@@ -8,19 +8,27 @@
 
 import UIKit
 
+protocol HomeFeedStateDelegate: class {
+    func configureQuickSearch()
+    func configureManualSearch()
+}
+
 private class FeedButton: UIButton {
+
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setTitleColor(.darkText, for: .normal)
         backgroundColor = .clear
-        titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        titleLabel?.font = .sectionHeader
     }    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-class HomeFeedStateCell: UITableViewCell {
+class HomeFeedStateView: UIView {
+    
+    weak var delegate: HomeFeedStateDelegate?
     
     private let quickSearchButton: FeedButton = {
         let b = FeedButton()
@@ -37,29 +45,28 @@ class HomeFeedStateCell: UITableViewCell {
     lazy var buttonStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [quickSearchButton, manualSearchButton])
         sv.alignment = .center
+        sv.distribution = .fillEqually
         sv.spacing = 20
         return sv
     }()
     
     private lazy var placementView: UIView = {
         let v = UIView()
-        v.backgroundColor = #colorLiteral(red: 0.09019608051, green: 0, blue: 0.3019607961, alpha: 1)
+        v.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.3779938412)
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.heightAnchor.constraint(equalToConstant: 3).isActive = true
+        v.heightAnchor.constraint(equalToConstant: 1.5).isActive = true
         v.widthAnchor.constraint(equalToConstant: 100).isActive = true
         return v
     }()
     
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .default, reuseIdentifier: nil)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupViews()
         setupActions()
     }
     
     fileprivate func setupViews() {
         backgroundColor = .white
-        selectionStyle = .none
         addSubview(buttonStackView)
         buttonStackView.anchor(
             top: topAnchor,
@@ -68,7 +75,6 @@ class HomeFeedStateCell: UITableViewCell {
             trailing: trailingAnchor,
             padding: .init(top: 0, left: 32, bottom: 5, right: 32)
         )
-        
         addSubview(placementView)
         placementView.centerXAnchor.constraint(equalTo: quickSearchButton.centerXAnchor).isActive = true
         placementView.topAnchor.constraint(equalTo: quickSearchButton.bottomAnchor).isActive = true
@@ -83,15 +89,15 @@ class HomeFeedStateCell: UITableViewCell {
         let centerDistance = quickSearchButton.center.x - manualSearchButton.center.x
         UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.95, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
             self.placementView.transform = CGAffineTransform(translationX: -centerDistance, y: 0)
-        }) { (_) in
-        }
+        })
+        delegate?.configureManualSearch()
     }
     
     fileprivate func animatePlacementQuick() {
         UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.95, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
             self.placementView.transform = .identity
-        }) { (_) in
-        }
+        })
+        delegate?.configureQuickSearch()
     }
     
     @objc fileprivate func quickSearchTap(_ sender: UIButton) {
@@ -103,7 +109,17 @@ class HomeFeedStateCell: UITableViewCell {
     }
     
     
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+
+
+
+
+
+
+
+

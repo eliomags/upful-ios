@@ -22,7 +22,7 @@ class HeaderLabel: UILabel {
     init(padding: Int) {
         self.padding = padding
         super.init(frame: .zero)
-        font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        font = .sectionHeader
     }
     
     override init(frame: CGRect) {
@@ -41,7 +41,7 @@ class SectionHeaderLabel: HeaderLabel {
     override init(padding: Int) {
         super.init(frame: .zero)
         self.padding = padding
-        font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        font = .sectionHeader
     }
     
     required init?(coder aDecoder: NSCoder) {
