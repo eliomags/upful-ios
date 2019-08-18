@@ -1,0 +1,113 @@
+//
+//  ManualSearchItem.swift
+//  Upful
+//
+//  Created by Yanik Simpson on 8/9/19.
+//  Copyright © 2019 Yanik Simpson. All rights reserved.
+//
+
+import Foundation
+
+struct ParameterItem {
+    let parameter: SearchParameter
+    let value: Double
+}
+
+struct ManualScreener {
+    let criteria: SearchCriteria
+    var parameter: SearchParameter
+    var value: Double?
+}
+
+enum ScreenerParameterType {
+    case ratio, percentage, other
+}
+
+enum CriteriaClassification: Int {
+    case valuation = 0
+    case financial = 1
+    case performance = 2
+    case other
+}
+
+extension SearchCriteria {
+    
+    var explicit: String {
+        switch self {
+        case .name: return "Name"
+        case .pricetoearnings: return "Price/Earnings"
+        case .pricetobook: return "Price/Book"
+        case .evtoebit: return "EV/EBIT"
+        case .marketcap: return "Market Cap"
+        case .divpayoutratio: return "Dividend Payout Ratio"
+        case .dividendyield: return "Dividend Yield"
+        case .revenuegrowth: return "Revenue Growth"
+        case .grossmargin: return "Gross Margin"
+        case .ebitmargin: return "EBIT Margin"
+        case .fcffgrowth: return "1 Year Free Cash Flow Growth"
+        case .ebitdagrowth: return "1 Year EBITDA Growth"
+        case .ebitgrowth: return "1 Year EBIT Growth"
+        case .investedcapitalgrowth: return "1 Year Invested Capital Growth"
+        case .epsgrowth: return "1 Year EPS Growth"
+        case .pricetorevenue: return "Price to Sales"
+        case .revenueqoqgrowth: return "Revenue Q/Q Growth"
+        }
+    }
+    
+    var parameterType: ScreenerParameterType {
+        switch self {
+        case .name: return .other
+        case .marketcap: return .other
+        case .pricetoearnings: return .ratio
+        case .evtoebit: return .ratio
+        case .pricetobook: return .ratio
+        case .fcffgrowth: return .percentage
+        case .ebitdagrowth: return .percentage
+        case .ebitgrowth: return .percentage
+        case .divpayoutratio: return .ratio
+        case .dividendyield: return .percentage
+        case .revenuegrowth: return .percentage
+        case .grossmargin: return .percentage
+        case .ebitmargin: return .percentage
+        case .investedcapitalgrowth: return .percentage
+        case .epsgrowth: return .percentage
+        case .pricetorevenue: return .ratio
+        case .revenueqoqgrowth: return .percentage
+        }
+    }
+    
+    var classification: CriteriaClassification {
+        switch self {
+        case .name: return .other
+        case .marketcap: return .other
+        case .pricetoearnings: return .valuation
+        case .evtoebit: return .valuation
+        case .pricetobook: return .valuation
+        case .fcffgrowth: return .performance
+        case .ebitdagrowth: return .performance
+        case .ebitgrowth: return .performance
+        case .divpayoutratio: return .financial
+        case .dividendyield: return .financial
+        case .revenuegrowth: return .performance
+        case .grossmargin: return .financial
+        case .ebitmargin: return .financial
+        case .investedcapitalgrowth: return .financial
+        case .epsgrowth: return .performance
+        case .pricetorevenue: return .valuation
+        case .revenueqoqgrowth: return .performance
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+

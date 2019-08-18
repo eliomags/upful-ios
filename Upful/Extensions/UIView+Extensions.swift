@@ -8,6 +8,37 @@
 
 import UIKit
 
+extension UIView {
+    func setupGradientBackground(colorOne: UIColor, colorTwo: UIColor) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.colors = [colorOne.cgColor, colorTwo.cgColor]
+        gradientLayer.locations = [0.0, 1.0]
+        gradientLayer.startPoint = CGPoint(x: 1.0, y: 1.0)
+        gradientLayer.endPoint = CGPoint(x: 0.0, y: 0.0)
+        
+        layer.insertSublayer(gradientLayer, at: 0)
+    }
+}
+
+enum ShadowIntensity {
+    case light, medium, intense
+}
+
+extension UIView {
+    func setupShadow(intensity: ShadowIntensity, height: CGFloat = 6.0, color: UIColor) {
+        layer.shadowColor = color.cgColor
+        layer.shadowOffset = CGSize(width: 0.0, height: height)
+        layer.shadowRadius = 8
+        layer.shadowOpacity = 0.5
+        layer.masksToBounds = false
+        switch intensity {
+        case .light: layer.shadowOpacity = 0.1
+        case .medium: layer.shadowOpacity = 0.5
+        case .intense: layer.shadowOpacity = 0.8
+        }
+    }
+}
 
 struct AnchoredConstraints {
     var top, leading, bottom, trailing, width, height: NSLayoutConstraint?

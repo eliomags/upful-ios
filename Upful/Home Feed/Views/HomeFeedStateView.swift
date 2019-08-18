@@ -19,7 +19,7 @@ private class FeedButton: UIButton {
         super.init(frame: .zero)
         setTitleColor(.darkText, for: .normal)
         backgroundColor = .clear
-        titleLabel?.font = .sectionHeader
+        titleLabel?.font = .viewHeader
     }    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -73,7 +73,7 @@ class HomeFeedStateView: UIView {
             leading: leadingAnchor,
             bottom: bottomAnchor,
             trailing: trailingAnchor,
-            padding: .init(top: 0, left: 32, bottom: 5, right: 32)
+            padding: .init(top: 0, left: 32, bottom: 10, right: 32)
         )
         addSubview(placementView)
         placementView.centerXAnchor.constraint(equalTo: quickSearchButton.centerXAnchor).isActive = true

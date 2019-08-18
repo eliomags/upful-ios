@@ -6,6 +6,7 @@
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
 
+import Firebase
 import UIKit
 
 @UIApplicationMain
@@ -18,10 +19,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow()
 
-        let homeVC = HomeFeedViewController()
-        let navVC = UINavigationController(rootViewController: homeVC)
+        FirebaseApp.configure()
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+
         
-        window?.rootViewController = navVC
+        let homeVC = HomeFeedViewController()
+        let settingsVC = UIViewController()
+        let controllers = [homeVC, settingsVC]
+        
+        homeVC.tabBarItem = UITabBarItem(title: "HOME", image: #imageLiteral(resourceName: "icons8-search-25.png"), tag: 0)
+        settingsVC.tabBarItem = UITabBarItem(title: "SETTINGS", image: #imageLiteral(resourceName: "icons8-settings-25.png"), tag: 1)
+
+        let tabVC = UITabBarController()
+        tabVC.tabBar.tintColor = .secondaryBackground
+//        tabVC.tabBar.barTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.2691890967)
+        tabVC.tabBar.barTintColor = .backgroundColor
+        tabVC.viewControllers = controllers.map({ UINavigationController(rootViewController: $0)})
+        
+        window?.rootViewController = tabVC
         window?.makeKeyAndVisible()
         
         return true
