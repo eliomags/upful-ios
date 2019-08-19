@@ -229,7 +229,7 @@
 		3D20FB5422FB34FB007836DD /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3D20FB5E22FBB15E007836DD /* HomeFeedStateView.swift */,
+				3D42BE4A2309A86300806AFF /* State View */,
 				3D917B5422FE0849001D5E39 /* Preset Cell */,
 			);
 			path = Views;
@@ -282,6 +282,14 @@
 				3D42BE482309A59800806AFF /* IntrinioModel.swift */,
 			);
 			path = Intrinio;
+			sourceTree = "<group>";
+		};
+		3D42BE4A2309A86300806AFF /* State View */ = {
+			isa = PBXGroup;
+			children = (
+				3D20FB5E22FBB15E007836DD /* HomeFeedStateView.swift */,
+			);
+			path = "State View";
 			sourceTree = "<group>";
 		};
 		3D90ADB223005F2200C52455 /* Home Feed Items */ = {

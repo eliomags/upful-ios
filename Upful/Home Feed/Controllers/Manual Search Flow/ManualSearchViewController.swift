@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ManualSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ManualSearchHeaderViewDelegate, ManualSearchDelegate {
+class ManualSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ManualSearchDelegate {
     
     var manualScreenItems: [ManualScreener] = [] {
         didSet {
@@ -21,8 +21,24 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     lazy var header: ManualSearchHeaderView = {
         let v = ManualSearchHeaderView()
-        v.delegate = self
         return v
+    }()
+    
+    class CustomRoundButton: UIButton {
+        override var intrinsicContentSize: CGSize {
+            return CGSize(width: 55, height: 55)
+        }
+    }
+    
+    let addCriteriaButton: CustomRoundButton = {
+        let b = CustomRoundButton(type: .system)
+        b.setBackgroundImage(#imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
+        b.backgroundColor = .black
+        b.layer.cornerRadius = b.intrinsicContentSize.height / 2
+        b.layer.masksToBounds = true
+        b.addTarget(self, action: #selector(handleAddCriteria), for: .touchUpInside)
+        b.setupShadow(intensity: .medium, color: .black)
+        return b
     }()
     
     class CustomButton: UIButton {
@@ -75,14 +91,64 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         view.backgroundColor = .backgroundColor
         view.addSubview(manualSearchSearchTableView)
         manualSearchSearchTableView.fillSuperview()
+        
+        view.addSubview(addCriteriaButton)
+        addCriteriaButton.anchor(
+            top: nil, leading: nil, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 30, right: 22))
+        
+        animateButton()
+    }
+    
+    
+    // MARK:- Views
+    
+    fileprivate func animateButton() {
+        // Check user defaults if person has completed
+        // If hasNavigatedToManualScreen == false
+        UIView.animate(withDuration: 0.5, animations: {
+            self.addCriteriaButton.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+        }) { (_) in
+            UIView.animate(withDuration: 0.5, animations: {
+                self.addCriteriaButton.transform = .identity
+            }, completion: { (_) in
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.addCriteriaButton.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+                }) { (_) in
+                    UIView.animate(withDuration: 0.5, animations: {
+                        self.addCriteriaButton.transform = .identity
+                    })
+                }
+            })
+        }
+        // Person has completed so add to user defaults
+        // hasNavigatedToManualScreen, true
     }
 
 
     // MARK:- Actions
     
+    @objc fileprivate func handleAddCriteria(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.1, animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }) { (_) in
+            UIView.animate(withDuration: 0.1, animations: {
+                sender.transform = .identity
+            }, completion: { (_) in
+                let searchCriteriaVC = SearchCriteriaTableViewController(style: .grouped)
+                searchCriteriaVC.delegate = self
+                self.navigationController?.pushViewController(searchCriteriaVC, animated: true)
+            })
+        }
+    }
+    
     @objc fileprivate func handleSearch(_ sender: UIButton) {
+        if manualScreenItems.isEmpty {
+            presentAlert()
+            return
+        }
         for item in manualScreenItems {
-            if item.parameter == .none  {
+            if item.parameter == .none {
                 presentAlert()
                 return
             }
@@ -118,13 +184,6 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         manualScreenItems[indexPath.item].value = parameterItem.value
     }
     
-    func navigateToSearchCriteria() {
-        let searchCriteriaVC = SearchCriteriaTableViewController(style: .grouped)
-        searchCriteriaVC.delegate = self
-        
-        self.navigationController?.pushViewController(searchCriteriaVC, animated: true)
-    }
-
     
     // MARK:- Tableview Methods
     

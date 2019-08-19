@@ -125,8 +125,7 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
     
     let cellImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = UIView.ContentMode.scaleAspectFit
-
+        iv.contentMode = UIView.ContentMode.scaleToFill
         return iv
     }()
     
@@ -151,7 +150,7 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
         let l = UILabel()
         l.textAlignment = NSTextAlignment.left
         l.numberOfLines = 0
-        l.textColor = .lightGray
+        l.textColor = .black
         l.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return l
     }()
@@ -160,7 +159,7 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
         let v = UIView()
         v.backgroundColor = .white
         v.layer.masksToBounds = true
-        v.layer.cornerRadius = 25
+        v.layer.cornerRadius = 8
         v.addSubview(headerBackgroundView)
         headerBackgroundView.anchor(
             top: v.topAnchor,
