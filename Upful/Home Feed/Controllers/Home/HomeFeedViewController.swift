@@ -35,6 +35,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         tv.backgroundColor = .backgroundColor
         tv.separatorStyle = .none
         tv.tableFooterView = UIView()
+        tv.tableHeaderView = UIView()
         return tv
     }()
     
@@ -60,7 +61,8 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         setupViews()
         setupBannerView()
         setupTableView(for: quickSearchTableView)
-        initializeFeedData()        
+        initializeFeedData()
+        initializeNetworkData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,6 +78,31 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         homeFeedItems.append(presetViewModel.configureValueData())
         homeFeedItems.append(presetViewModel.configureGrowthData())
         homeFeedItems.append(presetViewModel.configureDividendData())
+    }
+    
+    fileprivate func initializeNetworkData() {
+        CompanyViewModel.configureCompanyList().forEach { (company) in
+            NetworkService.shared.intrioAPI.getCompanyData(ticker: company.header) { (result) in
+                switch result {
+                case .success(let data):
+                    company.details = data.fundamental.company.name
+                    
+                    data.standardizedFinancials.forEach({ (financial) in
+                        if financial.dataTag.tag == SearchCriteria.marketcap.rawValue {
+                            company.marketcap = Int(financial.value)
+                        }
+                        if financial.dataTag.tag == SearchCriteria.pricetoearnings.rawValue {
+                            company.priceToEarnings = financial.value
+                        }
+                    })
+                    DispatchQueue.main.async {
+                        self.quickSearchTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+                    }
+                case .failure(_):
+                    print("Failed")
+                }
+            }
+        }
     }
     
     
@@ -165,6 +192,7 @@ extension HomeFeedViewController: UITableViewDataSource {
         switch indexPath.section {
         case 0:
             let companyCell = PopularCompanyTableViewCell(popularCompanies: homeFeedItems[indexPath.section] as! [PopularCompany])
+        
             return companyCell
         case 1,2,3:
             guard let screenerData = homeFeedItems[indexPath.section] as? [PresetScreener] else { return emptyCell }
@@ -182,7 +210,7 @@ extension HomeFeedViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 0: return 200
+        case 0: return 120
         case 1,2,3: return 210
         default: return UITableView.automaticDimension
         }

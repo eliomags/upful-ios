@@ -18,16 +18,18 @@ class PopularCompanyTableViewCell: UITableViewCell {
     
     var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 20
-        layout.itemSize = CGSize(width: 70, height: 70)
+        layout.scrollDirection = .horizontal
+//        layout.minimumLineSpacing = 20
+        layout.minimumInteritemSpacing = 30
+        layout.itemSize = CGSize(width: 170, height: 90)
         return layout
     }()
     
     lazy var popularCompanyCollectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .clear
-        cv.isScrollEnabled = false
+        cv.isScrollEnabled = true
+        cv.showsHorizontalScrollIndicator = false
         cv.delegate = self
         cv.dataSource = self
         cv.register(PopularCompanyCollectionViewCell.self, forCellWithReuseIdentifier: ReuseID.companyCell.rawValue)
@@ -46,13 +48,7 @@ class PopularCompanyTableViewCell: UITableViewCell {
         backgroundColor = .clear
         selectionStyle = .none
         addSubview(popularCompanyCollectionView)
-        popularCompanyCollectionView.anchor(
-            top: topAnchor,
-            leading: leadingAnchor,
-            bottom: bottomAnchor,
-            trailing: trailingAnchor,
-            padding: .init(top: 2, left: 16, bottom: 2, right: 16)
-        )
+        popularCompanyCollectionView.fillSuperview()
     }
     
     
@@ -74,8 +70,8 @@ extension PopularCompanyTableViewCell: UICollectionViewDelegate, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let data = popularCompanies[indexPath.row]
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell.rawValue, for: indexPath) as? PopularCompanyCollectionViewCell else { return UICollectionViewCell() }
-        cell.label.text = data.header
-        cell.logoImage(urlText: data.url)
+        cell.configureLabels(company: data)
+        
         return cell
     }
     
@@ -101,12 +97,18 @@ extension PopularCompanyTableViewCell: UICollectionViewDelegate, UICollectionVie
 
 
 class PopularCompanyCollectionViewCell: UICollectionViewCell {
-    
-    let label: UILabel = {
+    let tickerLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 10, weight: .heavy)
-        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
+        label.textAlignment = .left
+        return label
+    }()
+    let companyNameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        label.textAlignment = .left
         return label
     }()
     let companyLogo: UIImageView = {
@@ -118,32 +120,75 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
         iv.widthAnchor.constraint(equalToConstant: 35).isActive = true
         return iv
     }()
-    lazy var stackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [companyLogo, label])
-        sv.alignment = .center
+    lazy var companyDescriptionStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [tickerLabel, companyNameLabel])
+        sv.distribution = .fillEqually
         sv.axis = .vertical
-        sv.spacing = 2
+        sv.spacing = 1
         return sv
     }()
     
+    let priceLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 10, weight: .heavy)
+        label.textAlignment = .center
+        return label
+    }()
+    
+    lazy var marketcapStackView: StockDetailStackView = {
+        let sv = StockDetailStackView(description: "Market Cap")
+        return sv
+    }()
+    
+    lazy var peStackView: StockDetailStackView = {
+        let sv = StockDetailStackView(description: "Price/Earnings")
+        return sv
+    }()
+    
+    lazy var stockDetailsStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [marketcapStackView, peStackView])
+        sv.distribution = .fillEqually
+        sv.axis = .vertical
+        return sv
+    }()
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(stackView)
-        stackView.anchor(
-            top: topAnchor,
-            leading: leadingAnchor,
-            bottom: bottomAnchor,
-            trailing: trailingAnchor,
-            padding: .init(top: 12, left: 6, bottom: 8, right: 6)
-        )
         backgroundColor = .white
         layer.borderColor = UIColor.lightGray.cgColor
-        layer.borderWidth = 2
-        layer.cornerRadius = (contentView.bounds.height / 2) - 3
+        layer.borderWidth = 1
+        layer.cornerRadius = 8
         layer.masksToBounds = true
+
+        addSubview(companyDescriptionStackView)
+        companyDescriptionStackView.anchor(
+            top: topAnchor,
+            leading: leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 12, left: 6, bottom: 0, right: 0)
+        )
+        addSubview(priceLabel)
+        priceLabel.anchor(
+            top: topAnchor, leading: nil, bottom: nil, trailing: trailingAnchor,
+            padding: .init(top: 12, left: 0, bottom: 0, right: 6))
+        
+        addSubview(stockDetailsStackView)
+        stockDetailsStackView.anchor(
+            top: companyDescriptionStackView.bottomAnchor, leading: companyDescriptionStackView.leadingAnchor, bottom: bottomAnchor, trailing: priceLabel.trailingAnchor,
+            padding: .init(top: 5, left: 0, bottom: 8, right: 0))
     }
     
+    
+    func configureLabels(company: PopularCompany) {
+        tickerLabel.text = company.header
+        companyNameLabel.text = company.details
+//        priceLabel.text = "$\(company.price ?? 100)"
+        marketcapStackView.valueLabel.text = "$\(company.marketcap?.formatUsingAbbreviation() ?? " -")"
+        peStackView.valueLabel.text = company.priceToEarnings?.twoDecimal() ?? " -"
+    }
     
     fileprivate func logoImage(urlText: String) {
         guard let logoUrl = URL(string: urlText) else { return }

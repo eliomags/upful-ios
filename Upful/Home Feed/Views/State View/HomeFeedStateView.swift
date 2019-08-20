@@ -52,7 +52,8 @@ class HomeFeedStateView: UIView {
     
     private lazy var placementView: UIView = {
         let v = UIView()
-        v.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.3779938412)
+//        v.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.3779938412)
+        v.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
         v.translatesAutoresizingMaskIntoConstraints = false
         v.heightAnchor.constraint(equalToConstant: 1.5).isActive = true
         v.widthAnchor.constraint(equalToConstant: 100).isActive = true

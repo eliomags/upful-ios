@@ -151,7 +151,7 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
         l.textAlignment = NSTextAlignment.left
         l.numberOfLines = 0
         l.textColor = .black
-        l.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        l.font = .details2
         return l
     }()
     

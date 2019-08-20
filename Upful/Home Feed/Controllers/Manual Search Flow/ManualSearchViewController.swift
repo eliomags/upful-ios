@@ -33,7 +33,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     let addCriteriaButton: CustomRoundButton = {
         let b = CustomRoundButton(type: .system)
         b.setBackgroundImage(#imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
-        b.backgroundColor = .black
+        b.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
         b.layer.cornerRadius = b.intrinsicContentSize.height / 2
         b.layer.masksToBounds = true
         b.addTarget(self, action: #selector(handleAddCriteria), for: .touchUpInside)

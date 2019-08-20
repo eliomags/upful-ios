@@ -8,15 +8,15 @@
 
 import UIKit
 
-struct CompanyViewModel {
-    static let facebook = PopularCompany(details: "Facebook, Inc.", header: "FB")
-    static let netflix = PopularCompany(details: "Netflix", header: "NFLX")
-    static let apple = PopularCompany(details: "Apple", header: "AAPL")
-    static let amazon = PopularCompany(details: "Amazon.com", header: "AMZN")
-    static let google = PopularCompany(details: "Alphabet Inc.", header: "GOOGL")
-    static let twitter = PopularCompany(details: "Twitter", header: "TWTR")
-    static let microsoft = PopularCompany(details: "Microsoft Corporation", header: "MSFT")
-    static let mongoDB = PopularCompany(details: "MongoDB Inc.", header: "MDB")
+class CompanyViewModel {
+    static var facebook = PopularCompany(details: "Facebook, Inc.", header: "FB")
+    static var netflix = PopularCompany(details: "Netflix", header: "NFLX")
+    static var apple = PopularCompany(details: "Apple", header: "AAPL")
+    static var amazon = PopularCompany(details: "Amazon.com", header: "AMZN")
+    static var google = PopularCompany(details: "Alphabet Inc.", header: "GOOGL")
+    static var twitter = PopularCompany(details: "Twitter", header: "TWTR")
+    static var microsoft = PopularCompany(details: "Microsoft Corporation", header: "MSFT")
+    static var mongoDB = PopularCompany(details: "MongoDB Inc.", header: "MDB")
     
     static func configureCompanyList() -> [PopularCompany] {
         return [facebook, netflix, apple, amazon, google, twitter, microsoft, mongoDB]

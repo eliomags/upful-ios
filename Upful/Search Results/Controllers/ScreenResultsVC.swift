@@ -17,7 +17,7 @@ class ScreenResultsViewController: UIViewController {
     
     // MARK:- DataSource
     
-    var searchResults: [SearchResult] = [] {
+    var searchResults: [ScreenResult] = [] {
         didSet {
             DispatchQueue.main.async {
                 self.feedTableView.reloadData()

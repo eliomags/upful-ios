@@ -11,13 +11,19 @@ import UIKit
 extension UIFont {
     
     static var sectionHeader: UIFont {
-//        return UIFont(name: "AvenirNext-Bold", size: 16) ?? UIFont.systemFont(ofSize: 15, weight: .medium)
-        return UIFont.systemFont(ofSize: 13, weight: .heavy)
-
+        return UIFont(name: "Helvetica-Bold", size: 14) ?? UIFont.systemFont(ofSize: 15, weight: .bold)
     }
-    
+
     static var viewHeader: UIFont {
         return UIFont(name: "AvenirNext-DemiBold", size: 15) ?? UIFont.systemFont(ofSize: 15, weight: .bold)
+    }
+    
+    static var details1: UIFont {
+        return UIFont(name: "AvenirNext-Regular", size: 13) ?? UIFont.systemFont(ofSize: 13, weight: .regular)
+    }
+    
+    static var details2: UIFont {
+        return UIFont(name: "AvenirNext-Medium", size: 12) ?? UIFont.systemFont(ofSize: 13, weight: .regular)
     }
 }
 

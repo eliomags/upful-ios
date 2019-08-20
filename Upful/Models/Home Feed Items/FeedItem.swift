@@ -10,17 +10,17 @@ import UIKit
 
 protocol FeedItem {
     var header: String { get }
-    var details: String { get }
+    var details: String? { get set }
 }
 
-struct PopularCompany: FeedItem {
+class PopularCompany: FeedItem {
     var header: String
-    var details: String
+    var details: String?
     var url: String {
         return "https://storage.googleapis.com/iex/api/logos/\(header).png"
     }
     var price: Double?
-    var marketcap: Double?
+    var marketcap: Int?
     var priceToEarnings: Double?
     
     init(details: String, header: String) {

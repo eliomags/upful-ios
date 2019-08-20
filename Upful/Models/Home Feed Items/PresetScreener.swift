@@ -21,7 +21,7 @@ enum ScreenerIdentifier: String{
 struct PresetScreener: FeedItem {
     
     var header: String
-    var details: String
+    var details: String?
     let screenType: PresetScreenType
     var urlComponents: [String] = []
     var identifier: ScreenerIdentifier
