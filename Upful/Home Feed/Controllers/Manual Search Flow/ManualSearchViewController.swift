@@ -137,6 +137,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             }, completion: { (_) in
                 let searchCriteriaVC = SearchCriteriaTableViewController(style: .grouped)
                 searchCriteriaVC.delegate = self
+                
                 self.navigationController?.pushViewController(searchCriteriaVC, animated: true)
             })
         }

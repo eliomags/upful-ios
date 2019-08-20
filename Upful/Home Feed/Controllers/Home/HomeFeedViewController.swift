@@ -13,7 +13,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
 
     // MARK:- Dependencies
     
-    var homeFeedItems: [[HomeFeedItem]] = []  {
+    var homeFeedItems: [[FeedItem]] = []  {
         didSet {
             quickSearchTableView.reloadData()
         }
@@ -68,6 +68,8 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         navigationController?.navigationBar.prefersLargeTitles = false
     }
     
+    
+    
     fileprivate func initializeFeedData() {
         let presetViewModel = PresetScreenverViewModel()
         homeFeedItems.append(CompanyViewModel.configureCompanyList())
@@ -75,6 +77,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         homeFeedItems.append(presetViewModel.configureGrowthData())
         homeFeedItems.append(presetViewModel.configureDividendData())
     }
+    
     
     // MARK:- View Setup
     
@@ -134,6 +137,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         })
     }
     
+    
     // MARK:- Navigation
     
     func navigateToScreenerResults(searchParameters: [String]) {
@@ -157,6 +161,7 @@ extension HomeFeedViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let emptyCell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        
         switch indexPath.section {
         case 0:
             let companyCell = PopularCompanyTableViewCell(popularCompanies: homeFeedItems[indexPath.section] as! [PopularCompany])
@@ -184,7 +189,7 @@ extension HomeFeedViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 3{
+        if section == homeFeedItems.count - 1 {
             return UIView()
         }
         return nil
@@ -203,14 +208,14 @@ extension HomeFeedViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 70
+        return 35
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 3 {
+        if section == homeFeedItems.count - 1 {
             return 50
         } else {
-            return 0
+            return 25
         }
     }
 }

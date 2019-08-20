@@ -41,6 +41,7 @@ class PopularCompanyTableViewCell: UITableViewCell {
         setupViews()
     }
     
+    
     fileprivate func setupViews() {
         backgroundColor = .clear
         selectionStyle = .none
@@ -53,6 +54,7 @@ class PopularCompanyTableViewCell: UITableViewCell {
             padding: .init(top: 2, left: 16, bottom: 2, right: 16)
         )
     }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -142,12 +144,14 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
         layer.masksToBounds = true
     }
     
+    
     fileprivate func logoImage(urlText: String) {
         guard let logoUrl = URL(string: urlText) else { return }
         SDWebImageManager.shared.loadImage(with: logoUrl, options: .continueInBackground, progress: nil) { (image, _, _, _, _, _) in
             self.companyLogo.image = image?.withRenderingMode(.alwaysOriginal)
         }
     }
+    
     
     
     required init?(coder aDecoder: NSCoder) {

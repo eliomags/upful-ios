@@ -23,6 +23,7 @@ struct CompanyViewModel {
     }
 }
 
+
 class PresetScreenverViewModel {
     var value1: PresetScreener = PresetScreener(header: "VALUE 1",
                                                 details: "Price to Earnings < 20\nPrice to Book < 6\nEBIT Margin > 5%",

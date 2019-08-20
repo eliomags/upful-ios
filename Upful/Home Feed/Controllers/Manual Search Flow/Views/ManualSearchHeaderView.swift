@@ -31,6 +31,7 @@ class ManualSearchHeaderView: UIView {
                          padding: .init(top: 16, left: 8, bottom: 4, right: 20))
     }
     
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

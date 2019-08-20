@@ -14,7 +14,7 @@
 		3D20FB3E22FB1F0A007836DD /* UpfulTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB3D22FB1F0A007836DD /* UpfulTests.swift */; };
 		3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4B22FB2129007836DD /* UIView+Extensions.swift */; };
 		3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4E22FB259D007836DD /* NetworkingService.swift */; };
-		3D20FB5222FB3068007836DD /* HomeFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5122FB3068007836DD /* HomeFeedItem.swift */; };
+		3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5122FB3068007836DD /* FeedItem.swift */; };
 		3D20FB5822FB46DD007836DD /* PresetScreenerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5722FB46DD007836DD /* PresetScreenerTableViewCell.swift */; };
 		3D20FB5A22FB49EC007836DD /* PopularCompanyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5922FB49EC007836DD /* PopularCompanyCell.swift */; };
 		3D20FB5D22FBA772007836DD /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5C22FBA772007836DD /* HomeViewModel.swift */; };
@@ -65,7 +65,7 @@
 		3D20FB3F22FB1F0A007836DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D20FB4B22FB2129007836DD /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		3D20FB4E22FB259D007836DD /* NetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingService.swift; sourceTree = "<group>"; };
-		3D20FB5122FB3068007836DD /* HomeFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedItem.swift; sourceTree = "<group>"; };
+		3D20FB5122FB3068007836DD /* FeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
 		3D20FB5722FB46DD007836DD /* PresetScreenerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetScreenerTableViewCell.swift; sourceTree = "<group>"; };
 		3D20FB5922FB49EC007836DD /* PopularCompanyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularCompanyCell.swift; sourceTree = "<group>"; };
 		3D20FB5C22FBA772007836DD /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -292,10 +292,26 @@
 			path = "State View";
 			sourceTree = "<group>";
 		};
+		3D42BE4B230AFE7000806AFF /* Popular Companies */ = {
+			isa = PBXGroup;
+			children = (
+				3D20FB5922FB49EC007836DD /* PopularCompanyCell.swift */,
+			);
+			path = "Popular Companies";
+			sourceTree = "<group>";
+		};
+		3D42BE4E230B032F00806AFF /* Preset Searche */ = {
+			isa = PBXGroup;
+			children = (
+				3D20FB5722FB46DD007836DD /* PresetScreenerTableViewCell.swift */,
+			);
+			path = "Preset Searche";
+			sourceTree = "<group>";
+		};
 		3D90ADB223005F2200C52455 /* Home Feed Items */ = {
 			isa = PBXGroup;
 			children = (
-				3D20FB5122FB3068007836DD /* HomeFeedItem.swift */,
+				3D20FB5122FB3068007836DD /* FeedItem.swift */,
 				3D42BE442309A55900806AFF /* PresetScreener.swift */,
 			);
 			path = "Home Feed Items";
@@ -312,8 +328,8 @@
 		3D917B5422FE0849001D5E39 /* Preset Cell */ = {
 			isa = PBXGroup;
 			children = (
-				3D20FB5922FB49EC007836DD /* PopularCompanyCell.swift */,
-				3D20FB5722FB46DD007836DD /* PresetScreenerTableViewCell.swift */,
+				3D42BE4E230B032F00806AFF /* Preset Searche */,
+				3D42BE4B230AFE7000806AFF /* Popular Companies */,
 			);
 			path = "Preset Cell";
 			sourceTree = "<group>";
@@ -555,7 +571,7 @@
 				3D20FB2B22FB1F08007836DD /* HomeFeedViewController.swift in Sources */,
 				3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */,
 				3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */,
-				3D20FB5222FB3068007836DD /* HomeFeedItem.swift in Sources */,
+				3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */,
 				3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */,
 				3D917B5222FE0542001D5E39 /* ManualSearchViewController.swift in Sources */,
 				3D20FB5F22FBB15E007836DD /* HomeFeedStateView.swift in Sources */,
