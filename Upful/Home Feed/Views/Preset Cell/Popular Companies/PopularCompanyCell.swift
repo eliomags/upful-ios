@@ -19,8 +19,8 @@ class PopularCompanyTableViewCell: UITableViewCell {
     var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-//        layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 30
+        layout.minimumLineSpacing = 20
+        layout.sectionInset = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
         layout.itemSize = CGSize(width: 170, height: 90)
         return layout
     }()

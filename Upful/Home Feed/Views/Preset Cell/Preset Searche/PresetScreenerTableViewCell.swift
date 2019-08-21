@@ -27,7 +27,7 @@ class PresetScreenerTableViewCell: UITableViewCell {
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 16
         layout.minimumInteritemSpacing = 5
-        layout.sectionInset = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 4)
+        layout.sectionInset = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
         layout.itemSize = CGSize(width: (UIScreen.main.bounds.width / 2) + 40, height: 170)
         return layout
     }()

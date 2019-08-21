@@ -17,18 +17,22 @@ struct IntrinioResponse: Decodable {
     var pageSize: Int?
 }
 
-struct ScreenResult: Decodable {
+class ScreenResult: Decodable {
     let name: String?
     let ticker: String?
     let marketcap: Int?
+    var divyield: Double?
+    var pricetoearnings: Double?
+    var ebitgrowth: Double?
 }
 
 final class IntrinioAPI {
+    
     // Screening
     private let endpoint = "https://api.intrinio.com/securities/search?"
     let numberOfResults = 20
     private let resultOrder = "&order_column=marketcap&order_direction=desc&primary_only=true&page_size="
-    private let apiKey = "&api_key=OjA4ZWY3NTc4YjFlOGUxNTYzNjkwMmEyOGUxNWJkZTRk"
+    private let apiKey = "&api_key=OjNiMzRkZmFlNDBkYjIzYTgyMTNhNjcyZGNlZmYzMjE1"
     private var currentPage = 1
 
     func getScreenRequest(parameters: String, completion: @escaping (Result<[ScreenResult],NetworkingError>) -> Void) {
@@ -58,7 +62,8 @@ final class IntrinioAPI {
     
     //Lookup
     private let lookupEndpoint = "https://api-v2.intrinio.com/fundamentals/"
-    private let documentType = "-calculations-2019-Q2/standardized_financials?"
+    // Q1TTM, Q2TTM, Q3TTM, FY, Q1, Q2, Q3, Q4, Q2YTD, Q3YTD
+    private let documentType = "-calculations-2019-Q3TTM/standardized_financials?"
     
     func getCompanyData(ticker: String, completion: @escaping (Result<CompanyFundamentals, Error>) -> Void) {
         print(lookupEndpoint + ticker + documentType + apiKey)
@@ -66,7 +71,6 @@ final class IntrinioAPI {
         let decoder = JSONDecoder()
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, response, error) in
-//            print(response)
             if let error = error {
                 completion(.failure(error))
             }

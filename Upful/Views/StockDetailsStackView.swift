@@ -23,8 +23,10 @@ class StockDetailStackView: UIStackView {
         label.textAlignment = .right
         label.textColor = .black
         label.font = .details1
+        label.text = "NA"
         return label
     }()
+    
     
     init(description: String) {
         super.init(frame: .zero)
@@ -34,6 +36,7 @@ class StockDetailStackView: UIStackView {
         axis = .horizontal
         spacing = 5
     }
+    
     
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
