@@ -30,19 +30,16 @@ final class IntrinioAPI {
     
     // Screening
     private let endpoint = "https://api.intrinio.com/securities/search?"
-    let numberOfResults = 20
-    private let resultOrder = "&order_column=marketcap&order_direction=desc&primary_only=true&page_size="
+    let numberOfResults = 10
+    private let resultOrder = "&order_column=marketcap&order_direction=desc&primary_only=true"
     private let apiKey = "&api_key=OjNiMzRkZmFlNDBkYjIzYTgyMTNhNjcyZGNlZmYzMjE1"
-    private var currentPage = 1
-
-    func getScreenRequest(parameters: String, completion: @escaping (Result<[ScreenResult],NetworkingError>) -> Void) {
-        guard let url = URL(string: endpoint + "conditions=" + parameters + resultOrder + String(numberOfResults) + apiKey) else { return }
+    var currentPage = 1
+    
+    func getScreenRequest(parameters: String, page: Int, completion: @escaping (Result<[ScreenResult],NetworkingError>) -> Void) {
+        guard let url = URL(string: endpoint + "conditions=name~gt~0,\(parameters)" + resultOrder + "&page_number=\(page)" + "&page_size=\(numberOfResults)" + apiKey) else { return }
         let decoder = JSONDecoder()
         let session = URLSession.shared
-        let task = session.dataTask(with: url) { (data, response, error) in
-            if let response = response {
-                print(response)
-            }
+        let task = session.dataTask(with: url) { (data, _, error) in
             if error != nil {
                 completion(.failure(.failedNetworking))
             }
@@ -50,15 +47,39 @@ final class IntrinioAPI {
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
                 let fetchedData = try decoder.decode(IntrinioResponse.self, from: data)
-                print(fetchedData.data.count)
                 completion(.success(fetchedData.data))
             } catch {
                 completion(.failure(.parsingError))
             }
         }
-        currentPage += 1
         task.resume()
     }
+    
+    // Lookup historic financials
+    private let historicLookupEnpoint = "https://api-v2.intrinio.com/securities/"
+    private let searchType = "/historical_data/"
+    private let frequency = "?frequency=yearly&start_date=2018-01-01"
+    
+    func getCompanyFinancials(ticker: String, financial: String, completion: @escaping (Result<[CompanyHistoricalDatum], Error>) -> Void) {
+        guard let url = URL(string: historicLookupEnpoint + ticker + searchType + financial + frequency + apiKey) else { return }
+        let decoder = JSONDecoder()
+        let session = URLSession.shared
+        let task = session.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                completion(.failure(error))
+            }
+            guard let data = data else { return }
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            do {
+                let companyData = try decoder.decode(HistoricalDataSearch.self, from: data)
+                completion(.success(companyData.historicalData))
+            } catch let error {
+                completion(.failure(error))
+            }
+        }
+        task.resume()
+    }
+    
     
     //Lookup
     private let lookupEndpoint = "https://api-v2.intrinio.com/fundamentals/"
@@ -66,7 +87,6 @@ final class IntrinioAPI {
     private let documentType = "-calculations-2019-Q3TTM/standardized_financials?"
     
     func getCompanyData(ticker: String, completion: @escaping (Result<CompanyFundamentals, Error>) -> Void) {
-        print(lookupEndpoint + ticker + documentType + apiKey)
         guard let url = URL(string: lookupEndpoint + ticker + documentType + apiKey) else { return }
         let decoder = JSONDecoder()
         let session = URLSession.shared

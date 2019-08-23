@@ -13,11 +13,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
 
     // MARK:- Dependencies
     
-    var homeFeedItems: [[FeedItem]] = []  {
-        didSet {
-            quickSearchTableView.reloadData()
-        }
-    }
+    var homeFeedItems: [[FeedItem]] = []
     
     
     // MARK:- Views
@@ -62,7 +58,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         setupBannerView()
         setupTableView(for: quickSearchTableView)
         initializeFeedData()
-        initializeNetworkData()
+        initializePopularCompanyData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,28 +76,33 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         homeFeedItems.append(presetViewModel.configureDividendData())
     }
     
-    fileprivate func initializeNetworkData() {
-        CompanyViewModel.configureCompanyList().forEach { (company) in
-            NetworkService.shared.intrioAPI.getCompanyData(ticker: company.header) { (result) in
+    fileprivate func initializePopularCompanyData() {
+        CompanyViewModel.configureCompanyList().forEach { (popularCompany) in
+            NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: popularCompany.header, financial: SearchCriteria.marketcap.rawValue, completion: { (result) in
                 switch result {
-                case .success(let data):
-                    company.details = data.fundamental.company.name
-                    
-                    data.standardizedFinancials.forEach({ (financial) in
-                        if financial.dataTag.tag == SearchCriteria.marketcap.rawValue {
-                            company.marketcap = Int(financial.value)
-                        }
-                        if financial.dataTag.tag == SearchCriteria.pricetoearnings.rawValue {
-                            company.priceToEarnings = financial.value
-                        }
-                    })
+                case .success(let downloadedData):
+                    if downloadedData.isEmpty { return }
                     DispatchQueue.main.async {
-                        self.quickSearchTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+                        popularCompany.marketcap = Int(downloadedData.first?.value ?? 0)
+                        self.quickSearchTableView.reloadData()
                     }
                 case .failure(_):
-                    print("Failed")
+                    break
                 }
-            }
+            })
+            
+            NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: popularCompany.header, financial: SearchCriteria.pricetoearnings.rawValue, completion: { (result) in
+                switch result {
+                case .success(let downloadedData):
+                    if downloadedData.isEmpty { return }
+                    DispatchQueue.main.async {
+                        popularCompany.priceToEarnings = downloadedData.first?.value
+                        self.quickSearchTableView.reloadData()
+                    }
+                case .failure(_):
+                    break
+                }
+            })
         }
     }
     

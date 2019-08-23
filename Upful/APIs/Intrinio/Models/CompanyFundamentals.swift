@@ -8,6 +8,19 @@
 
 import Foundation
 
+struct HistoricalDataSearch: Decodable {
+    let historicalData: [CompanyHistoricalDatum]
+}
+
+// MARK: - HistoricalDatum
+struct CompanyHistoricalDatum: Decodable {
+    let date: String
+    let value: Double
+}
+
+
+
+
 
 struct CompanyFundamentals: Decodable {
     let standardizedFinancials: [StandardizedFinancial]
