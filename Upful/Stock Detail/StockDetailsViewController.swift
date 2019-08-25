@@ -15,12 +15,17 @@ class StockDetailsViewController: UIViewController {
      let ticker: String
     
     
+    // MARK: - Views
+    
+    
+    
+    
+    // MARK: - Initializer Methods
+    
     init(ticker: String) {
         self.ticker = ticker
         super.init(nibName: nil, bundle: nil)
     }
-    
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +37,8 @@ class StockDetailsViewController: UIViewController {
         setupNavBar()
     }
     
+    
+    // MARK: - Private Functions
     
     fileprivate func setupNavBar() {
         navigationController?.navigationBar.prefersLargeTitles = false

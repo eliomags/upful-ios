@@ -13,6 +13,8 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
 
     // MARK:- Dependencies
     
+    let analyticsLogger: AnalyticsLogger
+    
     var homeFeedItems: [[FeedItem]] = []
     
     
@@ -49,6 +51,15 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     
     
     // MARK:- Initializer Methods
+    
+    init(analyitcs: AnalyticsLogger) {
+        self.analyticsLogger = analyitcs
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -169,8 +180,8 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     // MARK:- Navigation
     
     func navigateToScreenerResults(searchParameters: [String]) {
+        analyticsLogger.reportEvents(event: .screenForStocks(screenType: .quick))
         let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters, networkingAPI: IntrinioAPI())
-        
         self.navigationController?.pushViewController(searchResultVC, animated: true)
     }
 }
