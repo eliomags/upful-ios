@@ -155,7 +155,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
         
-        let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents())
+        let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents(), networkingAPI: IntrinioAPI())
         navigationController?.pushViewController(screenerResultsVC, animated: true)
     }
     

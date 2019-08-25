@@ -30,16 +30,24 @@ final class IntrinioAPI {
     
     // Screening
     private let endpoint = "https://api.intrinio.com/securities/search?"
-    let numberOfResults = 10
+    private let numberOfResults = 10
     private let resultOrder = "&order_column=marketcap&order_direction=desc&primary_only=true"
     private let apiKey = "&api_key=OjNiMzRkZmFlNDBkYjIzYTgyMTNhNjcyZGNlZmYzMjE1"
-    var currentPage = 1
     
-    func getScreenRequest(parameters: String, page: Int, completion: @escaping (Result<[ScreenResult],NetworkingError>) -> Void) {
-        guard let url = URL(string: endpoint + "conditions=name~gt~0,\(parameters)" + resultOrder + "&page_number=\(page)" + "&page_size=\(numberOfResults)" + apiKey) else { return }
+    enum OrderDirection: String {
+        case desc
+        case asc
+    }
+    
+    private let sortBy = "&order_column=marketcap"
+    var sortDirection: OrderDirection = .desc
+    var screenPage = 1
+    
+    func newGetScreenRequest(parameters: String, completion: @escaping (Result<[ScreenResult],NetworkingError>) -> Void) {
+        guard let url = URL(string: endpoint + "conditions=name~gt~0,\(parameters)" + sortBy + "&order_direction=\(sortDirection.rawValue)&primary_only=true" + "&page_number=\(screenPage)" + "&page_size=\(numberOfResults)" + apiKey) else { return }
         let decoder = JSONDecoder()
         let session = URLSession.shared
-        let task = session.dataTask(with: url) { (data, _, error) in
+        let task = session.dataTask(with: url) { (data, resp, error) in
             if error != nil {
                 completion(.failure(.failedNetworking))
             }
@@ -52,6 +60,7 @@ final class IntrinioAPI {
                 completion(.failure(.parsingError))
             }
         }
+        screenPage += 1
         task.resume()
     }
     

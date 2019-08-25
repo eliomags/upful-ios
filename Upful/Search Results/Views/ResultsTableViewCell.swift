@@ -53,8 +53,7 @@ class ResultsTableViewCell: UITableViewCell {
     }()
     
     lazy var companyFundamentalsStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [marketcapStackView, pricetoearningsStackView,
-                                                ebitgrowthStackView, dividendyieldStackView])
+        let sv = UIStackView(arrangedSubviews: [marketcapStackView, pricetoearningsStackView])
         sv.distribution = .fillEqually
         sv.axis = .vertical
         sv.spacing = 3

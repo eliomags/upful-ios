@@ -12,10 +12,15 @@ class StockDetailsViewController: UIViewController {
     
     // MARK: - Dependencies
     
-    // let ticker: String
+     let ticker: String
     
     
+    init(ticker: String) {
+        self.ticker = ticker
+        super.init(nibName: nil, bundle: nil)
+    }
     
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,12 +33,14 @@ class StockDetailsViewController: UIViewController {
     }
     
     
-    
-    
-    
     fileprivate func setupNavBar() {
+        navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.title = "Screen Results"
     }
     
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 

@@ -169,7 +169,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     // MARK:- Navigation
     
     func navigateToScreenerResults(searchParameters: [String]) {
-        let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters)
+        let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters, networkingAPI: IntrinioAPI())
         
         self.navigationController?.pushViewController(searchResultVC, animated: true)
     }

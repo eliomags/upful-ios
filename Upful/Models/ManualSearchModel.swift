@@ -64,7 +64,7 @@ extension SearchCriteria {
         case .fcffgrowth: return .percentage
         case .ebitdagrowth: return .percentage
         case .ebitgrowth: return .percentage
-        case .divpayoutratio: return .ratio
+        case .divpayoutratio: return .percentage
         case .dividendyield: return .percentage
         case .revenuegrowth: return .percentage
         case .grossmargin: return .percentage
