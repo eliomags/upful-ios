@@ -9,15 +9,40 @@
 import UIKit
 
 protocol ManualSearchDelegate: class {
-    func addSearchCriteria(criteria: ManualScreener)
     func addSearchParameter(parameterItem: ParameterItem, indexPath: IndexPath)
 }
 
-class SearchCriteriaTableViewController: UITableViewController {
+class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDelegate {
+   
+    private enum ReuseID {
+        static let criteriaCell = "criteriaCell"
+    }
     
-    weak var delegate: ManualSearchDelegate?
+    // MARK: - Data
     
-    var manualSearchCriteriaItems: [[ManualScreener]] = []
+    private var manualSearchCriteriaItems: [[ManualScreenItem]] = []
+    
+    private var manualScreenItems: [ManualScreenItem] = []
+    
+    
+    // MARK: - Views
+    
+    class CustomRoundButton: UIButton {
+        override var intrinsicContentSize: CGSize {
+            return CGSize(width: 55, height: 55)
+        }
+    }
+    
+    lazy var addCriteriaButton: CustomRoundButton = {
+        let b = CustomRoundButton(type: .system)
+        b.setBackgroundImage(#imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
+        b.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+        b.layer.cornerRadius = b.intrinsicContentSize.height / 2
+        b.layer.masksToBounds = true
+        b.addTarget(self, action: #selector(handleNavigation), for: .touchUpInside)
+        b.setupShadow(intensity: .medium, color: .black)
+        return b
+    }()
     
     
     // MARK:- Initializer Methods
@@ -30,25 +55,91 @@ class SearchCriteriaTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundColor
-        configureNavBar()
+        setupTableView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.parent?.view.addSubview(addCriteriaButton)
+        addCriteriaButton.anchor(
+            top: nil, leading: nil, bottom: self.parent?.view.layoutMarginsGuide.bottomAnchor, trailing: self.parent?.view.trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 70, right: 25))
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        addCriteriaButton.removeFromSuperview()
+    }
+    
+    // MARK: - View Setup
+    
+    private func setupTableView() {
+        tableView.allowsMultipleSelection = true
+        tableView.allowsMultipleSelectionDuringEditing = true
+        tableView.register(ManualSearchCriteriaCell.self, forCellReuseIdentifier: ReuseID.criteriaCell)
+        tableView.tableHeaderView = UIView()
+        tableView.sectionHeaderHeight = 35
+    }
+    
+    
+    // MARK: - Delegate Method
+    
+    func remove(indexPath: IndexPath) {
+        for section in 0...manualSearchCriteriaItems.count - 1 {
+            for row in 0..<manualSearchCriteriaItems[section].count {
+                if manualSearchCriteriaItems[section][row].criteria == manualScreenItems[indexPath.row].criteria {
+                    tableView.deselectRow(at: IndexPath(row: row, section: section), animated: true)
+                }
+            }
+        }
+        manualScreenItems.remove(at: indexPath.row)
+    }
+    
+    
+    // MARK: - Actions
+    
+    @objc fileprivate func handleNavigation(_ sender: UIButton) {
+        if manualScreenItems.isEmpty {
+            presentAlert()
+            return
+        }
+        UIView.animate(withDuration: 0.1, animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }) { (_) in
+            UIView.animate(withDuration: 0.1, animations: {
+                sender.transform = .identity
+            }, completion: { (_) in
+                let manualSearchVC = ManualSearchViewController(manualScreenItems: self.manualScreenItems,
+                                                                analyticsLogger: AnalyticsLogger())
+                manualSearchVC.delegate = self
+                self.navigationController?.pushViewController(manualSearchVC, animated: true)
+            })
+        }
+    }
+    
+    fileprivate func presentAlert() {
+        let alert = UIAlertController(title: "", message: "Please add at least one criteria to continue.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     
     // MARK:- Data Setup
     
     fileprivate func initializeDisplayData() {
-        var valuation: [ManualScreener] = []
-        var financial: [ManualScreener] = []
-        var performance: [ManualScreener] = []
+        var valuation: [ManualScreenItem] = []
+        var financial: [ManualScreenItem] = []
+        var performance: [ManualScreenItem] = []
         
         SearchCriteria.allCases.forEach { (criteria) in
             switch criteria.classification {
             case .valuation:
-                valuation.append(ManualScreener(criteria: criteria, parameter: .none, value: nil))
+                valuation.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
             case .financial:
-                financial.append(ManualScreener(criteria: criteria, parameter: .none, value: nil))
+                financial.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
             case .performance:
-                performance.append(ManualScreener(criteria: criteria, parameter: .none, value: nil))
+                performance.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
             case .other:
                 break
             }
@@ -58,15 +149,8 @@ class SearchCriteriaTableViewController: UITableViewController {
         manualSearchCriteriaItems.append(performance)
     }
     
-    // MARK: - View Setup
-    
-    fileprivate func configureNavBar() {
-        navigationItem.title = "Select Criteria"
-        navigationController?.navigationBar.prefersLargeTitles = true
-    }
 
-    
-    // MARK: - Table view data source
+    // MARK: - Table View Data Source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return manualSearchCriteriaItems.count
@@ -77,14 +161,50 @@ class SearchCriteriaTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        cell.textLabel?.text = manualSearchCriteriaItems[indexPath.section][indexPath.row].criteria.explicit
-        return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.criteriaCell, for: indexPath) as? ManualSearchCriteriaCell
+        let manualScreenItem = manualSearchCriteriaItems[indexPath.section][indexPath.row]
+        cell?.textLabel?.text = manualScreenItem.criteria.explicit
+        
+        return cell ?? UITableViewCell()
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.addSearchCriteria(criteria: manualSearchCriteriaItems[indexPath.section][indexPath.row])
-        navigationController?.popViewController(animated: true)
+        let manualScreenItem = manualSearchCriteriaItems[indexPath.section][indexPath.row]
+        manualScreenItems.append(manualScreenItem)
+    }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let manualScreenItem = manualSearchCriteriaItems[indexPath.section][indexPath.row]
+        manualScreenItems = manualScreenItems.filter{( $0.criteria != manualScreenItem.criteria)}
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = .white
+        let header = SectionHeaderLabel(padding: 16)
+        let labelText = [
+            "VALUATION METRICS",
+            "FINANCIAL METRICS",
+            "GROWTH METRICS",
+        ]
+        header.text = labelText[section]
+        
+        backgroundView.addSubview(header)
+        header.fillSuperview()
+
+        return backgroundView
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 2 {
+            return 50
+        } else {
+            return 15
+        }
     }
     
     
@@ -93,3 +213,20 @@ class SearchCriteriaTableViewController: UITableViewController {
     }
 }
 
+class ManualSearchCriteriaCell: UITableViewCell {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        self.accessoryType = selected ? .checkmark : .none
+        self.textLabel?.font = selected ? .details2 : .details1
+    }
+}

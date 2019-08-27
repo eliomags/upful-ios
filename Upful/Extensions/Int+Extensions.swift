@@ -19,8 +19,8 @@ extension Int {
         typealias  Abbreviation = (threshold:Double, divisor:Double, suffix:String)
         let abbreviations:[Abbreviation] = [(0, 1, ""),
                                             (1000.0, 1000.0, "K"),
-                                            (100_000.0, 1_000_000.0, "M"),
-                                            (100_000_000.0, 1_000_000_000.0, "B"),
+                                            (1_000_000.0, 1_000_000.0, "M"),
+                                            (1_000_000_000.0, 1_000_000_000.0, "B"),
                                             (1_000_000_000_000.0, 1_000_000_000_000.0, "T")]
         
         let startValue = Double( (abs(self)))

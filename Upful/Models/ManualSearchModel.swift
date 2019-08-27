@@ -13,7 +13,7 @@ struct ParameterItem {
     let value: Double
 }
 
-struct ManualScreener {
+struct ManualScreenItem {
     let criteria: SearchCriteria
     var parameter: SearchParameter
     var value: Double?

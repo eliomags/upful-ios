@@ -37,7 +37,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         return tv
     }()
     
-    let manualTableVC = ManualSearchViewController()
+    let manualTableVC = SearchCriteriaTableViewController(style: .grouped)
     
     lazy var bannerView: GADBannerView = {
         let bannerView = GADBannerView(adSize: kGADAdSizeBanner)
@@ -130,10 +130,11 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     }
     
     fileprivate func configureNavBar() {
-        navigationItem.title = "Home"
+        navigationItem.title = "Upful"
         navigationController!.navigationBar.tintColor = .black
         navigationController!.navigationBar.isTranslucent = false
         navigationController?.navigationBar.backgroundColor = UIColor.white
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     

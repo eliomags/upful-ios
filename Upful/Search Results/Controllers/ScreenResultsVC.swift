@@ -103,6 +103,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
         fetchTableData(parameters: searchParameters, fetchType: .initial)
         view.addSubview(feedTableView)
         feedTableView.fillSuperview()
+        isLoading = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -161,7 +162,6 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
     }
     
     private func fetchTableData(parameters: [String], fetchType: FetchType) {
-        isLoading = true
         var searchKeys = ""
         parameters.forEach { (parameter) in
             searchKeys += "\(parameter),"

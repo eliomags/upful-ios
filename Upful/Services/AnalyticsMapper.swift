@@ -10,8 +10,8 @@ import Foundation
 
 
 class AnalyticsLogger {
-    let mixpanelAnalytics = MixPanelAnalytics()
-    let googleAnalytics = FirebaseAnayltics()
+    private let mixpanelAnalytics = MixPanelAnalytics()
+    private let googleAnalytics = FirebaseAnayltics()
     
     func reportEvents(event: AnalyticsEventName) {
         let analyticsAPIs: [AnalyticsTracker] = [mixpanelAnalytics, googleAnalytics]

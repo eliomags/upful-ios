@@ -382,8 +382,8 @@
 			isa = PBXGroup;
 			children = (
 				3D90ADB62301994900C52455 /* Views */,
-				3D917B5122FE0542001D5E39 /* ManualSearchViewController.swift */,
 				3D917B5922FE24C4001D5E39 /* SearchCriteriaTableViewController.swift */,
+				3D917B5122FE0542001D5E39 /* ManualSearchViewController.swift */,
 				3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */,
 			);
 			path = "Manual Search Flow";

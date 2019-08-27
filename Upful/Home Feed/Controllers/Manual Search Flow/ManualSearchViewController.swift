@@ -8,13 +8,25 @@
 
 import UIKit
 
+protocol SearchCriteriaDelegate: class {
+    func remove(indexPath: IndexPath)
+}
+
 class ManualSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ManualSearchDelegate {
     
-    var manualScreenItems: [ManualScreener] = [] {
+    // MARK: - Dependencies
+    
+    let analyticsLogger: AnalyticsLogger
+    
+    var manualScreenItems: [ManualScreenItem] {
         didSet {
-            manualSearchSearchTableView.reloadData()
+            if manualScreenItems.isEmpty {
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
+    
+    weak var delegate: SearchCriteriaDelegate?
 
     
     // MARK:- Views
@@ -24,26 +36,19 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         return v
     }()
     
-    class CustomRoundButton: UIButton {
-        override var intrinsicContentSize: CGSize {
-            return CGSize(width: 55, height: 55)
-        }
-    }
-    
-    let addCriteriaButton: CustomRoundButton = {
-        let b = CustomRoundButton(type: .system)
-        b.setBackgroundImage(#imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
-        b.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
-        b.layer.cornerRadius = b.intrinsicContentSize.height / 2
-        b.layer.masksToBounds = true
-        b.addTarget(self, action: #selector(handleAddCriteria), for: .touchUpInside)
-        b.setupShadow(intensity: .medium, color: .black)
-        return b
-    }()
-    
     class CustomButton: UIButton {
         override var intrinsicContentSize: CGSize {
             return CGSize(width: 0, height: 40)
+        }
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            layer.cornerRadius = intrinsicContentSize.height / 2
+            layer.masksToBounds = true
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
     }
     
@@ -74,74 +79,45 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         let v = UIView()
         v.backgroundColor = .clear
         v.addSubview(searchButton)
-        searchButton.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
-                            padding: .init(top: 48, left: 16, bottom: 8, right: 10))
+        searchButton.anchor(top: nil, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
+                            padding: .init(top: 0, left: 16, bottom: 50, right: 16))
         return v
     }()
     
     
     // MARK:- Initializer Methods
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    init(manualScreenItems: [ManualScreenItem], analyticsLogger: AnalyticsLogger) {
+        self.manualScreenItems = manualScreenItems
+        self.analyticsLogger = analyticsLogger
         super.init(nibName: nil, bundle: nil)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureNavBar()
         view.backgroundColor = .backgroundColor
         view.addSubview(manualSearchSearchTableView)
         manualSearchSearchTableView.fillSuperview()
-        
-        view.addSubview(addCriteriaButton)
-        addCriteriaButton.anchor(
-            top: nil, leading: nil, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 30, right: 22))
-        
-        animateButton()
+        view.addSubview(searchButton)
+        searchButton.anchor(top: nil, leading: view.layoutMarginsGuide.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.layoutMarginsGuide.trailingAnchor,
+                            padding: .init(top: 0, left: 16, bottom: 50, right: 16))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     
-    // MARK:- Views
+    // MARK: - View Set up
     
-    fileprivate func animateButton() {
-        // Check user defaults if person has completed
-        // If hasNavigatedToManualScreen == false
-        UIView.animate(withDuration: 0.5, animations: {
-            self.addCriteriaButton.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-        }) { (_) in
-            UIView.animate(withDuration: 0.5, animations: {
-                self.addCriteriaButton.transform = .identity
-            }, completion: { (_) in
-                UIView.animate(withDuration: 0.5, animations: {
-                    self.addCriteriaButton.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-                }) { (_) in
-                    UIView.animate(withDuration: 0.5, animations: {
-                        self.addCriteriaButton.transform = .identity
-                    })
-                }
-            })
-        }
-        // Person has completed so add to user defaults
-        // hasNavigatedToManualScreen, true
+    fileprivate func configureNavBar() {
+        navigationItem.title = "Upful"
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 
-
-    // MARK:- Actions
-    
-    @objc fileprivate func handleAddCriteria(_ sender: UIButton) {
-        UIView.animate(withDuration: 0.1, animations: {
-            sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-        }) { (_) in
-            UIView.animate(withDuration: 0.1, animations: {
-                sender.transform = .identity
-            }, completion: { (_) in
-                let searchCriteriaVC = SearchCriteriaTableViewController(style: .grouped)
-                searchCriteriaVC.delegate = self
-                
-                self.navigationController?.pushViewController(searchCriteriaVC, animated: true)
-            })
-        }
-    }
+    // MARK: - Actions
     
     @objc fileprivate func handleSearch(_ sender: UIButton) {
         if manualScreenItems.isEmpty {
@@ -154,7 +130,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 return
             }
         }
-        
+        analyticsLogger.reportEvents(event: .screenForStocks(screenType: .manual))
         let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents(), networkingAPI: IntrinioAPI())
         navigationController?.pushViewController(screenerResultsVC, animated: true)
     }
@@ -176,13 +152,14 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
 
     // MARK:- Delegate Methods
     
-    func addSearchCriteria(criteria: ManualScreener) {
+    func addSearchCriteria(criteria: ManualScreenItem) {
         manualScreenItems.append(criteria)
     }
     
     func addSearchParameter(parameterItem: ParameterItem, indexPath: IndexPath) {
         manualScreenItems[indexPath.item].parameter = parameterItem.parameter
         manualScreenItems[indexPath.item].value = parameterItem.value
+        manualSearchSearchTableView.reloadData()
     }
     
     
@@ -197,7 +174,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1, reuseIdentifier: nil)
         cell.selectionStyle = .none
         cell.textLabel?.text = manualScreenItems[indexPath.item].criteria.explicit
-        
+        cell.textLabel?.font = .details1
+        cell.detailTextLabel?.font = .details2
         if manualScreenItems[indexPath.item].parameter != .none {
             if manualScreenItems[indexPath.item].criteria.parameterType == .percentage {
                 cell.detailTextLabel?.text = manualScreenItems[indexPath.item].parameter.explicit + " " + "\(manualScreenItems[indexPath.item].value!.convertToPercent())%"
@@ -215,21 +193,21 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let searchParamsVC = ManualSearchParametersTableViewController(selectedIndexPath: indexPath, screenerItem: manualScreenItems[indexPath.item])
         searchParamsVC.delegate = self
-
         self.navigationController?.pushViewController(searchParamsVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .normal, title: "Delete") { (action, indexPath) in
             self.manualScreenItems.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            self.manualSearchSearchTableView.reloadData()
+            self.delegate?.remove(indexPath: indexPath)
         }
-        delete.backgroundColor = .lightGray
         
         return [delete]
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
         return header
     }
     
@@ -241,17 +219,13 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 {
-            return footer
-        } else {
-            return UIView()
-        }
-    }
+//    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+//        return footer
+//    }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 0 {
-            return UITableView.automaticDimension
+            return 170
         } else {
             return 0
         }

@@ -10,11 +10,11 @@ import UIKit
 
 
 class ManualSearchParametersTableViewController: UITableViewController {
-    weak var delegate: ManualSearchDelegate?
     
     // MARK:- Dependencies
     
-    let screenerItem: ManualScreener
+    let criteria: String
+    let screenerItem: ManualScreenItem
     let selectedIndexPath: IndexPath
     
     var manualSearchParameterItems: [ParameterItem] = [] {
@@ -23,11 +23,14 @@ class ManualSearchParametersTableViewController: UITableViewController {
         }
     }
     
+    weak var delegate: ManualSearchDelegate?
+
     // MARK:- Initializer Methods
     
-    init(selectedIndexPath: IndexPath, screenerItem: ManualScreener) {
-        self.selectedIndexPath = selectedIndexPath
+    init(selectedIndexPath: IndexPath, screenerItem: ManualScreenItem) {
         self.screenerItem = screenerItem
+        self.criteria = screenerItem.criteria.explicit
+        self.selectedIndexPath = selectedIndexPath
         super.init(style: .grouped)
     }
     
@@ -42,7 +45,6 @@ class ManualSearchParametersTableViewController: UITableViewController {
     
     fileprivate func initializeData() {
         manualSearchParameterItems.append(ParameterItem(parameter: .none, value: 0))
-        
         switch screenerItem.criteria.parameterType {
         case .ratio:
             configureRatioData()
@@ -76,8 +78,9 @@ class ManualSearchParametersTableViewController: UITableViewController {
     // MARK: - View Setup
     
     fileprivate func configureNavBar() {
-        navigationItem.title = "Select Parameter"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = criteria
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 
     
@@ -94,6 +97,7 @@ class ManualSearchParametersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         let displayData = manualSearchParameterItems[indexPath.item]
+        cell.textLabel?.font = .details1
         
         if displayData.parameter != .none {
             if screenerItem.criteria.parameterType == .percentage {
@@ -111,9 +115,17 @@ class ManualSearchParametersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedParameterItem = manualSearchParameterItems[indexPath.item]
         delegate?.addSearchParameter(parameterItem: selectedParameterItem, indexPath: selectedIndexPath)
-        
         self.navigationController?.popViewController(animated: true)
     }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0
+    }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
