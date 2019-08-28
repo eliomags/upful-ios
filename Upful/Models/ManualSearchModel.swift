@@ -31,7 +31,6 @@ enum CriteriaClassification: Int {
 }
 
 extension SearchCriteria {
-    
     var explicit: String {
         switch self {
         case .name: return "Name"

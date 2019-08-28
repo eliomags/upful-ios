@@ -26,6 +26,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         tv.showsVerticalScrollIndicator = false
         tv.separatorStyle = .none
         tv.backgroundColor = UIColor.clear
+        tv.tableHeaderView = UIView()
         return tv
     }()
     
@@ -58,8 +59,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     private func setupViews() {
         view.addSubview(detailsTableView)
-        detailsTableView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.trailingAnchor,
-                                padding: .init(top: 0, left: 5, bottom: 0, right: 5))
+        detailsTableView.anchor(top: view.layoutMarginsGuide.topAnchor,leading: view.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.trailingAnchor,
+                                padding: .init(top: 0, left: 8, bottom: 0, right: 8))
     }
     
     
@@ -67,10 +68,9 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     fileprivate func setupNavBar() {
         navigationController?.navigationBar.prefersLargeTitles = false
-        self.title = ticker
+        self.title = "\(ticker)"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
-    
 
 }
 
@@ -85,10 +85,17 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //        let cell = tableView.dequeueReusableCell(withIdentifier: "", for: indexPath)
+        // Need to deque all these damn cells
         switch indexPath.section {
         case 0:
             let cell = GraphTableViewCell(style: .default, reuseIdentifier: nil)
             cell.chartView.delegate = self
+            return cell
+        case 1:
+            let cell = DetailsCalculationCell(style: .default, reuseIdentifier: nil)
+            return cell
+        case 2:
+            let cell = CompanyNewsCell(style: .default, reuseIdentifier: nil)
             return cell
         default:
             return UITableViewCell()
@@ -96,16 +103,19 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.item {
-        case 0 :
+        switch indexPath {
+        case IndexPath(row: 0, section: 0) :
             return (UIScreen.main.bounds.height / 2) - 30
+        case IndexPath(row: 0, section: 2):
+//            return (UIScreen.main.bounds.height / 2) - 30
+            return tableView.contentHeight()
         default: return UITableView.automaticDimension
         }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = SectionHeaderLabel(padding: 16)
-        header.backgroundColor = .clear
+        let header = FormatedSectionHeaderLabel(padding: 16)
+        header.backgroundColor = .white
         let headerText = ["FINANCIALS", "CALCULATIONS", "NEWS"]
         switch section {
         case 0: header.text = headerText[0]
@@ -122,5 +132,21 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 2 {
+            return 70
+        } else {
+            return 14
+        }
+    }
+
+}
+
+private class FormatedSectionHeaderLabel: SectionHeaderLabel {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        roundCorners(corners: [.topRight, .topLeft], radius: 16)
     }
 }

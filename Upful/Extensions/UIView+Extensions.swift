@@ -8,18 +8,7 @@
 
 import UIKit
 
-extension UIView {
-    func setupGradientBackground(colorOne: UIColor, colorTwo: UIColor) {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = bounds
-        gradientLayer.colors = [colorOne.cgColor, colorTwo.cgColor]
-        gradientLayer.locations = [0.0, 1.0]
-        gradientLayer.startPoint = CGPoint(x: 1.0, y: 1.0)
-        gradientLayer.endPoint = CGPoint(x: 0.0, y: 0.0)
-        
-        layer.insertSublayer(gradientLayer, at: 0)
-    }
-}
+// MARK: - Background Shadow
 
 enum ShadowIntensity {
     case light, medium, intense
@@ -39,13 +28,13 @@ extension UIView {
         }
     }
 }
+// MARK: - Autolayout Guide
 
 struct AnchoredConstraints {
     var top, leading, bottom, trailing, width, height: NSLayoutConstraint?
 }
 
 extension UIView {
-    
     @discardableResult
     func anchor(top: NSLayoutYAxisAnchor?, leading: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, trailing: NSLayoutXAxisAnchor?, padding: UIEdgeInsets = .zero, size: CGSize = .zero) -> AnchoredConstraints {
         
@@ -121,8 +110,16 @@ extension UIView {
     
 }
 
+// MARK: - Rounded Corners
 
-
+extension UIView {
+    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        layer.mask = mask
+    }
+}
 
 
 

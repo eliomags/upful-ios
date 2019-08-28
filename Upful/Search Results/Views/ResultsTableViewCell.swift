@@ -39,18 +39,7 @@ class ResultsTableViewCell: UITableViewCell {
         sv.valueLabel.text = "-"
         return sv
     }()
-    
-    let dividendyieldStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.dividendyield.explicit)
-        sv.valueLabel.text = "-%"
-        return sv
-    }()
-    
-    let ebitgrowthStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.ebitgrowth.explicit)
-        sv.valueLabel.text = "-%"
-        return sv
-    }()
+
     
     lazy var companyFundamentalsStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [marketcapStackView, pricetoearningsStackView])

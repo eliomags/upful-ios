@@ -19,7 +19,7 @@ private struct Pallete {
         return #colorLiteral(red: 0.1770295799, green: 0.6907966137, blue: 0.4686983228, alpha: 1)
     }
     static var red: UIColor {
-        return #colorLiteral(red: 1, green: 0.1747880578, blue: 0.2384961247, alpha: 1)
+        return #colorLiteral(red: 1, green: 0.1438041242, blue: 0.133959256, alpha: 1)
     }
     static var lightGray: UIColor {
         return .lightGray

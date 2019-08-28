@@ -115,7 +115,7 @@ class ChartView: BarChartView {
         chartData.groupBars(fromX: Double(startYear), groupSpace: groupSpace, barSpace: barSpace)
         
         self.data = chartData
-        self.animate(xAxisDuration: 1, yAxisDuration: 1, easingOption: .linear)
+        self.animate(xAxisDuration: 0.75, yAxisDuration: 0.75, easingOption: .linear)
     }
     
     required init?(coder aDecoder: NSCoder) {

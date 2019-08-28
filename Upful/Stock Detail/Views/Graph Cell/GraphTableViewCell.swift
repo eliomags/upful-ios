@@ -16,12 +16,17 @@ class GraphTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = .clear
+        backgroundColor = .white
         addSubview(chartView)
         chartView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
                          padding: .init(top: 15, left: 15, bottom: 15, right: 15))
+        contentView.layer.masksToBounds = true
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        roundCorners(corners: [.bottomLeft, .bottomRight], radius: 16)
+    }
     
     
     required init?(coder aDecoder: NSCoder) {

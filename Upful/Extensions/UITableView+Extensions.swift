@@ -8,6 +8,21 @@
 
 import UIKit
 
+
+// MARK: - Get TableView Content Height for non scrollable display view
+
+extension UITableView {
+    func contentHeight() -> CGFloat {
+        var height = CGFloat(0)
+        for sectionIndex in 0..<numberOfSections {
+            height += rect(forSection: sectionIndex).size.height
+        }
+        return height
+    }
+}
+
+// MARK: - TableView state for data
+
 enum TableViewState {
     case errorState
     case emptyState
