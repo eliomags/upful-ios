@@ -24,6 +24,11 @@
 		3D2F96412312B036003811AB /* MixpanelAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96402312B036003811AB /* MixpanelAnalytics.swift */; };
 		3D2F96432312D44B003811AB /* GoogleAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96422312D44B003811AB /* GoogleAnalytics.swift */; };
 		3D2F96452312D4AF003811AB /* AnalyticsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96442312D4AF003811AB /* AnalyticsMapper.swift */; };
+		3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96462315C072003811AB /* CustomLargeButton.swift */; };
+		3D2F964B2315CD34003811AB /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F964A2315CD34003811AB /* BarChartView.swift */; };
+		3D2F964D23169CC7003811AB /* GraphTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F964C23169CC7003811AB /* GraphTableViewCell.swift */; };
+		3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F965323169D31003811AB /* DetailsHeaderView.swift */; };
+		3D2F965623169E9C003811AB /* DetailsCalculationsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F965523169E9C003811AB /* DetailsCalculationsCell.swift */; };
 		3D42BE4123098BD200806AFF /* ResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE4023098BD200806AFF /* ResultsTableViewCell.swift */; };
 		3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE442309A55900806AFF /* PresetScreener.swift */; };
 		3D42BE492309A59800806AFF /* Screener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE482309A59800806AFF /* Screener.swift */; };
@@ -86,6 +91,11 @@
 		3D2F96402312B036003811AB /* MixpanelAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixpanelAnalytics.swift; sourceTree = "<group>"; };
 		3D2F96422312D44B003811AB /* GoogleAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAnalytics.swift; sourceTree = "<group>"; };
 		3D2F96442312D4AF003811AB /* AnalyticsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsMapper.swift; sourceTree = "<group>"; };
+		3D2F96462315C072003811AB /* CustomLargeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLargeButton.swift; sourceTree = "<group>"; };
+		3D2F964A2315CD34003811AB /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
+		3D2F964C23169CC7003811AB /* GraphTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphTableViewCell.swift; sourceTree = "<group>"; };
+		3D2F965323169D31003811AB /* DetailsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsHeaderView.swift; sourceTree = "<group>"; };
+		3D2F965523169E9C003811AB /* DetailsCalculationsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsCalculationsCell.swift; sourceTree = "<group>"; };
 		3D42BE4023098BD200806AFF /* ResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableViewCell.swift; sourceTree = "<group>"; };
 		3D42BE442309A55900806AFF /* PresetScreener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetScreener.swift; sourceTree = "<group>"; };
 		3D42BE482309A59800806AFF /* Screener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screener.swift; sourceTree = "<group>"; };
@@ -265,6 +275,7 @@
 			children = (
 				3D20FB6122FBC03F007836DD /* CustomHeaderLabel.swift */,
 				3D42BE4F230C421D00806AFF /* StockDetailsStackView.swift */,
+				3D2F96462315C072003811AB /* CustomLargeButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -272,7 +283,8 @@
 		3D2F963A230F490A003811AB /* Stock Detail */ = {
 			isa = PBXGroup;
 			children = (
-				3D2F963B230F4922003811AB /* StockDetailsViewController.swift */,
+				3D2F96482315CD18003811AB /* Views */,
+				3D2F96492315CD1B003811AB /* Controller */,
 			);
 			path = "Stock Detail";
 			sourceTree = "<group>";
@@ -284,6 +296,57 @@
 				3D2F96422312D44B003811AB /* GoogleAnalytics.swift */,
 			);
 			path = Analytics;
+			sourceTree = "<group>";
+		};
+		3D2F96482315CD18003811AB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3D2F965223169D24003811AB /* Header */,
+				3D2F964E23169CE2003811AB /* Graph Cell */,
+				3D2F964F23169CEB003811AB /* Calculations Cell */,
+				3D2F965023169CF5003811AB /* News Cell */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3D2F96492315CD1B003811AB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3D2F963B230F4922003811AB /* StockDetailsViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3D2F964E23169CE2003811AB /* Graph Cell */ = {
+			isa = PBXGroup;
+			children = (
+				3D2F964A2315CD34003811AB /* BarChartView.swift */,
+				3D2F964C23169CC7003811AB /* GraphTableViewCell.swift */,
+			);
+			path = "Graph Cell";
+			sourceTree = "<group>";
+		};
+		3D2F964F23169CEB003811AB /* Calculations Cell */ = {
+			isa = PBXGroup;
+			children = (
+				3D2F965523169E9C003811AB /* DetailsCalculationsCell.swift */,
+			);
+			path = "Calculations Cell";
+			sourceTree = "<group>";
+		};
+		3D2F965023169CF5003811AB /* News Cell */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "News Cell";
+			sourceTree = "<group>";
+		};
+		3D2F965223169D24003811AB /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				3D2F965323169D31003811AB /* DetailsHeaderView.swift */,
+			);
+			path = Header;
 			sourceTree = "<group>";
 		};
 		3D42BE3E23098BB400806AFF /* Controllers */ = {
@@ -577,16 +640,16 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/Mixpanel-swift/Mixpanel.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mixpanel.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -601,13 +664,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */,
 				3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */,
+				3D2F964D23169CC7003811AB /* GraphTableViewCell.swift in Sources */,
 				3D42BE4123098BD200806AFF /* ResultsTableViewCell.swift in Sources */,
 				3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */,
 				3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */,
 				3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
 				3D2F96412312B036003811AB /* MixpanelAnalytics.swift in Sources */,
+				3D2F964B2315CD34003811AB /* BarChartView.swift in Sources */,
 				3D20FB5A22FB49EC007836DD /* PopularCompanyCell.swift in Sources */,
 				3D917B5A22FE24C4001D5E39 /* SearchCriteriaTableViewController.swift in Sources */,
 				3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */,
@@ -618,6 +684,7 @@
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
 				3D20FB2B22FB1F08007836DD /* HomeFeedViewController.swift in Sources */,
 				3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */,
+				3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */,
 				3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */,
 				3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */,
 				3D2F963C230F4922003811AB /* StockDetailsViewController.swift in Sources */,
@@ -631,6 +698,7 @@
 				3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */,
 				3D90ADBA2301BE0F00C52455 /* Double+Extensions.swift in Sources */,
 				3D2F96452312D4AF003811AB /* AnalyticsMapper.swift in Sources */,
+				3D2F965623169E9C003811AB /* DetailsCalculationsCell.swift in Sources */,
 				3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
 			);

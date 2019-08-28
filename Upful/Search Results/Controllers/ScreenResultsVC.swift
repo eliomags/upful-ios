@@ -219,6 +219,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
         navigationController?.navigationBar.prefersLargeTitles = true
         let sortButton = UIBarButtonItem(customView: self.sortButton)
         navigationItem.rightBarButtonItem = sortButton
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     
@@ -293,7 +294,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let selectedCompany = searchResults[indexPath.item] as? ScreenResult {
-            self.navigationController?.pushViewController(StockDetailsViewController(ticker: selectedCompany.ticker ?? ""), animated: true)
+            self.navigationController?.pushViewController(StockDetailsViewController(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? ""), animated: true)
         }
     }
 }

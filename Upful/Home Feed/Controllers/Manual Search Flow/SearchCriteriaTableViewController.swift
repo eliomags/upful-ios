@@ -36,7 +36,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     lazy var addCriteriaButton: CustomRoundButton = {
         let b = CustomRoundButton(type: .system)
         b.setBackgroundImage(#imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
-        b.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+        b.backgroundColor = .appAccent
         b.layer.cornerRadius = b.intrinsicContentSize.height / 2
         b.layer.masksToBounds = true
         b.addTarget(self, action: #selector(handleNavigation), for: .touchUpInside)
@@ -180,7 +180,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let backgroundView = UIView()
-        backgroundView.backgroundColor = .white
+        backgroundView.backgroundColor = .clear
         let header = SectionHeaderLabel(padding: 16)
         let labelText = [
             "VALUATION METRICS",
@@ -193,6 +193,9 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         header.fillSuperview()
 
         return backgroundView
+    }
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 25
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

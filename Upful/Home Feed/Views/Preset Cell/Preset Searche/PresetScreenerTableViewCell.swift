@@ -10,6 +10,7 @@ import UIKit
 
 protocol HomeFeedNavigationDelegate: class {
     func navigateToScreenerResults(searchParameters: [String])
+    func navigateToDetails(popularCompany ticker: String, companyName: String)
 }
 
 class PresetScreenerTableViewCell: UITableViewCell {

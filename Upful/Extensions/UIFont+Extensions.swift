@@ -11,7 +11,7 @@ import UIKit
 extension UIFont {
     
     static var sectionHeader: UIFont {
-        return UIFont(name: "Helvetica-Bold", size: 14) ?? UIFont.systemFont(ofSize: 15, weight: .bold)
+        return UIFont(name: "Helvetica-Bold", size: 12) ?? UIFont.systemFont(ofSize: 15, weight: .bold)
     }
 
     static var viewHeader: UIFont {

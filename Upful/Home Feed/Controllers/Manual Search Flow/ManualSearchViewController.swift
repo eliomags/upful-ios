@@ -36,32 +36,11 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         return v
     }()
     
-    class CustomButton: UIButton {
-        override var intrinsicContentSize: CGSize {
-            return CGSize(width: 0, height: 40)
-        }
-        
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            layer.cornerRadius = intrinsicContentSize.height / 2
-            layer.masksToBounds = true
-        }
-        
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-    }
     
     lazy var searchButton: CustomButton = {
         let b = CustomButton(type: .system)
         b.setTitle("SEARCH", for: .normal)
-        b.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-        b.setTitleColor(.white, for: .normal)
-        b.backgroundColor = .negative
-        b.layer.masksToBounds = true
-        b.layer.cornerRadius = b.bounds.height / 2
         b.addTarget(self, action: #selector(handleSearch), for: .touchUpInside)
-        b.setupShadow(intensity: .light, color: .black)
         return b
     }()
     
@@ -203,7 +182,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             self.manualSearchSearchTableView.reloadData()
             self.delegate?.remove(indexPath: indexPath)
         }
-        
+        delete.backgroundColor = .negative
+
         return [delete]
     }
     

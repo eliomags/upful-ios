@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SDWebImage
 
 class PopularCompanyTableViewCell: UITableViewCell {
     private enum ReuseID: String {
@@ -15,6 +14,8 @@ class PopularCompanyTableViewCell: UITableViewCell {
     }
     
     let popularCompanies: [PopularCompany]
+    
+    weak var delegate: HomeFeedNavigationDelegate?
     
     var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -76,8 +77,8 @@ extension PopularCompanyTableViewCell: UICollectionViewDelegate, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        print("did tap cell: ", indexPath)
+        delegate?.navigateToDetails(popularCompany: popularCompanies[indexPath.item].header,
+                                    companyName: popularCompanies[indexPath.item].details ?? "")
     }
     
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
@@ -185,16 +186,8 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
     func configureLabels(company: PopularCompany) {
         tickerLabel.text = company.header
         companyNameLabel.text = company.details
-//        priceLabel.text = "$\(company.price ?? 100)"
         marketcapStackView.valueLabel.text = "$\(company.marketcap?.formatUsingAbbreviation() ?? " -")"
         peStackView.valueLabel.text = company.priceToEarnings?.twoDecimal() ?? " -"
-    }
-    
-    fileprivate func logoImage(urlText: String) {
-        guard let logoUrl = URL(string: urlText) else { return }
-        SDWebImageManager.shared.loadImage(with: logoUrl, options: .continueInBackground, progress: nil) { (image, _, _, _, _, _) in
-            self.companyLogo.image = image?.withRenderingMode(.alwaysOriginal)
-        }
     }
     
     

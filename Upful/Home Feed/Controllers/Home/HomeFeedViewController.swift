@@ -32,6 +32,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         tv.dataSource = self
         tv.backgroundColor = .backgroundColor
         tv.separatorStyle = .none
+        tv.showsVerticalScrollIndicator = false
         tv.tableFooterView = UIView()
         tv.tableHeaderView = UIView()
         return tv
@@ -185,6 +186,12 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters, networkingAPI: IntrinioAPI())
         self.navigationController?.pushViewController(searchResultVC, animated: true)
     }
+    
+    func navigateToDetails(popularCompany ticker: String, companyName: String) {
+        let detailsVC = StockDetailsViewController(ticker: ticker, companyName: companyName)
+        self.navigationController?.pushViewController(detailsVC, animated: true)
+    }
+    
 }
 
 extension HomeFeedViewController: UITableViewDataSource {
@@ -205,13 +212,12 @@ extension HomeFeedViewController: UITableViewDataSource {
         switch indexPath.section {
         case 0:
             let companyCell = PopularCompanyTableViewCell(popularCompanies: homeFeedItems[indexPath.section] as! [PopularCompany])
-        
+            companyCell.delegate = self
             return companyCell
         case 1,2,3:
             guard let screenerData = homeFeedItems[indexPath.section] as? [PresetScreener] else { return emptyCell }
             let screenerCell = PresetScreenerTableViewCell(searches: screenerData)
             screenerCell.delegate = self
-            
             return screenerCell
         default:
             return emptyCell
@@ -249,7 +255,7 @@ extension HomeFeedViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 35
+        return 20
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

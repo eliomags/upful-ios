@@ -8,8 +8,6 @@
 
 import UIKit
 
-
-
 class StockDetailStackView: UIStackView {
     private let descriptionLabel: UILabel = {
         let label = UILabel()

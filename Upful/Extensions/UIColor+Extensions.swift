@@ -30,6 +30,9 @@ private struct Pallete {
     static var darkBlue: UIColor {
         return #colorLiteral(red: 0.1420197487, green: 0.2013853192, blue: 0.3809607923, alpha: 1)
     }
+    static var yellow: UIColor {
+        return #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+    }
 }
 
 extension UIColor {
@@ -58,9 +61,9 @@ extension UIColor {
         return Pallete.lightGray
     }
     
-    
-    
-    
+    static var appAccent: UIColor {
+        return Pallete.yellow
+    }
 }
 
 
