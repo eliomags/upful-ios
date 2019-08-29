@@ -151,19 +151,28 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1, reuseIdentifier: nil)
+        let parameter = manualScreenItems[indexPath.item].parameter
+        let criteria = manualScreenItems[indexPath.item].criteria
+        let value = manualScreenItems[indexPath.item].value
+
+
         cell.selectionStyle = .none
-        cell.textLabel?.text = manualScreenItems[indexPath.item].criteria.explicit
+        cell.textLabel?.text = criteria.explicit
         cell.textLabel?.font = .details1
         cell.detailTextLabel?.font = .details2
-        if manualScreenItems[indexPath.item].parameter != .none {
-            if manualScreenItems[indexPath.item].criteria.parameterType == .percentage {
-                cell.detailTextLabel?.text = manualScreenItems[indexPath.item].parameter.explicit + " " + "\(manualScreenItems[indexPath.item].value!.convertToPercent())%"
+        
+        if parameter != .none {
+            if criteria.parameterType == .percentage {
+                cell.detailTextLabel?.text = parameter.explicit + " " + "\(value!.convertToPercent())%"
             }
             if manualScreenItems[indexPath.item].criteria.parameterType == .ratio {
-                cell.detailTextLabel?.text = manualScreenItems[indexPath.item].parameter.explicit + " " + String(Int(manualScreenItems[indexPath.item].value ?? 0))
+                cell.detailTextLabel?.text = parameter.explicit + " " + String(Int(value ?? 0))
+            }
+            if manualScreenItems[indexPath.item].criteria.parameterType == .number {
+                cell.detailTextLabel?.text = parameter.explicit + " " + Int(value ?? 0).formatUsingAbbreviation()
             }
         } else {
-            cell.detailTextLabel?.text = manualScreenItems[indexPath.item].parameter.explicit
+            cell.detailTextLabel?.text = parameter.explicit
         }
 
         return cell

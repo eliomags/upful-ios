@@ -43,18 +43,6 @@ class ManualSearchParametersTableViewController: UITableViewController {
     
     // MARK:- Data Initialization
     
-    fileprivate func initializeData() {
-        manualSearchParameterItems.append(ParameterItem(parameter: .none, value: 0))
-        switch screenerItem.criteria.parameterType {
-        case .ratio:
-            configureRatioData()
-        case .percentage:
-            configurePercentageData()
-        case .other:
-            break
-        }
-    }
-    
     fileprivate func configureRatioData() {
         [3.0, 5, 10, 15, 20, 25, 30, 40, 50, 60, 80, 100].forEach { (value) in
             SearchParameter.allCases.forEach { (param) in
@@ -72,6 +60,30 @@ class ManualSearchParametersTableViewController: UITableViewController {
                     manualSearchParameterItems.append(ParameterItem(parameter: param, value: value))
                 }
             }
+        }
+    }
+    
+    fileprivate func configureMarketCapData() {
+        [50_000_000_000.0, 10_000_000_000, 3_000_000_000,1_000_000_000, 500_000_000, 100_000_000].forEach { (value) in
+            SearchParameter.allCases.forEach({ (param) in
+                if param != .none {
+                    manualSearchParameterItems.append(ParameterItem(parameter: param, value: value))
+                }
+            })
+        }
+    }
+    
+    fileprivate func initializeData() {
+        manualSearchParameterItems.append(ParameterItem(parameter: .none, value: 0))
+        switch screenerItem.criteria.parameterType {
+        case .ratio:
+            configureRatioData()
+        case .percentage:
+            configurePercentageData()
+        case .number:
+            configureMarketCapData()
+        case .other:
+            break
         }
     }
     
@@ -105,6 +117,9 @@ class ManualSearchParametersTableViewController: UITableViewController {
             }
             if screenerItem.criteria.parameterType == .ratio {
                 cell.textLabel?.text = displayData.parameter.explicit + " " + String(Int(displayData.value))
+            }
+            if screenerItem.criteria.parameterType == .number {
+                cell.textLabel?.text = displayData.parameter.explicit + " " + Int(displayData.value).formatUsingAbbreviation()
             }
         } else {
             cell.textLabel?.text = displayData.parameter.explicit

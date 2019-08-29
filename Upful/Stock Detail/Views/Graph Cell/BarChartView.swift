@@ -32,7 +32,6 @@ class ChartView: BarChartView {
     
     let stubData = ChartViewModel.setupData()
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear

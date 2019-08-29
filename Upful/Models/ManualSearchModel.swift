@@ -20,7 +20,7 @@ struct ManualScreenItem {
 }
 
 enum ScreenerParameterType {
-    case ratio, percentage, other
+    case ratio, percentage, other, number
 }
 
 enum CriteriaClassification: Int {
@@ -56,7 +56,7 @@ extension SearchCriteria {
     var parameterType: ScreenerParameterType {
         switch self {
         case .name: return .other
-        case .marketcap: return .other
+        case .marketcap: return .number
         case .pricetoearnings: return .ratio
         case .evtoebit: return .ratio
         case .pricetobook: return .ratio
@@ -78,7 +78,7 @@ extension SearchCriteria {
     var classification: CriteriaClassification {
         switch self {
         case .name: return .other
-        case .marketcap: return .other
+        case .marketcap: return .valuation
         case .pricetoearnings: return .valuation
         case .evtoebit: return .valuation
         case .pricetobook: return .valuation
