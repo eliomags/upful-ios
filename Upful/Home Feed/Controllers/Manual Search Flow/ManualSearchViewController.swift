@@ -169,7 +169,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 cell.detailTextLabel?.text = parameter.explicit + " " + String(Int(value ?? 0))
             }
             if manualScreenItems[indexPath.item].criteria.parameterType == .number {
-                cell.detailTextLabel?.text = parameter.explicit + " " + Int(value ?? 0).formatUsingAbbreviation()
+                cell.detailTextLabel?.text = parameter.explicit + " $" + Int(value ?? 0).formatUsingAbbreviation()
             }
         } else {
             cell.detailTextLabel?.text = parameter.explicit

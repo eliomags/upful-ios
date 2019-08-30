@@ -18,7 +18,9 @@ enum SearchCriteria: String, CaseIterable {
     case pricetoearnings
     case evtoebit
     case pricetobook
-    case fcffgrowth
+    case bookvaluepershare
+    case evtofcff
+    case debttoequity
     case ebitdagrowth
     case ebitgrowth
     
@@ -34,6 +36,7 @@ enum SearchCriteria: String, CaseIterable {
     case ebitmargin
     case investedcapitalgrowth
     case epsgrowth
+    case fcffgrowth
     case pricetorevenue
     case revenueqoqgrowth
 }

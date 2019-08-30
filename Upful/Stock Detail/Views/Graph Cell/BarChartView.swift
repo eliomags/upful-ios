@@ -30,6 +30,7 @@ class ReusableChartView: UIView {
 
 class ChartView: BarChartView {
     
+    let chartViewModel = ChartViewModel()
     let stubData = ChartViewModel.setupData()
     
     override init(frame: CGRect) {
@@ -43,7 +44,8 @@ class ChartView: BarChartView {
 
     
     private func setupView() {
-        chartDescription?.text = "Revenue vs. Earnings"
+//        chartDescription?.text = "Revenue vs. Earnings"
+        chartDescription?.text = ""
         doubleTapToZoomEnabled = false
         dragEnabled = false
         pinchZoomEnabled = false
@@ -66,6 +68,7 @@ class ChartView: BarChartView {
     private func setupYAxis() {
         leftAxis.spaceTop = 0.35
         leftAxis.axisMinimum = 0
+        leftAxis.valueFormatter = chartViewModel
         leftAxis.drawGridLinesEnabled = false
         rightAxis.drawGridLinesEnabled = false
         rightAxis.enabled = false
@@ -98,6 +101,9 @@ class ChartView: BarChartView {
         chartDataSet.colors = [UIColor.positive]
         chartDataSet1.colors = [UIColor.appAccent]
         
+        chartDataSet.valueFormatter = chartViewModel
+        chartDataSet1.valueFormatter = chartViewModel
+        
         let chartData = BarChartData(dataSets: dataSets)
         
         let groupSpace = 0.3
@@ -122,11 +128,21 @@ class ChartView: BarChartView {
     }
 }
 
-struct ChartViewModel {
+class ChartViewModel: IAxisValueFormatter, IValueFormatter {
+    func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
+        let formattedValue = Int(value).formatUsingAbbreviation()
+        return formattedValue
+    }
+    
+    func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+        let formattedValue = Int(value).formatUsingAbbreviation()
+        return formattedValue
+    }
+    
     static func setupData() -> [DetailsData] {
         let one = DetailsData(year: "2015", revenue: 5145784, earnings: 1005730)
         let two = DetailsData(year: "2016", revenue: 3357453, earnings: 3745693)
-        let three = DetailsData(year: "2017", revenue: 5335301, earnings: -20030)
+        let three = DetailsData(year: "2017", revenue: 5335301, earnings: 2003230)
         let four = DetailsData(year: "2018", revenue: 5127344, earnings: 1637662)
 
         return [one, two, three, four]

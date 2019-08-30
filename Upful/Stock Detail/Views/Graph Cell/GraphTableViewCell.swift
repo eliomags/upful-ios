@@ -25,7 +25,6 @@ class GraphTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        roundCorners(corners: [.bottomLeft, .bottomRight], radius: 16)
     }
     
     

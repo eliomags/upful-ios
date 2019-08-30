@@ -8,86 +8,22 @@
 
 import UIKit
 
-fileprivate class RowStackView: UIStackView {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        axis = .horizontal
-        spacing = 16
-        distribution = .fillEqually
-        alignment = .leading
-    }
-    
-    required init(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-
 class DetailsCalculationCell: UITableViewCell {
+    
     // Valuation
-    let marketcapStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.marketcap.explicit)
-        sv.valueLabel.text = "$ -"
-        return sv
-    }()
-    
-    let pricetoearningsStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.pricetoearnings.explicit)
-        sv.valueLabel.text = "-"
-        return sv
-    }()
-    
-    fileprivate lazy var valuationSV: RowStackView = {
-        let sv = RowStackView(arrangedSubviews: [marketcapStackView, pricetoearningsStackView])
-        return sv
-    }()
-    
-    // Financial
-    let dividendyieldStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.dividendyield.explicit)
-        sv.valueLabel.text = "-%"
-        return sv
-    }()
-    
-    let payoutRationStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.divpayoutratio.explicit)
-        sv.valueLabel.text = "-%"
-        return sv
-    }()
-    
-    fileprivate lazy var dividendSV: RowStackView = {
-        let sv = RowStackView(arrangedSubviews: [dividendyieldStackView, payoutRationStackView])
-        return sv
-    }()
-    
-    // Growth
-    let ebitgrowthStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.ebitgrowth.explicit)
-        sv.valueLabel.text = "-%"
-        return sv
-    }()
-    
-    let revenuegrowthStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.revenuegrowth.explicit)
-        sv.valueLabel.text = "-%"
-        return sv
-    }()
-    
-    fileprivate lazy var growthSV: RowStackView = {
-        let sv = RowStackView(arrangedSubviews: [ebitgrowthStackView, revenuegrowthStackView])
-        return sv
-    }()
-    
+    fileprivate let valuationView = ValuationSectionView()
+    fileprivate let financialView = FinancialSectionView()
+    fileprivate let growthView = GrowthSectionView()
     
     lazy var calcSV: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [
-            valuationSV,
-            dividendSV,
-            growthSV
+            valuationView,
+            financialView,
+            growthView
             ])
         sv.axis = .vertical
-        sv.distribution = .fillEqually
-        sv.spacing = 3
+        sv.distribution = .fill
+        sv.spacing = 8
         return sv
     }()
     
@@ -107,9 +43,21 @@ class DetailsCalculationCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        roundCorners(corners: [.bottomLeft, .bottomRight], radius: 16)
+//        roundCorners(corners: [.bottomLeft, .bottomRight], radius: 16)
     }
     
+    
+    func setValuationData() {
+
+    }
+    
+    func setFinancialData() {
+        
+    }
+    
+    func setGrowthData() {
+        
+    }
     
 }
 

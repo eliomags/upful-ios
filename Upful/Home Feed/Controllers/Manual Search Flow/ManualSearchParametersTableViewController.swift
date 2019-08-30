@@ -119,7 +119,7 @@ class ManualSearchParametersTableViewController: UITableViewController {
                 cell.textLabel?.text = displayData.parameter.explicit + " " + String(Int(displayData.value))
             }
             if screenerItem.criteria.parameterType == .number {
-                cell.textLabel?.text = displayData.parameter.explicit + " " + Int(displayData.value).formatUsingAbbreviation()
+                cell.textLabel?.text = displayData.parameter.explicit + " $" + Int(displayData.value).formatUsingAbbreviation()
             }
         } else {
             cell.textLabel?.text = displayData.parameter.explicit

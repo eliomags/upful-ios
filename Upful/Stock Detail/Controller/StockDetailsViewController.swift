@@ -10,6 +10,21 @@ import UIKit
 import Charts
 
 class StockDetailsViewController: UIViewController, ChartViewDelegate {
+
+    private enum ReuseID {
+        static let graphCell = "graphCell"
+        static let calculationsCell = "calculationsCell"
+        static let newsCell = "newsCell"
+    }
+    
+    private var chartData: [String] = []
+    private var calcData: [String] = []
+    private var newsData: [Int] = [1,2,3,4]
+    
+    private var feedData: [[Any]] {
+        return [chartData, calcData, newsData]
+    }
+    
     
     // MARK: - Dependencies
     
@@ -23,9 +38,12 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
+        tv.register(GraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
+        tv.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
+        tv.register(NewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
         tv.showsVerticalScrollIndicator = false
         tv.separatorStyle = .none
-        tv.backgroundColor = UIColor.clear
+        tv.backgroundColor = .white
         tv.tableHeaderView = UIView()
         return tv
     }()
@@ -59,8 +77,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     private func setupViews() {
         view.addSubview(detailsTableView)
-        detailsTableView.anchor(top: view.layoutMarginsGuide.topAnchor,leading: view.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.trailingAnchor,
-                                padding: .init(top: 0, left: 8, bottom: 0, right: 8))
+        detailsTableView.fillSuperview()
     }
     
     
@@ -76,6 +93,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
 
 extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 2 { return feedData[section].count }
+        
         return 1
     }
     
@@ -84,19 +103,17 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "", for: indexPath)
-        // Need to deque all these damn cells
         switch indexPath.section {
         case 0:
-            let cell = GraphTableViewCell(style: .default, reuseIdentifier: nil)
-            cell.chartView.delegate = self
-            return cell
+            guard let graphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? GraphTableViewCell else { return UITableViewCell() }
+            graphCell.chartView.delegate = self
+            return graphCell
         case 1:
-            let cell = DetailsCalculationCell(style: .default, reuseIdentifier: nil)
-            return cell
+            guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath) as? DetailsCalculationCell else { return UITableViewCell() }
+            return calculationsCell
         case 2:
-            let cell = CompanyNewsCell(style: .default, reuseIdentifier: nil)
-            return cell
+            guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? NewsCell else { return UITableViewCell() }
+            return newsCell
         default:
             return UITableViewCell()
         }        
@@ -105,10 +122,7 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath {
         case IndexPath(row: 0, section: 0) :
-            return (UIScreen.main.bounds.height / 2) - 30
-        case IndexPath(row: 0, section: 2):
-//            return (UIScreen.main.bounds.height / 2) - 30
-            return tableView.contentHeight()
+            return (UIScreen.main.bounds.height / 2) - 50
         default: return UITableView.automaticDimension
         }
     }
@@ -138,7 +152,7 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         if section == 2 {
             return 70
         } else {
-            return 14
+            return 25
         }
     }
 
