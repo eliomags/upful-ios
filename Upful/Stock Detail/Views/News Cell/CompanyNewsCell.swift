@@ -44,7 +44,7 @@ class NewsCell: UITableViewCell {
         labelStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
                               padding: .init(top: 16, left: 16, bottom: 16, right: 16))
         
-        
+
         addSubview(spacerView)
         spacerView.anchor(top: labelStackView.bottomAnchor, leading: labelStackView.leadingAnchor, bottom: nil, trailing: labelStackView.trailingAnchor,
                           padding: .init(top: 4, left: 8, bottom: 0, right: 8))

@@ -66,17 +66,19 @@ class ChartView: BarChartView {
     }
     
     private func setupYAxis() {
-        leftAxis.spaceTop = 0.35
-        leftAxis.axisMinimum = 0
+        leftAxis.spaceTop = 0.3
+        leftAxis.spaceBottom = 0.2
+//        leftAxis.axisMinimum = 0
         leftAxis.valueFormatter = chartViewModel
-        leftAxis.drawGridLinesEnabled = false
+        leftAxis.drawGridLinesEnabled = true
+        leftAxis.drawAxisLineEnabled = false
         rightAxis.drawGridLinesEnabled = false
         rightAxis.enabled = false
     }
     
     private func setupXAxis() {
         xAxis.labelPosition = .bottom
-        xAxis.drawGridLinesEnabled = true
+        xAxis.drawGridLinesEnabled = false
         xAxis.centerAxisLabelsEnabled = true
         xAxis.valueFormatter = IndexAxisValueFormatter(values: stubData.map({ $0.year }))
         xAxis.granularity = 1
@@ -100,7 +102,7 @@ class ChartView: BarChartView {
         
         chartDataSet.colors = [UIColor.positive]
         chartDataSet1.colors = [UIColor.appAccent]
-        
+    
         chartDataSet.valueFormatter = chartViewModel
         chartDataSet1.valueFormatter = chartViewModel
         

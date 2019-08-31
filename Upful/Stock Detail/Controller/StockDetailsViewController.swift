@@ -10,26 +10,42 @@ import UIKit
 import Charts
 
 class StockDetailsViewController: UIViewController, ChartViewDelegate {
-
+    
+    // MARK: - Dependencies
+    
+    let ticker: String
+    let companyName: String
+    let analyticsLogger: AnalyticsLogger
+    let intrinioApi: IntrinioAPI
+    
+    
     private enum ReuseID {
         static let graphCell = "graphCell"
         static let calculationsCell = "calculationsCell"
         static let newsCell = "newsCell"
     }
     
+    // MARK: - Data
+    
     private var chartData: [String] = []
-    private var calcData: [String] = []
-    private var newsData: [Int] = [1,2,3,4]
+    private var calcData: [StandardizedFinancial] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.detailsTableView.reloadData()
+            }
+        }
+    }
+    private var newsData: [CompanyNewsModel] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.detailsTableView.reloadData()
+            }
+        }
+    }
     
     private var feedData: [[Any]] {
         return [chartData, calcData, newsData]
     }
-    
-    
-    // MARK: - Dependencies
-    
-    let ticker: String
-    let companyName: String
     
     
     // MARK: - Views
@@ -51,9 +67,11 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Initializer Methods
     
-    init(ticker: String, companyName: String) {
+    init(ticker: String, companyName: String, intrinioApi: IntrinioAPI, analyticsLogger: AnalyticsLogger) {
         self.ticker = ticker
         self.companyName = companyName
+        self.analyticsLogger = analyticsLogger
+        self.intrinioApi = intrinioApi
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -65,6 +83,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .backgroundColor
         setupViews()
+        configureNewsData()
+        configureCalcData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,6 +102,28 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     
     // MARK: - Private Functions
+    
+    private func configureNewsData() {
+        self.intrinioApi.getCompanyNewsData(ticker: self.ticker) { (results) in
+            switch results {
+            case .success(let downloadedNewsData):
+                self.newsData.append(contentsOf: downloadedNewsData.news ?? [])
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    private func configureCalcData() {
+        self.intrinioApi.getCompanyData(ticker: self.ticker) { (results) in
+            switch results {
+            case .success(let financialData):
+                self.calcData.append(contentsOf: financialData)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
     
     fileprivate func setupNavBar() {
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -110,9 +152,14 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
             return graphCell
         case 1:
             guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath) as? DetailsCalculationCell else { return UITableViewCell() }
+            calculationsCell.setupCell(with: calcData)
+        
             return calculationsCell
         case 2:
             guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? NewsCell else { return UITableViewCell() }
+            let news = feedData[indexPath.section] as? [CompanyNewsModel]
+            newsCell.headerLabel.text = news?[indexPath.item].title
+            newsCell.detailLabel.text = news?[indexPath.item].summary
             return newsCell
         default:
             return UITableViewCell()
@@ -122,7 +169,7 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath {
         case IndexPath(row: 0, section: 0) :
-            return (UIScreen.main.bounds.height / 2) - 50
+            return (UIScreen.main.bounds.height / 2) - 90
         default: return UITableView.automaticDimension
         }
     }

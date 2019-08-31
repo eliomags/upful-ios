@@ -37,7 +37,6 @@ struct PresetScreener: FeedItem {
     }
 }
 
-
 extension PresetScreener {
     var screenImage: UIImage {
         switch identifier {

@@ -294,7 +294,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let selectedCompany = searchResults[indexPath.item] as? ScreenResult {
-            self.navigationController?.pushViewController(StockDetailsViewController(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? ""), animated: true)
+            self.navigationController?.pushViewController(StockDetailsViewController(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "", intrinioApi: IntrinioAPI(), analyticsLogger: AnalyticsLogger()), animated: true)
         }
     }
 }

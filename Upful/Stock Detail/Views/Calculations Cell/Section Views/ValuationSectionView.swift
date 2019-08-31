@@ -8,25 +8,14 @@
 
 import UIKit
 
-
-
 class RowStackView: UIStackView {
-    let spacerView = SpacerView()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         axis = .horizontal
         spacing = 16
         distribution = .fillEqually
         alignment = .leading
-        
-        addSubview(spacerView)
-        spacerView.anchor(top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
-                          padding: .init(top: 0, left: 8, bottom: 0, right: 8))
     }
-    
-    // Add view of 2px wide
-    
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -34,13 +23,13 @@ class RowStackView: UIStackView {
 
 final class ValuationSectionView: UIView {
     
-    let marketcapStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.marketcap.explicit)
+    let marketcapStackView: SectionedDetailsStackView = {
+        let sv = SectionedDetailsStackView(description: SearchCriteria.marketcap.explicit)
         sv.valueLabel.text = "$ -"
         return sv
     }()
-    let pricetoearningsStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.pricetoearnings.explicit)
+    let pricetoearningsStackView: SectionedDetailsStackView = {
+        let sv = SectionedDetailsStackView(description: SearchCriteria.pricetoearnings.explicit)
         sv.valueLabel.text = "-"
         return sv
     }()
@@ -50,12 +39,12 @@ final class ValuationSectionView: UIView {
     }()
     
     let evtofcfStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.evtofcff.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.evtofcff.explicit)
         sv.valueLabel.text = "-"
         return sv
     }()
     let evtoebitStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.evtoebit.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.evtoebit.explicit)
         sv.valueLabel.text = "-"
         return sv
     }()
@@ -66,12 +55,12 @@ final class ValuationSectionView: UIView {
     
     
     let bookValuePerShareStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.bookvaluepershare.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.bookvaluepershare.explicit)
         sv.valueLabel.text = "-"
         return sv
     }()
     let pricetosalesStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.pricetorevenue.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.pricetorevenue.explicit)
         sv.valueLabel.text = "-"
         return sv
     }()
@@ -89,7 +78,7 @@ final class ValuationSectionView: UIView {
             ])
         sv.axis = .vertical
         sv.distribution = .fillEqually
-        sv.spacing = 8
+        sv.spacing = 15
         return sv
     }()
     

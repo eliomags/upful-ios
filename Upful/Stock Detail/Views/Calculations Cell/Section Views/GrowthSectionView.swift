@@ -13,13 +13,13 @@ final class GrowthSectionView: UIView {
     
     // Growth
     let ebitgrowthStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.ebitgrowth.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.ebitgrowth.explicit)
         sv.valueLabel.text = "-%"
         return sv
     }()
     
     let ebitdagrowthStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.ebitdagrowth.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.ebitdagrowth.explicit)
         sv.valueLabel.text = "-%"
         return sv
     }()
@@ -31,12 +31,12 @@ final class GrowthSectionView: UIView {
     
     
     let revenuegrowthStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.revenuegrowth.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.revenuegrowth.explicit)
         sv.valueLabel.text = "-%"
         return sv
     }()
     let revenueqoqgrowthStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.revenueqoqgrowth.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.revenueqoqgrowth.explicit)
         sv.valueLabel.text = "-%"
         return sv
     }()
@@ -47,12 +47,12 @@ final class GrowthSectionView: UIView {
     
     
     let epsgrowthStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.epsgrowth.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.epsgrowth.explicit)
         sv.valueLabel.text = "-%"
         return sv
     }()
     let fcfgrowthStackView: StockDetailStackView = {
-        let sv = StockDetailStackView(description: SearchCriteria.fcffgrowth.explicit)
+        let sv = SectionedDetailsStackView(description: SearchCriteria.fcffgrowth.explicit)
         sv.valueLabel.text = "-%"
         return sv
     }()
@@ -70,7 +70,7 @@ final class GrowthSectionView: UIView {
             ])
         sv.axis = .vertical
         sv.distribution = .fillEqually
-        sv.spacing = 8
+        sv.spacing = 15
         return sv
     }()
     

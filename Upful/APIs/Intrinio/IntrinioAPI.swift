@@ -11,7 +11,7 @@ import Foundation
 
 // MARK: - INTRINIO SEARCH RESULTS MODEL
 
-struct IntrinioResponse: Decodable {
+struct ScreeningResponse: Decodable {
     var data: [ScreenResult]
     var resultCount: Int?
     var pageSize: Int?
@@ -24,6 +24,8 @@ class ScreenResult: Decodable {
     var divyield: Double?
     var pricetoearnings: Double?
     var ebitgrowth: Double?
+    var news: [CompanyNewsModel]?
+    var standardizedFinancials: [StandardizedFinancial]?
 }
 
 final class IntrinioAPI {
@@ -54,7 +56,7 @@ final class IntrinioAPI {
             guard let data = data else { return }
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
-                let fetchedData = try decoder.decode(IntrinioResponse.self, from: data)
+                let fetchedData = try decoder.decode(ScreeningResponse.self, from: data)
                 completion(.success(fetchedData.data))
             } catch {
                 completion(.failure(.parsingError))
@@ -90,12 +92,12 @@ final class IntrinioAPI {
     }
     
     
-    //Lookup
+    //Lookup fundamentals
     private let lookupEndpoint = "https://api-v2.intrinio.com/fundamentals/"
     // Q1TTM, Q2TTM, Q3TTM, FY, Q1, Q2, Q3, Q4, Q2YTD, Q3YTD
-    private let documentType = "-calculations-2019-Q3TTM/standardized_financials?"
+    private let documentType = "-calculations-2019-Q2TTM/standardized_financials?"
     
-    func getCompanyData(ticker: String, completion: @escaping (Result<CompanyFundamentals, Error>) -> Void) {
+    func getCompanyData(ticker: String, completion: @escaping (Result<[StandardizedFinancial], Error>) -> Void) {
         guard let url = URL(string: lookupEndpoint + ticker + documentType + apiKey) else { return }
         let decoder = JSONDecoder()
         let session = URLSession.shared
@@ -106,7 +108,33 @@ final class IntrinioAPI {
             guard let data = data else { return }
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
-                let companyData = try decoder.decode(CompanyFundamentals.self, from: data)
+                let companyData = try decoder.decode(ScreenResult.self, from: data)                
+                completion(.success(companyData.standardizedFinancials ?? []))
+            } catch let error {
+                completion(.failure(error))
+            }
+        }
+        task.resume()
+    }
+    
+    
+    // Get Company NewsData
+    
+    private let newsEndpoint = "https://api-v2.intrinio.com/companies/"
+    private let newsPageSize = "/news?page_size=4"
+    
+    func getCompanyNewsData(ticker: String, completion: @escaping (Result<ScreenResult, Error>) -> Void) {
+        guard let url = URL(string: newsEndpoint + ticker + newsPageSize + apiKey) else { return }
+        let decoder = JSONDecoder()
+        let session = URLSession.shared
+        let task = session.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                completion(.failure(error))
+            }
+            guard let data = data else { return }
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            do {
+                let companyData = try decoder.decode(ScreenResult.self, from: data)
                 completion(.success(companyData))
             } catch let error {
                 completion(.failure(error))

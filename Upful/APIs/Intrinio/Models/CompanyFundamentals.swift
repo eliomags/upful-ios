@@ -20,25 +20,28 @@ struct CompanyHistoricalDatum: Decodable {
 
 
 
-
-
+/// MARK: - CompanyFundamentals
 struct CompanyFundamentals: Decodable {
     let standardizedFinancials: [StandardizedFinancial]
-    let fundamental: Fundamental
+    let fundamental: Fundamental?
+    
+    enum CodingKeys: String, CodingKey {
+        case standardizedFinancials = "standardized_financials"
+        case fundamental
+    }
 }
 
-// MARK: - StandardizedFinancial
+// MARK: StandardizedFinancial which contains the value of the financial
 struct StandardizedFinancial: Decodable {
-    let dataTag: DataTag
-    let value: Double
+    let dataTag: DataTag?
+    let value: Double?
 }
 
-// MARK: - DataTag - contains name of metric
+// MARK: DataTag - contains name of metric
 struct DataTag: Decodable {
     let id, name, tag: String
 }
 
-// MARK: - Fundamental
 struct Fundamental: Decodable {
     let id, statementCode: String
     let fiscalYear: Int
@@ -47,7 +50,6 @@ struct Fundamental: Decodable {
     let company: Company
 }
 
-// MARK: - Company
 struct Company: Codable {
     let id, ticker, name, lei: String
     let cik: String

@@ -14,7 +14,6 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     // MARK:- Dependencies
     
     let analyticsLogger: AnalyticsLogger
-    
     var homeFeedItems: [[FeedItem]] = []
     
     
@@ -188,7 +187,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     }
     
     func navigateToDetails(popularCompany ticker: String, companyName: String) {
-        let detailsVC = StockDetailsViewController(ticker: ticker, companyName: companyName)
+        let detailsVC = StockDetailsViewController(ticker: ticker, companyName: companyName, intrinioApi: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
         self.navigationController?.pushViewController(detailsVC, animated: true)
     }
     
