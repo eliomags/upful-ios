@@ -33,7 +33,7 @@ class DetailsCalculationCell: UITableViewCell {
         addSubview(calcSV)
         calcSV.anchor(
             top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
-            padding: .init(top: 8, left: 16, bottom: 16, right: 16))
+            padding: .init(top: 8, left: 24, bottom: 16, right: 24))
     }
     
     required init?(coder aDecoder: NSCoder) {

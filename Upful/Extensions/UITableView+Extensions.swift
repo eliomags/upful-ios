@@ -25,14 +25,14 @@ extension UITableView {
 
 enum TableViewState {
     case errorState
-    case emptyState
+    case emptyState(message: String)
     
     var stateTitle: String {
         switch self {
         case .errorState:
             return "Error."
         case .emptyState:
-            return "No stocks found."
+            return "No Data."
         }
     }
     
@@ -40,8 +40,8 @@ enum TableViewState {
         switch self {
         case .errorState:
             return "Failed to send request to server."
-        case .emptyState:
-            return "There is no data to display."
+        case .emptyState (let message):
+            return message
         }
     }
     
@@ -50,7 +50,8 @@ enum TableViewState {
         case .errorState:
             return #imageLiteral(resourceName: "icons8-sad-cloud-50 (1).png").withRenderingMode(.alwaysOriginal)
         case .emptyState:
-            return #imageLiteral(resourceName: "icons8-sad-50.png").withRenderingMode(.alwaysOriginal)
+            return UIImage()
+//            return #imageLiteral(resourceName: "icons8-sad-50.png").withRenderingMode(.alwaysOriginal)
         }
     }
 }
@@ -94,7 +95,8 @@ extension UITableView {
         messageLabel.text = state.stateMessage
         messageLabel.numberOfLines = 0
         messageLabel.textAlignment = .center
-
+        
+        self.isScrollEnabled = false
         self.backgroundView = emptyView
         self.separatorStyle = .none
     }
@@ -102,6 +104,7 @@ extension UITableView {
     func restore() {
         self.backgroundView = nil
         self.separatorStyle = .singleLine
+        self.isScrollEnabled = true
     }
 }
 

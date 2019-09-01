@@ -166,7 +166,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
         parameters.forEach { (parameter) in
             searchKeys += "\(parameter),"
         }
-        intrinioAPI.newGetScreenRequest(parameters: searchKeys) { (result) in
+        intrinioAPI.performStockScreening(parameters: searchKeys) { (result) in
             switch result {
             case .success(let fetchedData):
                 switch fetchType {
@@ -188,8 +188,8 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
         }
     }
     
-    private func getPriceToEarningsData(_ searchResult: ScreenResult) {
-        NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: searchResult.ticker ?? "", financial: .pricetoearnings, frequency: .recent, completion: { (result) in
+    private func getPriceToEarningsData(_ searchResult: Stock) {
+        NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: searchResult.ticker ?? "", financial: .pricetoearnings, frequency: .recent, completion: { (result) in
             switch result {
             case .success(let downloadedData):
                 guard !downloadedData.isEmpty else { return }
@@ -203,9 +203,9 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
         })
     }
     
-    private func fetchCompanyFinancialData(searchResults: [ScreenResult]) {
+    private func fetchCompanyFinancialData(searchResults: [Stock]) {
         guard !searchResults.isEmpty else {
-            DispatchQueue.main.async { self.feedTableView.setEmptyView(state: .emptyState) }
+            DispatchQueue.main.async { self.feedTableView.setEmptyView(state: .emptyState(message: "No data to display.")) }
             return
         }
         searchResults.forEach { (searchResult) in
@@ -266,7 +266,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let resultsCell = tableView.dequeueReusableCell(withIdentifier: ReuseId.resultsCellID) as? ResultsTableViewCell else { return UITableViewCell() }
         
-        if let screenResult = searchResults[indexPath.item] as? ScreenResult {
+        if let screenResult = searchResults[indexPath.item] as? Stock {
             guard let ticker = screenResult.ticker else { return resultsCell }
             resultsCell.companyTickerLabel.text = ticker
             resultsCell.companyNameLabel.text = screenResult.name
@@ -293,7 +293,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let selectedCompany = searchResults[indexPath.item] as? ScreenResult {
+        if let selectedCompany = searchResults[indexPath.item] as? Stock {
             self.navigationController?.pushViewController(StockDetailsViewController(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "", intrinioApi: IntrinioAPI(), analyticsLogger: AnalyticsLogger()), animated: true)
         }
     }

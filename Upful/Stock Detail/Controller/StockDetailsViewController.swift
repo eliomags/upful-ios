@@ -26,8 +26,20 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Data
     
-    private var chartRevenueData: [CompanyHistoricalDatum] = []
-    private var chartEarningsData: [CompanyHistoricalDatum] = []
+    private var chartRevenueData: [CompanyHistoricalDatum] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.detailsTableView.reloadData()
+            }
+        }
+    }
+    private var chartEarningsData: [CompanyHistoricalDatum] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.detailsTableView.reloadData()
+            }
+        }
+    }
     
     private var chartData: [[CompanyHistoricalDatum]] {
         return [chartRevenueData, chartEarningsData]
@@ -112,7 +124,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     // MARK: - Private Functions
     
     private func getRevenueData() {
-        self.intrinioApi.getCompanyFinancials(ticker: self.ticker, financial: .totalrevenue, frequency: .historic) { (result) in
+        self.intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .totalrevenue, frequency: .historic) { (result) in
             switch result {
             case .success(let downloadedData):
                 self.chartRevenueData = downloadedData
@@ -123,7 +135,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     }
     
     private func getEarningsData() {
-        self.intrinioApi.getCompanyFinancials(ticker: self.ticker, financial: .netincome, frequency: .historic) { (result) in
+        self.intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .netincome, frequency: .historic) { (result) in
             switch result {
             case .success(let downloadedData):
                 self.chartEarningsData = downloadedData
@@ -152,7 +164,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     }
     
     private func configureCalcData() {
-        self.intrinioApi.getCompanyData(ticker: self.ticker) { (results) in
+        self.intrinioApi.fetchStockBatchFinancials(ticker: self.ticker) { (results) in
             switch results {
             case .success(let financialData):
                 self.calcData.append(contentsOf: financialData)
@@ -228,7 +240,6 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let _ = tableView.cellForRow(at: indexPath) as? NewsCell else { return }
-        print("This is the news cell we will track")
         analyticsLogger.reportEvents(event: .selectedNewsArticle)
     }
     

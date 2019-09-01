@@ -43,6 +43,8 @@
 		3D42BE52230C672C00806AFF /* CompanyFundamentals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE51230C672C00806AFF /* CompanyFundamentals.swift */; };
 		3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE54230C86B600806AFF /* Int+Extensions.swift */; };
 		3D42BE58230E26A900806AFF /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE57230E26A900806AFF /* UITableView+Extensions.swift */; };
+		3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */; };
+		3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D586517231C8AEB00495D79 /* StockSearchCell.swift */; };
 		3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB022FFC33C00C52455 /* UIColor+Extensions.swift */; };
 		3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */; };
 		3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */; };
@@ -117,6 +119,8 @@
 		3D42BE51230C672C00806AFF /* CompanyFundamentals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyFundamentals.swift; sourceTree = "<group>"; };
 		3D42BE54230C86B600806AFF /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 		3D42BE57230E26A900806AFF /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
+		3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchViewController.swift; sourceTree = "<group>"; };
+		3D586517231C8AEB00495D79 /* StockSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchCell.swift; sourceTree = "<group>"; };
 		3D90ADB022FFC33C00C52455 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchParametersTableViewController.swift; sourceTree = "<group>"; };
 		3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchHeaderView.swift; sourceTree = "<group>"; };
@@ -188,6 +192,7 @@
 				3D20FB4A22FB211C007836DD /* Extensions */,
 				3D20FB4922FB209F007836DD /* Home Feed */,
 				3DC4ED3022FE6EAA00232155 /* Search Results */,
+				3D4D8606231C5B2F0065CF9F /* Stock Search */,
 				3D2F963A230F490A003811AB /* Stock Detail */,
 				3D20FB5022FB3052007836DD /* Models */,
 				3D20FB6022FBC033007836DD /* Views */,
@@ -441,6 +446,31 @@
 				3D42BE482309A59800806AFF /* Screener.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		3D4D8606231C5B2F0065CF9F /* Stock Search */ = {
+			isa = PBXGroup;
+			children = (
+				3D4D8609231C6E8B0065CF9F /* Views */,
+				3D4D860A231C6E8F0065CF9F /* Controllers */,
+			);
+			path = "Stock Search";
+			sourceTree = "<group>";
+		};
+		3D4D8609231C6E8B0065CF9F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3D586517231C8AEB00495D79 /* StockSearchCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3D4D860A231C6E8F0065CF9F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		3D90ADB223005F2200C52455 /* Home Feed Items */ = {
@@ -715,6 +745,7 @@
 				3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */,
 				3D917B5622FE088F001D5E39 /* UIViewController+Extensions.swift in Sources */,
 				3D42BE492309A59800806AFF /* Screener.swift in Sources */,
+				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
 				3D20FB5822FB46DD007836DD /* PresetScreenerTableViewCell.swift in Sources */,
 				3D20FB5D22FBA772007836DD /* HomeViewModel.swift in Sources */,
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
@@ -722,6 +753,7 @@
 				3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */,
 				3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */,
 				3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */,
+				3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */,
 				3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */,
 				3D2F963C230F4922003811AB /* StockDetailsViewController.swift in Sources */,
 				3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */,

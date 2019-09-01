@@ -49,8 +49,12 @@ struct Fundamental: Decodable {
     let company: Company
 }
 
+struct Companies: Decodable {
+    let companies: [Company]
+}
+
 struct Company: Codable {
-    let id, ticker, name, lei: String
-    let cik: String
+    let id, ticker, name, lei: String?
+    let cik: String?
 }
 

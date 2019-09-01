@@ -89,7 +89,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     
     fileprivate func initializePopularCompanyData() {
         CompanyViewModel.configureCompanyList().forEach { (popularCompany) in
-            NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: popularCompany.header, financial: .marketcap, frequency: .recent, completion: { (result) in
+            NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .marketcap, frequency: .recent, completion: { (result) in
                 switch result {
                 case .success(let downloadedData):
                     if downloadedData.isEmpty { return }
@@ -102,7 +102,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
                 }
             })
             
-            NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: popularCompany.header, financial: .pricetoearnings, frequency: .recent, completion: { (result) in
+            NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .pricetoearnings, frequency: .recent, completion: { (result) in
                 switch result {
                 case .success(let downloadedData):
                     if downloadedData.isEmpty { return }
@@ -131,9 +131,9 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     
     fileprivate func configureNavBar() {
         navigationItem.title = "Upful"
-        navigationController!.navigationBar.tintColor = .black
         navigationController!.navigationBar.isTranslucent = false
         navigationController?.navigationBar.backgroundColor = UIColor.white
+        navigationController!.navigationBar.tintColor = .black
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     

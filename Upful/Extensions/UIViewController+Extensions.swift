@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+// MARK: - Adding Child View Controller
 extension UIViewController {
     func add(_ child: UIViewController) {
         addChild(child)
@@ -25,5 +27,19 @@ extension UIViewController {
         willMove(toParent: nil)
         view.removeFromSuperview()
         removeFromParent()
+    }
+}
+
+
+// MARK: - Dismissing Keyboard
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
