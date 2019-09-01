@@ -14,7 +14,6 @@ enum NetworkingError: Error {
     case parsingError
 }
 
-
 final class NetworkService {
     static let shared = NetworkService()
     

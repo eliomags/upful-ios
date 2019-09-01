@@ -54,8 +54,8 @@ final class ValuationSectionView: UIView {
     }()
     
     
-    let bookValuePerShareStackView: StockDetailStackView = {
-        let sv = SectionedDetailsStackView(description: SearchCriteria.bookvaluepershare.explicit)
+    let pricetobookStackView: StockDetailStackView = {
+        let sv = SectionedDetailsStackView(description: SearchCriteria.pricetobook.explicit)
         sv.valueLabel.text = "-"
         return sv
     }()
@@ -65,7 +65,7 @@ final class ValuationSectionView: UIView {
         return sv
     }()
     private lazy var row3SV: RowStackView = {
-        let sv = RowStackView(arrangedSubviews: [bookValuePerShareStackView, pricetosalesStackView])
+        let sv = RowStackView(arrangedSubviews: [pricetobookStackView, pricetosalesStackView])
         return sv
     }()
     

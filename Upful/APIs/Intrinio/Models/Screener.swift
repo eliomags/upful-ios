@@ -8,13 +8,13 @@
 
 import Foundation
 
-
 enum SearchCriteria: String, CaseIterable {
     case name
     case marketcap
+    case totalrevenue
+    case netincome
     
     // Value
-    
     case pricetoearnings
     case evtoebit
     case pricetobook
@@ -25,12 +25,10 @@ enum SearchCriteria: String, CaseIterable {
     case ebitgrowth
     
     // Dividend
-
     case divpayoutratio
     case dividendyield
     
     // Growth
-    
     case revenuegrowth
     case grossmargin
     case ebitmargin

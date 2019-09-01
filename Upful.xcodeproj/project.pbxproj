@@ -35,6 +35,7 @@
 		3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F965E2318D16A003811AB /* GrowthSectionView.swift */; };
 		3D2F966123196881003811AB /* SpacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F966023196881003811AB /* SpacerView.swift */; };
 		3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F9662231A16B7003811AB /* CompanyNewsModel.swift */; };
+		3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F9664231B7488003811AB /* String+Extensions.swift */; };
 		3D42BE4123098BD200806AFF /* ResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE4023098BD200806AFF /* ResultsTableViewCell.swift */; };
 		3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE442309A55900806AFF /* PresetScreener.swift */; };
 		3D42BE492309A59800806AFF /* Screener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE482309A59800806AFF /* Screener.swift */; };
@@ -108,6 +109,7 @@
 		3D2F965E2318D16A003811AB /* GrowthSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthSectionView.swift; sourceTree = "<group>"; };
 		3D2F966023196881003811AB /* SpacerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacerView.swift; sourceTree = "<group>"; };
 		3D2F9662231A16B7003811AB /* CompanyNewsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyNewsModel.swift; sourceTree = "<group>"; };
+		3D2F9664231B7488003811AB /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		3D42BE4023098BD200806AFF /* ResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableViewCell.swift; sourceTree = "<group>"; };
 		3D42BE442309A55900806AFF /* PresetScreener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetScreener.swift; sourceTree = "<group>"; };
 		3D42BE482309A59800806AFF /* Screener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screener.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 				3D90ADB92301BE0F00C52455 /* Double+Extensions.swift */,
 				3D42BE54230C86B600806AFF /* Int+Extensions.swift */,
 				3D42BE57230E26A900806AFF /* UITableView+Extensions.swift */,
+				3D2F9664231B7488003811AB /* String+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -702,6 +705,7 @@
 				3D2F965A2318C6E7003811AB /* ValuationSectionView.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
 				3D2F96412312B036003811AB /* MixpanelAnalytics.swift in Sources */,
+				3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */,
 				3D2F965D2318CC4E003811AB /* FinancialSectionView.swift in Sources */,
 				3D2F964B2315CD34003811AB /* BarChartView.swift in Sources */,
 				3D20FB5A22FB49EC007836DD /* PopularCompanyCell.swift in Sources */,

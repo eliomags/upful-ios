@@ -37,9 +37,7 @@ class ChartView: BarChartView {
         super.init(frame: frame)
         backgroundColor = .clear
         setupView()
-        setupChart(dataPoints: stubData.map({ $0.year }),
-                   values: stubData.map({ $0.revenue }),
-                   values1: stubData.map({ $0.earnings }))
+        animate()
     }
 
     
@@ -60,15 +58,14 @@ class ChartView: BarChartView {
         legend.verticalAlignment = .top
         legend.orientation = .vertical
         legend.drawInside = true
-        legend.yOffset = 10.0
+        legend.yOffset = -10
         legend.xOffset = 10.0
         legend.yEntrySpace = 0
     }
     
     private func setupYAxis() {
-        leftAxis.spaceTop = 0.3
+        leftAxis.spaceTop = 0.35
         leftAxis.spaceBottom = 0.2
-//        leftAxis.axisMinimum = 0
         leftAxis.valueFormatter = chartViewModel
         leftAxis.drawGridLinesEnabled = true
         leftAxis.drawAxisLineEnabled = false
@@ -79,14 +76,15 @@ class ChartView: BarChartView {
     private func setupXAxis() {
         xAxis.labelPosition = .bottom
         xAxis.drawGridLinesEnabled = false
-        xAxis.centerAxisLabelsEnabled = true
-        xAxis.valueFormatter = IndexAxisValueFormatter(values: stubData.map({ $0.year }))
+        xAxis.centerAxisLabelsEnabled = true        
         xAxis.granularity = 1
     }
     
-    private func setupChart(dataPoints: [String], values: [Double], values1: [Double]) {
+    func setupChart(dataPoints: [String], values: [Double], values1: [Double]) {
         var dataEntries: [ChartDataEntry] = []
         var dataEntries1: [ChartDataEntry] = []
+        
+        xAxis.valueFormatter = IndexAxisValueFormatter(values: dataPoints)
         
         for i in 0..<dataPoints.count {
             let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
@@ -122,6 +120,9 @@ class ChartView: BarChartView {
         chartData.groupBars(fromX: Double(startYear), groupSpace: groupSpace, barSpace: barSpace)
         
         self.data = chartData
+    }
+    
+    func animate() {
         self.animate(xAxisDuration: 0.75, yAxisDuration: 0.75, easingOption: .linear)
     }
     
@@ -133,11 +134,13 @@ class ChartView: BarChartView {
 class ChartViewModel: IAxisValueFormatter, IValueFormatter {
     func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
         let formattedValue = Int(value).formatUsingAbbreviation()
+        
         return formattedValue
     }
     
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         let formattedValue = Int(value).formatUsingAbbreviation()
+        
         return formattedValue
     }
     

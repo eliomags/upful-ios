@@ -19,7 +19,6 @@ struct CompanyHistoricalDatum: Decodable {
 }
 
 
-
 /// MARK: - CompanyFundamentals
 struct CompanyFundamentals: Decodable {
     let standardizedFinancials: [StandardizedFinancial]

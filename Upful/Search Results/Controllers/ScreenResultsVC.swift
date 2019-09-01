@@ -189,7 +189,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
     }
     
     private func getPriceToEarningsData(_ searchResult: ScreenResult) {
-        NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: searchResult.ticker ?? "", financial: SearchCriteria.pricetoearnings.rawValue, completion: { (result) in
+        NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: searchResult.ticker ?? "", financial: .pricetoearnings, frequency: .recent, completion: { (result) in
             switch result {
             case .success(let downloadedData):
                 guard !downloadedData.isEmpty else { return }

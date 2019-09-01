@@ -69,8 +69,8 @@ class DetailsCalculationCell: UITableViewCell {
                 valuationView.evtoebitStackView.valueLabel.text = financial.value?.twoDecimal()
                 return
             }
-            if (financial.dataTag?.tag)! == SearchCriteria.bookvaluepershare.rawValue {
-                valuationView.bookValuePerShareStackView.valueLabel.text = financial.value?.twoDecimal()
+            if (financial.dataTag?.tag)! == SearchCriteria.pricetobook.rawValue {
+                valuationView.pricetobookStackView.valueLabel.text = financial.value?.twoDecimal()
                 return
             }
             if (financial.dataTag?.tag)! == SearchCriteria.pricetorevenue.rawValue {

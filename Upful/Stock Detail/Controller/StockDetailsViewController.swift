@@ -18,7 +18,6 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     let analyticsLogger: AnalyticsLogger
     let intrinioApi: IntrinioAPI
     
-    
     private enum ReuseID {
         static let graphCell = "graphCell"
         static let calculationsCell = "calculationsCell"
@@ -27,7 +26,13 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Data
     
-    private var chartData: [String] = []
+    private var chartRevenueData: [CompanyHistoricalDatum] = []
+    private var chartEarningsData: [CompanyHistoricalDatum] = []
+    
+    private var chartData: [[CompanyHistoricalDatum]] {
+        return [chartRevenueData, chartEarningsData]
+    }
+    
     private var calcData: [StandardizedFinancial] = [] {
         didSet {
             DispatchQueue.main.async {
@@ -35,6 +40,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
             }
         }
     }
+    
     private var newsData: [CompanyNewsModel] = [] {
         didSet {
             DispatchQueue.main.async {
@@ -83,6 +89,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .backgroundColor
         setupViews()
+        getRevenueData()
+        getEarningsData()
         configureNewsData()
         configureCalcData()
     }
@@ -102,6 +110,35 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     
     // MARK: - Private Functions
+    
+    private func getRevenueData() {
+        self.intrinioApi.getCompanyFinancials(ticker: self.ticker, financial: .totalrevenue, frequency: .historic) { (result) in
+            switch result {
+            case .success(let downloadedData):
+                self.chartRevenueData = downloadedData
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func getEarningsData() {
+        self.intrinioApi.getCompanyFinancials(ticker: self.ticker, financial: .netincome, frequency: .historic) { (result) in
+            switch result {
+            case .success(let downloadedData):
+                self.chartEarningsData = downloadedData
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func configureChart(chartView: ChartView) {
+        guard !chartRevenueData.isEmpty && !chartEarningsData.isEmpty else { return }
+        chartView.setupChart(dataPoints: chartRevenueData.map({ $0.date.formatDate() }),
+                             values: chartRevenueData.map({ $0.value }),
+                             values1: chartEarningsData.map({ $0.value }))
+    }
     
     private func configureNewsData() {
         self.intrinioApi.getCompanyNewsData(ticker: self.ticker) { (results) in
@@ -149,11 +186,13 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         case 0:
             guard let graphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? GraphTableViewCell else { return UITableViewCell() }
             graphCell.chartView.delegate = self
+            configureChart(chartView: graphCell.chartView)
+            
             return graphCell
         case 1:
             guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath) as? DetailsCalculationCell else { return UITableViewCell() }
             calculationsCell.setupCell(with: calcData)
-        
+            
             return calculationsCell
         case 2:
             guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? NewsCell else { return UITableViewCell() }
@@ -177,7 +216,7 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = FormatedSectionHeaderLabel(padding: 16)
         header.backgroundColor = .white
-        let headerText = ["FINANCIALS", "CALCULATIONS", "NEWS"]
+        let headerText = ["FINANCIALS", "METRICS", "NEWS"]
         switch section {
         case 0: header.text = headerText[0]
         case 1: header.text = headerText[1]
@@ -185,6 +224,12 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         default: break
         }
         return header
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let _ = tableView.cellForRow(at: indexPath) as? NewsCell else { return }
+        print("This is the news cell we will track")
+        analyticsLogger.reportEvents(event: .selectedNewsArticle)
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -202,7 +247,6 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
             return 25
         }
     }
-
 }
 
 private class FormatedSectionHeaderLabel: SectionHeaderLabel {

@@ -16,7 +16,7 @@ class FirebaseAnayltics: AnalyticsTracker {
     
     func log(event: AnalyticsEventName) {
         Analytics.logEvent(event.getName(),
-                           parameters: event.parameters)
+                           parameters: event.metaData)
     }
 }
 

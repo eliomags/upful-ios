@@ -89,7 +89,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     
     fileprivate func initializePopularCompanyData() {
         CompanyViewModel.configureCompanyList().forEach { (popularCompany) in
-            NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: popularCompany.header, financial: SearchCriteria.marketcap.rawValue, completion: { (result) in
+            NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: popularCompany.header, financial: .marketcap, frequency: .recent, completion: { (result) in
                 switch result {
                 case .success(let downloadedData):
                     if downloadedData.isEmpty { return }
@@ -102,7 +102,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
                 }
             })
             
-            NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: popularCompany.header, financial: SearchCriteria.pricetoearnings.rawValue, completion: { (result) in
+            NetworkService.shared.intrioAPI.getCompanyFinancials(ticker: popularCompany.header, financial: .pricetoearnings, frequency: .recent, completion: { (result) in
                 switch result {
                 case .success(let downloadedData):
                     if downloadedData.isEmpty { return }

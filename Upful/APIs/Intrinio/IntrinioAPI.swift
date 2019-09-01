@@ -67,12 +67,16 @@ final class IntrinioAPI {
     }
     
     // Lookup historic financials
+    enum FinancialsFrequency: String {
+        case recent = "?frequency=yearly&start_date=2018-01-01"
+        case historic = "?frequency=yearly&start_date=2015-01-01&end_date=2021-01-01&sort_order=asc"
+    }
+    
     private let historicLookupEnpoint = "https://api-v2.intrinio.com/securities/"
     private let searchType = "/historical_data/"
-    private let frequency = "?frequency=yearly&start_date=2018-01-01"
     
-    func getCompanyFinancials(ticker: String, financial: String, completion: @escaping (Result<[CompanyHistoricalDatum], Error>) -> Void) {
-        guard let url = URL(string: historicLookupEnpoint + ticker + searchType + financial + frequency + apiKey) else { return }
+    func getCompanyFinancials(ticker: String, financial: SearchCriteria, frequency: FinancialsFrequency, completion: @escaping (Result<[CompanyHistoricalDatum], Error>) -> Void) {
+        guard let url = URL(string: historicLookupEnpoint + ticker + searchType + financial.rawValue + frequency.rawValue + apiKey) else { return }
         let decoder = JSONDecoder()
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, response, error) in

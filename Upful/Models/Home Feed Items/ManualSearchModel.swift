@@ -38,21 +38,23 @@ extension SearchCriteria {
         case .pricetobook: return "Price/Book"
         case .evtoebit: return "EV/EBIT"
         case .marketcap: return "Market Cap"
-        case .divpayoutratio: return "Dividend Payout Ratio"
+        case .divpayoutratio: return "Payout Ratio"
         case .dividendyield: return "Dividend Yield"
         case .revenuegrowth: return "Revenue Growth"
         case .grossmargin: return "Gross Margin"
         case .ebitmargin: return "EBIT Margin"
-        case .fcffgrowth: return "1 Year Free Cash Flow Growth"
-        case .ebitdagrowth: return "1 Year EBITDA Growth"
-        case .ebitgrowth: return "1 Year EBIT Growth"
-        case .investedcapitalgrowth: return "1 Year Invested Capital Growth"
-        case .epsgrowth: return "1 Year EPS Growth"
+        case .fcffgrowth: return "Free Cash Flow"
+        case .ebitdagrowth: return "EBITDA Growth"
+        case .ebitgrowth: return "EBIT Growth"
+        case .investedcapitalgrowth: return "Invested Capital"
+        case .epsgrowth: return "EPS Growth"
         case .pricetorevenue: return "Price to Sales"
-        case .revenueqoqgrowth: return "Revenue Q/Q Growth"
+        case .revenueqoqgrowth: return "Revenue Q/Q"
         case .bookvaluepershare: return "Book Value/Share"
         case .evtofcff: return "EV/FCF"
         case .debttoequity: return "Debt/Equity"
+        case .totalrevenue: return "Revenue"
+        case .netincome: return "Net Income"
         }
     }
     
@@ -78,6 +80,8 @@ extension SearchCriteria {
         case .bookvaluepershare: return .ratio
         case .evtofcff: return .ratio
         case .debttoequity: return .ratio
+        case .totalrevenue: return .number
+        case .netincome: return .number
         }
     }
     
@@ -103,6 +107,8 @@ extension SearchCriteria {
         case .bookvaluepershare: return .valuation
         case .evtofcff: return .valuation
         case .debttoequity: return .financial
+        case .totalrevenue: return .other
+        case .netincome: return .other
         }
     }
 
