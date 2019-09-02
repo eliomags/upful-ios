@@ -67,6 +67,7 @@ class ChartView: BarChartView {
         leftAxis.spaceTop = 0.35
         leftAxis.spaceBottom = 0.2
         leftAxis.valueFormatter = chartViewModel
+        leftAxis.gridColor = .darkGray
         leftAxis.drawGridLinesEnabled = true
         leftAxis.drawAxisLineEnabled = false
         rightAxis.drawGridLinesEnabled = false
@@ -100,7 +101,10 @@ class ChartView: BarChartView {
         
         chartDataSet.colors = [UIColor.positive]
         chartDataSet1.colors = [UIColor.appAccent]
-    
+        
+        chartDataSet.valueFont = NSUIFont.systemFont(ofSize: 9, weight: .semibold)
+        chartDataSet1.valueFont = NSUIFont.systemFont(ofSize: 9, weight: .semibold)
+
         chartDataSet.valueFormatter = chartViewModel
         chartDataSet1.valueFormatter = chartViewModel
         

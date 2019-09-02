@@ -24,6 +24,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         static let newsCell = "newsCell"
     }
     
+    
     // MARK: - Data
     
     private var chartRevenueData: [CompanyHistoricalDatum] = [] {
@@ -105,6 +106,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         getEarningsData()
         configureNewsData()
         configureCalcData()
+        AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -226,7 +228,7 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = FormatedSectionHeaderLabel(padding: 16)
+        let header = SectionHeaderLabel(padding: 16)
         header.backgroundColor = .white
         let headerText = ["FINANCIALS", "METRICS", "NEWS"]
         switch section {
@@ -240,7 +242,13 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let _ = tableView.cellForRow(at: indexPath) as? NewsCell else { return }
-        analyticsLogger.reportEvents(event: .selectedNewsArticle)
+        guard let newsArticleURL = URL(string: newsData[indexPath.item].url) else { return }
+
+        if UIApplication.shared.canOpenURL(newsArticleURL) {
+            analyticsLogger.reportEvents(event: .selectedNewsArticle)
+            UIApplication.shared.open(newsArticleURL, options: [:], completionHandler: nil)
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -260,9 +268,3 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     }
 }
 
-private class FormatedSectionHeaderLabel: SectionHeaderLabel {
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        roundCorners(corners: [.topRight, .topLeft], radius: 16)
-    }
-}

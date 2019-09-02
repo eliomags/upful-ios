@@ -70,6 +70,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         setupTableView(for: quickSearchTableView)
         initializeFeedData()
         initializePopularCompanyData()
+        AppStoreReviewHelper.checkAndAskForReview(checkType: .newSession)
     }
     
     override func viewWillAppear(_ animated: Bool) {
