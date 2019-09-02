@@ -25,14 +25,14 @@ extension UITableView {
 
 enum TableViewState {
     case errorState
-    case emptyState(message: String)
+    case emptyState(title: String, message: String)
     
     var stateTitle: String {
         switch self {
         case .errorState:
             return "Error."
-        case .emptyState:
-            return "No Data."
+        case .emptyState (let title):
+            return title.title
         }
     }
     
@@ -41,7 +41,7 @@ enum TableViewState {
         case .errorState:
             return "Failed to send request to server."
         case .emptyState (let message):
-            return message
+            return message.message
         }
     }
     
@@ -96,7 +96,6 @@ extension UITableView {
         messageLabel.numberOfLines = 0
         messageLabel.textAlignment = .center
         
-        self.isScrollEnabled = false
         self.backgroundView = emptyView
         self.separatorStyle = .none
     }
@@ -104,7 +103,6 @@ extension UITableView {
     func restore() {
         self.backgroundView = nil
         self.separatorStyle = .singleLine
-        self.isScrollEnabled = true
     }
 }
 

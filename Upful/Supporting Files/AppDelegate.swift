@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let homeVC = HomeFeedViewController(analyitcs: AnalyticsLogger())
         let settingsVC = UIViewController()
         let searchVC = StockSearchViewController(networkingAPI: IntrinioAPI())
-        let controllers = [homeVC,searchVC, settingsVC]
+        let controllers = [homeVC,searchVC]
         
         homeVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-home-page-30"), tag: 0)
         searchVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-search-30"), tag: 1)

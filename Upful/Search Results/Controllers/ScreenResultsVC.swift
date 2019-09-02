@@ -205,7 +205,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
     
     private func fetchCompanyFinancialData(searchResults: [Stock]) {
         guard !searchResults.isEmpty else {
-            DispatchQueue.main.async { self.feedTableView.setEmptyView(state: .emptyState(message: "No data to display.")) }
+            DispatchQueue.main.async { self.feedTableView.setEmptyView(state: .emptyState(title: "No Data.", message: "No data to display.")) }
             return
         }
         searchResults.forEach { (searchResult) in

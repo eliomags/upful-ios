@@ -45,7 +45,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         bannerView.rootViewController = self
         bannerView.load(GADRequest())
         bannerView.delegate = self
-        bannerView.backgroundColor = .white
+        bannerView.backgroundColor = .clear
         return bannerView
     }()
     
@@ -66,8 +66,8 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         view.backgroundColor = .backgroundColor
         configureNavBar()
         setupViews()
-        setupBannerView()
         setupTableView(for: quickSearchTableView)
+        setupBannerView()
         initializeFeedData()
         initializePopularCompanyData()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .newSession)
@@ -78,7 +78,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
         navigationController?.navigationBar.prefersLargeTitles = false
     }
     
-    
+    // MARK: -
     
     fileprivate func initializeFeedData() {
         let presetViewModel = PresetScreenverViewModel()
@@ -122,11 +122,11 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     // MARK:- View Setup
     
     fileprivate func setupTableView(for tableView: UIView) {
-        view.addSubview(tableView)
+        view.insertSubview(tableView, at: 0)
         tableView.anchor(
             top: stateView.layoutMarginsGuide.bottomAnchor,
             leading: view.leadingAnchor,
-            bottom: bannerView.topAnchor,
+            bottom: view.layoutMarginsGuide.bottomAnchor,
             trailing: view.trailingAnchor)
     }
     
@@ -183,6 +183,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     
     func navigateToScreenerResults(searchParameters: [String]) {
         analyticsLogger.reportEvents(event: .screenForStocks(screenType: .quick))
+        
         let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters, networkingAPI: IntrinioAPI())
         self.navigationController?.pushViewController(searchResultVC, animated: true)
     }

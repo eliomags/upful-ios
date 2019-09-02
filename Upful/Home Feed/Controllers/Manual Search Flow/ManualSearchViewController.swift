@@ -36,11 +36,12 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         return v
     }()
     
-    
     lazy var searchButton: CustomButton = {
         let b = CustomButton(type: .system)
         b.setTitle("SEARCH", for: .normal)
+        b.layer.masksToBounds = true
         b.addTarget(self, action: #selector(handleSearch), for: .touchUpInside)
+        b.setupShadow(intensity: .intense, color: .black)
         return b
     }()
     

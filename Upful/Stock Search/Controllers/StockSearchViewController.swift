@@ -93,7 +93,7 @@ class StockSearchViewController: UITableViewController, UISearchBarDelegate {
                 self.displayData = fetchedCompanies
                 if fetchedCompanies.isEmpty {
                     DispatchQueue.main.async {
-                        self.tableView.setEmptyView(state: .emptyState(message: "Unable to find a company that matches your search.\nTry searching by ticker."))
+                        self.tableView.setEmptyView(state: .emptyState(title: "No Data.", message: "Unable to find a company that matches your search.\nTry searching by ticker."))
                     }
                 }
             case .failure(_):
@@ -113,7 +113,7 @@ class StockSearchViewController: UITableViewController, UISearchBarDelegate {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if displayData.isEmpty {
-            tableView.setEmptyView(state: .emptyState(message: "Search by company or by ticker."))
+            tableView.setEmptyView(state: .emptyState(title: "Get Started.", message: "Search by company or by ticker."))
         } else {
             tableView.restore()
         }

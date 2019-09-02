@@ -24,8 +24,24 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         static let newsCell = "newsCell"
     }
     
+    // MARK: - State
+    // TODO: - Better implementation of state
+    private enum State {
+        case Pending
+        case Loading
+        case Loaded(data: [[Any]])
+        case Error
+    }
     
-    // MARK: - Data
+    private var isLoading: Bool = false {
+        didSet {
+            observeStateChanges(isLoading)
+        }
+    }
+    
+    private func observeStateChanges(_ state: Bool) {
+        self.showActivitySpinner(state)
+    }
     
     private var chartRevenueData: [CompanyHistoricalDatum] = [] {
         didSet {
@@ -83,6 +99,18 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         return tv
     }()
     
+    var loadingView: UIView = {
+        let v = UIView()
+        let activityView = UIActivityIndicatorView(style: .gray)
+        activityView.startAnimating()
+        v.addSubview(activityView)
+        activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
+                            padding: .init(top: 30, left: 30, bottom: 30, right: 30))
+        v.layer.cornerRadius = 15
+        v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
+        return v
+    }()
+    
     
     // MARK: - Initializer Methods
     
@@ -107,6 +135,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         configureNewsData()
         configureCalcData()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
+        
+        isLoading = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -130,6 +160,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
             switch result {
             case .success(let downloadedData):
                 self.chartRevenueData = downloadedData
+                self.isLoading = false
+
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -141,6 +173,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
             switch result {
             case .success(let downloadedData):
                 self.chartEarningsData = downloadedData
+                self.isLoading = false
+
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -159,6 +193,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
             switch results {
             case .success(let downloadedNewsData):
                 self.newsData.append(contentsOf: downloadedNewsData.news ?? [])
+                self.isLoading = false
+
             case .failure(let error):
                 print(error)
             }
@@ -170,6 +206,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
             switch results {
             case .success(let financialData):
                 self.calcData.append(contentsOf: financialData)
+                self.isLoading = false
+
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -184,11 +222,34 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
 
 }
 
+extension StockDetailsViewController {
+    func showActivitySpinner(_ shouldShowSpinner: Bool) {
+        if shouldShowSpinner {
+            self.view.addSubview(loadingView)
+            loadingView.translatesAutoresizingMaskIntoConstraints = false
+            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        }
+        if !shouldShowSpinner {
+            DispatchQueue.main.async {
+                self.loadingView.removeFromSuperview()
+            }
+        }
+    }
+}
+
+
 extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 2 { return feedData[section].count }
-        
-        return 1
+        if self.isLoading == true {
+            tableView.setEmptyView(state: .emptyState(title: "", message: "Loading..."))
+            return 0
+        } else {
+            tableView.restore()
+            tableView.separatorStyle = .none
+            if section == 2 { return feedData[section].count }
+            return 1
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -230,14 +291,17 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = SectionHeaderLabel(padding: 16)
         header.backgroundColor = .white
-        let headerText = ["FINANCIALS", "METRICS", "NEWS"]
-        switch section {
-        case 0: header.text = headerText[0]
-        case 1: header.text = headerText[1]
-        case 2: header.text = headerText[2]
-        default: break
+        if !isLoading {
+            let headerText = ["FINANCIALS", "METRICS", "NEWS"]
+            switch section {
+            case 0: header.text = headerText[0]
+            case 1: header.text = headerText[1]
+            case 2: header.text = headerText[2]
+            default: break
+            }
+            return header
         }
-        return header
+        return nil
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -267,4 +331,6 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
 }
+
+
 
