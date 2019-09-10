@@ -9,106 +9,89 @@
 import UIKit
 
 class CompanyViewModel {
-    static var facebook = PopularCompany(details: "Facebook, Inc.", header: "FB")
-    static var netflix = PopularCompany(details: "Netflix", header: "NFLX")
-    static var apple = PopularCompany(details: "Apple", header: "AAPL")
-    static var amazon = PopularCompany(details: "Amazon.com", header: "AMZN")
-    static var google = PopularCompany(details: "Alphabet Inc.", header: "GOOGL")
-    static var twitter = PopularCompany(details: "Twitter", header: "TWTR")
-    static var microsoft = PopularCompany(details: "Microsoft Corporation", header: "MSFT")
-    static var mongoDB = PopularCompany(details: "MongoDB Inc.", header: "MDB")
+    static let facebook = PopularCompany(details: "Facebook Inc", header: "FB")
+    static let netflix = PopularCompany(details: "Netflix Inc", header: "NFLX")
+    static let apple = PopularCompany(details: "Apple Inc", header: "AAPL")
+    static let amazon = PopularCompany(details: "Amazon.com Inc", header: "AMZN")
+    static let google = PopularCompany(details: "Alphabet Inc", header: "GOOGL")
+    static let twitter = PopularCompany(details: "Twitter Inc", header: "TWTR")
+    static let microsoft = PopularCompany(details: "Microsoft Corp", header: "MSFT")
+    static let mongoDB = PopularCompany(details: "MongoDB Inc", header: "MDB")
     
     static func configureCompanyList() -> [PopularCompany] {
         return [facebook, netflix, apple, amazon, google, twitter, microsoft, mongoDB]
     }
 }
 
-
-class PresetScreenverViewModel {
-    var value1: PresetScreener = PresetScreener(header: "VALUE 1",
+class PresetFeedDataLoader {
+    private let value1: PresetScreener = PresetScreener(
+                                                header: "Value stocks 1",
                                                 details: "Price to Earnings < 20\nPrice to Book < 6\nEBIT Margin > 5%",
                                                 screenType: .value, identifier: .value1)
-    var value2: PresetScreener = PresetScreener(header: "VALUE 2",
+    private let value2: PresetScreener = PresetScreener(
+                                                header: "Value stocks 2",
                                                 details: "Price to Earnings < 20\nPrice to Book < 10\nEBIT Margin > 10%\n1 Year Revenue Growth > 5%",
                                                 screenType: .value, identifier: .value2)
-    var value3: PresetScreener = PresetScreener(header: "VALUE 3",
+    private let value3: PresetScreener = PresetScreener(
+                                                header: "Value stocks 3",
                                                 details: "Price to Earnings < 30\nFree Cash Flow Growth > 10%\nEBIT Margin > 40%",
                                                 screenType: .value, identifier: .value3)
     
-    func configureValueData() -> [PresetScreener] {
-        value1.createURLComponent(criteria: .name, parameter: .gt, 0)
-        value1.createURLComponent(criteria: .pricetoearnings, parameter: .lt, 20)
-        value1.createURLComponent(criteria: .pricetobook, parameter: .lt, 6)
-        value1.createURLComponent(criteria: .ebitmargin, parameter: .gt, 0.05)
-
-        value2.createURLComponent(criteria: .name, parameter: .gt, 0)
-        value2.createURLComponent(criteria: .pricetoearnings, parameter: .lt, 25)
-        value2.createURLComponent(criteria: .pricetobook, parameter: .lt, 10)
-        value2.createURLComponent(criteria: .revenuegrowth, parameter: .gt, 0.05)
-        value2.createURLComponent(criteria: .ebitmargin, parameter: .gt, 0.10)
+    private let growth1: PresetScreener = PresetScreener(
+                                                header: "Growth stocks 1",
+                                                details: "1 Year EPS Growth > 10%\n1 Year Invested Capital Growth > 5%",
+                                                screenType: .growth, identifier: .growth1)
+    private let growth2: PresetScreener = PresetScreener(
+                                                header: "Growth stocks 2",
+                                                details: "1 Year Revenue Growth > 10%\nPrice to Revenue < 15",
+                                                screenType: .growth, identifier: .growth2)
+    private let growth3: PresetScreener = PresetScreener(
+                                                header: "Growth stocks 3",
+                                                details: "1 Year EPS Growth > 35%\nPrice to Revenue < 10",
+                                                screenType: .growth, identifier: .growth3)
+    
+    private let dividend1: PresetScreener = PresetScreener(
+                                                header: "Dividend stocks 1",
+                                                details: "Dividend Yield > 2%\nPayout Ratio < 60%",
+                                                screenType: .dividend, identifier: .dividend1)
+    private let dividend2: PresetScreener = PresetScreener(
+                                                header: "Dividend stocks 2",
+                                                details: "Dividend Yield > 0%\nRevenue Growth > 10%\nPrice to Revenue < 15",
+                                                screenType: .dividend, identifier: .dividend2)
+    private let dividend3: PresetScreener = PresetScreener(
+                                                header: "Dividend stocks 3",
+                                                details: "Dividend Yield > 1%\nPayout Ratio < 50%\nEPS Growth > 10%",
+                                                screenType: .dividend, identifier: .dividend3)
+    
+    
+    func configureCompanyList() -> [PopularCompany] {
         
-        value3.createURLComponent(criteria: .name, parameter: .gt, 0)
-        value3.createURLComponent(criteria: .pricetoearnings, parameter: .lt, 30)
-        value3.createURLComponent(criteria: .fcffgrowth, parameter: .gt, 0.10)
-        value3.createURLComponent(criteria: .ebitmargin, parameter: .lt, 0.4)
-
-        return [value1,value2,value3]
+        return CompanyViewModel.configureCompanyList()
     }
     
-    var growth1: PresetScreener = PresetScreener(header: "GROWTH 1",
-                                                 details: "1 Year EPS Growth > 10%\n1 Year Invested Capital Growth > 5%",
-                                                 screenType: .growth, identifier: .growth1)
-    var growth2: PresetScreener = PresetScreener(header: "GROWTH 2",
-                                                 details: "1 Year Revenue Growth > 10%\nPrice to Revenue < 15",
-                                                 screenType: .growth, identifier: .growth2)
-    var growth3: PresetScreener = PresetScreener(header: "GROWTH 3",
-                                                 details: "1 Year EPS Growth > 35%\nPrice to Revenue < 10",
-                                                 screenType: .growth, identifier: .growth3)
-
-    func configureGrowthData() -> [PresetScreener] {
-        growth1.createURLComponent(criteria: .name, parameter: .gt, 0)
-        growth1.createURLComponent(criteria: .epsgrowth, parameter: .gt, 0.1)
-        growth1.createURLComponent(criteria: .investedcapitalgrowth, parameter: .gt, 0.05)
+    func configureValueData() -> [PresetScreenerViewModel] {
+        let value1VM = PresetScreenerViewModel(presetScreener: value1)
+        let value2VM = PresetScreenerViewModel(presetScreener: value2)
+        let value3VM = PresetScreenerViewModel(presetScreener: value3)
         
-        growth2.createURLComponent(criteria: .name, parameter: .gt, 0)
-        growth2.createURLComponent(criteria: .revenuegrowth, parameter: .gt, 0.1)
-        growth2.createURLComponent(criteria: .pricetorevenue, parameter: .lt, 15)
-
-        growth3.createURLComponent(criteria: .name, parameter: .gt, 0)
-        growth3.createURLComponent(criteria: .epsgrowth, parameter: .gt, 0.35)
-        growth3.createURLComponent(criteria: .pricetorevenue, parameter: .lt, 10)
-        
-        return [growth1,growth2,growth3]
+        return [value1VM, value2VM, value3VM]
     }
     
-    var dividend1: PresetScreener = PresetScreener(header: "DIVIDEND 1",
-                                                 details: "Dividend Yield > 2%\nPayout Ratio < 60%",
-                                                 screenType: .dividend, identifier: .dividend1)
-    var dividend2: PresetScreener = PresetScreener(header: "DIVIDEND 2",
-                                                   details: "Dividend Yield > 0%\nRevenue Growth > 10%\nPrice to Revenue < 15",
-                                                 screenType: .dividend, identifier: .dividend2)
-    var dividend3: PresetScreener = PresetScreener(header: "DIVIDEND 3",
-                                                   details: "Dividend Yield > 1%\nPayout Ratio < 50%\nEPS Growth > 10%",
-                                                 screenType: .dividend, identifier: .dividend3)
-    
-    func configureDividendData() -> [PresetScreener] {
-        dividend1.createURLComponent(criteria: .name, parameter: .gt, 0)
-        dividend1.createURLComponent(criteria: .dividendyield, parameter: .gt, 0.02)
-        dividend1.createURLComponent(criteria: .divpayoutratio, parameter: .lt, 0.60)
+    func configureGrowthData() -> [PresetScreenerViewModel] {
+        let growth1VM = PresetScreenerViewModel(presetScreener: growth1)
+        let growth2VM = PresetScreenerViewModel(presetScreener: growth2)
+        let growth3VM = PresetScreenerViewModel(presetScreener: growth3)
         
-        dividend2.createURLComponent(criteria: .name, parameter: .gt, 0)
-        dividend2.createURLComponent(criteria: .dividendyield, parameter: .gt, 0.00)
-        dividend2.createURLComponent(criteria: .revenuegrowth, parameter: .gt, 0.1)
-        dividend2.createURLComponent(criteria: .pricetorevenue, parameter: .lt, 15)
-        
-        dividend3.createURLComponent(criteria: .name, parameter: .gt, 0)
-        dividend3.createURLComponent(criteria: .dividendyield, parameter: .gt, 0.01)
-        dividend3.createURLComponent(criteria: .divpayoutratio, parameter: .lt, 0.50)
-        dividend3.createURLComponent(criteria: .epsgrowth, parameter: .gt, 0.1)
-        
-        return [dividend1, dividend2, dividend3]
+        return [growth1VM, growth2VM, growth3VM]
     }
-
+    
+    func configureDividendData() -> [PresetScreenerViewModel] {
+        let dividend1VM = PresetScreenerViewModel(presetScreener: dividend1)
+        let dividend2VM = PresetScreenerViewModel(presetScreener: dividend2)
+        let dividend3VM = PresetScreenerViewModel(presetScreener: dividend3)
+        
+        return [dividend1VM, dividend2VM, dividend3VM]
+    }
 }
 
 

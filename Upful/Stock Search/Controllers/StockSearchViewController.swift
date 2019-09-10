@@ -8,11 +8,17 @@
 
 import UIKit
 
-class StockSearchViewController: UITableViewController, UISearchBarDelegate {
+class StockSearchViewController: UITableViewController, UISearchControllerDelegate, UISearchBarDelegate {
     
     private enum ReuseID {
         static let stockCell = "stockCell"
     }
+    
+    
+    // MARK: - Dependencies
+    
+    let intrinioAPI: IntrinioAPI
+    
     
     // MARK: - State
     
@@ -29,19 +35,14 @@ class StockSearchViewController: UITableViewController, UISearchBarDelegate {
     }
     
     
-    // MARK: - Dependencies
-    
-    let intrinioAPI: IntrinioAPI
-    
     // MARK: - Views
     
-    lazy var searchBar: UISearchBar = {
-        let sb = UISearchBar()
-        sb.searchBarStyle = UISearchBar.Style.minimal
-        sb.sizeToFit()
-        sb.placeholder = "Search"
-        sb.delegate = self
-        return sb
+    lazy var searchController: UISearchController = {
+        let sc = UISearchController(searchResultsController: nil)
+        sc.delegate = self
+        sc.searchBar.delegate = self
+        sc.dimsBackgroundDuringPresentation = false
+        return sc
     }()
     
     
@@ -49,7 +50,7 @@ class StockSearchViewController: UITableViewController, UISearchBarDelegate {
     
     init(networkingAPI: IntrinioAPI) {
         self.intrinioAPI = networkingAPI
-        super.init(style: .grouped)
+        super.init(style: .plain)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -59,9 +60,10 @@ class StockSearchViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        tableView.tableHeaderView = searchBar
+        tableView.backgroundColor = .white
+        tableView.keyboardDismissMode = .onDrag
         tableView.register(StockSearchCell.self, forCellReuseIdentifier: ReuseID.stockCell)
-        hideKeyboardWhenTappedAround()
+        definesPresentationContext = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,13 +76,14 @@ class StockSearchViewController: UITableViewController, UISearchBarDelegate {
     
     private func setupNavBar() {
         navigationItem.title = "Search"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController!.navigationBar.tintColor = .black
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-    }
-    
-    private func setupViews() {
-        self.tableView.tableHeaderView = searchBar
+        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+        if #available(iOS 11.0, *) {
+            navigationItem.searchController = searchController
+            navigationItem.hidesSearchBarWhenScrolling = false
+        } else {
+            tableView.tableHeaderView = searchController.searchBar
+        }
     }
     
     
@@ -104,8 +107,24 @@ class StockSearchViewController: UITableViewController, UISearchBarDelegate {
         }
     }
     
+    
+    // MARK: - SearchBar Delegate Methods
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         fetchCompanies(searchText)
+    }
+    
+    
+    // MARK: - ScrollView Delegate Methods
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.resignFirstResponder()
+        view.endEditing(true)
+        if scrollView.contentOffset.y < 0 {
+            
+        } else {
+            
+        }
     }
     
     
@@ -131,7 +150,7 @@ class StockSearchViewController: UITableViewController, UISearchBarDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let placeHolder = displayData[indexPath.item]
-        let stockDetailsVC = StockDetailsViewController(ticker: placeHolder.ticker ?? "", companyName: placeHolder.name ?? "", intrinioApi: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
+        let stockDetailsVC = StockDetailsViewController(ticker: placeHolder.ticker ?? "", companyName: placeHolder.name ?? "", networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
         
         navigationController?.pushViewController(stockDetailsVC, animated: true)
     }

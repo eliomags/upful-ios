@@ -13,6 +13,9 @@ enum SearchCriteria: String, CaseIterable {
     case marketcap
     case totalrevenue
     case netincome
+    case totalassets
+    case totalliabilities
+    case totalequity
     
     // Value
     case pricetoearnings

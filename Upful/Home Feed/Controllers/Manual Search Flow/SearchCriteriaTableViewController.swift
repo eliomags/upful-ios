@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol ManualSearchDelegate: class {
-    func addSearchParameter(parameterItem: ParameterItem, indexPath: IndexPath)
-}
-
 class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDelegate {
    
     private enum ReuseID {
@@ -21,7 +17,6 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     // MARK: - Data
     
     private var manualSearchCriteriaItems: [[ManualScreenItem]] = []
-    
     private var manualScreenItems: [ManualScreenItem] = []
     
     
@@ -36,7 +31,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     lazy var addCriteriaButton: CustomRoundButton = {
         let b = CustomRoundButton(type: .system)
         b.setBackgroundImage(#imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
-        b.backgroundColor = .appAccent
+        b.backgroundColor = .appAccent3
         b.layer.cornerRadius = b.intrinsicContentSize.height / 2
         b.layer.masksToBounds = true
         b.addTarget(self, action: #selector(handleNavigation), for: .touchUpInside)
@@ -45,7 +40,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     }()
     
     
-    // MARK:- Initializer Methods
+    // MARK: - Initializer Methods
     
     override init(style: UITableView.Style) {
         super.init(style: style)
@@ -72,6 +67,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         addCriteriaButton.removeFromSuperview()
     }
     
+    
     // MARK: - View Setup
     
     private func setupTableView() {
@@ -94,6 +90,10 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
             }
         }
         manualScreenItems.remove(at: indexPath.row)
+    }
+    
+    func updateScreenerItems(with updatedItems: [ManualScreenItem]) {
+        self.manualScreenItems = updatedItems
     }
     
     
@@ -125,7 +125,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     }
     
     
-    // MARK:- Data Setup
+    // MARK: - Data Setup
     
     fileprivate func initializeDisplayData() {
         var valuation: [ManualScreenItem] = []
@@ -204,7 +204,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 2 {
-            return 50
+            return 80
         } else {
             return 15
         }

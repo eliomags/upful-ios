@@ -9,30 +9,10 @@
 import Foundation
 import Charts
 
-class ReusableChartView: UIView {
-    let graphHeader = DetailsHeaderView()
-    let chartView = ChartView()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        addSubview(graphHeader)
-        graphHeader.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor,
-                           padding: .init(top: 8, left: 16, bottom: 0, right: 8))
-        addSubview(chartView)
-        chartView.anchor(top: graphHeader.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
-                         padding: .init(top: 6, left: 8, bottom: 8, right: 8))
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
 
-class ChartView: BarChartView {
-    
+class GenericBarChartView: BarChartView {
     let chartViewModel = ChartViewModel()
-    let stubData = ChartViewModel.setupData()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
@@ -42,7 +22,6 @@ class ChartView: BarChartView {
 
     
     private func setupView() {
-//        chartDescription?.text = "Revenue vs. Earnings"
         chartDescription?.text = ""
         doubleTapToZoomEnabled = false
         dragEnabled = false
@@ -54,6 +33,8 @@ class ChartView: BarChartView {
     
     private func setupLegend() {
         legend.enabled = true
+        legend.textColor = .black
+        legend.font = UIFont.systemFont(ofSize: 10, weight: .semibold)
         legend.horizontalAlignment = .right
         legend.verticalAlignment = .top
         legend.orientation = .vertical
@@ -67,7 +48,9 @@ class ChartView: BarChartView {
         leftAxis.spaceTop = 0.35
         leftAxis.spaceBottom = 0.2
         leftAxis.valueFormatter = chartViewModel
-        leftAxis.gridColor = .darkGray
+        leftAxis.labelTextColor = .black
+        leftAxis.labelFont = UIFont.systemFont(ofSize: 10, weight: .semibold)
+        leftAxis.gridColor = .lightGray
         leftAxis.drawGridLinesEnabled = true
         leftAxis.drawAxisLineEnabled = false
         rightAxis.drawGridLinesEnabled = false
@@ -94,7 +77,6 @@ class ChartView: BarChartView {
             let dataEntry1 = BarChartDataEntry(x: Double(i), y: values1[i])
             dataEntries1.append(dataEntry1)
         }
-        
         let chartDataSet = BarChartDataSet(entries: dataEntries, label: "Revenue")
         let chartDataSet1 = BarChartDataSet(entries: dataEntries1, label: "Earnings")
         let dataSets: [BarChartDataSet] = [chartDataSet, chartDataSet1]
@@ -102,21 +84,22 @@ class ChartView: BarChartView {
         chartDataSet.colors = [UIColor.positive]
         chartDataSet1.colors = [UIColor.appAccent]
         
-        chartDataSet.valueFont = NSUIFont.systemFont(ofSize: 9, weight: .semibold)
-        chartDataSet1.valueFont = NSUIFont.systemFont(ofSize: 9, weight: .semibold)
+        chartDataSet.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
+        chartDataSet1.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
+        
+        chartDataSet.valueColors = [NSUIColor.black]
+        chartDataSet1.valueColors = [NSUIColor.black]
 
         chartDataSet.valueFormatter = chartViewModel
         chartDataSet1.valueFormatter = chartViewModel
-        
+
         let chartData = BarChartData(dataSets: dataSets)
-        
         let groupSpace = 0.3
         let barSpace = 0.05
         let barWidth = 0.3
-        
         let groupCount = dataPoints.count
         let startYear = 0
-        
+
         chartData.barWidth = barWidth
         xAxis.axisMinimum = Double(startYear)
         let entireGroupSpace = chartData.groupWidth(groupSpace: groupSpace, barSpace: barSpace)
@@ -143,7 +126,7 @@ class ChartViewModel: IAxisValueFormatter, IValueFormatter {
     }
     
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        let formattedValue = Int(value).formatUsingAbbreviation()
+        let formattedValue = "$"+Int(value).formatUsingAbbreviation()
         
         return formattedValue
     }

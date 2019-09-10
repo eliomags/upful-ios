@@ -11,13 +11,15 @@ import UIKit
 
 class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedNavigationDelegate {
 
-    // MARK:- Dependencies
+    // MARK: - Dependencies
     
     let analyticsLogger: AnalyticsLogger
-    var homeFeedItems: [[FeedItem]] = []
+    let presetFeedDataLoader: PresetFeedDataLoader
+
+    var homeFeedItems: [[Any]] = []
     
     
-    // MARK:- Views
+    // MARK: - Views
     
     lazy var stateView: HomeFeedStateView = {
         let v = HomeFeedStateView()
@@ -41,19 +43,20 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     
     lazy var bannerView: GADBannerView = {
         let bannerView = GADBannerView(adSize: kGADAdSizeBanner)
-        bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+        bannerView.adUnitID = Constants.AdMobID.testAdID
         bannerView.rootViewController = self
-        bannerView.load(GADRequest())
         bannerView.delegate = self
+        bannerView.load(GADRequest())
         bannerView.backgroundColor = .clear
         return bannerView
     }()
     
     
-    // MARK:- Initializer Methods
+    // MARK: - Initializer Methods
     
-    init(analyitcs: AnalyticsLogger) {
+    init(analyitcs: AnalyticsLogger, presetDataLoader: PresetFeedDataLoader) {
         self.analyticsLogger = analyitcs
+        self.presetFeedDataLoader = presetDataLoader
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -81,11 +84,10 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     // MARK: -
     
     fileprivate func initializeFeedData() {
-        let presetViewModel = PresetScreenverViewModel()
-        homeFeedItems.append(CompanyViewModel.configureCompanyList())
-        homeFeedItems.append(presetViewModel.configureValueData())
-        homeFeedItems.append(presetViewModel.configureGrowthData())
-        homeFeedItems.append(presetViewModel.configureDividendData())
+        homeFeedItems.append(presetFeedDataLoader.configureCompanyList())
+        homeFeedItems.append(presetFeedDataLoader.configureValueData())
+        homeFeedItems.append(presetFeedDataLoader.configureGrowthData())
+        homeFeedItems.append(presetFeedDataLoader.configureDividendData())
     }
     
     fileprivate func initializePopularCompanyData() {
@@ -119,7 +121,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     }
     
     
-    // MARK:- View Setup
+    // MARK: - View Setup
     
     fileprivate func setupTableView(for tableView: UIView) {
         view.insertSubview(tableView, at: 0)
@@ -132,14 +134,12 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     
     fileprivate func configureNavBar() {
         navigationItem.title = "Upful"
-        navigationController!.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.backgroundColor = UIColor.white
-        navigationController!.navigationBar.tintColor = .black
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     }
     
     
-    // MARK:- Setup Banner View
+    // MARK: - Setup Banner View
     
     fileprivate func setupViews() {
         view.addSubview(stateView)
@@ -163,7 +163,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
                           leading: view.leadingAnchor,
                           bottom: view.layoutMarginsGuide.bottomAnchor,
                           trailing: view.trailingAnchor,
-                          size: CGSize(width: 0, height: 0))
+                          padding: .init(top: 0, left: 8, bottom: 12, right: 8))
     }
     
     func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
@@ -179,7 +179,7 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     }
     
     
-    // MARK:- Navigation
+    // MARK: - Navigation
     
     func navigateToScreenerResults(searchParameters: [String]) {
         analyticsLogger.reportEvents(event: .screenForStocks(screenType: .quick))
@@ -189,14 +189,12 @@ class HomeFeedViewController: UIViewController, GADBannerViewDelegate, HomeFeedN
     }
     
     func navigateToDetails(popularCompany ticker: String, companyName: String) {
-        let detailsVC = StockDetailsViewController(ticker: ticker, companyName: companyName, intrinioApi: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
+        let detailsVC = StockDetailsViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
         self.navigationController?.pushViewController(detailsVC, animated: true)
     }
-    
 }
 
 extension HomeFeedViewController: UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         default: return 1
@@ -209,16 +207,17 @@ extension HomeFeedViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let emptyCell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        
         switch indexPath.section {
         case 0:
             let companyCell = PopularCompanyTableViewCell(popularCompanies: homeFeedItems[indexPath.section] as! [PopularCompany])
             companyCell.delegate = self
+            
             return companyCell
         case 1,2,3:
-            guard let screenerData = homeFeedItems[indexPath.section] as? [PresetScreener] else { return emptyCell }
+            guard let screenerData = homeFeedItems[indexPath.section] as? [PresetScreenerViewModel] else { return emptyCell }
             let screenerCell = PresetScreenerTableViewCell(searches: screenerData)
             screenerCell.delegate = self
+            
             return screenerCell
         default:
             return emptyCell
@@ -227,11 +226,10 @@ extension HomeFeedViewController: UITableViewDataSource {
 }
 
 extension HomeFeedViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0: return 120
-        case 1,2,3: return 210
+        case 1,2,3: return UIScreen.main.bounds.height/6 + 30
         default: return UITableView.automaticDimension
         }
     }
@@ -261,7 +259,7 @@ extension HomeFeedViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == homeFeedItems.count - 1 {
-            return 50
+            return 80
         } else {
             return 25
         }
@@ -269,7 +267,6 @@ extension HomeFeedViewController: UITableViewDelegate {
 }
 
 extension HomeFeedViewController: HomeFeedStateDelegate {
-    
     func configureQuickSearch() {
         manualTableVC.remove()
         setupTableView(for: quickSearchTableView)

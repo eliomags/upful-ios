@@ -8,6 +8,24 @@
 
 import Foundation
 
+// MARK: - INTRINIO SEARCH RESULTS MODEL
+struct ScreeningResponse: Decodable {
+    var data: [Stock]
+    var resultCount: Int?
+    var pageSize: Int?
+}
+
+class Stock: Decodable {
+    let name: String?
+    let ticker: String?
+    let marketcap: Int?
+    var divyield: Double?
+    var pricetoearnings: Double?
+    var ebitgrowth: Double?
+    var standardizedFinancials: [StandardizedFinancial]?
+    var news: [CompanyNewsModel]?
+}
+
 struct CompanyNewsModel: Decodable {
     let title: String
     let publicationDate: String

@@ -54,7 +54,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
     
     var adsToLoad = [GADBannerView]()
     var loadStateForAds = [GADBannerView: Bool]()
-    let adUnitID = "ca-app-pub-3940256099942544/2934735716"
+    let adUnitID = Constants.AdMobID.testAdID
     var adInterval = 12
     let adViewHeight = CGFloat(100)
     
@@ -215,7 +215,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
     
     fileprivate func setupNavBar() {
         sortButton.addTarget(self, action: #selector(handleSortTap), for: .touchUpInside)
-        self.title = "Search Results"
+        navigationItem.title = "Search Results"
         navigationController?.navigationBar.prefersLargeTitles = true
         let sortButton = UIBarButtonItem(customView: self.sortButton)
         navigationItem.rightBarButtonItem = sortButton
@@ -225,6 +225,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
     
     // MARK: - Actions
     
+    /// Handles sorting the loaded Search Results by Market Cap through a UIAlertController
     @objc private func handleSortTap(_ sender: UIButton) {
         intrinioAPI.screenPage = 1
         let sortMenu = UIAlertController(title: nil, message: "Choose Sort", preferredStyle: .actionSheet)
@@ -294,7 +295,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let selectedCompany = searchResults[indexPath.item] as? Stock {
-            self.navigationController?.pushViewController(StockDetailsViewController(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "", intrinioApi: IntrinioAPI(), analyticsLogger: AnalyticsLogger()), animated: true)
+            self.navigationController?.pushViewController(StockDetailsViewController(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "", networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger()), animated: true)
         }
     }
 }

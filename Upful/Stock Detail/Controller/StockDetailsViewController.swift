@@ -10,7 +10,7 @@ import UIKit
 import Charts
 
 class StockDetailsViewController: UIViewController, ChartViewDelegate {
-    
+
     // MARK: - Dependencies
     
     let ticker: String
@@ -36,6 +36,13 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     private var isLoading: Bool = false {
         didSet {
             observeStateChanges(isLoading)
+            if !isLoading {
+                DispatchQueue.main.async {
+                    self.detailsTableView.reloadData()
+                    self.refreshControl.endRefreshing()
+                    self.detailsTableView.contentInset = UIEdgeInsets.zero
+                }
+            }
         }
     }
     
@@ -43,40 +50,21 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         self.showActivitySpinner(state)
     }
     
-    private var chartRevenueData: [CompanyHistoricalDatum] = [] {
-        didSet {
-            DispatchQueue.main.async {
-                self.detailsTableView.reloadData()
-            }
-        }
-    }
-    private var chartEarningsData: [CompanyHistoricalDatum] = [] {
-        didSet {
-            DispatchQueue.main.async {
-                self.detailsTableView.reloadData()
-            }
-        }
-    }
-    
+    private var chartRevenueData: [CompanyHistoricalDatum] = []
+    private var chartEarningsData: [CompanyHistoricalDatum] = []
     private var chartData: [[CompanyHistoricalDatum]] {
         return [chartRevenueData, chartEarningsData]
     }
     
-    private var calcData: [StandardizedFinancial] = [] {
-        didSet {
-            DispatchQueue.main.async {
-                self.detailsTableView.reloadData()
-            }
-        }
+    private var historicalAssetData: [CompanyHistoricalDatum] = []
+    private var historicalLiabilitiesData: [CompanyHistoricalDatum] = []
+    private var historicalEquityData: [CompanyHistoricalDatum] = []
+    private var balanceSheetData: [[CompanyHistoricalDatum]] {
+        return [historicalAssetData, historicalLiabilitiesData, historicalEquityData]
     }
     
-    private var newsData: [CompanyNewsModel] = [] {
-        didSet {
-            DispatchQueue.main.async {
-                self.detailsTableView.reloadData()
-            }
-        }
-    }
+    private var calcData: [StandardizedFinancial] = []
+    private var newsData: [CompanyNewsModel] = []
     
     private var feedData: [[Any]] {
         return [chartData, calcData, newsData]
@@ -85,21 +73,38 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Views
     
-    lazy var detailsTableView: UITableView = {
+    private lazy var stockHeaderView: TableHeaderView = {
+        let v = TableHeaderView()
+        v.detailsLabel.text = companyName
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+        return v
+    }()
+    
+    private lazy var refreshControl: UIRefreshControl = {
+        let rc = UIRefreshControl()
+        rc.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
+        return rc
+    }()
+    
+    private lazy var detailsTableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(GraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
+        tv.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
         tv.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
         tv.register(NewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
         tv.showsVerticalScrollIndicator = false
         tv.separatorStyle = .none
         tv.backgroundColor = .white
-        tv.tableHeaderView = UIView()
+        tv.tableHeaderView = stockHeaderView
+        if #available(iOS 10.0, *) { tv.refreshControl = refreshControl }
+        else { tv.addSubview(refreshControl) }
+        
         return tv
     }()
     
-    var loadingView: UIView = {
+    private var loadingView: UIView = {
         let v = UIView()
         let activityView = UIActivityIndicatorView(style: .gray)
         activityView.startAnimating()
@@ -108,17 +113,18 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
                             padding: .init(top: 30, left: 30, bottom: 30, right: 30))
         v.layer.cornerRadius = 15
         v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
+        
         return v
     }()
     
     
     // MARK: - Initializer Methods
     
-    init(ticker: String, companyName: String, intrinioApi: IntrinioAPI, analyticsLogger: AnalyticsLogger) {
+    init(ticker: String, companyName: String, networkingAPI: IntrinioAPI, analyticsLogger: AnalyticsLogger) {
         self.ticker = ticker
         self.companyName = companyName
         self.analyticsLogger = analyticsLogger
-        self.intrinioApi = intrinioApi
+        self.intrinioApi = networkingAPI
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -130,13 +136,8 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .backgroundColor
         setupViews()
-        getRevenueData()
-        getEarningsData()
-        configureNewsData()
-        configureCalcData()
+        setData()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
-        
-        isLoading = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -150,6 +151,10 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     private func setupViews() {
         view.addSubview(detailsTableView)
         detailsTableView.fillSuperview()
+    }
+    
+    @objc private func refreshData(_ sender: Any) {
+        setData()
     }
     
     
@@ -181,18 +186,66 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         }
     }
     
-    private func configureChart(chartView: ChartView) {
+    private func getAssetData() {
+        self.intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .totalassets, frequency: .historic) { (results) in
+            switch results {
+            case .success(let downloadedData):
+                self.historicalAssetData = downloadedData
+                self.isLoading = false
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func getLiabilitiesData() {
+        self.intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .totalliabilities, frequency: .historic) { (results) in
+            switch results {
+            case .success(let downloadedData):
+                self.historicalLiabilitiesData = downloadedData
+                self.isLoading = false
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func getEquityData() {
+        self.intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .totalequity, frequency: .historic) { (results) in
+            switch results {
+            case .success(let downloadedData):
+                self.historicalEquityData = downloadedData
+                self.isLoading = false
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func configureChart(chartView: GenericBarChartView) {
         guard !chartRevenueData.isEmpty && !chartEarningsData.isEmpty else { return }
         chartView.setupChart(dataPoints: chartRevenueData.map({ $0.date.formatDate() }),
                              values: chartRevenueData.map({ $0.value }),
                              values1: chartEarningsData.map({ $0.value }))
     }
     
+    private func configurePieChart(chartView: GenericPieChartView) {
+        guard !historicalAssetData.isEmpty &&
+            !historicalLiabilitiesData.isEmpty &&
+            !historicalEquityData.isEmpty else { return }
+        let index = historicalAssetData.count - 1
+        
+        chartView.setupPieChart(values: [
+            historicalAssetData[index].value,
+            historicalLiabilitiesData[index].value,
+            historicalEquityData[index].value])
+    }
+    
     private func configureNewsData() {
         self.intrinioApi.getCompanyNewsData(ticker: self.ticker) { (results) in
             switch results {
             case .success(let downloadedNewsData):
-                self.newsData.append(contentsOf: downloadedNewsData.news ?? [])
+                self.newsData = downloadedNewsData.news ?? []
                 self.isLoading = false
 
             case .failure(let error):
@@ -205,7 +258,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         self.intrinioApi.fetchStockBatchFinancials(ticker: self.ticker) { (results) in
             switch results {
             case .success(let financialData):
-                self.calcData.append(contentsOf: financialData)
+                self.calcData = financialData
                 self.isLoading = false
 
             case .failure(let error):
@@ -214,10 +267,23 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         }
     }
     
+    private func setData() {
+        isLoading = true
+        getRevenueData()
+        getEarningsData()
+        configureNewsData()
+        configureCalcData()
+//        getAssetData()
+//        getLiabilitiesData()
+//        getEquityData()
+    }
+    
     fileprivate func setupNavBar() {
-        navigationController?.navigationBar.prefersLargeTitles = false
-        self.title = "\(ticker)"
+        navigationItem.title = "\(ticker)"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .heavy)]
     }
 
 }
@@ -237,7 +303,6 @@ extension StockDetailsViewController {
         }
     }
 }
-
 
 extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -259,11 +324,11 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            guard let graphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? GraphTableViewCell else { return UITableViewCell() }
-            graphCell.chartView.delegate = self
-            configureChart(chartView: graphCell.chartView)
+            guard let barGraphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? BarGraphTableViewCell else { return UITableViewCell() }
+            barGraphCell.chartView.delegate = self
+            configureChart(chartView: barGraphCell.chartView)
             
-            return graphCell
+            return barGraphCell
         case 1:
             guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath) as? DetailsCalculationCell else { return UITableViewCell() }
             calculationsCell.setupCell(with: calcData)
@@ -274,15 +339,16 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
             let news = feedData[indexPath.section] as? [CompanyNewsModel]
             newsCell.headerLabel.text = news?[indexPath.item].title
             newsCell.detailLabel.text = news?[indexPath.item].summary
+            
             return newsCell
         default:
             return UITableViewCell()
-        }        
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath {
-        case IndexPath(row: 0, section: 0) :
+        case IndexPath(row: 0, section: 0),IndexPath(row: 1, section: 0) :
             return (UIScreen.main.bounds.height / 2) - 90
         default: return UITableView.automaticDimension
         }
@@ -312,7 +378,6 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
             analyticsLogger.reportEvents(event: .selectedNewsArticle)
             UIApplication.shared.open(newsArticleURL, options: [:], completionHandler: nil)
         }
-        
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -320,6 +385,7 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 { return 35 }
         return 50
     }
     
@@ -331,6 +397,4 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
 }
-
-
 

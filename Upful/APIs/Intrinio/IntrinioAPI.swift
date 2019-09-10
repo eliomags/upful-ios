@@ -8,31 +8,9 @@
 
 import Foundation
 
-
-// MARK: - INTRINIO SEARCH RESULTS MODEL
-
-struct ScreeningResponse: Decodable {
-    var data: [Stock]
-    var resultCount: Int?
-    var pageSize: Int?
-}
-
-class Stock: Decodable {
-    let name: String?
-    let ticker: String?
-    let marketcap: Int?
-    var divyield: Double?
-    var pricetoearnings: Double?
-    var ebitgrowth: Double?
-    var standardizedFinancials: [StandardizedFinancial]?
-    var news: [CompanyNewsModel]?
-}
-
 final class IntrinioAPI {
-    
-    private let apiKey = "&api_key=OjNiMzRkZmFlNDBkYjIzYTgyMTNhNjcyZGNlZmYzMjE1"
+    private let apiKey = Constants.Intrinio.apiKey
 
-    
     private let companySearchEndpoint = "https://api-v2.intrinio.com/companies/search?query="
     
     func searchByName(name: String, completion: @escaping (Result<[Company],Error>) -> Void) {
@@ -54,7 +32,6 @@ final class IntrinioAPI {
         }
         task.resume()
     }
-    
     
     
     // MARK: - Screening for stocks

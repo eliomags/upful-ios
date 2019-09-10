@@ -19,26 +19,28 @@ private class FeedButton: UIButton {
         super.init(frame: .zero)
         setTitleColor(.darkText, for: .normal)
         backgroundColor = .clear
-        titleLabel?.font = .viewHeader
-    }    
+        titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+//        titleLabel?.font = .viewHeader
+    }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 class HomeFeedStateView: UIView {
-    
     weak var delegate: HomeFeedStateDelegate?
     
     private let quickSearchButton: FeedButton = {
         let b = FeedButton()
         b.setTitle("Quick Search", for: .normal)
+        b.setTitleColor(.black, for: .normal)
         return b
     }()
     
     private let manualSearchButton: FeedButton = {
         let b = FeedButton()
         b.setTitle("Manual Search", for: .normal)
+        b.setTitleColor(.black, for: .normal)
         return b
     }()
     

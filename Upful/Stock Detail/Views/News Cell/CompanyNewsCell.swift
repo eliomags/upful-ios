@@ -13,7 +13,7 @@ class NewsCell: UITableViewCell {
 
     let headerLabel: UILabel = {
         let l = UILabel()
-        l.numberOfLines = 0
+        l.numberOfLines = 2
         l.font = UIFont.viewHeader
         l.text = "Should Roku’s Fast Growth Worry Netflix and Peers?"
         return l

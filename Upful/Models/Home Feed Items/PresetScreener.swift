@@ -37,33 +37,6 @@ struct PresetScreener: FeedItem {
     }
 }
 
-extension PresetScreener {
-    var screenImage: UIImage {
-        switch identifier {
-        case .value1:
-            return #imageLiteral(resourceName: "value5").withRenderingMode(.alwaysOriginal)
-        case .value2:
-            return #imageLiteral(resourceName: "value1.png").withRenderingMode(.alwaysOriginal)
-        case .value3:
-            return #imageLiteral(resourceName: "value4.png").withRenderingMode(.alwaysOriginal)
-            
-        case .dividend1:
-            return #imageLiteral(resourceName: "dividend2").withRenderingMode(.alwaysOriginal)
-        case .dividend2:
-            return #imageLiteral(resourceName: "dividend3").withRenderingMode(.alwaysOriginal)
-        case .dividend3:
-            return #imageLiteral(resourceName: "dividend1").withRenderingMode(.alwaysOriginal)
-            
-        case .growth1:
-            return #imageLiteral(resourceName: "grwoth1").withRenderingMode(.alwaysOriginal)
-        case .growth2:
-            return #imageLiteral(resourceName: "value2").withRenderingMode(.alwaysOriginal)
-        case .growth3:
-            return #imageLiteral(resourceName: "growth2").withRenderingMode(.alwaysOriginal)
-        }
-    }
-}
-
 
 
 

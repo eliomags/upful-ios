@@ -16,14 +16,6 @@ class DetailsHeaderView: UIView {
                       height: 70)
     }
     
-    let tickerLabel: UILabel = {
-        let l = UILabel()
-        l.text = "TWTR"
-        l.backgroundColor = .yellow
-        l.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
-        return l
-    }()
-    
     let companyNameLabel: UILabel = {
         let l = UILabel()
         l.text = "Twitter Inc."
@@ -33,7 +25,7 @@ class DetailsHeaderView: UIView {
     }()
     
     lazy var headerStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [tickerLabel, companyNameLabel])
+        let sv = UIStackView(arrangedSubviews: [companyNameLabel])
         sv.axis = .vertical
         sv.distribution = .fillEqually
         sv.spacing = 4
@@ -55,8 +47,7 @@ class DetailsHeaderView: UIView {
     }
     
     
-    func setLabels(ticker: String, companyName: String) {
-        tickerLabel.text = ticker
+    func setLabels(companyName: String) {
         companyNameLabel.text = companyName
     }
  

@@ -14,10 +14,9 @@ protocol HomeFeedNavigationDelegate: class {
 }
 
 class PresetScreenerTableViewCell: UITableViewCell {
-    
     weak var delegate: HomeFeedNavigationDelegate?
     
-    let presetSearches: [PresetScreener]
+    let presetSearches: [PresetScreenerViewModel]
     
     private enum ReuseID: String {
         case presetCell
@@ -29,7 +28,7 @@ class PresetScreenerTableViewCell: UITableViewCell {
         layout.minimumLineSpacing = 16
         layout.minimumInteritemSpacing = 5
         layout.sectionInset = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
-        layout.itemSize = CGSize(width: (UIScreen.main.bounds.width / 2) + 40, height: 170)
+        layout.itemSize = CGSize(width: (UIScreen.main.bounds.width/2) + 40, height: (UIScreen.main.bounds.height/6))
         return layout
     }()
     
@@ -46,7 +45,7 @@ class PresetScreenerTableViewCell: UITableViewCell {
     }()
     
     
-    init(searches: [PresetScreener]) {
+    init(searches: [PresetScreenerViewModel]) {
         self.presetSearches = searches
         super.init(style: .default, reuseIdentifier: nil)
         setupViews()
@@ -71,7 +70,6 @@ class PresetScreenerTableViewCell: UITableViewCell {
 }
 
 extension PresetScreenerTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
-    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -83,13 +81,13 @@ extension PresetScreenerTableViewCell: UICollectionViewDelegate, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let screenerData = presetSearches[indexPath.row]
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.presetCell.rawValue, for: indexPath) as? PresetScreenerCollectionViewCell else { return UICollectionViewCell() }
-        cell.configureView(screener: screenerData)
+        cell.configureView(viewModel: screenerData)
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let searchParameters = presetSearches[indexPath.item].urlComponents
+        let searchParameters = presetSearches[indexPath.item].presetScreener.urlComponents
         
         delegate?.navigateToScreenerResults(searchParameters: searchParameters)
     }
@@ -114,12 +112,12 @@ extension PresetScreenerTableViewCell: UICollectionViewDelegate, UICollectionVie
 
 class PresetScreenerCollectionViewCell: UICollectionViewCell {
     
-    // MARK:- Views
+    // MARK: - Views
     
     let headerLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont(name: "AvenirNext-Bold", size: 13) ?? UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textAlignment = .left
         return label
     }()
@@ -132,11 +130,11 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
     
     lazy var headerBackgroundView: UIView = {
         let iv = UIView()
-        let imagePadding = 15
-        iv.backgroundColor = .black
+        let imagePadding = 2
+        iv.backgroundColor = .clear
         iv.layer.masksToBounds = false
         iv.addSubview(cellImageView)
-        cellImageView.fillSuperview()
+        cellImageView.anchor(top: iv.topAnchor, leading: iv.leadingAnchor, bottom: iv.bottomAnchor, trailing: iv.trailingAnchor, padding: .init(top: 2, left: 2, bottom: 2, right: 2))
         return iv
     }()
     
@@ -151,9 +149,17 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
         let l = UILabel()
         l.textAlignment = NSTextAlignment.left
         l.numberOfLines = 0
-        l.textColor = .black
+        l.textColor = .gray
         l.font = .details2
         return l
+    }()
+    
+    lazy var detailsStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [headerLabel, detailLabel])
+        sv.axis = .vertical
+        sv.spacing = 4
+        sv.alignment = .leading
+        return sv
     }()
     
     lazy var viewBackground: UIView = {
@@ -161,50 +167,44 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
         v.backgroundColor = .white
         v.layer.masksToBounds = true
         v.layer.cornerRadius = 8
-        v.addSubview(headerBackgroundView)
-        headerBackgroundView.anchor(
+        v.addSubview(detailsStackView)
+        detailsStackView.anchor(
             top: v.topAnchor,
             leading: v.leadingAnchor,
             bottom: nil,
             trailing: v.trailingAnchor,
-            size: .init(width: 0, height: self.bounds.height / 3 + 35)
-        )
-        v.addSubview(detailLabel)
-        detailLabel.anchor(
-            top: headerBackgroundView.bottomAnchor,
-            leading: v.leadingAnchor,
-            bottom: v.bottomAnchor,
-            trailing: v.trailingAnchor,
-            padding: .init(top: 3, left: 15, bottom: 6, right: 5)
+            padding: .init(top: 15, left: 15, bottom: 0, right: 15)
         )
         return v
     }()
     
     
-    // MARK:- Initializer Methods
+    // MARK: - Initializer Methods
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
         contentView.layer.masksToBounds = true
+        layer.masksToBounds = true
+        setupShadow(intensity: .light, color: .black)
         addSubview(viewBackground)
         viewBackground.fillSuperview()
+        
+        addSubview(headerBackgroundView)
+        headerBackgroundView.anchor(
+            top: topAnchor, leading: nil, bottom: nil, trailing: trailingAnchor,
+            padding: .init(top: 4, left: 8, bottom: 0, right: 9), size: .init(width: 40, height: 40))
     }
-    
-    
-    func configureView(screener: PresetScreener) {
-        headerLabel.text = screener.header
-        detailLabel.text = screener.details
-        cellImageView.image = screener.screenImage
-//        screenerTypeLabel.text = screener.header
-    }
-    
-    
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    func configureView(viewModel: PresetScreenerViewModel) {
+        headerLabel.text = viewModel.presetScreener.header
+        detailLabel.text = viewModel.presetScreener.details
+        cellImageView.image = viewModel.icon
+    }
 }
 
 

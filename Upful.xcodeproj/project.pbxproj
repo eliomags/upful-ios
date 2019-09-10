@@ -26,7 +26,7 @@
 		3D2F96452312D4AF003811AB /* AnalyticsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96442312D4AF003811AB /* AnalyticsMapper.swift */; };
 		3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96462315C072003811AB /* CustomLargeButton.swift */; };
 		3D2F964B2315CD34003811AB /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F964A2315CD34003811AB /* BarChartView.swift */; };
-		3D2F964D23169CC7003811AB /* GraphTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F964C23169CC7003811AB /* GraphTableViewCell.swift */; };
+		3D2F964D23169CC7003811AB /* BarGraphTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F964C23169CC7003811AB /* BarGraphTableViewCell.swift */; };
 		3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F965323169D31003811AB /* DetailsHeaderView.swift */; };
 		3D2F965623169E9C003811AB /* DetailsCalculationsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F965523169E9C003811AB /* DetailsCalculationsCell.swift */; };
 		3D2F965823171F52003811AB /* CompanyNewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F965723171F52003811AB /* CompanyNewsCell.swift */; };
@@ -46,6 +46,10 @@
 		3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */; };
 		3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D586517231C8AEB00495D79 /* StockSearchCell.swift */; };
 		3D58651A231C946600495D79 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D586519231C946600495D79 /* AppStoreReviewHelper.swift */; };
+		3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651B231D777C00495D79 /* TableHeaderView.swift */; };
+		3D58651F231DE67B00495D79 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651E231DE67B00495D79 /* Constants.swift */; };
+		3D5865242321E61400495D79 /* Preset Screener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5865232321E61400495D79 /* Preset Screener.swift */; };
+		3D5865262323024A00495D79 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5865252323024A00495D79 /* PieChartView.swift */; };
 		3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB022FFC33C00C52455 /* UIColor+Extensions.swift */; };
 		3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */; };
 		3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */; };
@@ -103,7 +107,7 @@
 		3D2F96442312D4AF003811AB /* AnalyticsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsMapper.swift; sourceTree = "<group>"; };
 		3D2F96462315C072003811AB /* CustomLargeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLargeButton.swift; sourceTree = "<group>"; };
 		3D2F964A2315CD34003811AB /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
-		3D2F964C23169CC7003811AB /* GraphTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphTableViewCell.swift; sourceTree = "<group>"; };
+		3D2F964C23169CC7003811AB /* BarGraphTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarGraphTableViewCell.swift; sourceTree = "<group>"; };
 		3D2F965323169D31003811AB /* DetailsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsHeaderView.swift; sourceTree = "<group>"; };
 		3D2F965523169E9C003811AB /* DetailsCalculationsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsCalculationsCell.swift; sourceTree = "<group>"; };
 		3D2F965723171F52003811AB /* CompanyNewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyNewsCell.swift; sourceTree = "<group>"; };
@@ -123,6 +127,10 @@
 		3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchViewController.swift; sourceTree = "<group>"; };
 		3D586517231C8AEB00495D79 /* StockSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchCell.swift; sourceTree = "<group>"; };
 		3D586519231C946600495D79 /* AppStoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewHelper.swift; sourceTree = "<group>"; };
+		3D58651B231D777C00495D79 /* TableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderView.swift; sourceTree = "<group>"; };
+		3D58651E231DE67B00495D79 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		3D5865232321E61400495D79 /* Preset Screener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preset Screener.swift"; sourceTree = "<group>"; };
+		3D5865252323024A00495D79 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		3D90ADB022FFC33C00C52455 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchParametersTableViewController.swift; sourceTree = "<group>"; };
 		3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchHeaderView.swift; sourceTree = "<group>"; };
@@ -219,6 +227,7 @@
 			children = (
 				3D20FB3122FB1F0A007836DD /* LaunchScreen.storyboard */,
 				3D20FB2822FB1F08007836DD /* AppDelegate.swift */,
+				3D58651E231DE67B00495D79 /* Constants.swift */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -288,6 +297,7 @@
 		3D20FB5B22FBA754007836DD /* View Models */ = {
 			isa = PBXGroup;
 			children = (
+				3D5865222321E57E00495D79 /* Preset Screener */,
 				3D20FB5C22FBA772007836DD /* HomeViewModel.swift */,
 			);
 			path = "View Models";
@@ -300,6 +310,7 @@
 				3D42BE4F230C421D00806AFF /* StockDetailsStackView.swift */,
 				3D2F96462315C072003811AB /* CustomLargeButton.swift */,
 				3D2F966023196881003811AB /* SpacerView.swift */,
+				3D58651B231D777C00495D79 /* TableHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -344,8 +355,8 @@
 		3D2F964E23169CE2003811AB /* Graph Cell */ = {
 			isa = PBXGroup;
 			children = (
-				3D2F964A2315CD34003811AB /* BarChartView.swift */,
-				3D2F964C23169CC7003811AB /* GraphTableViewCell.swift */,
+				3D8632862323E4D300C29B88 /* Graphs */,
+				3D8632852323E4CC00C29B88 /* Cells */,
 			);
 			path = "Graph Cell";
 			sourceTree = "<group>";
@@ -476,6 +487,31 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		3D5865222321E57E00495D79 /* Preset Screener */ = {
+			isa = PBXGroup;
+			children = (
+				3D5865232321E61400495D79 /* Preset Screener.swift */,
+			);
+			path = "Preset Screener";
+			sourceTree = "<group>";
+		};
+		3D8632852323E4CC00C29B88 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				3D2F964C23169CC7003811AB /* BarGraphTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		3D8632862323E4D300C29B88 /* Graphs */ = {
+			isa = PBXGroup;
+			children = (
+				3D2F964A2315CD34003811AB /* BarChartView.swift */,
+				3D5865252323024A00495D79 /* PieChartView.swift */,
+			);
+			path = Graphs;
+			sourceTree = "<group>";
+		};
 		3D90ADB223005F2200C52455 /* Home Feed Items */ = {
 			isa = PBXGroup;
 			children = (
@@ -497,8 +533,8 @@
 		3D917B5422FE0849001D5E39 /* Preset Cell */ = {
 			isa = PBXGroup;
 			children = (
-				3D42BE4E230B032F00806AFF /* Preset Searche */,
 				3D42BE4B230AFE7000806AFF /* Popular Companies */,
+				3D42BE4E230B032F00806AFF /* Preset Searche */,
 			);
 			path = "Preset Cell";
 			sourceTree = "<group>";
@@ -730,14 +766,16 @@
 				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
 				3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */,
 				3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */,
-				3D2F964D23169CC7003811AB /* GraphTableViewCell.swift in Sources */,
+				3D2F964D23169CC7003811AB /* BarGraphTableViewCell.swift in Sources */,
 				3D42BE4123098BD200806AFF /* ResultsTableViewCell.swift in Sources */,
 				3D58651A231C946600495D79 /* AppStoreReviewHelper.swift in Sources */,
 				3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */,
 				3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */,
 				3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */,
+				3D5865242321E61400495D79 /* Preset Screener.swift in Sources */,
 				3D2F965A2318C6E7003811AB /* ValuationSectionView.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
+				3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */,
 				3D2F96412312B036003811AB /* MixpanelAnalytics.swift in Sources */,
 				3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */,
 				3D2F965D2318CC4E003811AB /* FinancialSectionView.swift in Sources */,
@@ -754,6 +792,7 @@
 				3D20FB5D22FBA772007836DD /* HomeViewModel.swift in Sources */,
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
 				3D20FB2B22FB1F08007836DD /* HomeFeedViewController.swift in Sources */,
+				3D5865262323024A00495D79 /* PieChartView.swift in Sources */,
 				3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */,
 				3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */,
 				3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */,
@@ -771,6 +810,7 @@
 				3D90ADBA2301BE0F00C52455 /* Double+Extensions.swift in Sources */,
 				3D2F96452312D4AF003811AB /* AnalyticsMapper.swift in Sources */,
 				3D2F965623169E9C003811AB /* DetailsCalculationsCell.swift in Sources */,
+				3D58651F231DE67B00495D79 /* Constants.swift in Sources */,
 				3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
 			);

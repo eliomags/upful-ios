@@ -10,6 +10,7 @@ import UIKit
 
 protocol SearchCriteriaDelegate: class {
     func remove(indexPath: IndexPath)
+    func updateScreenerItems(with updatedItems: [ManualScreenItem])
 }
 
 class ManualSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ManualSearchDelegate {
@@ -95,9 +96,24 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     fileprivate func configureNavBar() {
         navigationItem.title = "Upful"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearCriteriaTapped))
     }
 
     // MARK: - Actions
+    
+    fileprivate func presentAlert() {
+        let alert = UIAlertController(title: "Search Failed", message: "Please add a search parameter to continue.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    fileprivate func configureURLComponents() -> [String] {
+        var urlComponents: [String] = []
+        manualScreenItems.forEach { (manualScreenerItem) in
+            urlComponents.append(manualScreenerItem.criteria.rawValue + "\(manualScreenerItem.parameter.rawValue)~\(manualScreenerItem.value ?? 0)")
+        }
+        return urlComponents
+    }
     
     @objc fileprivate func handleSearch(_ sender: UIButton) {
         if manualScreenItems.isEmpty {
@@ -116,18 +132,13 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         navigationController?.pushViewController(screenerResultsVC, animated: true)
     }
     
-    fileprivate func configureURLComponents() -> [String] {
-        var urlComponents: [String] = []
-        manualScreenItems.forEach { (manualScreenerItem) in
-            urlComponents.append(manualScreenerItem.criteria.rawValue + "\(manualScreenerItem.parameter.rawValue)~\(manualScreenerItem.value ?? 0)")
+    @objc fileprivate func clearCriteriaTapped(_ sender: UIBarButtonItem) {
+        for _ in 0..<manualScreenItems.count {
+            guard manualScreenItems.count > 0 else { return }
+            delegate?.remove(indexPath: IndexPath(row: 0, section: 0))
         }
-        return urlComponents
-    }
-    
-    fileprivate func presentAlert() {
-        let alert = UIAlertController(title: "Search Failed", message: "Please add a search parameter to continue.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        delegate?.updateScreenerItems(with: [])
+        manualScreenItems.removeAll()
     }
     
 
@@ -140,6 +151,9 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     func addSearchParameter(parameterItem: ParameterItem, indexPath: IndexPath) {
         manualScreenItems[indexPath.item].parameter = parameterItem.parameter
         manualScreenItems[indexPath.item].value = parameterItem.value
+        
+        /// Pass the updated value to the manual search flow root
+        delegate?.updateScreenerItems(with: manualScreenItems)
         manualSearchSearchTableView.reloadData()
     }
     
@@ -156,7 +170,6 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         let parameter = manualScreenItems[indexPath.item].parameter
         let criteria = manualScreenItems[indexPath.item].criteria
         let value = manualScreenItems[indexPath.item].value
-
 
         cell.selectionStyle = .none
         cell.textLabel?.text = criteria.explicit

@@ -36,12 +36,16 @@ class PopularCompanyTableViewCell: UITableViewCell {
         cv.register(PopularCompanyCollectionViewCell.self, forCellWithReuseIdentifier: ReuseID.companyCell.rawValue)
         return cv
     }()
-    
+
     
     init(popularCompanies: [PopularCompany]) {
         self.popularCompanies = popularCompanies
         super.init(style: .default, reuseIdentifier: nil)
         setupViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     
@@ -52,14 +56,9 @@ class PopularCompanyTableViewCell: UITableViewCell {
         popularCompanyCollectionView.fillSuperview()
     }
     
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }
 
 extension PopularCompanyTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
-    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -108,33 +107,17 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
     let companyNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .left
         return label
     }()
-    let companyLogo: UIImageView = {
-        let iv = UIImageView()
-        iv.backgroundColor = .clear
-        iv.contentMode = .scaleAspectFit
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        iv.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        return iv
-    }()
+
     lazy var companyDescriptionStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [tickerLabel, companyNameLabel])
         sv.distribution = .fillEqually
         sv.axis = .vertical
         sv.spacing = 1
         return sv
-    }()
-    
-    let priceLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 10, weight: .heavy)
-        label.textAlignment = .center
-        return label
     }()
     
     lazy var marketcapStackView: StockDetailStackView = {
@@ -171,15 +154,11 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
             trailing: nil,
             padding: .init(top: 12, left: 6, bottom: 0, right: 0)
         )
-        addSubview(priceLabel)
-        priceLabel.anchor(
-            top: topAnchor, leading: nil, bottom: nil, trailing: trailingAnchor,
-            padding: .init(top: 12, left: 0, bottom: 0, right: 6))
         
         addSubview(stockDetailsStackView)
         stockDetailsStackView.anchor(
-            top: companyDescriptionStackView.bottomAnchor, leading: companyDescriptionStackView.leadingAnchor, bottom: bottomAnchor, trailing: priceLabel.trailingAnchor,
-            padding: .init(top: 5, left: 0, bottom: 8, right: 0))
+            top: companyDescriptionStackView.bottomAnchor, leading: companyDescriptionStackView.leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
+            padding: .init(top: 5, left: 0, bottom: 8, right: 6))
     }
     
     

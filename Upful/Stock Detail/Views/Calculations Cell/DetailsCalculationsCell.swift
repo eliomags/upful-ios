@@ -87,7 +87,7 @@ class DetailsCalculationCell: UITableViewCell {
                 return
             }
             if (financial.dataTag?.tag)! == SearchCriteria.divpayoutratio.rawValue {
-                financialView.payoutRatioStackView.valueLabel.text = "\((financial.value ?? 0 / 100).convertToPercent())"
+                financialView.payoutRatioStackView.valueLabel.text = "\((financial.value ?? 0 / 100).convertToPercent())%"
                 return
             }
             if (financial.dataTag?.tag)! == SearchCriteria.debttoequity.rawValue {

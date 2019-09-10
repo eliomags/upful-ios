@@ -18,7 +18,7 @@ class CustomButton: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .appAccent
+        backgroundColor = .appAccent3
         setTitleColor(.white, for: .normal)
     }
     

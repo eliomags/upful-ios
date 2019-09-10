@@ -40,6 +40,7 @@ extension UIViewController {
     }
     
     @objc func dismissKeyboard() {
+        self.resignFirstResponder()
         view.endEditing(true)
     }
 }

@@ -55,6 +55,9 @@ extension SearchCriteria {
         case .debttoequity: return "Debt/Equity"
         case .totalrevenue: return "Revenue"
         case .netincome: return "Net Income"
+        case .totalassets: return "Total Assets"
+        case .totalliabilities: return "Total Liabilities"
+        case .totalequity: return "Total Equity"
         }
     }
     
@@ -82,6 +85,9 @@ extension SearchCriteria {
         case .debttoequity: return .ratio
         case .totalrevenue: return .number
         case .netincome: return .number
+        case .totalassets: return .number
+        case .totalliabilities: return .number
+        case .totalequity: return .number
         }
     }
     
@@ -109,6 +115,9 @@ extension SearchCriteria {
         case .debttoequity: return .financial
         case .totalrevenue: return .other
         case .netincome: return .other
+        case .totalassets: return .other
+        case .totalliabilities: return .other
+        case .totalequity: return .other
         }
     }
 

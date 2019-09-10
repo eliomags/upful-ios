@@ -18,6 +18,7 @@ class AnalyticsLogger {
         
         analyticsAPIs.forEach { (analytics) in
             analytics.log(event: event)
+//            print("Logged event for:", analytics)
         }
     }
 }

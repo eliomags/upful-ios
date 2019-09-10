@@ -8,6 +8,9 @@
 
 import UIKit
 
+protocol ManualSearchDelegate: class {
+    func addSearchParameter(parameterItem: ParameterItem, indexPath: IndexPath)
+}
 
 class ManualSearchParametersTableViewController: UITableViewController {
     
@@ -24,6 +27,7 @@ class ManualSearchParametersTableViewController: UITableViewController {
     }
     
     weak var delegate: ManualSearchDelegate?
+    
 
     // MARK:- Initializer Methods
     
@@ -40,6 +44,7 @@ class ManualSearchParametersTableViewController: UITableViewController {
         initializeData()
         configureNavBar()
     }
+    
     
     // MARK:- Data Initialization
     

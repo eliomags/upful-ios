@@ -10,10 +10,9 @@ import Foundation
 
 
 extension Double {
-    
     func convertToPercent() -> String {
         let numFormatter = NumberFormatter()
-        var startValue = abs(self)
+        var startValue = self
         startValue *= 100
         numFormatter.allowsFloats = true
         numFormatter.maximumFractionDigits = 2
@@ -23,7 +22,7 @@ extension Double {
     
     func twoDecimal() -> String {
         let numFormatter = NumberFormatter()
-        let startValue = abs(self)
+        let startValue = self
         numFormatter.allowsFloats = true
         numFormatter.maximumFractionDigits = 1
         
