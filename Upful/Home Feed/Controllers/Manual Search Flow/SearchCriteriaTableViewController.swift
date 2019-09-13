@@ -8,7 +8,11 @@
 
 import UIKit
 
-class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDelegate {
+class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDelegate, MenuBarDisplayable {
+    var delegate: MenuViewItemDelegate?
+    
+    var menubarTitle: String = "Manual Search"
+    
    
     private enum ReuseID {
         static let criteriaCell = "criteriaCell"
@@ -22,13 +26,13 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     
     // MARK: - Views
     
-    class CustomRoundButton: UIButton {
+    private class CustomRoundButton: UIButton {
         override var intrinsicContentSize: CGSize {
             return CGSize(width: 55, height: 55)
         }
     }
     
-    lazy var addCriteriaButton: CustomRoundButton = {
+    private lazy var addCriteriaButton: CustomRoundButton = {
         let b = CustomRoundButton(type: .system)
         b.setBackgroundImage(#imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
         b.backgroundColor = .appAccent3
@@ -42,6 +46,12 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     
     // MARK: - Initializer Methods
     
+    override func loadView() {
+        super.loadView()
+        setupTableView()
+
+    }
+    
     override init(style: UITableView.Style) {
         super.init(style: style)
         initializeDisplayData()
@@ -49,17 +59,16 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundColor
-        setupTableView()
+        view.backgroundColor = .groupTableViewBackground
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.parent?.view.addSubview(addCriteriaButton)
+        tableView.addSubview(addCriteriaButton)
         addCriteriaButton.anchor(
             top: nil, leading: nil, bottom: self.parent?.view.layoutMarginsGuide.bottomAnchor, trailing: self.parent?.view.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 70, right: 25))
+            padding: .init(top: 0, left: 0, bottom: 45, right: 25))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -75,7 +84,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         tableView.allowsMultipleSelectionDuringEditing = true
         tableView.register(ManualSearchCriteriaCell.self, forCellReuseIdentifier: ReuseID.criteriaCell)
         tableView.tableHeaderView = UIView()
-        tableView.sectionHeaderHeight = 35
+        tableView.sectionHeaderHeight = 60
     }
     
     
@@ -179,9 +188,11 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = .clear
+        let view = UIView()
         let header = SectionHeaderLabel(padding: 16)
+        view.addSubview(header)
+        header.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
+                      padding: .init(top: 0, left: 0, bottom: 4, right: 18))
         let labelText = [
             "VALUATION METRICS",
             "FINANCIAL METRICS",
@@ -189,12 +200,13 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         ]
         header.text = labelText[section]
         
-        backgroundView.addSubview(header)
-        header.fillSuperview()
 
-        return backgroundView
+        return view
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 100
+        }
         return 25
     }
     

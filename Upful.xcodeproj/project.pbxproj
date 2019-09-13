@@ -60,6 +60,10 @@
 		3D917B5222FE0542001D5E39 /* ManualSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B5122FE0542001D5E39 /* ManualSearchViewController.swift */; };
 		3D917B5622FE088F001D5E39 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B5522FE088F001D5E39 /* UIViewController+Extensions.swift */; };
 		3D917B5A22FE24C4001D5E39 /* SearchCriteriaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B5922FE24C4001D5E39 /* SearchCriteriaTableViewController.swift */; };
+		3DA54086232B361B00EE477C /* MenuViewProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA54085232B361B00EE477C /* MenuViewProtocols.swift */; };
+		3DA54089232B364000EE477C /* MenuViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA54088232B364000EE477C /* MenuViewContainer.swift */; };
+		3DA5408C232B366F00EE477C /* MenuViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA5408B232B366F00EE477C /* MenuViewHeader.swift */; };
+		3DA5408F232B37C700EE477C /* HomeFeedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA5408E232B37C700EE477C /* HomeFeedContainer.swift */; };
 		3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */; };
 		3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */; };
 		6EFBDDEF75650ADE9A43846E /* Pods_Upful_UpfulTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93827783A5ED4D3B1AC1DB9F /* Pods_Upful_UpfulTests.framework */; };
@@ -141,6 +145,10 @@
 		3D917B5122FE0542001D5E39 /* ManualSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchViewController.swift; sourceTree = "<group>"; };
 		3D917B5522FE088F001D5E39 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		3D917B5922FE24C4001D5E39 /* SearchCriteriaTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCriteriaTableViewController.swift; sourceTree = "<group>"; };
+		3DA54085232B361B00EE477C /* MenuViewProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewProtocols.swift; sourceTree = "<group>"; };
+		3DA54088232B364000EE477C /* MenuViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewContainer.swift; sourceTree = "<group>"; };
+		3DA5408B232B366F00EE477C /* MenuViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewHeader.swift; sourceTree = "<group>"; };
+		3DA5408E232B37C700EE477C /* HomeFeedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedContainer.swift; sourceTree = "<group>"; };
 		3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenResultsVC.swift; sourceTree = "<group>"; };
 		3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrinioAPI.swift; sourceTree = "<group>"; };
 		59C76C07469A281B054B28FF /* Pods_Upful.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Upful.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -205,7 +213,7 @@
 				3D4D8606231C5B2F0065CF9F /* Stock Search */,
 				3D2F963A230F490A003811AB /* Stock Detail */,
 				3D20FB5022FB3052007836DD /* Models */,
-				3D20FB6022FBC033007836DD /* Views */,
+				3D20FB6022FBC033007836DD /* Reusable Views */,
 				3D20FB2F22FB1F0A007836DD /* Assets.xcassets */,
 				3D20FB3422FB1F0A007836DD /* Info.plist */,
 				3D917B4522FD2D7E001D5E39 /* GoogleService-Info.plist */,
@@ -235,6 +243,7 @@
 		3D20FB4922FB209F007836DD /* Home Feed */ = {
 			isa = PBXGroup;
 			children = (
+				3DA5408D232B37B700EE477C /* Container View */,
 				3D20FB5422FB34FB007836DD /* Views */,
 				3D20FB5322FB34F5007836DD /* Controllers */,
 				3D20FB5B22FBA754007836DD /* View Models */,
@@ -288,7 +297,7 @@
 		3D20FB5422FB34FB007836DD /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3D42BE4A2309A86300806AFF /* State View */,
+				3D42BE4A2309A86300806AFF /* Archive */,
 				3D917B5422FE0849001D5E39 /* Preset Cell */,
 			);
 			path = Views;
@@ -303,16 +312,17 @@
 			path = "View Models";
 			sourceTree = "<group>";
 		};
-		3D20FB6022FBC033007836DD /* Views */ = {
+		3D20FB6022FBC033007836DD /* Reusable Views */ = {
 			isa = PBXGroup;
 			children = (
+				3DA54083232B35F900EE477C /* MenuContainer */,
 				3D20FB6122FBC03F007836DD /* CustomHeaderLabel.swift */,
 				3D42BE4F230C421D00806AFF /* StockDetailsStackView.swift */,
 				3D2F96462315C072003811AB /* CustomLargeButton.swift */,
 				3D2F966023196881003811AB /* SpacerView.swift */,
 				3D58651B231D777C00495D79 /* TableHeaderView.swift */,
 			);
-			path = Views;
+			path = "Reusable Views";
 			sourceTree = "<group>";
 		};
 		3D2F963A230F490A003811AB /* Stock Detail */ = {
@@ -429,12 +439,12 @@
 			path = Intrinio;
 			sourceTree = "<group>";
 		};
-		3D42BE4A2309A86300806AFF /* State View */ = {
+		3D42BE4A2309A86300806AFF /* Archive */ = {
 			isa = PBXGroup;
 			children = (
 				3D20FB5E22FBB15E007836DD /* HomeFeedStateView.swift */,
 			);
-			path = "State View";
+			path = Archive;
 			sourceTree = "<group>";
 		};
 		3D42BE4B230AFE7000806AFF /* Popular Companies */ = {
@@ -537,6 +547,48 @@
 				3D42BE4E230B032F00806AFF /* Preset Searche */,
 			);
 			path = "Preset Cell";
+			sourceTree = "<group>";
+		};
+		3DA54083232B35F900EE477C /* MenuContainer */ = {
+			isa = PBXGroup;
+			children = (
+				3DA5408A232B366500EE477C /* Menu View Header */,
+				3DA54087232B362B00EE477C /* View Container */,
+				3DA54084232B360A00EE477C /* Protocols */,
+			);
+			path = MenuContainer;
+			sourceTree = "<group>";
+		};
+		3DA54084232B360A00EE477C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				3DA54085232B361B00EE477C /* MenuViewProtocols.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		3DA54087232B362B00EE477C /* View Container */ = {
+			isa = PBXGroup;
+			children = (
+				3DA54088232B364000EE477C /* MenuViewContainer.swift */,
+			);
+			path = "View Container";
+			sourceTree = "<group>";
+		};
+		3DA5408A232B366500EE477C /* Menu View Header */ = {
+			isa = PBXGroup;
+			children = (
+				3DA5408B232B366F00EE477C /* MenuViewHeader.swift */,
+			);
+			path = "Menu View Header";
+			sourceTree = "<group>";
+		};
+		3DA5408D232B37B700EE477C /* Container View */ = {
+			isa = PBXGroup;
+			children = (
+				3DA5408E232B37C700EE477C /* HomeFeedContainer.swift */,
+			);
+			path = "Container View";
 			sourceTree = "<group>";
 		};
 		3DC4ED2F22FE671100232155 /* Manual Search Flow */ = {
@@ -773,6 +825,7 @@
 				3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */,
 				3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */,
 				3D5865242321E61400495D79 /* Preset Screener.swift in Sources */,
+				3DA54086232B361B00EE477C /* MenuViewProtocols.swift in Sources */,
 				3D2F965A2318C6E7003811AB /* ValuationSectionView.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
 				3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */,
@@ -790,12 +843,15 @@
 				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
 				3D20FB5822FB46DD007836DD /* PresetScreenerTableViewCell.swift in Sources */,
 				3D20FB5D22FBA772007836DD /* HomeViewModel.swift in Sources */,
+				3DA5408F232B37C700EE477C /* HomeFeedContainer.swift in Sources */,
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
 				3D20FB2B22FB1F08007836DD /* HomeFeedViewController.swift in Sources */,
 				3D5865262323024A00495D79 /* PieChartView.swift in Sources */,
 				3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */,
 				3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */,
 				3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */,
+				3DA54089232B364000EE477C /* MenuViewContainer.swift in Sources */,
+				3DA5408C232B366F00EE477C /* MenuViewHeader.swift in Sources */,
 				3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */,
 				3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */,
 				3D2F963C230F4922003811AB /* StockDetailsViewController.swift in Sources */,

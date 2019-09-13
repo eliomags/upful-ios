@@ -100,7 +100,6 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         tv.tableHeaderView = stockHeaderView
         if #available(iOS 10.0, *) { tv.refreshControl = refreshControl }
         else { tv.addSubview(refreshControl) }
-        
         return tv
     }()
     
@@ -136,7 +135,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .backgroundColor
         setupViews()
-        setData()
+        loadChartData()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
     }
     
@@ -154,7 +153,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     }
     
     @objc private func refreshData(_ sender: Any) {
-        setData()
+        loadChartData()
     }
     
     
@@ -267,7 +266,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         }
     }
     
-    private func setData() {
+    private func loadChartData() {
         isLoading = true
         getRevenueData()
         getEarningsData()

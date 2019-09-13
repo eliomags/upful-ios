@@ -1,0 +1,161 @@
+//
+//  MenuViewContainer.swift
+//  Upful
+//
+//  Created by Yanik Simpson on 9/12/19.
+//  Copyright © 2019 Yanik Simpson. All rights reserved.
+//
+
+import UIKit
+
+class MenuContainerViewController: UICollectionViewController, MenuBarViewDelegate, MenuViewItemDelegate {
+    private struct Constants {
+        static let cell1 = "cell1"
+    }
+    
+    var menubarControllers: [MenuBarDisplayable] {
+        return []
+    }
+    
+    // MARK: - Views
+    
+    private lazy var menuBarView: MenuBarView = {
+        let menubarTitles = menubarControllers.map({ $0.menubarTitle })
+        let view = MenuBarView(menuTitles: menubarTitles)
+        view.delegate = self
+        return view
+    }()
+    
+    
+    // MARK: - Initializer Functions
+    
+    override init(collectionViewLayout layout: UICollectionViewLayout) {
+        super.init(collectionViewLayout: layout)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        setupCollectionView()
+        view.addSubview(menuBarView)
+        menuBarView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
+    }
+    
+    private func setupCollectionView() {
+        collectionView.backgroundColor = UIColor.groupTableViewBackground
+        collectionView.isPagingEnabled = true
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.cell1)
+        if let flowlayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            flowlayout.scrollDirection = .horizontal
+            flowlayout.minimumLineSpacing = 0
+            flowlayout.minimumInteritemSpacing = 0
+        }
+    }
+    
+    
+    // MARK: - Delegate Methods
+    
+    /// Menubar Delegate Methods
+    func selectedIndex(_ index: Int) {
+        collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
+    }
+    
+    func hideMenuBar() {
+        UIView.animate(withDuration: 0.2) {
+            self.menuBarView.transform = CGAffineTransform(translationX: 0, y: -self.menuBarView.bounds.height)
+        }
+    }
+    
+    func presentMenuBar() {
+        UIView.animate(withDuration: 0.2) {
+            self.menuBarView.transform = .identity
+        }
+    }
+    
+    func navigateTo(_ viewController: UIViewController) {
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func presentViewController(_ viewController: UIViewController) {
+        self.present(viewController, animated: true, completion: nil)
+    }
+    
+    /// ScrollView Delegate Mthods
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let distance = scrollView.contentOffset.x
+        self.menuBarView.placementViewLeadingConstraint = distance
+    }
+    
+    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let targetInt = targetContentOffset.move().x / menuBarView.frame.width
+        menuBarView.setIndex(Int(targetInt))
+        presentMenuBar()
+    }
+    
+    
+    // MARK: - Fileprivate Functions
+    
+    private func display(contentController content: UIViewController, on view: UIView) {
+        self.addChild(content)
+        content.view.frame = view.bounds
+        view.addSubview(content.view)
+        content.didMove(toParent: self)
+    }
+    
+}
+
+extension MenuContainerViewController {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return menubarControllers.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let pageIndex = indexPath.row
+        let displayableCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cell1, for: indexPath)
+        
+        for i in 0..<menubarControllers.count {
+            if i == indexPath.row {
+                display(contentController: menubarControllers[pageIndex], on: displayableCell)
+                displayableCell.backgroundColor = .groupTableViewBackground
+                return displayableCell
+            }
+        }
+        return UICollectionViewCell()
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        menuBarView.setIndex(indexPath.row)
+    }
+}
+
+extension MenuContainerViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellHeight = (collectionView.bounds.height - collectionView.contentInset.top)
+        return CGSize(width: collectionView.bounds.width, height: cellHeight)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets.zero
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

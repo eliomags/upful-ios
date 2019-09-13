@@ -63,6 +63,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
     
     lazy var feedTableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
+        tv.backgroundColor = .white
         tv.dataSource = self
         tv.delegate = self
         tv.register(ResultsTableViewCell.self, forCellReuseIdentifier: ReuseId.resultsCellID)
@@ -99,7 +100,8 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundColor
+        
+        view.backgroundColor = .white
         fetchTableData(parameters: searchParameters, fetchType: .initial)
         view.addSubview(feedTableView)
         feedTableView.fillSuperview()

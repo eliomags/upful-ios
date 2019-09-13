@@ -31,19 +31,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func initializeVC() -> UIViewController {
-        let homeVC = HomeFeedViewController(analyitcs: AnalyticsLogger(), presetDataLoader: PresetFeedDataLoader())
-        let settingsVC = UIViewController()
+        let homeVC = HomeFeedContainer(collectionViewLayout: UICollectionViewFlowLayout())
         let searchVC = StockSearchViewController(networkingAPI: IntrinioAPI())
         let controllers = [homeVC,searchVC]
         
         homeVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-home-page-30"), tag: 0)
         searchVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-search-30"), tag: 1)
-        settingsVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-settings-30"), tag: 2)
         
         let tabVC = UITabBarController()
-        tabVC.tabBar.tintColor = .appAccent
-        //        tabVC.tabBar.barTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.2691890967)
-        
+        tabVC.tabBar.tintColor = .appAccent        
         tabVC.tabBar.barTintColor = .backgroundColor
         tabVC.viewControllers = controllers.map({
             let navVC = UINavigationController(rootViewController: $0)
