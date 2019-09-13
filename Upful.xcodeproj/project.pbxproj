@@ -66,6 +66,7 @@
 		3DA5408F232B37C700EE477C /* HomeFeedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA5408E232B37C700EE477C /* HomeFeedContainer.swift */; };
 		3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */; };
 		3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */; };
+		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		6EFBDDEF75650ADE9A43846E /* Pods_Upful_UpfulTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93827783A5ED4D3B1AC1DB9F /* Pods_Upful_UpfulTests.framework */; };
 		9EACA51EBDB9027C65ED019D /* Pods_UpfulTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC0A134A6E928314BD6D8405 /* Pods_UpfulTests.framework */; };
 		DBF9A52BC5915E42042B6760 /* Pods_Upful.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59C76C07469A281B054B28FF /* Pods_Upful.framework */; };
@@ -151,6 +152,7 @@
 		3DA5408E232B37C700EE477C /* HomeFeedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedContainer.swift; sourceTree = "<group>"; };
 		3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenResultsVC.swift; sourceTree = "<group>"; };
 		3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrinioAPI.swift; sourceTree = "<group>"; };
+		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		59C76C07469A281B054B28FF /* Pods_Upful.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Upful.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A3615F7902317CD398E45C9 /* Pods-UpfulTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UpfulTests/Pods-UpfulTests.release.xcconfig"; sourceTree = "<group>"; };
 		9315B80D35508D89B49F5501 /* Pods-UpfulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UpfulTests/Pods-UpfulTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -328,6 +330,7 @@
 		3D2F963A230F490A003811AB /* Stock Detail */ = {
 			isa = PBXGroup;
 			children = (
+				3DF5FBA0232BB9A400856205 /* Stock Details Container */,
 				3D2F96482315CD18003811AB /* Views */,
 				3D2F96492315CD1B003811AB /* Controller */,
 			);
@@ -620,6 +623,14 @@
 			path = APIs;
 			sourceTree = "<group>";
 		};
+		3DF5FBA0232BB9A400856205 /* Stock Details Container */ = {
+			isa = PBXGroup;
+			children = (
+				3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */,
+			);
+			path = "Stock Details Container";
+			sourceTree = "<group>";
+		};
 		A4196304E936B0EBD91F6E49 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -864,6 +875,7 @@
 				3D20FB5F22FBB15E007836DD /* HomeFeedStateView.swift in Sources */,
 				3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */,
 				3D90ADBA2301BE0F00C52455 /* Double+Extensions.swift in Sources */,
+				3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */,
 				3D2F96452312D4AF003811AB /* AnalyticsMapper.swift in Sources */,
 				3D2F965623169E9C003811AB /* DetailsCalculationsCell.swift in Sources */,
 				3D58651F231DE67B00495D79 /* Constants.swift in Sources */,

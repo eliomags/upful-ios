@@ -297,7 +297,8 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let selectedCompany = searchResults[indexPath.item] as? Stock {
-            self.navigationController?.pushViewController(StockDetailsViewController(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "", networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger()), animated: true)
+            let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
+            self.navigationController?.pushViewController(detailVC, animated: true)
         }
     }
 }

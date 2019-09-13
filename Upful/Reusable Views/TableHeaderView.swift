@@ -9,6 +9,10 @@
 import UIKit
 
 class TableHeaderView: UIView {
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: 0, height: 60)
+    }
     var detailsLabel: UILabel = {
         let l = UILabel()
         l.numberOfLines = 0
@@ -26,10 +30,9 @@ class TableHeaderView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
         addSubview(headerStackView)
-        headerStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
-                               padding: .init(top: 12, left: 16, bottom: 1, right: 16))
+        headerStackView.anchor(top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
+                               padding: .init(top: 0, left: 16, bottom: 1, right: 16))
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

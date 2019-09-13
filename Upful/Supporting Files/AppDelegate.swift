@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow()
+        window?.backgroundColor = .white
+
         FirebaseApp.configure()
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         Mixpanel.initialize(token: Constants.MixPanel.token)
@@ -34,7 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let homeVC = HomeFeedContainer(collectionViewLayout: UICollectionViewFlowLayout())
         let searchVC = StockSearchViewController(networkingAPI: IntrinioAPI())
         let controllers = [homeVC,searchVC]
-        
         homeVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-home-page-30"), tag: 0)
         searchVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-search-30"), tag: 1)
         

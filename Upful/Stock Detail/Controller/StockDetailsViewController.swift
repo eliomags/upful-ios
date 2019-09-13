@@ -9,7 +9,13 @@
 import UIKit
 import Charts
 
-class StockDetailsViewController: UIViewController, ChartViewDelegate {
+class StockDetailsViewController: UITableViewController, ChartViewDelegate, MenuBarDisplayable {
+    
+    // MARK: - MenuBarDisplayable Protocol Properties
+    
+    var delegate: MenuViewItemDelegate?
+    var menubarTitle: String = "Overview"
+    
 
     // MARK: - Dependencies
     
@@ -38,9 +44,10 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
             observeStateChanges(isLoading)
             if !isLoading {
                 DispatchQueue.main.async {
-                    self.detailsTableView.reloadData()
-                    self.refreshControl.endRefreshing()
-                    self.detailsTableView.contentInset = UIEdgeInsets.zero
+                    self.tableView.reloadData()
+                    self.refreshingControl.endRefreshing()
+                    self.tableView.contentInset = UIEdgeInsets(top: 70, left: 0, bottom: 0, right: 0)
+
                 }
             }
         }
@@ -81,27 +88,12 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         return v
     }()
     
-    private lazy var refreshControl: UIRefreshControl = {
+    private lazy var refreshingControl: UIRefreshControl = {
         let rc = UIRefreshControl()
         rc.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
         return rc
     }()
     
-    private lazy var detailsTableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .grouped)
-        tv.delegate = self
-        tv.dataSource = self
-        tv.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
-        tv.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
-        tv.register(NewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
-        tv.showsVerticalScrollIndicator = false
-        tv.separatorStyle = .none
-        tv.backgroundColor = .white
-        tv.tableHeaderView = stockHeaderView
-        if #available(iOS 10.0, *) { tv.refreshControl = refreshControl }
-        else { tv.addSubview(refreshControl) }
-        return tv
-    }()
     
     private var loadingView: UIView = {
         let v = UIView()
@@ -124,7 +116,7 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         self.companyName = companyName
         self.analyticsLogger = analyticsLogger
         self.intrinioApi = networkingAPI
-        super.init(nibName: nil, bundle: nil)
+        super.init(style: .grouped)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -133,23 +125,28 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundColor
+        view.backgroundColor = .white
         setupViews()
         loadChartData()
-        AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupNavBar()
     }
     
     
     // MARK: - View Setup
     
     private func setupViews() {
-        view.addSubview(detailsTableView)
-        detailsTableView.fillSuperview()
+        tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
+        tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
+        tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
+        tableView.showsVerticalScrollIndicator = false
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .white
+        tableView.tableHeaderView = stockHeaderView
+        tableView.contentInset = UIEdgeInsets(top: 70, left: 0, bottom: 0, right: 0)
+        if #available(iOS 10.0, *) { tableView.refreshControl = refreshingControl }
     }
     
     @objc private func refreshData(_ sender: Any) {
@@ -284,6 +281,16 @@ class StockDetailsViewController: UIViewController, ChartViewDelegate {
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .heavy)]
     }
+    
+    override func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview).y
+        if translation > 0 {
+            delegate?.presentMenuBar()
+        }
+        if translation < 0 {
+            delegate?.hideMenuBar()
+        }
+    }
 
 }
 
@@ -303,8 +310,8 @@ extension StockDetailsViewController {
     }
 }
 
-extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension StockDetailsViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.isLoading == true {
             tableView.setEmptyView(state: .emptyState(title: "", message: "Loading..."))
             return 0
@@ -316,11 +323,11 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
             guard let barGraphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? BarGraphTableViewCell else { return UITableViewCell() }
@@ -345,7 +352,7 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath {
         case IndexPath(row: 0, section: 0),IndexPath(row: 1, section: 0) :
             return (UIScreen.main.bounds.height / 2) - 90
@@ -353,7 +360,7 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = SectionHeaderLabel(padding: 16)
         header.backgroundColor = .white
         if !isLoading {
@@ -369,7 +376,7 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         return nil
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let _ = tableView.cellForRow(at: indexPath) as? NewsCell else { return }
         guard let newsArticleURL = URL(string: newsData[indexPath.item].url) else { return }
 
@@ -379,16 +386,16 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 { return 35 }
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 { return 20 }
         return 50
     }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 2 {
             return 70
         } else {

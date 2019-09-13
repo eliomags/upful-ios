@@ -99,21 +99,12 @@ class HomeFeedViewController: UITableViewController, HomeFeedNavigationDelegate,
     }
     
     func navigateToDetails(popularCompany ticker: String, companyName: String) {
-        let detailsVC = StockDetailsViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
-        self.navigationController?.pushViewController(detailsVC, animated: true)
+//        let detailsVC = StockDetailsViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
+        
+        let detailVC = StockDetailsContainerView(ticker: ticker, companyName: companyName)
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
-    
-    // MARK: - ScrollView Delegate Methods
-    
-    override func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-        let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview).y
-        if translation > 0 {
-            delegate?.presentMenuBar()
-        }
-        if translation < 0 {
-            delegate?.hideMenuBar()
-        }
-    }
+
 }
 
 extension HomeFeedViewController {

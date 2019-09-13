@@ -50,6 +50,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.cell1)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         if let flowlayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             flowlayout.scrollDirection = .horizontal
             flowlayout.minimumLineSpacing = 0
@@ -100,10 +101,10 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     // MARK: - Fileprivate Functions
     
-    private func display(contentController content: UIViewController, on view: UIView) {
+    private func display(contentController content: UITableViewController, on view: UIView) {
         self.addChild(content)
         content.view.frame = view.bounds
-        view.addSubview(content.view)
+        view.addSubview(content.tableView)
         content.didMove(toParent: self)
     }
     
@@ -135,8 +136,9 @@ extension MenuContainerViewController {
 
 extension MenuContainerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellHeight = (collectionView.bounds.height - collectionView.contentInset.top)
-        return CGSize(width: collectionView.bounds.width, height: cellHeight)
+        let cellHeight = (collectionView.frame.height - collectionView.contentInset.top)
+//        return CGSize(width: collectionView.frame.width, height: cellHeight)
+        return collectionView.sizeThatFits(CGSize(width: collectionView.frame.width, height: cellHeight))
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

@@ -196,6 +196,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let searchParamsVC = ManualSearchParametersTableViewController(selectedIndexPath: indexPath, screenerItem: manualScreenItems[indexPath.item])
         searchParamsVC.delegate = self
+        
         self.navigationController?.pushViewController(searchParamsVC, animated: true)
     }
     
