@@ -22,6 +22,8 @@ enum AnalyticsEventName {
     case screenForStocks(screenType: ScreenType)
     case searchByName
     case selectedNewsArticle
+    case selectedAnalysis(criteria: SearchCriteria)
+    case selectedCompanyFiling
     
     func getName() -> String {
         switch self {
@@ -31,6 +33,10 @@ enum AnalyticsEventName {
             return "search_by_name"
         case .selectedNewsArticle:
             return "selected_news_article"
+        case .selectedAnalysis:
+            return "selected_analysis_parameter"
+        case .selectedCompanyFiling:
+            return "selected_company_filing"
         }
     }
 }
@@ -43,6 +49,10 @@ extension AnalyticsEventName {
         case .searchByName:
             return [:]
         case .selectedNewsArticle:
+            return [:]
+        case .selectedAnalysis(let criteria):
+            return ["analysis_criteria": criteria.rawValue]
+        case .selectedCompanyFiling:
             return [:]
         }
     }

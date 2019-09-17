@@ -16,10 +16,9 @@ class CompanyViewModel {
     static let google = PopularCompany(details: "Alphabet Inc", header: "GOOGL")
     static let twitter = PopularCompany(details: "Twitter Inc", header: "TWTR")
     static let microsoft = PopularCompany(details: "Microsoft Corp", header: "MSFT")
-    static let mongoDB = PopularCompany(details: "MongoDB Inc", header: "MDB")
     
     static func configureCompanyList() -> [PopularCompany] {
-        return [facebook, netflix, apple, amazon, google, twitter, microsoft, mongoDB]
+        return [facebook, netflix, apple, amazon, google, twitter, microsoft]
     }
 }
 

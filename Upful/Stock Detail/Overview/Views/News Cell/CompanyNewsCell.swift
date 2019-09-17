@@ -15,7 +15,7 @@ class NewsCell: UITableViewCell {
         let l = UILabel()
         l.numberOfLines = 2
         l.font = UIFont.viewHeader
-        l.text = "Should Roku’s Fast Growth Worry Netflix and Peers?"
+        l.text = ""
         return l
     }()
     
@@ -23,7 +23,7 @@ class NewsCell: UITableViewCell {
         let l = UILabel()
         l.numberOfLines = 2
         l.font = UIFont.details1
-        l.text = "Roku (ROKU), a competitor with Netflix, is growing at a fantastic rate. The company saw 59% year-over-year growth in revenues in the second quarter."
+        l.text = ""
         return l
     }()
     

@@ -20,3 +20,5 @@ protocol MenuBarDisplayable: UITableViewController {
     var delegate: MenuViewItemDelegate? { get set }
     var menubarTitle: String { get set }
 }
+
+

@@ -37,8 +37,8 @@ class HomeFeedViewController: UITableViewController, HomeFeedNavigationDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .groupTableViewBackground
-        tableView.backgroundColor = .groupTableViewBackground
+        view.backgroundColor = .white
+        tableView.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.tableFooterView = UIView()
@@ -49,7 +49,7 @@ class HomeFeedViewController: UITableViewController, HomeFeedNavigationDelegate,
     }
     
     
-    // MARK: -
+    // MARK: - Data Setup
     
     fileprivate func initializeFeedData() {
         homeFeedItems.append(presetFeedDataLoader.configureCompanyList())
@@ -99,8 +99,6 @@ class HomeFeedViewController: UITableViewController, HomeFeedNavigationDelegate,
     }
     
     func navigateToDetails(popularCompany ticker: String, companyName: String) {
-//        let detailsVC = StockDetailsViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
-        
         let detailVC = StockDetailsContainerView(ticker: ticker, companyName: companyName)
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -171,9 +169,7 @@ extension HomeFeedViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 100
-        }
+        if section == 0 { return 100 }
         return 20
     }
     

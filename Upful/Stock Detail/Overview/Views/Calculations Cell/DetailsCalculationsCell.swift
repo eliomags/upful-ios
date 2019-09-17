@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailsCalculationCell: UITableViewCell {
+final class DetailsCalculationCell: UITableViewCell {
     
     private let valuationView = ValuationSectionView()
     private let financialView = FinancialSectionView()

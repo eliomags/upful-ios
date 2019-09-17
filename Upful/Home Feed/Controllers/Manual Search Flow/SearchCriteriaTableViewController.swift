@@ -122,7 +122,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
                 let manualSearchVC = ManualSearchViewController(manualScreenItems: self.manualScreenItems,
                                                                 analyticsLogger: AnalyticsLogger())
                 manualSearchVC.delegate = self
-                self.navigationController?.pushViewController(manualSearchVC, animated: true)
+                self.parent?.navigationController?.pushViewController(manualSearchVC, animated: true)
             })
         }
     }
@@ -199,14 +199,11 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
             "GROWTH METRICS",
         ]
         header.text = labelText[section]
-        
-
         return view
     }
+    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 100
-        }
+        if section == 0 { return 90 }
         return 25
     }
     

@@ -14,7 +14,7 @@ protocol MenuBarViewDelegate: class {
     func hideMenuBar()
 }
 
-class MenuBarView: UIView {
+final class MenuBarView: UIView {
     weak var delegate: MenuBarViewDelegate?
     
     override var intrinsicContentSize: CGSize {
@@ -23,15 +23,9 @@ class MenuBarView: UIView {
     
     let menuTitles: [String]
     
-    private lazy var menuBarControl: UISegmentedControl = {
-        let sc = UISegmentedControl(items: menuTitles)
-        sc.tintColor = UIColor.clear
+    private lazy var menuBarControl: MenuBarControl = {
+        let sc = MenuBarControl(items: menuTitles)
         sc.addTarget(self, action: #selector(selectedControl), for: .valueChanged)
-        sc.selectedSegmentIndex = 0
-        sc.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.sectionHeader], for: .normal)
-        sc.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.sectionHeader], for: .selected)
-        sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .selected)
-        sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
         return sc
     }()
     

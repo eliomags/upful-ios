@@ -9,7 +9,7 @@
 import Foundation
 
 
-class AnalyticsLogger {
+final class AnalyticsLogger {
     private let mixpanelAnalytics = MixPanelAnalytics()
     private let googleAnalytics = FirebaseAnayltics()
     
@@ -17,8 +17,8 @@ class AnalyticsLogger {
         let analyticsAPIs: [AnalyticsTracker] = [mixpanelAnalytics, googleAnalytics]
         
         analyticsAPIs.forEach { (analytics) in
-//            analytics.log(event: event)
-            print("Logged event for:", analytics)
+            analytics.log(event: event)
+//            print("Logged event for:", analytics)
         }
     }
 }

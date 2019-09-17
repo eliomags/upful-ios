@@ -50,8 +50,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.backgroundColor = .backgroundColor
-        tv.separatorStyle = .none
+        tv.backgroundColor = .white
+        tv.separatorStyle = .singleLine
         tv.tableFooterView = UIView()
         return tv
     }()
@@ -94,7 +94,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     // MARK: - View Set up
     
     fileprivate func configureNavBar() {
-        navigationItem.title = "Upful"
+        navigationItem.title = ""
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearCriteriaTapped))
     }
@@ -167,11 +167,13 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1, reuseIdentifier: nil)
+        
         let parameter = manualScreenItems[indexPath.item].parameter
         let criteria = manualScreenItems[indexPath.item].criteria
         let value = manualScreenItems[indexPath.item].value
 
         cell.selectionStyle = .none
+        cell.accessoryType = .disclosureIndicator
         cell.textLabel?.text = criteria.explicit
         cell.textLabel?.font = .details1
         cell.detailTextLabel?.font = .details2

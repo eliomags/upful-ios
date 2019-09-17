@@ -6,14 +6,10 @@
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
 
-import GoogleMobileAds
 import UIKit
 
-class BannerAdTableViewCell: UITableViewCell {
-    
-}
 
-class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
+final class ScreenResultsViewController: UIViewController {
     
     // MARK: - Dependencies
     
@@ -36,7 +32,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
 
     // MARK: - DataSource
     
-    var searchResults = [AnyObject]() {
+    var searchResults = [Stock]() {
         didSet {
             DispatchQueue.main.async {
                 self.feedTableView.reloadData()
@@ -46,17 +42,7 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
     
     struct ReuseId {
         static let resultsCellID = "resultsCellID"
-        static let bannerAdCell = "BannerViewCell"
     }
-    
-    
-    // MARK: Banner Ad Setup
-    
-    var adsToLoad = [GADBannerView]()
-    var loadStateForAds = [GADBannerView: Bool]()
-    let adUnitID = Constants.AdMobID.testAdID
-    var adInterval = 12
-    let adViewHeight = CGFloat(100)
     
     
     // MARK: - Views
@@ -67,7 +53,6 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
         tv.dataSource = self
         tv.delegate = self
         tv.register(ResultsTableViewCell.self, forCellReuseIdentifier: ReuseId.resultsCellID)
-        tv.register(BannerAdTableViewCell.self, forCellReuseIdentifier: ReuseId.bannerAdCell)
         return tv
     }()
     
@@ -113,49 +98,6 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
         setupNavBar()
     }
     
-    
-    // MARK: - GADBannerView delegate methods
-    
-    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
-        loadStateForAds[bannerView] = true
-    }
-    
-    func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
-        print("Failed to receive ad:", error.localizedDescription)
-        preloadNextAd()
-    }
-    
-    /// Adds banner ads to the tableViewItems list.
-    func addBannerAds() {
-        let index = adInterval
-        // Ensure subview layout has been performed before accessing subview sizes.
-        feedTableView.layoutIfNeeded()
-        while index < searchResults.count {
-            let adSize = GADAdSizeFromCGSize(
-                CGSize(width: feedTableView.contentSize.width, height: adViewHeight))
-            let adView = GADBannerView(adSize: adSize)
-            adView.adUnitID = adUnitID
-            adView.rootViewController = self
-            adView.delegate = self
-            
-            searchResults.insert(adView, at: index)
-            adsToLoad.append(adView)
-            loadStateForAds[adView] = false
-            adInterval += 12
-            return
-        }
-    }
-    
-    /// Preload banner ads sequentially. Dequeue and load next ad from `adsToLoad` list.
-    func preloadNextAd() {
-        if !adsToLoad.isEmpty {
-            let ad = adsToLoad.removeFirst()
-            let adRequest = GADRequest()
-            adRequest.testDevices = [ kGADSimulatorID ]
-            ad.load(adRequest)
-        }
-    }
-    
 
     // MARK: - Fileprivate Functions
     
@@ -177,10 +119,6 @@ class ScreenResultsViewController: UIViewController, GADBannerViewDelegate {
                 }
                 self.fetchCompanyFinancialData(searchResults: fetchedData)
                 self.isLoading = false
-                DispatchQueue.main.async {
-                    self.addBannerAds()
-                    self.preloadNextAd()
-                }
             case .failure(_):
                 self.isLoading = false
                 DispatchQueue.main.async {
@@ -268,22 +206,14 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let resultsCell = tableView.dequeueReusableCell(withIdentifier: ReuseId.resultsCellID) as? ResultsTableViewCell else { return UITableViewCell() }
+
+        let screenResult = searchResults[indexPath.item]
+        guard let ticker = screenResult.ticker else { return resultsCell }
+        resultsCell.companyTickerLabel.text = ticker
+        resultsCell.companyNameLabel.text = screenResult.name
+        resultsCell.marketcapStackView.valueLabel.text = "$\(screenResult.marketcap?.formatUsingAbbreviation() ?? " -")"
+        resultsCell.pricetoearningsStackView.valueLabel.text = "\(screenResult.pricetoearnings?.twoDecimal() ?? "-")"
         
-        if let screenResult = searchResults[indexPath.item] as? Stock {
-            guard let ticker = screenResult.ticker else { return resultsCell }
-            resultsCell.companyTickerLabel.text = ticker
-            resultsCell.companyNameLabel.text = screenResult.name
-            resultsCell.marketcapStackView.valueLabel.text = "$\(screenResult.marketcap?.formatUsingAbbreviation() ?? " -")"
-            resultsCell.pricetoearningsStackView.valueLabel.text = "\(screenResult.pricetoearnings?.twoDecimal() ?? "-")"
-        }
-        
-        if let bannerView = searchResults[indexPath.item] as? GADBannerView {
-            let reusableAdCell = tableView.dequeueReusableCell(withIdentifier: ReuseId.bannerAdCell, for: indexPath)
-            for subview in reusableAdCell.contentView.subviews { subview.removeFromSuperview() }
-            reusableAdCell.contentView.addSubview(bannerView)
-            bannerView.fillSuperview()
-            return reusableAdCell
-        }
         
         return resultsCell
     }
@@ -296,10 +226,9 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let selectedCompany = searchResults[indexPath.item] as? Stock {
-            let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
-            self.navigationController?.pushViewController(detailVC, animated: true)
-        }
+        let selectedCompany = searchResults[indexPath.item]
+        let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 

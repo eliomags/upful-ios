@@ -40,7 +40,7 @@ class GenericBarChartView: BarChartView {
         legend.orientation = .vertical
         legend.drawInside = true
         legend.yOffset = -10
-        legend.xOffset = 10.0
+        legend.xOffset = 0
         legend.yEntrySpace = 0
     }
     
@@ -51,6 +51,9 @@ class GenericBarChartView: BarChartView {
         leftAxis.labelTextColor = .black
         leftAxis.labelFont = UIFont.systemFont(ofSize: 10, weight: .semibold)
         leftAxis.gridColor = .lightGray
+//        leftAxis.axisMaxLabels = 5
+//        leftAxis.axisMinimum = 4
+        leftAxis.granularity = 1
         leftAxis.drawGridLinesEnabled = true
         leftAxis.drawAxisLineEnabled = false
         rightAxis.drawGridLinesEnabled = false
@@ -60,7 +63,7 @@ class GenericBarChartView: BarChartView {
     private func setupXAxis() {
         xAxis.labelPosition = .bottom
         xAxis.drawGridLinesEnabled = false
-        xAxis.centerAxisLabelsEnabled = true        
+        xAxis.centerAxisLabelsEnabled = true
         xAxis.granularity = 1
     }
     
@@ -84,6 +87,9 @@ class GenericBarChartView: BarChartView {
         chartDataSet.colors = [UIColor.positive]
         chartDataSet1.colors = [UIColor.appAccent]
         
+        chartDataSet.highlightEnabled = false
+        chartDataSet1.highlightEnabled = false
+
         chartDataSet.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         chartDataSet1.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         
@@ -119,6 +125,25 @@ class GenericBarChartView: BarChartView {
 }
 
 class ChartViewModel: IAxisValueFormatter, IValueFormatter {
+    static var decimalFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 2
+        formatter.maximumIntegerDigits = 4
+        formatter.negativeSuffix = "%"
+        formatter.positiveSuffix = "%"
+        formatter.multiplier = 100
+
+        return formatter
+    }()
+    
+    static var multipleFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 1
+        formatter.maximumIntegerDigits = 4
+
+        return formatter
+    }()
+    
     func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
         let formattedValue = Int(value).formatUsingAbbreviation()
         
@@ -132,10 +157,10 @@ class ChartViewModel: IAxisValueFormatter, IValueFormatter {
     }
     
     static func setupData() -> [DetailsData] {
-        let one = DetailsData(year: "2015", revenue: 5145784, earnings: 1005730)
-        let two = DetailsData(year: "2016", revenue: 3357453, earnings: 3745693)
-        let three = DetailsData(year: "2017", revenue: 5335301, earnings: 2003230)
-        let four = DetailsData(year: "2018", revenue: 5127344, earnings: 1637662)
+        let one = DetailsData(year: "2015", revenue: 5145784, pe: 12)
+        let two = DetailsData(year: "2016", revenue: 3357453, pe: 15)
+        let three = DetailsData(year: "2017", revenue: 5335301, pe: 10)
+        let four = DetailsData(year: "2018", revenue: 5127344, pe: 17)
 
         return [one, two, three, four]
     }
@@ -144,7 +169,7 @@ class ChartViewModel: IAxisValueFormatter, IValueFormatter {
 struct DetailsData {
     let year: String
     let revenue: Double
-    let earnings: Double
+    let pe: Double
 }
 
 

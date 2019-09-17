@@ -10,6 +10,33 @@ import Foundation
 
 final class IntrinioAPI {
     private let apiKey = Constants.Intrinio.apiKey
+    
+    /// Used to fetch company filings in the details screen
+    func getCompanyFilings(ticker: String, completion: @escaping (Result<[Filings],Error>) -> Void) {
+        guard let filingsUrl = URL(string: "https://api-v2.intrinio.com/companies/" +
+            ticker + "/filings?report_type=10-K,10-K/A,10-Q,10-Q/A&start_date=2018-01-01" +
+            apiKey) else { return }
+        let decoder = JSONDecoder()
+        let session = URLSession.shared
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        let task = session.dataTask(with: filingsUrl) { (data, _, err) in
+            if let err = err {
+                completion(.failure(err))
+            }
+            guard let data = data else { return }
+            do {
+                let companyFilings = try decoder.decode(Company.self, from: data)
+                completion(.success(companyFilings.filings ?? []))
+            } catch let error {
+                completion(.failure(error))
+            }
+            
+        }
+        task.resume()
+    }
+    
+    
 
     private let companySearchEndpoint = "https://api-v2.intrinio.com/companies/search?query="
     

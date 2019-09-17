@@ -53,8 +53,9 @@ struct Companies: Decodable {
     let companies: [Company]
 }
 
-struct Company: Codable {
+struct Company: Decodable {
     let id, ticker, name, lei: String?
     let cik: String?
+    var filings: [Filings]?
 }
 

@@ -17,6 +17,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         return []
     }
     
+    
     // MARK: - Views
     
     private lazy var menuBarView: MenuBarView = {
@@ -46,11 +47,13 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     }
     
     private func setupCollectionView() {
+        
         collectionView.backgroundColor = UIColor.groupTableViewBackground
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.cell1)
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: -menuBarView.intrinsicContentSize.height, left: 0, bottom: 0, right: 0)
+        collectionView.contentInsetAdjustmentBehavior = .never
         if let flowlayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             flowlayout.scrollDirection = .horizontal
             flowlayout.minimumLineSpacing = 0
@@ -61,20 +64,32 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     // MARK: - Delegate Methods
     
-    /// Menubar Delegate Methods
+    /// Menubar Methods
+    /// Navigates to the designated child tableView based on the selected item index of the segmented control
     func selectedIndex(_ index: Int) {
         collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
     }
     
+    
+    /// Methods for hiding and presenting the menu bar when the child tableView has scrolled.
+    /// We will check if the view is already animated before animating to improve performance.
+    private var isMenuBarVisible = true
+    
     func hideMenuBar() {
-        UIView.animate(withDuration: 0.2) {
-            self.menuBarView.transform = CGAffineTransform(translationX: 0, y: -self.menuBarView.bounds.height)
+        if isMenuBarVisible == true {
+            UIView.animate(withDuration: 0.2) {
+                self.menuBarView.transform = CGAffineTransform(translationX: 0, y: -self.menuBarView.bounds.height)
+            }
+            isMenuBarVisible = !isMenuBarVisible
         }
     }
     
     func presentMenuBar() {
-        UIView.animate(withDuration: 0.2) {
-            self.menuBarView.transform = .identity
+        if isMenuBarVisible == false {
+            UIView.animate(withDuration: 0.2) {
+                self.menuBarView.transform = .identity
+            }
+            isMenuBarVisible = !isMenuBarVisible
         }
     }
     
@@ -86,7 +101,9 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         self.present(viewController, animated: true, completion: nil)
     }
     
-    /// ScrollView Delegate Mthods
+    
+    // MARK: - ScrollView Delegate Methods
+    
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let distance = scrollView.contentOffset.x
         self.menuBarView.placementViewLeadingConstraint = distance
@@ -136,9 +153,10 @@ extension MenuContainerViewController {
 
 extension MenuContainerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellHeight = (collectionView.frame.height - collectionView.contentInset.top)
+//        let cellHeight = (collectionView.frame.height - collectionView.contentInset.top)
 //        return CGSize(width: collectionView.frame.width, height: cellHeight)
-        return collectionView.sizeThatFits(CGSize(width: collectionView.frame.width, height: cellHeight))
+//        return collectionView.sizeThatFits(CGSize(width: collectionView.frame.width, height: cellHeight))
+        return collectionView.frame.size
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

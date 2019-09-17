@@ -14,14 +14,12 @@ class StockDetailsContainerView: MenuContainerViewController {
     
     override var menubarControllers: [MenuBarDisplayable] {
         let controllers: [MenuBarDisplayable] = [
-            
-            StockDetailsViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger()),
-            StockDetailsViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
+            StockOverviewViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger()),
+            StockAnalysisViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
         ]
         controllers.forEach { (controller) in
             controller.delegate = self
         }
-        
         return controllers
     }
     
@@ -56,8 +54,7 @@ class StockDetailsContainerView: MenuContainerViewController {
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .heavy)]
     }
-    
-    
+
 }
 
 

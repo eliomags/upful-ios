@@ -33,6 +33,7 @@ enum CriteriaClassification: Int {
 extension SearchCriteria {
     var explicit: String {
         switch self {
+        case .none: return "None"
         case .name: return "Name"
         case .pricetoearnings: return "Price/Earnings"
         case .pricetobook: return "Price/Book"
@@ -63,6 +64,7 @@ extension SearchCriteria {
     
     var parameterType: ScreenerParameterType {
         switch self {
+        case .none: return .other
         case .name: return .other
         case .marketcap: return .number
         case .pricetoearnings: return .ratio
@@ -118,6 +120,7 @@ extension SearchCriteria {
         case .totalassets: return .other
         case .totalliabilities: return .other
         case .totalequity: return .other
+        case .none: return .other
         }
     }
 

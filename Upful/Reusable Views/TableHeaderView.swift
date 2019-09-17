@@ -16,7 +16,7 @@ class TableHeaderView: UIView {
     var detailsLabel: UILabel = {
         let l = UILabel()
         l.numberOfLines = 0
-        l.font = UIFont(name: "AvenirNext-Medium", size: 16)
+        l.font = UIFont(name: "AvenirNext-Bold", size: 18)
         return l
     }()
     

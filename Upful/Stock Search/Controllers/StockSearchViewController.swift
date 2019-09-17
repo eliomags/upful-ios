@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StockSearchViewController: UITableViewController, UISearchControllerDelegate, UISearchBarDelegate {
+final class StockSearchViewController: UITableViewController, UISearchControllerDelegate, UISearchBarDelegate {
     
     private enum ReuseID {
         static let stockCell = "stockCell"
@@ -41,6 +41,7 @@ class StockSearchViewController: UITableViewController, UISearchControllerDelega
         let sc = UISearchController(searchResultsController: nil)
         sc.delegate = self
         sc.searchBar.delegate = self
+        sc.searchBar.tintColor = .black
         sc.dimsBackgroundDuringPresentation = false
         return sc
     }()
@@ -77,6 +78,7 @@ class StockSearchViewController: UITableViewController, UISearchControllerDelega
     private func setupNavBar() {
         navigationItem.title = "Search"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         if #available(iOS 11.0, *) {
             navigationItem.searchController = searchController
@@ -149,12 +151,11 @@ class StockSearchViewController: UITableViewController, UISearchControllerDelega
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let placeHolder = displayData[indexPath.item]
-        let stockDetailsVC = StockDetailsViewController(ticker: placeHolder.ticker ?? "", companyName: placeHolder.name ?? "", networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
+        let selectedCompany = displayData[indexPath.item]
+        let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
         
-        navigationController?.pushViewController(stockDetailsVC, animated: true)
+        navigationController?.pushViewController(detailsVC, animated: true)
     }
-    
 }
 
 

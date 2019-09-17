@@ -9,6 +9,8 @@
 import Foundation
 
 enum SearchCriteria: String, CaseIterable {
+    case none
+    
     case name
     case marketcap
     case totalrevenue
