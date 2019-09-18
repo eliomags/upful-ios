@@ -8,6 +8,21 @@
 
 import UIKit
 
+class StateLabel: UILabel {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .lightText
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if self.text == "" { backgroundColor = UIColor.lightText}
+//        if self.text != "" { backgroundColor = UIColor.clear }
+    }
+}
+
 class StockDetailStackView: UIStackView {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
@@ -21,7 +36,7 @@ class StockDetailStackView: UIStackView {
         label.textAlignment = .right
         label.textColor = .black
         label.font = .details1
-        label.text = "NA"
+        label.text = ""
         return label
     }()
     

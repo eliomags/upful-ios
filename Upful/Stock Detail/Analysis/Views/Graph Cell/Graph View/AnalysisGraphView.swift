@@ -40,6 +40,7 @@ class CombinedLineChartView: CombinedChartView {
     }
     
     private func setupYAxis() {
+        drawValueAboveBarEnabled = false
         leftAxis.spaceTop = 0.15
         leftAxis.spaceBottom = 0.2
         leftAxis.labelTextColor = .black
@@ -49,12 +50,7 @@ class CombinedLineChartView: CombinedChartView {
         leftAxis.drawAxisLineEnabled = false
         leftAxis.granularity = 1
         leftAxis.drawBottomYLabelEntryEnabled = true
-        
-        leftAxis.axisMinLabels = 4
-        leftAxis.axisMaxLabels = 4
-        
-        rightAxis.axisMaxLabels = 4
-        rightAxis.axisMinLabels = 4
+        leftAxis.axisMaxLabels = 5
         
         rightAxis.enabled = true
         rightAxis.spaceTop = 0.15
@@ -64,6 +60,7 @@ class CombinedLineChartView: CombinedChartView {
         rightAxis.gridColor = .lightGray
         rightAxis.drawGridLinesEnabled = false
         rightAxis.drawAxisLineEnabled = false
+        rightAxis.axisMaxLabels = 5
     }
     
     private func setupXAxis() {
@@ -94,7 +91,6 @@ class CombinedLineChartView: CombinedChartView {
     func generateLineData(dataPoints: [String], values: [Double], criteria: SearchCriteria) {
         var entries = [ChartDataEntry]()
         setVisibleXRange(minXRange: 0, maxXRange: Double(dataPoints.count - 1))
-        
         for i in 0..<dataPoints.count {
             let dataEntry = ChartDataEntry(x: Double(i), y: values[i])
             entries.append(dataEntry)
@@ -103,6 +99,7 @@ class CombinedLineChartView: CombinedChartView {
         let dataSet = LineChartDataSet(entries: entries, label: criteria.explicit)
         dataSet.setColor(NSUIColor.appAccent)
         dataSet.setCircleColors(NSUIColor.appAccent)
+        dataSet.valueTextColor = UIColor.darkText
         dataSet.mode = .cubicBezier
         dataSet.drawValuesEnabled = true
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 10, weight: .light)
@@ -110,11 +107,11 @@ class CombinedLineChartView: CombinedChartView {
         dataSet.circleHoleRadius = 0
         dataSet.drawVerticalHighlightIndicatorEnabled = false
         dataSet.drawHorizontalHighlightIndicatorEnabled = true
-    
+        
         dataSet.axisDependency = .right
         rightAxis.axisMaximum = dataSet.yMax * 1.3
         xAxis.valueFormatter = IndexAxisValueFormatter(values: dataPoints)
-        
+
         let lineChartData = LineChartData(dataSet: dataSet)
         if criteria.parameterType == .number {
             dataSet.valueFormatter = chartViewModel
@@ -149,8 +146,10 @@ class CombinedLineChartView: CombinedChartView {
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         dataSet.drawValuesEnabled = true
         dataSet.highlightEnabled = false
+        
         dataSet.axisDependency = .left
         leftAxis.axisMaximum = dataSet.yMax * 1.4
+        xAxis.valueFormatter = IndexAxisValueFormatter(values: dataPoints)
 
         let chartData = BarChartData(dataSet: dataSet)
         chartData.barWidth = 0.3
@@ -168,7 +167,6 @@ class CombinedLineChartView: CombinedChartView {
         }
         
         self.chartData.barData = chartData
-        
         data = self.chartData
         self.fitScreen()
     }

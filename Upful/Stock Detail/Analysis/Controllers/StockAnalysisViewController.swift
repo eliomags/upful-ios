@@ -258,6 +258,7 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
                                   values: barChartData.map({$0.value}),
                                   criteria: criteria)
     }
+    
 }
 
 extension StockAnalysisViewController {
@@ -279,6 +280,7 @@ extension StockAnalysisViewController {
                 cell.chartView.delegate = self
                 configureBarData(chartView: cell.chartView, criteria: barCriteria)
                 configureLineData(chartView: cell.chartView, criteria: lineCriteria)
+                
                 return cell
             case 1,2:
                 let cell = UITableViewCell(style: .default, reuseIdentifier: ReuseID.graphConfigurationCell)

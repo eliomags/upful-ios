@@ -10,7 +10,9 @@ import Foundation
 
 struct Constants {
     struct MixPanel {
-        static let token = "90dafb0f4cbcc21d7a9bddb6611a8b30"
+//        static let token = "90dafb0f4cbcc21d7a9bddb6611a8b30"
+        static let token = ""
+
     }
     
     struct AdMobID {

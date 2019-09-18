@@ -30,6 +30,7 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
         static let newsCell = "newsCell"
     }
     
+    
     // MARK: - State
     // TODO: - Better implementation of state
     private enum State {

@@ -124,7 +124,7 @@ class GenericBarChartView: BarChartView {
     }
 }
 
-class ChartViewModel: IAxisValueFormatter, IValueFormatter {
+class ChartViewModel: NSObject, IAxisValueFormatter, IValueFormatter {
     static var decimalFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 2
