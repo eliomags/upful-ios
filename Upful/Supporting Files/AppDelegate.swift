@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow()
@@ -35,23 +34,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func initializeVC() -> UIViewController {
         let homeVC = HomeFeedContainer(collectionViewLayout: UICollectionViewFlowLayout())
         let searchVC = StockSearchViewController(networkingAPI: IntrinioAPI())
-        let controllers = [homeVC,searchVC]
+        let savedVC = SaveViewController(style: .grouped)
+        
+        let controllers = [homeVC,savedVC,searchVC]
         homeVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-home-page-30"), tag: 0)
-        searchVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-search-30"), tag: 1)
+        savedVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-star-30"), tag: 1)
+        searchVC.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "icons8-search-30"), tag: 2)
         
         let tabVC = UITabBarController()
         tabVC.tabBar.tintColor = .appAccent        
         tabVC.tabBar.barTintColor = .backgroundColor
         tabVC.viewControllers = controllers.map({
             let navVC = UINavigationController(rootViewController: $0)
+            navVC.navigationBar.prefersLargeTitles = true
             navVC.navigationBar.isTranslucent = false
-            navVC.navigationBar.tintColor = .black
+            navVC.navigationBar.tintColor = .appAccent
             navVC.navigationBar.backgroundColor = .white
             navVC.navigationBar.barTintColor = .white
-            if #available(iOS 11.0, *) { navVC.navigationBar.prefersLargeTitles = true }
             navVC.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
             navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .heavy)]
-            
             return navVC
         })
         return tabVC

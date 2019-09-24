@@ -8,17 +8,10 @@
 
 import Foundation
 
-struct Constants {
+public struct Constants {
     struct MixPanel {
 //        static let token = "90dafb0f4cbcc21d7a9bddb6611a8b30"
         static let token = ""
-
-    }
-    
-    struct AdMobID {
-        static let testAdID = "ca-app-pub-3940256099942544/2934735716"
-        static let homeFeedAdMobID = "ca-app-pub-8568716362855067/5122015346"
-        static let resultsAdMobID = "ca-app-pub-8568716362855067/7834990355"
     }
     
     struct Intrinio {

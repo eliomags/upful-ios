@@ -118,10 +118,10 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     // MARK: - Fileprivate Functions
     
-    private func display(contentController content: UITableViewController, on view: UIView) {
+    private func display(contentController content: MenuBarDisplayable, on view: UIView) {
         self.addChild(content)
         content.view.frame = view.bounds
-        view.addSubview(content.tableView)
+        view.addSubview(content.view)
         content.didMove(toParent: self)
     }
     
@@ -153,9 +153,6 @@ extension MenuContainerViewController {
 
 extension MenuContainerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let cellHeight = (collectionView.frame.height - collectionView.contentInset.top)
-//        return CGSize(width: collectionView.frame.width, height: cellHeight)
-//        return collectionView.sizeThatFits(CGSize(width: collectionView.frame.width, height: cellHeight))
         return collectionView.frame.size
     }
     

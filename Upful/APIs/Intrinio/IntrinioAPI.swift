@@ -36,8 +36,6 @@ final class IntrinioAPI {
         task.resume()
     }
     
-    
-
     private let companySearchEndpoint = "https://api-v2.intrinio.com/companies/search?query="
     
     func searchByName(name: String, completion: @escaping (Result<[Company],Error>) -> Void) {
@@ -61,7 +59,7 @@ final class IntrinioAPI {
     }
     
     
-    // MARK: - Screening for stocks
+    /// MARK: - Screening for stocks
     private let endpoint = "https://api.intrinio.com/securities/search?"
     private let numberOfResults = 10
     private let resultOrder = "&order_column=marketcap&order_direction=desc&primary_only=true"
@@ -94,7 +92,7 @@ final class IntrinioAPI {
         task.resume()
     }
     
-    // MARK: - Lookup historic financials
+    /// MARK: - Lookup historic financials
     enum FinancialsFrequency: String {
         case recent = "?frequency=yearly&start_date=2018-01-01"
         case historic = "?frequency=yearly&start_date=2015-01-01&end_date=2021-01-01&sort_order=asc"
@@ -124,13 +122,15 @@ final class IntrinioAPI {
     }
     
     
-    // MARK: - Lookup fundamentals
+    /// MARK: - Lookup fundamentals
+    
     private let lookupEndpoint = "https://api-v2.intrinio.com/fundamentals/"
     // Q1TTM, Q2TTM, Q3TTM, FY, Q1, Q2, Q3, Q4, Q2YTD, Q3YTD
     private let documentType = "-calculations-2019-Q2TTM/standardized_financials?"
     
     func fetchStockBatchFinancials(ticker: String, completion: @escaping (Result<[StandardizedFinancial], Error>) -> Void) {
         guard let url = URL(string: lookupEndpoint + ticker + documentType + apiKey) else { return }
+
         let decoder = JSONDecoder()
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, response, error) in
@@ -150,7 +150,7 @@ final class IntrinioAPI {
     }
     
     
-    // MARK: - Get Company NewsData
+    /// MARK: - Get Company NewsData
     
     private let newsEndpoint = "https://api-v2.intrinio.com/companies/"
     private let newsPageSize = "/news?page_size=4"

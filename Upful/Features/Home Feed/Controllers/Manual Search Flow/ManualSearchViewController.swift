@@ -1,0 +1,336 @@
+//
+//  ManualSearchViewController.swift
+//  Upful
+//
+//  Created by Yanik Simpson on 8/9/19.
+//  Copyright © 2019 Yanik Simpson. All rights reserved.
+//
+
+import UIKit
+
+protocol SearchCriteriaDelegate: class {
+    func remove(indexPath: IndexPath)
+    func updateScreenerItems(with updatedItems: [ManualScreenItem])
+}
+
+class ManualSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ManualSearchDelegate {
+    
+    // MARK: - Dependencies
+    
+    let analyticsLogger: AnalyticsLogger
+    
+    var manualScreenItems: [ManualScreenItem] {
+        didSet {
+            if manualScreenItems.isEmpty {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+    
+    weak var delegate: SearchCriteriaDelegate?
+
+    
+    // MARK:- Views
+    
+    lazy var header: ManualSearchHeaderView = {
+        let v = ManualSearchHeaderView()
+        return v
+    }()
+    
+    lazy var saveButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(#imageLiteral(resourceName: "icons8-star-30 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "icons8-star-30 (2)").withRenderingMode(.alwaysOriginal), for: .selected)
+        button.setTitle("", for: .normal)
+        button.backgroundColor = .clear
+        button.tintColor = .clear
+        button.addTarget(self, action: #selector(saveScreener), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var searchButton: CustomButton = {
+        let b = CustomButton(type: .system)
+        b.setTitle("SEARCH", for: .normal)
+        b.layer.masksToBounds = true
+        b.addTarget(self, action: #selector(handleSearch), for: .touchUpInside)
+        b.setupShadow(intensity: .intense, color: .black)
+        return b
+    }()
+    
+    lazy var manualSearchSearchTableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.delegate = self
+        tv.dataSource = self
+        tv.backgroundColor = .white
+        tv.separatorStyle = .singleLine
+        tv.tableFooterView = UIView()
+        return tv
+    }()
+    
+    lazy var footer: UIView = {
+        let v = UIView()
+        v.backgroundColor = .clear
+        v.addSubview(searchButton)
+        searchButton.anchor(top: nil, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
+                            padding: .init(top: 0, left: 16, bottom: 50, right: 16))
+        return v
+    }()
+    
+    
+    // MARK:- Initializer Methods
+    
+    init(manualScreenItems: [ManualScreenItem], analyticsLogger: AnalyticsLogger) {
+        self.manualScreenItems = manualScreenItems
+        self.analyticsLogger = analyticsLogger
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureNavBar()
+        view.backgroundColor = .backgroundColor
+        view.addSubview(manualSearchSearchTableView)
+        manualSearchSearchTableView.fillSuperview()
+        view.addSubview(searchButton)
+        searchButton.anchor(top: nil, leading: view.layoutMarginsGuide.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.layoutMarginsGuide.trailingAnchor,
+                            padding: .init(top: 0, left: 16, bottom: 70, right: 16))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.analyticsLogger = AnalyticsLogger()
+        self.manualScreenItems = []
+        super.init(coder: aDecoder)
+    }
+    
+    
+    // MARK: - View Functions
+    
+    fileprivate func configureNavBar() {
+        navigationItem.title = ""
+        let clearButton = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearCriteriaTapped))
+        let save = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveScreener))
+        navigationItem.rightBarButtonItems = [save,clearButton]
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
+    
+    // MARK: - Actions
+    
+    fileprivate func presentAlert() {
+        let alert = UIAlertController(title: "Search Failed", message: "Please add a search parameter to continue.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func presentSuccessAlert() {
+        let alert = UIAlertController(title: "Success", message: "Saved Successfully.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    fileprivate func configureURLComponents() -> [String] {
+        var urlComponents: [String] = []
+        manualScreenItems.forEach { (manualScreenerItem) in
+            urlComponents.append(manualScreenerItem.criteria.rawValue + "\(manualScreenerItem.parameter.rawValue)~\(manualScreenerItem.value ?? 0)")
+        }
+        return urlComponents
+    }
+    
+    @objc fileprivate func handleSearch(_ sender: UIButton) {
+        if manualScreenItems.isEmpty {
+            presentAlert()
+            return
+        }
+        for item in manualScreenItems {
+            if item.parameter == .none {
+                presentAlert()
+                return
+            }
+        }
+        analyticsLogger.reportEvents(event: .screenForStocks(screenType: .manual))
+        let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents(), networkingAPI: IntrinioAPI())
+        navigationController?.pushViewController(screenerResultsVC, animated: true)
+    }
+    
+    @objc fileprivate func clearCriteriaTapped(_ sender: UIBarButtonItem) {
+        for _ in 0..<manualScreenItems.count {
+            guard manualScreenItems.count > 0 else { return }
+            delegate?.remove(indexPath: IndexPath(row: 0, section: 0))
+        }
+        delegate?.updateScreenerItems(with: [])
+        manualScreenItems.removeAll()
+    }
+    
+    private func checkCurrentParameters(completion: (()->())) {
+        var isSuitable = true
+        manualScreenItems.forEach { (manualScreenItem) in
+            if manualScreenItem.parameter.rawValue == SearchParameter.none.rawValue {
+                isSuitable = false
+            }
+            if isSuitable { completion() }
+            if !isSuitable {
+                ViewPresenter.displayErrorActionView(in: self, message: "Please add search parameters to your screen before saving.")
+            }
+        }
+    }
+    
+    
+    // MARK: - Core Data Functionality
+    
+    private func checkSavedScreeners(title: String, completion: (()->Void)) {
+        var savedScreeners: [SavedScreener] = []
+        let request = SavedScreener.createfetchRequest()
+        do {
+            savedScreeners = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
+            let isPrevisouslySaved = !savedScreeners.filter { (savedScreener) -> Bool in return savedScreener.title == title }
+                .isEmpty
+            if isPrevisouslySaved {
+                ViewPresenter.displayErrorActionView(
+                    in: self,
+                    message: "Screener named \(title) already exists. \nPlease give this a new name.")
+                return
+            }
+            if !isPrevisouslySaved { completion() }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    private func saveParameters(with destination: SavedScreener) {
+        manualScreenItems.forEach { (screenerItem) in
+            let screenerParameter = SavedScreenerParameter(context: PersistenceService.shared.persistentContainer.viewContext)
+            screenerParameter.value = screenerItem.value ?? 0
+            screenerParameter.parameter = screenerItem.parameter.rawValue
+            screenerParameter.criteria = screenerItem.criteria.rawValue
+            screenerParameter.savedScreener = destination
+            PersistenceService.shared.saveContext()
+        }
+    }
+    
+    @objc private func saveScreener(_ sender: UIBarButtonItem) {
+        self.checkCurrentParameters { [unowned self] in
+            let alert = UIAlertController(title: "Add to Favorites", message: "Give your screener a name.", preferredStyle: .alert)
+            alert.addTextField { (titleTextField) in titleTextField.placeholder = "Title" }
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
+                var titleTextFieldText = alert?.textFields![0].text
+                if titleTextFieldText == "" { titleTextFieldText = "No Title" }
+                
+                self.checkSavedScreeners(title: titleTextFieldText ?? "No Title", completion: {
+                    let savedScreener = SavedScreener(context: PersistenceService.shared.persistentContainer.viewContext)
+                    savedScreener.title = titleTextFieldText ?? "No Title"
+                    savedScreener.screenDescription = ""
+                    self.saveParameters(with: savedScreener)
+                    PersistenceService.shared.saveContextWithCompletion(completion: { [unowned self] in
+                        ViewPresenter.displaySuccessActionView(in: self)
+                    })
+                })
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+
+    // MARK:- Delegate Methods
+    
+    func addSearchCriteria(criteria: ManualScreenItem) {
+        manualScreenItems.append(criteria)
+    }
+    
+    func addSearchParameter(parameterItem: ParameterItem, indexPath: IndexPath) {
+        manualScreenItems[indexPath.item].parameter = parameterItem.parameter
+        manualScreenItems[indexPath.item].value = parameterItem.value
+        delegate?.updateScreenerItems(with: manualScreenItems)
+        manualSearchSearchTableView.reloadData()
+    }
+    
+    
+    // MARK:- Tableview Methods
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return manualScreenItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1, reuseIdentifier: nil)
+        
+        let parameter = manualScreenItems[indexPath.item].parameter
+        let criteria = manualScreenItems[indexPath.item].criteria
+        let value = manualScreenItems[indexPath.item].value
+
+        cell.selectionStyle = .none
+        cell.accessoryType = .disclosureIndicator
+        cell.textLabel?.text = criteria.explicit
+        cell.textLabel?.font = .details1
+        cell.detailTextLabel?.font = .details2
+        
+        if parameter != .none {
+            if criteria.parameterType == .percentage {
+                cell.detailTextLabel?.text = parameter.explicit + " " + "\(value!.convertToPercent())%"
+            }
+            if manualScreenItems[indexPath.item].criteria.parameterType == .ratio {
+                cell.detailTextLabel?.text = parameter.explicit + " " + String(Int(value ?? 0))
+            }
+            if manualScreenItems[indexPath.item].criteria.parameterType == .number {
+                cell.detailTextLabel?.text = parameter.explicit + " $" + Int(value ?? 0).formatUsingAbbreviation()
+            }
+        } else {
+            cell.detailTextLabel?.text = parameter.explicit
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let searchParamsVC = ManualSearchParametersTableViewController(selectedIndexPath: indexPath, screenerItem: manualScreenItems[indexPath.item])
+        searchParamsVC.delegate = self
+        
+        self.navigationController?.pushViewController(searchParamsVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .normal, title: "Delete") { (action, indexPath) in
+            self.manualScreenItems.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            self.manualSearchSearchTableView.reloadData()
+            self.delegate?.remove(indexPath: indexPath)
+        }
+        delete.backgroundColor = .negative
+
+        return [delete]
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 70
+        } else {
+            return 0
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 220
+        } else {
+            return 0
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
