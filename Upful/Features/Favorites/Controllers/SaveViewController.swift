@@ -46,10 +46,36 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         static let savedCompanyCell = "savedCompanyCell"
     }
     
-    var savedItems: [SavedItem] = [] {
-        didSet { saveScreenerCollectionViewController.collectionView.reloadData() }
+    
+    // MARK: - State
+    
+    var isSavedScreenersEmpty: Bool {
+        return savedItems.isEmpty
     }
-    var savedStocks: [SavedStock] = []
+    
+    var isSavedStocksEmpty: Bool {
+        return savedStocks.isEmpty
+    }
+    
+    fileprivate func observeState() {
+        tableView.isScrollEnabled = !(isSavedScreenersEmpty && isSavedStocksEmpty)
+    }
+    
+    
+    // MARK: - Display Data
+    
+    var savedItems: [SavedItem] = [] {
+        didSet {
+            observeState()
+            saveScreenerCollectionViewController.collectionView.reloadData()
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        }
+    }
+    var savedStocks: [SavedStock] = [] {
+        didSet {
+            observeState()
+        }
+    }
 
     var displayData: [[Any]] {
         return [
@@ -57,6 +83,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             savedStocks
         ]
     }
+    
     
     // MARK: - Views
     
@@ -66,12 +93,13 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         return controller
     }()
     
+    
     // MARK: - Initializer Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundColor = .white
-        tableView.separatorStyle = .singleLine
+        tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedScreenCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedCompanyCell)
         configureNavBar()
@@ -195,7 +223,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             let manualScreenItem = ManualScreenItem(criteria: criteria!, parameter: parameter!, value: param.value)
             manualScreenItems.append(manualScreenItem)
         }
-    
         let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems, analyticsLogger: AnalyticsLogger())
         navigationController?.pushViewController(manualSearchVC, animated: true)
     }
@@ -207,6 +234,19 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     func displaySuccessNote() {
         ViewPresenter.displaySuccessActionView(in: self)
+    }
+    
+    
+    // MARK: - Navigation
+    
+    fileprivate func navigateToAddScreener() {
+        let manaulVC = SearchCriteriaTableViewController(style: .grouped)
+        navigationController?.pushViewController(manaulVC, animated: true)
+    }
+    
+    fileprivate func navigateToAddStock() {
+        let searchResultsVC = ScreenResultsViewController(searchParameters: [], networkingAPI: IntrinioAPI())
+        navigationController?.pushViewController(searchResultsVC, animated: true)
     }
     
     
@@ -235,7 +275,9 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 1
-        case 1: return savedStocks.count
+        case 1:
+            if isSavedStocksEmpty { return 1 }
+            return savedStocks.count
         default: return 1
         }
     }
@@ -243,11 +285,24 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
+            if isSavedScreenersEmpty {
+                let emptyCell = EmptyScreenerFavoriteCell(style: .default, reuseIdentifier: nil)
+                    emptyCell.cellAction = { [weak self] in
+                        self?.navigateToAddScreener()
+                }
+                return emptyCell
+            }
             let savedScreenerCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.savedScreenCell, for: indexPath)
             display(contentController: saveScreenerCollectionViewController, on: savedScreenerCell)
             return savedScreenerCell
         case 1:
-            /// Second section to show saved stocks
+            if isSavedStocksEmpty {
+                let emptyCell = EmptyStockFavoriteCell(style: .default, reuseIdentifier: nil)
+                emptyCell.cellAction = { [weak self] in
+                    self?.navigateToAddStock()
+                }
+                return emptyCell
+            }
             let cell = UITableViewCell(style: .subtitle, reuseIdentifier: ReuseID.savedCompanyCell)
             cell.textLabel?.text = savedStocks[indexPath.item].ticker
             cell.detailTextLabel?.text = savedStocks[indexPath.item].companyName
@@ -259,30 +314,41 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         if indexPath.section == 0 { return [] }
-        if indexPath.section == 1 {
-            guard let savedStock = displayData[indexPath.section][indexPath.row] as? SavedStock else { return nil }
-            let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-                self.removeFavoriteCompany(savedStock.ticker)
-                self.savedStocks.remove(at: indexPath.item)
-                tableView.deleteRows(at: [indexPath], with: .automatic)
+        if !isSavedStocksEmpty {
+            if indexPath.section == 1 {
+                guard let savedStock = displayData[indexPath.section][indexPath.row] as? SavedStock else { return nil }
+                let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+                    self.removeFavoriteCompany(savedStock.ticker)
+                    self.savedStocks.remove(at: indexPath.item)
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                }
+                return [delete]
             }
-            return [delete]
         }
         return nil
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 1 {
-            let detailsVC = StockDetailsContainerView(
-                ticker: savedStocks[indexPath.item].ticker,
-                companyName: savedStocks[indexPath.item].companyName)
-            self.navigationController?.pushViewController(detailsVC, animated: true)
+        if !isSavedStocksEmpty {
+            if indexPath.section == 1 {
+                let detailsVC = StockDetailsContainerView(
+                    ticker: savedStocks[indexPath.item].ticker,
+                    companyName: savedStocks[indexPath.item].companyName)
+                self.navigationController?.pushViewController(detailsVC, animated: true)
+            }
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 0: return tableView.frame.height/2 - 50
+        case 0:
+            if isSavedScreenersEmpty { return tableView.frame.height/3 }
+            if !isSavedScreenersEmpty { return tableView.frame.height/2 - 50 }
+            return UITableView.automaticDimension
+        case 1:
+            if isSavedStocksEmpty { return tableView.frame.height/3 }
+            if !isSavedStocksEmpty { return UITableView.automaticDimension }
+            return UITableView.automaticDimension
         default: return UITableView.automaticDimension
         }
     }
@@ -301,6 +367,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
+
 }
 
 
