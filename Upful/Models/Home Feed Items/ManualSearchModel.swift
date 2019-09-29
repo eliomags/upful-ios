@@ -82,7 +82,7 @@ extension SearchCriteria {
         case .epsgrowth: return .percentage
         case .pricetorevenue: return .ratio
         case .revenueqoqgrowth: return .percentage
-        case .bookvaluepershare: return .ratio
+        case .bookvaluepershare: return .number
         case .evtofcff: return .ratio
         case .debttoequity: return .ratio
         case .totalrevenue: return .number

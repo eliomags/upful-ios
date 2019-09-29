@@ -8,17 +8,30 @@
 
 import UIKit
 
-struct SavedItem {
+class SavedItem {
     var savedScreener: SavedScreener
     var savedParameters: [SavedScreenerParameter]
+    
+    init(savedScreener: SavedScreener, savedParameters: [SavedScreenerParameter]) {
+        self.savedScreener = savedScreener
+        self.savedParameters = savedParameters
+    }
     
     func configureDescription() -> String {
         var str = ""
         for param in savedParameters {
             var description = ""
-            description.append(SearchCriteria(rawValue: param.criteria)?.explicit ?? "Invalid Criteria" + " ")
-            description.append(SearchParameter(rawValue: param.parameter)?.explicit ?? "Invalid Parameter" + " ")
-            description.append("\(param.value)\n")
+            description.append(SearchCriteria(rawValue: param.criteria)!.explicit + " ")
+            description.append(SearchParameter(rawValue: param.parameter)!.explicit + " ")
+            switch SearchCriteria(rawValue: param.criteria)!.parameterType {
+            case .percentage:
+                description.append("\(param.value.convertToPercent())%\n")
+            case .number:
+                description.append("$\(Int(param.value).formatUsingAbbreviation())\n")
+            case .ratio:
+                description.append("\(param.value.twoDecimal())\n")
+            default: break
+            }
             str.append(description)
         }
         return str
@@ -58,7 +71,9 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     fileprivate func observeState() {
-        tableView.isScrollEnabled = !(isSavedScreenersEmpty && isSavedStocksEmpty)
+//        tableView.isScrollEnabled = !(isSavedScreenersEmpty && isSavedStocksEmpty)
+        saveScreenerCollectionViewController.collectionView.reloadData()
+        tableView.reloadData()
     }
     
     
@@ -67,8 +82,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     var savedItems: [SavedItem] = [] {
         didSet {
             observeState()
-            saveScreenerCollectionViewController.collectionView.reloadData()
-            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         }
     }
     var savedStocks: [SavedStock] = [] {
@@ -89,7 +102,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     lazy var saveScreenerCollectionViewController: SavedScreenersCollectionViewController = {
         let controller = SavedScreenersCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
-        controller.delegate = self
+        controller.dataSource = self
         return controller
     }()
     
@@ -98,11 +111,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.backgroundColor = .white
-        tableView.separatorStyle = .none
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedScreenCell)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedCompanyCell)
-        configureNavBar()
+       setUpTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,6 +121,18 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         configureSavedItemsToDisplay()
     }
     
+    
+    // MARK: - View Setup
+    
+    fileprivate func setUpTableView() {
+        tableView.backgroundColor = .white
+        tableView.separatorStyle = .none
+        tableView.tableHeaderView = UIView()
+        tableView.tableFooterView = UIView()
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedScreenCell)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedCompanyCell)
+        configureNavBar()
+    }
     
     fileprivate func configureNavBar() {
         navigationItem.title = ""
@@ -240,8 +261,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     // MARK: - Navigation
     
     fileprivate func navigateToAddScreener() {
-        let manaulVC = SearchCriteriaTableViewController(style: .grouped)
-        navigationController?.pushViewController(manaulVC, animated: true)
+        let searchCriteriaVC = SearchCriteriaTableViewController(style: .grouped)
+        navigationController?.pushViewController(searchCriteriaVC, animated: true)
     }
     
     fileprivate func navigateToAddStock() {
@@ -260,7 +281,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     private func setupNavBar() {
-        navigationItem.title = "Favorites"
+        navigationItem.title = "Home"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
@@ -305,7 +326,9 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             }
             let cell = UITableViewCell(style: .subtitle, reuseIdentifier: ReuseID.savedCompanyCell)
             cell.textLabel?.text = savedStocks[indexPath.item].ticker
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
             cell.detailTextLabel?.text = savedStocks[indexPath.item].companyName
+            cell.detailTextLabel?.textColor = .gray
             cell.accessoryType = .disclosureIndicator
             return cell
         default: return UITableViewCell()
@@ -314,26 +337,27 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         if indexPath.section == 0 { return [] }
-        if !isSavedStocksEmpty {
-            if indexPath.section == 1 {
+        if indexPath.section == 1 {
+            if !isSavedStocksEmpty {
                 guard let savedStock = displayData[indexPath.section][indexPath.row] as? SavedStock else { return nil }
                 let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
                     self.removeFavoriteCompany(savedStock.ticker)
                     self.savedStocks.remove(at: indexPath.item)
-                    tableView.deleteRows(at: [indexPath], with: .automatic)
                 }
                 return [delete]
+            } else {
+                return []
             }
         }
         return nil
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if !isSavedStocksEmpty {
-            if indexPath.section == 1 {
+        if indexPath.section == 1 {
+            if !isSavedStocksEmpty {
                 let detailsVC = StockDetailsContainerView(
-                    ticker: savedStocks[indexPath.item].ticker,
-                    companyName: savedStocks[indexPath.item].companyName)
+                ticker: savedStocks[indexPath.item].ticker,
+                companyName: savedStocks[indexPath.item].companyName)
                 self.navigationController?.pushViewController(detailsVC, animated: true)
             }
         }
@@ -342,11 +366,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            if isSavedScreenersEmpty { return tableView.frame.height/3 }
-            if !isSavedScreenersEmpty { return tableView.frame.height/2 - 50 }
+            if isSavedScreenersEmpty || savedItems.count == 1 { return tableView.frame.height/2 - 50 }
+            if !isSavedScreenersEmpty && savedItems.count > 1 { return tableView.frame.height/2 - 10 }
             return UITableView.automaticDimension
         case 1:
-            if isSavedStocksEmpty { return tableView.frame.height/3 }
+            if isSavedStocksEmpty { return tableView.frame.height/2 - 50 }
             if !isSavedStocksEmpty { return UITableView.automaticDimension }
             return UITableView.automaticDimension
         default: return UITableView.automaticDimension
@@ -354,20 +378,40 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
+        return 60
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerText = ["Screeners","Companies"]
-        let header = SectionHeaderLabel(padding: 16)
-        header.text = headerText[section].uppercased()
-        return header
+        let headerText = ["Screeners","stocks"]
+        switch section {
+        case 0:
+            let screenerHeader = ActionableTableHeader()
+            screenerHeader.headerTextLabel.text = headerText[section].uppercased()
+            screenerHeader.showButton(isSavedScreenersEmpty)
+            screenerHeader.buttonAction = { [weak self] in
+                self?.navigateToAddScreener()
+            }
+            return screenerHeader
+        case 1:
+            let stockHeader = ActionableTableHeader()
+            stockHeader.headerTextLabel.text = headerText[section].uppercased()
+            stockHeader.showButton(isSavedStocksEmpty)
+            stockHeader.buttonAction = { [weak self] in
+                self?.navigateToAddStock()
+            }
+            return stockHeader
+        default: return UIView()
+        }
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
-
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == displayData.count - 1 { return 30 }
+        return 12
+    }
 }
 
 

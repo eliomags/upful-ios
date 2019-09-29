@@ -37,15 +37,30 @@ class HeaderLabel: UILabel {
     }
 }
 
-class SectionHeaderLabel: HeaderLabel {
+class SmallSectionHeaderLabel: HeaderLabel {
     override init(padding: Int) {
         super.init(frame: .zero)
         self.padding = padding
-        font = .sectionHeader
+        font = UIFont.systemFont(ofSize: 11, weight: .regular)
+        textColor = .darkGray
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.padding = 30
+        self.padding = 16
     }
 }
+
+class LargeSectionHeaderLabel: HeaderLabel {
+        override init(padding: Int) {
+        super.init(frame: .zero)
+        self.padding = padding
+        font = .sectionHeader
+        textColor = .black
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.padding = 16
+    }
+}
+

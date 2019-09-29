@@ -96,7 +96,6 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
                             padding: .init(top: 30, left: 30, bottom: 30, right: 30))
         v.layer.cornerRadius = 15
         v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
-        
         return v
     }()
     
@@ -112,7 +111,11 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.ticker = ""
+        self.companyName = ""
+        self.analyticsLogger = AnalyticsLogger()
+        self.intrinioApi = IntrinioAPI()
+        super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
@@ -284,7 +287,7 @@ extension StockOverviewViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = SectionHeaderLabel(padding: 16)
+        let header = LargeSectionHeaderLabel(padding: 16)
         header.backgroundColor = .white
         if !isLoading {
             let headerText = ["FINANCIALS", "METRICS", "NEWS"]
@@ -296,12 +299,10 @@ extension StockOverviewViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let _ = tableView.cellForRow(at: indexPath) as? NewsCell else { return }
-        guard let newsArticleURL = URL(string: newsData[indexPath.item].url) else { return }
+        let newsArticleURL = newsData[indexPath.item].url
 
-        if UIApplication.shared.canOpenURL(newsArticleURL) {
-            analyticsLogger.reportEvents(event: .selectedNewsArticle)
-            UIApplication.shared.open(newsArticleURL, options: [:], completionHandler: nil)
-        }
+        let webViewController = WebViewViewController(urlString: newsArticleURL)
+        self.navigationController?.pushViewController(webViewController, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

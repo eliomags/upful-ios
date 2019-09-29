@@ -82,7 +82,6 @@ final class ScreenResultsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
         fetchTableData(parameters: searchParameters, fetchType: .initial)
         view.addSubview(feedTableView)
@@ -196,8 +195,10 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableView.isScrollEnabled = !searchResults.isEmpty
         if searchResults.isEmpty { tableView.separatorStyle = .none }
-        if !searchResults.isEmpty { tableView.restore() }
-        
+        if !searchResults.isEmpty {
+            tableView.backgroundView = nil
+            tableView.separatorStyle = .singleLine
+        }
         return searchResults.count
     }
     
@@ -206,12 +207,11 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
 
         let screenResult = searchResults[indexPath.item]
         guard let ticker = screenResult.ticker else { return resultsCell }
+        resultsCell.accessoryType = .disclosureIndicator
         resultsCell.companyTickerLabel.text = ticker
         resultsCell.companyNameLabel.text = screenResult.name
         resultsCell.marketcapStackView.valueLabel.text = "$\(screenResult.marketcap?.formatUsingAbbreviation() ?? " -")"
         resultsCell.pricetoearningsStackView.valueLabel.text = "\(screenResult.pricetoearnings?.twoDecimal() ?? "-")"
-        
-        
         return resultsCell
     }
     

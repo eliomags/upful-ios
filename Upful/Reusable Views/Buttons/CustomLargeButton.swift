@@ -29,7 +29,7 @@ class CustomButton: UIButton {
     override func layoutSubviews() {
         super.layoutSubviews()
         titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-        layer.cornerRadius = intrinsicContentSize.height / 2
+//        layer.cornerRadius = intrinsicContentSize.height / 2
         layer.masksToBounds = true
     }
     

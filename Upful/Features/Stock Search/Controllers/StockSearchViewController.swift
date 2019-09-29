@@ -89,8 +89,6 @@ final class StockSearchViewController: UITableViewController, UISearchController
     }
     
     
-    // MARK: - Search Bar Delegate methods
-    
     fileprivate func fetchCompanies(_ searchText: String) {
         intrinioAPI.searchByName(name: searchText) { (result) in
             switch result {
@@ -146,7 +144,6 @@ final class StockSearchViewController: UITableViewController, UISearchController
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.stockCell, for: indexPath) as? StockSearchCell else { return UITableViewCell() }
         cell.companyNameLabel.text = displayData[indexPath.item].name
         cell.companyTickerLabel.text = displayData[indexPath.item].ticker
-
         return cell
     }
     

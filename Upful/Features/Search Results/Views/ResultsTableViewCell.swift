@@ -18,7 +18,7 @@ class ResultsTableViewCell: UITableViewCell {
     }()
     let companyNameLabel: UILabel = {
         let l = UILabel()
-        l.font = .details2
+        l.font = .details1
         return l
     }()
     lazy var companyDescriptionStackView: UIStackView = {
@@ -66,7 +66,7 @@ class ResultsTableViewCell: UITableViewCell {
             leading: leadingAnchor,
             bottom: bottomAnchor,
             trailing: trailingAnchor,
-            padding: .init(top: 4, left: 32, bottom: 12, right: 32))
+            padding: .init(top: 4, left: 32, bottom: 12, right: 48))
     }
 
     required init?(coder aDecoder: NSCoder) {

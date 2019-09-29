@@ -43,9 +43,9 @@ final class MenuBarView: UIView {
     
     lazy var placementView: UIView = {
         let v = UIView()
-        v.backgroundColor = .lightGray
+        v.backgroundColor = .appAccent
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.heightAnchor.constraint(equalToConstant: 1.25).isActive = true
+        v.heightAnchor.constraint(equalToConstant: 1.5).isActive = true
         return v
     }()
     

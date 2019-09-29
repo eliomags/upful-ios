@@ -10,8 +10,8 @@ import UIKit
 
 class ManualSearchHeaderView: UIView {
     
-    let header: SectionHeaderLabel = {
-        let l = SectionHeaderLabel(padding: 16)
+    let header: SmallSectionHeaderLabel = {
+        let l = SmallSectionHeaderLabel(padding: 16)
         l.text = "ADD SEARCH PARAMETERS"
         return l
     }()

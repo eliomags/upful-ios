@@ -35,7 +35,9 @@ class SearchSelectionViewController: UITableViewController {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.analyticsLogger = AnalyticsLogger()
+        self.chartType = .bar
+        super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
@@ -116,7 +118,7 @@ extension SearchSelectionViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        let header = SectionHeaderLabel(padding: 16)
+        let header = SmallSectionHeaderLabel(padding: 16)
         view.addSubview(header)
         header.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
                       padding: .init(top: 0, left: 0, bottom: 4, right: 18))

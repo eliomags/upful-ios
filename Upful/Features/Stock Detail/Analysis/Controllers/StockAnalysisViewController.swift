@@ -283,7 +283,7 @@ extension StockAnalysisViewController {
             case 1,2:
                 let cell = UITableViewCell(style: .default, reuseIdentifier: ReuseID.graphConfigurationCell)
                 guard let criteria = feedData[indexPath.section][indexPath.row] as? SearchCriteria else { return cell }
-                cell.textLabel?.font = UIFont.details2
+                cell.textLabel?.font = UIFont.details1
                 if indexPath.row == 1 {
                     cell.accessoryView = UIImageView(image: #imageLiteral(resourceName: "icons8-chevron-right-30 (1)")
                         .withRenderingMode(.alwaysOriginal))
@@ -323,18 +323,17 @@ extension StockAnalysisViewController {
             }
         case 1:
             let filing = feedData[indexPath.section][indexPath.row] as? Filings
-            guard let filingsURL = URL(string: filing?.reportUrl ?? "") else { return }
-            if UIApplication.shared.canOpenURL(filingsURL) {
-                self.analyticsLogger.reportEvents(event: .selectedCompanyFiling)
-                 UIApplication.shared.open(filingsURL, options: [:], completionHandler: nil)
-            }
+            let filings = filing!.reportUrl!
+            let webViewController = FilingsWebViewController(urlString: filings)
+            navigationController?.pushViewController(webViewController, animated: true)
+            
         default: break
         }
     }
 
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = SectionHeaderLabel(padding: 16)
+        let header = LargeSectionHeaderLabel(padding: 16)
         header.backgroundColor = .clear
         if !isLoading {
             let headerText = ["COMPARISON", "filings"]

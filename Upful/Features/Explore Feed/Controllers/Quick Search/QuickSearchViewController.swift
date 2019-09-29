@@ -1,0 +1,389 @@
+//
+//  ViewController.swift
+//  Upful
+//
+//  Created by Yanik Simpson on 8/7/19.
+//  Copyright © 2019 Yanik Simpson. All rights reserved.
+//
+
+import UIKit
+
+class QuickSearchViewController: UITableViewController,UISearchControllerDelegate, UISearchBarDelegate, HomeFeedNavigationDelegate, MenuBarDisplayable {
+    
+    var delegate: MenuViewItemDelegate?
+    var menubarTitle: String = "Quick Search"
+    
+    private enum ReuseID {
+        static let stockCell = "stockCell"
+    }
+    
+
+    // MARK: - Dependencies
+    
+    let analyticsLogger: AnalyticsLogger
+    let presetFeedDataLoader: PresetFeedDataLoader
+
+    
+    // MARK: - Data Source
+    
+    var homeFeedItems: [[Any]] = []
+    var searchDisplay: [Company]  = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    
+    // MARK: - State
+    
+    private enum State {
+        case normal
+        case searching(searchText: String)
+    }
+    
+    private var state: State = .normal {
+        didSet {
+            observeState()
+        }
+    }
+    
+    private func observeState() {
+        switch state {
+            
+        case .normal:
+            searchDisplay.removeAll()
+
+        case .searching(let searchText):
+            fetchCompanies(searchText)
+        }
+    }
+    
+    
+    // MARK: - Views
+    
+    lazy var searchController: UISearchController = {
+        let sc = UISearchController(searchResultsController: nil)
+        sc.delegate = self
+        sc.searchBar.delegate = self
+        sc.searchBar.tintColor = .black
+        sc.searchBar.searchBarStyle = UISearchBar.Style.minimal
+        sc.searchBar.backgroundColor = .white
+        sc.dimsBackgroundDuringPresentation = false
+        sc.hidesNavigationBarDuringPresentation = false
+        sc.definesPresentationContext = false
+        sc.searchBar.sizeToFit()
+        return sc
+    }()
+    
+    
+    // MARK: - Initializer Methods
+    
+    init(analyitcs: AnalyticsLogger, presetDataLoader: PresetFeedDataLoader) {
+        self.analyticsLogger = analyitcs
+        self.presetFeedDataLoader = presetDataLoader
+        super.init(style: .grouped)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        initializeFeedData()
+        setupTableView()
+        fetchPopularCompanyData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    
+    // MARK: - View Setup
+    
+    lazy var footer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        return view
+    }()
+    
+    fileprivate func setupTableView() {
+        tableView.backgroundColor = .white
+        tableView.separatorStyle = .none
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.stockCell)
+        tableView.contentInsetAdjustmentBehavior = .never
+        tableView.tableFooterView = footer
+        tableView.contentInset = UIEdgeInsets(
+            top: searchController.searchBar.intrinsicContentSize.height + 12,
+            left: 0, bottom: 0, right: 0)
+        definesPresentationContext = true
+        tableView.keyboardDismissMode = .onDrag
+        tableView.tableHeaderView = searchController.searchBar
+        
+        self.tableView.estimatedRowHeight = 0;
+        self.tableView.estimatedSectionHeaderHeight = 40;
+        self.tableView.estimatedSectionFooterHeight = 0;
+    }
+
+    
+    // MARK: - Data Setup
+    
+    fileprivate func initializeFeedData() {
+        homeFeedItems.append(presetFeedDataLoader.configureCompanyList())
+        homeFeedItems.append(presetFeedDataLoader.configureValueData())
+        homeFeedItems.append(presetFeedDataLoader.configureGrowthData())
+        homeFeedItems.append(presetFeedDataLoader.configureDividendData())
+    }
+    
+    fileprivate func fetchPopularCompanyData() {
+        CompanyViewModel.configureCompanyList().forEach { (popularCompany) in
+            NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .marketcap, frequency: .recent, completion: { (result) in
+                switch result {
+                case .success(let downloadedData):
+                    if downloadedData.isEmpty { return }
+                    DispatchQueue.main.async {
+                        popularCompany.marketcap = Int(downloadedData.first?.value ?? 0)
+                        self.tableView.reloadData()
+                    }
+                case .failure(_):
+                    break
+                }
+            })
+            
+            NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .pricetoearnings, frequency: .recent, completion: { (result) in
+                switch result {
+                case .success(let downloadedData):
+                    if downloadedData.isEmpty { return }
+                    DispatchQueue.main.async {
+                        popularCompany.priceToEarnings = downloadedData.first?.value
+                        self.tableView.reloadData()
+                    }
+                case .failure(_):
+                    break
+                }
+            })
+        }
+    }
+    
+    fileprivate func fetchCompanies(_ searchText: String) {
+        NetworkService.shared.intrioAPI.searchByName(name: searchText) { (result) in
+            switch result {
+            case .success(let fetchedCompanies):
+                self.searchDisplay = fetchedCompanies
+                DispatchQueue.main.async {
+                    if fetchedCompanies.isEmpty && !searchText.isEmpty && self.searchDisplay.isEmpty {
+                        self.tableView.setEmptyView(state: .emptyState(title: "No Data.", message: "Unable to find a company that matches your search.\nTry searching by ticker."))
+                    }
+                    if fetchedCompanies.isEmpty && searchText.isEmpty && self.searchDisplay.isEmpty {
+                        self.tableView.setEmptyView(state: .emptyState(title: "Get Started.", message: "Search by company or by ticker."))
+                    }
+                }
+            case .failure(_):
+                DispatchQueue.main.async {
+                    self.searchDisplay.removeAll()
+                    self.tableView.setEmptyView(state: .errorState)
+                }
+            }
+        }
+    }
+    
+    
+    // MARK: - Delegate Methods
+    
+    // Search Bar
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        state = .normal
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        state = .searching(searchText: searchText)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        state = .searching(searchText: searchBar.text ?? "")
+    }
+    
+    
+    // MenubarDisplayable
+    func navigateToScreenerResults(searchParameters: [String]) {
+        analyticsLogger.reportEvents(event: .screenForStocks(screenType: .quick))
+        let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters, networkingAPI: IntrinioAPI())
+        self.navigationController?.pushViewController(searchResultVC, animated: true)
+    }
+    
+    func navigateToDetails(popularCompany ticker: String, companyName: String) {
+        let detailVC = StockDetailsContainerView(ticker: ticker, companyName: companyName)
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+}
+
+extension QuickSearchViewController {
+    
+    // MARK: - TableView DataSource Methods
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch state {
+            
+        case .normal:
+            tableView.restore()
+            return 1
+            
+        case .searching:
+            if !searchDisplay.isEmpty {
+                tableView.restore()
+            }
+            tableView.separatorStyle = .singleLine
+            return searchDisplay.count
+        }
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        switch state {
+            
+        case .normal:
+            return homeFeedItems.count
+            
+        case .searching:
+            return 1
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let emptyCell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        switch state {
+            
+        case .normal:
+            switch indexPath.section {
+            case 0:
+                let companyCell = PopularCompanyTableViewCell(popularCompanies: homeFeedItems[indexPath.section] as! [PopularCompany])
+                companyCell.delegate = self
+                return companyCell
+                
+            case 1,2,3:
+                guard let screenerData = homeFeedItems[indexPath.section] as? [PresetScreenerViewModel] else { return emptyCell }
+                let screenerCell = PresetScreenerTableViewCell(searches: screenerData)
+                screenerCell.delegate = self
+                return screenerCell
+                
+            default:
+                return emptyCell
+            }
+            
+        case .searching:
+            let cell = UITableViewCell(style: .subtitle, reuseIdentifier: ReuseID.stockCell)
+            cell.textLabel?.text = searchDisplay[indexPath.item].name
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+            cell.detailTextLabel?.text = searchDisplay[indexPath.item].ticker
+            cell.detailTextLabel?.textColor = .gray
+            cell.accessoryType = .disclosureIndicator
+            return cell
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch state {
+            
+        case .searching(_):
+            let selectedCompany = searchDisplay[indexPath.item]
+            let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
+            navigationController?.pushViewController(detailsVC, animated: true)
+            
+        default:
+            break
+        }
+    }
+}
+
+extension QuickSearchViewController {
+    
+    // MARK: - TableView Delegate Methods
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch state {
+            
+        case .normal:
+            switch indexPath.section {
+            case 0: return 120
+            case 1,2,3: return UIScreen.main.bounds.height/6 + 30
+            default: return UITableView.automaticDimension
+            }
+            
+        case .searching:
+            return UITableView.automaticDimension
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        switch state {
+            
+        case .normal:
+            let view = UIView()
+            let header = LargeSectionHeaderLabel(padding: 16)
+            view.addSubview(header)
+            header.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
+                          padding: .init(top: 0, left: 0, bottom: 4, right: 18))
+            let labelText = [
+                "POPULAR COMPANIES",
+                "EXPLORE VALUE STOCKS",
+                "EXPLORE GROWTH STOCKS",
+                "EXPLORE DIVIDEND STOCKS"
+            ]
+            header.text = labelText[section]
+            return view
+            
+        case .searching:
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch state {
+            
+        case .normal:
+            if section == 0 { return 70 }
+            return 44
+            
+        case .searching:
+            return 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        switch state {
+            
+        case .normal:
+            if section == homeFeedItems.count - 1 {
+                return UIView()
+            }
+        case .searching:
+            return UIView()
+        }
+        return nil
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        switch state {
+            
+        case .normal:
+            if section == homeFeedItems.count - 1 { return 60 }
+            return 20
+            
+        case .searching:
+            return 0
+        }
+    }
+}
+
+
+
+
+

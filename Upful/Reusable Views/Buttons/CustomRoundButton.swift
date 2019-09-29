@@ -35,13 +35,10 @@ class SmallRoundButton: CustomButton {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 20, height: 20)
     }
-    var radius: CGFloat {
-        return self.intrinsicContentSize.height / 2
-    }
+
     init() {
         super.init(frame: .zero)
-        layer.cornerRadius = radius
-        backgroundColor = .appAccent
+        backgroundColor = .appAccent3
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

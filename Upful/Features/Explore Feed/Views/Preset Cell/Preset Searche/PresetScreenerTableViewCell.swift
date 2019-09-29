@@ -14,6 +14,7 @@ protocol HomeFeedNavigationDelegate: class {
 }
 
 class PresetScreenerTableViewCell: UITableViewCell {
+    
     weak var delegate: HomeFeedNavigationDelegate?
     
     let presetSearches: [PresetScreenerViewModel]
@@ -65,7 +66,8 @@ class PresetScreenerTableViewCell: UITableViewCell {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.presetSearches = []
+        super.init(coder: aDecoder)
     }
 }
 
@@ -82,13 +84,11 @@ extension PresetScreenerTableViewCell: UICollectionViewDelegate, UICollectionVie
         let screenerData = presetSearches[indexPath.row]
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.presetCell.rawValue, for: indexPath) as? PresetScreenerCollectionViewCell else { return UICollectionViewCell() }
         cell.configureView(viewModel: screenerData)
-        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let searchParameters = presetSearches[indexPath.item].presetScreener.urlComponents
-        
         delegate?.navigateToScreenerResults(searchParameters: searchParameters)
     }
     
@@ -134,7 +134,9 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
         iv.backgroundColor = .clear
         iv.layer.masksToBounds = false
         iv.addSubview(cellImageView)
-        cellImageView.anchor(top: iv.topAnchor, leading: iv.leadingAnchor, bottom: iv.bottomAnchor, trailing: iv.trailingAnchor, padding: .init(top: 2, left: 2, bottom: 2, right: 2))
+        cellImageView.anchor(
+            top: iv.topAnchor, leading: iv.leadingAnchor, bottom: iv.bottomAnchor, trailing: iv.trailingAnchor,
+            padding: .init(top: 2, left: 2, bottom: 2, right: 2))
         return iv
     }()
     

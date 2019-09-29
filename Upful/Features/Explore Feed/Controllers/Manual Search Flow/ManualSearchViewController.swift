@@ -172,16 +172,17 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             if manualScreenItem.parameter.rawValue == SearchParameter.none.rawValue {
                 isSuitable = false
             }
-            if isSuitable { completion() }
-            if !isSuitable {
-                ViewPresenter.displayErrorActionView(in: self, message: "Please add search parameters to your screen before saving.")
-            }
         }
+        if !isSuitable {
+            ViewPresenter.displayErrorActionView(in: self, message: "Please add search parameters to your screen before saving.")
+            return
+        }
+        if isSuitable { completion() }
     }
     
     
     // MARK: - Core Data Functionality
-    
+        
     private func checkSavedScreeners(title: String, completion: (()->Void)) {
         var savedScreeners: [SavedScreener] = []
         let request = SavedScreener.createfetchRequest()
@@ -259,17 +260,14 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1, reuseIdentifier: nil)
-        
         let parameter = manualScreenItems[indexPath.item].parameter
         let criteria = manualScreenItems[indexPath.item].criteria
         let value = manualScreenItems[indexPath.item].value
-
         cell.selectionStyle = .none
         cell.accessoryType = .disclosureIndicator
         cell.textLabel?.text = criteria.explicit
         cell.textLabel?.font = .details1
         cell.detailTextLabel?.font = .details2
-        
         if parameter != .none {
             if criteria.parameterType == .percentage {
                 cell.detailTextLabel?.text = parameter.explicit + " " + "\(value!.convertToPercent())%"
@@ -301,7 +299,6 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             self.delegate?.remove(indexPath: indexPath)
         }
         delete.backgroundColor = .negative
-
         return [delete]
     }
     

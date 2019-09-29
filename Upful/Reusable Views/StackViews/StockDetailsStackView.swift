@@ -35,7 +35,7 @@ class StockDetailStackView: UIStackView {
         let label = UILabel()
         label.textAlignment = .right
         label.textColor = .black
-        label.font = .details2
+        label.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
         label.text = ""
         return label
     }()

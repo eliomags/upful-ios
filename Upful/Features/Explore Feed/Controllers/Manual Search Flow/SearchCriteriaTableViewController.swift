@@ -9,6 +9,7 @@
 import UIKit
 
 class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDelegate, MenuBarDisplayable {
+    
     var delegate: MenuViewItemDelegate?
     
     var menubarTitle: String = "Manual Search"
@@ -49,6 +50,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         view.backgroundColor = .groupTableViewBackground
     }
     
@@ -58,6 +60,10 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         addCriteriaButton.anchor(
             top: nil, leading: nil, bottom: self.parent?.view.layoutMarginsGuide.bottomAnchor, trailing: self.parent?.view.trailingAnchor,
             padding: .init(top: 0, left: 0, bottom: 45, right: 25))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -74,6 +80,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         tableView.register(ManualSearchCriteriaCell.self, forCellReuseIdentifier: ReuseID.criteriaCell)
         tableView.tableHeaderView = UIView()
         tableView.sectionHeaderHeight = 60
+        tableView.backgroundColor = .white
     }
     
     
@@ -111,7 +118,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
                 let manualSearchVC = ManualSearchViewController(manualScreenItems: self.manualScreenItems,
                                                                 analyticsLogger: AnalyticsLogger())
                 manualSearchVC.delegate = self
-                self.parent?.navigationController?.pushViewController(manualSearchVC, animated: true)
+                self.navigationController?.pushViewController(manualSearchVC, animated: true)
             })
         }
     }
@@ -131,15 +138,19 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         var performance: [ManualScreenItem] = []
         
         SearchCriteria.allCases.forEach { (criteria) in
-            switch criteria.classification {
-            case .valuation:
-                valuation.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
-            case .financial:
-                financial.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
-            case .performance:
-                performance.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
-            case .other:
-                break
+            switch criteria {
+            case .bookvaluepershare: break
+            default:
+                switch criteria.classification {
+                case .valuation:
+                    valuation.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                case .financial:
+                    financial.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                case .performance:
+                    performance.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                case .other:
+                    break
+                }
             }
         }
         manualSearchCriteriaItems.append(valuation)
@@ -178,7 +189,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        let header = SectionHeaderLabel(padding: 16)
+        let header = SmallSectionHeaderLabel(padding: 16)
         view.addSubview(header)
         header.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
                       padding: .init(top: 0, left: 0, bottom: 4, right: 18))
