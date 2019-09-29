@@ -245,6 +245,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             manualScreenItems.append(manualScreenItem)
         }
         let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems, analyticsLogger: AnalyticsLogger())
+        manualSearchVC.screenerTitleText = savedItems[indexPath.item].savedScreener.title
         navigationController?.pushViewController(manualSearchVC, animated: true)
     }
     

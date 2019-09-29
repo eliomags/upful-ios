@@ -182,24 +182,42 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     
     // MARK: - Core Data Functionality
+    
+    var screenerTitleText: String = "No Title"
+    
+    private func updateScreenerParameters(title: String, completion: (()->Void)) {
         
-    private func checkSavedScreeners(title: String, completion: (()->Void)) {
-        var savedScreeners: [SavedScreener] = []
-        let request = SavedScreener.createfetchRequest()
+        /// Remove all screener Parameters with the title
+        
+        let request = SavedScreenerParameter.createfetchRequest()
+        let context = PersistenceService.shared.persistentContainer.viewContext
+        request.predicate = NSPredicate(format: "savedScreener.title == %@", title)
         do {
-            savedScreeners = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
-            let isPrevisouslySaved = !savedScreeners.filter { (savedScreener) -> Bool in return savedScreener.title == title }
-                .isEmpty
-            if isPrevisouslySaved {
-                ViewPresenter.displayErrorActionView(
-                    in: self,
-                    message: "Screener named \(title) already exists. \nPlease give this a new name.")
-                return
+            let parameters = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
+            for parameter in parameters {
+                context.delete(parameter)
             }
-            if !isPrevisouslySaved { completion() }
+            PersistenceService.shared.saveContext()
         } catch {
             print(error.localizedDescription)
+            return
         }
+        
+        /// Remove currently saved screener with the title
+        
+        let savedScreenerRequest = SavedScreener.createfetchRequest()
+        savedScreenerRequest.predicate = NSPredicate(format: "title = %@", title)
+        do {
+            let objects = try context.fetch(savedScreenerRequest)
+            for object in objects {
+                context.delete(object)
+            }
+            PersistenceService.shared.saveContext()
+        } catch {
+            print(error.localizedDescription)
+            return
+        }
+        completion()
     }
     
     private func saveParameters(with destination: SavedScreener) {
@@ -216,12 +234,15 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     @objc private func saveScreener(_ sender: UIBarButtonItem) {
         self.checkCurrentParameters { [unowned self] in
             let alert = UIAlertController(title: "Add to Favorites", message: "Give your screener a name.", preferredStyle: .alert)
-            alert.addTextField { (titleTextField) in titleTextField.placeholder = "Title" }
+            alert.addTextField { (titleTextField) in
+                titleTextField.text = self.screenerTitleText
+                titleTextField.placeholder = "Title"
+            }
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
                 var titleTextFieldText = alert?.textFields![0].text
                 if titleTextFieldText == "" { titleTextFieldText = "No Title" }
                 
-                self.checkSavedScreeners(title: titleTextFieldText ?? "No Title", completion: {
+                self.updateScreenerParameters(title: titleTextFieldText ?? "No Title", completion: {
                     let savedScreener = SavedScreener(context: PersistenceService.shared.persistentContainer.viewContext)
                     savedScreener.title = titleTextFieldText ?? "No Title"
                     savedScreener.screenDescription = ""
@@ -232,7 +253,6 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 })
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-
             self.present(alert, animated: true, completion: nil)
         }
     }
