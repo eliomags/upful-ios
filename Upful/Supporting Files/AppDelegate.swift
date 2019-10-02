@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: #imageLiteral(resourceName: "icons8-settings-25"), tag: 2)
         
         let tabVC = UITabBarController()
-        tabVC.tabBar.tintColor = .appAccent        
+        tabVC.tabBar.tintColor = .appAccent
         tabVC.tabBar.barTintColor = .backgroundColor
         
         tabVC.viewControllers = controllers.map({
@@ -52,6 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             navVC.navigationBar.tintColor = .appAccent
             navVC.navigationBar.backgroundColor = .white
             navVC.navigationBar.barTintColor = .white
+            navVC.navigationBar.setValue(true, forKey: "hidesShadow")
             navVC.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
             navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 26, weight: .heavy)]
             return navVC

@@ -179,7 +179,7 @@ class SavedScreenerCollectionViewCell: UICollectionViewCell {
     
     lazy var editButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        button.backgroundColor = UIColor(white: 0.90, alpha: 1)
         button.setTitleColor(.appAccent3, for: .normal)
         button.setTitle("EDIT", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)

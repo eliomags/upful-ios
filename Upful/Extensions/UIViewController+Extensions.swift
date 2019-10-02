@@ -44,3 +44,13 @@ extension UIViewController {
         view.endEditing(true)
     }
 }
+
+
+extension UIViewController {
+    func display(contentController content: UIViewController, on view: UIView) {
+        self.addChild(content)
+        content.view.frame = view.bounds
+        view.addSubview(content.view)
+        content.didMove(toParent: self)
+    }
+}

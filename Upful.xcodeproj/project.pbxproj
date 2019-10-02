@@ -15,6 +15,15 @@
 		3D0C5F78233FA42300F4A5FC /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F77233FA42300F4A5FC /* WebViewViewController.swift */; };
 		3D0C5F7B233FB61A00F4A5FC /* FilingsWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F7A233FB61A00F4A5FC /* FilingsWebView.swift */; };
 		3D0C5F7E233FC1BC00F4A5FC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F7D233FC1BC00F4A5FC /* SettingsViewController.swift */; };
+		3D0C5F81234170D900F4A5FC /* SubscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F80234170D900F4A5FC /* SubscriptionViewController.swift */; };
+		3D0C5F85234199BD00F4A5FC /* SubcriptionFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F84234199BD00F4A5FC /* SubcriptionFooterView.swift */; };
+		3D0C5F8823419F1600F4A5FC /* SubscriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F8723419F1600F4A5FC /* SubscriptionTableViewCell.swift */; };
+		3D0C5F8C23423B7100F4A5FC /* SubscriptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */; };
+		3D0C5F9023423E1700F4A5FC /* SubscriptionDetailsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F8F23423E1700F4A5FC /* SubscriptionDetailsCollectionView.swift */; };
+		3D0C5F942342C88300F4A5FC /* SubscriptionItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F932342C88300F4A5FC /* SubscriptionItemViewModel.swift */; };
+		3D0C5F972343C48A00F4A5FC /* SubscriptionOfferingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F962343C48A00F4A5FC /* SubscriptionOfferingsCell.swift */; };
+		3D0C5F9B2343C59300F4A5FC /* SubscriptionFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */; };
+		3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
 		3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */; };
 		3D20FB3022FB1F0A007836DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D20FB2F22FB1F0A007836DD /* Assets.xcassets */; };
@@ -124,6 +133,15 @@
 		3D0C5F77233FA42300F4A5FC /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		3D0C5F7A233FB61A00F4A5FC /* FilingsWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilingsWebView.swift; sourceTree = "<group>"; };
 		3D0C5F7D233FC1BC00F4A5FC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		3D0C5F80234170D900F4A5FC /* SubscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionViewController.swift; sourceTree = "<group>"; };
+		3D0C5F84234199BD00F4A5FC /* SubcriptionFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubcriptionFooterView.swift; sourceTree = "<group>"; };
+		3D0C5F8723419F1600F4A5FC /* SubscriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTableViewCell.swift; sourceTree = "<group>"; };
+		3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionItem.swift; sourceTree = "<group>"; };
+		3D0C5F8F23423E1700F4A5FC /* SubscriptionDetailsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionDetailsCollectionView.swift; sourceTree = "<group>"; };
+		3D0C5F932342C88300F4A5FC /* SubscriptionItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionItemViewModel.swift; sourceTree = "<group>"; };
+		3D0C5F962343C48A00F4A5FC /* SubscriptionOfferingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionOfferingsCell.swift; sourceTree = "<group>"; };
+		3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionFeatures.swift; sourceTree = "<group>"; };
+		3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGradientButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D20FB2822FB1F08007836DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchViewController.swift; sourceTree = "<group>"; };
@@ -293,6 +311,110 @@
 				3D0C5F7D233FC1BC00F4A5FC /* SettingsViewController.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		3D0C5F7F234170B600F4A5FC /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F8A23423B6600F4A5FC /* Model */,
+				3D0C5F832341944D00F4A5FC /* Views */,
+				3D0C5F822341944800F4A5FC /* Controllers */,
+				3D0C5F8923423B4400F4A5FC /* View Models */,
+			);
+			path = Subscription;
+			sourceTree = "<group>";
+		};
+		3D0C5F822341944800F4A5FC /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F80234170D900F4A5FC /* SubscriptionViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		3D0C5F832341944D00F4A5FC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F9D2343EA6000F4A5FC /* Custom Views */,
+				3D0C5F8E23423D4500F4A5FC /* Table Footer */,
+				3D0C5F8D23423D3000F4A5FC /* TableView Cells */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3D0C5F8923423B4400F4A5FC /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F992343C56700F4A5FC /* Subscription Features */,
+				3D0C5F982343C55C00F4A5FC /* Subscription Item */,
+			);
+			path = "View Models";
+			sourceTree = "<group>";
+		};
+		3D0C5F8A23423B6600F4A5FC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3D0C5F8D23423D3000F4A5FC /* TableView Cells */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F952343BDEB00F4A5FC /* Perks */,
+				3D0C5F9C2343E4F300F4A5FC /* Subscription */,
+			);
+			path = "TableView Cells";
+			sourceTree = "<group>";
+		};
+		3D0C5F8E23423D4500F4A5FC /* Table Footer */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F84234199BD00F4A5FC /* SubcriptionFooterView.swift */,
+			);
+			path = "Table Footer";
+			sourceTree = "<group>";
+		};
+		3D0C5F952343BDEB00F4A5FC /* Perks */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F8F23423E1700F4A5FC /* SubscriptionDetailsCollectionView.swift */,
+				3D0C5F962343C48A00F4A5FC /* SubscriptionOfferingsCell.swift */,
+			);
+			path = Perks;
+			sourceTree = "<group>";
+		};
+		3D0C5F982343C55C00F4A5FC /* Subscription Item */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F932342C88300F4A5FC /* SubscriptionItemViewModel.swift */,
+			);
+			path = "Subscription Item";
+			sourceTree = "<group>";
+		};
+		3D0C5F992343C56700F4A5FC /* Subscription Features */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */,
+			);
+			path = "Subscription Features";
+			sourceTree = "<group>";
+		};
+		3D0C5F9C2343E4F300F4A5FC /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F8723419F1600F4A5FC /* SubscriptionTableViewCell.swift */,
+			);
+			path = Subscription;
+			sourceTree = "<group>";
+		};
+		3D0C5F9D2343EA6000F4A5FC /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */,
+			);
+			path = "Custom Views";
 			sourceTree = "<group>";
 		};
 		3D20FB1C22FB1F08007836DD = {
@@ -924,6 +1046,7 @@
 		3DF5FBC023341ED600856205 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				3D0C5F7F234170B600F4A5FC /* Subscription */,
 				3DF5FBBF23341EC500856205 /* Home */,
 				3D20FB4922FB209F007836DD /* Explore Feed */,
 				3D0C5F7C233FC1A700F4A5FC /* Settings */,
@@ -1162,10 +1285,12 @@
 				3DF5FBC323341F3F00856205 /* SaveViewController.swift in Sources */,
 				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
 				3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */,
+				3D0C5F9B2343C59300F4A5FC /* SubscriptionFeatures.swift in Sources */,
 				3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */,
 				3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */,
 				3D2F964D23169CC7003811AB /* BarGraphTableViewCell.swift in Sources */,
 				3D42BE4123098BD200806AFF /* ResultsTableViewCell.swift in Sources */,
+				3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */,
 				3D7C854C2337479300A2E63E /* CustomSizeImageView.swift in Sources */,
 				3D58651A231C946600495D79 /* AppStoreReviewHelper.swift in Sources */,
 				3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */,
@@ -1177,7 +1302,9 @@
 				3DA54086232B361B00EE477C /* MenuViewProtocols.swift in Sources */,
 				3D0C5F73233AFD0300F4A5FC /* ActionableTableHeader.swift in Sources */,
 				3D0C5F6D233A451600F4A5FC /* GeneralNotesEmptyCell.swift in Sources */,
+				3D0C5F8C23423B7100F4A5FC /* SubscriptionItem.swift in Sources */,
 				3D2F965A2318C6E7003811AB /* ValuationSectionView.swift in Sources */,
+				3D0C5F85234199BD00F4A5FC /* SubcriptionFooterView.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
 				3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */,
 				3D2F96412312B036003811AB /* MixpanelAnalytics.swift in Sources */,
@@ -1196,6 +1323,7 @@
 				3D917B5622FE088F001D5E39 /* UIViewController+Extensions.swift in Sources */,
 				3DC7108D2335D9BE00A2A0DA /* NotesViewController.swift in Sources */,
 				3D0C5F6423395CD500F4A5FC /* Notes+CoreDataClass.swift in Sources */,
+				3D0C5F81234170D900F4A5FC /* SubscriptionViewController.swift in Sources */,
 				3D7C854E233747A800A2E63E /* ActionView.swift in Sources */,
 				3D42BE492309A59800806AFF /* Screener.swift in Sources */,
 				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
@@ -1210,6 +1338,7 @@
 				3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */,
 				3D5865262323024A00495D79 /* PieChartView.swift in Sources */,
 				3D0C5F7B233FB61A00F4A5FC /* FilingsWebView.swift in Sources */,
+				3D0C5F8823419F1600F4A5FC /* SubscriptionTableViewCell.swift in Sources */,
 				3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */,
 				3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */,
 				3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */,
@@ -1222,6 +1351,7 @@
 				3DF5FBBE2333A48B00856205 /* ChartUpdatable.swift in Sources */,
 				3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */,
 				3DF5FBB0232BFCF100856205 /* AnalysisChartCell.swift in Sources */,
+				3D0C5F9023423E1700F4A5FC /* SubscriptionDetailsCollectionView.swift in Sources */,
 				3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */,
 				3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */,
 				3D2F96432312D44B003811AB /* GoogleAnalytics.swift in Sources */,
@@ -1241,9 +1371,11 @@
 				3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */,
 				3D2F96452312D4AF003811AB /* AnalyticsMapper.swift in Sources */,
 				3D2F965623169E9C003811AB /* DetailsCalculationsCell.swift in Sources */,
+				3D0C5F942342C88300F4A5FC /* SubscriptionItemViewModel.swift in Sources */,
 				3D58651F231DE67B00495D79 /* Constants.swift in Sources */,
 				3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */,
 				3D7C85522337A93500A2E63E /* Animator.swift in Sources */,
+				3D0C5F972343C48A00F4A5FC /* SubscriptionOfferingsCell.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

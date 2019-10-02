@@ -142,9 +142,15 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     @objc private func handleNotesTap(_ sender: Any) {
-        let notesVC = NotesViewController(delegate: self)
-        let navVC = UINavigationController(rootViewController: notesVC)
+//        let notesVC = NotesViewController(delegate: self)
+//        let navVC = UINavigationController(rootViewController: notesVC)
+//        present(navVC, animated: true, completion: nil)
+        
+        let subscriptionVC = SubscriptionViewController(style: .grouped)
+        let navVC = UINavigationController(rootViewController: subscriptionVC)
         present(navVC, animated: true, completion: nil)
+
+//        navigationController?.pushViewController(navVC, animated: true)
     }
     
     
@@ -274,12 +280,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     // MARK: - Fileprivate Functions
     
-    private func display(contentController content: UIViewController, on view: UIView) {
-        self.addChild(content)
-        content.view.frame = view.bounds
-        view.addSubview(content.view)
-        content.didMove(toParent: self)
-    }
     
     private func setupNavBar() {
         navigationItem.title = "Home"

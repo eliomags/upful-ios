@@ -29,18 +29,11 @@ class CustomButton: UIButton {
     override func layoutSubviews() {
         super.layoutSubviews()
         titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-//        layer.cornerRadius = intrinsicContentSize.height / 2
+        layer.cornerRadius = bounds.height / 2
         layer.masksToBounds = true
     }
     
-    private func setupGradient() {
-        gradientLayer.colors = [UIColor.negative.cgColor, UIColor.appAccent.cgColor]
-        //            gradientLayer.locations = [0.5, 1]
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        gradientLayer.frame = self.bounds
-        layer.insertSublayer(gradientLayer, at: 0)
-    }
+
 }
 
 

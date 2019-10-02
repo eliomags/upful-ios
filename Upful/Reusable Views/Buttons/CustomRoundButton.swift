@@ -31,6 +31,7 @@ class CustomRoundButton: UIButton {
     }
 }
 
+
 class SmallRoundButton: CustomButton {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 20, height: 20)

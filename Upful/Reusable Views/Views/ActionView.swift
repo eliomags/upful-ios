@@ -53,7 +53,7 @@ class ActionView: UIView, Animatable {
         super.init(frame: frame)
         layer.cornerRadius = 4
         layer.masksToBounds = true
-        backgroundColor = UIColor(red: 243/255, green: 175/255, blue: 34/255, alpha: 0.75)
+        backgroundColor = UIColor(red: 243/255, green: 175/255, blue: 34/255, alpha: 1)
         addSubview(actionStackView)
         actionStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 8, left: 8, bottom: 8, right: 8))
     }
