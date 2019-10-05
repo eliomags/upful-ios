@@ -48,7 +48,9 @@ class SavedItem {
     }
 }
 
-final class SaveViewController: UITableViewController, SaveScreenerDelegate, NoteVCDelegate {
+
+
+final class SaveViewController: UITableViewController, SaveScreenerDelegate, NoteVCDelegate, ActionHeaderDelegate {
     
     // MARK: - Dependencies
     
@@ -57,36 +59,41 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     enum ReuseID {
         static let savedScreenCell = "savedScreenCell"
         static let savedCompanyCell = "savedCompanyCell"
+        static let screenerHeaderView = "screenerHeaderView"
     }
     
     
     // MARK: - State
-    
+            
     var isSavedScreenersEmpty: Bool {
-        return savedItems.isEmpty
+        return savedScreeners.isEmpty
     }
     
     var isSavedStocksEmpty: Bool {
         return savedStocks.isEmpty
     }
     
-    fileprivate func observeState() {
-//        tableView.isScrollEnabled = !(isSavedScreenersEmpty && isSavedStocksEmpty)
+    fileprivate func observeScreenerState() {
         saveScreenerCollectionViewController.collectionView.reloadData()
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        if isSavedScreenersEmpty { tableView.reloadData() }
+    }
+    
+    private func observeSavedStockState() {
         tableView.reloadData()
     }
     
     
     // MARK: - Display Data
     
-    var savedItems: [SavedItem] = [] {
+    var savedScreeners: [SavedItem] = [] {
         didSet {
-            observeState()
+            observeScreenerState()
         }
     }
     var savedStocks: [SavedStock] = [] {
         didSet {
-            observeState()
+            observeSavedStockState()
         }
     }
 
@@ -103,6 +110,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     lazy var saveScreenerCollectionViewController: SavedScreenersCollectionViewController = {
         let controller = SavedScreenersCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
         controller.dataSource = self
+        controller.delegate = self
         return controller
     }()
     
@@ -125,10 +133,17 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     // MARK: - View Setup
     
     fileprivate func setUpTableView() {
-        tableView.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark { tableView.backgroundColor = .systemBackground }
+            if traitCollection.userInterfaceStyle == .light { tableView.backgroundColor = .white }
+        } else {
+            tableView.backgroundColor = .white
+        }
+        tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.tableHeaderView = UIView()
         tableView.tableFooterView = UIView()
+        tableView.register(ActionableTableHeader.self, forHeaderFooterViewReuseIdentifier: ReuseID.screenerHeaderView)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedScreenCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedCompanyCell)
         configureNavBar()
@@ -142,15 +157,10 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     @objc private func handleNotesTap(_ sender: Any) {
-//        let notesVC = NotesViewController(delegate: self)
-//        let navVC = UINavigationController(rootViewController: notesVC)
-//        present(navVC, animated: true, completion: nil)
-        
-        let subscriptionVC = SubscriptionViewController(style: .grouped)
+        let subscriptionVC = SubscriptionViewController()
         let navVC = UINavigationController(rootViewController: subscriptionVC)
+        navVC.modalPresentationStyle = .fullScreen
         present(navVC, animated: true, completion: nil)
-
-//        navigationController?.pushViewController(navVC, animated: true)
     }
     
     
@@ -179,7 +189,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
                 let savedItem = SavedItem(savedScreener: screener, savedParameters: getParameters(named: screener.title))
                 items.append(savedItem)
             }
-            self.savedItems = items
+            self.savedScreeners = items
         } catch {
             print(error.localizedDescription)
         }
@@ -235,6 +245,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         } catch {
             print(error.localizedDescription)
         }
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
     }
     
     
@@ -242,26 +254,30 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     func editScreener(indexPath: IndexPath) {
         var manualScreenItems = [ManualScreenItem]()
-        
         /// Create [ManualScreenItems] to pass to the ManualSearchVC to configure the items
-        savedItems[indexPath.item].savedParameters.forEach { (param) in
+        savedScreeners[indexPath.item].savedParameters.forEach { (param) in
             let criteria = SearchCriteria(rawValue: param.criteria)
             let parameter = SearchParameter(rawValue: param.parameter)
             let manualScreenItem = ManualScreenItem(criteria: criteria!, parameter: parameter!, value: param.value)
             manualScreenItems.append(manualScreenItem)
         }
         let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems, analyticsLogger: AnalyticsLogger())
-        manualSearchVC.screenerTitleText = savedItems[indexPath.item].savedScreener.title
+        manualSearchVC.screenerTitleText = savedScreeners[indexPath.item].savedScreener.title
         navigationController?.pushViewController(manualSearchVC, animated: true)
     }
     
     func deleteScreener(indexPath: IndexPath) {
-        removeFavoriteScreener(savedItems[indexPath.item].savedScreener.title)
-        savedItems.remove(at: indexPath.item)
+        removeFavoriteScreener(savedScreeners[indexPath.item].savedScreener.title)
+        savedScreeners.remove(at: indexPath.item)
     }
     
     func displaySuccessNote() {
         ViewPresenter.displaySuccessActionView(in: self)
+    }
+    
+    func observeCollectionViewState(isEditing: Bool) {
+        let header = tableView.headerView(forSection: 0) as? ActionableTableHeader
+        header?.animateButton(isStateChanged: isEditing)
     }
     
     
@@ -279,7 +295,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     
     // MARK: - Fileprivate Functions
-    
     
     private func setupNavBar() {
         navigationItem.title = "Home"
@@ -332,6 +347,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             cell.detailTextLabel?.textColor = .gray
             cell.accessoryType = .disclosureIndicator
             return cell
+            
         default: return UITableViewCell()
         }
     }
@@ -367,8 +383,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            if isSavedScreenersEmpty || savedItems.count == 1 { return tableView.frame.height/2 - 50 }
-            if !isSavedScreenersEmpty && savedItems.count > 1 { return tableView.frame.height/2 - 10 }
+            let height: CGFloat = 340
+            if isSavedScreenersEmpty { return tableView.frame.height/3 + 20 }
+            if savedScreeners.count == 1 { return (height / 3) + 20 }
+            if savedScreeners.count == 2 { return (height / 2) + 50 }
+            if savedScreeners.count >= 3 { return height }
             return UITableView.automaticDimension
         case 1:
             if isSavedStocksEmpty { return tableView.frame.height/2 - 50 }
@@ -386,9 +405,12 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         let headerText = ["Screeners","stocks"]
         switch section {
         case 0:
-            let screenerHeader = ActionableTableHeader()
+            let screenerHeader = ActionableTableHeader(reuseIdentifier: ReuseID.screenerHeaderView)
             screenerHeader.headerTextLabel.text = headerText[section].uppercased()
             screenerHeader.showButton(isSavedScreenersEmpty)
+            screenerHeader.editButtonAction = { [weak self] in
+                self?.saveScreenerCollectionViewController.isLongPressEnabled = false
+            }
             screenerHeader.buttonAction = { [weak self] in
                 self?.navigateToAddScreener()
             }
@@ -410,8 +432,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == displayData.count - 1 { return 30 }
-        return 12
+        return 30
     }
 }
 

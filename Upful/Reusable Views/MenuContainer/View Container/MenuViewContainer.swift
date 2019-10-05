@@ -40,15 +40,12 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         setupCollectionView()
         view.addSubview(menuBarView)
         menuBarView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
     }
     
     private func setupCollectionView() {
-        
-        collectionView.backgroundColor = UIColor.groupTableViewBackground
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.cell1)
@@ -139,7 +136,6 @@ extension MenuContainerViewController {
         for i in 0..<menubarControllers.count {
             if i == indexPath.row {
                 display(contentController: menubarControllers[pageIndex], on: displayableCell)
-                displayableCell.backgroundColor = .groupTableViewBackground
                 return displayableCell
             }
         }

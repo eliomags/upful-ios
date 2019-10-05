@@ -54,9 +54,10 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
             
         case .normal:
             searchDisplay.removeAll()
-
+            tableView.isScrollEnabled = true
         case .searching(let searchText):
             fetchCompanies(searchText)
+            tableView.isScrollEnabled = false
         }
     }
     
@@ -67,9 +68,13 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         let sc = UISearchController(searchResultsController: nil)
         sc.delegate = self
         sc.searchBar.delegate = self
-        sc.searchBar.tintColor = .black
+        if #available(iOS 13.0, *) {
+            sc.searchBar.backgroundColor = .systemBackground
+        } else {
+            sc.searchBar.backgroundColor = .white
+        }
+        sc.searchBar.tintColor = .appAccent3
         sc.searchBar.searchBarStyle = UISearchBar.Style.minimal
-        sc.searchBar.backgroundColor = .white
         sc.dimsBackgroundDuringPresentation = false
         sc.hidesNavigationBarDuringPresentation = false
         sc.definesPresentationContext = false
@@ -87,50 +92,48 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.analyticsLogger = AnalyticsLogger()
+        self.presetFeedDataLoader = PresetFeedDataLoader()
+        super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark { view.backgroundColor = .systemBackground }
+            if traitCollection.userInterfaceStyle == .light { view.backgroundColor = .white }
+        } else {
+            view.backgroundColor = .white
+        }
         initializeFeedData()
         setupTableView()
         fetchPopularCompanyData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
     
     // MARK: - View Setup
-    
-    lazy var footer: UIView = {
-        let view = UIView()
-        view.backgroundColor = .green
-        return view
-    }()
-    
+        
     fileprivate func setupTableView() {
-        tableView.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark { tableView.backgroundColor = .systemBackground }
+            if traitCollection.userInterfaceStyle == .light { tableView.backgroundColor = .white }
+        } else {
+            tableView.backgroundColor = .white
+        }
         tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.stockCell)
         tableView.contentInsetAdjustmentBehavior = .never
-        tableView.tableFooterView = footer
+        tableView.tableFooterView = UIView()
         tableView.contentInset = UIEdgeInsets(
-            top: searchController.searchBar.intrinsicContentSize.height + 12,
+            top: searchController.searchBar.intrinsicContentSize.height + 93,
             left: 0, bottom: 0, right: 0)
         definesPresentationContext = true
         tableView.keyboardDismissMode = .onDrag
         tableView.tableHeaderView = searchController.searchBar
         
-        self.tableView.estimatedRowHeight = 0;
-        self.tableView.estimatedSectionHeaderHeight = 40;
-        self.tableView.estimatedSectionFooterHeight = 0;
+        tableView.estimatedRowHeight = 0
+        tableView.estimatedSectionHeaderHeight = 40
+        tableView.estimatedSectionFooterHeight = 0
     }
 
     
@@ -210,7 +213,6 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         state = .searching(searchText: searchBar.text ?? "")
     }
-    
     
     // MenubarDisplayable
     func navigateToScreenerResults(searchParameters: [String]) {
@@ -312,7 +314,7 @@ extension QuickSearchViewController {
             
         case .normal:
             switch indexPath.section {
-            case 0: return 120
+            case 0: return 200
             case 1,2,3: return UIScreen.main.bounds.height/6 + 30
             default: return UITableView.automaticDimension
             }

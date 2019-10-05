@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 final class ScreenResultsViewController: UIViewController {
     
     // MARK: - Dependencies
@@ -45,7 +44,7 @@ final class ScreenResultsViewController: UIViewController {
     
     lazy var feedTableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
-        tv.backgroundColor = .white
+//        tv.backgroundColor = .white
         tv.dataSource = self
         tv.delegate = self
         tv.register(ResultsTableViewCell.self, forCellReuseIdentifier: ReuseId.resultsCellID)
@@ -82,7 +81,6 @@ final class ScreenResultsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         fetchTableData(parameters: searchParameters, fetchType: .initial)
         view.addSubview(feedTableView)
         feedTableView.fillSuperview()

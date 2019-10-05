@@ -116,7 +116,6 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
     
     let headerLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .appAccent3
         label.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         label.textAlignment = .left
         return label
@@ -166,7 +165,7 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
     
     lazy var viewBackground: UIView = {
         let v = UIView()
-        v.backgroundColor = .white
+//        v.backgroundColor = .white
         v.layer.masksToBounds = true
         v.layer.cornerRadius = 8
         v.addSubview(detailsStackView)

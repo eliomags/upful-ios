@@ -8,25 +8,6 @@
 
 import UIKit
 
-//class SubscriptionFeaturesViewController: UIPageViewController {
-//
-//    var itemDataSource: SubscriptionFeatureDataSource?
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        dataSource = self
-//    }
-//}
-//extension SubscriptionFeaturesViewController: UIPageViewControllerDataSource {
-//    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-//        <#code#>
-//    }
-//
-//    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-//        <#code#>
-//    }
-//}
-
 class SubscriptionOfferingCell: UICollectionViewCell {
     let offeringImageView: UIImageView = {
         let imageView = UIImageView()
@@ -76,12 +57,6 @@ class SubscriptionOfferingCell: UICollectionViewCell {
         stackView.distribution = .fill
         stackView.spacing = 4
         return stackView
-    }()
-    
-    lazy var pageControl: UIPageControl = {
-        let control = UIPageControl()
-        
-        return control
     }()
     
     

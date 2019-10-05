@@ -23,9 +23,16 @@ class HomeFeedContainer: MenuContainerViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.backgroundColor = .groupTableViewBackground
         configureNavBar()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .newSession)
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                collectionView.backgroundColor = .systemBackground
+            }
+            if traitCollection.userInterfaceStyle == .light { collectionView.backgroundColor = .white }
+        } else {
+            collectionView.backgroundColor = .white
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

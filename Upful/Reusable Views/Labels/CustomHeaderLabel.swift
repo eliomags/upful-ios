@@ -56,7 +56,6 @@ class LargeSectionHeaderLabel: HeaderLabel {
         super.init(frame: .zero)
         self.padding = padding
         font = .sectionHeader
-        textColor = .black
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

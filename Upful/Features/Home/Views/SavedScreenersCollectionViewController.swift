@@ -9,9 +9,13 @@
 import UIKit
 
 protocol SaveScreenerDelegate: class {
-    var savedItems: [SavedItem] { get set }
+    var savedScreeners: [SavedItem] { get set }
     func editScreener(indexPath: IndexPath)
     func deleteScreener(indexPath: IndexPath)
+}
+
+protocol ActionHeaderDelegate: class {
+    func observeCollectionViewState(isEditing: Bool)
 }
 
 class SavedScreenersCollectionViewController: UICollectionViewController, UIGestureRecognizerDelegate {
@@ -21,15 +25,11 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
     }
     
     weak var dataSource: SaveScreenerDelegate?
+    weak var delegate: ActionHeaderDelegate?
     
     fileprivate func observeState() {
-        if isLongPressEnabled {
-            collectionView.addGestureRecognizer(tapGesture)
-        }
-        if !isLongPressEnabled {
-            collectionView.removeGestureRecognizer(tapGesture)
-        }
         collectionView.reloadData()
+        delegate?.observeCollectionViewState(isEditing: isLongPressEnabled)
     }
     
     var isLongPressEnabled = false {
@@ -48,11 +48,13 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
         collectionView.isPagingEnabled = true
         collectionView.register(SavedScreenerCollectionViewCell.self, forCellWithReuseIdentifier: ReuseID.cell)
         if let flowlayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            flowlayout.itemSize = CGSize(width: (UIScreen.main.bounds.width) - 30 , height: (UIScreen.main.bounds.height/6))
+            let width = collectionView.bounds.width
+            let paddingConstant: CGFloat = 30
+            flowlayout.itemSize = CGSize(width: width - paddingConstant, height: 100)
             flowlayout.scrollDirection = .horizontal
-            flowlayout.minimumInteritemSpacing = 8
+            flowlayout.minimumInteritemSpacing = 0
             flowlayout.minimumLineSpacing = 8
-            flowlayout.sectionInset = UIEdgeInsets(top: 16, left: 8, bottom: 16, right: 5)
+            flowlayout.sectionInset = UIEdgeInsets(top: 5, left: 12, bottom: 5, right: 15)
         }
         setupGestures()
     }
@@ -70,11 +72,8 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
     fileprivate func setupGestures() {
         longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longTap))
         longPressGesture.delegate = self
-        longPressGesture.minimumPressDuration = 0.5
+        longPressGesture.minimumPressDuration = 0.8
         collectionView.addGestureRecognizer(longPressGesture)
-        
-        tapGesture = UITapGestureRecognizer(target: self, action: #selector(exitTap))
-        tapGesture.delegate = self
     }
     
     @objc fileprivate func longTap(_ gesture: UILongPressGestureRecognizer) {
@@ -82,6 +81,7 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
         case .began:
             guard let selectedIndexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }
             collectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
+            Vibration.selection.vibrate()
         case .changed:
             collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
         case .ended:
@@ -94,29 +94,18 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
         }
     }
     
-    var tapGesture: UITapGestureRecognizer!
-    
-    @objc fileprivate func exitTap(_ gesture: UITapGestureRecognizer) {
-        if isLongPressEnabled {
-            let location = gesture.location(in: collectionView)
-            guard collectionView.indexPathForItem(at: location) == nil else { return }
-           isLongPressEnabled = false
-        }
-    }
-    
-    
     // MARK: - CollectionView Delegate Methods
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataSource?.savedItems.count ?? 1
+        return dataSource?.savedScreeners.count ?? 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.cell, for: indexPath) as? SavedScreenerCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.titleLabel.text = dataSource?.savedItems[indexPath.item].savedScreener.title
-        cell.descriptionLabel.text = dataSource?.savedItems[indexPath.item].configureDescription()
+        cell.titleLabel.text = dataSource?.savedScreeners[indexPath.item].savedScreener.title
+        cell.descriptionLabel.text = dataSource?.savedScreeners[indexPath.item].configureDescription()
         cell.editSelected = { [weak self] in
             self?.dataSource?.editScreener(indexPath: indexPath)
         }
@@ -129,27 +118,33 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let urlComponents = (dataSource?.savedItems[indexPath.item].configureURLComponents()) ?? []
+        let urlComponents = (dataSource?.savedScreeners[indexPath.item].configureURLComponents()) ?? []
         if urlComponents == []  { return }
         let resultsVC = ScreenResultsViewController(searchParameters: urlComponents, networkingAPI: IntrinioAPI())
         parent?.navigationController?.pushViewController(resultsVC, animated: true)
     }
     
-    override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
 }
 
 class SavedScreenerCollectionViewCell: UICollectionViewCell {
+    
+    override var isHighlighted: Bool {
+        didSet {
+            UIView.animate(withDuration: isHighlighted ? 0.3: 0.2) {
+                self.transform = self.isHighlighted ? CGAffineTransform(scaleX: 0.94, y: 0.94): CGAffineTransform.identity
+            }
+        }
+    }
+    
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         return label
     }()
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 4
+        label.numberOfLines = 3
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         return label
@@ -179,24 +174,28 @@ class SavedScreenerCollectionViewCell: UICollectionViewCell {
     
     lazy var editButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor(white: 0.90, alpha: 1)
+        button.backgroundColor = UIColor(white: 0.15, alpha: 0.2)
         button.setTitleColor(.appAccent3, for: .normal)
         button.setTitle("EDIT", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        button.heightAnchor.constraint(equalToConstant: 27).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 60).isActive = true
         return button
     }()
     
     var editSelected: (()->())?
     var removeSelected: (()->())?
     
+    
+    // MARK: - Initializer Methods
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
+        backgroundColor = UIColor(white: 0.94, alpha: 1)
         layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         setupViews()
         setupActions()
-        setupShadow(intensity: .light, color: .black)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -204,23 +203,24 @@ class SavedScreenerCollectionViewCell: UICollectionViewCell {
     }
     
     
+    // MARK: - View Setup
+    
     fileprivate func setupViews() {
         addSubview(removeButton)
         removeButton.anchor(top: topAnchor, leading: nil, bottom: nil, trailing: trailingAnchor,
                             padding: .init(top: -1, left: 0, bottom: 0, right: -1))
         addSubview(editButton)
-        editButton.anchor(top: nil, leading: nil, bottom: bottomAnchor, trailing: trailingAnchor,
-                          padding: .init(top: 0, left: 0, bottom: 12, right: 5), size: CGSize(width: 60, height: 26))
+        editButton.translatesAutoresizingMaskIntoConstraints = false
+        editButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        editButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30).isActive = true
         
         addSubview(textStackView)
-        textStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor,
-                             padding: .init(top: 8, left: 16, bottom: 2, right: 16))
-        descriptionLabel.trailingAnchor.constraint(equalTo: removeButton.leadingAnchor, constant: -4).isActive = true
+        textStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: editButton.leadingAnchor,
+                             padding: .init(top: 12, left: 16, bottom: 2, right: 6))
         
         editButton.layer.cornerRadius = 13
         editButton.layer.masksToBounds = true
     }
-    
     
     private func setupActions() {
         editButton.addTarget(self, action: #selector(handleEditTap), for: .touchUpInside)

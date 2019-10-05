@@ -104,7 +104,7 @@ class SubscriptionTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = .clear
+        backgroundColor = .white
         addSubview(contentBackgroundView)
         contentBackgroundView.anchor(
             top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
@@ -133,12 +133,23 @@ class SubscriptionTableViewCell: UITableViewCell {
                 self.contentBackgroundView.backgroundColor = UIColor(red: 243/255, green: 175/255, blue: 34/255, alpha: 0.3)
                 self.contentBackgroundView.layer.borderWidth = 1
                 self.contentBackgroundView.layer.borderColor = UIColor.appAccent.cgColor
-                self.durationLabel.textColor = .black
-                self.monthLabel.textColor = .black
-                self.dueNowPricingLabel.textColor = .black
-                self.monthlyPricingLabel.textColor = .black
-                self.savingsValueLabel.textColor = .black
-                self.saveLabel.textColor = .black
+                
+                if #available(iOS 13.0, *) {
+                    self.durationLabel.textColor = .label
+                    self.monthLabel.textColor = .label
+                    self.dueNowPricingLabel.textColor = .label
+                    self.monthlyPricingLabel.textColor = .label
+                    self.savingsValueLabel.textColor = .label
+                    self.saveLabel.textColor = .label
+                } else {
+                    // Fallback on earlier versions
+                    self.durationLabel.textColor = .black
+                    self.monthLabel.textColor = .black
+                    self.dueNowPricingLabel.textColor = .black
+                    self.monthlyPricingLabel.textColor = .black
+                    self.savingsValueLabel.textColor = .black
+                    self.saveLabel.textColor = .black
+                }
             }
         }
         if !selected {

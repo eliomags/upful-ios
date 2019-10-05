@@ -37,13 +37,12 @@ final class MenuBarView: UIView {
         didSet {
             let translationDistance = placementViewLeadingConstraint/CGFloat(menuBarControl.numberOfSegments)
             placementView.transform = CGAffineTransform(translationX: translationDistance, y: 0)
-            
         }
     }
     
     lazy var placementView: UIView = {
         let v = UIView()
-        v.backgroundColor = .black
+        v.backgroundColor = .appAccent2
         v.translatesAutoresizingMaskIntoConstraints = false
         v.heightAnchor.constraint(equalToConstant: 1.5).isActive = true
         return v
@@ -61,7 +60,12 @@ final class MenuBarView: UIView {
     }
     
     fileprivate func setupViews() {
-        backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark { backgroundColor = .systemBackground }
+            if traitCollection.userInterfaceStyle == .light { backgroundColor = .white }
+        } else {
+            backgroundColor = .white
+        }
         addSubview(placementView)
         addSubview(menuBarControl)
 
@@ -74,7 +78,7 @@ final class MenuBarView: UIView {
             leading: leadingAnchor,
             bottom: placementView.topAnchor,
             trailing: trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 5, right: 0)
+            padding: .init(top: 0, left: 0, bottom: 0, right: 0)
         )
     }
     

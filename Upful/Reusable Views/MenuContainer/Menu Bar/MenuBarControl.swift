@@ -12,18 +12,37 @@ class MenuBarControl: UISegmentedControl {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark { backgroundColor = .systemBackground }
+            if traitCollection.userInterfaceStyle == .light { backgroundColor = .white }
+        } else {
+            backgroundColor = .white
+        }
         
     }
     
     override init(items: [Any]?) {
         super.init(items: items)
         selectedSegmentIndex = 0
-        setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
-                                   NSAttributedString.Key.foregroundColor: UIColor.gray
+        if #available(iOS 13.0, *) {
+            setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
+                                    NSAttributedString.Key.foregroundColor: UIColor.label
             ], for: .normal)
-        setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
-                                   NSAttributedString.Key.foregroundColor: UIColor.black
-            ], for: .selected)
+            setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
+                                       NSAttributedString.Key.foregroundColor: UIColor.label
+                ], for: .selected)
+        } else {
+            setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
+                                           NSAttributedString.Key.foregroundColor: UIColor.black
+                   ], for: .normal)
+            setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
+                                              NSAttributedString.Key.foregroundColor: UIColor.black
+                    ], for: .selected)
+        }
+        if #available(iOS 13.0, *) {
+            self.selectedSegmentTintColor = .clear
+        }
+        backgroundColor = .clear
         tintColor = UIColor.clear
     }
     

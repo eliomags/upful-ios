@@ -34,7 +34,10 @@ private struct Pallete {
         return #colorLiteral(red: 0.1420197487, green: 0.2013853192, blue: 0.3809607923, alpha: 1)
     }
     static var yellow: UIColor {
-        return #colorLiteral(red: 1, green: 0.5830868004, blue: 0.106787948, alpha: 1)
+        return #colorLiteral(red: 0.9522877336, green: 0.6878936887, blue: 0.1339971721, alpha: 1)
+    }
+    static var darkGreen: UIColor {
+        return #colorLiteral(red: 0.1058823529, green: 0.2078431373, blue: 0.1529411765, alpha: 1)
     }
 }
 
@@ -53,7 +56,7 @@ extension UIColor {
     }
     
     static var negative: UIColor {
-        return Pallete.red
+        return .systemRed
     }
     
     static var secondaryText: UIColor {
@@ -61,7 +64,7 @@ extension UIColor {
     }
     
     static var tertiaryText: UIColor {
-        return Pallete.lightGray
+        return .lightText
     }
     
     static var appAccent: UIColor {
@@ -69,11 +72,14 @@ extension UIColor {
     }
     
     static var appAccent2: UIColor {
-        return Pallete.deepGreen
+        return Pallete.yellow
     }
     
     static var appAccent3: UIColor {
-        return Pallete.deepBlue
+        return Pallete.deepGreen
+    }
+    static var darkGreen: UIColor {
+        return Pallete.darkGreen
     }
 }
 

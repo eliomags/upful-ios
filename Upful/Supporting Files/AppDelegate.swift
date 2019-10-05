@@ -42,22 +42,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: #imageLiteral(resourceName: "icons8-settings-25"), tag: 2)
         
         let tabVC = UITabBarController()
-        tabVC.tabBar.tintColor = .appAccent
-        tabVC.tabBar.barTintColor = .backgroundColor
-        
+        tabVC.tabBar.tintColor = .appAccent2
+        tabVC.tabBar.isTranslucent = true
+
         tabVC.viewControllers = controllers.map({
             let navVC = UINavigationController(rootViewController: $0)
             navVC.navigationBar.prefersLargeTitles = true
-            navVC.navigationBar.isTranslucent = false
-            navVC.navigationBar.tintColor = .appAccent
-            navVC.navigationBar.backgroundColor = .white
-            navVC.navigationBar.barTintColor = .white
+            navVC.navigationBar.isTranslucent = true
+            navVC.navigationBar.tintColor = .appAccent2
             navVC.navigationBar.setValue(true, forKey: "hidesShadow")
-            navVC.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
             navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 26, weight: .heavy)]
             return navVC
         })
-        
         return tabVC
     }
 

@@ -76,7 +76,7 @@ class GeneralEmptyCell: UITableViewCell {
         switch self.buttonLook {
         case .bordered:
             emptyCellActionButton.setTitleColor(.appAccent3, for: .normal)
-            emptyCellActionButton.backgroundColor = .white
+            emptyCellActionButton.backgroundColor = .clear
             emptyCellActionButton.layer.borderWidth = 1.5
             emptyCellActionButton.layer.borderColor = UIColor.appAccent3.cgColor
         case .solid:
@@ -97,6 +97,11 @@ class GeneralEmptyCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        if #available(iOS 13.0, *) {
+            backgroundColor = .tertiarySystemGroupedBackground
+        } else {
+            backgroundColor = .backgroundColor
+        }
         selectionStyle = .none
         addSubview(stackViewEmpty)
         stackViewEmpty.translatesAutoresizingMaskIntoConstraints = false

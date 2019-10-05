@@ -15,7 +15,7 @@ class SpacerView: UIView {
         super.init(frame: frame)
         backgroundColor = #colorLiteral(red: 0.8839988112, green: 0.8841472864, blue: 0.8839792609, alpha: 1)
         translatesAutoresizingMaskIntoConstraints = false
-        heightAnchor.constraint(equalToConstant: 1).isActive = true
+        heightAnchor.constraint(equalToConstant: 0.5).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

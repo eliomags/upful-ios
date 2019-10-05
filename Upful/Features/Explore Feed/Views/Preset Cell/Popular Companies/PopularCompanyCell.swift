@@ -21,7 +21,7 @@ class PopularCompanyTableViewCell: UITableViewCell {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 20
-        layout.sectionInset = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 4, right: 12)
         layout.itemSize = CGSize(width: 170, height: 90)
         return layout
     }()
@@ -33,6 +33,7 @@ class PopularCompanyTableViewCell: UITableViewCell {
         cv.showsHorizontalScrollIndicator = false
         cv.delegate = self
         cv.dataSource = self
+        cv.isPagingEnabled = true
         cv.register(PopularCompanyCollectionViewCell.self, forCellWithReuseIdentifier: ReuseID.companyCell.rawValue)
         return cv
     }()
@@ -45,7 +46,8 @@ class PopularCompanyTableViewCell: UITableViewCell {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.popularCompanies = []
+        super.init(coder: aDecoder)
     }
     
     
@@ -70,7 +72,6 @@ extension PopularCompanyTableViewCell: UICollectionViewDelegate, UICollectionVie
         let data = popularCompanies[indexPath.row]
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell.rawValue, for: indexPath) as? PopularCompanyCollectionViewCell else { return UICollectionViewCell() }
         cell.configureLabels(company: data)
-        
         return cell
     }
     
@@ -98,14 +99,12 @@ extension PopularCompanyTableViewCell: UICollectionViewDelegate, UICollectionVie
 class PopularCompanyCollectionViewCell: UICollectionViewCell {
     let tickerLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .appAccent3
         label.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         label.textAlignment = .left
         return label
     }()
     let companyNameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.darkText
         label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         label.textAlignment = .left
         return label
@@ -139,7 +138,11 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            backgroundColor = .systemBackground
+        } else {
+            backgroundColor = .white
+        }
         layer.borderColor = UIColor.lightGray.cgColor
         layer.borderWidth = 0.25
         layer.cornerRadius = 8

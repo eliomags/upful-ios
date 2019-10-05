@@ -26,7 +26,6 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
     
     
     // MARK: - State
-    
 
     private enum ReuseID {
         static let graphCell = "graphCell"

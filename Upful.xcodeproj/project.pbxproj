@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -93,6 +93,8 @@
 		3DC7108D2335D9BE00A2A0DA /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */; };
 		3DC710952336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710932336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift */; };
 		3DC710962336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710942336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift */; };
+		3DD4291B2345A3BA0079DA18 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291A2345A3BA0079DA18 /* AddButton.swift */; };
+		3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291C2347EC530079DA18 /* Vibration.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
 		3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */; };
@@ -107,7 +109,6 @@
 		3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC0523342BED00856205 /* PersistenceService.swift */; };
 		3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */; };
 		3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC082334360200856205 /* SavedStock+CoreDataProperties.swift */; };
-		6EFBDDEF75650ADE9A43846E /* Pods_Upful_UpfulTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93827783A5ED4D3B1AC1DB9F /* Pods_Upful_UpfulTests.framework */; };
 		9EACA51EBDB9027C65ED019D /* Pods_UpfulTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC0A134A6E928314BD6D8405 /* Pods_UpfulTests.framework */; };
 		DBF9A52BC5915E42042B6760 /* Pods_Upful.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59C76C07469A281B054B28FF /* Pods_Upful.framework */; };
 /* End PBXBuildFile section */
@@ -121,6 +122,19 @@
 			remoteInfo = Upful;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3DA37C3223453049008832AB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		023AAB374D3059C075004339 /* Pods-Upful.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Upful.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Upful/Pods-Upful.debug.xcconfig"; sourceTree = "<group>"; };
@@ -219,6 +233,8 @@
 		3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		3DC710932336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreener+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3DC710942336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreener+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3DD4291A2345A3BA0079DA18 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
+		3DD4291C2347EC530079DA18 /* Vibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibration.swift; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
 		3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisGraphView.swift; sourceTree = "<group>"; };
@@ -236,7 +252,6 @@
 		59C76C07469A281B054B28FF /* Pods_Upful.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Upful.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A3615F7902317CD398E45C9 /* Pods-UpfulTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UpfulTests/Pods-UpfulTests.release.xcconfig"; sourceTree = "<group>"; };
 		9315B80D35508D89B49F5501 /* Pods-UpfulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UpfulTests/Pods-UpfulTests.debug.xcconfig"; sourceTree = "<group>"; };
-		93827783A5ED4D3B1AC1DB9F /* Pods_Upful_UpfulTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Upful_UpfulTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC0A134A6E928314BD6D8405 /* Pods_UpfulTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UpfulTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD4474703268102BF85409A5 /* Pods-Upful-UpfulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Upful-UpfulTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Upful-UpfulTests/Pods-Upful-UpfulTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D6464D4EB0D76DB0F09D0648 /* Pods-Upful.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Upful.release.xcconfig"; path = "Pods/Target Support Files/Pods-Upful/Pods-Upful.release.xcconfig"; sourceTree = "<group>"; };
@@ -256,7 +271,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EACA51EBDB9027C65ED019D /* Pods_UpfulTests.framework in Frameworks */,
-				6EFBDDEF75650ADE9A43846E /* Pods_Upful_UpfulTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,12 +295,13 @@
 			path = "Empty Cells";
 			sourceTree = "<group>";
 		};
-		3D0C5F71233AFCF000F4A5FC /* Custom VIew */ = {
+		3D0C5F71233AFCF000F4A5FC /* Custom VIews */ = {
 			isa = PBXGroup;
 			children = (
 				3D0C5F72233AFD0300F4A5FC /* ActionableTableHeader.swift */,
+				3DD4291A2345A3BA0079DA18 /* AddButton.swift */,
 			);
-			path = "Custom VIew";
+			path = "Custom VIews";
 			sourceTree = "<group>";
 		};
 		3D0C5F76233FA3EA00F4A5FC /* WebNavigation */ = {
@@ -508,6 +523,7 @@
 				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
 				3D2F96442312D4AF003811AB /* AnalyticsMapper.swift */,
 				3D586519231C946600495D79 /* AppStoreReviewHelper.swift */,
+				3DD4291C2347EC530079DA18 /* Vibration.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -907,7 +923,7 @@
 		3DC710862335CF4100A2A0DA /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3D0C5F71233AFCF000F4A5FC /* Custom VIew */,
+				3D0C5F71233AFCF000F4A5FC /* Custom VIews */,
 				3D0C5F6B233A44F200F4A5FC /* Empty Cells */,
 				3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */,
 			);
@@ -1109,7 +1125,6 @@
 				3D2E37D72303942100DE8D12 /* GoogleMobileAds.framework */,
 				59C76C07469A281B054B28FF /* Pods_Upful.framework */,
 				BC0A134A6E928314BD6D8405 /* Pods_UpfulTests.framework */,
-				93827783A5ED4D3B1AC1DB9F /* Pods_Upful_UpfulTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1126,12 +1141,15 @@
 				3D20FB2222FB1F08007836DD /* Frameworks */,
 				3D20FB2322FB1F08007836DD /* Resources */,
 				DBAC63ACD445083835E79E46 /* [CP] Embed Pods Frameworks */,
+				3DA37C3223453049008832AB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Upful;
+			packageProductDependencies = (
+			);
 			productName = Upful;
 			productReference = 3D20FB2522FB1F08007836DD /* Upful.app */;
 			productType = "com.apple.product-type.application";
@@ -1183,6 +1201,8 @@
 				Base,
 			);
 			mainGroup = 3D20FB1C22FB1F08007836DD;
+			packageReferences = (
+			);
 			productRefGroup = 3D20FB2622FB1F08007836DD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1255,23 +1275,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${BUILT_PRODUCTS_DIR}/Mixpanel-swift/Mixpanel.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mixpanel.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1281,6 +1294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
 				3DF5FBC323341F3F00856205 /* SaveViewController.swift in Sources */,
 				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
@@ -1377,6 +1391,7 @@
 				3D7C85522337A93500A2E63E /* Animator.swift in Sources */,
 				3D0C5F972343C48A00F4A5FC /* SubscriptionOfferingsCell.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
+				3DD4291B2345A3BA0079DA18 /* AddButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1534,7 +1549,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1554,7 +1569,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

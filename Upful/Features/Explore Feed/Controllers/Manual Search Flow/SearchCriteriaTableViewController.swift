@@ -50,8 +50,11 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         view.backgroundColor = .groupTableViewBackground
+        tableView.contentInsetAdjustmentBehavior = .automatic
+        tableView.contentInset = UIEdgeInsets(
+            top: (93),
+            left: 0, bottom: 0, right: 0)
     }
     
     override func viewDidAppear(_ animated: Bool) {
