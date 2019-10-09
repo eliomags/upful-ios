@@ -59,6 +59,7 @@ extension SearchCriteria {
         case .totalassets: return "Total Assets"
         case .totalliabilities: return "Total Liabilities"
         case .totalequity: return "Total Equity"
+        case .industrycategory: return "Industry Category"
         }
     }
     
@@ -90,6 +91,7 @@ extension SearchCriteria {
         case .totalassets: return .number
         case .totalliabilities: return .number
         case .totalequity: return .number
+        case .industrycategory: return .other
         }
     }
     
@@ -121,6 +123,7 @@ extension SearchCriteria {
         case .totalliabilities: return .other
         case .totalequity: return .other
         case .none: return .other
+        case .industrycategory: return .other
         }
     }
 

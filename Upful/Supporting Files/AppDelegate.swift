@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func initializeVC() -> UIViewController {
         let homeVC = SaveViewController(style: .grouped)
         let exploreVC = HomeFeedContainer(collectionViewLayout: UICollectionViewFlowLayout())
-        let settingsVC = SettingsViewController()
+        let settingsVC = SettingsViewController(style: .grouped)
         
         let controllers = [homeVC,exploreVC,settingsVC]
         homeVC.tabBarItem = UITabBarItem(title: "Home", image: #imageLiteral(resourceName: "icons8-home-page-30"), tag: 0)
@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabVC.viewControllers = controllers.map({
             let navVC = UINavigationController(rootViewController: $0)
             navVC.navigationBar.prefersLargeTitles = true
-            navVC.navigationBar.isTranslucent = true
+            navVC.navigationBar.isTranslucent = false
             navVC.navigationBar.tintColor = .appAccent2
             navVC.navigationBar.setValue(true, forKey: "hidesShadow")
             navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 26, weight: .heavy)]

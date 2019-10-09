@@ -49,7 +49,7 @@ class ActionableTableHeader: UITableViewHeaderFooterView {
         button.setTitle("DONE", for: .normal)
         button.layer.cornerRadius = 35/2
         button.layer.borderColor = UIColor.appAccent3.cgColor
-        button.layer.borderWidth = 2
+        button.layer.borderWidth = 1.75
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 35).isActive = true

@@ -8,19 +8,16 @@
 
 import UIKit
 
-class SubscriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SubscriptionFeatureDataSource {
+class SubscriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    // MARK: - Dependencies
     
-    // MARK: - Data
-    
-    var subscriptionOfferings: [SubscriptionFeatureViewModel] = []
-    var subscriptionData: [[SubscriptionItemViewModel]] = []
-    
-    
+    let suscriptionDataService: SubscriptionDataService
+
     // MARK: - Views
     
     lazy var subscriptionDetailsCollectionView: SubscriptionDetailsCollectionView = {
         let view = SubscriptionDetailsCollectionView(collectionViewLayout: UICollectionViewFlowLayout())
-        view.dataSource = self
+        view.dataSource = suscriptionDataService
         return view
     }()
     
@@ -55,16 +52,22 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         return view
     }()
     
-    
     // MARK: - Initializer Methods
+    
+    init(suscriptionDataService: SubscriptionDataService) {
+        self.suscriptionDataService = suscriptionDataService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         setupNavBar()
         setupPresentation()
-        setUpSubscritionData()
-        setupSubscriptionFeatures()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -72,29 +75,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         setupNavBar()
         setupDefaultSelection()
     }
-    
-    
-    // MARK: - Data Setup
-    
-    fileprivate func setupSubscriptionFeatures() {
-        let features = [
-            SubscriptionFeatureViewModel(subscriptionFeature: SubscriptionFeature(title: "Unlimited Saving", description: "Save as many screeners and stocks as you want"), feature: .saving),
-            SubscriptionFeatureViewModel(subscriptionFeature: SubscriptionFeature(title: "Unlimited Daily Screens", description: "Screen for as many stocks as you want each day"), feature: .screens),
-            SubscriptionFeatureViewModel(subscriptionFeature: SubscriptionFeature(title: "Notes Access", description: "Get access to notes"), feature: .notes)
-        ]
-        self.subscriptionOfferings = features
-    }
-    
-    fileprivate func setUpSubscritionData() {
-        let subscriptions = [
-            SubscriptionItem(subscriptionDuration: 1, monthlyPricing: SubscriptionItemViewModel.oneMonthPricing),
-            SubscriptionItem(subscriptionDuration: 1, monthlyPricing: SubscriptionItemViewModel.oneMonthPricing),
-            SubscriptionItem(subscriptionDuration: 6, monthlyPricing: 10.99),
-            SubscriptionItem(subscriptionDuration: 12, monthlyPricing: 7.99)
-        ]
-        self.subscriptionData = subscriptions.map({ [SubscriptionItemViewModel(subscriptionItem: $0)] })
-    }
-    
     
     // MARK: - View Setup
     
@@ -130,13 +110,11 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         tableView.selectRow(at: IndexPath(row: 0, section: 1), animated: true, scrollPosition: .bottom)
     }
     
-    
     // MARK: - Actions
     
     @objc fileprivate func handleCancelTap(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
     }
-    
     
     // MARK: - TableView DataSource Methods
     
@@ -162,10 +140,10 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
             let cell = SubscriptionTableViewCell(style: .default, reuseIdentifier: nil)
             if section == 1 { cell.monthLabel.text = "month" }
             if section != 1 { cell.setSavingsViews() }
-            cell.durationLabel.text = subscriptionData[indexPath.section][indexPath.row].subscriptionDuration
-            cell.monthlyPricingLabel.text = subscriptionData[indexPath.section][indexPath.row].monthlyPricing
-            cell.dueNowPricingLabel.text = subscriptionData[indexPath.section][indexPath.row].totalCost
-            cell.savingsValueLabel.text = subscriptionData[indexPath.section][indexPath.row].savingPercentage
+            cell.durationLabel.text = suscriptionDataService.subscriptionData[indexPath.section][indexPath.row].subscriptionDuration
+            cell.monthlyPricingLabel.text = suscriptionDataService.subscriptionData[indexPath.section][indexPath.row].monthlyPricing
+            cell.dueNowPricingLabel.text = suscriptionDataService.subscriptionData[indexPath.section][indexPath.row].totalCost
+            cell.savingsValueLabel.text = suscriptionDataService.subscriptionData[indexPath.section][indexPath.row].savingPercentage
             return cell
             
         default: return UITableViewCell()
@@ -182,7 +160,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(indexPath)
     }
-    
     
     // MARK: - TableView Delegate Methods
     

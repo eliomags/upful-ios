@@ -45,16 +45,16 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     
     private var state: State = .normal {
         didSet {
-            observeState()
+            handleStateChange()
         }
     }
     
-    private func observeState() {
+    private func handleStateChange() {
         switch state {
-            
         case .normal:
             searchDisplay.removeAll()
             tableView.isScrollEnabled = true
+            
         case .searching(let searchText):
             fetchCompanies(searchText)
             tableView.isScrollEnabled = false
@@ -69,16 +69,16 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         sc.delegate = self
         sc.searchBar.delegate = self
         if #available(iOS 13.0, *) {
-            sc.searchBar.backgroundColor = .systemBackground
+            if traitCollection.userInterfaceStyle == .dark { sc.searchBar.backgroundColor = .white }
+            if traitCollection.userInterfaceStyle == .light { sc.searchBar.backgroundColor = .white  }
         } else {
             sc.searchBar.backgroundColor = .white
         }
         sc.searchBar.tintColor = .appAccent3
-        sc.searchBar.searchBarStyle = UISearchBar.Style.minimal
+        sc.searchBar.searchBarStyle = .minimal
         sc.dimsBackgroundDuringPresentation = false
         sc.hidesNavigationBarDuringPresentation = false
         sc.definesPresentationContext = false
-        sc.searchBar.sizeToFit()
         return sc
     }()
     
@@ -101,7 +101,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
             if traitCollection.userInterfaceStyle == .dark { view.backgroundColor = .systemBackground }
-            if traitCollection.userInterfaceStyle == .light { view.backgroundColor = .white }
+            if traitCollection.userInterfaceStyle == .light { view.backgroundColor = .clear }
         } else {
             view.backgroundColor = .white
         }
@@ -120,17 +120,17 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         } else {
             tableView.backgroundColor = .white
         }
+        tableView.backgroundView = UIView()
         tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.stockCell)
-        tableView.contentInsetAdjustmentBehavior = .never
-        tableView.tableFooterView = UIView()
+        tableView.contentInsetAdjustmentBehavior = .automatic
         tableView.contentInset = UIEdgeInsets(
-            top: searchController.searchBar.intrinsicContentSize.height + 93,
+            top: searchController.searchBar.intrinsicContentSize.height + 20,
             left: 0, bottom: 0, right: 0)
         definesPresentationContext = true
         tableView.keyboardDismissMode = .onDrag
+        tableView.tableFooterView = UIView()
         tableView.tableHeaderView = searchController.searchBar
-        
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionHeaderHeight = 40
         tableView.estimatedSectionFooterHeight = 0
@@ -201,7 +201,6 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     
     // MARK: - Delegate Methods
     
-    // Search Bar
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         state = .normal
     }
@@ -234,7 +233,6 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch state {
-            
         case .normal:
             tableView.restore()
             return 1
@@ -250,7 +248,6 @@ extension QuickSearchViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         switch state {
-            
         case .normal:
             return homeFeedItems.count
             
@@ -262,7 +259,6 @@ extension QuickSearchViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let emptyCell = UITableViewCell(style: .default, reuseIdentifier: nil)
         switch state {
-            
         case .normal:
             switch indexPath.section {
             case 0:
@@ -293,7 +289,6 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch state {
-            
         case .searching(_):
             let selectedCompany = searchDisplay[indexPath.item]
             let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
@@ -311,7 +306,6 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch state {
-            
         case .normal:
             switch indexPath.section {
             case 0: return 200
@@ -326,7 +320,6 @@ extension QuickSearchViewController {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch state {
-            
         case .normal:
             let view = UIView()
             let header = LargeSectionHeaderLabel(padding: 16)
@@ -349,7 +342,6 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch state {
-            
         case .normal:
             if section == 0 { return 70 }
             return 44
@@ -361,7 +353,6 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         switch state {
-            
         case .normal:
             if section == homeFeedItems.count - 1 {
                 return UIView()
@@ -374,7 +365,6 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         switch state {
-            
         case .normal:
             if section == homeFeedItems.count - 1 { return 60 }
             return 20

@@ -10,7 +10,7 @@ import Foundation
 
 enum SearchCriteria: String, CaseIterable {
     case none
-    
+    case industrycategory = "industry_category"
     case name
     case marketcap
     case totalrevenue

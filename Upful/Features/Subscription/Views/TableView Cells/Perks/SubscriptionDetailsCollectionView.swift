@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol SubscriptionFeatureDataSource: class {
-    var subscriptionOfferings: [SubscriptionFeatureViewModel] { get set }
-}
-
 class SubscriptionDetailsCollectionView: UICollectionViewController {
     
     var dataSource: SubscriptionFeatureDataSource?

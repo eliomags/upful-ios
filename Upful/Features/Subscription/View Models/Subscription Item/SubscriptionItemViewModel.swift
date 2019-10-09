@@ -14,7 +14,7 @@ struct SubscriptionItemViewModel {
     var savingPercentage: String?
     var totalCost: String?
     
-    static let oneMonthPricing = 14.99
+    static let oneMonthPricing = 8.99
     
     init(subscriptionItem: SubscriptionItem) {
         self.subscriptionDuration = "\(subscriptionItem.subscriptionDuration)"

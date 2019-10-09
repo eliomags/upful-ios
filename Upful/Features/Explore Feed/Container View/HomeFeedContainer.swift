@@ -26,11 +26,13 @@ class HomeFeedContainer: MenuContainerViewController {
         configureNavBar()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .newSession)
         if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark {
-                collectionView.backgroundColor = .systemBackground
+            if traitCollection.userInterfaceStyle == .dark { collectionView.backgroundColor = .white }
+            if traitCollection.userInterfaceStyle == .light {
+                collectionView.backgroundColor = .white
+                view.backgroundColor = .white
             }
-            if traitCollection.userInterfaceStyle == .light { collectionView.backgroundColor = .white }
         } else {
+            view.backgroundColor = .white
             collectionView.backgroundColor = .white
         }
     }

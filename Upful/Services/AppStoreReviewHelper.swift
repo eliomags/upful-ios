@@ -73,7 +73,7 @@ struct AppStoreReviewHelper {
         }
     }
     
-    fileprivate static func requestAppStoreReview() {
+    static func requestAppStoreReview() {
         SKStoreReviewController.requestReview()
     }
     

@@ -165,7 +165,6 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
     
     lazy var viewBackground: UIView = {
         let v = UIView()
-//        v.backgroundColor = .white
         v.layer.masksToBounds = true
         v.layer.cornerRadius = 8
         v.addSubview(detailsStackView)
@@ -184,7 +183,7 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .clear
+        backgroundColor = .white
         contentView.layer.masksToBounds = true
         layer.masksToBounds = true
         setupShadow(intensity: .light, color: .black)

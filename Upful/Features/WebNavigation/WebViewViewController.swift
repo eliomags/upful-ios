@@ -33,8 +33,7 @@ class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.urlString = ""
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func loadView() {

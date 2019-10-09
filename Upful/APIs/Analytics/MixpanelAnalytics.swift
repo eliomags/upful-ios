@@ -24,6 +24,8 @@ enum AnalyticsEventName {
     case selectedNewsArticle
     case selectedAnalysis(criteria: SearchCriteria)
     case selectedCompanyFiling
+    case suggestion(description: String)
+    case issue(description: String)
     
     func getName() -> String {
         switch self {
@@ -37,6 +39,11 @@ enum AnalyticsEventName {
             return "selected_analysis_parameter"
         case .selectedCompanyFiling:
             return "selected_company_filing"
+        case .suggestion:
+            return "suggestion"
+        case .issue:
+            return "issue"
+
         }
     }
 }
@@ -54,6 +61,11 @@ extension AnalyticsEventName {
             return ["analysis_criteria": criteria.rawValue]
         case .selectedCompanyFiling:
             return [:]
+        case .suggestion(let description):
+            return ["description": description]
+        case .issue(let description):
+            return ["description": description]
+
         }
     }
 }

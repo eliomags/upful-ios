@@ -27,15 +27,18 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
     weak var dataSource: SaveScreenerDelegate?
     weak var delegate: ActionHeaderDelegate?
     
-    fileprivate func observeState() {
-        collectionView.reloadData()
-        delegate?.observeCollectionViewState(isEditing: isLongPressEnabled)
-    }
+    
+    // MARK: - State
     
     var isLongPressEnabled = false {
         didSet {
             observeState()
         }
+    }
+    
+    fileprivate func observeState() {
+        collectionView.reloadData()
+        delegate?.observeCollectionViewState(isEditing: isLongPressEnabled)
     }
     
     
@@ -82,10 +85,10 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
             guard let selectedIndexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }
             collectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
             Vibration.selection.vibrate()
+            isLongPressEnabled = true
         case .changed:
             collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
         case .ended:
-            isLongPressEnabled = true
             collectionView.endInteractiveMovement()
             collectionView.reloadData()
         default:

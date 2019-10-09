@@ -20,7 +20,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     // MARK: - Views
     
-    private lazy var menuBarView: MenuBarView = {
+    lazy var menuBarView: MenuBarView = {
         let menubarTitles = menubarControllers.map({ $0.menubarTitle })
         let view = MenuBarView(menuTitles: menubarTitles)
         view.delegate = self
@@ -35,7 +35,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
@@ -49,7 +49,8 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.cell1)
-        collectionView.contentInset = UIEdgeInsets(top: -menuBarView.intrinsicContentSize.height, left: 0, bottom: 0, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: -menuBarView.intrinsicContentSize.height,
+                                                   left: 0, bottom: 0, right: 0)
         collectionView.contentInsetAdjustmentBehavior = .never
         if let flowlayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             flowlayout.scrollDirection = .horizontal
@@ -66,7 +67,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     func selectedIndex(_ index: Int) {
         collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
     }
-    
     
     /// Methods for hiding and presenting the menu bar when the child tableView has scrolled.
     /// We will check if the view is already animated before animating to improve performance.
@@ -132,7 +132,6 @@ extension MenuContainerViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let pageIndex = indexPath.row
         let displayableCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cell1, for: indexPath)
-        
         for i in 0..<menubarControllers.count {
             if i == indexPath.row {
                 display(contentController: menubarControllers[pageIndex], on: displayableCell)

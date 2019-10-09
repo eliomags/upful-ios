@@ -10,6 +10,8 @@ import UIKit
 
 
 protocol MenuViewItemDelegate: class {
+    var menuBarView: MenuBarView { get }
+    
     func hideMenuBar()
     func presentMenuBar()
     func navigateTo(_ viewController: UIViewController)

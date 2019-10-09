@@ -28,13 +28,14 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         return controllers
     }
     
-    lazy var saveButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "icons8-star-30 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.setImage(#imageLiteral(resourceName: "icons8-star-30 (2)").withRenderingMode(.alwaysOriginal), for: .selected)
-        button.setTitle("", for: .normal)
-        button.backgroundColor = .clear
-        button.tintColor = .clear
+    lazy var notesButton: NotesButton = {
+        let button = NotesButton()
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleOpenNotes)))
+        return button
+    }()
+    
+    lazy var saveButton: SaveButton = {
+        let button = SaveButton()
         button.addTarget(self, action: #selector(saveCompany), for: .touchUpInside)
         return button
     }()
@@ -49,9 +50,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     }
     
     required init?(coder aDecoder: NSCoder) {
-        ticker = ""
-        companyName = ""
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -110,6 +109,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         savedStock.companyName = self.companyName
         if !sender.isSelected { removeFavorite() }
         PersistenceService.shared.saveContext()
+        if sender.isSelected { Vibration.light.vibrate() }
     }
     
     
@@ -140,10 +140,11 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
 
     fileprivate func configureNavBar() {
         navigationItem.title = "\(ticker)"
-        let notes = UIBarButtonItem(title: "Notes", style: .done, target: self, action: #selector(handleOpenNotes))
+        let notes = UIBarButtonItem(customView: notesButton)
         let save = UIBarButtonItem(customView: saveButton)
+        let spacer = UIBarButtonItem(customView: UIView())
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.rightBarButtonItems = [save, notes]
+        navigationItem.rightBarButtonItems = [save,spacer,spacer, notes]
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .heavy)]

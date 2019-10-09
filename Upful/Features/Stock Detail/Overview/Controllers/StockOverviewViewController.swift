@@ -111,11 +111,7 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.ticker = ""
-        self.companyName = ""
-        self.analyticsLogger = AnalyticsLogger()
-        self.intrinioApi = IntrinioAPI()
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {

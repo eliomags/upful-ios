@@ -44,7 +44,11 @@ final class MenuBarView: UIView {
         let v = UIView()
         v.backgroundColor = .appAccent2
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.heightAnchor.constraint(equalToConstant: 1.5).isActive = true
+        if #available(iOS 13.0, *) {
+            v.heightAnchor.constraint(equalToConstant: 0).isActive = true
+        } else {
+            v.heightAnchor.constraint(equalToConstant: 1.5).isActive = true
+        }
         return v
     }()
     
@@ -56,7 +60,8 @@ final class MenuBarView: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.menuTitles = []
+        super.init(coder: aDecoder)
     }
     
     fileprivate func setupViews() {
@@ -66,9 +71,12 @@ final class MenuBarView: UIView {
         } else {
             backgroundColor = .white
         }
-        addSubview(placementView)
+        
         addSubview(menuBarControl)
-
+        addSubview(placementView)
+        
+        // Need to refactor segmented control to be 
+        
         placementView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         placementView.widthAnchor.constraint(equalTo: menuBarControl.widthAnchor, multiplier: 1/CGFloat(menuBarControl.numberOfSegments)).isActive = true
         placementView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true

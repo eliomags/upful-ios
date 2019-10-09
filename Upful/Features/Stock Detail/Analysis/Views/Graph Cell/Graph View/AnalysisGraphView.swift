@@ -23,7 +23,7 @@ class CombinedLineChartView: CombinedChartView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     
@@ -142,7 +142,7 @@ class CombinedLineChartView: CombinedChartView {
             entries.append(dataEntry)
         }
         let dataSet = BarChartDataSet(entries: entries, label: criteria.explicit)
-        dataSet.setColor(NSUIColor.appAccent2)
+        dataSet.setColor(NSUIColor.appAccent3)
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         dataSet.drawValuesEnabled = true
         dataSet.highlightEnabled = false

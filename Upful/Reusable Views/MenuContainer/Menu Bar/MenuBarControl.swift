@@ -26,27 +26,29 @@ class MenuBarControl: UISegmentedControl {
         selectedSegmentIndex = 0
         if #available(iOS 13.0, *) {
             setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
-                                    NSAttributedString.Key.foregroundColor: UIColor.label
+                                    NSAttributedString.Key.foregroundColor: UIColor.gray
             ], for: .normal)
             setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
                                        NSAttributedString.Key.foregroundColor: UIColor.label
                 ], for: .selected)
         } else {
             setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
-                                           NSAttributedString.Key.foregroundColor: UIColor.black
+                                           NSAttributedString.Key.foregroundColor: UIColor.gray
                    ], for: .normal)
             setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
                                               NSAttributedString.Key.foregroundColor: UIColor.black
                     ], for: .selected)
         }
         if #available(iOS 13.0, *) {
-            self.selectedSegmentTintColor = .clear
+            self.selectedSegmentTintColor = .white
+            self.tintColor = .white
         }
-        backgroundColor = .clear
-        tintColor = UIColor.clear
+        backgroundColor = .white
+        tintColor = UIColor.white
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
 }
