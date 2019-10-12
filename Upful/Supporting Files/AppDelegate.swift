@@ -10,7 +10,6 @@ import Firebase
 import Mixpanel
 import UIKit
 
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -42,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: #imageLiteral(resourceName: "icons8-settings-25"), tag: 2)
         
         let tabVC = UITabBarController()
-        tabVC.tabBar.tintColor = .appAccent2
+        tabVC.tabBar.tintColor = .appAccent3
         tabVC.tabBar.isTranslucent = true
 
         tabVC.viewControllers = controllers.map({

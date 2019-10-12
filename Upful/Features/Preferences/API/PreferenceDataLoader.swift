@@ -1,95 +1,34 @@
 //
-//  PreferenceManager.swift
+//  PreferenceDataLoader.swift
 //  Upful
 //
-//  Created by Yanik Simpson on 10/7/19.
+//  Created by Yanik Simpson on 10/10/19.
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
 
 import Foundation
 
-protocol DataManager: class {
-    associatedtype T
-    associatedtype U
-    var data: [U] { get set }
-    func remove(_ item: T)
-    func update(_ item: T)
-    func save()
-}
-
-
-final class PreferenceDataManager: DataManager {
-    // MARK: - Dependencies
-
-    let dataLoader = PreferenceDataLoader()
-    
-    // MARK: - State
-    
-    enum PreferenceName {
-        static let hasAddedPreferece = "hasAddedPreference"
-        static let industryPreferences = "industryPreferences"
-        static let metricPreferences = "preference"
-    }
-    
-    var data: [[Preference]] = []
-    var savedPreferences: Set<String> = []
-    
-    // MARK: - Initializer
-    
-    init() {
-        data = dataLoader.load()
-        savedPreferences = Set(retrieveSavedPreferences().map({ $0 }))
-        print(savedPreferences)
-    }
-    
-    // MARK: - API
-    
-    func update(_ preferenceType: PreferenceType) {
-        self.savedPreferences.update(with: preferenceType.rawValue)
-        print(savedPreferences)
-    }
-    
-    func remove(_ preferenceType: PreferenceType) {
-        self.savedPreferences = savedPreferences.filter({ $0 != preferenceType.rawValue })
-    }
-    
-    func save() {
-        let newPreferences: [String] = self.savedPreferences.map({ $0 })
-        UserDefaults.standard.set(newPreferences, forKey: PreferenceName.metricPreferences)
-        print(retrieveSavedPreferences())
-    }
-    
-    // MARK: - Helpers
-    
-    func retrieveSavedPreferences() -> [String] {
-        let items: [String] = UserDefaults.standard.stringArray(forKey: PreferenceName.metricPreferences) ?? []
-        return items
-//        let preferenceTypes: [PreferenceType] = items.compactMap({ (PreferenceType(rawValue: $0)) })
-//        return preferenceTypes
-    }
-}
-
-
 final class PreferenceDataLoader {
-    func load() -> [[Preference]] {
-        return
-            [
-            createIndustryPreferences(),
-            createGrowthPreferences(),
-            createProfitabilityPreferences(),
-            createDividendPreferences()
+    func load() -> [[PreferenceViewModel]] {
+        let preferences = [
+        createIndustryPreferences(),
+        createGrowthPreferences(),
+        createProfitabilityPreferences(),
+        createDividendPreferences()
             ]
+        
+        return preferences.map({ $0.map({ PreferenceViewModel(preference: $0) })})
     }
     
     private func createIndustryPreferences() -> [Preference] {
         var industryPreferencesss = [Preference]()
-        PreferenceType.allCases.forEach { (preference) in
+        PreferenceID.allCases.forEach { (preference) in
             if preference.category() == PreferenceCategory.industry {
                 if preference == .industryAny {
-                    let newPreference = Preference(description: "Any", criteria: .industrycategory, parameter: .lt, value: preference.rawValue, id: preference)
+                    let newPreference = Preference(description: "Any", criteria: .industrycategory, parameter: .equal, value: preference.rawValue, id: preference)
                     industryPreferencesss.append(newPreference)
                 } else {
-                    let newPreference = Preference(description: preference.rawValue, criteria: .industrycategory, parameter: .lt, value: preference.rawValue, id: preference)
+                    let newPreference = Preference(description: preference.rawValue, criteria: .industrycategory, parameter: .equal, value: preference.rawValue, id: preference)
                     industryPreferencesss.append(newPreference)
                 }
             }
@@ -104,7 +43,7 @@ final class PreferenceDataLoader {
             Preference(description: "High", criteria: .revenuegrowth, parameter: SearchParameter.gt, value: "0.25", id: .growthHigh),
             Preference(description: "Medium", criteria: .revenuegrowth, parameter: SearchParameter.gt, value: "0.10", id: .growthMedium),
             Preference(description: "Low", criteria: .revenuegrowth, parameter: SearchParameter.gt, value: "0.10", id: .growthLow),
-            Preference(description: "Negative", criteria: .revenuegrowth, parameter: SearchParameter.lt, value: "0.0", id: .profitabilityNegative)
+            Preference(description: "Negative", criteria: .revenuegrowth, parameter: SearchParameter.lt, value: "0.0", id: .growthNegative)
         ]
         return growthPreferences
     }

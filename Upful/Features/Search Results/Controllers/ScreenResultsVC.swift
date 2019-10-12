@@ -100,6 +100,7 @@ final class ScreenResultsViewController: UIViewController {
     }
     
     private func fetchTableData(parameters: [String], fetchType: FetchType) {
+        print(parameters)
         var searchKeys = ""
         parameters.forEach { (parameter) in
             searchKeys += "\(parameter),"

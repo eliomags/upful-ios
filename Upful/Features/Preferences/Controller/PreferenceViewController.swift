@@ -9,21 +9,59 @@
 import UIKit
 
 class PreferenceViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
     // MARK: - Dependencies
     
     let dataManager: PreferenceDataManager
     
     // MARK: - Views
     
+    lazy var preferenceHeaderView: PreferenceHeaderView = {
+        let view = PreferenceHeaderView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .grouped)
-        view.tableHeaderView = UIView()
         view.backgroundColor = .white
         view.separatorStyle = .none
         view.contentInsetAdjustmentBehavior = .never
         view.delegate = self
         view.dataSource = self
+        view.setTableHeaderView(headerView: preferenceHeaderView)
         return view
+    }()
+    
+    lazy var cancelButton: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.73, alpha: 0.92)
+        view.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        view.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        view.layer.cornerRadius = 13
+        view.layer.masksToBounds = true
+        
+        let cancelImageView = UIImageView(image: #imageLiteral(resourceName: "icons8-delete-15").withRenderingMode(.alwaysOriginal))
+        cancelImageView.backgroundColor = .clear
+        
+        view.addSubview(cancelImageView)
+        cancelImageView.anchor(
+            top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
+            padding: .init(top: 7, left: 7, bottom: 7, right: 7))
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
+        return view
+    }()
+    
+    lazy var saveButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Save", for: .normal)
+        button.backgroundColor = .appAccent3
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(handleDone), for: .touchUpInside)
+        button.layer.cornerRadius = 8
+        button.layer.masksToBounds = true
+        return button
     }()
     
     // MARK: - Initializer Methods
@@ -44,26 +82,48 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         setupViews()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if self.tableView.shouldUpdateHeaderViewFrame() {
+            self.tableView.beginUpdates()
+            self.tableView.endUpdates()
+        }
+    }
+    
     // MARK: - View Setup
     
     private func setupNavBar() {
         navigationItem.title = "Preferences"
-        navigationController?.navigationBar.backgroundColor = .white
+        navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.tintColor = .black
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(handleDone))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
         navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     private func setupViews() {
+        view.addSubview(saveButton)
+        saveButton.anchor(
+            top: nil,
+            leading: view.leadingAnchor,
+            bottom: view.layoutMarginsGuide.bottomAnchor,
+            trailing: view.trailingAnchor,
+            padding: .init(top: 0, left: 16, bottom: 16, right: 16),
+            size: .init(width: 0, height: 40))
+        
         view.addSubview(tableView)
         tableView.anchor(top: view.layoutMarginsGuide.topAnchor,
                          leading: view.leadingAnchor,
-                         bottom: view.bottomAnchor,
-                         trailing: view.trailingAnchor)
+                         bottom: saveButton.topAnchor,
+                         trailing: view.trailingAnchor,
+                         padding: .init(top: 0, left: 0, bottom: 16, right: 0))
     }
     
     // MARK: - Actions
+    
+    @objc fileprivate func handleDismiss() {
+        self.dismiss(animated: true, completion: nil)
+    }
     
     @objc fileprivate func handleDone() {
         print("////////////////////")
@@ -75,6 +135,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         self.dismiss(animated: true)
     }
     
+    
     // MARK: - TableView DataSource Methods
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -85,16 +146,53 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         return 1
     }
     
+    var industryContentHeight: CGFloat = 0 {
+        didSet{
+            if didUpdateIndustryConstraint == false {
+                tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            }
+        }
+    }
+    var defaultContentHeight: CGFloat = 0 {
+        didSet{
+            if didUpdateDefaultConstraint == false {
+                for section in 0...dataManager.data.count - 1 {
+                    tableView.reloadRows(at: [IndexPath(row: 0, section: section)], with: .automatic)
+                }
+            }
+        }
+    }
+    var didUpdateIndustryConstraint = false
+    var didUpdateDefaultConstraint = false
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         let preferenceData = dataManager.data[section]
+        var preferenceCollectionView: GenericPreferenceCollectionViewController
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        let preferenceCollectionView = GenericPreferenceCollectionViewController(preferences: preferenceData)
+        switch section {
+        case 0:
+             preferenceCollectionView = IndustryPreferenceCollectionViewController(
+                preferences: preferenceData,
+                savedPreferenceIds: dataManager.retrieveSavedIDs())
+            preferenceCollectionView.contentUpdated = { [weak self] contentHeight in
+                self?.industryContentHeight = contentHeight
+                self?.didUpdateIndustryConstraint = true
+            }
+        default:
+            preferenceCollectionView = GenericPreferenceCollectionViewController(
+                preferences: preferenceData,
+                savedPreferenceIds: dataManager.retrieveSavedIDs())
+            preferenceCollectionView.contentUpdated = { [weak self] contentHeight in
+                self?.defaultContentHeight = contentHeight
+                self?.didUpdateDefaultConstraint = true
+            }
+        }
         display(contentController: preferenceCollectionView, on: cell)
-        
         preferenceCollectionView.preferenceSelected = { [weak self] (selection) in
             self?.dataManager.update(selection)
         }
+        
         preferenceCollectionView.preferenceDeSelected = { [weak self] (deSelection) in
             self?.dataManager.remove(deSelection)
         }
@@ -103,15 +201,27 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 { return tableView.frame.height / 3 - 50}
-        return 120
+        if indexPath.section == 0 {
+            if industryContentHeight == 0 { return tableView.frame.height / 2 + 20 }
+            return industryContentHeight
+        }
+        if #available(iOS 13.0, *) {
+            if defaultContentHeight == 0 { return 65 }
+            else { return defaultContentHeight + 8 }
+        }
+        return 90
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headers = ["Industry", "Growth", "Profitability", "Dividend"]
+        let headers = ["Select Up to 3 Industry Categories",
+                       "Select a Growth Preference",
+                       "Select a Profitability Preference",
+                       "Select a Dividend Preference"
+                    ]
         let label = LargeSectionHeaderLabel(padding: 16)
-        label.font = UIFont.systemFont(ofSize: 11, weight: .regular)
-        label.text = headers[section].uppercased()
+        label.textColor = .darkText
+        label.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        label.text = headers[section]
         return label
     }
     

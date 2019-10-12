@@ -107,8 +107,38 @@ extension UITableView {
 }
 
 
+// MARK: - Setting and Updating TableView Header View
 
+extension UITableView {
+    // 1.
+    func setTableHeaderView(headerView: UIView) {
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableHeaderView = headerView
+        // ** Must setup AutoLayout after set tableHeaderView.
+        headerView.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
+        headerView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        headerView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+    }
 
+    // 2.
+    func shouldUpdateHeaderViewFrame() -> Bool {
+        guard let headerView = self.tableHeaderView else { return false }
+        let oldSize = headerView.bounds.size
+        // Update the size
+        headerView.layoutIfNeeded()
+        let newSize = headerView.bounds.size
+        return oldSize != newSize
+    }
+}
+/*
+ The gist is that you should let tableView manage the frame of tableHeaderView the same way as table view cells. This is done through tableView's beginUpdates/endUpdates.
+
+ The thing is that tableView doesn't care about AutoLayout when it updates the children frames. It uses the current tableHeaderView's size to determine where the first cell/section header should be.
+
+ 1) Add a width constraint so that the tableHeaderView uses this width whenever we call layoutIfNeeded(). Also add centerX and top constraints to position it correctly relative to the tableView.
+
+ 2) To let the tableView knows about the latest size of tableHeaderView, e.g., when the device is rotated, in viewDidLayoutSubviews we can call layoutIfNeeded() on tableHeaderView. Then, if the size is changed, call beginUpdates/endUpdates.
+ */
 
 
 

@@ -13,7 +13,7 @@ struct Preference {
     let criteria: SearchCriteria
     let parameter: SearchParameter
     let value: String
-    let id: PreferenceType
+    let id: PreferenceID
 }
 
 enum PreferenceCategory: Int {
@@ -23,14 +23,14 @@ enum PreferenceCategory: Int {
     case profitability
 }
 
-enum PreferenceType: String, CaseIterable {
+enum PreferenceID: String, CaseIterable {
     case industryAny = "0"
     case industryRetail = "Retail"
-    case industryDrug = "Drug"
     case industryFinancialServices = "Financial Services"
     case industryBanking = "Banking"
     case industryRealEstate = "Real Estate"
     case insurance = "Insurance"
+    case industryDrug = "Drug"
     case industryHealthServices = "Health Services"
     case computerSoftware = "Computer Software & Services"
     case computerHardware = "Computer Hardware"
@@ -67,7 +67,7 @@ enum PreferenceType: String, CaseIterable {
     case dividendLow
 }
 
-extension PreferenceType {
+extension PreferenceID {
     func category() -> PreferenceCategory {
         switch self {
         case .industryAny: return .industry

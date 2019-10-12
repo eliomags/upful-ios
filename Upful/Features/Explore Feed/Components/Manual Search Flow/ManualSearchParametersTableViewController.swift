@@ -51,7 +51,7 @@ class ManualSearchParametersTableViewController: UITableViewController {
     fileprivate func configureRatioData() {
         [3.0, 5, 10, 15, 20, 25, 30, 40, 50, 60, 80, 100].forEach { (value) in
             SearchParameter.allCases.forEach { (param) in
-                if param != .none {
+                if param != .none && param != .equal {
                     manualSearchParameterItems.append(ParameterItem(parameter: param, value: value))
                 }
             }
@@ -61,7 +61,7 @@ class ManualSearchParametersTableViewController: UITableViewController {
     fileprivate func configurePercentageData() {
         [0.0, 0.01, 0.03, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.80].forEach { (value) in
             SearchParameter.allCases.forEach { (param) in
-                if param != .none {
+                if param != .none && param != .equal  {
                     manualSearchParameterItems.append(ParameterItem(parameter: param, value: value))
                 }
             }
@@ -71,7 +71,7 @@ class ManualSearchParametersTableViewController: UITableViewController {
     fileprivate func configureMarketCapData() {
         [50_000_000_000.0, 10_000_000_000, 3_000_000_000,1_000_000_000, 500_000_000, 100_000_000].forEach { (value) in
             SearchParameter.allCases.forEach({ (param) in
-                if param != .none {
+                if param != .none && param != .equal  {
                     manualSearchParameterItems.append(ParameterItem(parameter: param, value: value))
                 }
             })
