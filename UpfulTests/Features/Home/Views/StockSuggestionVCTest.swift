@@ -82,29 +82,17 @@ class StockSuggestionViewControllerTest: XCTestCase {
         XCTAssertEqual(state, StockSuggestionViewController.State.pending)
     }
     
+        // This test case could be improved by injecting
     func testInit_loadedState() {
         // given added Data
         initializeSystemUnderTest()
         
         sut.viewDidLoad()
         let state = sut.state
-
         // then
         XCTAssertEqual(state, StockSuggestionViewController.State.isLoading)
     }
     
-    func testController_whenNoReceivedData_stateEmpty() {
-        // given
-        initializeSystemUnderTest()
-        
-        // when no data is received from networking
-        sut.stockData = []
-        sut.checkForRecievedData()
-        let state = sut.state
-        
-        // then state should be set to empty
-        XCTAssertEqual(state, StockSuggestionViewController.State.empty)
-    }
     
     
     
@@ -120,7 +108,23 @@ class StockSuggestionViewControllerTest: XCTestCase {
         preferenceManager.update(.dividendAny)
         
         // when initialized
-        sut = StockSuggestionViewController(dataManager: preferenceManager)
+        sut = StockSuggestionViewController(dataManager: preferenceManager,networkingAPI: IntrinioMock())
+    }
+    
+    
+    class IntrinioMock: StockScreenNetworkingProtocol {
+        enum TestParameter: String {
+            case empty
+            case value
+            case error
+        }
+        var testParameter: String = ""
+                
+        func screenForPreferences(parameters: String, completion: @escaping (Result<[Stock], NetworkingError>) -> Void) {
+            let returnStocks: [Stock] = []
+            completion(.success(returnStocks))
+            
+        }
     }
 
 }

@@ -9,21 +9,9 @@
 import UIKit
 
 class EmptyStockSuggestionCollectionViewCell: UICollectionViewCell {
-    
     override var isHighlighted: Bool {
         didSet {
             isHighlighted ? animateHighlighted() : animateUnHighlighted()
-        }
-    }
-    
-    fileprivate func animateHighlighted() {
-        UIView.animate(withDuration: 0.3) {
-            self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        }
-    }
-    fileprivate func animateUnHighlighted() {
-        UIView.animate(withDuration: 0.2) {
-            self.transform = .identity
         }
     }
     
@@ -64,6 +52,8 @@ class EmptyStockSuggestionCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
+    // MARK: - Initializer Methods
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
@@ -83,7 +73,18 @@ class EmptyStockSuggestionCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Helper Methods
     
+    fileprivate func animateHighlighted() {
+        UIView.animate(withDuration: 0.3) {
+            self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        }
+    }
+    fileprivate func animateUnHighlighted() {
+        UIView.animate(withDuration: 0.2) {
+            self.transform = .identity
+        }
+    }
     
 }
 

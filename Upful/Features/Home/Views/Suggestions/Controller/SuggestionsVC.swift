@@ -11,9 +11,6 @@ import UIKit
 class StockSuggestionViewController: UIViewController {
     
     // MARK: - Dependencies
-    
-    let networkingAPI: IntrinioAPI
-    let preferenceDataManager: PreferenceDataManager
 
     let dispatchGroup = DispatchGroup()
     
@@ -23,26 +20,10 @@ class StockSuggestionViewController: UIViewController {
         static let noPreferencesCell = "noPreferencesCell"
     }
     
-    // MARK: - State
+    // MARK: - View Model
     
-    enum State {
-        case pending
-        case isLoading
-        case loaded
-        case noPreferencesSet
-        case empty
-    }
-    
-    var state: State = .pending {
-        didSet {
-            handleStateChange()
-        }
-    }
-    
-    var groupedPreferences: [[String]]
-    var stockData: [Stock] = []
+    let viewModel: SuggestionViewModel!
 
-    
     // MARK: - Views
     
     lazy var layout: UICollectionViewFlowLayout = {
@@ -71,10 +52,8 @@ class StockSuggestionViewController: UIViewController {
     
     // MARK: - Initializer Functions
         
-    init(dataManager: PreferenceDataManager = .init(), networkingAPI: IntrinioAPI = .init()) {
-        self.preferenceDataManager = dataManager
-        self.networkingAPI = networkingAPI
-        self.groupedPreferences = dataManager.getGroupedPreferences()
+    init(viewModel: SuggestionViewModel = .init()) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -84,104 +63,20 @@ class StockSuggestionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setState()
         view.addSubview(collectionView)
         collectionView.fillSuperview()
+        bindViewModelStateChanges()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        if preferenceDataManager.didUpdateData {
-            hasNetworkingCompleted = false
-            stockData.removeAll()
-            setState()
+    // MARK: - View Updates
+    
+    func bindViewModelStateChanges() {
+        viewModel.stateChanged = { [weak self] (newState) in
+            self?.collectionView.reloadData()
         }
     }
     
-    // MARK: - State Methods
-    
-    func setState() {
-        if groupedPreferences.isEmpty {
-            state = .noPreferencesSet
-        } else {
-            state = .isLoading
-        }
-    }
-    
-    func shuffleResults() {
-        if stockData.count <= 4 { return }
-        stockData.shuffle()
-        let difference = stockData.count - 4
-        stockData.removeLast(difference)
-    }
-    
-    func checkForRecievedData() {
-        if self.stockData.isEmpty {
-            self.state = .empty
-        } else {
-            self.shuffleResults()
-            self.state = .loaded
-        }
-    }
-    
-    func handleStateChange() {
-        switch state {
-
-        case .pending:
-            break
-            
-        case .isLoading:
-            fetchData()
-            
-            dispatchGroup.notify(queue: .main) {
-                self.hasNetworkingCompleted = true
-                self.checkForRecievedData()
-            }
-            
-        case .loaded, .noPreferencesSet, .empty:
-            self.collectionView.reloadData()
-        }
-    }
-    
-    // MARK: - Helpers
-    
-    var hasNetworkingCompleted = false
-    
-    func fetchData() {
-        guard groupedPreferences.count > 0 else { return }
-        guard hasNetworkingCompleted == false else { return }
-        
-        for count in 0...groupedPreferences.count - 1 {
-            dispatchGroup.enter()
-            var searchKeys = ""
-            groupedPreferences[count].forEach { (parameter) in
-                searchKeys += "\(parameter),"
-            }
-
-            fetchStockData(parameter: searchKeys)
-        }
-    }
-
-    private func fetchStockData(parameter: String) {
-        networkingAPI.screenForPreferences(parameters: parameter) { (result) in
-            switch result {
-                
-            case .success(let fetchedData):
-                self.stockData.append(contentsOf: fetchedData)
-                self.dispatchGroup.leave()
-                
-            case .failure(let error):
-                switch error {
-                case .urlError:
-                    print("URL Error")
-                default:
-                    print(error.localizedDescription)
-                }
-                self.dispatchGroup.leave()
-            }
-        }
-    }
+    // MARK: - Navigation
     
     func navigateToStockDetails(ticker: String, name: String) {
         let detailsVC = StockDetailsContainerView(ticker: ticker, companyName: name)
@@ -192,35 +87,41 @@ class StockSuggestionViewController: UIViewController {
 
 extension StockSuggestionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch state {
+        switch viewModel.state {
             
         case .empty, .noPreferencesSet:
             return 1
             
-        case .pending:
-            return 2
+        case .pending, .isLoading:
+            return 4
+            
         default:
-            return stockData.count
+            return viewModel.stockData.count
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch state {
+        switch viewModel.state {
             
         case .pending, .isLoading:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell, for: indexPath) as? PopularCompanyCollectionViewCell else { return UICollectionViewCell() }
-            cell.companyNameLabel.backgroundColor = UIColor(white: 0.95, alpha: 0.8)
-            cell.tickerLabel.backgroundColor = UIColor(white: 0.95, alpha: 0.8)
-            cell.marketcapStackView.valueLabel.backgroundColor = UIColor(white: 0.95, alpha: 0.8)
-            cell.peStackView.valueLabel.backgroundColor = UIColor(white: 0.95, alpha: 0.8)
+            cell.companyNameLabel.backgroundColor = UIColor(white: 0.92, alpha: 0.8)
+            cell.tickerLabel.backgroundColor = UIColor(white: 0.92, alpha: 0.8)
+            cell.marketcapStackView.valueLabel.backgroundColor = UIColor(white: 0.92, alpha: 0.8)
+            cell.peStackView.valueLabel.backgroundColor = UIColor(white: 0.92, alpha: 0.8)
             return cell
             
         case .loaded:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell, for: indexPath) as? PopularCompanyCollectionViewCell else { return UICollectionViewCell() }
-            cell.companyNameLabel.text = stockData[indexPath.item].name
-            cell.tickerLabel.text = stockData[indexPath.item].ticker
-            cell.marketcapStackView.valueLabel.text = stockData[indexPath.item].marketcap?.formatUsingAbbreviation()
-            cell.peStackView.valueLabel.text = (stockData[indexPath.item].pricetoearnings?.twoDecimal()) ?? "NA"
+            let data = viewModel.stockData[indexPath.item]
+            cell.companyNameLabel.backgroundColor = .clear
+            cell.tickerLabel.backgroundColor = .clear
+            cell.marketcapStackView.valueLabel.backgroundColor = .clear
+            cell.peStackView.valueLabel.backgroundColor = .clear
+            cell.companyNameLabel.text = data.name
+            cell.tickerLabel.text = data.ticker
+            cell.marketcapStackView.valueLabel.text = data.marketcap?.formatUsingAbbreviation()
+            cell.peStackView.valueLabel.text = (data.pricetoearnings?.twoDecimal()) ?? "NA"
             return cell
             
         case .noPreferencesSet:
@@ -234,10 +135,10 @@ extension StockSuggestionViewController: UICollectionViewDataSource, UICollectio
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch state {
+        switch viewModel.state {
             
         case .loaded:
-            let data = stockData[indexPath.item]
+            let data = viewModel.stockData[indexPath.item]
             navigateToStockDetails(ticker: data.ticker!, name: data.name!)
             
         case .empty, .noPreferencesSet:
@@ -254,7 +155,7 @@ extension StockSuggestionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let padding: CGFloat = 8
         let itemWidth: CGFloat = (UIScreen.main.bounds.width / 2) - (3 * padding)
-        switch state {
+        switch viewModel.state {
             
         case .noPreferencesSet, .empty:
             return collectionView.bounds.size
@@ -267,7 +168,7 @@ extension StockSuggestionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         let padding: CGFloat = 8
         
-        switch state {
+        switch viewModel.state {
             
         case .noPreferencesSet, .empty:
             return 0
@@ -280,7 +181,7 @@ extension StockSuggestionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         let padding: CGFloat = 8
         
-        switch state {
+        switch viewModel.state {
             
         case .noPreferencesSet, .empty:
             return 0
@@ -292,7 +193,7 @@ extension StockSuggestionViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         let padding: CGFloat = 8
-        switch state {
+        switch viewModel.state {
             
         case .noPreferencesSet, .empty:
             return .zero

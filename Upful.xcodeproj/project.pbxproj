@@ -25,6 +25,7 @@
 		3D0C5F9B2343C59300F4A5FC /* SubscriptionFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */; };
 		3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */; };
 		3D20EB762354E3D800D1093A /* AddPreferenceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */; };
+		3D20EB7A235627D000D1093A /* SuggestionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB79235627D000D1093A /* SuggestionViewModel.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
 		3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */; };
 		3D20FB3022FB1F0A007836DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D20FB2F22FB1F0A007836DD /* Assets.xcassets */; };
@@ -179,6 +180,7 @@
 		3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionFeatures.swift; sourceTree = "<group>"; };
 		3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGradientButton.swift; sourceTree = "<group>"; };
 		3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPreferenceCollectionViewCell.swift; sourceTree = "<group>"; };
+		3D20EB79235627D000D1093A /* SuggestionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionViewModel.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D20FB2822FB1F08007836DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchViewController.swift; sourceTree = "<group>"; };
@@ -486,6 +488,29 @@
 				3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */,
 			);
 			path = "Add Preference";
+			sourceTree = "<group>";
+		};
+		3D20EB772356278D00D1093A /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "View Model";
+			sourceTree = "<group>";
+		};
+		3D20EB78235627C300D1093A /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				3D20EB79235627D000D1093A /* SuggestionViewModel.swift */,
+			);
+			path = "View Model";
+			sourceTree = "<group>";
+		};
+		3D20EB7B2356452000D1093A /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3DD52194235444E60090CDE6 /* SuggestionsVC.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		3D20FB1C22FB1F08007836DD = {
@@ -1144,7 +1169,8 @@
 			children = (
 				3D20EB742354E3C900D1093A /* Add Preference */,
 				3DD5218F235431840090CDE6 /* Empty Suggestion */,
-				3DD52194235444E60090CDE6 /* SuggestionsVC.swift */,
+				3D20EB7B2356452000D1093A /* Controller */,
+				3D20EB78235627C300D1093A /* View Model */,
 			);
 			path = Suggestions;
 			sourceTree = "<group>";
@@ -1277,6 +1303,7 @@
 		3DF5FBBF23341EC500856205 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				3D20EB772356278D00D1093A /* View Model */,
 				3DC710862335CF4100A2A0DA /* Views */,
 				3DF5FBC123341F1E00856205 /* Controllers */,
 			);
@@ -1565,6 +1592,7 @@
 				3D20FB5A22FB49EC007836DD /* PopularCompanyCell.swift in Sources */,
 				3D2F966123196881003811AB /* SpacerView.swift in Sources */,
 				3D917B5A22FE24C4001D5E39 /* SearchCriteriaTableViewController.swift in Sources */,
+				3D20EB7A235627D000D1093A /* SuggestionViewModel.swift in Sources */,
 				3DAB3EBB234C13100008CC18 /* PreferenceViewController.swift in Sources */,
 				3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */,
 				3D2F965823171F52003811AB /* CompanyNewsCell.swift in Sources */,
