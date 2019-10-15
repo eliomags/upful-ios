@@ -77,7 +77,7 @@ class NotesViewController: UIViewController, UITextViewDelegate {
     // MARK: - Core Data
     
     private func handleLoadFailure(completion: (()->())) {
-        ViewPresenter.displayErrorActionView(in: self, message: "Error fetching")
+        InformationViewPresenter.displayErrorActionView(in: self, message: "Error fetching")
         completion()
     }
     

@@ -9,11 +9,10 @@
 import UIKit
 
 class PreferenceViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
     // MARK: - Dependencies
     
     let dataManager: PreferenceDataManager
-    
+
     // MARK: - Views
     
     lazy var preferenceHeaderView: PreferenceHeaderView = {
@@ -66,7 +65,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     // MARK: - Initializer Methods
     
-    init(dataManager: PreferenceDataManager) {
+    init(dataManager: PreferenceDataManager = .init()) {
         self.dataManager = dataManager
         super.init(nibName: nil, bundle: nil)
     }

@@ -24,6 +24,7 @@
 		3D0C5F972343C48A00F4A5FC /* SubscriptionOfferingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F962343C48A00F4A5FC /* SubscriptionOfferingsCell.swift */; };
 		3D0C5F9B2343C59300F4A5FC /* SubscriptionFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */; };
 		3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */; };
+		3D20EB762354E3D800D1093A /* AddPreferenceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
 		3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */; };
 		3D20FB3022FB1F0A007836DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D20FB2F22FB1F0A007836DD /* Assets.xcassets */; };
@@ -66,9 +67,9 @@
 		3D58651F231DE67B00495D79 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651E231DE67B00495D79 /* Constants.swift */; };
 		3D5865242321E61400495D79 /* Preset Screener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5865232321E61400495D79 /* Preset Screener.swift */; };
 		3D5865262323024A00495D79 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5865252323024A00495D79 /* PieChartView.swift */; };
-		3D7C85472337344300A2E63E /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C85462337344300A2E63E /* Presenter.swift */; };
+		3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C85462337344300A2E63E /* InformationViewPresenter.swift */; };
 		3D7C854C2337479300A2E63E /* CustomSizeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C854B2337479300A2E63E /* CustomSizeImageView.swift */; };
-		3D7C854E233747A800A2E63E /* ActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C854D233747A800A2E63E /* ActionView.swift */; };
+		3D7C854E233747A800A2E63E /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C854D233747A800A2E63E /* InformationView.swift */; };
 		3D7C85522337A93500A2E63E /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C85512337A93500A2E63E /* Animator.swift */; };
 		3D7C855523380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C855323380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift */; };
 		3D7C855623380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C855423380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift */; };
@@ -99,7 +100,6 @@
 		3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ECE234F98A40008CC18 /* Protocols.swift */; };
 		3DAB3ED1234F9F590008CC18 /* PrefrenceHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED0234F9F590008CC18 /* PrefrenceHeaderView.swift */; };
 		3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */; };
-		3DAB3ED5235130910008CC18 /* PreferenceDataManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED4235130910008CC18 /* PreferenceDataManagerTest.swift */; };
 		3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */; };
 		3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */; };
 		3DC710882335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */; };
@@ -113,6 +113,10 @@
 		3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD429222349633E0079DA18 /* GenericNavBarButton.swift */; };
 		3DD42926234A68B00079DA18 /* SubscriptionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD42925234A68B00079DA18 /* SubscriptionPresenter.swift */; };
 		3DD42929234A92CD0079DA18 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD42928234A92CD0079DA18 /* ReportViewController.swift */; };
+		3DD52185235276580090CDE6 /* PreferenceDataManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD52184235276580090CDE6 /* PreferenceDataManagerTest.swift */; };
+		3DD5218C235293D60090CDE6 /* StockSuggestionVCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */; };
+		3DD521912354319E0090CDE6 /* EmptySuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */; };
+		3DD52195235444E60090CDE6 /* SuggestionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD52194235444E60090CDE6 /* SuggestionsVC.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
 		3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */; };
@@ -174,6 +178,7 @@
 		3D0C5F962343C48A00F4A5FC /* SubscriptionOfferingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionOfferingsCell.swift; sourceTree = "<group>"; };
 		3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionFeatures.swift; sourceTree = "<group>"; };
 		3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGradientButton.swift; sourceTree = "<group>"; };
+		3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPreferenceCollectionViewCell.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D20FB2822FB1F08007836DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchViewController.swift; sourceTree = "<group>"; };
@@ -224,9 +229,9 @@
 		3D58651E231DE67B00495D79 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3D5865232321E61400495D79 /* Preset Screener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preset Screener.swift"; sourceTree = "<group>"; };
 		3D5865252323024A00495D79 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
-		3D7C85462337344300A2E63E /* Presenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presenter.swift; sourceTree = "<group>"; };
+		3D7C85462337344300A2E63E /* InformationViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewPresenter.swift; sourceTree = "<group>"; };
 		3D7C854B2337479300A2E63E /* CustomSizeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSizeImageView.swift; sourceTree = "<group>"; };
-		3D7C854D233747A800A2E63E /* ActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionView.swift; sourceTree = "<group>"; };
+		3D7C854D233747A800A2E63E /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
 		3D7C85512337A93500A2E63E /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
 		3D7C855323380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreenerParameter+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3D7C855423380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreenerParameter+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -257,7 +262,6 @@
 		3DAB3ECE234F98A40008CC18 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		3DAB3ED0234F9F590008CC18 /* PrefrenceHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefrenceHeaderView.swift; sourceTree = "<group>"; };
 		3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceViewModel.swift; sourceTree = "<group>"; };
-		3DAB3ED4235130910008CC18 /* PreferenceDataManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceDataManagerTest.swift; sourceTree = "<group>"; };
 		3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenResultsVC.swift; sourceTree = "<group>"; };
 		3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrinioAPI.swift; sourceTree = "<group>"; };
 		3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersCollectionViewController.swift; sourceTree = "<group>"; };
@@ -271,6 +275,10 @@
 		3DD429222349633E0079DA18 /* GenericNavBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericNavBarButton.swift; sourceTree = "<group>"; };
 		3DD42925234A68B00079DA18 /* SubscriptionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPresenter.swift; sourceTree = "<group>"; };
 		3DD42928234A92CD0079DA18 /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
+		3DD52184235276580090CDE6 /* PreferenceDataManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceDataManagerTest.swift; sourceTree = "<group>"; };
+		3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSuggestionVCTest.swift; sourceTree = "<group>"; };
+		3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySuggestionCell.swift; sourceTree = "<group>"; };
+		3DD52194235444E60090CDE6 /* SuggestionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsVC.swift; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
 		3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisGraphView.swift; sourceTree = "<group>"; };
@@ -322,18 +330,10 @@
 			path = Notes;
 			sourceTree = "<group>";
 		};
-		3D0C5F6B233A44F200F4A5FC /* Empty Cells */ = {
-			isa = PBXGroup;
-			children = (
-				3D0C5F6C233A451600F4A5FC /* GeneralNotesEmptyCell.swift */,
-				3D0C5F6E233A49A800F4A5FC /* EmptyScreenFavoriteCell.swift */,
-			);
-			path = "Empty Cells";
-			sourceTree = "<group>";
-		};
 		3D0C5F71233AFCF000F4A5FC /* Custom VIews */ = {
 			isa = PBXGroup;
 			children = (
+				3D0C5F6C233A451600F4A5FC /* GeneralNotesEmptyCell.swift */,
 				3D0C5F72233AFD0300F4A5FC /* ActionableTableHeader.swift */,
 				3DD4291A2345A3BA0079DA18 /* AddButton.swift */,
 			);
@@ -471,6 +471,23 @@
 			path = "Custom Views";
 			sourceTree = "<group>";
 		};
+		3D20EB722354C53200D1093A /* Saved Screener */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F6E233A49A800F4A5FC /* EmptyScreenFavoriteCell.swift */,
+				3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */,
+			);
+			path = "Saved Screener";
+			sourceTree = "<group>";
+		};
+		3D20EB742354E3C900D1093A /* Add Preference */ = {
+			isa = PBXGroup;
+			children = (
+				3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */,
+			);
+			path = "Add Preference";
+			sourceTree = "<group>";
+		};
 		3D20FB1C22FB1F08007836DD = {
 			isa = PBXGroup;
 			children = (
@@ -513,6 +530,7 @@
 			isa = PBXGroup;
 			children = (
 				3D20FB3D22FB1F0A007836DD /* UpfulTests.swift */,
+				3DAB3ED6235130970008CC18 /* Features */,
 				3D20FB3F22FB1F0A007836DD /* Info.plist */,
 			);
 			path = UpfulTests;
@@ -570,6 +588,8 @@
 			isa = PBXGroup;
 			children = (
 				3D90ADB223005F2200C52455 /* Home Feed Items */,
+				3D42BE482309A59800806AFF /* Screener.swift */,
+				3D42BE51230C672C00806AFF /* CompanyFundamentals.swift */,
 				3D2F9662231A16B7003811AB /* CompanyNewsModel.swift */,
 			);
 			path = Models;
@@ -728,7 +748,6 @@
 			isa = PBXGroup;
 			children = (
 				3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */,
-				3D42BE53230C672F00806AFF /* Models */,
 			);
 			path = Intrinio;
 			sourceTree = "<group>";
@@ -747,15 +766,6 @@
 				3D20FB5722FB46DD007836DD /* PresetScreenerTableViewCell.swift */,
 			);
 			path = "Preset Searche";
-			sourceTree = "<group>";
-		};
-		3D42BE53230C672F00806AFF /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				3D42BE51230C672C00806AFF /* CompanyFundamentals.swift */,
-				3D42BE482309A59800806AFF /* Screener.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		3D4D8606231C5B2F0065CF9F /* Stock Search */ = {
@@ -794,7 +804,7 @@
 		3D7C85452337343400A2E63E /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
-				3D7C85462337344300A2E63E /* Presenter.swift */,
+				3D7C85462337344300A2E63E /* InformationViewPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -802,7 +812,7 @@
 		3D7C85482337476A00A2E63E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3D7C854D233747A800A2E63E /* ActionView.swift */,
+				3D7C854D233747A800A2E63E /* InformationView.swift */,
 				3D58651B231D777C00495D79 /* TableHeaderView.swift */,
 				3D2F966023196881003811AB /* SpacerView.swift */,
 				3D7C854B2337479300A2E63E /* CustomSizeImageView.swift */,
@@ -958,7 +968,6 @@
 		3DAB3EB5234C044D0008CC18 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				3DAB3ED6235130970008CC18 /* Tests */,
 				3DAB3EB6234C04520008CC18 /* Models */,
 				3DAB3ECB234F973C0008CC18 /* API */,
 				3DAB3EBE234CA4310008CC18 /* Views */,
@@ -1020,12 +1029,21 @@
 			path = API;
 			sourceTree = "<group>";
 		};
-		3DAB3ED6235130970008CC18 /* Tests */ = {
+		3DAB3ED6235130970008CC18 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				3DAB3ED4235130910008CC18 /* PreferenceDataManagerTest.swift */,
+				3DD52189235293A40090CDE6 /* Home */,
+				3DAB3EEC23521CF90008CC18 /* Preferences */,
 			);
-			path = Tests;
+			path = Features;
+			sourceTree = "<group>";
+		};
+		3DAB3EEC23521CF90008CC18 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				3DD52184235276580090CDE6 /* PreferenceDataManagerTest.swift */,
+			);
+			path = Preferences;
 			sourceTree = "<group>";
 		};
 		3DC4ED2F22FE671100232155 /* Manual Search Flow */ = {
@@ -1061,8 +1079,8 @@
 			isa = PBXGroup;
 			children = (
 				3D0C5F71233AFCF000F4A5FC /* Custom VIews */,
-				3D0C5F6B233A44F200F4A5FC /* Empty Cells */,
-				3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */,
+				3D20EB722354C53200D1093A /* Saved Screener */,
+				3DD5218623527A3C0090CDE6 /* Suggestions */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1119,6 +1137,40 @@
 				3DAB3EB1234B6C120008CC18 /* Controllers */,
 			);
 			path = "Send Report";
+			sourceTree = "<group>";
+		};
+		3DD5218623527A3C0090CDE6 /* Suggestions */ = {
+			isa = PBXGroup;
+			children = (
+				3D20EB742354E3C900D1093A /* Add Preference */,
+				3DD5218F235431840090CDE6 /* Empty Suggestion */,
+				3DD52194235444E60090CDE6 /* SuggestionsVC.swift */,
+			);
+			path = Suggestions;
+			sourceTree = "<group>";
+		};
+		3DD52189235293A40090CDE6 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				3DD5218A235293B60090CDE6 /* Views */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		3DD5218A235293B60090CDE6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3DD5218F235431840090CDE6 /* Empty Suggestion */ = {
+			isa = PBXGroup;
+			children = (
+				3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */,
+			);
+			path = "Empty Suggestion";
 			sourceTree = "<group>";
 		};
 		3DF5FBA0232BB9A400856205 /* Stock Details Container */ = {
@@ -1469,6 +1521,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */,
+				3DD521912354319E0090CDE6 /* EmptySuggestionCell.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
 				3DF5FBC323341F3F00856205 /* SaveViewController.swift in Sources */,
 				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
@@ -1497,6 +1550,7 @@
 				3D0C5F8C23423B7100F4A5FC /* SubscriptionItem.swift in Sources */,
 				3D2F965A2318C6E7003811AB /* ValuationSectionView.swift in Sources */,
 				3D0C5F85234199BD00F4A5FC /* SubcriptionFooterView.swift in Sources */,
+				3DD52195235444E60090CDE6 /* SuggestionsVC.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
 				3DAB3EB0234B6BAA0008CC18 /* ReportPresenter.swift in Sources */,
 				3DAB3EB4234B6C440008CC18 /* ReportContentView.swift in Sources */,
@@ -1521,15 +1575,16 @@
 				3DC7108D2335D9BE00A2A0DA /* NotesViewController.swift in Sources */,
 				3D0C5F6423395CD500F4A5FC /* Notes+CoreDataClass.swift in Sources */,
 				3D0C5F81234170D900F4A5FC /* SubscriptionViewController.swift in Sources */,
-				3D7C854E233747A800A2E63E /* ActionView.swift in Sources */,
+				3D7C854E233747A800A2E63E /* InformationView.swift in Sources */,
 				3D42BE492309A59800806AFF /* Screener.swift in Sources */,
 				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
 				3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */,
 				3D20FB5822FB46DD007836DD /* PresetScreenerTableViewCell.swift in Sources */,
 				3DF5FBB2232F16F300856205 /* SearchSelectionVIewController.swift in Sources */,
+				3D20EB762354E3D800D1093A /* AddPreferenceCollectionViewCell.swift in Sources */,
 				3D20FB5D22FBA772007836DD /* HomeViewModel.swift in Sources */,
 				3D7C855623380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift in Sources */,
-				3D7C85472337344300A2E63E /* Presenter.swift in Sources */,
+				3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */,
 				3DA5408F232B37C700EE477C /* HomeFeedContainer.swift in Sources */,
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
 				3DF5FBB92330FF6D00856205 /* CompanyFillings.swift in Sources */,
@@ -1590,8 +1645,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DAB3ED5235130910008CC18 /* PreferenceDataManagerTest.swift in Sources */,
 				3D20FB3E22FB1F0A007836DD /* UpfulTests.swift in Sources */,
+				3DD5218C235293D60090CDE6 /* StockSuggestionVCTest.swift in Sources */,
+				3DD52185235276580090CDE6 /* PreferenceDataManagerTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

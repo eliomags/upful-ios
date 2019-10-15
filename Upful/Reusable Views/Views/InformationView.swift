@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ActionView: UIView, Animatable {
+class InformationView: UIView, Animatable {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 0, height: 45)
     }

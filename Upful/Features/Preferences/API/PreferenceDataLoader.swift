@@ -25,7 +25,7 @@ final class PreferenceDataLoader {
         PreferenceID.allCases.forEach { (preference) in
             if preference.category() == PreferenceCategory.industry {
                 if preference == .industryAny {
-                    let newPreference = Preference(description: "Any", criteria: .industrycategory, parameter: .equal, value: preference.rawValue, id: preference)
+                    let newPreference = Preference(description: "Any", criteria: .industrycategory, parameter: .gt, value: preference.rawValue, id: preference)
                     industryPreferencesss.append(newPreference)
                 } else {
                     let newPreference = Preference(description: preference.rawValue, criteria: .industrycategory, parameter: .equal, value: preference.rawValue, id: preference)
@@ -40,9 +40,9 @@ final class PreferenceDataLoader {
         let growthPreferences: [Preference] =
         [
             Preference(description: "Any", criteria: .revenuegrowth, parameter: SearchParameter.gt, value: "0", id: .growthAny),
-            Preference(description: "High", criteria: .revenuegrowth, parameter: SearchParameter.gt, value: "0.25", id: .growthHigh),
-            Preference(description: "Medium", criteria: .revenuegrowth, parameter: SearchParameter.gt, value: "0.10", id: .growthMedium),
-            Preference(description: "Low", criteria: .revenuegrowth, parameter: SearchParameter.gt, value: "0.10", id: .growthLow),
+            Preference(description: "High", criteria: .revenuegrowth, parameter: SearchParameter.gt, value: "0.15", id: .growthHigh),
+            Preference(description: "Medium", criteria: .revenuegrowth, parameter: SearchParameter.lt, value: "0.15", id: .growthMedium),
+            Preference(description: "Low", criteria: .revenuegrowth, parameter: SearchParameter.lt, value: "0.10", id: .growthLow),
             Preference(description: "Negative", criteria: .revenuegrowth, parameter: SearchParameter.lt, value: "0.0", id: .growthNegative)
         ]
         return growthPreferences
@@ -52,9 +52,9 @@ final class PreferenceDataLoader {
         let profitabilityPreferences: [Preference] =
         [
             Preference(description: "Any", criteria: .ebitmargin, parameter: SearchParameter.gt, value: "0", id: .profitabilityAny),
-            Preference(description: "High", criteria: .ebitmargin, parameter: SearchParameter.gt, value: "0.25", id: .profitabilityHigh),
-            Preference(description: "Medium", criteria: .ebitmargin, parameter: SearchParameter.gt, value: "0.10", id: .profitabilityMedium),
-            Preference(description: "Low", criteria: .ebitmargin, parameter: SearchParameter.gt, value: "0.10", id: .profitabilityLow),
+            Preference(description: "High", criteria: .ebitmargin, parameter: SearchParameter.gt, value: "0.2", id: .profitabilityHigh),
+            Preference(description: "Medium", criteria: .ebitmargin, parameter: SearchParameter.lt, value: "0.08", id: .profitabilityMedium),
+            Preference(description: "Low", criteria: .ebitmargin, parameter: SearchParameter.lt, value: "0.05", id: .profitabilityLow),
             Preference(description: "Negative", criteria: .ebitmargin, parameter: SearchParameter.lt, value: "0.0", id: .profitabilityNegative)
         ]
         return profitabilityPreferences
@@ -64,9 +64,9 @@ final class PreferenceDataLoader {
         let dividendPreferences: [Preference] =
         [
             Preference(description: "Any", criteria: .dividendyield, parameter: SearchParameter.gt, value: "0", id: .dividendAny),
-            Preference(description: "High", criteria: .dividendyield, parameter: SearchParameter.gt, value: "0.25", id: .dividendHigh),
-            Preference(description: "Medium", criteria: .dividendyield, parameter: SearchParameter.gt, value: "0.10", id: .dividendMedium),
-            Preference(description: "Low", criteria: .dividendyield, parameter: SearchParameter.gt, value: "0.10", id: .dividendLow),
+            Preference(description: "High", criteria: .dividendyield, parameter: SearchParameter.gt, value: "0.03", id: .dividendHigh),
+            Preference(description: "Medium", criteria: .dividendyield, parameter: SearchParameter.lt, value: "0.02", id: .dividendMedium),
+            Preference(description: "Low", criteria: .dividendyield, parameter: SearchParameter.lt, value: "0.01", id: .dividendLow),
             Preference(description: "None", criteria: .dividendyield, parameter: SearchParameter.gt, value: "0", id: .dividendNone)
         ]
         return dividendPreferences

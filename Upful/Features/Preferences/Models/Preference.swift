@@ -93,6 +93,7 @@ extension PreferenceID {
         case .automotive: return .industry
         case .transportation: return .industry
         case .defense: return .industry
+            
         case .growthAny: return .growth
         case .growthHigh: return .growth
         case .growthMedium: return .growth
@@ -103,6 +104,7 @@ extension PreferenceID {
         case .profitabilityMedium: return .profitability
         case .profitabilityLow: return .profitability
         case .profitabilityNegative: return .profitability
+            
         case .dividendAny: return .dividend
         case .dividendNone: return .dividend
         case .dividendHigh: return .dividend

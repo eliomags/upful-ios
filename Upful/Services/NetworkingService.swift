@@ -12,6 +12,7 @@ enum NetworkingError: Error {
     case failedNetworking
     case noData
     case parsingError
+    case urlError
 }
 
 final class NetworkService {

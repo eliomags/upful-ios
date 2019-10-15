@@ -8,16 +8,19 @@
 
 import UIKit
 
-struct PreferencePresenter {
-    let preferenceDataManager = PreferenceDataManager()
+class PreferencePresenter {
+    var preferenceVC: PreferenceViewController!
+    let preferenceDataManager: PreferenceDataManager!
+    
+    init(preferenceDataManager: PreferenceDataManager = .init()) {
+        self.preferenceDataManager = preferenceDataManager
+        self.preferenceVC = PreferenceViewController(dataManager: self.preferenceDataManager)
+    }
  
     func present(in viewController: UIViewController) {
-        let preferenceVC = PreferenceViewController(dataManager: preferenceDataManager)
-        
         let navVC = UINavigationController(rootViewController: preferenceVC)
-
         viewController.present(navVC, animated: true)
     }
-
+    
 }
 

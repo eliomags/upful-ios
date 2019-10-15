@@ -23,6 +23,7 @@ class PreferenceDataManager: DataManager {
     
     var data: [[PreferenceViewModel]] = []
     var savedPreferences: [String] = []
+    var didUpdateData: Bool = false
     
     // MARK: - Initializer
     
@@ -36,6 +37,7 @@ class PreferenceDataManager: DataManager {
     
     func update(_ preferenceType: PreferenceID) {
         self.savedPreferences.append(preferenceType.rawValue)
+        didUpdateData = true
     }
     
     func remove(_ preferenceType: PreferenceID) {
@@ -48,6 +50,21 @@ class PreferenceDataManager: DataManager {
     }
     
     // MARK: - Helpers
+    
+    func getGroupedPreferences() -> [[String]] {
+        let industryPreferences = getIndustriesForNetworking()
+        let parameterPreferences = getParametersForNetworking()
+        
+        var groupedPreferences: [[String]] = []
+        
+        for industry in industryPreferences {
+            var stack = parameterPreferences
+            stack.append(industry)
+            groupedPreferences.append(stack)
+        }
+        
+        return groupedPreferences
+    }
             
     func getIndustriesForNetworking() -> [String] {
         let preferenceViewModelOptions = data.flatMap({ $0.map({ $0 })})

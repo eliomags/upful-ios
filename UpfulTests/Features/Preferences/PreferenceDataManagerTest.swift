@@ -16,6 +16,7 @@ class PreferenceDataManagerTest: XCTestCase {
     
     override func setUp() {
         sut = PreferenceDataManager()
+        sut.savedPreferences.removeAll()
     }
 
     override func tearDown() {
@@ -28,6 +29,8 @@ class PreferenceDataManagerTest: XCTestCase {
     func testInit_data() {
         XCTAssertNotEqual(sut.data.count, 0)
     }
+    
+    // MARK: - Protocol Methods
 
     func test_updatePreferences() {
         // given
@@ -61,7 +64,7 @@ class PreferenceDataManagerTest: XCTestCase {
         // then
         XCTAssertEqual(networkingParameters,
                        ["revenuegrowth~gt~0",
-                        "dividendyield~gt~0.25"])
+                        "dividendyield~gt~0.03"])
     }
     
     func test_getIndustriesForNetworking() {
@@ -77,6 +80,49 @@ class PreferenceDataManagerTest: XCTestCase {
         // then
         XCTAssertEqual(industries, ["industry_category~eq~Automotive",
                                     "industry_category~eq~Computer Hardware"])
+    }
+    
+    func test_getAllStringsForNetworking_withOneIndustry() {
+        // when
+        sut.update(.automotive)
+        sut.update(.profitabilityLow)
+        sut.update(.growthAny)
+        sut.update(.dividendHigh)
+        
+        // given
+        let networkingStrings = sut.getGroupedPreferences()
+        // then
+        XCTAssertEqual(networkingStrings.count, 1)
+    }
+    
+    func test_getAllStringsForNetworking_withTwoIndustry() {
+        // when
+        sut.update(.automotive)
+        sut.update(.industryRetail)
+        sut.update(.profitabilityLow)
+        sut.update(.growthAny)
+        sut.update(.dividendHigh)
+        
+        // given
+        let networkingStrings = sut.getGroupedPreferences()
+        // then
+        XCTAssertEqual(networkingStrings.count, 2)
+    }
+    
+    func test_getAllStringsForNetworking_withThreeIndustry() {
+        // when
+        sut.update(.automotive)
+        sut.update(.industryRetail)
+        sut.update(.defense)
+        sut.update(.profitabilityLow)
+        sut.update(.growthAny)
+        sut.update(.dividendHigh)
+        
+        // given
+        let networkingStrings = sut.getGroupedPreferences()
+        print(networkingStrings)
+        // then
+        XCTAssertEqual(networkingStrings.count, 3)
     }
     
 }

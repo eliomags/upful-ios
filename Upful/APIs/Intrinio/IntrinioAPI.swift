@@ -59,7 +59,8 @@ final class IntrinioAPI {
     }
     
     
-    /// MARK: - Screening for stocks
+    // MARK: - Screening for stocks
+    
     private let endpoint = "https://api.intrinio.com/securities/search?"
     private let numberOfResults = 10
     private let resultOrder = "&order_column=marketcap&order_direction=desc&primary_only=true"
@@ -89,6 +90,31 @@ final class IntrinioAPI {
             }
         }
         screenPage += 1
+        task.resume()
+    }
+    
+    func screenForPreferences(parameters: String, completion: @escaping (Result<[Stock],NetworkingError>) -> Void) {
+        guard let url = URL(string: endpoint + "conditions=name~gt~0,pricetoearnings~gte~0,\(parameters)" + "&order_column=marketcap" + "&primary_only=true" + "&page_size=8" + apiKey) else {
+            completion(.failure(.urlError))
+            return
+        }
+        print(url)
+
+        let decoder = JSONDecoder()
+        let session = URLSession.shared
+        let task = session.dataTask(with: url) { (data, resp, error) in
+            if error != nil {
+                completion(.failure(.failedNetworking))
+            }
+            guard let data = data else { return }
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            do {
+                let fetchedData = try decoder.decode(ScreeningResponse.self, from: data)
+                completion(.success(fetchedData.data))
+            } catch {
+                completion(.failure(.parsingError))
+            }
+        }
         task.resume()
     }
     

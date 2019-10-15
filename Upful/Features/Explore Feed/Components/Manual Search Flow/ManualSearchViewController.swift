@@ -174,7 +174,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
         if !isSuitable {
-            ViewPresenter.displayErrorActionView(in: self, message: "Please add search parameters to your screen before saving.")
+            InformationViewPresenter.displayErrorActionView(in: self, message: "Please add search parameters to your screen before saving.")
             return
         }
         if isSuitable { completion() }
@@ -248,7 +248,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                     savedScreener.screenDescription = ""
                     self.saveParameters(with: savedScreener)
                     PersistenceService.shared.saveContextWithCompletion(completion: { [unowned self] in
-                        ViewPresenter.displaySuccessActionView(in: self)
+                        InformationViewPresenter.displaySuccessActionView(in: self)
                     })
                 })
             }))

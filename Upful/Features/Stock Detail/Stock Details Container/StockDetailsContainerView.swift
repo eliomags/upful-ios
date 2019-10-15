@@ -123,7 +123,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     // MARK: - Delegate Methods
     
     func displaySuccessNote() {
-        ViewPresenter.displaySuccessActionView(in: self)
+        InformationViewPresenter.displaySuccessActionView(in: self)
     }
     
     

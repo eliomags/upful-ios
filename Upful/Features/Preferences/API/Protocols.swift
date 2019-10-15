@@ -17,14 +17,4 @@ protocol DataManager: class {
     func save()
 }
 
-protocol NetworkManager {
-    associatedtype T
-    func get(urlString: String, completion: Result<T,Error>)
-}
-
-extension NetworkManager {
-    var apiKey: String {
-        return Constants.Intrinio.apiKey
-    }
-}
 

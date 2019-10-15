@@ -71,7 +71,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     @objc fileprivate func handleSubmit() {
         submitReport(description: reportText, completion: {
             self.dismiss(animated: true) {
-                ViewPresenter.displaySuccessActionView(in: self.delegate as! UIViewController)
+                InformationViewPresenter.displaySuccessActionView(in: self.delegate as! UIViewController)
             }
         })
     }

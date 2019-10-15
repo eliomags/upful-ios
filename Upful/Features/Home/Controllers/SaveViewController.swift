@@ -106,6 +106,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     // MARK: - Views
     
+    lazy var preferenceVC: StockSuggestionViewController = {
+        let preferenceVC = StockSuggestionViewController()
+        return preferenceVC
+    }()
+    
     lazy var saveScreenerCollectionViewController: SavedScreenersCollectionViewController = {
         let controller = SavedScreenersCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
         controller.dataSource = self
@@ -167,6 +172,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     // MARK: - Core Data
+    // TODO: - Refactor into Manager Service
     
     /// This method fetches and filters the [SavedScreenerParameters] with the corresponding title attribute
     private func getParameters(named title: String) -> [SavedScreenerParameter] {
@@ -273,7 +279,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     func displaySuccessNote() {
-        ViewPresenter.displaySuccessActionView(in: self)
+        InformationViewPresenter.displaySuccessActionView(in: self)
     }
     
     func observeCollectionViewState(isEditing: Bool) {
@@ -319,10 +325,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            let cell = UITableViewCell(style: .default, reuseIdentifier: ReuseID.suggestionCell)
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.suggestionCell, for: indexPath)
             cell.selectionStyle = .none
-            cell.backgroundColor = .blue
+            display(contentController: preferenceVC, on: cell)
             return cell
+            
         case 1:
             if isSavedScreenersEmpty {
                 let emptyCell = EmptyScreenerFavoriteCell(style: .default, reuseIdentifier: nil)
@@ -334,6 +341,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             let savedScreenerCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.savedScreenCell, for: indexPath)
             display(contentController: saveScreenerCollectionViewController, on: savedScreenerCell)
             return savedScreenerCell
+            
         case 2:
             if isSavedStocksEmpty {
                 let emptyCell = EmptyStockFavoriteCell(style: .default, reuseIdentifier: nil)
@@ -385,7 +393,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 150
+            return 200
         case 1:
             let height: CGFloat = 340
             if isSavedScreenersEmpty { return tableView.frame.height/3 + 20 }
@@ -406,13 +414,18 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerText = ["Stocks You Might Like","Screeners","stocks"]
+        let headerText = [
+            "Stocks You Might Like",
+            "Saved Screeners",
+            "Saved Stocks"
+        ]
         switch section {
         case 0 :
             let header = LargeSectionHeaderLabel(padding: 16)
             header.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
             header.text = headerText[section]
             return header
+            
         case 1:
             let screenerHeader = ActionableTableHeader(reuseIdentifier: ReuseID.screenerHeaderView)
             screenerHeader.headerTextLabel.text = headerText[section].uppercased()
@@ -424,6 +437,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
                 self?.navigateToAddScreener()
             }
             return screenerHeader
+            
         case 2:
             let stockHeader = ActionableTableHeader()
             stockHeader.headerTextLabel.text = headerText[section].uppercased()

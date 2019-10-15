@@ -80,19 +80,6 @@ extension PopularCompanyTableViewCell: UICollectionViewDelegate, UICollectionVie
                                     companyName: popularCompanies[indexPath.item].details ?? "")
     }
     
-    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? PopularCompanyCollectionViewCell
-        UIView.animate(withDuration: 0.2) {
-            cell?.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? PopularCompanyCollectionViewCell
-        UIView.animate(withDuration: 0.2) {
-            cell?.transform = .identity
-        }
-    }
 }
 
 
@@ -134,7 +121,12 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
         sv.axis = .vertical
         return sv
     }()
-
+    
+    override var isHighlighted: Bool {
+        didSet {
+            isHighlighted ? highlightedAnimation() : unHighlightedAnimation()
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -154,6 +146,9 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
             bottom: nil,
             trailing: nil,
             padding: .init(top: 12, left: 6, bottom: 0, right: 0))
+        
+        companyNameLabel.anchor(top: nil, leading: nil, bottom: nil, trailing: trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 16))
+        
         addSubview(stockDetailsStackView)
         stockDetailsStackView.anchor(
             top: companyDescriptionStackView.bottomAnchor, leading: companyDescriptionStackView.leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
@@ -170,6 +165,18 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
         companyNameLabel.text = company.details
         marketcapStackView.valueLabel.text = "$\(company.marketcap?.formatUsingAbbreviation() ?? " -")"
         peStackView.valueLabel.text = company.priceToEarnings?.twoDecimal() ?? " -"
+    }
+    
+    fileprivate func highlightedAnimation() {
+        UIView.animate(withDuration: 0.2) {
+        self.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
+        }
+    }
+    
+    fileprivate func unHighlightedAnimation() {
+        UIView.animate(withDuration: 0.2) {
+            self.transform = .identity
+        }
     }
     
 }
