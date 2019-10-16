@@ -58,6 +58,7 @@ class SuggestionViewModel {
     var stateChanged: ((State) -> Void)?
     
     func setState() {
+        preferenceDataManager.fetchRecent()
         groupedPreferences = preferenceDataManager.getGroupedPreferences()
         if groupedPreferences.isEmpty {
             state = .noPreferencesSet

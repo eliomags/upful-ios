@@ -42,6 +42,7 @@ enum AnalyticsEventName {
     case preferencesSet
     case suggestion(description: String)
     case issue(description: String)
+    case noteSaved(description: String)
     
     func getName() -> String {
         switch self {
@@ -63,6 +64,8 @@ enum AnalyticsEventName {
             return "preference_set"
         case .selectedStock:
             return "selected_stock"
+        case .noteSaved:
+            return "saved_note"
         }
     }
 }
@@ -88,6 +91,8 @@ extension AnalyticsEventName {
             return [:]
         case .selectedStock(let selectionType):
             return ["selection_type": selectionType.rawValue]
+        case .noteSaved(let description):
+            return ["note": description]
         }
     }
 }

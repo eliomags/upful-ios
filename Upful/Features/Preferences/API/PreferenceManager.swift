@@ -61,7 +61,6 @@ class PreferenceDataManager: DataManager {
     
     func getGroupedPreferences() -> [[String]] {
         didUpdateData = true
-        fetchRecent()
         let industryPreferences = getIndustriesForNetworking()
         let parameterPreferences = getParametersForNetworking()
         

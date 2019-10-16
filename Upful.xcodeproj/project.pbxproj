@@ -26,6 +26,7 @@
 		3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */; };
 		3D20EB762354E3D800D1093A /* AddPreferenceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */; };
 		3D20EB7A235627D000D1093A /* SuggestionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB79235627D000D1093A /* SuggestionViewModel.swift */; };
+		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
 		3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */; };
 		3D20FB3022FB1F0A007836DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D20FB2F22FB1F0A007836DD /* Assets.xcassets */; };
@@ -181,6 +182,7 @@
 		3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGradientButton.swift; sourceTree = "<group>"; };
 		3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPreferenceCollectionViewCell.swift; sourceTree = "<group>"; };
 		3D20EB79235627D000D1093A /* SuggestionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionViewModel.swift; sourceTree = "<group>"; };
+		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D20FB2822FB1F08007836DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchViewController.swift; sourceTree = "<group>"; };
@@ -511,6 +513,22 @@
 				3DD52194235444E60090CDE6 /* SuggestionsVC.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		3D20EB7C2357963C00D1093A /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3D20EB7D2357964C00D1093A /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				3D20EB7E2357965700D1093A /* NotesViewModel.swift */,
+			);
+			path = "View Model";
 			sourceTree = "<group>";
 		};
 		3D20FB1C22FB1F08007836DD = {
@@ -1113,7 +1131,8 @@
 		3DC7108B2335D9AD00A2A0DA /* Notes View */ = {
 			isa = PBXGroup;
 			children = (
-				3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */,
+				3D20EB7C2357963C00D1093A /* Controller */,
+				3D20EB7D2357964C00D1093A /* View Model */,
 			);
 			path = "Notes View";
 			sourceTree = "<group>";
@@ -1663,6 +1682,7 @@
 				3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */,
 				3D7C85522337A93500A2E63E /* Animator.swift in Sources */,
 				3DAB3EC3234D22890008CC18 /* FeaturePresenter.swift in Sources */,
+				3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */,
 				3D0C5F972343C48A00F4A5FC /* SubscriptionOfferingsCell.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
 				3DD4291B2345A3BA0079DA18 /* AddButton.swift in Sources */,

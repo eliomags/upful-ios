@@ -22,7 +22,6 @@ class SuggestionViewModelTest: XCTestCase {
     override func tearDown() {
         sut = nil
         preferenceManager = nil
-        
         super.tearDown()
     }
 
@@ -34,7 +33,7 @@ class SuggestionViewModelTest: XCTestCase {
         preferenceManager.update(.growthAny)
         preferenceManager.update(.profitabilityLow)
         preferenceManager.update(.dividendAny)
-        
+        preferenceManager.save()
         // when initialized
         sut = SuggestionViewModel(dataManager: preferenceManager)
         // then
@@ -48,7 +47,7 @@ class SuggestionViewModelTest: XCTestCase {
         preferenceManager.update(.growthAny)
         preferenceManager.update(.profitabilityLow)
         preferenceManager.update(.dividendAny)
-        
+        preferenceManager.save()
         // when initialized
         sut = SuggestionViewModel(dataManager: preferenceManager)
             // then
@@ -63,7 +62,7 @@ class SuggestionViewModelTest: XCTestCase {
         preferenceManager.update(.growthAny)
         preferenceManager.update(.profitabilityAny)
         preferenceManager.update(.dividendAny)
-        
+        preferenceManager.save()
         // when initialized
         sut = SuggestionViewModel(dataManager: preferenceManager)
         print(sut.groupedPreferences)
@@ -110,7 +109,8 @@ class SuggestionViewModelTest: XCTestCase {
         preferenceManager.update(.growthAny)
         preferenceManager.update(.profitabilityAny)
         preferenceManager.update(.dividendAny)
-        
+        preferenceManager.save()
+
         // when initialized
         sut = SuggestionViewModel(dataManager: preferenceManager, networkingAPI: IntrinioMock())
     }

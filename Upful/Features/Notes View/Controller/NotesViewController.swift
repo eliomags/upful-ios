@@ -16,12 +16,9 @@ class NotesViewController: UIViewController, UITextViewDelegate {
     
     weak var delegate: NoteVCDelegate?
     
-    var noteText = String() {
-        didSet {
-            textView.text = noteText
-        }
-    }
+    let viewModel = NotesViewModel()
     
+    // MARK: - Views
     
     lazy var textView: UITextView = {
         let textView = UITextView(frame: .zero)
@@ -33,7 +30,6 @@ class NotesViewController: UIViewController, UITextViewDelegate {
         return textView
     }()
     
-    
     // MARK: - Initializer Methods
     
     init(delegate: NoteVCDelegate) {
@@ -44,19 +40,14 @@ class NotesViewController: UIViewController, UITextViewDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
-        view.addSubview(textView)
-        textView.anchor(
-            top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
-            padding: .init(top: 8, left: 8, bottom: 8, right: 8))
-        
         setupNavBar()
-        loadNotes()
+        setupTextView()
+        getNotes()
     }
-    
     
     // MARK: - View Setup
     
@@ -68,49 +59,46 @@ class NotesViewController: UIViewController, UITextViewDelegate {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(handleDoneTap))
     }
     
-    
-    func textViewDidChange(_ textView: UITextView) {
-        noteText = textView.text ?? ""
+    fileprivate func setupTextView() {
+        view.addSubview(textView)
+        textView.anchor(
+            top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.trailingAnchor,
+            padding: .init(top: 8, left: 8, bottom: 8, right: 8))
     }
     
     
-    // MARK: - Core Data
+    // MARK: - Delegate Methods
+    
+    func textViewDidChange(_ textView: UITextView) {
+        viewModel.addNoteText(textView.text ?? "")
+    }
+    
+    // MARK: - Helpers
     
     private func handleLoadFailure(completion: (()->())) {
         InformationViewPresenter.displayErrorActionView(in: self, message: "Error fetching")
         completion()
     }
     
-    private func loadNotes() {
-        let request = Notes.createfetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", "1")
+    private func getNotes() {
         do {
-            let notes = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
-            noteText = notes.compactMap({ $0.content }).last ?? "Start adding notes."
+            try viewModel.loadNotes()
+            textView.text = viewModel.noteText
         } catch {
             handleLoadFailure {
-                print(error.localizedDescription)
                 self.dismiss(animated: true, completion: nil)
             }
         }
     }
     
-    /// This is actually creating a new notes object and persisting that
-    private func saveNotes(completion: (()->())) {
-        let notes = Notes(context: PersistenceService.shared.persistentContainer.viewContext)
-        notes.content = noteText
-        notes.id = "1"
-        PersistenceService.shared.saveContextWithCompletion {
-            completion()
-        }
-    }
-    
+    // MARK: - Actions
+
     @objc private func handleDismissTap(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
     }
     
     @objc private func handleDoneTap(_ sender: UIBarButtonItem) {
-        saveNotes {
+        viewModel.saveNotes {
             self.dismiss(animated: true, completion: {
                 self.delegate?.displaySuccessNote()
             })

@@ -89,9 +89,8 @@ class PreferenceDataManagerTest: XCTestCase {
         sut.update(.growthAny)
         sut.update(.dividendHigh)
         
-        // given
-        let networkingStrings = sut.getGroupedPreferences()
         // then
+        let networkingStrings = sut.getGroupedPreferences()
         XCTAssertEqual(networkingStrings.count, 1)
     }
     
@@ -103,9 +102,8 @@ class PreferenceDataManagerTest: XCTestCase {
         sut.update(.growthAny)
         sut.update(.dividendHigh)
         
-        // given
-        let networkingStrings = sut.getGroupedPreferences()
         // then
+        let networkingStrings = sut.getGroupedPreferences()
         XCTAssertEqual(networkingStrings.count, 2)
     }
     
@@ -118,11 +116,21 @@ class PreferenceDataManagerTest: XCTestCase {
         sut.update(.growthAny)
         sut.update(.dividendHigh)
         
-        // given
-        let networkingStrings = sut.getGroupedPreferences()
-        print(networkingStrings)
         // then
+        let networkingStrings = sut.getGroupedPreferences()
         XCTAssertEqual(networkingStrings.count, 3)
+    }
+    
+    func test_save_and_dataFetch_notEmpty() {
+        // given
+        sut.update(.automotive)
+        sut.save()
+        // when user data is removed and fetched using user defaults
+        sut.data.removeAll()
+        sut.savedPreferences.removeAll()
+        sut.fetchRecent()
+        // then
+        XCTAssertTrue(!(sut.savedPreferences.isEmpty))
     }
     
 }
