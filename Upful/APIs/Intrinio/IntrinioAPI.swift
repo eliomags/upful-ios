@@ -98,8 +98,6 @@ final class IntrinioAPI: StockScreenNetworkingProtocol {
             completion(.failure(.urlError))
             return
         }
-        print(url)
-
         let decoder = JSONDecoder()
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, resp, error) in

@@ -55,7 +55,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     // MARK: - Dependencies
     
     let persistenceService = PersistenceService.shared
-    
+    let analyticsMapper: AnalyticsLogger
+
     enum ReuseID {
         static let suggestionCell = "suggestionCell"
         static let savedScreenCell = "savedScreenCell"
@@ -119,7 +120,16 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }()
     
     // MARK: - Initializer Methods
-
+    
+    init(analyticsMapper: AnalyticsLogger = .init()) {
+        self.analyticsMapper = analyticsMapper
+        super.init(style: .grouped)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        setUpTableView()
@@ -385,6 +395,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
                 let detailsVC = StockDetailsContainerView(
                 ticker: savedStocks[indexPath.item].ticker,
                 companyName: savedStocks[indexPath.item].companyName)
+                analyticsMapper.reportEvents(event: .selectedStock(selectionType: .savedStock))
                 self.navigationController?.pushViewController(detailsVC, animated: true)
             }
         }

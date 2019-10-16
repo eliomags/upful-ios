@@ -12,7 +12,7 @@ class PopularCompanyTableViewCell: UITableViewCell {
     private enum ReuseID: String {
         case companyCell
     }
-    
+    let analyticsMapper: AnalyticsLogger
     let popularCompanies: [PopularCompany]
     
     weak var delegate: HomeFeedNavigationDelegate?
@@ -39,15 +39,15 @@ class PopularCompanyTableViewCell: UITableViewCell {
     }()
 
     
-    init(popularCompanies: [PopularCompany]) {
+    init(popularCompanies: [PopularCompany], analyticsMapper: AnalyticsLogger = .init()) {
         self.popularCompanies = popularCompanies
+        self.analyticsMapper = analyticsMapper
         super.init(style: .default, reuseIdentifier: nil)
         setupViews()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.popularCompanies = []
-        super.init(coder: aDecoder)
+        fatalError()
     }
     
     

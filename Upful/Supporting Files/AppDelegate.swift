@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func initializeVC() -> UIViewController {
-        let homeVC = SaveViewController(style: .grouped)
+        let homeVC = SaveViewController()
         let exploreVC = HomeFeedContainer(collectionViewLayout: UICollectionViewFlowLayout())
         let settingsVC = SettingsViewController(style: .grouped)
         

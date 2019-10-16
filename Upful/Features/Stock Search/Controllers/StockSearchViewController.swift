@@ -9,16 +9,14 @@
 import UIKit
 
 final class StockSearchViewController: UITableViewController, UISearchControllerDelegate, UISearchBarDelegate {
-    
     private enum ReuseID {
         static let stockCell = "stockCell"
     }
     
-    
     // MARK: - Dependencies
     
     let intrinioAPI: IntrinioAPI
-    
+    let analyticsMapper: AnalyticsLogger
     
     // MARK: - State
     
@@ -34,7 +32,6 @@ final class StockSearchViewController: UITableViewController, UISearchController
         return displayData.isEmpty
     }
     
-    
     // MARK: - Views
     
     lazy var searchController: UISearchController = {
@@ -46,11 +43,10 @@ final class StockSearchViewController: UITableViewController, UISearchController
         return sc
     }()
     
-    
     // MARK: - Initializer Functions
-    
-    init(networkingAPI: IntrinioAPI) {
+    init(networkingAPI: IntrinioAPI, analyticsMapper: AnalyticsLogger = .init()) {
         self.intrinioAPI = networkingAPI
+        self.analyticsMapper = analyticsMapper
         super.init(style: .plain)
     }
     
@@ -72,7 +68,6 @@ final class StockSearchViewController: UITableViewController, UISearchController
         setupNavBar()
     }
     
-    
     // MARK: - View Setup
     
     private func setupNavBar() {
@@ -87,7 +82,6 @@ final class StockSearchViewController: UITableViewController, UISearchController
             tableView.tableHeaderView = searchController.searchBar
         }
     }
-    
     
     fileprivate func fetchCompanies(_ searchText: String) {
         intrinioAPI.searchByName(name: searchText) { (result) in
@@ -107,13 +101,11 @@ final class StockSearchViewController: UITableViewController, UISearchController
         }
     }
     
-    
     // MARK: - SearchBar Delegate Methods
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         fetchCompanies(searchText)
     }
-    
     
     // MARK: - ScrollView Delegate Methods
     
@@ -127,7 +119,6 @@ final class StockSearchViewController: UITableViewController, UISearchController
         }
     }
     
-    
     // MARK: - Tableview Delegate Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -136,7 +127,6 @@ final class StockSearchViewController: UITableViewController, UISearchController
         } else {
             tableView.restore()
         }
-        
         return displayData.count
     }
     
@@ -148,9 +138,9 @@ final class StockSearchViewController: UITableViewController, UISearchController
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        analyticsMapper.reportEvents(event: .selectedStock(selectionType: .searchResult))
         let selectedCompany = displayData[indexPath.item]
         let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
-        
         navigationController?.pushViewController(detailsVC, animated: true)
     }
 }

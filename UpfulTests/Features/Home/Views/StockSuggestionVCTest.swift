@@ -9,9 +9,9 @@
 import XCTest
 @testable import Upful
 
-class StockSuggestionViewControllerTest: XCTestCase {
+class SuggestionViewModelTest: XCTestCase {
     
-    var sut: StockSuggestionViewController!
+    var sut: SuggestionViewModel!
     var preferenceManager: PreferenceDataManager!
 
     override func setUp() {
@@ -36,7 +36,7 @@ class StockSuggestionViewControllerTest: XCTestCase {
         preferenceManager.update(.dividendAny)
         
         // when initialized
-        sut = StockSuggestionViewController(dataManager: preferenceManager)
+        sut = SuggestionViewModel(dataManager: preferenceManager)
         // then
         XCTAssertEqual(sut.groupedPreferences.count, 1)
     }
@@ -50,7 +50,7 @@ class StockSuggestionViewControllerTest: XCTestCase {
         preferenceManager.update(.dividendAny)
         
         // when initialized
-        sut = StockSuggestionViewController(dataManager: preferenceManager)
+        sut = SuggestionViewModel(dataManager: preferenceManager)
             // then
         XCTAssertEqual(sut.groupedPreferences.count, 2)
     }
@@ -65,13 +65,13 @@ class StockSuggestionViewControllerTest: XCTestCase {
         preferenceManager.update(.dividendAny)
         
         // when initialized
-        sut = StockSuggestionViewController(dataManager: preferenceManager)
+        sut = SuggestionViewModel(dataManager: preferenceManager)
         print(sut.groupedPreferences)
         // then
         XCTAssertEqual(sut.groupedPreferences.count, 3)
     }
     
-    // MARK: - State
+    // MARK: - Setting State
     
     func testInit_initialState() {
         initializeSystemUnderTest()
@@ -79,20 +79,24 @@ class StockSuggestionViewControllerTest: XCTestCase {
         let state = sut.state
 
         // then
-        XCTAssertEqual(state, StockSuggestionViewController.State.pending)
+        XCTAssertEqual(state, SuggestionViewModel.State.isLoading)
     }
     
         // This test case could be improved by injecting
-    func testInit_loadedState() {
+    func testInit_setState_loading() {
         // given added Data
         initializeSystemUnderTest()
-        
-        sut.viewDidLoad()
         let state = sut.state
         // then
-        XCTAssertEqual(state, StockSuggestionViewController.State.isLoading)
+        XCTAssertEqual(state, SuggestionViewModel.State.isLoading)
     }
     
+    func testInit_setState_empty() {
+        // when initialized with no gset preferences
+        sut = SuggestionViewModel(dataManager: preferenceManager, networkingAPI: IntrinioMock())
+        // then
+        XCTAssertEqual(sut.state, SuggestionViewModel.State.noPreferencesSet)
+    }
     
     
     
@@ -108,9 +112,8 @@ class StockSuggestionViewControllerTest: XCTestCase {
         preferenceManager.update(.dividendAny)
         
         // when initialized
-        sut = StockSuggestionViewController(dataManager: preferenceManager,networkingAPI: IntrinioMock())
+        sut = SuggestionViewModel(dataManager: preferenceManager, networkingAPI: IntrinioMock())
     }
-    
     
     class IntrinioMock: StockScreenNetworkingProtocol {
         enum TestParameter: String {
@@ -122,9 +125,9 @@ class StockSuggestionViewControllerTest: XCTestCase {
                 
         func screenForPreferences(parameters: String, completion: @escaping (Result<[Stock], NetworkingError>) -> Void) {
             let returnStocks: [Stock] = []
+            print("function called")
             completion(.success(returnStocks))
             
         }
     }
-
 }

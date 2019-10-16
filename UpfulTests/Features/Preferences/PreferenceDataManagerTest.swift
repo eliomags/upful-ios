@@ -78,8 +78,8 @@ class PreferenceDataManagerTest: XCTestCase {
         let industries = sut.getIndustriesForNetworking()
         
         // then
-        XCTAssertEqual(industries, ["industry_category~eq~Automotive",
-                                    "industry_category~eq~Computer Hardware"])
+        XCTAssertEqual(industries, ["industry_category~contains~Automotive",
+                                    "industry_category~contains~Computer Hardware"])
     }
     
     func test_getAllStringsForNetworking_withOneIndustry() {

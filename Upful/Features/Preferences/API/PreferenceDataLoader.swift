@@ -28,7 +28,7 @@ final class PreferenceDataLoader {
                     let newPreference = Preference(description: "Any", criteria: .industrycategory, parameter: .gt, value: preference.rawValue, id: preference)
                     industryPreferencesss.append(newPreference)
                 } else {
-                    let newPreference = Preference(description: preference.rawValue, criteria: .industrycategory, parameter: .equal, value: preference.rawValue, id: preference)
+                    let newPreference = Preference(description: preference.rawValue, criteria: .industrycategory, parameter: .contains, value: preference.rawValue, id: preference)
                     industryPreferencesss.append(newPreference)
                 }
             }

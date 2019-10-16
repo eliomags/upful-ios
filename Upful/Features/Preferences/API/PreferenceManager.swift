@@ -30,9 +30,13 @@ class PreferenceDataManager: DataManager {
     init(dataLoader: PreferenceDataLoader = .init()) {
         self.dataLoader = dataLoader
         data = dataLoader.load()
-        savedPreferences = retrieveSavedPreferences().map({ $0 })
+        fetchRecent()
     }
     
+    func endUpdates() {
+        didUpdateData = false
+    }
+        
     // MARK: - API
     
     func update(_ preferenceType: PreferenceID) {
@@ -51,7 +55,13 @@ class PreferenceDataManager: DataManager {
     
     // MARK: - Helpers
     
+    func fetchRecent() {
+        savedPreferences = retrieveSavedPreferences().map({ $0 })
+    }
+    
     func getGroupedPreferences() -> [[String]] {
+        didUpdateData = true
+        fetchRecent()
         let industryPreferences = getIndustriesForNetworking()
         let parameterPreferences = getParametersForNetworking()
         

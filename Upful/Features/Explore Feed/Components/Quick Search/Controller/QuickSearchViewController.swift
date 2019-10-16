@@ -135,7 +135,6 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         tableView.estimatedSectionHeaderHeight = 40
         tableView.estimatedSectionFooterHeight = 0
     }
-
     
     // MARK: - Data Setup
     
@@ -221,6 +220,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     }
     
     func navigateToDetails(popularCompany ticker: String, companyName: String) {
+        analyticsLogger.reportEvents(event: .selectedStock(selectionType: .popular))
         let detailVC = StockDetailsContainerView(ticker: ticker, companyName: companyName)
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -292,6 +292,7 @@ extension QuickSearchViewController {
         case .searching(_):
             let selectedCompany = searchDisplay[indexPath.item]
             let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
+            analyticsLogger.reportEvents(event: .selectedStock(selectionType: .nameSearch))
             navigationController?.pushViewController(detailsVC, animated: true)
             
         default:

@@ -12,7 +12,8 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     // MARK: - Dependencies
     
     let dataManager: PreferenceDataManager
-
+    let analyticsMapper: AnalyticsLogger
+    
     // MARK: - Views
     
     lazy var preferenceHeaderView: PreferenceHeaderView = {
@@ -65,8 +66,9 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     // MARK: - Initializer Methods
     
-    init(dataManager: PreferenceDataManager = .init()) {
+    init(dataManager: PreferenceDataManager = .init(), analyticsMapper: AnalyticsLogger = .init()) {
         self.dataManager = dataManager
+        self.analyticsMapper = analyticsMapper
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -125,12 +127,8 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     @objc fileprivate func handleDone() {
-        print("////////////////////")
-        dataManager.savedPreferences.forEach { (preference) in
-            print(preference)
-        }
-        print("////////////////////")
         dataManager.save()
+        analyticsMapper.reportEvents(event: .preferencesSet)
         self.dismiss(animated: true)
     }
     

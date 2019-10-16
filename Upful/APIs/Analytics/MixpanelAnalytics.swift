@@ -13,17 +13,33 @@ protocol AnalyticsTracker {
     func log(event: AnalyticsEventName)
 }
 
+// MARK: - Stock selection type
+
+enum StockSelectionType: String {
+    case preference
+    case savedStock = "saved_stock"
+    case popular
+    case searchResult = "search_result"
+    case nameSearch = "name_search"
+}
+
+// MARK: - Screening Types
+
 enum ScreenType: String {
     case quick
     case manual
 }
+
+// MARK: - Analytics Events
 
 enum AnalyticsEventName {
     case screenForStocks(screenType: ScreenType)
     case searchByName
     case selectedNewsArticle
     case selectedAnalysis(criteria: SearchCriteria)
+    case selectedStock(selectionType: StockSelectionType)
     case selectedCompanyFiling
+    case preferencesSet
     case suggestion(description: String)
     case issue(description: String)
     
@@ -43,7 +59,10 @@ enum AnalyticsEventName {
             return "suggestion"
         case .issue:
             return "issue"
-
+        case .preferencesSet:
+            return "preference_set"
+        case .selectedStock:
+            return "selected_stock"
         }
     }
 }
@@ -65,7 +84,10 @@ extension AnalyticsEventName {
             return ["description": description]
         case .issue(let description):
             return ["description": description]
-
+        case .preferencesSet:
+            return [:]
+        case .selectedStock(let selectionType):
+            return ["selection_type": selectionType.rawValue]
         }
     }
 }

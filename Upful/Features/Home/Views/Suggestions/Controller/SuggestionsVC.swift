@@ -68,6 +68,11 @@ class StockSuggestionViewController: UIViewController {
         bindViewModelStateChanges()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.setState()
+    }
+    
     // MARK: - View Updates
     
     func bindViewModelStateChanges() {
@@ -139,6 +144,7 @@ extension StockSuggestionViewController: UICollectionViewDataSource, UICollectio
             
         case .loaded:
             let data = viewModel.stockData[indexPath.item]
+            viewModel.analyticsMapper.reportEvents(event: .selectedStock(selectionType: .preference))
             navigateToStockDetails(ticker: data.ticker!, name: data.name!)
             
         case .empty, .noPreferencesSet:

@@ -15,6 +15,21 @@ class EmptyStockSuggestionCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    let emptyImageView: UIImageView = {
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "icons8-nothing-found-48"))
+        return imageView
+    }()
+    
+    lazy var imageBackgroundView: UIView = {
+        let view = UIView()
+        view.addSubview(emptyImageView)
+        emptyImageView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        view.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        return view
+    }()
+    
     let headerLabel: UILabel = {
         let label = UILabel()
         label.text = "No Stocks Found."
@@ -27,14 +42,14 @@ class EmptyStockSuggestionCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = "No stocks found based on your preferences. Adjust your preferences to get more results."
+        label.text = "No stocks found for your preferences. Adjust your preferences to get more results."
         label.font = .details1
         label.textColor = .gray
         return label
     }()
     
     lazy var contentStackView: UIStackView = {
-        let stackview = UIStackView(arrangedSubviews: [headerLabel, descriptionLabel])
+        let stackview = UIStackView(arrangedSubviews: [emptyImageView, headerLabel, descriptionLabel])
         stackview.axis = .vertical
         stackview.alignment = .center
         stackview.distribution = .fill

@@ -48,14 +48,14 @@ enum SearchParameter: String, CaseIterable {
     case lt = "~lt"
     case gt = "~gt"
     case none
-    case equal = "~eq"
+    case contains = "~contains"
     
     var explicit: String {
         switch self {
         case .lt: return "<"
         case .gt: return ">"
         case .none: return "Add Parameter"
-        case .equal: return "="
+        case .contains: return "="
         }
     }
 }

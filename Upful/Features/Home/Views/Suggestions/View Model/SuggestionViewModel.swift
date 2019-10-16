@@ -17,6 +17,7 @@ class SuggestionViewModel {
     
     let preferenceDataManager: PreferenceDataManager
     let networkingAPI: StockScreenNetworkingProtocol
+    let analyticsMapper: AnalyticsLogger
     let dispatchGroup = DispatchGroup()
     
     // MARK: - State
@@ -31,20 +32,22 @@ class SuggestionViewModel {
     
     var state: State = .pending {
         didSet {
-            handleStateChange()
+            handleStateChange(completion: {
+                stateChanged?(state)
+            })
         }
     }
     
     // MARK: - Data
     
     var groupedPreferences: [[String]]
-    var stockData: [Stock] = []
-    
+    var stockData: [Stock] = [] 
     
     // MARK: - Initializer
     
-    init(dataManager: PreferenceDataManager = .init(), networkingAPI: StockScreenNetworkingProtocol = IntrinioAPI()) {
+    init(dataManager: PreferenceDataManager = .init(), analyticsMapper: AnalyticsLogger = .init(), networkingAPI: StockScreenNetworkingProtocol = IntrinioAPI()) {
         self.preferenceDataManager = dataManager
+        self.analyticsMapper = analyticsMapper
         self.networkingAPI = networkingAPI
         self.groupedPreferences = dataManager.getGroupedPreferences()
         setState()
@@ -55,6 +58,7 @@ class SuggestionViewModel {
     var stateChanged: ((State) -> Void)?
     
     func setState() {
+        groupedPreferences = preferenceDataManager.getGroupedPreferences()
         if groupedPreferences.isEmpty {
             state = .noPreferencesSet
         } else {
@@ -78,7 +82,7 @@ class SuggestionViewModel {
         }
     }
     
-    func handleStateChange() {
+    func handleStateChange(completion: (() -> Void)) {
         switch state {
             
         case .isLoading:
@@ -86,14 +90,10 @@ class SuggestionViewModel {
             dispatchGroup.notify(queue: .main) {
                 self.checkForRecievedData()
             }
-            stateChanged?(state)
-            
-        case .loaded, .noPreferencesSet, .empty:
-            stateChanged?(state)
-            
         default:
             break
         }
+        completion()
     }
     
     // MARK: - Helpers
@@ -118,14 +118,8 @@ class SuggestionViewModel {
             case .success(let fetchedData):
                 self.stockData.append(contentsOf: fetchedData)
                 self.dispatchGroup.leave()
-        
-            case .failure(let error):
-                switch error {
-                case .urlError:
-                    print("URL Error")
-                default:
-                    print(error.localizedDescription)
-                }
+                
+            case .failure(_):
                 self.dispatchGroup.leave()
             }
         }
