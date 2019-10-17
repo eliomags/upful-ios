@@ -79,7 +79,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     // MARK: - Helpers
     
     func submitReport(description: String, completion: (() -> ())) {
-        analyticsMapper.reportEvents(event: .suggestion(description: description))
+        AnalyticsLogger.reportEvents(event: .suggestion(description: description))
         completion()
     }
     
@@ -95,14 +95,14 @@ class ReportViewController: UIViewController, UITextViewDelegate {
 
 final class SuggestionViewController: ReportViewController{
     override func submitReport(description: String, completion: (() -> ())) {
-        analyticsMapper.reportEvents(event: .suggestion(description: description))
+        AnalyticsLogger.reportEvents(event: .suggestion(description: description))
         completion()
     }
 }
 
 final class IssueViewController: ReportViewController {
     override func submitReport(description: String, completion: (() -> ())) {
-        analyticsMapper.reportEvents(event: .issue(description: description))
+        AnalyticsLogger.reportEvents(event: .issue(description: description))
         completion()
     }
 }

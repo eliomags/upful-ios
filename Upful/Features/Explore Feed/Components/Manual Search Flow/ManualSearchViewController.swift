@@ -152,7 +152,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 return
             }
         }
-        analyticsLogger.reportEvents(event: .screenForStocks(screenType: .manual))
+        AnalyticsLogger.reportEvents(event: .screenForStocks(screenType: .manual))
         let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents(), networkingAPI: IntrinioAPI())
         navigationController?.pushViewController(screenerResultsVC, animated: true)
     }

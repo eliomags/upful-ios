@@ -17,13 +17,11 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         static let stockCell = "stockCell"
     }
     
-
     // MARK: - Dependencies
     
     let analyticsLogger: AnalyticsLogger
     let presetFeedDataLoader: PresetFeedDataLoader
 
-    
     // MARK: - Data Source
     
     var homeFeedItems: [[Any]] = []
@@ -34,7 +32,6 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
             }
         }
     }
-    
     
     // MARK: - State
     
@@ -61,7 +58,6 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         }
     }
     
-    
     // MARK: - Views
     
     lazy var searchController: UISearchController = {
@@ -82,6 +78,10 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         return sc
     }()
     
+    lazy var popularCompaniesVC: PopularCompanyViewController = {
+        let popularVC = PopularCompanyViewController(popularCompanies: [])
+        return popularVC
+    }()
     
     // MARK: - Initializer Methods
     
@@ -92,9 +92,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.analyticsLogger = AnalyticsLogger()
-        self.presetFeedDataLoader = PresetFeedDataLoader()
-        super.init(coder: aDecoder)
+        fatalError()
     }
     
     override func viewDidLoad() {
@@ -109,7 +107,6 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         setupTableView()
         fetchPopularCompanyData()
     }
-    
     
     // MARK: - View Setup
         
@@ -149,6 +146,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         CompanyViewModel.configureCompanyList().forEach { (popularCompany) in
             NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .marketcap, frequency: .recent, completion: { (result) in
                 switch result {
+                    
                 case .success(let downloadedData):
                     if downloadedData.isEmpty { return }
                     DispatchQueue.main.async {
@@ -162,6 +160,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
             
             NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .pricetoearnings, frequency: .recent, completion: { (result) in
                 switch result {
+                    
                 case .success(let downloadedData):
                     if downloadedData.isEmpty { return }
                     DispatchQueue.main.async {
@@ -197,7 +196,6 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         }
     }
     
-    
     // MARK: - Delegate Methods
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -214,17 +212,11 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     
     // MenubarDisplayable
     func navigateToScreenerResults(searchParameters: [String]) {
-        analyticsLogger.reportEvents(event: .screenForStocks(screenType: .quick))
+        AnalyticsLogger.reportEvents(event: .screenForStocks(screenType: .quick))
         let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters, networkingAPI: IntrinioAPI())
         self.navigationController?.pushViewController(searchResultVC, animated: true)
     }
     
-    func navigateToDetails(popularCompany ticker: String, companyName: String) {
-        analyticsLogger.reportEvents(event: .selectedStock(selectionType: .popular))
-        let detailVC = StockDetailsContainerView(ticker: ticker, companyName: companyName)
-        self.navigationController?.pushViewController(detailVC, animated: true)
-    }
-
 }
 
 extension QuickSearchViewController {
@@ -233,10 +225,10 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch state {
+            
         case .normal:
             tableView.restore()
             return 1
-            
         case .searching:
             if !searchDisplay.isEmpty {
                 tableView.restore()
@@ -248,9 +240,9 @@ extension QuickSearchViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         switch state {
+            
         case .normal:
             return homeFeedItems.count
-            
         case .searching:
             return 1
         }
@@ -259,11 +251,13 @@ extension QuickSearchViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let emptyCell = UITableViewCell(style: .default, reuseIdentifier: nil)
         switch state {
+            
         case .normal:
             switch indexPath.section {
             case 0:
-                let companyCell = PopularCompanyTableViewCell(popularCompanies: homeFeedItems[indexPath.section] as! [PopularCompany])
-                companyCell.delegate = self
+                let companyCell = UITableViewCell(style: .default, reuseIdentifier: nil)
+                display(contentController: popularCompaniesVC, on: companyCell)
+                popularCompaniesVC.popularCompanies = homeFeedItems[indexPath.section] as! [PopularCompany]
                 return companyCell
                 
             case 1,2,3:
@@ -289,10 +283,11 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch state {
+            
         case .searching(_):
             let selectedCompany = searchDisplay[indexPath.item]
             let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
-            analyticsLogger.reportEvents(event: .selectedStock(selectionType: .nameSearch))
+            AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .nameSearch))
             navigationController?.pushViewController(detailsVC, animated: true)
             
         default:
@@ -307,6 +302,7 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch state {
+            
         case .normal:
             switch indexPath.section {
             case 0: return 200
@@ -321,6 +317,7 @@ extension QuickSearchViewController {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch state {
+            
         case .normal:
             let view = UIView()
             let header = LargeSectionHeaderLabel(padding: 16)
@@ -343,6 +340,7 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch state {
+            
         case .normal:
             if section == 0 { return 70 }
             return 44
@@ -354,6 +352,7 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         switch state {
+            
         case .normal:
             if section == homeFeedItems.count - 1 {
                 return UIView()
@@ -366,6 +365,7 @@ extension QuickSearchViewController {
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         switch state {
+            
         case .normal:
             if section == homeFeedItems.count - 1 { return 60 }
             return 20

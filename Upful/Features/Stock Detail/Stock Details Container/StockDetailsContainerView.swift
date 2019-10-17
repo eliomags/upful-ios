@@ -109,7 +109,10 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         savedStock.companyName = self.companyName
         if !sender.isSelected { removeFavorite() }
         PersistenceService.shared.saveContext()
-        if sender.isSelected { Vibration.light.vibrate() }
+        if sender.isSelected {
+            Vibration.light.vibrate()
+            AnalyticsLogger.reportEvents(event: .savedTicker(ticker: self.ticker))
+        }
     }
     
     

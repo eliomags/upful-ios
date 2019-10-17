@@ -43,7 +43,7 @@ class NotesViewController: UIViewController, UITextViewDelegate {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .clear
+        view.backgroundColor = .white
         setupNavBar()
         setupTextView()
         getNotes()
@@ -52,9 +52,11 @@ class NotesViewController: UIViewController, UITextViewDelegate {
     // MARK: - View Setup
     
     private func setupNavBar() {
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.backgroundColor = .white
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Notes"
-        navigationController?.navigationBar.tintColor = .appAccent
+        navigationController?.navigationBar.tintColor = .appAccent3
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismissTap))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(handleDoneTap))
     }
@@ -62,7 +64,7 @@ class NotesViewController: UIViewController, UITextViewDelegate {
     fileprivate func setupTextView() {
         view.addSubview(textView)
         textView.anchor(
-            top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.trailingAnchor,
+            top: view.topAnchor, leading: view.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.trailingAnchor,
             padding: .init(top: 8, left: 8, bottom: 8, right: 8))
     }
     

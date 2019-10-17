@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol SuggestionDelegate: class {
+    func reload()
+}
+
 class StockSuggestionViewController: UIViewController {
     
     // MARK: - Dependencies
@@ -72,7 +76,7 @@ class StockSuggestionViewController: UIViewController {
         super.viewWillAppear(animated)
         viewModel.setState()
     }
-    
+        
     // MARK: - View Updates
     
     func bindViewModelStateChanges() {
@@ -144,7 +148,7 @@ extension StockSuggestionViewController: UICollectionViewDataSource, UICollectio
             
         case .loaded:
             let data = viewModel.stockData[indexPath.item]
-            viewModel.analyticsMapper.reportEvents(event: .selectedStock(selectionType: .preference))
+            AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .preference))
             navigateToStockDetails(ticker: data.ticker!, name: data.name!)
             
         case .empty, .noPreferencesSet:

@@ -7,11 +7,6 @@
 //
 
 import Foundation
-import Mixpanel
-
-protocol AnalyticsTracker {
-    func log(event: AnalyticsEventName)
-}
 
 // MARK: - Stock selection type
 
@@ -34,7 +29,6 @@ enum ScreenType: String {
 
 enum AnalyticsEventName {
     case screenForStocks(screenType: ScreenType)
-    case searchByName
     case selectedNewsArticle
     case selectedAnalysis(criteria: SearchCriteria)
     case selectedStock(selectionType: StockSelectionType)
@@ -43,13 +37,12 @@ enum AnalyticsEventName {
     case suggestion(description: String)
     case issue(description: String)
     case noteSaved(description: String)
+    case savedTicker(ticker: String)
     
     func getName() -> String {
         switch self {
         case .screenForStocks:
             return "screen_for_stocks"
-        case .searchByName:
-            return "search_by_name"
         case .selectedNewsArticle:
             return "selected_news_article"
         case .selectedAnalysis:
@@ -66,6 +59,8 @@ enum AnalyticsEventName {
             return "selected_stock"
         case .noteSaved:
             return "saved_note"
+        case .savedTicker:
+            return "saved_ticker"
         }
     }
 }
@@ -75,8 +70,6 @@ extension AnalyticsEventName {
         switch self {
         case .screenForStocks(let screenType):
             return ["screen_type": screenType.rawValue]
-        case .searchByName:
-            return [:]
         case .selectedNewsArticle:
             return [:]
         case .selectedAnalysis(let criteria):
@@ -93,17 +86,9 @@ extension AnalyticsEventName {
             return ["selection_type": selectionType.rawValue]
         case .noteSaved(let description):
             return ["note": description]
+        case .savedTicker(let ticker):
+            return ["ticker": ticker]
         }
-    }
-}
-
-class MixPanelAnalytics: AnalyticsTracker {
-   
-    init() {}
-    
-    func log(event: AnalyticsEventName) {
-        Mixpanel.mainInstance().track(event: event.getName(),
-                                      properties: event.metaData)
     }
 }
 

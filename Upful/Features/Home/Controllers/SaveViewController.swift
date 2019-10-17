@@ -395,7 +395,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
                 let detailsVC = StockDetailsContainerView(
                 ticker: savedStocks[indexPath.item].ticker,
                 companyName: savedStocks[indexPath.item].companyName)
-                analyticsMapper.reportEvents(event: .selectedStock(selectionType: .savedStock))
+                AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .savedStock))
                 self.navigationController?.pushViewController(detailsVC, animated: true)
             }
         }

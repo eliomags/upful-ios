@@ -10,15 +10,15 @@ import Foundation
 
 
 final class AnalyticsLogger {
-    private let mixpanelAnalytics = MixPanelAnalytics()
-    private let googleAnalytics = FirebaseAnayltics()
+    static let mixpanelAnalytics = MixPanelAnalytics()
+    static let googleAnalytics = FirebaseAnayltics()
     
-    func reportEvents(event: AnalyticsEventName) {
+    static func reportEvents(event: AnalyticsEventName) {
         let analyticsAPIs: [AnalyticsTracker] = [mixpanelAnalytics, googleAnalytics]
         
         analyticsAPIs.forEach { (analytics) in
 //            analytics.log(event: event)
-            print("Logged event for:", analytics)
+            print("Logged event for:", event, analytics)
         }
     }
 }

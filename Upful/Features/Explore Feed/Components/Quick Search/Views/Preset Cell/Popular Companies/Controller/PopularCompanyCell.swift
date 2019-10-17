@@ -8,14 +8,21 @@
 
 import UIKit
 
-class PopularCompanyTableViewCell: UITableViewCell {
+class PopularCompanyViewController: UIViewController {
     private enum ReuseID: String {
         case companyCell
     }
-    let analyticsMapper: AnalyticsLogger
-    let popularCompanies: [PopularCompany]
     
-    weak var delegate: HomeFeedNavigationDelegate?
+    // MARK: - Dependencies
+    
+    let analyticsMapper: AnalyticsLogger
+    var popularCompanies: [PopularCompany] {
+        didSet {
+            popularCompanyCollectionView.reloadData()
+        }
+    }
+                
+    // MARK: - Views
     
     var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -38,11 +45,12 @@ class PopularCompanyTableViewCell: UITableViewCell {
         return cv
     }()
 
+    // MARK: - Initializer
     
     init(popularCompanies: [PopularCompany], analyticsMapper: AnalyticsLogger = .init()) {
         self.popularCompanies = popularCompanies
         self.analyticsMapper = analyticsMapper
-        super.init(style: .default, reuseIdentifier: nil)
+        super.init(nibName: nil, bundle: nil)
         setupViews()
     }
     
@@ -50,16 +58,17 @@ class PopularCompanyTableViewCell: UITableViewCell {
         fatalError()
     }
     
+    // MARK: - View Setup
     
     fileprivate func setupViews() {
-        backgroundColor = .clear
-        selectionStyle = .none
-        addSubview(popularCompanyCollectionView)
+        view.backgroundColor = .clear
+        view.addSubview(popularCompanyCollectionView)
         popularCompanyCollectionView.fillSuperview()
     }
+    
 }
 
-extension PopularCompanyTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
+extension PopularCompanyViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -76,8 +85,9 @@ extension PopularCompanyTableViewCell: UICollectionViewDelegate, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.navigateToDetails(popularCompany: popularCompanies[indexPath.item].header,
-                                    companyName: popularCompanies[indexPath.item].details ?? "")
+        AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .popular))
+        let detailVC = StockDetailsContainerView(ticker: popularCompanies[indexPath.item].header, companyName: popularCompanies[indexPath.item].details ?? "")
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
     
 }

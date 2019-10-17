@@ -30,7 +30,6 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
         static let newsCell = "newsCell"
     }
     
-    
     // MARK: - State
     // TODO: - Better implementation of state
     private enum State {
@@ -69,7 +68,6 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
         return [chartData, calcData, newsData]
     }
     
-    
     // MARK: - Views
     
     private lazy var stockHeaderView: TableHeaderView = {
@@ -86,7 +84,6 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
         return rc
     }()
     
-    
     private var loadingView: UIView = {
         let v = UIView()
         let activityView = UIActivityIndicatorView(style: .gray)
@@ -98,7 +95,6 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
         v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
         return v
     }()
-    
     
     // MARK: - Initializer Methods
     
@@ -121,7 +117,6 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
         loadChartData()
     }
     
-    
     // MARK: - View Setup
     
     private func setupViews() {
@@ -139,7 +134,6 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
     @objc private func refreshData(_ sender: Any) {
         loadChartData()
     }
-    
     
     // MARK: - Private Functions
     

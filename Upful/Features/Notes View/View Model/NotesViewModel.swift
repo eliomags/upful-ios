@@ -37,7 +37,7 @@ class NotesViewModel {
     }
     
     func saveNotes(completion: (()->())) {
-        analyticsMapper.reportEvents(event: .noteSaved(description: noteText))
+        AnalyticsLogger.reportEvents(event: .noteSaved(description: noteText))
 
         let notes = Notes(context: PersistenceService.shared.persistentContainer.viewContext)
         notes.content = noteText

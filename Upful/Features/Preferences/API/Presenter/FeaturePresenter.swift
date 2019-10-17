@@ -19,6 +19,7 @@ class PreferencePresenter {
  
     func present(in viewController: UIViewController) {
         let navVC = UINavigationController(rootViewController: preferenceVC)
+        navVC.modalPresentationStyle = .fullScreen
         viewController.present(navVC, animated: true)
     }
     

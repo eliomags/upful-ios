@@ -87,7 +87,7 @@ class SearchSelectionViewController: UITableViewController {
     }
     
     fileprivate func handleCrtieriaTap(criteria: SearchCriteria) {
-        analyticsLogger.reportEvents(event: .selectedAnalysis(criteria: criteria))
+        AnalyticsLogger.reportEvents(event: .selectedAnalysis(criteria: criteria))
 
         dismiss(animated: true) {
             self.delegate?.updateChartData(chartType: self.chartType, criteria: criteria)

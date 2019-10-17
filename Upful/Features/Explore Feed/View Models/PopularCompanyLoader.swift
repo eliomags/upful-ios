@@ -16,9 +16,10 @@ class CompanyViewModel {
     static let google = PopularCompany(details: "Alphabet Inc", header: "GOOGL")
     static let twitter = PopularCompany(details: "Twitter Inc", header: "TWTR")
     static let microsoft = PopularCompany(details: "Microsoft Corp", header: "MSFT")
+    static let disney = PopularCompany(details: "The Walt Disney Co", header: "DIS")
     
     static func configureCompanyList() -> [PopularCompany] {
-        return [facebook, netflix, apple, amazon, google, twitter, microsoft]
+        return [facebook, netflix, apple, amazon, google, twitter, microsoft, disney]
     }
 }
 
@@ -64,7 +65,6 @@ class PresetFeedDataLoader {
     
     
     func configureCompanyList() -> [PopularCompany] {
-        
         return CompanyViewModel.configureCompanyList()
     }
     

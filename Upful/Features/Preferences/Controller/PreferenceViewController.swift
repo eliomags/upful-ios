@@ -33,21 +33,8 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         return view
     }()
     
-    lazy var cancelButton: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(white: 0.73, alpha: 0.92)
-        view.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        view.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        view.layer.cornerRadius = 13
-        view.layer.masksToBounds = true
-        
-        let cancelImageView = UIImageView(image: #imageLiteral(resourceName: "icons8-delete-15").withRenderingMode(.alwaysOriginal))
-        cancelImageView.backgroundColor = .clear
-        
-        view.addSubview(cancelImageView)
-        cancelImageView.anchor(
-            top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
-            padding: .init(top: 7, left: 7, bottom: 7, right: 7))
+    lazy var cancelButton: CancelButton = {
+        let view = CancelButton()
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
         return view
     }()
@@ -128,7 +115,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     @objc fileprivate func handleDone() {
         dataManager.save()
-        analyticsMapper.reportEvents(event: .preferencesSet)
+        AnalyticsLogger.reportEvents(event: .preferencesSet)
         self.dismiss(animated: true)
     }
     

@@ -18,6 +18,7 @@ class SuggestionViewModel {
     let preferenceDataManager: PreferenceDataManager
     let networkingAPI: StockScreenNetworkingProtocol
     let analyticsMapper: AnalyticsLogger
+    
     let dispatchGroup = DispatchGroup()
     
     // MARK: - State
@@ -58,6 +59,7 @@ class SuggestionViewModel {
     var stateChanged: ((State) -> Void)?
     
     func setState() {
+        stockData.removeAll()
         preferenceDataManager.fetchRecent()
         groupedPreferences = preferenceDataManager.getGroupedPreferences()
         if groupedPreferences.isEmpty {
@@ -119,7 +121,6 @@ class SuggestionViewModel {
             case .success(let fetchedData):
                 self.stockData.append(contentsOf: fetchedData)
                 self.dispatchGroup.leave()
-                
             case .failure(_):
                 self.dispatchGroup.leave()
             }
