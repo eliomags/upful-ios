@@ -25,7 +25,7 @@ private struct Pallete {
         return .lightGray
     }
     static var deepGreen: UIColor {
-        return #colorLiteral(red: 0.0116204666, green: 0.6127878428, blue: 0.6295601726, alpha: 1)
+        return #colorLiteral(red: 0.01176470588, green: 0.6117647059, blue: 0.631372549, alpha: 1)
     }
     static var deepBlue: UIColor {
         return #colorLiteral(red: 0.006215432659, green: 0.001057554386, blue: 0.2019402385, alpha: 1)

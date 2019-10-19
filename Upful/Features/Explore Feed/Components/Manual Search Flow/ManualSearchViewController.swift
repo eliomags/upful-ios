@@ -16,9 +16,7 @@ protocol SearchCriteriaDelegate: class {
 class ManualSearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ManualSearchDelegate {
     
     // MARK: - Dependencies
-    
-    let analyticsLogger: AnalyticsLogger
-    
+        
     var manualScreenItems: [ManualScreenItem] {
         didSet {
             if manualScreenItems.isEmpty {
@@ -79,9 +77,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK:- Initializer Methods
     
-    init(manualScreenItems: [ManualScreenItem], analyticsLogger: AnalyticsLogger) {
+    init(manualScreenItems: [ManualScreenItem]) {
         self.manualScreenItems = manualScreenItems
-        self.analyticsLogger = analyticsLogger
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -102,9 +99,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.analyticsLogger = AnalyticsLogger()
-        self.manualScreenItems = []
-        super.init(coder: aDecoder)
+        fatalError()
     }
     
     
@@ -152,7 +147,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 return
             }
         }
-        AnalyticsLogger.reportEvents(event: .screenForStocks(screenType: .manual))
+        AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .manual))
         let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents(), networkingAPI: IntrinioAPI())
         navigationController?.pushViewController(screenerResultsVC, animated: true)
     }
@@ -231,6 +226,19 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
+    fileprivate func handleSaveCompletion(_ titleTextFieldText: String?) {
+        self.updateScreenerParameters(title: titleTextFieldText ?? "No Title", completion: {
+            let savedScreener = SavedScreener(context: PersistenceService.shared.persistentContainer.viewContext)
+            savedScreener.title = titleTextFieldText ?? "No Title"
+            savedScreener.screenDescription = ""
+            self.saveParameters(with: savedScreener)
+            AnalyticsLogger.instance.reportEvents(event: .savedScreener(description: configureURLComponents().joined(separator: ",")))
+            PersistenceService.shared.saveContextWithCompletion(completion: { [unowned self] in
+                InformationViewPresenter.displaySuccessActionView(in: self)
+            })
+        })
+    }
+    
     @objc private func saveScreener(_ sender: UIBarButtonItem) {
         self.checkCurrentParameters { [unowned self] in
             let alert = UIAlertController(title: "Add to Favorites", message: "Give your screener a name.", preferredStyle: .alert)
@@ -241,16 +249,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
                 var titleTextFieldText = alert?.textFields![0].text
                 if titleTextFieldText == "" { titleTextFieldText = "No Title" }
-                
-                self.updateScreenerParameters(title: titleTextFieldText ?? "No Title", completion: {
-                    let savedScreener = SavedScreener(context: PersistenceService.shared.persistentContainer.viewContext)
-                    savedScreener.title = titleTextFieldText ?? "No Title"
-                    savedScreener.screenDescription = ""
-                    self.saveParameters(with: savedScreener)
-                    PersistenceService.shared.saveContextWithCompletion(completion: { [unowned self] in
-                        InformationViewPresenter.displaySuccessActionView(in: self)
-                    })
-                })
+                self.handleSaveCompletion(titleTextFieldText)
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)

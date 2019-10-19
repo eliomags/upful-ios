@@ -12,7 +12,6 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     // MARK: - Dependencies
     
     let dataManager: PreferenceDataManager
-    let analyticsMapper: AnalyticsLogger
     
     // MARK: - Views
     
@@ -53,9 +52,8 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     // MARK: - Initializer Methods
     
-    init(dataManager: PreferenceDataManager = .init(), analyticsMapper: AnalyticsLogger = .init()) {
+    init(dataManager: PreferenceDataManager = .init()) {
         self.dataManager = dataManager
-        self.analyticsMapper = analyticsMapper
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -115,7 +113,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     @objc fileprivate func handleDone() {
         dataManager.save()
-        AnalyticsLogger.reportEvents(event: .preferencesSet)
+        AnalyticsLogger.instance.reportEvents(event: .preferencesSet)
         self.dismiss(animated: true)
     }
     

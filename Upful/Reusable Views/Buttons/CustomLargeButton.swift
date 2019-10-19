@@ -17,8 +17,8 @@ class CustomButton: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor(white: 0.5, alpha: 0.9)
-        setTitleColor(.appAccent, for: .normal)
+        backgroundColor = UIColor(white: 0.95, alpha: 0.97)
+        setTitleColor(.appAccent3, for: .normal)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -29,7 +29,7 @@ class CustomButton: UIButton {
     override func layoutSubviews() {
         super.layoutSubviews()
         titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-        layer.cornerRadius = bounds.height / 2
+        layer.cornerRadius = 16
         layer.masksToBounds = true
     }
     

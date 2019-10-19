@@ -15,7 +15,6 @@ class PopularCompanyViewController: UIViewController {
     
     // MARK: - Dependencies
     
-    let analyticsMapper: AnalyticsLogger
     var popularCompanies: [PopularCompany] {
         didSet {
             popularCompanyCollectionView.reloadData()
@@ -47,9 +46,8 @@ class PopularCompanyViewController: UIViewController {
 
     // MARK: - Initializer
     
-    init(popularCompanies: [PopularCompany], analyticsMapper: AnalyticsLogger = .init()) {
+    init(popularCompanies: [PopularCompany]) {
         self.popularCompanies = popularCompanies
-        self.analyticsMapper = analyticsMapper
         super.init(nibName: nil, bundle: nil)
         setupViews()
     }
@@ -85,7 +83,7 @@ extension PopularCompanyViewController: UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .popular))
+        AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .popular))
         let detailVC = StockDetailsContainerView(ticker: popularCompanies[indexPath.item].header, companyName: popularCompanies[indexPath.item].details ?? "")
         self.navigationController?.pushViewController(detailVC, animated: true)
     }

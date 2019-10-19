@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class StockSearchCell: UITableViewCell {
     
     let companyTickerLabel: UILabel = {

@@ -29,8 +29,7 @@ struct ReportPresenter {
             reportInstructions = "Issue:"
             
             let reportViewController = IssueViewController(title: title,
-                                                            reportInstructions: reportInstructions,
-                                                            analyticsMapper: AnalyticsLogger())
+                                                            reportInstructions: reportInstructions)
             reportViewController.delegate = viewController as? ReportDelegate
             
             let navVC = UINavigationController(rootViewController: reportViewController)
@@ -41,8 +40,7 @@ struct ReportPresenter {
             reportInstructions = "Suggestion:"
             
             let reportViewController = SuggestionViewController(title: title,
-                                                            reportInstructions: reportInstructions,
-                                                            analyticsMapper: AnalyticsLogger())
+                                                            reportInstructions: reportInstructions)
             reportViewController.delegate = viewController as? ReportDelegate
             
             let navVC = UINavigationController(rootViewController: reportViewController)

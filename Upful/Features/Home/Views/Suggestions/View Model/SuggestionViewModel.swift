@@ -17,7 +17,6 @@ class SuggestionViewModel {
     
     let preferenceDataManager: PreferenceDataManager
     let networkingAPI: StockScreenNetworkingProtocol
-    let analyticsMapper: AnalyticsLogger
     
     let dispatchGroup = DispatchGroup()
     
@@ -46,9 +45,8 @@ class SuggestionViewModel {
     
     // MARK: - Initializer
     
-    init(dataManager: PreferenceDataManager = .init(), analyticsMapper: AnalyticsLogger = .init(), networkingAPI: StockScreenNetworkingProtocol = IntrinioAPI()) {
+    init(dataManager: PreferenceDataManager = .init(), networkingAPI: StockScreenNetworkingProtocol = IntrinioAPI()) {
         self.preferenceDataManager = dataManager
-        self.analyticsMapper = analyticsMapper
         self.networkingAPI = networkingAPI
         self.groupedPreferences = dataManager.getGroupedPreferences()
         setState()

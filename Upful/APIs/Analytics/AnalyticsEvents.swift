@@ -23,6 +23,7 @@ enum StockSelectionType: String {
 enum ScreenType: String {
     case quick
     case manual
+    case saved = "currently_saved"
 }
 
 // MARK: - Analytics Events
@@ -37,6 +38,7 @@ enum AnalyticsEventName {
     case suggestion(description: String)
     case issue(description: String)
     case noteSaved(description: String)
+    case savedScreener(description: String)
     case savedTicker(ticker: String)
     
     func getName() -> String {
@@ -61,6 +63,8 @@ enum AnalyticsEventName {
             return "saved_note"
         case .savedTicker:
             return "saved_ticker"
+        case .savedScreener:
+            return "saved_screener"
         }
     }
 }
@@ -88,6 +92,8 @@ extension AnalyticsEventName {
             return ["note": description]
         case .savedTicker(let ticker):
             return ["ticker": ticker]
+        case .savedScreener(let description):
+            return ["screener": description]
         }
     }
 }

@@ -13,7 +13,8 @@ class CustomRoundButton: UIButton {
         return CGSize(width: 55, height: 55)
     }
     var buttonColor: UIColor {
-        return UIColor(red: 243/255, green: 175/255, blue: 34/255, alpha: 0.75)
+//        return UIColor(red: 243/255, green: 175/255, blue: 34/255, alpha: 0.75)
+        return .appAccent3
     }
     
     var radius: CGFloat {

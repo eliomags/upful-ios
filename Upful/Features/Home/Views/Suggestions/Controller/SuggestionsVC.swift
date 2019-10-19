@@ -148,7 +148,7 @@ extension StockSuggestionViewController: UICollectionViewDataSource, UICollectio
             
         case .loaded:
             let data = viewModel.stockData[indexPath.item]
-            AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .preference))
+            AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .preference))
             navigateToStockDetails(ticker: data.ticker!, name: data.name!)
             
         case .empty, .noPreferencesSet:

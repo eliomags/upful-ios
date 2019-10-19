@@ -11,7 +11,7 @@ import UIKit
 class HomeFeedContainer: MenuContainerViewController {
     override var menubarControllers: [MenuBarDisplayable] {
         let controllers: [MenuBarDisplayable] = [
-            QuickSearchViewController(analyitcs: AnalyticsLogger(), presetDataLoader: PresetFeedDataLoader()),
+            QuickSearchViewController(presetDataLoader: PresetFeedDataLoader()),
             SearchCriteriaTableViewController(style: .grouped)
         ]
         controllers.forEach { (controller) in

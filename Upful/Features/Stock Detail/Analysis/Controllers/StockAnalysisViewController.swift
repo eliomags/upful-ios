@@ -21,7 +21,6 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
     
     let ticker: String
     let companyName: String
-    let analyticsLogger: AnalyticsLogger
     let intrinioApi: IntrinioAPI
     
     
@@ -109,10 +108,9 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
     
     // MARK: - Initializer Methods
     
-    init(ticker: String, companyName: String, networkingAPI: IntrinioAPI, analyticsLogger: AnalyticsLogger) {
+    init(ticker: String, companyName: String, networkingAPI: IntrinioAPI) {
         self.ticker = ticker
         self.companyName = companyName
-        self.analyticsLogger = analyticsLogger
         self.intrinioApi = networkingAPI
         super.init(style: .grouped)
     }
@@ -315,7 +313,7 @@ extension StockAnalysisViewController {
                 if indexPath.row == 1 { chartType = .line }
                 if indexPath.row == 2 { chartType = .bar }
                 let criteriaVC = SearchSelectionViewController(
-                    chartType: chartType, analyticsLogger: AnalyticsLogger())
+                    chartType: chartType)
                 criteriaVC.delegate = self
                 let navVC = UINavigationController(rootViewController: criteriaVC)
                 self.parent?.present(navVC, animated: true, completion: nil)

@@ -13,7 +13,6 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     
     let headerTitle: String
     let reportInstructions: String
-    let analyticsMapper: AnalyticsLogger
     
     weak var delegate: ReportDelegate?
     
@@ -29,9 +28,8 @@ class ReportViewController: UIViewController, UITextViewDelegate {
         
     // MARK: - Initializer Methods
     
-    init(title: String, reportInstructions: String, analyticsMapper: AnalyticsLogger) {
+    init(title: String, reportInstructions: String) {
         self.headerTitle = title
-        self.analyticsMapper = analyticsMapper
         self.reportInstructions = reportInstructions
         super.init(nibName: nil, bundle: nil)
     }
@@ -79,7 +77,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     // MARK: - Helpers
     
     func submitReport(description: String, completion: (() -> ())) {
-        AnalyticsLogger.reportEvents(event: .suggestion(description: description))
+        AnalyticsLogger.instance.reportEvents(event: .suggestion(description: description))
         completion()
     }
     
@@ -95,14 +93,14 @@ class ReportViewController: UIViewController, UITextViewDelegate {
 
 final class SuggestionViewController: ReportViewController{
     override func submitReport(description: String, completion: (() -> ())) {
-        AnalyticsLogger.reportEvents(event: .suggestion(description: description))
+        AnalyticsLogger.instance.reportEvents(event: .suggestion(description: description))
         completion()
     }
 }
 
 final class IssueViewController: ReportViewController {
     override func submitReport(description: String, completion: (() -> ())) {
-        AnalyticsLogger.reportEvents(event: .issue(description: description))
+        AnalyticsLogger.instance.reportEvents(event: .issue(description: description))
         completion()
     }
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol NoteVCDelegate: class {
+protocol NoteVCDelegate: UIViewController {
     func displaySuccessNote()
 }
 
@@ -23,7 +23,7 @@ class NotesViewController: UIViewController, UITextViewDelegate {
     lazy var textView: UITextView = {
         let textView = UITextView(frame: .zero)
         textView.delegate = self
-        textView.backgroundColor = .white
+        textView.backgroundColor = UIColor(white: 0.96, alpha: 1)
         textView.text = ""
         textView.font = UIFont.boldSystemFont(ofSize: 14)
         textView.textColor = .darkText
@@ -50,6 +50,11 @@ class NotesViewController: UIViewController, UITextViewDelegate {
     }
     
     // MARK: - View Setup
+    lazy var cancelButton: CancelButton = {
+        let button = CancelButton()
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismissTap)))
+        return button
+    }()
     
     private func setupNavBar() {
         navigationController?.navigationBar.isTranslucent = true
@@ -57,7 +62,7 @@ class NotesViewController: UIViewController, UITextViewDelegate {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Notes"
         navigationController?.navigationBar.tintColor = .appAccent3
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismissTap))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(handleDoneTap))
     }
     

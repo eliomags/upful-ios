@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 // MARK: - Get TableView Content Height for non scrollable display view
 
 extension UITableView {

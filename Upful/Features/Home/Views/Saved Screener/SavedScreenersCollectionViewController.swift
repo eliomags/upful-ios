@@ -124,6 +124,7 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
         let urlComponents = (dataSource?.savedScreeners[indexPath.item].configureURLComponents()) ?? []
         if urlComponents == []  { return }
         let resultsVC = ScreenResultsViewController(searchParameters: urlComponents, networkingAPI: IntrinioAPI())
+        AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .saved))
         parent?.navigationController?.pushViewController(resultsVC, animated: true)
     }
     

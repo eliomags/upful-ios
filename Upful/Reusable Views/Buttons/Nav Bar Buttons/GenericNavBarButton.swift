@@ -12,7 +12,7 @@ class GenericNavBarButton: UIView {
     
     // MARK: - Sizing
     
-    let padding: CGFloat = 6
+    let padding: CGFloat = 4
     let size: CGFloat = 33
     
     var image: UIImage {
@@ -32,21 +32,21 @@ class GenericNavBarButton: UIView {
         let view = UIView()
         view.backgroundColor = .clear
         view.addSubview(imageView)
+        imageView.centerInSuperview()
         imageView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: padding, left: padding, bottom: padding, right: padding))
         return view
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = #colorLiteral(red: 0.4042032957, green: 0.4036494493, blue: 0.4210765362, alpha: 1)
-
+//        backgroundColor = #colorLiteral(red: 0.4042032957, green: 0.4036494493, blue: 0.4210765362, alpha: 0.4323095034)
+        backgroundColor = .clear
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: size).isActive = true
         widthAnchor.constraint(equalToConstant: size).isActive = true
         
         addSubview(contentView)
         contentView.fillSuperview()
-        
     }
     
     required init?(coder: NSCoder) {

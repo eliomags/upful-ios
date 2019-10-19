@@ -63,13 +63,11 @@ final class ScreenResultsViewController: UIViewController {
         return v
     }()
     
-    let sortButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.setTitle("Sort", for: .normal)
-        b.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
-        return b
+    lazy var sortButton: SortButton = {
+        let button = SortButton()
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSortTap)))
+        return button
     }()
-
     
     // MARK: - Initializer Methods
     
@@ -148,10 +146,9 @@ final class ScreenResultsViewController: UIViewController {
     }
     
     fileprivate func setupNavBar() {
-        sortButton.addTarget(self, action: #selector(handleSortTap), for: .touchUpInside)
         navigationItem.title = "Search Results"
         navigationController?.navigationBar.prefersLargeTitles = true
-        let sortButton = UIBarButtonItem(customView: self.sortButton)
+        let sortButton = UIBarButtonItem(customView: self.sortButton)        
         navigationItem.rightBarButtonItem = sortButton
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
@@ -221,7 +218,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .searchResult))
+        AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .searchResult))
         let selectedCompany = searchResults[indexPath.item]
         let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
         self.navigationController?.pushViewController(detailVC, animated: true)

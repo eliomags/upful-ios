@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class GeneralEmptyCell: UITableViewCell {
     
     enum ButtonLook {
@@ -72,8 +71,47 @@ class GeneralEmptyCell: UITableViewCell {
         return button
     }()
     
+    lazy var stackViewEmpty: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [cellImageView, headerLabel, descriptionLabel, emptyCellActionButton])
+        sv.axis = .vertical
+        sv.distribution = .fill
+        sv.alignment = .center
+        sv.spacing = 12
+        return sv
+    }()
+    
+    lazy var contentBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.addSubview(stackViewEmpty)
+        stackViewEmpty.centerInSuperview()
+        return view
+    }()
+    
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+        selectionStyle = .none
+        addSubview(contentBackgroundView)
+        contentBackgroundView.fillSuperview()
+
+        emptyCellActionButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 45).isActive = true
+        emptyCellActionButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -45).isActive = true
+
+        configureButton()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    var cellAction: (() ->())?
+    
+
     fileprivate func configureButton() {
         switch self.buttonLook {
+            
         case .bordered:
             emptyCellActionButton.setTitleColor(.appAccent3, for: .normal)
             emptyCellActionButton.backgroundColor = .clear
@@ -84,40 +122,6 @@ class GeneralEmptyCell: UITableViewCell {
             emptyCellActionButton.backgroundColor = .appAccent3
         }
     }
-    
-    lazy var stackViewEmpty: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [cellImageView, headerLabel, descriptionLabel, emptyCellActionButton])
-        sv.axis = .vertical
-        sv.distribution = .fill
-        sv.alignment = .center
-        sv.spacing = 12
-        return sv
-    }()
-    
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        if #available(iOS 13.0, *) {
-            backgroundColor = .tertiarySystemGroupedBackground
-        } else {
-            backgroundColor = .backgroundColor
-        }
-        selectionStyle = .none
-        addSubview(stackViewEmpty)
-        stackViewEmpty.translatesAutoresizingMaskIntoConstraints = false
-        stackViewEmpty.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        stackViewEmpty.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        emptyCellActionButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 45).isActive = true
-        emptyCellActionButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -45).isActive = true
-        configureButton()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    
-    var cellAction: (() ->())?
     
     @objc fileprivate func handleCellAction(_ sender: UIButton) {
         cellAction?()

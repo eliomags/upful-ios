@@ -19,7 +19,6 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     
     // MARK: - Dependencies
     
-    let analyticsLogger: AnalyticsLogger
     let presetFeedDataLoader: PresetFeedDataLoader
 
     // MARK: - Data Source
@@ -54,7 +53,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
             
         case .searching(let searchText):
             fetchCompanies(searchText)
-            tableView.isScrollEnabled = false
+            tableView.isScrollEnabled = true
         }
     }
     
@@ -85,8 +84,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     
     // MARK: - Initializer Methods
     
-    init(analyitcs: AnalyticsLogger, presetDataLoader: PresetFeedDataLoader) {
-        self.analyticsLogger = analyitcs
+    init(presetDataLoader: PresetFeedDataLoader) {
         self.presetFeedDataLoader = presetDataLoader
         super.init(style: .grouped)
     }
@@ -177,6 +175,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     fileprivate func fetchCompanies(_ searchText: String) {
         NetworkService.shared.intrioAPI.searchByName(name: searchText) { (result) in
             switch result {
+                
             case .success(let fetchedCompanies):
                 self.searchDisplay = fetchedCompanies
                 DispatchQueue.main.async {
@@ -212,7 +211,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     
     // MenubarDisplayable
     func navigateToScreenerResults(searchParameters: [String]) {
-        AnalyticsLogger.reportEvents(event: .screenForStocks(screenType: .quick))
+        AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .quick))
         let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters, networkingAPI: IntrinioAPI())
         self.navigationController?.pushViewController(searchResultVC, animated: true)
     }
@@ -273,8 +272,8 @@ extension QuickSearchViewController {
         case .searching:
             let cell = UITableViewCell(style: .subtitle, reuseIdentifier: ReuseID.stockCell)
             cell.textLabel?.text = searchDisplay[indexPath.item].name
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
             cell.detailTextLabel?.text = searchDisplay[indexPath.item].ticker
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
             cell.detailTextLabel?.textColor = .gray
             cell.accessoryType = .disclosureIndicator
             return cell
@@ -287,7 +286,7 @@ extension QuickSearchViewController {
         case .searching(_):
             let selectedCompany = searchDisplay[indexPath.item]
             let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
-            AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .nameSearch))
+            AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .nameSearch))
             navigationController?.pushViewController(detailsVC, animated: true)
             
         default:
@@ -321,14 +320,15 @@ extension QuickSearchViewController {
         case .normal:
             let view = UIView()
             let header = LargeSectionHeaderLabel(padding: 16)
+            header.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
             view.addSubview(header)
             header.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
                           padding: .init(top: 0, left: 0, bottom: 4, right: 18))
             let labelText = [
-                "POPULAR COMPANIES",
-                "EXPLORE VALUE STOCKS",
-                "EXPLORE GROWTH STOCKS",
-                "EXPLORE DIVIDEND STOCKS"
+                "Popular Companies",
+                "Explore Value Stocks",
+                "Explore Growth Stocks",
+                "Explore Dividend Stocks"
             ]
             header.text = labelText[section]
             return view

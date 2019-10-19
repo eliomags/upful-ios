@@ -10,9 +10,25 @@ import UIKit
 
 class NotesButton: GenericNavBarButton {
     override var image: UIImage {
-        return #imageLiteral(resourceName: "icons8-create-30").withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+        return #imageLiteral(resourceName: "icons8-create-30 (1)").withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
     }
 }
+
+class SortButton: GenericNavBarButton {
+    override var image: UIImage {
+        return #imageLiteral(resourceName: "icons8-more-25").withRenderingMode(.alwaysOriginal)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = UIColor(white: 0.95, alpha: 0.95)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 
 class SaveButton: UIButton {
     override var isHighlighted: Bool {
@@ -26,9 +42,9 @@ class SaveButton: UIButton {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: 33).isActive = true
-        widthAnchor.constraint(equalToConstant: 33).isActive = true
-        setImage(#imageLiteral(resourceName: "icons8-star-30 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
-        setImage(#imageLiteral(resourceName: "icons8-star-30 (2)").withRenderingMode(.alwaysOriginal), for: .selected)
+        widthAnchor.constraint(equalToConstant: 33).isActive = true        
+        setImage(#imageLiteral(resourceName: "icons8-heart-25").withRenderingMode(.alwaysOriginal), for: .normal)
+        setImage(#imageLiteral(resourceName: "icons8-heart-25 (1)").withRenderingMode(.alwaysOriginal), for: .selected)
         setTitle("", for: .normal)
         backgroundColor = .clear
         tintColor = .clear

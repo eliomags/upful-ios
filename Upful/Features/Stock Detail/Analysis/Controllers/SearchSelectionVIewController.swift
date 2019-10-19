@@ -9,13 +9,9 @@
 import UIKit
 
 class SearchSelectionViewController: UITableViewController {
-    
     struct Constants {
         static let criteriaCell = "CriteriaCell"
     }
-    
-    let analyticsLogger: AnalyticsLogger
-    
     
     // MARK: - State
 
@@ -23,12 +19,19 @@ class SearchSelectionViewController: UITableViewController {
     weak var delegate: ChartUpdatable?
     let chartType: ChartType
     
+    // MARK: - State
+    
+    lazy var cancelButton: CancelButton = {
+        let button = CancelButton()
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
+        return button
+    }()
+    
     
     // MARK: - Initializer Functions
     
-    init(chartType: ChartType, analyticsLogger: AnalyticsLogger) {
+    init(chartType: ChartType) {
         self.chartType = chartType
-        self.analyticsLogger = analyticsLogger
         super.init(style: .grouped)
         initializeDisplayData()
         modalPresentationStyle = .overCurrentContext
@@ -42,11 +45,12 @@ class SearchSelectionViewController: UITableViewController {
         super.viewDidLoad()
         tableView.tableHeaderView = UIView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.criteriaCell)
-        let saveButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismiss))
+        let saveButton = UIBarButtonItem(customView: cancelButton)
         saveButton.tintColor = .black
         self.navigationItem.leftBarButtonItem = saveButton
     }
     
+    // MARK: -
     
     fileprivate func initializeDisplayData() {
         var values: [ManualScreenItem] = []
@@ -79,7 +83,6 @@ class SearchSelectionViewController: UITableViewController {
         data.append(performance)
     }
     
-    
     // MARK: - Actions
     
     @objc fileprivate func handleDismiss(_ sender: UIButton) {
@@ -87,7 +90,7 @@ class SearchSelectionViewController: UITableViewController {
     }
     
     fileprivate func handleCrtieriaTap(criteria: SearchCriteria) {
-        AnalyticsLogger.reportEvents(event: .selectedAnalysis(criteria: criteria))
+        AnalyticsLogger.instance.reportEvents(event: .selectedAnalysis(criteria: criteria))
 
         dismiss(animated: true) {
             self.delegate?.updateChartData(chartType: self.chartType, criteria: criteria)

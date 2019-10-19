@@ -11,14 +11,12 @@ import CoreData
 
 class NotesViewModel {
     // MARK: - Dependencies
-    let analyticsMapper: AnalyticsLogger
     
     var noteText = String()
     
     // MARK: - Initialze
     
-    init(analyticsMapper: AnalyticsLogger = .init()) {
-        self.analyticsMapper = analyticsMapper
+    init() {
     }
     
     func addNoteText(_ text: String) {
@@ -37,7 +35,7 @@ class NotesViewModel {
     }
     
     func saveNotes(completion: (()->())) {
-        AnalyticsLogger.reportEvents(event: .noteSaved(description: noteText))
+        AnalyticsLogger.instance.reportEvents(event: .noteSaved(description: noteText))
 
         let notes = Notes(context: PersistenceService.shared.persistentContainer.viewContext)
         notes.content = noteText
@@ -46,4 +44,5 @@ class NotesViewModel {
             completion()
         }
     }
+    
 }

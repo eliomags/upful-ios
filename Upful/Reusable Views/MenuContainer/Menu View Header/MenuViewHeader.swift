@@ -42,7 +42,7 @@ final class MenuBarView: UIView {
     
     lazy var placementView: UIView = {
         let v = UIView()
-        v.backgroundColor = .appAccent2
+        v.backgroundColor = .appAccent3
         v.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 13.0, *) {
             v.heightAnchor.constraint(equalToConstant: 0).isActive = true

@@ -21,7 +21,6 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
     
     let ticker: String
     let companyName: String
-    let analyticsLogger: AnalyticsLogger
     let intrinioApi: IntrinioAPI
     
     private enum ReuseID {
@@ -98,10 +97,9 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
     
     // MARK: - Initializer Methods
     
-    init(ticker: String, companyName: String, networkingAPI: IntrinioAPI, analyticsLogger: AnalyticsLogger) {
+    init(ticker: String, companyName: String, networkingAPI: IntrinioAPI) {
         self.ticker = ticker
         self.companyName = companyName
-        self.analyticsLogger = analyticsLogger
         self.intrinioApi = networkingAPI
         super.init(style: .grouped)
     }

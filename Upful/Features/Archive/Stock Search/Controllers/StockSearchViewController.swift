@@ -16,7 +16,6 @@ final class StockSearchViewController: UITableViewController, UISearchController
     // MARK: - Dependencies
     
     let intrinioAPI: IntrinioAPI
-    let analyticsMapper: AnalyticsLogger
     
     // MARK: - State
     
@@ -44,9 +43,8 @@ final class StockSearchViewController: UITableViewController, UISearchController
     }()
     
     // MARK: - Initializer Functions
-    init(networkingAPI: IntrinioAPI, analyticsMapper: AnalyticsLogger = .init()) {
+    init(networkingAPI: IntrinioAPI) {
         self.intrinioAPI = networkingAPI
-        self.analyticsMapper = analyticsMapper
         super.init(style: .plain)
     }
     
@@ -138,7 +136,7 @@ final class StockSearchViewController: UITableViewController, UISearchController
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .searchResult))
+        AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .nameSearch))
         let selectedCompany = displayData[indexPath.item]
         let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
         navigationController?.pushViewController(detailsVC, animated: true)

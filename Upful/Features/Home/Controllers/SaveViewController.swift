@@ -55,7 +55,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     // MARK: - Dependencies
     
     let persistenceService = PersistenceService.shared
-    let analyticsMapper: AnalyticsLogger
 
     enum ReuseID {
         static let suggestionCell = "suggestionCell"
@@ -121,8 +120,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     // MARK: - Initializer Methods
     
-    init(analyticsMapper: AnalyticsLogger = .init()) {
-        self.analyticsMapper = analyticsMapper
+    init() {
         super.init(style: .grouped)
     }
     
@@ -159,8 +157,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedScreenCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedCompanyCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.suggestionCell)
-
-        configureNavBar()
     }
     
     lazy var notesButton: NotesButton = {
@@ -177,7 +173,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     @objc private func handleNotesTap(_ sender: Any) {
-        let presenter = SubscriptionPresenter()
+        let presenter = NotesPresenter()
         presenter.present(in: self)
     }
     
@@ -278,7 +274,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             let manualScreenItem = ManualScreenItem(criteria: criteria!, parameter: parameter!, value: param.value)
             manualScreenItems.append(manualScreenItem)
         }
-        let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems, analyticsLogger: AnalyticsLogger())
+        let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems)
         manualSearchVC.screenerTitleText = savedScreeners[indexPath.item].savedScreener.title
         navigationController?.pushViewController(manualSearchVC, animated: true)
     }
@@ -395,7 +391,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
                 let detailsVC = StockDetailsContainerView(
                 ticker: savedStocks[indexPath.item].ticker,
                 companyName: savedStocks[indexPath.item].companyName)
-                AnalyticsLogger.reportEvents(event: .selectedStock(selectionType: .savedStock))
+                AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .savedStock))
                 self.navigationController?.pushViewController(detailsVC, animated: true)
             }
         }
@@ -403,6 +399,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+            
         case 0:
             return 200
         case 1:
@@ -421,16 +418,18 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 { return 70 }
         return 60
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerText = [
-            "Stocks You Might Like",
+            "Stocks You May Like",
             "Saved Screeners",
             "Saved Stocks"
         ]
         switch section {
+            
         case 0 :
             let header = LargeSectionHeaderLabel(padding: 16)
             header.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
@@ -439,7 +438,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             
         case 1:
             let screenerHeader = ActionableTableHeader(reuseIdentifier: ReuseID.screenerHeaderView)
-            screenerHeader.headerTextLabel.text = headerText[section].uppercased()
+            screenerHeader.headerTextLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+            screenerHeader.headerTextLabel.text = headerText[section]
             screenerHeader.showButton(isSavedScreenersEmpty)
             screenerHeader.editButtonAction = { [weak self] in
                 self?.saveScreenerCollectionViewController.isLongPressEnabled = false
@@ -451,7 +451,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             
         case 2:
             let stockHeader = ActionableTableHeader()
-            stockHeader.headerTextLabel.text = headerText[section].uppercased()
+            stockHeader.headerTextLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+            stockHeader.headerTextLabel.text = headerText[section]
             stockHeader.showButton(isSavedStocksEmpty)
             stockHeader.buttonAction = { [weak self] in
                 self?.navigateToAddStock()

@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         Mixpanel.initialize(token: Constants.MixPanel.token)
-        
+                
         window?.rootViewController = initializeVC()
         window?.makeKeyAndVisible()
         
@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let navVC = UINavigationController(rootViewController: $0)
             navVC.navigationBar.prefersLargeTitles = true
             navVC.navigationBar.isTranslucent = false
-            navVC.navigationBar.tintColor = .appAccent2
+            navVC.navigationBar.tintColor = .appAccent3
             navVC.navigationBar.setValue(true, forKey: "hidesShadow")
             navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 26, weight: .heavy)]
             return navVC

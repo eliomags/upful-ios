@@ -66,6 +66,8 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         super.viewDidLoad()
         view.backgroundColor = .groupTableViewBackground
         setupTableView()
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -130,8 +132,7 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
             UIView.animate(withDuration: 0.1, animations: {
                 sender.transform = .identity
             }, completion: { (_) in
-                let manualSearchVC = ManualSearchViewController(manualScreenItems: self.manualScreenItems,
-                                                                analyticsLogger: AnalyticsLogger())
+                let manualSearchVC = ManualSearchViewController(manualScreenItems: self.manualScreenItems)
                 manualSearchVC.delegate = self
                 self.navigationController?.pushViewController(manualSearchVC, animated: true)
             })

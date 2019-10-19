@@ -19,8 +19,8 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     
     override var menubarControllers: [MenuBarDisplayable] {
         let controllers: [MenuBarDisplayable] = [
-            StockOverviewViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger()),
-            StockAnalysisViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI(), analyticsLogger: AnalyticsLogger())
+            StockOverviewViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI()),
+            StockAnalysisViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI())
         ]
         controllers.forEach { (controller) in
             controller.delegate = self
@@ -111,10 +111,9 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         PersistenceService.shared.saveContext()
         if sender.isSelected {
             Vibration.light.vibrate()
-            AnalyticsLogger.reportEvents(event: .savedTicker(ticker: self.ticker))
+            AnalyticsLogger.instance.reportEvents(event: .savedTicker(ticker: self.ticker))
         }
     }
-    
     
     // MARK: - UIPopOverPresentationDelegate Methods
     
@@ -122,13 +121,11 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         return .overCurrentContext
     }
     
-    
     // MARK: - Delegate Methods
     
     func displaySuccessNote() {
         InformationViewPresenter.displaySuccessActionView(in: self)
     }
-    
     
     // MARK: - Actions
     
@@ -147,7 +144,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         let save = UIBarButtonItem(customView: saveButton)
         let spacer = UIBarButtonItem(customView: UIView())
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.rightBarButtonItems = [save,spacer,spacer, notes]
+        navigationItem.rightBarButtonItems = [save,spacer, notes]
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .heavy)]
