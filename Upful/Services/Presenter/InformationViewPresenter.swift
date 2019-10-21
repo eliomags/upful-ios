@@ -14,20 +14,30 @@ enum InformationViewType {
 
 struct InformationViewPresenter {
     static let actionView = InformationView()
-
-    static func displaySuccessActionView(in viewController: UIViewController) {
+    
+    static func genericViewDisplay(in viewController: UIViewController) {
         let view = viewController.view
-        actionView.descriptionLabel.text = "Saved successfully."
-//        actionView.backgroundColor = UIColor(red: 243/255, green: 175/255, blue: 35/255, alpha: 1)
-        actionView.backgroundColor = .appAccent3
         viewController.view.addSubview(actionView)
         actionView.anchor(top: nil, leading: view?.layoutMarginsGuide.leadingAnchor, bottom: view?.layoutMarginsGuide.bottomAnchor, trailing: view?.layoutMarginsGuide.trailingAnchor,
                           padding: .init(top: 0, left: 4, bottom: 16, right: 4))
     }
+
+    static func showSaveSuccess(in viewController: UIViewController) {
+        actionView.descriptionLabel.text = "Saved successfully."
+        actionView.backgroundColor = .appAccent3
+        genericViewDisplay(in: viewController)
+    }
+    
+    static func showReportSuccess(in viewController: UIViewController) {
+        actionView.descriptionLabel.text = "Report Sent."
+        actionView.backgroundColor = UIColor(red: 243/255, green: 175/255, blue: 35/255, alpha: 1)
+        genericViewDisplay(in: viewController)
+    }
+    
     
     static func displayUpdateActionView(in viewController: UIViewController) {
         let view = viewController.view
-        actionView.descriptionLabel.text = "Saved successfully."
+        actionView.descriptionLabel.text = "Report Sent."
         actionView.backgroundColor = .appAccent3
         viewController.view.addSubview(actionView)
         actionView.anchor(top: nil, leading: view?.layoutMarginsGuide.leadingAnchor, bottom: view?.layoutMarginsGuide.bottomAnchor, trailing: view?.layoutMarginsGuide.trailingAnchor,

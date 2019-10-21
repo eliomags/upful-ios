@@ -17,11 +17,7 @@ final class AnalyticsLogger {
     private let mixpanelAnalytics = MixPanelAnalytics()
     private let googleAnalytics = FirebaseAnayltics()
     
-    private var isTrackingDisabled = false {
-        didSet {
-            print("is tracking disabled", isTrackingDisabled)
-        }
-    }
+    private var isTrackingDisabled = false
     
     
     private init() {
@@ -30,7 +26,6 @@ final class AnalyticsLogger {
     
     func retreiveSetting() {
         isTrackingDisabled = UserDefaults.standard.bool(forKey: AnalyticsDefaults.allowTracking)
-        print(isTrackingDisabled)
     }
     
     func getAnalyticsPermission() -> Bool {
@@ -45,11 +40,13 @@ final class AnalyticsLogger {
     func reportEvents(event: AnalyticsEventName) {
         if !isTrackingDisabled {
             let analyticsAPIs: [AnalyticsTracker] = [mixpanelAnalytics, googleAnalytics]
-            analyticsAPIs.forEach { (analytics) in
+            analyticsAPIs.forEach { (analyticsItem) in
 //                analytics.log(event: event)
-                print("Logged event for:", event, analytics)
+                print("Logged event for:", event, analyticsItem)
             }
+
         }
+        
     }
     
 }

@@ -8,9 +8,9 @@
 
 import UIKit
 
-protocol ReportDelegate: class { }
-extension SettingsViewController: ReportDelegate {}
-
+protocol ReportDelegate: class {
+    func showSuccess()
+}
 
 struct ReportPresenter {
     enum ReportType {

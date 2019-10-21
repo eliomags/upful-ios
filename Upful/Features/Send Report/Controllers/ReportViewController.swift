@@ -23,7 +23,15 @@ class ReportViewController: UIViewController, UITextViewDelegate {
         view.contentHeaderLabel.text = reportInstructions
         view.submitButton.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
         view.textView.delegate = self
+        view.textView.text = "Add description"
+        view.textView.textColor = .lightGray
         return view
+    }()
+    
+    lazy var cancelButton: CancelButton = {
+        let button = CancelButton()
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleCancel)))
+        return button
     }()
         
     // MARK: - Initializer Methods
@@ -53,7 +61,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
         navigationController?.navigationBar.backgroundColor = .white
         navigationController?.navigationBar.tintColor = .black
         navigationItem.title = headerTitle
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
     }
     
     // MARK: - Actions
@@ -69,7 +77,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     @objc fileprivate func handleSubmit() {
         submitReport(description: reportText, completion: {
             self.dismiss(animated: true) {
-                InformationViewPresenter.displaySuccessActionView(in: self.delegate as! UIViewController)
+                self.delegate?.showSuccess()
             }
         })
     }
@@ -87,6 +95,20 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         reportText = textView.text
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.lightGray {
+            textView.text = nil
+            textView.textColor = UIColor.black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.textColor = .lightGray
+            textView.text = "Add description"
+        }
     }
     
 }

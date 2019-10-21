@@ -78,7 +78,7 @@ class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     // MARK: - Delegate Methods
     
     func displaySuccessNote() {
-        InformationViewPresenter.displaySuccessActionView(in: self)
+        InformationViewPresenter.showSaveSuccess(in: self)
     }
     
 }

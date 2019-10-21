@@ -13,8 +13,8 @@ class CancelButton: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor(white: 0.73, alpha: 0.92)
-        heightAnchor.constraint(equalToConstant: 30).isActive = true
-        widthAnchor.constraint(equalToConstant: 30).isActive = true
+        heightAnchor.constraint(equalToConstant: 26).isActive = true
+        widthAnchor.constraint(equalToConstant: 26).isActive = true
         
         let cancelImageView = UIImageView(image: #imageLiteral(resourceName: "icons8-delete-15").withRenderingMode(.alwaysOriginal))
         cancelImageView.backgroundColor = .clear
@@ -31,7 +31,7 @@ class CancelButton: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = 15
+        layer.cornerRadius = 13
         layer.masksToBounds = true
     }
 }

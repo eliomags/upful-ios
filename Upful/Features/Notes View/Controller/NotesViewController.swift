@@ -23,11 +23,17 @@ class NotesViewController: UIViewController, UITextViewDelegate {
     lazy var textView: UITextView = {
         let textView = UITextView(frame: .zero)
         textView.delegate = self
-        textView.backgroundColor = UIColor(white: 0.96, alpha: 1)
-        textView.text = ""
+        textView.backgroundColor = UIColor(white: 0.99, alpha: 1)
+        textView.text = "Start adding notes."
         textView.font = UIFont.boldSystemFont(ofSize: 14)
-        textView.textColor = .darkText
+        textView.textColor = .black
         return textView
+    }()
+    
+    lazy var cancelButton: CancelButton = {
+        let button = CancelButton()
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismissTap)))
+        return button
     }()
     
     // MARK: - Initializer Methods
@@ -50,11 +56,6 @@ class NotesViewController: UIViewController, UITextViewDelegate {
     }
     
     // MARK: - View Setup
-    lazy var cancelButton: CancelButton = {
-        let button = CancelButton()
-        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismissTap)))
-        return button
-    }()
     
     private func setupNavBar() {
         navigationController?.navigationBar.isTranslucent = true
@@ -72,7 +73,6 @@ class NotesViewController: UIViewController, UITextViewDelegate {
             top: view.topAnchor, leading: view.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.trailingAnchor,
             padding: .init(top: 8, left: 8, bottom: 8, right: 8))
     }
-    
     
     // MARK: - Delegate Methods
     

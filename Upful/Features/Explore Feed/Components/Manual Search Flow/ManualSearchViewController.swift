@@ -234,7 +234,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             self.saveParameters(with: savedScreener)
             AnalyticsLogger.instance.reportEvents(event: .savedScreener(description: configureURLComponents().joined(separator: ",")))
             PersistenceService.shared.saveContextWithCompletion(completion: { [unowned self] in
-                InformationViewPresenter.displaySuccessActionView(in: self)
+                InformationViewPresenter.showSaveSuccess(in: self)
             })
         })
     }

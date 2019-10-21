@@ -120,7 +120,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.stockCell)
         tableView.contentInsetAdjustmentBehavior = .automatic
         tableView.contentInset = UIEdgeInsets(
-            top: searchController.searchBar.intrinsicContentSize.height + 20,
+            top: searchController.searchBar.intrinsicContentSize.height + 0,
             left: 0, bottom: 0, right: 0)
         definesPresentationContext = true
         tableView.keyboardDismissMode = .onDrag

@@ -130,12 +130,12 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       setUpTableView()
+        setUpTableView()
+        configureNavBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupNavBar()
         loadSavedStocks()
         configureSavedItemsToDisplay()
     }
@@ -166,7 +166,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }()
     
     fileprivate func configureNavBar() {
-        navigationItem.title = ""
+        navigationItem.title = "Home"
         let save = UIBarButtonItem(customView: notesButton)
         navigationItem.rightBarButtonItems = [save]
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
@@ -285,7 +285,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     func displaySuccessNote() {
-        InformationViewPresenter.displaySuccessActionView(in: self)
+        InformationViewPresenter.showSaveSuccess(in: self)
     }
     
     func observeCollectionViewState(isEditing: Bool) {

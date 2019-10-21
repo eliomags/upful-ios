@@ -20,7 +20,7 @@ class ReportContentView: UIView {
     lazy var textView: UITextView = {
         let textView = UITextView()
         textView.text = "Description"
-        textView.backgroundColor = UIColor(white: 0.92, alpha: 1)
+        textView.backgroundColor = UIColor(white: 0.98, alpha: 1)
         textView.layer.cornerRadius = 4
         textView.layer.masksToBounds = true
         return textView
@@ -32,6 +32,8 @@ class ReportContentView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .appAccent3
+        button.layer.cornerRadius = 8
+        button.layer.masksToBounds = true
         return button
     }()
 
@@ -62,7 +64,7 @@ class ReportContentView: UIView {
             leading: leadingAnchor,
             bottom: nil,
             trailing: trailingAnchor,
-            padding: .init(top: 16, left: 0, bottom: 0, right: 0),
+            padding: .init(top: 16, left: 32, bottom: 0, right: 32),
             size: .init(width: 0, height: 40))
     }
     

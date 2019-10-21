@@ -8,28 +8,68 @@
 
 import UIKit
 
-class CustomRoundButton: UIButton {
+class CustomRoundButton: UIView {
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 55, height: 55)
+        return CGSize(width: 45, height: 45)
     }
     var buttonColor: UIColor {
-//        return UIColor(red: 243/255, green: 175/255, blue: 34/255, alpha: 0.75)
         return .appAccent3
     }
     
-    var radius: CGFloat {
-        return intrinsicContentSize.height / 2
+    var buttonImage: UIImage {
+        return #imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal)
     }
+    
+    lazy var buttonImageView: UIImageView = {
+        let view = UIImageView(image: self.buttonImage)
+        return view
+    }()
+    
+    // MARK: - Initializer Methods
+    
     init() {
         super.init(frame: .zero)
-        layer.cornerRadius = radius
         layer.masksToBounds = true
         backgroundColor = buttonColor
+        
+        addSubview(buttonImageView)
+        buttonImageView.anchor(
+            top: self.topAnchor,
+            leading: self.leadingAnchor,
+            bottom: self.bottomAnchor,
+            trailing: self.trailingAnchor,
+            padding: .init(top: 6, left: 6, bottom: 6, right: 6))
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = 45/2
+    }
+    
+    // MARK: -
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        UIView.animate(withDuration: 0.2) {
+            self.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        UIView.animate(withDuration: 0.3) {
+            self.transform = .identity
+        }
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        UIView.animate(withDuration: 0.3) {
+            self.transform = .identity
+        }
+    }
+
 }
 
 

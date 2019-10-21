@@ -148,3 +148,11 @@ class SettingsViewController: UITableViewController {
     
 }
 
+// MARK: - Report Delegate
+
+extension SettingsViewController: ReportDelegate {
+    func showSuccess() {
+        InformationViewPresenter.showReportSuccess(in: self)
+    }
+    
+}

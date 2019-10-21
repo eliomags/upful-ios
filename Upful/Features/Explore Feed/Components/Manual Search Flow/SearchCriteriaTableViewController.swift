@@ -17,39 +17,38 @@ class CreateScreenerTableViewController: SearchCriteriaTableViewController {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
     override func setupTableView() {
         super.setupTableView()
-        
     }
 }
 
 class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDelegate, MenuBarDisplayable {
     
     var delegate: MenuViewItemDelegate?
-    
     var menubarTitle: String = "Manual Search"
     
-   
     private enum ReuseID {
         static let criteriaCell = "criteriaCell"
     }
-    
     
     // MARK: - Data
     
     private var manualSearchCriteriaItems: [[ManualScreenItem]] = []
     private var manualScreenItems: [ManualScreenItem] = []
     
-    
     // MARK: - Views
 
     private lazy var addCriteriaButton: CustomRoundButton = {
         let b = CustomRoundButton()
-        b.setBackgroundImage(#imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
-        b.addTarget(self, action: #selector(handleNavigation), for: .touchUpInside)
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        b.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        b.layer.cornerRadius = 50/2
+        b.setupShadow(intensity: .light, color: .black)
+        b.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNavigation)))
         return b
     }()
-    
     
     // MARK: - Initializer Methods
     
@@ -67,7 +66,6 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         view.backgroundColor = .groupTableViewBackground
         setupTableView()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -87,7 +85,6 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         addCriteriaButton.removeFromSuperview()
     }
     
-    
     // MARK: - View Setup
     
     func setupTableView() {
@@ -99,7 +96,6 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         tableView.sectionHeaderHeight = 24
         tableView.backgroundColor = .groupTableViewBackground
     }
-    
     
     // MARK: - Delegate Method
     
@@ -118,25 +114,16 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         self.manualScreenItems = updatedItems
     }
     
-    
     // MARK: - Actions
     
-    @objc fileprivate func handleNavigation(_ sender: UIButton) {
+    @objc fileprivate func handleNavigation() {
         if manualScreenItems.isEmpty {
             presentAlert()
             return
         }
-        UIView.animate(withDuration: 0.1, animations: {
-            sender.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-        }) { (_) in
-            UIView.animate(withDuration: 0.1, animations: {
-                sender.transform = .identity
-            }, completion: { (_) in
-                let manualSearchVC = ManualSearchViewController(manualScreenItems: self.manualScreenItems)
-                manualSearchVC.delegate = self
-                self.navigationController?.pushViewController(manualSearchVC, animated: true)
-            })
-        }
+        let manualSearchVC = ManualSearchViewController(manualScreenItems: self.manualScreenItems)
+        manualSearchVC.delegate = self
+        self.navigationController?.pushViewController(manualSearchVC, animated: true)
     }
     
     fileprivate func presentAlert() {
@@ -144,7 +131,6 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-    
     
     // MARK: - Data Setup
     
@@ -173,7 +159,6 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         manualSearchCriteriaItems.append(financial)
         manualSearchCriteriaItems.append(performance)
     }
-    
 
     // MARK: - Table View Data Source
 
