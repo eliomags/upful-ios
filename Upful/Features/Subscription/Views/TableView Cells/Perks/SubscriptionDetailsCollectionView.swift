@@ -9,7 +9,7 @@
 import UIKit
 
 class SubscriptionDetailsCollectionView: UICollectionViewController {
-    
+    // MARK: - weak var??
     var dataSource: SubscriptionFeatureDataSource?
     
     lazy var pageControl: UIPageControl = {
@@ -25,7 +25,6 @@ class SubscriptionDetailsCollectionView: UICollectionViewController {
         setupPageControl()
     }
     
-
     // MARK: - View Setup
     
     fileprivate func setupCollectionView() {

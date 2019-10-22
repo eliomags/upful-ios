@@ -15,7 +15,7 @@ protocol SaveScreenerDelegate: class {
 }
 
 protocol ActionHeaderDelegate: class {
-    func observeCollectionViewState(isEditing: Bool)
+    func observeSavedScreenerState(isEditing: Bool)
 }
 
 class SavedScreenersCollectionViewController: UICollectionViewController, UIGestureRecognizerDelegate {
@@ -27,7 +27,6 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
     weak var dataSource: SaveScreenerDelegate?
     weak var delegate: ActionHeaderDelegate?
     
-    
     // MARK: - State
     
     var isLongPressEnabled = false {
@@ -38,7 +37,7 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
     
     fileprivate func observeState() {
         collectionView.reloadData()
-        delegate?.observeCollectionViewState(isEditing: isLongPressEnabled)
+        delegate?.observeSavedScreenerState(isEditing: isLongPressEnabled)
     }
     
     

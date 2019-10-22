@@ -9,15 +9,16 @@
 import UIKit
 
 class SubscriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
     // MARK: - Dependencies
     
-    let suscriptionDataService: SubscriptionDataService
+    let viewModel: SubscriptionViewModel
 
     // MARK: - Views
     
     lazy var subscriptionDetailsCollectionView: SubscriptionDetailsCollectionView = {
         let view = SubscriptionDetailsCollectionView(collectionViewLayout: UICollectionViewFlowLayout())
-        view.dataSource = suscriptionDataService
+        view.dataSource = viewModel.suscriptionDataService
         return view
     }()
     
@@ -41,8 +42,8 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - Initializer Methods
     
-    init(suscriptionDataService: SubscriptionDataService) {
-        self.suscriptionDataService = suscriptionDataService
+    init(viewModel: SubscriptionViewModel = .init()) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -55,12 +56,29 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         setupTableView()
         setupNavBar()
         setupPresentation()
+        
+        observeStateChanges()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupNavBar()
-        setupDefaultSelection()
+    }
+    
+    func observeStateChanges() {
+        viewModel.stateChanged = { [weak self] (state) in
+            guard let self = self else { return }
+            switch state {
+                
+            case .loaded:
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    self.setupDefaultSelection()
+                }
+            default:
+                break
+            }
+        }
     }
     
     // MARK: - View Setup
@@ -127,14 +145,23 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
             let cell = SubscriptionTableViewCell(style: .default, reuseIdentifier: nil)
             if section == 1 { cell.monthLabel.text = "month" }
             if section != 1 { cell.setSavingsViews() }
-            cell.durationLabel.text = suscriptionDataService.subscriptionData[indexPath.section][indexPath.row].subscriptionDuration
-            cell.monthlyPricingLabel.text = suscriptionDataService.subscriptionData[indexPath.section][indexPath.row].monthlyPricing
-            cell.dueNowPricingLabel.text = suscriptionDataService.subscriptionData[indexPath.section][indexPath.row].totalCost
-            cell.savingsValueLabel.text = suscriptionDataService.subscriptionData[indexPath.section][indexPath.row].savingPercentage
-            return cell
             
-        default: return UITableViewCell()
+            switch viewModel.state {
+
+            case .loaded:
+                cell.durationLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].subscriptionDuration
+                cell.monthlyPricingLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].monthlyPricing
+                cell.dueNowPricingLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].totalCost
+                cell.savingsValueLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].savingPercentage
+                return cell
+            default:
+                break
+            }
+        default:
+            break
         }
+        return UITableViewCell()
+
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

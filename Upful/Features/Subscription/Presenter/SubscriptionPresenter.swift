@@ -10,7 +10,7 @@ import UIKit
 
 struct SubscriptionPresenter {
     func present(in viewController: UIViewController) {
-        let subscriptionVC = SubscriptionViewController(suscriptionDataService: SubscriptionDataService())
+        let subscriptionVC = SubscriptionViewController()
         let navVC = UINavigationController(rootViewController: subscriptionVC)
         navVC.modalPresentationStyle = .fullScreen
         viewController.present(navVC, animated: true, completion: nil)

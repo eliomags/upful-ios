@@ -58,15 +58,6 @@ class ActionableTableHeader: UITableViewHeaderFooterView {
         return button
     }()
     
-    private lazy var overallStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [textStackView, addButton, doneButton])
-        stackView.alignment = .leading
-        stackView.axis = .horizontal
-        stackView.distribution = .fill
-        stackView.spacing = 4
-        return stackView
-    }()
-    
     var buttonAction: (()->())?
     var editButtonAction: (()->())?
     
@@ -77,21 +68,21 @@ class ActionableTableHeader: UITableViewHeaderFooterView {
         addSubview(textStackView)
         addSubview(addButton)
         addSubview(doneButton)
+        
+        addButton.anchor(
+            top: nil, leading: nil, bottom: nil, trailing: trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 8, right: 16))
+        addButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+
+        doneButton.anchor(
+            top: nil, leading: nil, bottom: nil, trailing: trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 8, right: 16))
+        doneButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 
         textStackView.anchor(
             top: nil, leading: leadingAnchor, bottom: nil, trailing: doneButton.leadingAnchor,
             padding: .init(top: 0, left: 16, bottom: 8, right: 8))
         textStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        
-        addButton.anchor(
-            top: nil, leading: nil, bottom: nil, trailing: trailingAnchor,
-            padding: .init(top: 0, left: 16, bottom: 8, right: 16))
-        addButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        
-        doneButton.anchor(
-            top: nil, leading: nil, bottom: nil, trailing: trailingAnchor,
-            padding: .init(top: 0, left: 16, bottom: 8, right: 16))
-        doneButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

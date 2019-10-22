@@ -9,13 +9,12 @@
 import Foundation
 
 class SubscriptionDataService: SubscriptionFeatureDataSource {
-    var subscriptionData: [[SubscriptionItemViewModel]] = []
+    
     var subscriptionOfferings: [SubscriptionFeatureViewModel] = []
 
     
     init() {
         loadSubscriptionFeatures()
-        loadSubscritionData()
     }
         
     
@@ -28,15 +27,6 @@ class SubscriptionDataService: SubscriptionFeatureDataSource {
         self.subscriptionOfferings = features
     }
     
-    fileprivate func loadSubscritionData() {
-        let subscriptions = [
-            SubscriptionItem(subscriptionDuration: 1, monthlyPricing: SubscriptionItemViewModel.oneMonthPricing),
-            SubscriptionItem(subscriptionDuration: 1, monthlyPricing: SubscriptionItemViewModel.oneMonthPricing),
-            SubscriptionItem(subscriptionDuration: 6, monthlyPricing: 7.99),
-            SubscriptionItem(subscriptionDuration: 12, monthlyPricing: 6.99)
-        ]
-        self.subscriptionData = subscriptions.map({ [SubscriptionItemViewModel(subscriptionItem: $0)] })
-    }
 }
 
 

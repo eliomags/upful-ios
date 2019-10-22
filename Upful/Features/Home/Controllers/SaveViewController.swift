@@ -288,8 +288,10 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         InformationViewPresenter.showSaveSuccess(in: self)
     }
     
-    func observeCollectionViewState(isEditing: Bool) {
-        let header = tableView.headerView(forSection: 0) as? ActionableTableHeader
+    func observeSavedScreenerState(isEditing: Bool) {
+        let header = tableView.headerView(forSection: displayData.firstIndex(where: { (savedScreener) -> Bool in
+            return  [self.saveScreenerCollectionViewController] == savedScreener as? [SavedScreenersCollectionViewController]
+        })!) as? ActionableTableHeader
         header?.animateButton(isStateChanged: isEditing)
     }
     

@@ -8,11 +8,6 @@
 
 import UIKit
 
-struct SubscriptionItem {
-    let subscriptionDuration: Int
-    let monthlyPricing: Double
-}
-
 
 struct SubscriptionFeature {
     let title: String
