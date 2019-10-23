@@ -70,10 +70,6 @@ class SubscriptionOfferingCell: UICollectionViewCell {
         addSubview(offeringdDescriptionStackView)
         offeringdDescriptionStackView.anchor(top: imageBackgroundView.bottomAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor,
                                              padding: .init(top: 16, left: 16, bottom: 8, right: 16))
-        
-        offeringDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        offeringDescriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30).isActive = true
-        offeringDescriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30).isActive = true
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

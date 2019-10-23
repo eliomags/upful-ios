@@ -10,7 +10,7 @@ import UIKit
 
 class SubscriptionDetailsCollectionView: UICollectionViewController {
     // MARK: - weak var??
-    var dataSource: SubscriptionFeatureDataSource?
+    weak var dataSource: SubscriptionFeatureDataSource?
     
     lazy var pageControl: UIPageControl = {
         let control = UIPageControl()
@@ -34,7 +34,7 @@ class SubscriptionDetailsCollectionView: UICollectionViewController {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.contentInset = .zero
         if let flowlayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            flowlayout.itemSize = collectionView.bounds.size
+            flowlayout.itemSize = collectionView.frame.size
             flowlayout.scrollDirection = .horizontal
             flowlayout.minimumInteritemSpacing = 0
             flowlayout.minimumLineSpacing = 0

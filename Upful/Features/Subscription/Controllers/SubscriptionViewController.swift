@@ -12,7 +12,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - Dependencies
     
-    let viewModel: SubscriptionViewModel
+    let viewModel: SubscriptionViewModel = SubscriptionViewModel()
 
     // MARK: - Views
     
@@ -31,6 +31,8 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     lazy var footerView: SubscriptionFooterView = {
         let view = SubscriptionFooterView()
+        view.subscribeButton.addTarget(self, action: #selector(handleSubscribeTap), for: .touchUpInside)
+        view.restoreButton.addTarget(self, action: #selector(handleRestoreTap), for: .touchUpInside)
         return view
     }()
     
@@ -41,15 +43,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }()
     
     // MARK: - Initializer Methods
-    
-    init(viewModel: SubscriptionViewModel = .init()) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,6 +68,28 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
                     self.tableView.reloadData()
                     self.setupDefaultSelection()
                 }
+            case .paymentError(let error):
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Error", message: "An error has occured while performing the purchase. Please contact support.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { [weak self] _ in
+                        self?.dismiss(animated: true, completion: nil)
+                    }))
+                    switch error {
+                    case .paymentCancelled:
+                        return
+                    case .unknown:
+                        alert.message = "Unknown error. Please contact support"
+                    case .clientInvalid:
+                        alert.message = "Not allowed to make the payment"
+                    case .paymentNotAllowed:
+                        alert.message = "The device is not allowed to make the payment"
+                    case .storeProductNotAvailable:
+                        alert.message = "The product is not available in the current storefront"
+                    default:
+                        break
+                        }
+                    self.present(alert, animated: true)
+                    }
             default:
                 break
             }
@@ -121,10 +136,34 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         self.dismiss(animated: true, completion: nil)
     }
     
+    @objc fileprivate func handleSubscribeTap(_ sender: UIButton) {
+        viewModel.buySelectedProduct()
+    }
+    
+    @objc fileprivate func handleRestoreTap(_ sender: UIButton) {
+        sender.isEnabled = false
+        viewModel.restorePurchase(completion: { [weak self] (success) in
+          if !success {
+              let actionVC = UIAlertController(title: "Purchase Not Found", message: "No purchase to restore.", preferredStyle: .alert)
+              actionVC.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { (_) in
+                sender.isEnabled = true
+              }))
+            self?.present(actionVC, animated: true, completion: nil)
+          }
+          if success {
+              let actionVC = UIAlertController(title: "Success", message: "Your purchase has succesfully been restored.", preferredStyle: .alert)
+              actionVC.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { (_) in
+                sender.isEnabled = true
+              }))
+              self?.present(actionVC, animated: true, completion: nil)
+          }
+      })
+    }
+    
     // MARK: - TableView DataSource Methods
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -141,12 +180,10 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
             display(contentController: subscriptionDetailsCollectionView, on: cell)
             return cell
             
-        case 1,2,3:
+        case 1:
             let cell = SubscriptionTableViewCell(style: .default, reuseIdentifier: nil)
             if section == 1 { cell.monthLabel.text = "month" }
-            if section != 1 { cell.setSavingsViews() }
-            
-            switch viewModel.state {
+            switch viewModel.getState() {
 
             case .loaded:
                 cell.durationLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].subscriptionDuration
@@ -161,7 +198,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
             break
         }
         return UITableViewCell()
-
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -172,7 +208,8 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath)
+        let product = viewModel.productViewModels[indexPath.section][indexPath.row].product
+        viewModel.setSelectedProduct(product)
     }
     
     // MARK: - TableView Delegate Methods
@@ -197,12 +234,12 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 3 { return footerView }
+        if section == 1 { return footerView }
         return nil
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 3 { return 300 }
+        if section == 1 { return 300 }
         return 0
     }
 }

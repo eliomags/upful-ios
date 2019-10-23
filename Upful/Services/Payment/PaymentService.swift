@@ -37,6 +37,10 @@ open class PaymentService: NSObject {
         super.init()
         SKPaymentQueue.default().add(self)
     }
+    
+    deinit {
+        print("deinit",self)
+    }
 }
 
 extension PaymentService {
@@ -50,7 +54,6 @@ extension PaymentService {
     }
     
     public func buyProduct(_ product: SKProduct) {
-      print("Buying \(product.productIdentifier)...")
       let payment = SKPayment(product: product)
       SKPaymentQueue.default().add(payment)
     }
@@ -64,7 +67,7 @@ extension PaymentService {
     }
     
     public func restorePurchases() {
-      
+      SKPaymentQueue.default().restoreCompletedTransactions()
     }
 }
 
@@ -74,18 +77,12 @@ extension PaymentService: SKProductsRequestDelegate {
  // MARK: - Delegate Methods
   
   public func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-    print("Loaded list of products...")
     let products = response.products
     productsRequestCompletionHandler?(true, products)
     clearRequestAndHandler()
-
-    for p in products {
-      print("Found product: \(p.productIdentifier) \(p.localizedTitle) \(p.price.floatValue)")
-    }
   }
   
   public func request(_ request: SKRequest, didFailWithError error: Error) {
-    print("Failed to load list of products.")
     print("Error: \(error.localizedDescription)")
     productsRequestCompletionHandler?(false, nil)
     clearRequestAndHandler()

@@ -9,15 +9,21 @@
 import Foundation
 import StoreKit
 
+extension Double {
+    func roundToTwoDecimal() -> String {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        return formatter.string(from: NSNumber(value: self)) ?? ""
+    }
+}
+
 class UpfulProductViewModel {
     private static let oneMonthPricing = 8.99
-    
     private let priceFormatter: NumberFormatter = {
       let formatter = NumberFormatter()
-      
       formatter.formatterBehavior = .behavior10_4
       formatter.numberStyle = .currency
-      
       return formatter
     }()
 
@@ -35,36 +41,28 @@ class UpfulProductViewModel {
         setValues()
     }
     
-    private func setValues() {
-        print(product.description)
-        
+    private func setValues() {        
         priceFormatter.locale = product.priceLocale
-        monthlyPricing = priceFormatter.string(from: product.price)! + "/mo"
-        setSavingsPercentage(from: product.price.doubleValue)
+        totalCost = priceFormatter.string(from: product.price)!
+        
         switch UpfulProducts.ProductID(rawValue: (product.productIdentifier)) {
             
         case .oneMonth:
             subscriptionDuration = "1"
-            setTotalCost(from: product.price.doubleValue, duration: 1)
-        case .sixMonth:
-            subscriptionDuration = "6"
-            setTotalCost(from: product.price.doubleValue, duration: 6)
-        case .twelveMonth:
-            subscriptionDuration = "12"
-            setTotalCost(from: product.price.doubleValue, duration: 12)
+            setMonthlyCost(from: product.price.doubleValue, duration: 1)
         default:
             fatalError("No Product with that Identifier found")
         }
     }
 
-    private func setTotalCost(from monthlyPricing: Double, duration: Int) {
-        let subscriptionAnnualCost = monthlyPricing * Double(duration)
-        self.totalCost = "$\(subscriptionAnnualCost)"
+    private func setMonthlyCost(from totalPricing: Double, duration: Int) {
+        let subscriptionMonthlyCost = totalPricing / Double(duration)
+        self.monthlyPricing = "$\(subscriptionMonthlyCost.roundToTwoDecimal())" + "/mo"
     }
     
-    private func setSavingsPercentage(from monthlyPricing: Double) {
+    private func setSavingsPercentage(from pricing: Double, duration: Int) {
         let standardMonthlyCost = UpfulProductViewModel.oneMonthPricing
-        let savings = "\(Int((1-(monthlyPricing/standardMonthlyCost))*100))%"
+        let savings = "\(Int((1-((pricing / Double(duration))/standardMonthlyCost))*100))%"
         self.savingPercentage = savings
     }
     

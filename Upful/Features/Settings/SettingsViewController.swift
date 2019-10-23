@@ -13,8 +13,7 @@ class SettingsViewController: UITableViewController {
     let displayItems: [[String]] = [
         ["Preferences"],
         
-        ["Upgrade to Premium",
-        "Restore Purchase"],
+        ["Upgrade to Premium"],
         
         ["Leave a Suggestion",
         "Report an Issue",
@@ -93,7 +92,7 @@ class SettingsViewController: UITableViewController {
             preferencePresenter.present(in: self)
         case 1:
             switch row {
-            case 0, 1:
+            case 0:
                 let presenter = SubscriptionPresenter()
                 presenter.present(in: self)
             default: break

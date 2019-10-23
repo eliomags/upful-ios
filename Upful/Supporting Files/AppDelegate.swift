@@ -20,10 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window?.backgroundColor = .white
 
+        
         FirebaseApp.configure()
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         Mixpanel.initialize(token: Constants.MixPanel.token)
-                
+        IAPService().completeTransactions()
+
         window?.rootViewController = initializeVC()
         window?.makeKeyAndVisible()
         

@@ -11,10 +11,8 @@ import Foundation
 public struct UpfulProducts {
     enum ProductID: String, CaseIterable {
         case oneMonth = "com.syanik.Upful.Yanik.MonthlySubscription"
-        case sixMonth = "com.syanik.Upful.Yanik.HalfYear"
-        case twelveMonth = "com.syanik.Upful.Yanik.TwelveMonth"
     }
     
-    private static let productIds: Set<String> = Set(UpfulProducts.ProductID.allCases.map({ $0.rawValue }))
-    public static let store = PaymentService(productIDs: productIds)
+    static let productIds: Set<String> = Set(UpfulProducts.ProductID.allCases.map({ $0.rawValue }))
+//    public static let store = PaymentService(productIDs: productIds)
 }

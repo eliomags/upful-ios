@@ -26,4 +26,22 @@ class LargeGradientButton: CustomButton {
         layer.insertSublayer(gradientLayer, at: 0)
     }
     
+    override var isHighlighted: Bool {
+        didSet {
+            isHighlighted ? highlightAnimation(): unhighlightAnimation()
+        }
+    }
+    
+    private func highlightAnimation() {
+        UIView.animate(withDuration: 0.3) {
+            self.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
+        }
+    }
+    
+    private func unhighlightAnimation() {
+        UIView.animate(withDuration: 0.3) {
+            self.transform = .identity
+        }
+    }
+    
 }

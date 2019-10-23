@@ -9,7 +9,12 @@
 import Foundation
 import StoreKit
 
+
 class SubscriptionViewModel {
+    // MARK - Dependencies
+    
+    let suscriptionDataService = SubscriptionDataService()
+    let iAPService: IAPService = IAPService()
     
     // MARK: - State
     
@@ -18,21 +23,17 @@ class SubscriptionViewModel {
         case loading
         case loaded(products: [SKProduct])
         case error
+        case paymentError(error: SKError.Code)
     }
     
-    var state: State = .awaiting {
+    private var state: State = .awaiting {
         didSet {
             handleStateChange()
             stateChanged?(state)
         }
     }
     
-    var productViewModels: [[UpfulProductViewModel]] = [[]] {
-        didSet {
-            print(productViewModels)
-        }
-    }
-    
+    func getState() -> State { return self.state }
     var stateChanged: ((State) -> Void)?
     
     private func handleStateChange() {
@@ -40,27 +41,54 @@ class SubscriptionViewModel {
             
         case .loaded(let fetchedProducts):
             let sortedProducts = fetchedProducts.sorted { (product1, product2) -> Bool in
-                return product1.price.doubleValue > product2.price.doubleValue
+                return product1.price.doubleValue < product2.price.doubleValue
             }
             productViewModels.append(contentsOf: sortedProducts.compactMap({ [UpfulProductViewModel(product: $0)] }))
+            selectedProduct = sortedProducts.first
         default:
             break
         }
     }
     
-    let suscriptionDataService = SubscriptionDataService()
+    private var selectedProduct: SKProduct?
+    var productViewModels: [[UpfulProductViewModel]] = [[]]
     
     // MARK: - Initializer
     
     init() {
-        UpfulProducts.store.requestProducts { [weak self] (success, products) in
-            guard let self = self else { return }
-            if success {
-                self.state = .loaded(products: products ?? [])
-            } else {
+        iAPService.retreiveProducts { (result) in
+            switch result {
+            case .success(let fetchedProducts):
+                self.state = .loaded(products: fetchedProducts)
+
+            case .failure(_):
                 self.state = .error
+            }
+        }
+        listenForPurchaseCompletion()
+    }
+    
+    func setSelectedProduct(_ product: SKProduct) {
+        self.selectedProduct = product
+        iAPService.verifyProductSubscription(product)
+    }
+    
+    func buySelectedProduct() {
+        guard let selectedProduct = selectedProduct else { return }
+        iAPService.purchaseProduct(selectedProduct)
+    }
+    
+    func listenForPurchaseCompletion() {
+        iAPService.purchaseCompletionHandler = { [weak self] (_, error) in
+            guard let self = self else { return }
+            if let error = error {
+                self.state = .paymentError(error: error)
             }
         }
     }
     
+    func restorePurchase(completion: @escaping (Bool) -> Void) {
+        iAPService.restorePurchases(completion: completion)
+    }
+
 }
