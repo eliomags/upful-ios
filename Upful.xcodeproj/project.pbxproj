@@ -108,6 +108,7 @@
 		3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ECE234F98A40008CC18 /* Protocols.swift */; };
 		3DAB3ED1234F9F590008CC18 /* PrefrenceHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED0234F9F590008CC18 /* PrefrenceHeaderView.swift */; };
 		3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */; };
+		3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB004FC2360F5D1002F704D /* PermissionManager.swift */; };
 		3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */; };
 		3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */; };
 		3DC710882335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */; };
@@ -279,6 +280,7 @@
 		3DAB3ECE234F98A40008CC18 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		3DAB3ED0234F9F590008CC18 /* PrefrenceHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefrenceHeaderView.swift; sourceTree = "<group>"; };
 		3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceViewModel.swift; sourceTree = "<group>"; };
+		3DB004FC2360F5D1002F704D /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenResultsVC.swift; sourceTree = "<group>"; };
 		3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrinioAPI.swift; sourceTree = "<group>"; };
 		3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersCollectionViewController.swift; sourceTree = "<group>"; };
@@ -587,7 +589,6 @@
 			isa = PBXGroup;
 			children = (
 				3D20FB4822FB2086007836DD /* Supporting Files */,
-				3DC4ED3322FF029200232155 /* APIs */,
 				3D20FB4D22FB258A007836DD /* Services */,
 				3D20FB4A22FB211C007836DD /* Extensions */,
 				3DF5FBC023341ED600856205 /* Features */,
@@ -648,6 +649,9 @@
 		3D20FB4D22FB258A007836DD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3D42BE462309A56F00806AFF /* Intrinio */,
+				3D2F963F2312B025003811AB /* Analytics */,
+				3DB004FB2360F5C0002F704D /* Permissions */,
 				3DFB62B8235E3B140026D3DC /* Payment */,
 				3D7C85452337343400A2E63E /* informationViewPresenter */,
 				3DF5FC0423342BDF00856205 /* Persistence */,
@@ -1138,6 +1142,14 @@
 			path = Preferences;
 			sourceTree = "<group>";
 		};
+		3DB004FB2360F5C0002F704D /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				3DB004FC2360F5D1002F704D /* PermissionManager.swift */,
+			);
+			path = Permissions;
+			sourceTree = "<group>";
+		};
 		3DC4ED2F22FE671100232155 /* Manual Search Flow */ = {
 			isa = PBXGroup;
 			children = (
@@ -1156,15 +1168,6 @@
 				3D42BE3E23098BB400806AFF /* Controllers */,
 			);
 			path = "Search Results";
-			sourceTree = "<group>";
-		};
-		3DC4ED3322FF029200232155 /* APIs */ = {
-			isa = PBXGroup;
-			children = (
-				3D2F963F2312B025003811AB /* Analytics */,
-				3D42BE462309A56F00806AFF /* Intrinio */,
-			);
-			path = APIs;
 			sourceTree = "<group>";
 		};
 		3DC710862335CF4100A2A0DA /* Views */ = {
@@ -1713,6 +1716,7 @@
 				3DAB3EB9234C04E60008CC18 /* Preference.swift in Sources */,
 				3DA5408C232B366F00EE477C /* MenuViewHeader.swift in Sources */,
 				3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */,
+				3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */,
 				3DF5FBBE2333A48B00856205 /* ChartUpdatable.swift in Sources */,
 				3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */,
 				3DF5FBB0232BFCF100856205 /* AnalysisChartCell.swift in Sources */,

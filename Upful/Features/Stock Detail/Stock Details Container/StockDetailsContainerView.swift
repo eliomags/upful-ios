@@ -36,7 +36,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     
     lazy var saveButton: SaveButton = {
         let button = SaveButton()
-        button.addTarget(self, action: #selector(saveCompany), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleSaveTap), for: .touchUpInside)
         return button
     }()
     
@@ -101,20 +101,37 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         }
     }
     
-    @objc fileprivate func saveCompany(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
+    private func saveCompany(button: UIButton) {
+        button.isSelected = !button.isSelected
         let savedStock = SavedStock(context: PersistenceService.shared.persistentContainer.viewContext)
         savedStock.notes = ""
         savedStock.ticker = self.ticker
         savedStock.companyName = self.companyName
-        if !sender.isSelected { removeFavorite() }
+        if !button.isSelected { self.removeFavorite() }
         PersistenceService.shared.saveContext()
-        if sender.isSelected {
+        if button.isSelected {
             Vibration.light.vibrate()
             AnalyticsLogger.instance.reportEvents(event: .savedTicker(ticker: self.ticker))
         }
     }
     
+    @objc fileprivate func handleSaveTap(_ sender: UIButton) {
+        PermissionManager.shared.getSaveStockPermission { [unowned self] (permissionGranted, error) in
+            if !permissionGranted {
+                let presenter = SubscriptionPresenter()
+                presenter.present(in: self)
+            }
+            if permissionGranted {
+                self.saveCompany(button: sender)
+            }
+            if let _ = error {
+                let alertVC = UIAlertController(title: "Error", message: "There was an error performing your request.", preferredStyle: .alert)
+                alertVC.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                self.present(alertVC, animated: true, completion: nil)
+            }
+        }
+    }
+        
     // MARK: - UIPopOverPresentationDelegate Methods
     
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {

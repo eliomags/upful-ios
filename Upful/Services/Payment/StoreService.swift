@@ -14,14 +14,14 @@ class IAPService {
     private let productIdentifiers: Set<String>
     private let secret = "0f2f374e72fa4144b1842dd7158f6ebf"
     
-    var isSubscribed = false {
+    var isPremium = false {
         didSet {
             saveSubscription()
         }
     }
+    
     private func saveSubscription() {
-        // TODO: - HANDLE SAVING
-        print(isSubscribed)
+        UserDefaults.standard.set(isPremium, forKey: "isPremium")
     }
 
     
@@ -81,7 +81,7 @@ class IAPService {
     func restorePurchases(completion: @escaping ((_ success: Bool) -> Void)) {
         SwiftyStoreKit.restorePurchases(atomically: true) { results in
             if results.restoredPurchases.count > 0 {
-                self.isSubscribed = true
+                self.isPremium = true
                 completion(true)
             }
             else {
@@ -108,11 +108,11 @@ class IAPService {
                 switch purchaseResult {
                     
                 case .purchased:
-                    self.isSubscribed = true
+                    self.isPremium = true
                 case .expired:
-                    self.isSubscribed = false
+                    self.isPremium = false
                 case .notPurchased:
-                    self.isSubscribed = false
+                    self.isPremium = false
                 }
             case .error(let error):
                 print("Receipt verification failed: \(error)")

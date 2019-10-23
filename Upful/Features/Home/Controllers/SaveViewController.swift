@@ -131,13 +131,13 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
-        configureNavBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadSavedStocks()
         configureSavedItemsToDisplay()
+        configureNavBar()
     }
     
     // MARK: - View Setup
@@ -170,6 +170,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         let save = UIBarButtonItem(customView: notesButton)
         navigationItem.rightBarButtonItems = [save]
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     @objc private func handleNotesTap(_ sender: Any) {

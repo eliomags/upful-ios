@@ -35,17 +35,6 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         return v
     }()
     
-    lazy var saveButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "icons8-star-30 (1)").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.setImage(#imageLiteral(resourceName: "icons8-star-30 (2)").withRenderingMode(.alwaysOriginal), for: .selected)
-        button.setTitle("", for: .normal)
-        button.backgroundColor = .clear
-        button.tintColor = .clear
-        button.addTarget(self, action: #selector(saveScreener), for: .touchUpInside)
-        return button
-    }()
-    
     lazy var searchButton: CustomButton = {
         let b = CustomButton(type: .system)
         b.setTitle("SEARCH", for: .normal)
@@ -102,17 +91,15 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         fatalError()
     }
     
-    
     // MARK: - View Functions
     
     fileprivate func configureNavBar() {
         navigationItem.title = ""
         let clearButton = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearCriteriaTapped))
-        let save = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveScreener))
+        let save = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(handleSaveTap))
         navigationItem.rightBarButtonItems = [save,clearButton]
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
-    
     
     // MARK: - Actions
     
@@ -239,8 +226,9 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         })
     }
     
-    @objc private func saveScreener(_ sender: UIBarButtonItem) {
-        self.checkCurrentParameters { [unowned self] in
+    fileprivate func saveScreener() {
+        self.checkCurrentParameters { [weak self] in
+            guard let self = self else { return }
             let alert = UIAlertController(title: "Add to Favorites", message: "Give your screener a name.", preferredStyle: .alert)
             alert.addTextField { (titleTextField) in
                 titleTextField.text = self.screenerTitleText
@@ -253,6 +241,28 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    
+    // MARK: - Action
+    
+    @objc private func handleSaveTap(_ sender: UIBarButtonItem) {
+        PermissionManager.shared.getSaveScreenerPermission { [unowned self] (permissionGranted, error) in
+            if let _ = error {
+                let alertVC = UIAlertController(title: "Error", message: "There was an error.", preferredStyle: .alert)
+                alertVC.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                self.present(alertVC, animated: true)
+            }
+            
+            if !permissionGranted {
+                let presenter = SubscriptionPresenter()
+                presenter.present(in: self)
+            }
+            
+            if permissionGranted {
+                self.saveScreener()
+            }
         }
     }
     
