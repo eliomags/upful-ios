@@ -51,7 +51,7 @@ class AddPreferenceCollectionViewCell: UICollectionViewCell {
             leading: leadingAnchor,
             bottom: bottomAnchor,
             trailing: trailingAnchor,
-            padding: .init(top: 30, left: 12, bottom: 30, right: 12))
+            padding: .init(top: 8, left: 12, bottom: 8, right: 12))
     }
     
     required init?(coder: NSCoder) {

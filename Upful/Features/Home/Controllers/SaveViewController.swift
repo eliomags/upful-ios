@@ -365,6 +365,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             cell.detailTextLabel?.text = savedStocks[indexPath.item].companyName
             cell.detailTextLabel?.textColor = .gray
             cell.accessoryType = .disclosureIndicator
+            cell.addSeparator()
             return cell
             
         default: return UITableViewCell()
@@ -404,7 +405,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         switch indexPath.section {
             
         case 0:
-            return 200
+            if self.preferenceVC.viewModel.state == .noPreferencesSet {
+                return tableView.frame.height / 5 - 30
+            } else {
+                return 200
+            }
         case 1:
             let height: CGFloat = 340
             if isSavedScreenersEmpty { return tableView.frame.height/3 + 20 }
@@ -473,6 +478,4 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         return 30
     }
 }
-
-
 
