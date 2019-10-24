@@ -90,6 +90,8 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
                         }
                     self.present(alert, animated: true)
                     }
+            case .paymentSuccess:
+                self.dismiss(animated: true, completion: nil)
             default:
                 break
             }

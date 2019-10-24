@@ -38,8 +38,9 @@ class IAPService {
                     if purchase.needsFinishTransaction {
                         SwiftyStoreKit.finishTransaction(purchase.transaction)
                     }
+                    self.isPremium = true
                 case .failed, .purchasing, .deferred:
-                    break
+                    self.isPremium = false
                 @unknown default:
                     break
                 }

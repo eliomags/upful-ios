@@ -24,6 +24,7 @@ class SubscriptionViewModel {
         case loaded(products: [SKProduct])
         case error
         case paymentError(error: SKError.Code)
+        case paymentSuccess
     }
     
     private var state: State = .awaiting {
@@ -79,10 +80,13 @@ class SubscriptionViewModel {
     }
     
     func listenForPurchaseCompletion() {
-        iAPService.purchaseCompletionHandler = { [weak self] (_, error) in
+        iAPService.purchaseCompletionHandler = { [weak self] (success, error) in
             guard let self = self else { return }
             if let error = error {
                 self.state = .paymentError(error: error)
+            }
+            if success {
+                self.state = .paymentSuccess
             }
         }
     }

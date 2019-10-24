@@ -109,14 +109,16 @@ class SettingsViewController: UITableViewController {
                 let issueVC = ReportPresenter(reportType: .issue)
                 issueVC.present(in: self)
             case 2:
-                let alertVC = UIAlertController(title: "Upgrade", message: "Tracking is used to gather data for improving your experience. Upgrade to premium to disable tracking.", preferredStyle: .alert)
-                alertVC.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-                alertVC.addAction(UIAlertAction(title: "Upgrade", style: .default, handler: { [weak self] (_) in
-                    guard let self = self else { return }
-                    let presenter = SubscriptionPresenter()
-                    presenter.present(in: self)
-                }))
-                self.present(alertVC, animated: true, completion: nil)
+                if !PermissionManager.shared.isPremium {
+                    let alertVC = UIAlertController(title: "Upgrade", message: "Tracking is used to gather data for improving your experience. Upgrade to premium to disable tracking.", preferredStyle: .alert)
+                    alertVC.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+                    alertVC.addAction(UIAlertAction(title: "Upgrade", style: .default, handler: { [weak self] (_) in
+                        guard let self = self else { return }
+                        let presenter = SubscriptionPresenter()
+                        presenter.present(in: self)
+                    }))
+                    self.present(alertVC, animated: true, completion: nil)
+                }
             default: break
             }
             // MARK - Review
