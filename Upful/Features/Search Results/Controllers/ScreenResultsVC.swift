@@ -146,11 +146,12 @@ final class ScreenResultsViewController: UIViewController {
     }
     
     fileprivate func setupNavBar() {
-        navigationItem.title = "Search Results"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "Results"
+        navigationController?.navigationBar.prefersLargeTitles = false
         let sortButton = UIBarButtonItem(customView: self.sortButton)        
         navigationItem.rightBarButtonItem = sortButton
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.setValue(false, forKey: "hidesShadow")
     }
     
     

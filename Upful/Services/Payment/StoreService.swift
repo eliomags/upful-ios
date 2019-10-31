@@ -95,7 +95,7 @@ class IAPService {
     // MARK: - Verification
     
     func verifyProductSubscription(_ product: SKProduct) {
-        let appleValidator = AppleReceiptValidator(service: .sandbox, sharedSecret: secret)
+        let appleValidator = AppleReceiptValidator(service: .production, sharedSecret: secret)
         SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in
             switch result {
                 

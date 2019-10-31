@@ -90,12 +90,12 @@ class SuggestionViewModelTest: XCTestCase {
         XCTAssertEqual(state, SuggestionViewModel.State.isLoading)
     }
     
-    func testInit_setState_empty() {
-        // when initialized with no gset preferences
-        sut = SuggestionViewModel(dataManager: preferenceManager, networkingAPI: IntrinioMock())
-        // then
-        XCTAssertEqual(sut.state, SuggestionViewModel.State.noPreferencesSet)
-    }
+//    func testInit_setState_empty() {
+//        // when initialized with no gset preferences
+//        sut = SuggestionViewModel(dataManager: preferenceManager, networkingAPI: IntrinioMock())
+//        // then
+//        XCTAssertEqual(sut.state, SuggestionViewModel.State.noPreferencesSet)
+//    }
     
     
     
@@ -116,18 +116,12 @@ class SuggestionViewModelTest: XCTestCase {
     }
     
     class IntrinioMock: StockScreenNetworkingProtocol {
-        enum TestParameter: String {
-            case empty
-            case value
-            case error
-        }
         var testParameter: String = ""
                 
         func screenForPreferences(parameters: String, completion: @escaping (Result<[Stock], NetworkingError>) -> Void) {
             let returnStocks: [Stock] = []
             print("function called")
             completion(.success(returnStocks))
-            
         }
     }
 }

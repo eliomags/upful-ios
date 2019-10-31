@@ -50,7 +50,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             navVC.navigationBar.isTranslucent = false
             navVC.navigationBar.tintColor = .appAccent3
             navVC.navigationBar.setValue(true, forKey: "hidesShadow")
-            navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 26, weight: .heavy)]
             return navVC
         })
         return tabVC

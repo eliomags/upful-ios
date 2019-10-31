@@ -21,8 +21,9 @@ class SubscriptionDataService: SubscriptionFeatureDataSource {
     fileprivate func loadSubscriptionFeatures() {
         let features = [
             SubscriptionFeatureViewModel(subscriptionFeature: SubscriptionFeature(title: "Unlimited Saving", description: "Save as many screeners and stocks as you want"), feature: .saving),
-            SubscriptionFeatureViewModel(subscriptionFeature: SubscriptionFeature(title: "Unlimited Daily Screens", description: "Screen for as many stocks as you want each day"), feature: .screens),
-            SubscriptionFeatureViewModel(subscriptionFeature: SubscriptionFeature(title: "Notes Access", description: "Get access to notes"), feature: .notes)
+            SubscriptionFeatureViewModel(subscriptionFeature: SubscriptionFeature(title: "Unlimited Daily Screens", description: "Screen for as many stocks as you want each day"), feature: .screens)
+//            ,
+//            SubscriptionFeatureViewModel(subscriptionFeature: SubscriptionFeature(title: "Notes Access", description: "Get access to notes"), feature: .notes)
         ]
         self.subscriptionOfferings = features
     }

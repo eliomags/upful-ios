@@ -33,8 +33,22 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         let view = SubscriptionFooterView()
         view.subscribeButton.addTarget(self, action: #selector(handleSubscribeTap), for: .touchUpInside)
         view.restoreButton.addTarget(self, action: #selector(handleRestoreTap), for: .touchUpInside)
+        view.privacyButton.addTarget(self, action: #selector(handlePrivacyTap), for: .touchUpInside)
+        view.termsOfUseButton.addTarget(self, action: #selector(handleTermsOfUseTap), for: .touchUpInside)
         return view
     }()
+    
+    @objc fileprivate func handlePrivacyTap(_ sender: UIButton) {
+        if let url = URL(string: Constants.Legal.privacyPolicy) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc fileprivate func handleTermsOfUseTap(_ sender: UIButton) {
+        if let url = URL(string: Constants.Legal.termsOfUse) {
+            UIApplication.shared.open(url)
+        }
+    }
     
     lazy var cancelButton: CancelButton = {
         let view = CancelButton()

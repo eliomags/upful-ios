@@ -164,7 +164,6 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         navigationItem.rightBarButtonItems = [save,spacer, notes]
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .heavy)]
     }
 
 }

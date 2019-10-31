@@ -24,6 +24,8 @@ final class AnalyticsLogger {
         retreiveSetting()
     }
     
+    // MARK: - API
+    
     func retreiveSetting() {
         isTrackingDisabled = UserDefaults.standard.bool(forKey: AnalyticsDefaults.allowTracking)
     }
@@ -41,10 +43,9 @@ final class AnalyticsLogger {
         if !isTrackingDisabled {
             let analyticsAPIs: [AnalyticsTracker] = [mixpanelAnalytics, googleAnalytics]
             analyticsAPIs.forEach { (analyticsItem) in
-//                analytics.log(event: event)
+//                analyticsItem.log(event: event)
                 print("Logged event for:", event, analyticsItem)
             }
-
         }
         
     }
