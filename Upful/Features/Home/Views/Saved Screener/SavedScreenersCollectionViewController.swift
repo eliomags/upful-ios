@@ -177,7 +177,16 @@ class SavedScreenerCollectionViewCell: UICollectionViewCell {
     
     lazy var editButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor(white: 0.15, alpha: 0.2)
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                button.backgroundColor = UIColor(white: 0.05, alpha: 0.9)
+            }
+            if traitCollection.userInterfaceStyle == .light {
+                button.backgroundColor = UIColor(white: 0.8, alpha: 0.2)
+            }
+        } else {
+            button.backgroundColor = UIColor(white: 0.8, alpha: 0.2)
+        }
         button.setTitleColor(.appAccent3, for: .normal)
         button.setTitle("EDIT", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
@@ -194,8 +203,7 @@ class SavedScreenerCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        backgroundColor = UIColor(white: 0.94, alpha: 1)
-        backgroundColor = .groupTableViewBackground
+        backgroundColor = VersionManager.collectionCellColor(in: self)
         layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         setupViews()

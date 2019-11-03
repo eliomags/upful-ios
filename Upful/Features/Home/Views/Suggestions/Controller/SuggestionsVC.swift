@@ -114,10 +114,10 @@ extension StockSuggestionViewController: UICollectionViewDataSource, UICollectio
             
         case .pending, .isLoading:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell, for: indexPath) as? PopularCompanyCollectionViewCell else { return UICollectionViewCell() }
-            cell.companyNameLabel.backgroundColor = UIColor(white: 0.92, alpha: 0.8)
-            cell.tickerLabel.backgroundColor = UIColor(white: 0.92, alpha: 0.8)
-            cell.marketcapStackView.valueLabel.backgroundColor = UIColor(white: 0.92, alpha: 0.8)
-            cell.peStackView.valueLabel.backgroundColor = UIColor(white: 0.92, alpha: 0.8)
+            cell.companyNameLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
+            cell.tickerLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
+            cell.marketcapStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
+            cell.peStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
             return cell
             
         case .loaded:

@@ -25,23 +25,15 @@ class HomeFeedContainer: MenuContainerViewController {
         super.viewDidLoad()
         configureNavBar()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .newSession)
-        if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark { collectionView.backgroundColor = .white }
-            if traitCollection.userInterfaceStyle == .light {
-                collectionView.backgroundColor = .white
-                view.backgroundColor = .white
-            }
-        } else {
-            view.backgroundColor = .white
-            collectionView.backgroundColor = .white
-        }
+        collectionView.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
+        VersionManager.setNavigationBar(in: navigationController)
     }
-    
     
     fileprivate func configureNavBar() {
         navigationItem.title = "Explore"

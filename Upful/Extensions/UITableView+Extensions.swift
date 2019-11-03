@@ -66,7 +66,6 @@ extension UITableView {
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
         stateImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        titleLabel.textColor = UIColor.black
         titleLabel.font = .viewHeader
         titleLabel.textAlignment = .center
         

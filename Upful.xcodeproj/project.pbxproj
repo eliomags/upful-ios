@@ -126,6 +126,7 @@
 		3DD5218C235293D60090CDE6 /* StockSuggestionVCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */; };
 		3DD521912354319E0090CDE6 /* EmptySuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */; };
 		3DD52195235444E60090CDE6 /* SuggestionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD52194235444E60090CDE6 /* SuggestionsVC.swift */; };
+		3DD75A30236BAF6700C298B9 /* VersionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A2F236BAF6700C298B9 /* VersionManager.swift */; };
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
@@ -299,6 +300,7 @@
 		3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSuggestionVCTest.swift; sourceTree = "<group>"; };
 		3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySuggestionCell.swift; sourceTree = "<group>"; };
 		3DD52194235444E60090CDE6 /* SuggestionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsVC.swift; sourceTree = "<group>"; };
+		3DD75A2F236BAF6700C298B9 /* VersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionManager.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
@@ -660,6 +662,7 @@
 				3DF5FC0423342BDF00856205 /* Persistence */,
 				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
 				3D586519231C946600495D79 /* AppStoreReviewHelper.swift */,
+				3DD75A2F236BAF6700C298B9 /* VersionManager.swift */,
 				3DD4291C2347EC530079DA18 /* Vibration.swift */,
 			);
 			path = Services;
@@ -1744,6 +1747,7 @@
 				3D30D9342358862E00DC06B6 /* NotesPresenter.swift in Sources */,
 				3D90ADBA2301BE0F00C52455 /* Double+Extensions.swift in Sources */,
 				3DAB3EBD234C139B0008CC18 /* PreferenceManager.swift in Sources */,
+				3DD75A30236BAF6700C298B9 /* VersionManager.swift in Sources */,
 				3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */,
 				3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */,
 				3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */,

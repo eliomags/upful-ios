@@ -143,12 +143,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     // MARK: - View Setup
     
     fileprivate func setUpTableView() {
-        if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark { tableView.backgroundColor = .systemBackground }
-            if traitCollection.userInterfaceStyle == .light { tableView.backgroundColor = .white }
-        } else {
-            tableView.backgroundColor = .white
-        }
+        tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.tableHeaderView = UIView()
@@ -171,6 +166,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         navigationItem.rightBarButtonItems = [save]
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.prefersLargeTitles = true
+        VersionManager.navigationBarColor(in: navigationController)
     }
     
     @objc private func handleNotesTap(_ sender: Any) {
@@ -336,6 +332,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.suggestionCell, for: indexPath)
             cell.selectionStyle = .none
+            cell.backgroundColor = .clear
             display(contentController: preferenceVC, on: cell)
             return cell
             
@@ -348,6 +345,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
                 return emptyCell
             }
             let savedScreenerCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.savedScreenCell, for: indexPath)
+            savedScreenerCell.backgroundColor = .clear
             display(contentController: saveScreenerCollectionViewController, on: savedScreenerCell)
             return savedScreenerCell
             

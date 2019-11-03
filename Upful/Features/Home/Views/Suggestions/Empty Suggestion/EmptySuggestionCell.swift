@@ -59,7 +59,7 @@ class EmptyStockSuggestionCollectionViewCell: UICollectionViewCell {
     
     lazy var contentBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .groupTableViewBackground
+        view.backgroundColor = VersionManager.collectionCellColor(in: self)
         view.addSubview(contentStackView)
         contentStackView.centerInSuperview()
         view.layer.cornerRadius = 16

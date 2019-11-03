@@ -51,13 +51,14 @@ class SettingsViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
+        VersionManager.setNavigationBar(in: navigationController)
+        VersionManager.navigationBarColor(in: navigationController)
     }
     
     // MARK: - View Setup
     
     fileprivate func setupNavBar() {
         navigationItem.title = "Settings"
-        navigationController?.navigationBar.backgroundColor = .white
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     

@@ -47,11 +47,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabVC.viewControllers = controllers.map({
             let navVC = UINavigationController(rootViewController: $0)
             navVC.navigationBar.prefersLargeTitles = true
-            navVC.navigationBar.isTranslucent = false
             navVC.navigationBar.tintColor = .appAccent3
             navVC.navigationBar.setValue(true, forKey: "hidesShadow")
+            if #available(iOS 13.0, *) {
+                navVC.navigationBar.isTranslucent = true
+                if navVC.traitCollection.userInterfaceStyle == .dark {
+                    navVC.navigationBar.backgroundColor = .black
+                }
+                if navVC.traitCollection.userInterfaceStyle == .light {
+                    navVC.navigationBar.backgroundColor = .white
+                }
+            } else {
+                navVC.navigationBar.isTranslucent = false
+                navVC.navigationBar.backgroundColor = .white
+            }
             return navVC
         })
+        VersionManager.setTabBarColor(in: tabVC)
         return tabVC
     }
 

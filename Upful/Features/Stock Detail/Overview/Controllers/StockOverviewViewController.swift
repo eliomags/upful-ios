@@ -110,9 +110,15 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         setupViews()
         loadChartData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        VersionManager.setNavigationBar(in: navigationController)
+        VersionManager.navigationBarColor(in: navigationController)
     }
     
     // MARK: - View Setup
@@ -123,7 +129,7 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
         tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .clear
         tableView.tableHeaderView = stockHeaderView
         tableView.contentInset = UIEdgeInsets(top: -10, left: 0, bottom: 0, right: 0)
         if #available(iOS 10.0, *) { tableView.refreshControl = refreshingControl }

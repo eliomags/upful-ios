@@ -174,6 +174,7 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
             trailing: v.trailingAnchor,
             padding: .init(top: 15, left: 15, bottom: 0, right: 15)
         )
+        v.backgroundColor = VersionManager.collectionCellColor(in: self)
         return v
     }()
     
@@ -182,7 +183,7 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
+        
         contentView.layer.masksToBounds = true
         layer.masksToBounds = true
         setupShadow(intensity: .light, color: .black)

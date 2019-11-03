@@ -63,12 +63,6 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         let sc = UISearchController(searchResultsController: nil)
         sc.delegate = self
         sc.searchBar.delegate = self
-        if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark { sc.searchBar.backgroundColor = .white }
-            if traitCollection.userInterfaceStyle == .light { sc.searchBar.backgroundColor = .white  }
-        } else {
-            sc.searchBar.backgroundColor = .white
-        }
         sc.searchBar.tintColor = .appAccent3
         sc.searchBar.searchBarStyle = .minimal
         sc.dimsBackgroundDuringPresentation = false
@@ -106,15 +100,20 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         fetchPopularCompanyData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                tabBarController?.tabBar.backgroundColor = .black
+                tabBarController?.tabBar.isTranslucent = true
+            }
+        }
+    }
+    
     // MARK: - View Setup
         
     fileprivate func setupTableView() {
-        if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark { tableView.backgroundColor = .systemBackground }
-            if traitCollection.userInterfaceStyle == .light { tableView.backgroundColor = .white }
-        } else {
-            tableView.backgroundColor = .white
-        }
+        tableView.showsVerticalScrollIndicator = false
         tableView.backgroundView = UIView()
         tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.stockCell)
@@ -129,6 +128,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionHeaderHeight = 40
         tableView.estimatedSectionFooterHeight = 0
+
     }
     
     // MARK: - Data Setup
@@ -255,6 +255,7 @@ extension QuickSearchViewController {
             switch indexPath.section {
             case 0:
                 let companyCell = UITableViewCell(style: .default, reuseIdentifier: nil)
+                companyCell.backgroundColor = .clear
                 display(contentController: popularCompaniesVC, on: companyCell)
                 popularCompaniesVC.popularCompanies = homeFeedItems[indexPath.section] as! [PopularCompany]
                 return companyCell

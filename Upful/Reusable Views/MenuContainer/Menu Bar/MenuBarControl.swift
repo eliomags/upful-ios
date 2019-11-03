@@ -12,24 +12,21 @@ class MenuBarControl: UISegmentedControl {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark { backgroundColor = .systemBackground }
-            if traitCollection.userInterfaceStyle == .light { backgroundColor = .white }
-        } else {
-            backgroundColor = .white
-        }
-        
     }
     
     override init(items: [Any]?) {
         super.init(items: items)
         selectedSegmentIndex = 0
         if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                selectedSegmentTintColor = .black
+                backgroundColor = .secondarySystemBackground
+            }
             setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
-                                    NSAttributedString.Key.foregroundColor: UIColor.gray
+                                    NSAttributedString.Key.foregroundColor: UIColor.lightGray
             ], for: .normal)
             setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
-                                       NSAttributedString.Key.foregroundColor: UIColor.label
+                                       NSAttributedString.Key.foregroundColor: UIColor.appAccent3
                 ], for: .selected)
         } else {
             setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
@@ -39,12 +36,6 @@ class MenuBarControl: UISegmentedControl {
                                               NSAttributedString.Key.foregroundColor: UIColor.black
                     ], for: .selected)
         }
-        if #available(iOS 13.0, *) {
-            self.selectedSegmentTintColor = .white
-            self.tintColor = .white
-        }
-        backgroundColor = .white
-        tintColor = UIColor.white
         
     }
     

@@ -9,12 +9,10 @@
 import UIKit
 
 class AddButton: UIView {
-    
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 70, height: 40)
     }
 
-    
     let buttonLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)

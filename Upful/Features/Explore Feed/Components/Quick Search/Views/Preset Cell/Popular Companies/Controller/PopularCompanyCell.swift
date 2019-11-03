@@ -84,7 +84,8 @@ extension PopularCompanyViewController: UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .popular))
-        let detailVC = StockDetailsContainerView(ticker: popularCompanies[indexPath.item].header, companyName: popularCompanies[indexPath.item].details ?? "")
+        let detailVC = StockDetailsContainerView(ticker: popularCompanies[indexPath.item].header,
+                                                 companyName: popularCompanies[indexPath.item].details ?? "")
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
     
@@ -138,11 +139,7 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        if #available(iOS 13.0, *) {
-            backgroundColor = .systemBackground
-        } else {
-            backgroundColor = .white
-        }
+        backgroundColor = VersionManager.collectionCellColor2(in: self)
         layer.borderColor = UIColor.lightGray.cgColor
         layer.borderWidth = 0.25
         layer.cornerRadius = 8
