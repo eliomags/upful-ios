@@ -37,10 +37,6 @@ open class PaymentService: NSObject {
         super.init()
         SKPaymentQueue.default().add(self)
     }
-    
-    deinit {
-        print("deinit",self)
-    }
 }
 
 extension PaymentService {
@@ -115,7 +111,9 @@ extension PaymentService: SKPaymentTransactionObserver {
         break
       case .purchasing:
         break
-      }
+      @unknown default:
+            break
+        }
     }
   }
   

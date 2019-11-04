@@ -55,16 +55,24 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.backgroundColor = .groupTableViewBackground
-        
-        AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
+        collectionView.backgroundColor = VersionManager.mainContainerBackground(in: self)
         configureNavBar()
+        AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
+        setupNavBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupNavBar()
+    }
+    
+    // MARK: - View Setup
+    
+    func setupNavBar() {
         navigationController?.navigationBar.prefersLargeTitles = false
         performSelector(inBackground: #selector(loadSavedStocks), with: nil)
+        VersionManager.navigationBarColor(in: navigationController)
+        VersionManager.setNavigationBar(in: navigationController)
     }
     
     
@@ -156,7 +164,8 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     }
 
     fileprivate func configureNavBar() {
-        navigationItem.title = "\(ticker)"
+        navigationItem.title = ""
+//        navigationItem.title = "\(ticker)"
         let notes = UIBarButtonItem(customView: notesButton)
         let save = UIBarButtonItem(customView: saveButton)
         let spacer = UIBarButtonItem(customView: UIView())

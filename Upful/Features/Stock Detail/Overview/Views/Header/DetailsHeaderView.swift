@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class DetailsHeaderView: UIView {
     
     override var intrinsicContentSize: CGSize {
@@ -16,16 +15,26 @@ class DetailsHeaderView: UIView {
                       height: 70)
     }
     
+    let companyTickerLabel: UILabel = {
+        let l = UILabel()
+        l.text = "TWTR"
+        l.textColor = .white
+        l.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .largeTitle).pointSize, weight: .heavy)
+        l.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        l.translatesAutoresizingMaskIntoConstraints = false
+        return l
+    }()
+    
     let companyNameLabel: UILabel = {
         let l = UILabel()
         l.text = "Twitter Inc."
-        l.backgroundColor = .blue
+        l.backgroundColor = .clear
         l.font = UIFont.systemFont(ofSize: 14, weight: .light)
         return l
     }()
     
     lazy var headerStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [companyNameLabel])
+        let sv = UIStackView(arrangedSubviews: [companyTickerLabel,companyNameLabel])
         sv.axis = .vertical
         sv.distribution = .fillEqually
         sv.spacing = 4
@@ -38,8 +47,8 @@ class DetailsHeaderView: UIView {
         backgroundColor = .clear
         addSubview(headerStackView)
         headerStackView.fillSuperview()
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -47,8 +56,9 @@ class DetailsHeaderView: UIView {
     }
     
     
-    func setLabels(companyName: String) {
+    func setLabels(companyName: String, companyTicker: String) {
         companyNameLabel.text = companyName
+        companyTickerLabel.text = companyTicker
     }
  
 }

@@ -72,6 +72,7 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
     private lazy var stockHeaderView: TableHeaderView = {
         let v = TableHeaderView()
         v.detailsLabel.text = companyName
+        v.companyTickerLabel.text = ticker
         v.translatesAutoresizingMaskIntoConstraints = false
         v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         return v
@@ -117,13 +118,15 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        VersionManager.setNavigationBar(in: navigationController)
         VersionManager.navigationBarColor(in: navigationController)
+        VersionManager.setNavigationBar(in: navigationController)
+        navigationController?.navigationBar.isTranslucent = false
     }
     
     // MARK: - View Setup
     
     private func setupViews() {
+        tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
         tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
         tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
@@ -207,12 +210,18 @@ final class StockOverviewViewController: UITableViewController, ChartViewDelegat
         configureCalcData()
     }
     
-    override func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-        let translation = scrollView.panGestureRecognizer.translation(in: scrollView.superview).y
-        if translation > 0 { delegate?.presentMenuBar() }
-        if translation < 0 { delegate?.hideMenuBar() }
+    // MARK: - Scroll View Delegate
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let heightThreshold = stockHeaderView.frame.height - (delegate?.menuBarView.frame.height ?? 40) - 36
+        if scrollView.contentOffset.y > heightThreshold {
+            parent?.navigationItem.title = ticker
+        }
+        if scrollView.contentOffset.y < heightThreshold {
+            parent?.navigationItem.title = ""
+        }
     }
-
+    
 }
 
 extension StockOverviewViewController {
@@ -252,6 +261,7 @@ extension StockOverviewViewController {
         switch indexPath.section {
         case 0:
             guard let barGraphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? BarGraphTableViewCell else { return UITableViewCell() }
+            barGraphCell.backgroundColor = .clear
             barGraphCell.chartView.delegate = self
             configureChart(chartView: barGraphCell.chartView)
             
@@ -282,7 +292,7 @@ extension StockOverviewViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = LargeSectionHeaderLabel(padding: 16)
-        header.backgroundColor = .white
+        header.backgroundColor = VersionManager.collectionCellColor2(in: self)
         if !isLoading {
             let headerText = ["FINANCIALS", "METRICS", "NEWS"]
             header.text = headerText[section]

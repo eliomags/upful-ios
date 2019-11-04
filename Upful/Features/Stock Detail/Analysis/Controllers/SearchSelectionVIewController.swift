@@ -48,6 +48,10 @@ class SearchSelectionViewController: UITableViewController {
         let saveButton = UIBarButtonItem(customView: cancelButton)
         saveButton.tintColor = .black
         self.navigationItem.leftBarButtonItem = saveButton
+        
+        VersionManager.navigationBarColor(in: navigationController)
+        VersionManager.setNavigationBar(in: navigationController)
+        navigationController?.navigationBar.isTranslucent = false
     }
     
     // MARK: -

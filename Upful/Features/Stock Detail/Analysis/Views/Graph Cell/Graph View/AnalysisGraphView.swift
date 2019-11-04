@@ -43,7 +43,11 @@ class CombinedLineChartView: CombinedChartView {
         drawValueAboveBarEnabled = false
         leftAxis.spaceTop = 0.15
         leftAxis.spaceBottom = 0.2
-        leftAxis.labelTextColor = .black
+        if #available(iOS 13.0, *) {
+            leftAxis.labelTextColor = .label
+        } else {
+            leftAxis.labelTextColor = .black
+        }
         leftAxis.labelFont = UIFont.systemFont(ofSize: 10, weight: .semibold)
         leftAxis.gridColor = .lightGray
         leftAxis.drawGridLinesEnabled = true
@@ -55,7 +59,11 @@ class CombinedLineChartView: CombinedChartView {
         rightAxis.enabled = true
         rightAxis.spaceTop = 0.15
         rightAxis.spaceBottom = 0.2
-        rightAxis.labelTextColor = .black
+        if #available(iOS 13.0, *) {
+            rightAxis.labelTextColor = .label
+        } else {
+            rightAxis.labelTextColor = .black
+        }
         rightAxis.labelFont = UIFont.systemFont(ofSize: 10, weight: .semibold)
         rightAxis.gridColor = .lightGray
         rightAxis.drawGridLinesEnabled = false
@@ -75,7 +83,11 @@ class CombinedLineChartView: CombinedChartView {
     
     private func setupLegend() {
         legend.enabled = false
-        legend.textColor = .black
+        if #available(iOS 13.0, *) {
+            legend.textColor = .label
+        } else {
+            legend.textColor = .black
+        }
         legend.font = UIFont.systemFont(ofSize: 10, weight: .semibold)
         legend.horizontalAlignment = .right
         legend.verticalAlignment = .top
@@ -90,6 +102,11 @@ class CombinedLineChartView: CombinedChartView {
     
     func generateLineData(dataPoints: [String], values: [Double], criteria: SearchCriteria) {
         var entries = [ChartDataEntry]()
+        if #available(iOS 13.0, *) {
+            xAxis.labelTextColor = .label
+        } else {
+            xAxis.labelTextColor = .black
+        }
         setVisibleXRange(minXRange: 0, maxXRange: Double(dataPoints.count - 1))
         for i in 0..<dataPoints.count {
             let dataEntry = ChartDataEntry(x: Double(i), y: values[i])
@@ -99,7 +116,11 @@ class CombinedLineChartView: CombinedChartView {
         let dataSet = LineChartDataSet(entries: entries, label: criteria.explicit)
         dataSet.setColor(NSUIColor.appAccent)
         dataSet.setCircleColors(NSUIColor.appAccent)
-        dataSet.valueTextColor = UIColor.darkText
+        if #available(iOS 13.0, *) {
+            dataSet.valueTextColor = UIColor.label
+        } else {
+            dataSet.valueTextColor = UIColor.darkText
+        }
         dataSet.mode = .cubicBezier
         dataSet.drawValuesEnabled = true
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 10, weight: .light)
@@ -146,11 +167,16 @@ class CombinedLineChartView: CombinedChartView {
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         dataSet.drawValuesEnabled = true
         dataSet.highlightEnabled = false
-        
+        if #available(iOS 13.0, *) {
+            dataSet.valueTextColor = UIColor.label
+        } else {
+            dataSet.valueTextColor = UIColor.darkText
+        }
         dataSet.axisDependency = .left
         leftAxis.axisMaximum = dataSet.yMax * 1.4
         xAxis.valueFormatter = IndexAxisValueFormatter(values: dataPoints)
 
+        
         let chartData = BarChartData(dataSet: dataSet)
         chartData.barWidth = 0.3
         if criteria.parameterType == .number {

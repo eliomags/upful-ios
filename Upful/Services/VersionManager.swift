@@ -74,11 +74,13 @@ struct VersionManager {
                 if view.traitCollection.userInterfaceStyle == .dark {
                     let app = UINavigationBarAppearance()
                     app.backgroundColor = .black
+                    view.navigationBar.standardAppearance = app
                     view.navigationBar.scrollEdgeAppearance = app
                 }
                 if view.traitCollection.userInterfaceStyle == .light {
                     let app = UINavigationBarAppearance()
                     app.backgroundColor = .white
+                    view.navigationBar.standardAppearance = app
                     view.navigationBar.scrollEdgeAppearance = app
                 }
             } else {
@@ -118,6 +120,18 @@ struct VersionManager {
             }
         }
         return UIColor(white: 0.92, alpha: 0.8)
+    }
+    
+    static func labelColor(in view: UITraitEnvironment) -> UIColor {
+        if #available(iOS 13.0, *) {
+            if view.traitCollection.userInterfaceStyle == .dark {
+                return .white
+            }
+            if view.traitCollection.userInterfaceStyle == .light {
+                return .black
+            }
+        }
+        return .black
     }
     
 }

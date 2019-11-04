@@ -82,6 +82,7 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
     private lazy var stockHeaderView: TableHeaderView = {
         let v = TableHeaderView()
         v.detailsLabel.text = companyName
+        v.companyTickerLabel.text = ticker
         v.translatesAutoresizingMaskIntoConstraints = false
         v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         return v
@@ -121,10 +122,18 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         setupViews()
         loadChart()
         fetchCompanyFilingsData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        VersionManager.navigationBarColor(in: navigationController)
+        VersionManager.setNavigationBar(in: navigationController)
+        navigationController?.navigationBar.isTranslucent = false
     }
     
     
@@ -144,7 +153,7 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
         tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.reportsCell)
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
         tableView.tableHeaderView = stockHeaderView
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         if #available(iOS 10.0, *) { tableView.refreshControl = refreshingControl }
@@ -253,6 +262,17 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
                                   criteria: criteria)
     }
     
+    // MARK: - Scroll View Delegate
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let heightThreshold = stockHeaderView.frame.height - (delegate?.menuBarView.frame.height ?? 40) - 36
+        if scrollView.contentOffset.y > heightThreshold {
+            parent?.navigationItem.title = ticker
+        }
+        if scrollView.contentOffset.y < heightThreshold {
+            parent?.navigationItem.title = ""
+        }
+    }
 }
 
 extension StockAnalysisViewController {
@@ -276,19 +296,16 @@ extension StockAnalysisViewController {
                     configureBarData(chartView: cell.chartView, criteria: barCriteria)
                     configureLineData(chartView: cell.chartView, criteria: lineCriteria)
                 }
+                
                 return cell
             case 1,2:
                 let cell = UITableViewCell(style: .default, reuseIdentifier: ReuseID.graphConfigurationCell)
                 guard let criteria = feedData[indexPath.section][indexPath.row] as? SearchCriteria else { return cell }
                 cell.textLabel?.font = UIFont.details1
-                if indexPath.row == 1 {
-                    cell.accessoryView = UIImageView(image: #imageLiteral(resourceName: "icons8-chevron-right-30 (1)")
-                        .withRenderingMode(.alwaysOriginal))
-                }
-                if indexPath.row == 2 {
-                    cell.accessoryView = UIImageView(image: #imageLiteral(resourceName: "icons8-chevron-right-30")
-                        .withRenderingMode(.alwaysOriginal))
-                }
+                cell.backgroundColor = .clear
+                cell.accessoryType = .disclosureIndicator
+                if indexPath.row == 1 { cell.textLabel?.textColor = .appAccent }
+                if indexPath.row == 2 { cell.textLabel?.textColor = .appAccent3 }
                 cell.selectionStyle = .gray
                 cell.textLabel?.text = "\(criteria.explicit)"
                 return cell
@@ -296,6 +313,7 @@ extension StockAnalysisViewController {
             }
         case 1:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.reportsCell, for: indexPath) as? NewsCell else { return UITableViewCell() }
+            cell.backgroundColor = .clear
             let filingsData = feedData[indexPath.section] as? [Filings]
             cell.headerLabel.text = filingsData?[indexPath.row].reportType ?? ""
             cell.detailLabel.text = filingsData?[indexPath.row].periodEndDate ?? ""

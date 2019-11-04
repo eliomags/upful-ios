@@ -18,13 +18,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow()
-        window?.backgroundColor = .white
+        window?.rootViewController = initializeVC()
+
+        if #available(iOS 13.0, *) {
+            if window?.rootViewController?.traitCollection.userInterfaceStyle == .dark {
+                window?.backgroundColor = .black
+            }
+            if window?.rootViewController?.traitCollection.userInterfaceStyle == .light {
+                window?.backgroundColor = .white
+            }
+        } else {
+            window?.backgroundColor = .white
+        }
 
         FirebaseApp.configure()
         Mixpanel.initialize(token: Constants.MixPanel.token)
         IAPService().completeTransactions()
 
-        window?.rootViewController = initializeVC()
         window?.makeKeyAndVisible()
         
         return true

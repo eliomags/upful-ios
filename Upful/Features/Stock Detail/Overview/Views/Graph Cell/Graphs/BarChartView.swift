@@ -9,7 +9,6 @@
 import Foundation
 import Charts
 
-
 class GenericBarChartView: BarChartView {
     let chartViewModel = ChartViewModel()
 
@@ -33,7 +32,11 @@ class GenericBarChartView: BarChartView {
     
     private func setupLegend() {
         legend.enabled = true
-        legend.textColor = .black
+        if #available(iOS 13.0, *) {
+            legend.textColor = .label
+        } else {
+            legend.textColor = .black
+        }
         legend.font = UIFont.systemFont(ofSize: 10, weight: .semibold)
         legend.horizontalAlignment = .right
         legend.verticalAlignment = .top
@@ -48,7 +51,11 @@ class GenericBarChartView: BarChartView {
         leftAxis.spaceTop = 0.35
         leftAxis.spaceBottom = 0.2
         leftAxis.valueFormatter = chartViewModel
-        leftAxis.labelTextColor = .black
+        if #available(iOS 13.0, *) {
+            leftAxis.labelTextColor = .label
+        } else {
+            leftAxis.labelTextColor = .black
+        }
         leftAxis.labelFont = UIFont.systemFont(ofSize: 10, weight: .semibold)
         leftAxis.gridColor = .lightGray
 //        leftAxis.axisMaxLabels = 5
@@ -72,8 +79,13 @@ class GenericBarChartView: BarChartView {
         var dataEntries1: [ChartDataEntry] = []
         
         xAxis.valueFormatter = IndexAxisValueFormatter(values: dataPoints)
+        if #available(iOS 13.0, *) {
+            xAxis.labelTextColor = .label
+        } else {
+            xAxis.labelTextColor = .black
+        }
         
-        for i in 0..<dataPoints.count {
+        for i in 0..<dataPoints.count { 
             let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
             dataEntries.append(dataEntry)
             
@@ -93,8 +105,13 @@ class GenericBarChartView: BarChartView {
         chartDataSet.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         chartDataSet1.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         
-        chartDataSet.valueColors = [NSUIColor.black]
-        chartDataSet1.valueColors = [NSUIColor.black]
+        if #available(iOS 13.0, *) {
+            chartDataSet.valueColors = [NSUIColor.label]
+            chartDataSet1.valueColors = [NSUIColor.label]
+
+        } else {
+            chartDataSet1.valueColors = [NSUIColor.black]
+        }
 
         chartDataSet.valueFormatter = chartViewModel
         chartDataSet1.valueFormatter = chartViewModel
@@ -132,7 +149,6 @@ class ChartViewModel: NSObject, IAxisValueFormatter, IValueFormatter {
         formatter.negativeSuffix = "%"
         formatter.positiveSuffix = "%"
         formatter.multiplier = 100
-
         return formatter
     }()
     
@@ -140,38 +156,19 @@ class ChartViewModel: NSObject, IAxisValueFormatter, IValueFormatter {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 1
         formatter.maximumIntegerDigits = 4
-
         return formatter
     }()
     
     func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
         let formattedValue = Int(value).formatUsingAbbreviation()
-        
         return formattedValue
     }
     
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         let formattedValue = "$"+Int(value).formatUsingAbbreviation()
-        
         return formattedValue
     }
-    
-    static func setupData() -> [DetailsData] {
-        let one = DetailsData(year: "2015", revenue: 5145784, pe: 12)
-        let two = DetailsData(year: "2016", revenue: 3357453, pe: 15)
-        let three = DetailsData(year: "2017", revenue: 5335301, pe: 10)
-        let four = DetailsData(year: "2018", revenue: 5127344, pe: 17)
-
-        return [one, two, three, four]
-    }
 }
-
-struct DetailsData {
-    let year: String
-    let revenue: Double
-    let pe: Double
-}
-
 
 
 

@@ -39,7 +39,7 @@ class NewsCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .gray
-        
+        backgroundColor = .clear
         addSubview(labelStackView)
         labelStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
                               padding: .init(top: 16, left: 16, bottom: 16, right: 16))

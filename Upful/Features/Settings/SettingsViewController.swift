@@ -37,7 +37,7 @@ class SettingsViewController: UITableViewController {
     }
     
     // MARK: - Initializer Methods
-
+ 
     override func loadView() {
         super.loadView()
         setupNavBar()

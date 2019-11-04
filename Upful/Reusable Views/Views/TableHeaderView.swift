@@ -13,15 +13,24 @@ class TableHeaderView: UIView {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 0, height: 60)
     }
+    let companyTickerLabel: UILabel = {
+        let l = UILabel()
+        l.text = "TWTR"
+        l.font = UIFont(name: "AvenirNext-Heavy", size: 21)
+        l.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        l.translatesAutoresizingMaskIntoConstraints = false
+        return l
+    }()
+    
     var detailsLabel: UILabel = {
         let l = UILabel()
         l.numberOfLines = 0
-        l.font = UIFont(name: "AvenirNext-Bold", size: 18)
+        l.font = UIFont(name: "AvenirNext-Bold", size: 17)
         return l
     }()
     
     lazy var headerStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [detailsLabel])
+        let sv = UIStackView(arrangedSubviews: [companyTickerLabel, detailsLabel])
         sv.axis = .vertical
         sv.spacing = 6
         sv.alignment = .leading
