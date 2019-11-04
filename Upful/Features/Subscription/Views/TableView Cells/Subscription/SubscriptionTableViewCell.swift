@@ -104,7 +104,7 @@ class SubscriptionTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = .white
+        backgroundColor = .clear
         addSubview(contentBackgroundView)
         contentBackgroundView.anchor(
             top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,

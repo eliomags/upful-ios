@@ -12,7 +12,7 @@ class HomeFeedContainer: MenuContainerViewController {
     override var menubarControllers: [MenuBarDisplayable] {
         let controllers: [MenuBarDisplayable] = [
             QuickSearchViewController(presetDataLoader: PresetFeedDataLoader()),
-            SearchCriteriaTableViewController(style: .grouped)
+            SearchCriteriaTableViewController()
         ]
         controllers.forEach { (controller) in
             controller.delegate = self

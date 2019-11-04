@@ -23,7 +23,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .grouped)
-        view.backgroundColor = .white
+        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         view.separatorStyle = .none
         view.contentInsetAdjustmentBehavior = .never
         view.delegate = self
@@ -63,7 +63,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         setupNavBar()
         setupViews()
     }
@@ -178,7 +178,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         preferenceCollectionView.preferenceDeSelected = { [weak self] (deSelection) in
             self?.dataManager.remove(deSelection)
         }
-        cell.backgroundColor = .white
+        cell.backgroundColor = VersionManager.mainContainerBackground(in: self)
         return cell
     }
     
@@ -201,7 +201,6 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
                        "Select a Dividend Preference"
                     ]
         let label = LargeSectionHeaderLabel(padding: 16)
-        label.textColor = .darkText
         label.font = UIFont.systemFont(ofSize: 12, weight: .light)
         label.text = headers[section]
         return label

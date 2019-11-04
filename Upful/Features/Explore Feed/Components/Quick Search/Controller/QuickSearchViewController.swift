@@ -8,7 +8,13 @@
 
 import UIKit
 
-class QuickSearchViewController: UITableViewController,UISearchControllerDelegate, UISearchBarDelegate, HomeFeedNavigationDelegate, MenuBarDisplayable {
+class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UISearchBarDelegate, HomeFeedNavigationDelegate, MenuBarDisplayable {
+    var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
+    
     
     var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Quick Search"
@@ -80,7 +86,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     
     init(presetDataLoader: PresetFeedDataLoader) {
         self.presetFeedDataLoader = presetDataLoader
-        super.init(style: .grouped)
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -90,8 +96,7 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark { view.backgroundColor = .systemBackground }
-            if traitCollection.userInterfaceStyle == .light { view.backgroundColor = .clear }
+            view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         } else {
             view.backgroundColor = .white
         }
@@ -110,25 +115,41 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let parent = parent as? HomeFeedContainer {
+            parent.collectionView.contentInset = UIEdgeInsets(top: searchController.searchBar.intrinsicContentSize.height + 5,
+            left: 0, bottom: 0, right: 0)
+             parent.collectionView.setNeedsLayout()
+            parent.collectionView.layoutIfNeeded()
+            tableView.setNeedsLayout()
+            tableView.layoutIfNeeded()
+        }
+    }
+
     // MARK: - View Setup
         
     fileprivate func setupTableView() {
         tableView.showsVerticalScrollIndicator = false
+        tableView.backgroundColor = .clear
         tableView.backgroundView = UIView()
         tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.stockCell)
         tableView.contentInsetAdjustmentBehavior = .automatic
-        tableView.contentInset = UIEdgeInsets(
-            top: searchController.searchBar.intrinsicContentSize.height + 0,
-            left: 0, bottom: 0, right: 0)
         definesPresentationContext = true
         tableView.keyboardDismissMode = .onDrag
         tableView.tableFooterView = UIView()
         tableView.tableHeaderView = searchController.searchBar
         tableView.estimatedRowHeight = 0
         tableView.estimatedSectionHeaderHeight = 40
-        tableView.estimatedSectionFooterHeight = 0
-
+        tableView.estimatedSectionFooterHeight = 0        
+        view.addSubview(tableView)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
     }
     
     // MARK: - Data Setup
@@ -218,11 +239,11 @@ class QuickSearchViewController: UITableViewController,UISearchControllerDelegat
     
 }
 
-extension QuickSearchViewController {
+extension QuickSearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - TableView DataSource Methods
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch state {
             
         case .normal:
@@ -237,7 +258,7 @@ extension QuickSearchViewController {
         }
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         switch state {
             
         case .normal:
@@ -247,7 +268,7 @@ extension QuickSearchViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let emptyCell = UITableViewCell(style: .default, reuseIdentifier: nil)
         switch state {
             
@@ -281,7 +302,7 @@ extension QuickSearchViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch state {
             
         case .searching(_):
@@ -300,7 +321,7 @@ extension QuickSearchViewController {
     
     // MARK: - TableView Delegate Methods
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch state {
             
         case .normal:
@@ -315,7 +336,7 @@ extension QuickSearchViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch state {
             
         case .normal:
@@ -339,7 +360,7 @@ extension QuickSearchViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch state {
             
         case .normal:
@@ -351,7 +372,7 @@ extension QuickSearchViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         switch state {
             
         case .normal:
@@ -364,7 +385,7 @@ extension QuickSearchViewController {
         return nil
     }
     
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         switch state {
             
         case .normal:

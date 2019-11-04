@@ -166,6 +166,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         navigationItem.rightBarButtonItems = [save]
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         VersionManager.navigationBarColor(in: navigationController)
     }
     
@@ -295,7 +296,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     // MARK: - Navigation
     
     fileprivate func navigateToAddScreener() {
-        let searchCriteriaVC = CreateScreenerTableViewController(style: .grouped)
+        let searchCriteriaVC = CreateScreenerTableViewController()
         navigationController?.pushViewController(searchCriteriaVC, animated: true)
     }
     
@@ -304,13 +305,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         navigationController?.pushViewController(searchResultsVC, animated: true)
     }
     
-    // MARK: - Fileprivate Functions
-    
-    private func setupNavBar() {
-        navigationItem.title = "Home"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-    }
     
     // MARK: - TableView Delegate Methods
     
@@ -363,6 +357,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             cell.detailTextLabel?.text = savedStocks[indexPath.item].companyName
             cell.detailTextLabel?.textColor = .gray
             cell.accessoryType = .disclosureIndicator
+            cell.backgroundColor = .clear
             cell.addSeparator()
             return cell
             

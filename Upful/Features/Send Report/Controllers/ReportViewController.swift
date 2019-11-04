@@ -9,6 +9,7 @@
 import UIKit
 
 class ReportViewController: UIViewController, UITextViewDelegate {
+    
     // MARK: - Dependencies
     
     let headerTitle: String
@@ -24,7 +25,6 @@ class ReportViewController: UIViewController, UITextViewDelegate {
         view.submitButton.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
         view.textView.delegate = self
         view.textView.text = "Add description"
-        view.textView.textColor = .lightGray
         return view
     }()
     
@@ -48,7 +48,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         view.addSubview(reportContentView)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
         reportContentView.fillSuperview()
@@ -62,6 +62,8 @@ class ReportViewController: UIViewController, UITextViewDelegate {
         navigationController?.navigationBar.tintColor = .black
         navigationItem.title = headerTitle
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        VersionManager.navigationBarColor(in: navigationController)
+        VersionManager.setNavigationBar(in: navigationController)
     }
     
     // MARK: - Actions
@@ -98,19 +100,12 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.lightGray {
-            textView.text = nil
-            textView.textColor = UIColor.black
-        }
+        if reportText.isEmpty { textView.text = nil }
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.textColor = .lightGray
-            textView.text = "Add description"
-        }
+        if textView.text.isEmpty { textView.text = "Add description" }
     }
-    
 }
 
 final class SuggestionViewController: ReportViewController{

@@ -9,6 +9,7 @@
 import UIKit
 
 class IndustryPreferenceCollectionViewController: GenericPreferenceCollectionViewController {
+    
     override init(preferences: [PreferenceViewModel], savedPreferenceIds: [PreferenceID]) {
         super.init(preferences: preferences, savedPreferenceIds: savedPreferenceIds)
         collectionView.allowsMultipleSelection = true
@@ -224,9 +225,22 @@ class PreferenceCollectionViewCell: UICollectionViewCell {
         didSet {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.85, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
                 self.transform = self.isSelected ? CGAffineTransform(scaleX: 1.05, y: 1.05) : .identity
-                self.label.textColor = self.isSelected ? UIColor.white : UIColor.black
-                self.backgroundColor = self.isSelected ? UIColor.appAccent3 : UIColor(white: 0.99, alpha: 1)
                 self.layer.borderColor = self.isSelected ? UIColor.clear.cgColor : UIColor.lightGray.cgColor
+                
+                if #available(iOS 13.0, *) {
+                    self.label.textColor = .label
+                    if self.traitCollection.userInterfaceStyle == .dark {
+                        self.backgroundColor = self.isSelected ? UIColor.appAccent3 : .secondarySystemBackground
+                    }
+                    if self.traitCollection.userInterfaceStyle == .light {
+                        self.backgroundColor = self.isSelected ? UIColor.appAccent3 : VersionManager.collectionCellColor(in: self)
+                        self.label.textColor = self.isSelected ? UIColor.white : UIColor.black
+                    }
+                } else {
+                    self.backgroundColor = self.isSelected ? UIColor.appAccent3 : UIColor(white: 0.99, alpha: 1)
+                    self.label.textColor = self.isSelected ? UIColor.white : UIColor.black
+                }
+                
             })
         }
     }
@@ -235,7 +249,9 @@ class PreferenceCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor(white: 0.99, alpha: 1)
+        
+        backgroundColor = VersionManager.collectionCellColor(in: self)
+        
         addSubview(contentStackView)
         contentStackView.anchor(
             top: topAnchor,

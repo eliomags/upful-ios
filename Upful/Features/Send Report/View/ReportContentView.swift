@@ -20,7 +20,18 @@ class ReportContentView: UIView {
     lazy var textView: UITextView = {
         let textView = UITextView()
         textView.text = "Description"
-        textView.backgroundColor = UIColor(white: 0.98, alpha: 1)
+        if #available(iOS 13.0, *) {
+            if traitCollection.userInterfaceStyle == .light {
+                textView.textColor = .lightGray
+                textView.backgroundColor = UIColor(white: 0.98, alpha: 1)
+            }
+            if traitCollection.userInterfaceStyle == .dark {
+                textView.textColor = .white
+            }
+        } else {
+            textView.textColor = .darkGray
+            textView.backgroundColor = UIColor(white: 0.98, alpha: 1)
+        }
         textView.layer.cornerRadius = 4
         textView.layer.masksToBounds = true
         return textView

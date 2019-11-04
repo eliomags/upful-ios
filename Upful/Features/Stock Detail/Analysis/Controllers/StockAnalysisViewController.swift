@@ -9,7 +9,14 @@
 import UIKit
 import Charts
 
-class StockAnalysisViewController: UITableViewController, ChartViewDelegate, MenuBarDisplayable, ChartUpdatable {
+class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarDisplayable, ChartUpdatable {
+    
+    var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
+    
     
     // MARK: - MenuBarDisplay Protocol
     
@@ -113,7 +120,7 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
         self.ticker = ticker
         self.companyName = companyName
         self.intrinioApi = networkingAPI
-        super.init(style: .grouped)
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -156,7 +163,14 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
         tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
         tableView.tableHeaderView = stockHeaderView
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        if #available(iOS 10.0, *) { tableView.refreshControl = refreshingControl }
+        tableView.refreshControl = refreshingControl
+        view.addSubview(tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
     }
     
     func showActivitySpinner(_ shouldShowSpinner: Bool) {
@@ -264,7 +278,7 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
     
     // MARK: - Scroll View Delegate
     
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let heightThreshold = stockHeaderView.frame.height - (delegate?.menuBarView.frame.height ?? 40) - 36
         if scrollView.contentOffset.y > heightThreshold {
             parent?.navigationItem.title = ticker
@@ -275,17 +289,17 @@ class StockAnalysisViewController: UITableViewController, ChartViewDelegate, Men
     }
 }
 
-extension StockAnalysisViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return feedData.count
     }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 { return feedData[section].count }
         if section == 1 { return companyFilings.count }
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0 :
             switch indexPath.row {
@@ -323,7 +337,7 @@ extension StockAnalysisViewController {
         return UITableViewCell()
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var chartType: ChartType = .bar
         switch indexPath.section {
         case 0:
@@ -347,7 +361,7 @@ extension StockAnalysisViewController {
     }
 
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = LargeSectionHeaderLabel(padding: 16)
         header.backgroundColor = .clear
         if !isLoading {
@@ -358,7 +372,7 @@ extension StockAnalysisViewController {
         return nil
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath {
         case IndexPath(row: 0, section: 0):
             return (UIScreen.main.bounds.height / 2) - 50
@@ -366,16 +380,16 @@ extension StockAnalysisViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 //        if section == 0 { return 40 }
         return 50
     }
     
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == feedData.count - 1 {
             return 70
         } else {

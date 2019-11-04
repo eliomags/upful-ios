@@ -18,7 +18,8 @@ protocol MenuViewItemDelegate: class {
     func presentViewController(_ viewController: UIViewController)
 }
 
-protocol MenuBarDisplayable: UITableViewController {
+protocol MenuBarDisplayable: UIViewController {
+    var tableView: UITableView { get set }
     var delegate: MenuViewItemDelegate? { get set }
     var menubarTitle: String { get set }
 }

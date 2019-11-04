@@ -9,13 +9,13 @@
 import UIKit
 
 class CreateScreenerTableViewController: SearchCriteriaTableViewController {
-    override init(style: UITableView.Style) {
-        super.init(style: style)
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nil, bundle: nil)
         setupTableView()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func setupTableView() {
@@ -23,7 +23,14 @@ class CreateScreenerTableViewController: SearchCriteriaTableViewController {
     }
 }
 
-class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDelegate, MenuBarDisplayable {
+class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SearchCriteriaDelegate, MenuBarDisplayable {
+    
+    var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
+    
     
     var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Manual Search"
@@ -38,6 +45,15 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     private var manualScreenItems: [ManualScreenItem] = []
     
     // MARK: - Views
+    
+    private lazy var tableHeader: TableHeaderView = {
+        let v = TableHeaderView()
+        v.detailsLabel.text = ""
+        v.companyTickerLabel.text = "Select your search criteria."
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+        return v
+    }()
 
     private lazy var addCriteriaButton: CustomRoundButton = {
         let b = CustomRoundButton()
@@ -52,8 +68,8 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
     
     // MARK: - Initializer Methods
     
-    override init(style: UITableView.Style) {
-        super.init(style: style)
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nil, bundle: nil)
         initializeDisplayData()
     }
     
@@ -61,23 +77,29 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         super.init(coder: aDecoder)
     }
     
+    override func loadView() {
+        super.loadView()
+        setupTableView()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .groupTableViewBackground
-        setupTableView()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        tableView.addSubview(addCriteriaButton)
-        addCriteriaButton.anchor(
-            top: nil, leading: nil, bottom: self.parent?.view.layoutMarginsGuide.bottomAnchor, trailing: self.parent?.view.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 45, right: 25))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.navigationBar.isTranslucent = false
+        setupTableHeader()
+        tableView.addSubview(addCriteriaButton)
+        addCriteriaButton.anchor(
+            top: nil, leading: nil, bottom: self.parent?.view.layoutMarginsGuide.bottomAnchor, trailing: self.parent?.view.trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 45, right: 25))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -91,10 +113,29 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         tableView.allowsMultipleSelection = true
         tableView.allowsMultipleSelectionDuringEditing = true
         tableView.register(ManualSearchCriteriaCell.self, forCellReuseIdentifier: ReuseID.criteriaCell)
-        tableView.tableHeaderView = UIView()
         tableView.tableFooterView = UIView()
+        tableView.contentInsetAdjustmentBehavior = .never
         tableView.sectionHeaderHeight = 24
         tableView.backgroundColor = .groupTableViewBackground
+        view.addSubview(tableView)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+    }
+    
+    func setupTableHeader() {
+        tableView.tableHeaderView = tableHeader
+        if let parent = parent as? HomeFeedContainer {
+                   parent.collectionView.contentInset = UIEdgeInsets(top: tableHeader.intrinsicContentSize.height + 5,
+                   left: 0, bottom: 0, right: 0)
+            parent.collectionView.setNeedsLayout()
+            parent.collectionView.layoutIfNeeded()
+            tableView.setNeedsLayout()
+            tableView.layoutIfNeeded()
+        }
     }
     
     // MARK: - Delegate Method
@@ -162,15 +203,15 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
 
     // MARK: - Table View Data Source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return manualSearchCriteriaItems.count
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return manualSearchCriteriaItems[section].count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.criteriaCell, for: indexPath) as? ManualSearchCriteriaCell
         let manualScreenItem = manualSearchCriteriaItems[indexPath.section][indexPath.row]
         cell?.textLabel?.text = manualScreenItem.criteria.explicit
@@ -178,17 +219,17 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         return cell ?? UITableViewCell()
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let manualScreenItem = manualSearchCriteriaItems[indexPath.section][indexPath.row]
         manualScreenItems.append(manualScreenItem)
     }
     
-    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let manualScreenItem = manualSearchCriteriaItems[indexPath.section][indexPath.row]
         manualScreenItems = manualScreenItems.filter{( $0.criteria != manualScreenItem.criteria)}
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
         let header = SmallSectionHeaderLabel(padding: 16)
         view.addSubview(header)
@@ -203,16 +244,16 @@ class SearchCriteriaTableViewController: UITableViewController, SearchCriteriaDe
         return view
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 { return 90 }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 { return 40 }
         return 25
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
     
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 2 {
             return 80
         } else {
@@ -236,5 +277,10 @@ class ManualSearchCriteriaCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         self.accessoryType = selected ? .checkmark : .none
         self.textLabel?.font = selected ? .details2 : .details1
+        if #available(iOS 13.0, *) {
+            self.textLabel?.textColor = selected ? .appAccent3 : .label
+        } else {
+            self.textLabel?.textColor = selected ? .appAccent3 : .black
+        }
     }
 }
