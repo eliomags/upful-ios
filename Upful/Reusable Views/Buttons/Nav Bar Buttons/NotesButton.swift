@@ -16,12 +16,19 @@ class NotesButton: GenericNavBarButton {
 
 class SortButton: GenericNavBarButton {
     override var image: UIImage {
-        return #imageLiteral(resourceName: "icons8-more-25").withRenderingMode(.alwaysOriginal)
+        return #imageLiteral(resourceName: "icons8-more-22").withRenderingMode(.alwaysOriginal)
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor(white: 0.95, alpha: 0.95)
+        backgroundColor = .appAccent3
+        heightAnchor.constraint(equalToConstant: 27).isActive = true
+        widthAnchor.constraint(equalToConstant: 27).isActive = true
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.height / 2
     }
     
     required init?(coder: NSCoder) {
@@ -42,8 +49,8 @@ class SaveButton: UIButton {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: 33).isActive = true
-        widthAnchor.constraint(equalToConstant: 33).isActive = true        
-        setImage(#imageLiteral(resourceName: "icons8-heart-25").withRenderingMode(.alwaysOriginal), for: .normal)
+        widthAnchor.constraint(equalToConstant: 33).isActive = true
+        setImage(#imageLiteral(resourceName: "icons8-heart-25 (2)").withRenderingMode(.alwaysOriginal), for: .normal)
         setImage(#imageLiteral(resourceName: "icons8-heart-25 (1)").withRenderingMode(.alwaysOriginal), for: .selected)
         setTitle("", for: .normal)
         backgroundColor = .clear

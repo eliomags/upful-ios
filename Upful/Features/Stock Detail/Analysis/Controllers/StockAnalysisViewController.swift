@@ -11,13 +11,6 @@ import Charts
 
 class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarDisplayable, ChartUpdatable {
     
-    var tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .grouped)
-        tv.translatesAutoresizingMaskIntoConstraints = false
-        return tv
-    }()
-    
-    
     // MARK: - MenuBarDisplay Protocol
     
     var delegate: MenuViewItemDelegate?
@@ -75,21 +68,20 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     private func observeStateChanges(_ state: Bool) {
         self.showActivitySpinner(state)
         if !state {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.refreshingControl.endRefreshing()
-                self.tableView.contentInset = UIEdgeInsets(top: 70, left: 0, bottom: 0, right: 0)
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+                self?.refreshingControl.endRefreshing()
+                self?.tableView.contentInset = UIEdgeInsets(top: 70, left: 0, bottom: 0, right: 0)
             }
         }
     }
-
     
     // MARK: - Views
     
     private lazy var stockHeaderView: TableHeaderView = {
         let v = TableHeaderView()
         v.detailsLabel.text = companyName
-        v.companyTickerLabel.text = ticker
+        v.headerLabel.text = ticker
         v.translatesAutoresizingMaskIntoConstraints = false
         v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         return v
@@ -113,6 +105,11 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         return v
     }()
     
+    var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
     
     // MARK: - Initializer Methods
     
@@ -137,12 +134,10 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         VersionManager.navigationBarColor(in: navigationController)
         VersionManager.setNavigationBar(in: navigationController)
         navigationController?.navigationBar.isTranslucent = false
     }
-    
     
     // MARK: - Actions
     
@@ -150,7 +145,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         loadChart()
         fetchCompanyFilingsData()
     }
-    
     
     // MARK: - View Setup
     
@@ -187,7 +181,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         }
     }
     
-    
     // MARK: - Delegate Methods
     
     /// ChartUpdatable protocol which updates the chart from the selected search criteria in SearchSelectionViewController
@@ -199,7 +192,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
             lineCriteria = criteria
         }
     }
-    
     
     // MARK: - Private Functions
     

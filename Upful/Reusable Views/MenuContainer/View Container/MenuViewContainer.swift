@@ -17,7 +17,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         return []
     }
     
-    
     // MARK: - Views
     
     lazy var menuBarView: MenuBarView = {
@@ -26,7 +25,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         view.delegate = self
         return view
     }()
-    
     
     // MARK: - Initializer Functions
     
@@ -58,7 +56,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
             flowlayout.minimumInteritemSpacing = 0
         }
     }
-    
     
     // MARK: - Delegate Methods
     
@@ -98,7 +95,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         self.present(viewController, animated: true, completion: nil)
     }
     
-    
     // MARK: - ScrollView Delegate Methods
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -111,7 +107,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         menuBarView.setIndex(Int(targetInt))
         presentMenuBar()
     }
-    
     
     // MARK: - Fileprivate Functions
     

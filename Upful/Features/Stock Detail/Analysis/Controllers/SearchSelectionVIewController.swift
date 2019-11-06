@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchSelectionViewController: UITableViewController {
+class SearchSelectionViewController: UIViewController {
     struct Constants {
         static let criteriaCell = "CriteriaCell"
     }
@@ -19,7 +19,7 @@ class SearchSelectionViewController: UITableViewController {
     weak var delegate: ChartUpdatable?
     let chartType: ChartType
     
-    // MARK: - State
+    // MARK: - Views
     
     lazy var cancelButton: CancelButton = {
         let button = CancelButton()
@@ -27,12 +27,27 @@ class SearchSelectionViewController: UITableViewController {
         return button
     }()
     
+    var tableHeader: TableHeaderView = {
+        let header = TableHeaderView()
+        header.headerLabel.text = "Select a criteria."
+        header.detailsLabel.text = " "
+        return header
+    }()
+    
+    lazy var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.delegate = self
+        tv.dataSource = self
+//        tv.tableHeaderView = tableHeader
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
     
     // MARK: - Initializer Functions
     
     init(chartType: ChartType) {
         self.chartType = chartType
-        super.init(style: .grouped)
+        super.init(nibName: nil, bundle: nil)
         initializeDisplayData()
         modalPresentationStyle = .overCurrentContext
     }
@@ -43,24 +58,60 @@ class SearchSelectionViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableHeaderView = UIView()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.criteriaCell)
-        let saveButton = UIBarButtonItem(customView: cancelButton)
-        saveButton.tintColor = .black
-        self.navigationItem.leftBarButtonItem = saveButton
-        
-        VersionManager.navigationBarColor(in: navigationController)
-        VersionManager.setNavigationBar(in: navigationController)
-        navigationController?.navigationBar.isTranslucent = false
+        setupTableView()
+        setupNavBar()
+        setupTableHeader()
     }
     
-    // MARK: -
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    // MARK: - View Setup
+    
+    fileprivate func setupNavBar() {
+        let saveButton = UIBarButtonItem(customView: cancelButton)
+        saveButton.tintColor = .black
+        navigationItem.leftBarButtonItem = saveButton
+//        VersionManager.setNavigationBar(in: navigationController)
+//        VersionManager.navigationBarColor(in: navigationController)
+    }
+    
+    fileprivate func setupTableView() {
+        if #available(iOS 12.0, *) {
+            if traitCollection.userInterfaceStyle == .dark {
+                tableView.backgroundColor = .black
+            }
+        } else {
+            tableView.backgroundColor = .groupTableViewBackground
+        }
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.criteriaCell)
+        tableView.contentInsetAdjustmentBehavior = .automatic
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+    }
+    
+    fileprivate func setupTableHeader() {
+        tableView.tableHeaderView = tableHeader
+        tableView.setNeedsLayout()
+        tableView.layoutIfNeeded()
+        tableView.contentInset = UIEdgeInsets(top: tableHeader.intrinsicContentSize.height + 5,
+                                              left: 0, bottom: 0, right: 0)
+        tableView.setNeedsLayout()
+        tableView.layoutIfNeeded()
+    }
+    
+    // MARK: - Data Setup
     
     fileprivate func initializeDisplayData() {
         var values: [ManualScreenItem] = []
         var valuation: [ManualScreenItem] = []
         var financial: [ManualScreenItem] = []
         var performance: [ManualScreenItem] = []
+        
         SearchCriteria.allCases.forEach { (criteria) in
             switch criteria.classification {
             case .valuation:
@@ -76,7 +127,7 @@ class SearchSelectionViewController: UITableViewController {
                 performance.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
             case .other:
                 switch criteria {
-                case .name, .none: break
+                case .name, .industrycategory, .none: break
                 default: values.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
                 }
             }
@@ -102,14 +153,14 @@ class SearchSelectionViewController: UITableViewController {
     }
 }
 
-extension SearchSelectionViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+extension SearchSelectionViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return data.count
     }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data[section].count
     }
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.criteriaCell, for: indexPath)
         cell.textLabel?.font = UIFont.details1
         cell.textLabel?.text = "\(data[indexPath.section][indexPath.row].criteria.explicit)"
@@ -117,11 +168,11 @@ extension SearchSelectionViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         handleCrtieriaTap(criteria: data[indexPath.section][indexPath.row].criteria)
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
         let header = SmallSectionHeaderLabel(padding: 16)
         view.addSubview(header)

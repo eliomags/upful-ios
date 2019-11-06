@@ -9,6 +9,7 @@
 import UIKit
 
 class HomeFeedContainer: MenuContainerViewController {
+    
     override var menubarControllers: [MenuBarDisplayable] {
         let controllers: [MenuBarDisplayable] = [
             QuickSearchViewController(presetDataLoader: PresetFeedDataLoader()),
@@ -17,7 +18,6 @@ class HomeFeedContainer: MenuContainerViewController {
         controllers.forEach { (controller) in
             controller.delegate = self
         }
-        
         return controllers
     }
     

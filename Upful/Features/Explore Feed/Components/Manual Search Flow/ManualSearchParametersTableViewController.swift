@@ -28,7 +28,6 @@ class ManualSearchParametersTableViewController: UITableViewController {
     
     weak var delegate: ManualSearchDelegate?
     
-
     // MARK:- Initializer Methods
     
     init(selectedIndexPath: IndexPath, screenerItem: ManualScreenItem) {
@@ -40,11 +39,10 @@ class ManualSearchParametersTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundColor
+        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         initializeData()
         configureNavBar()
     }
-    
     
     // MARK:- Data Initialization
     
@@ -99,7 +97,6 @@ class ManualSearchParametersTableViewController: UITableViewController {
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
-
     
     // MARK: - Table view data source
     

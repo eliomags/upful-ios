@@ -27,11 +27,12 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     weak var delegate: SearchCriteriaDelegate?
 
-    
     // MARK:- Views
     
-    lazy var header: ManualSearchHeaderView = {
-        let v = ManualSearchHeaderView()
+    lazy var header: TableHeaderView = {
+        let v = TableHeaderView()
+        v.headerLabel.text = "Add your parameters."
+        v.detailsLabel.text = " "
         return v
     }()
     
@@ -41,6 +42,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         b.layer.masksToBounds = true
         b.addTarget(self, action: #selector(handleSearch), for: .touchUpInside)
         b.setupShadow(intensity: .intense, color: .black)
+        b.backgroundColor = VersionManager.buttonColor2(in: self)
         return b
     }()
     
@@ -48,7 +50,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.backgroundColor = .white
+        tv.backgroundColor = VersionManager.mainContainerBackground(in: self)
         tv.separatorStyle = .singleLine
         tv.tableFooterView = UIView()
         return tv
@@ -74,9 +76,10 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavBar()
-        view.backgroundColor = .backgroundColor
+        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         view.addSubview(manualSearchSearchTableView)
         manualSearchSearchTableView.fillSuperview()
+        
         view.addSubview(searchButton)
         searchButton.anchor(top: nil, leading: view.layoutMarginsGuide.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.layoutMarginsGuide.trailingAnchor,
                             padding: .init(top: 0, left: 16, bottom: 70, right: 16))

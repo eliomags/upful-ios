@@ -62,7 +62,7 @@ final class IntrinioAPI: StockScreenNetworkingProtocol {
     // MARK: - Screening for stocks
     
     private let endpoint = "https://api.intrinio.com/securities/search?"
-    private let numberOfResults = 10
+    private let numberOfResults = 22
     private let resultOrder = "&order_column=marketcap&order_direction=desc&primary_only=true"
     enum OrderDirection: String {
         case desc

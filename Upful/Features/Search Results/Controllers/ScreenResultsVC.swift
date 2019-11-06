@@ -44,7 +44,6 @@ final class ScreenResultsViewController: UIViewController {
     
     lazy var feedTableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
-//        tv.backgroundColor = .white
         tv.dataSource = self
         tv.delegate = self
         tv.register(ResultsTableViewCell.self, forCellReuseIdentifier: ReuseId.resultsCellID)

@@ -25,12 +25,12 @@ class CreateScreenerTableViewController: SearchCriteriaTableViewController {
 
 class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SearchCriteriaDelegate, MenuBarDisplayable {
     
-    var tableView: UITableView = {
+    lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
+        tv.tableHeaderView = tableHeader
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
-    
     
     var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Manual Search"
@@ -49,7 +49,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     private lazy var tableHeader: TableHeaderView = {
         let v = TableHeaderView()
         v.detailsLabel.text = ""
-        v.companyTickerLabel.text = "Select your search criteria."
+        v.headerLabel.text = "Select your search criteria."
         v.translatesAutoresizingMaskIntoConstraints = false
         v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         return v

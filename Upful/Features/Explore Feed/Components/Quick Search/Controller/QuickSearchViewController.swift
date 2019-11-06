@@ -9,12 +9,6 @@
 import UIKit
 
 class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UISearchBarDelegate, HomeFeedNavigationDelegate, MenuBarDisplayable {
-    var tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .grouped)
-        tv.translatesAutoresizingMaskIntoConstraints = false
-        return tv
-    }()
-    
     
     var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Quick Search"
@@ -32,8 +26,8 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     var homeFeedItems: [[Any]] = []
     var searchDisplay: [Company]  = [] {
         didSet {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
             }
         }
     }
@@ -53,6 +47,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     
     private func handleStateChange() {
         switch state {
+            
         case .normal:
             searchDisplay.removeAll()
             tableView.isScrollEnabled = true
@@ -64,6 +59,13 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     }
     
     // MARK: - Views
+    
+    lazy var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.tableHeaderView = searchController.searchBar
+        return tv
+    }()
     
     lazy var searchController: UISearchController = {
         let sc = UISearchController(searchResultsController: nil)
@@ -95,11 +97,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = VersionManager.mainContainerBackground(in: self)
-        } else {
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         initializeFeedData()
         setupTableView()
         fetchPopularCompanyData()

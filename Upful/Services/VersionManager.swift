@@ -14,18 +14,26 @@ struct VersionManager {
     
     static func buttonColor(in view: UITraitEnvironment) -> UIColor {
         if #available(iOS 13.0, *) {
-            if view.traitCollection.userInterfaceStyle == .dark { return .black }
-            if view.traitCollection.userInterfaceStyle == .light { return .white }
+            if UITraitCollection.current.userInterfaceStyle == .dark { return .black }
+            if UITraitCollection.current.userInterfaceStyle == .light { return .white }
         }
         return .white
+    }
+    
+    static func buttonColor2(in view: UITraitEnvironment) -> UIColor {
+        if #available(iOS 13.0, *) {
+            if UITraitCollection.current.userInterfaceStyle == .dark { return .secondarySystemBackground }
+            if UITraitCollection.current.userInterfaceStyle == .light { return .secondarySystemBackground }
+        }
+        return .darkGray
     }
         
     // MARK - Containers
     
     static func mainContainerBackground(in view: UITraitEnvironment) -> UIColor {
         if #available(iOS 13.0, *) {
-            if view.traitCollection.userInterfaceStyle == .dark { return .black }
-            if view.traitCollection.userInterfaceStyle == .light { return .white }
+            if UITraitCollection.current.userInterfaceStyle == .dark { return .black }
+            if UITraitCollection.current.userInterfaceStyle == .light { return .white }
         } 
         return .white
     }
@@ -35,16 +43,16 @@ struct VersionManager {
     
     static func collectionCellColor(in view: UITraitEnvironment) -> UIColor {
         if #available(iOS 13.0, *) {
-            if view.traitCollection.userInterfaceStyle == .dark { return .secondarySystemGroupedBackground }
-            if view.traitCollection.userInterfaceStyle == .light { return .groupTableViewBackground }
+            if UITraitCollection.current.userInterfaceStyle == .dark { return .secondarySystemGroupedBackground }
+            if UITraitCollection.current.userInterfaceStyle == .light { return .groupTableViewBackground }
         }
         return .groupTableViewBackground
     }
     
     static func collectionCellColor2(in view: UITraitEnvironment) -> UIColor {
         if #available(iOS 13.0, *) {
-            if view.traitCollection.userInterfaceStyle == .dark { return .black }
-            if view.traitCollection.userInterfaceStyle == .light { return .white }
+            if UITraitCollection.current.userInterfaceStyle == .dark { return .black }
+            if UITraitCollection.current.userInterfaceStyle == .light { return .white }
         }
         return .white
     }
@@ -55,10 +63,10 @@ struct VersionManager {
         if let view = view {
             if #available(iOS 13.0, *) {
              view.navigationBar.isTranslucent = false
-                if view.traitCollection.userInterfaceStyle == .dark {
+                if UITraitCollection.current.userInterfaceStyle == .dark {
                      view.navigationBar.backgroundColor = .black
                  }
-                if view.traitCollection.userInterfaceStyle == .light {
+                if UITraitCollection.current.userInterfaceStyle == .light {
                      view.navigationBar.backgroundColor = .white
                  }
             } else {
@@ -71,13 +79,13 @@ struct VersionManager {
     static func navigationBarColor(in view: UINavigationController?) {
         if let view = view {
             if #available(iOS 13.0, *) {
-                if view.traitCollection.userInterfaceStyle == .dark {
+                if UITraitCollection.current.userInterfaceStyle == .dark {
                     let app = UINavigationBarAppearance()
                     app.backgroundColor = .black
                     view.navigationBar.standardAppearance = app
                     view.navigationBar.scrollEdgeAppearance = app
                 }
-                if view.traitCollection.userInterfaceStyle == .light {
+                if UITraitCollection.current.userInterfaceStyle == .light {
                     let app = UINavigationBarAppearance()
                     app.backgroundColor = .white
                     view.navigationBar.standardAppearance = app
@@ -92,12 +100,12 @@ struct VersionManager {
     static func setTabBarColor(in view: UITabBarController?) {
         if let view = view {
             if #available(iOS 13.0, *) {
-                if view.traitCollection.userInterfaceStyle == .dark {
+                if UITraitCollection.current.userInterfaceStyle == .dark {
                     let app = UITabBarAppearance()
                     app.backgroundColor = .black
                     view.tabBar.standardAppearance = app
                 }
-                if view.traitCollection.userInterfaceStyle == .light {
+                if UITraitCollection.current.userInterfaceStyle == .light {
                     let app = UITabBarAppearance()
                     app.backgroundColor = .white
                     view.tabBar.standardAppearance = app
@@ -112,10 +120,10 @@ struct VersionManager {
     
     static func loadingLabelColor(in view: UITraitEnvironment) -> UIColor {
         if #available(iOS 13.0, *) {
-            if view.traitCollection.userInterfaceStyle == .dark {
+            if UITraitCollection.current.userInterfaceStyle == .dark {
                 return .secondarySystemBackground
             }
-            if view.traitCollection.userInterfaceStyle == .light {
+            if UITraitCollection.current.userInterfaceStyle == .light {
                 return UIColor(white: 0.92, alpha: 0.8)
             }
         }
@@ -124,12 +132,8 @@ struct VersionManager {
     
     static func labelColor(in view: UITraitEnvironment) -> UIColor {
         if #available(iOS 13.0, *) {
-            if view.traitCollection.userInterfaceStyle == .dark {
-                return .white
-            }
-            if view.traitCollection.userInterfaceStyle == .light {
-                return .black
-            }
+            if UITraitCollection.current.userInterfaceStyle == .dark { return .white }
+            if UITraitCollection.current.userInterfaceStyle == .light { return .black }
         }
         return .black
     }
