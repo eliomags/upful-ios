@@ -20,6 +20,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     // MARK: - Dependencies
     
     let presetFeedDataLoader: PresetFeedDataLoader
+    let firestoreService = FirestoreAPI()
 
     // MARK: - Data Source
     
@@ -94,7 +95,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground(in: self)
@@ -102,7 +103,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
         setupTableView()
         fetchPopularCompanyData()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if #available(iOS 13.0, *) {
@@ -151,12 +152,33 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     }
     
     // MARK: - Data Setup
+    private(set) var popularCompanies: [PopularCompany] = []
     
     fileprivate func initializeFeedData() {
         homeFeedItems.append(presetFeedDataLoader.configureCompanyList())
         homeFeedItems.append(presetFeedDataLoader.configureValueData())
         homeFeedItems.append(presetFeedDataLoader.configureGrowthData())
         homeFeedItems.append(presetFeedDataLoader.configureDividendData())
+    }
+    
+    fileprivate func getPopularCompanies() {
+        firestoreService.fetch(from: .popularStocks) { (result) in
+            switch result {
+                
+            case .success(let fetchedData):
+                let results = fetchedData as? [[String: String]]
+                
+                results?.forEach({ (dictionary) in
+                    let ticker = dictionary["ticker"] ?? ""
+                    let name = dictionary["name"] ?? ""
+                    let company = PopularCompany(details: ticker, header: ticker)
+                    self.popularCompanies.append(company)
+                })
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     fileprivate func fetchPopularCompanyData() {

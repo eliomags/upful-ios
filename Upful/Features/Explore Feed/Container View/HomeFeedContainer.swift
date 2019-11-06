@@ -21,6 +21,7 @@ class HomeFeedContainer: MenuContainerViewController {
         return controllers
     }
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavBar()

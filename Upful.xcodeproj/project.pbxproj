@@ -127,6 +127,8 @@
 		3DD521912354319E0090CDE6 /* EmptySuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */; };
 		3DD52195235444E60090CDE6 /* SuggestionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD52194235444E60090CDE6 /* SuggestionsVC.swift */; };
 		3DD75A30236BAF6700C298B9 /* VersionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A2F236BAF6700C298B9 /* VersionManager.swift */; };
+		3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A362372456700C298B9 /* FirestoreService.swift */; };
+		3DD75A3A2372797A00C298B9 /* QuickSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A392372797A00C298B9 /* QuickSearchViewModel.swift */; };
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
@@ -301,6 +303,8 @@
 		3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySuggestionCell.swift; sourceTree = "<group>"; };
 		3DD52194235444E60090CDE6 /* SuggestionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsVC.swift; sourceTree = "<group>"; };
 		3DD75A2F236BAF6700C298B9 /* VersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionManager.swift; sourceTree = "<group>"; };
+		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
+		3DD75A392372797A00C298B9 /* QuickSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchViewModel.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
@@ -661,6 +665,7 @@
 				3D7C85452337343400A2E63E /* informationViewPresenter */,
 				3DF5FC0423342BDF00856205 /* Persistence */,
 				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
+				3DD75A362372456700C298B9 /* FirestoreService.swift */,
 				3D586519231C946600495D79 /* AppStoreReviewHelper.swift */,
 				3DD75A2F236BAF6700C298B9 /* VersionManager.swift */,
 				3DD4291C2347EC530079DA18 /* Vibration.swift */,
@@ -840,6 +845,7 @@
 			isa = PBXGroup;
 			children = (
 				3D20FB5422FB34FB007836DD /* Views */,
+				3DD75A382372697300C298B9 /* View Model */,
 				3DD4291E2348F7D20079DA18 /* Controller */,
 			);
 			path = "Quick Search";
@@ -1211,6 +1217,7 @@
 			isa = PBXGroup;
 			children = (
 				3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */,
+				3DD75A392372797A00C298B9 /* QuickSearchViewModel.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1276,6 +1283,13 @@
 				3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */,
 			);
 			path = "Empty Suggestion";
+			sourceTree = "<group>";
+		};
+		3DD75A382372697300C298B9 /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "View Model";
 			sourceTree = "<group>";
 		};
 		3DF5FBA0232BB9A400856205 /* Stock Details Container */ = {
@@ -1636,6 +1650,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DD75A3A2372797A00C298B9 /* QuickSearchViewModel.swift in Sources */,
 				3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */,
 				3DD521912354319E0090CDE6 /* EmptySuggestionCell.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
@@ -1750,6 +1765,7 @@
 				3DD75A30236BAF6700C298B9 /* VersionManager.swift in Sources */,
 				3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */,
 				3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */,
+				3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */,
 				3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */,
 				3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */,
 				3DD42929234A92CD0079DA18 /* ReportViewController.swift in Sources */,
