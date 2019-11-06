@@ -20,7 +20,6 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     // MARK: - Dependencies
     
     let presetFeedDataLoader: PresetFeedDataLoader
-    let firestoreService = FirestoreAPI()
 
     // MARK: - Data Source
     
@@ -81,7 +80,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     }()
     
     lazy var popularCompaniesVC: PopularCompanyViewController = {
-        let popularVC = PopularCompanyViewController(popularCompanies: [])
+        let popularVC = PopularCompanyViewController(viewModel: PopularCompanyViewModel())
         return popularVC
     }()
     
@@ -96,12 +95,12 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
         fatalError()
     }
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground(in: self)
         initializeFeedData()
         setupTableView()
-        fetchPopularCompanyData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -152,65 +151,12 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     }
     
     // MARK: - Data Setup
-    private(set) var popularCompanies: [PopularCompany] = []
     
     fileprivate func initializeFeedData() {
-        homeFeedItems.append(presetFeedDataLoader.configureCompanyList())
+        homeFeedItems.append([])
         homeFeedItems.append(presetFeedDataLoader.configureValueData())
         homeFeedItems.append(presetFeedDataLoader.configureGrowthData())
         homeFeedItems.append(presetFeedDataLoader.configureDividendData())
-    }
-    
-    fileprivate func getPopularCompanies() {
-        firestoreService.fetch(from: .popularStocks) { (result) in
-            switch result {
-                
-            case .success(let fetchedData):
-                let results = fetchedData as? [[String: String]]
-                
-                results?.forEach({ (dictionary) in
-                    let ticker = dictionary["ticker"] ?? ""
-                    let name = dictionary["name"] ?? ""
-                    let company = PopularCompany(details: ticker, header: ticker)
-                    self.popularCompanies.append(company)
-                })
-                
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    fileprivate func fetchPopularCompanyData() {
-        CompanyViewModel.configureCompanyList().forEach { (popularCompany) in
-            NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .marketcap, frequency: .recent, completion: { (result) in
-                switch result {
-                    
-                case .success(let downloadedData):
-                    if downloadedData.isEmpty { return }
-                    DispatchQueue.main.async {
-                        popularCompany.marketcap = Int(downloadedData.first?.value ?? 0)
-                        self.tableView.reloadData()
-                    }
-                case .failure(_):
-                    break
-                }
-            })
-            
-            NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .pricetoearnings, frequency: .recent, completion: { (result) in
-                switch result {
-                    
-                case .success(let downloadedData):
-                    if downloadedData.isEmpty { return }
-                    DispatchQueue.main.async {
-                        popularCompany.priceToEarnings = downloadedData.first?.value
-                        self.tableView.reloadData()
-                    }
-                case .failure(_):
-                    break
-                }
-            })
-        }
     }
     
     fileprivate func fetchCompanies(_ searchText: String) {
@@ -298,7 +244,7 @@ extension QuickSearchViewController: UITableViewDataSource, UITableViewDelegate 
                 let companyCell = UITableViewCell(style: .default, reuseIdentifier: nil)
                 companyCell.backgroundColor = .clear
                 display(contentController: popularCompaniesVC, on: companyCell)
-                popularCompaniesVC.popularCompanies = homeFeedItems[indexPath.section] as! [PopularCompany]
+//                popularCompaniesVC.popularCompanies = homeFeedItems[indexPath.section] as! [PopularCompany]
                 return companyCell
                 
             case 1,2,3:

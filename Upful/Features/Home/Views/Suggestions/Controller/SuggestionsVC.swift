@@ -45,7 +45,7 @@ class StockSuggestionViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.isScrollEnabled = false
-        collectionView.register(PopularCompanyCollectionViewCell.self, forCellWithReuseIdentifier: ReuseID.companyCell)
+        collectionView.register(GenericCompanyCollectionViewCell.self, forCellWithReuseIdentifier: ReuseID.companyCell)
         collectionView.register(EmptyStockSuggestionCollectionViewCell.self, forCellWithReuseIdentifier: ReuseID.noResultsCell)
         collectionView.register(AddPreferenceCollectionViewCell.self, forCellWithReuseIdentifier: ReuseID.noPreferencesCell)
         collectionView.showsHorizontalScrollIndicator = false
@@ -113,20 +113,14 @@ extension StockSuggestionViewController: UICollectionViewDataSource, UICollectio
         switch viewModel.state {
             
         case .pending, .isLoading:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell, for: indexPath) as? PopularCompanyCollectionViewCell else { return UICollectionViewCell() }
-            cell.companyNameLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
-            cell.tickerLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
-            cell.marketcapStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
-            cell.peStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell, for: indexPath) as? GenericCompanyCollectionViewCell else { return UICollectionViewCell() }
+            cell.setLoadingLabels()
             return cell
             
         case .loaded:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell, for: indexPath) as? PopularCompanyCollectionViewCell else { return UICollectionViewCell() }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell, for: indexPath) as? GenericCompanyCollectionViewCell else { return UICollectionViewCell() }
             let data = viewModel.stockData[indexPath.item]
-            cell.companyNameLabel.backgroundColor = .clear
-            cell.tickerLabel.backgroundColor = .clear
-            cell.marketcapStackView.valueLabel.backgroundColor = .clear
-            cell.peStackView.valueLabel.backgroundColor = .clear
+            cell.setLoadedLabels()
             cell.companyNameLabel.text = data.name
             cell.tickerLabel.text = data.ticker
             cell.marketcapStackView.valueLabel.text = data.marketcap?.formatUsingAbbreviation()

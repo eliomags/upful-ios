@@ -8,21 +8,6 @@
 
 import UIKit
 
-class CompanyViewModel {
-    static let facebook = PopularCompany(details: "Facebook Inc", header: "FB")
-    static let netflix = PopularCompany(details: "Netflix Inc", header: "NFLX")
-    static let apple = PopularCompany(details: "Apple Inc", header: "AAPL")
-    static let amazon = PopularCompany(details: "Amazon.com Inc", header: "AMZN")
-    static let google = PopularCompany(details: "Alphabet Inc", header: "GOOGL")
-    static let twitter = PopularCompany(details: "Twitter Inc", header: "TWTR")
-    static let microsoft = PopularCompany(details: "Microsoft Corp", header: "MSFT")
-    static let disney = PopularCompany(details: "The Walt Disney Co", header: "DIS")
-    
-    static func configureCompanyList() -> [PopularCompany] {
-        return [facebook, netflix, apple, amazon, google, twitter, microsoft, disney]
-    }
-}
-
 class PresetFeedDataLoader {
     private let value1: PresetScreener = PresetScreener(
                                                 header: "Value stocks 1",
@@ -62,11 +47,6 @@ class PresetFeedDataLoader {
                                                 header: "Dividend stocks 3",
                                                 details: "Dividend Yield > 1%\nPayout Ratio < 50%\nEPS Growth > 10%",
                                                 screenType: .dividend, identifier: .dividend3)
-    
-    
-    func configureCompanyList() -> [PopularCompany] {
-        return CompanyViewModel.configureCompanyList()
-    }
     
     func configureValueData() -> [PresetScreenerViewModel] {
         let value1VM = PresetScreenerViewModel(presetScreener: value1)

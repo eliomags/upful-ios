@@ -16,10 +16,10 @@ protocol FirestoreService {
     func fetch(from : T, completion: U)
 }
 
-class FirestoreAPI: FirestoreService {
+public class FirestoreAPI: FirestoreService {
     typealias FirestoreFetchCompletion<T> = (Result<[T],Error>) -> Void
     
-    enum Collection: String {
+    public enum Collection: String {
         case popularStocks
         case savedCompanies
         case suggestions

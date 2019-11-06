@@ -1,98 +1,14 @@
 //
-//  PopularCompanyCell.swift
+//  GenericCompanyCell.swift
 //  Upful
 //
-//  Created by Yanik Simpson on 8/7/19.
+//  Created by Yanik Simpson on 11/6/19.
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
 
 import UIKit
 
-class PopularCompanyViewController: UIViewController {
-    private enum ReuseID: String {
-        case companyCell
-    }
-    
-    // MARK: - Dependencies
-    
-    var popularCompanies: [PopularCompany] {
-        didSet {
-            popularCompanyCollectionView.reloadData()
-        }
-    }
-                
-    // MARK: - Views
-    
-    var layout: UICollectionViewFlowLayout = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 20
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 4, right: 12)
-        layout.itemSize = CGSize(width: 170, height: 90)
-        return layout
-    }()
-    
-    lazy var popularCompanyCollectionView: UICollectionView = {
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .clear
-        cv.isScrollEnabled = true
-        cv.showsHorizontalScrollIndicator = false
-        cv.delegate = self
-        cv.dataSource = self
-        cv.isPagingEnabled = true
-        cv.register(PopularCompanyCollectionViewCell.self, forCellWithReuseIdentifier: ReuseID.companyCell.rawValue)
-        return cv
-    }()
-
-    // MARK: - Initializer
-    
-    init(popularCompanies: [PopularCompany]) {
-        self.popularCompanies = popularCompanies
-        super.init(nibName: nil, bundle: nil)
-        setupViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
-    
-    // MARK: - View Setup
-    
-    fileprivate func setupViews() {
-        view.backgroundColor = .clear
-        view.addSubview(popularCompanyCollectionView)
-        popularCompanyCollectionView.fillSuperview()
-    }
-    
-}
-
-extension PopularCompanyViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return popularCompanies.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let data = popularCompanies[indexPath.row]
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell.rawValue, for: indexPath) as? PopularCompanyCollectionViewCell else { return UICollectionViewCell() }
-        cell.configureLabels(company: data)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .popular))
-        let detailVC = StockDetailsContainerView(ticker: popularCompanies[indexPath.item].header,
-                                                 companyName: popularCompanies[indexPath.item].details ?? "")
-        self.navigationController?.pushViewController(detailVC, animated: true)
-    }
-    
-}
-
-
-class PopularCompanyCollectionViewCell: UICollectionViewCell {
+class GenericCompanyCollectionViewCell: UICollectionViewCell {
     let tickerLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
@@ -172,6 +88,22 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
         peStackView.valueLabel.text = company.priceToEarnings?.twoDecimal() ?? " -"
     }
     
+    
+    func setLoadingLabels() {
+        companyNameLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
+        tickerLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
+        marketcapStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
+        peStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
+    }
+    
+    func setLoadedLabels() {
+        companyNameLabel.backgroundColor = .clear
+        tickerLabel.backgroundColor = .clear
+        marketcapStackView.valueLabel.backgroundColor = .clear
+        peStackView.valueLabel.backgroundColor = .clear
+    }
+    
+    
     fileprivate func highlightedAnimation() {
         UIView.animate(withDuration: 0.2) {
         self.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
@@ -185,6 +117,10 @@ class PopularCompanyCollectionViewCell: UICollectionViewCell {
     }
     
 }
+
+
+
+
 
 
 
