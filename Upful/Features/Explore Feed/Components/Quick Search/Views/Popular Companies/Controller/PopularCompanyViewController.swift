@@ -87,7 +87,7 @@ extension PopularCompanyViewController: UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if viewModel.state == .loading { return 4 }
+        if viewModel.state == .loading { return 6 }
         return viewModel.popularCompanies.count
     }
     

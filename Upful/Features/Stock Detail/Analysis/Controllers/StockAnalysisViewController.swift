@@ -150,7 +150,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     private func setupViews() {
         tableView.register(AnalysisChartCell.self, forCellReuseIdentifier: ReuseID.graphCell)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.graphConfigurationCell)
+        tableView.register(GenericTableViewCell.self, forCellReuseIdentifier: ReuseID.graphConfigurationCell)
         tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.reportsCell)
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
@@ -305,15 +305,13 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
                 
                 return cell
             case 1,2:
-                let cell = UITableViewCell(style: .default, reuseIdentifier: ReuseID.graphConfigurationCell)
+                // MARK: - Cells For Graph Data
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphConfigurationCell, for: indexPath) as? GenericTableViewCell else { return UITableViewCell() }
                 guard let criteria = feedData[indexPath.section][indexPath.row] as? SearchCriteria else { return cell }
-                cell.textLabel?.font = UIFont.details1
-                cell.backgroundColor = .clear
-                cell.accessoryType = .disclosureIndicator
-                if indexPath.row == 1 { cell.textLabel?.textColor = .appAccent }
-                if indexPath.row == 2 { cell.textLabel?.textColor = .appAccent3 }
+                cell.titleLabel.text = "\(criteria.explicit)"
+                if indexPath.row == 1 { cell.iconView.backgroundColor = .appAccent }
+                if indexPath.row == 2 { cell.iconView.backgroundColor =  .appAccent3 }
                 cell.selectionStyle = .gray
-                cell.textLabel?.text = "\(criteria.explicit)"
                 return cell
             default: break
             }
@@ -377,7 +375,6 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        if section == 0 { return 40 }
         return 50
     }
     
@@ -388,5 +385,78 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
             return 25
         }
     }
+}
+
+class GenericCellImageView: UIImageView {
+    
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(equalToConstant: 22).isActive = true
+        widthAnchor.constraint(equalToConstant: 22).isActive = true
+        layer.masksToBounds = true
+        backgroundColor = .red
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = 4
+    }
+    
+}
+
+class GenericTableViewCell: UITableViewCell {
+    
+    let iconView: GenericCellImageView = {
+        let iv = GenericCellImageView(frame: .zero)
+        return iv
+    }()
+    
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.details1
+        label.text = "Test"
+        return label
+    }()
+    
+    lazy var contentStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [iconView, titleLabel])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 15
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+        
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupView()
+    }
+    
+    func setupView() {
+        accessoryType = .disclosureIndicator
+        backgroundColor = .clear
+        addSubview(contentStackView)
+        contentStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        contentStackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        if let accessoryView = accessoryView {
+            contentStackView.trailingAnchor.constraint(equalTo: accessoryView.leadingAnchor, constant: -8).isActive = true
+        } else {
+            contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+
 }
 

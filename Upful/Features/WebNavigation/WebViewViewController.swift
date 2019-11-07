@@ -19,7 +19,6 @@ class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
         return "News"
     }
     
-    
     // MARK: - Views
     
     var webView: WKWebView!
@@ -55,8 +54,6 @@ class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     
     fileprivate func setupNavBar() {
         navigationItem.title = headerText
-        let notesButton = UIBarButtonItem(title: "Notes", style: .done, target: self, action: #selector(handleNotesTap))
-        navigationItem.rightBarButtonItem = notesButton
     }
     
     fileprivate func setUpWebView() {

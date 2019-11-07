@@ -162,8 +162,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     fileprivate func configureNavBar() {
         navigationItem.title = "Home"
-        let save = UIBarButtonItem(customView: notesButton)
-        navigationItem.rightBarButtonItems = [save]
+//        let notes = UIBarButtonItem(customView: notesButton)
+//        navigationItem.rightBarButtonItems = [notes]
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")

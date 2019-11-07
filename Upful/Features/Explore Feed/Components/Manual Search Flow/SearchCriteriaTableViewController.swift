@@ -51,6 +51,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         v.detailsLabel.text = ""
         v.headerLabel.text = "Select your search criteria."
         v.translatesAutoresizingMaskIntoConstraints = false
+        v.heightAnchor.constraint(equalToConstant: v.intrinsicContentSize.height).isActive = true
         v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         return v
     }()
@@ -86,6 +87,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         super.viewDidLoad()
         view.backgroundColor = .groupTableViewBackground
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        setupTableHeader()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -95,7 +97,6 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.navigationBar.isTranslucent = false
-        setupTableHeader()
         tableView.addSubview(addCriteriaButton)
         addCriteriaButton.anchor(
             top: nil, leading: nil, bottom: self.parent?.view.layoutMarginsGuide.bottomAnchor, trailing: self.parent?.view.trailingAnchor,

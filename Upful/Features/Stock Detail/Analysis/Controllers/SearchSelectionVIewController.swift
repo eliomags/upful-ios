@@ -27,8 +27,11 @@ class SearchSelectionViewController: UIViewController {
         return button
     }()
     
-    var tableHeader: TableHeaderView = {
+    lazy var tableHeader: TableHeaderView = {
         let header = TableHeaderView()
+        header.translatesAutoresizingMaskIntoConstraints = false
+        header.heightAnchor.constraint(equalToConstant: header.intrinsicContentSize.height).isActive = true
+        header.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         header.headerLabel.text = "Select a criteria."
         header.detailsLabel.text = " "
         return header
@@ -38,7 +41,7 @@ class SearchSelectionViewController: UIViewController {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-//        tv.tableHeaderView = tableHeader
+        tv.tableHeaderView = tableHeader
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
@@ -73,18 +76,14 @@ class SearchSelectionViewController: UIViewController {
         let saveButton = UIBarButtonItem(customView: cancelButton)
         saveButton.tintColor = .black
         navigationItem.leftBarButtonItem = saveButton
-//        VersionManager.setNavigationBar(in: navigationController)
-//        VersionManager.navigationBarColor(in: navigationController)
+        VersionManager.setNavigationBar(in: navigationController)
+        VersionManager.navigationBarColor(in: navigationController)
     }
     
     fileprivate func setupTableView() {
         if #available(iOS 12.0, *) {
-            if traitCollection.userInterfaceStyle == .dark {
-                tableView.backgroundColor = .black
-            }
-        } else {
-            tableView.backgroundColor = .groupTableViewBackground
-        }
+            if traitCollection.userInterfaceStyle == .dark { tableView.backgroundColor = .black }
+        } else { tableView.backgroundColor = .groupTableViewBackground }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.criteriaCell)
         tableView.contentInsetAdjustmentBehavior = .automatic
         view.addSubview(tableView)
@@ -96,10 +95,6 @@ class SearchSelectionViewController: UIViewController {
     
     fileprivate func setupTableHeader() {
         tableView.tableHeaderView = tableHeader
-        tableView.setNeedsLayout()
-        tableView.layoutIfNeeded()
-        tableView.contentInset = UIEdgeInsets(top: tableHeader.intrinsicContentSize.height + 5,
-                                              left: 0, bottom: 0, right: 0)
         tableView.setNeedsLayout()
         tableView.layoutIfNeeded()
     }

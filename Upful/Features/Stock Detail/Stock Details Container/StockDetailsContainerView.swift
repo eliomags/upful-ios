@@ -40,7 +40,6 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         return button
     }()
     
-    
     // MARK: - Initializer Methods
     
     init(ticker: String, companyName: String) {
@@ -165,12 +164,9 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
 
     fileprivate func configureNavBar() {
         navigationItem.title = ""
-//        navigationItem.title = "\(ticker)"
-        let notes = UIBarButtonItem(customView: notesButton)
         let save = UIBarButtonItem(customView: saveButton)
-        let spacer = UIBarButtonItem(customView: UIView())
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.rightBarButtonItems = [save,spacer, notes]
+        navigationItem.rightBarButtonItems = [save]
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     }
