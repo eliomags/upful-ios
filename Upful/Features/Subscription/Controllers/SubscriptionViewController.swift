@@ -199,8 +199,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         case 1:
             let cell = SubscriptionTableViewCell(style: .default, reuseIdentifier: nil)
             if section == 1 { cell.monthLabel.text = "month" }
-            switch viewModel.getState() {
-
+            switch viewModel.state {
             case .loaded:
                 cell.durationLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].subscriptionDuration
                 cell.monthlyPricingLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].monthlyPricing

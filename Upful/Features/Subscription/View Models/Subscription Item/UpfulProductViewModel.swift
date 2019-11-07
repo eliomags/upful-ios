@@ -19,7 +19,7 @@ extension Double {
 }
 
 class UpfulProductViewModel {
-    private static let oneMonthPricing = 8.99
+    private static let oneMonthPricing = 1.99
     private let priceFormatter: NumberFormatter = {
       let formatter = NumberFormatter()
       formatter.formatterBehavior = .behavior10_4
@@ -37,7 +37,6 @@ class UpfulProductViewModel {
     
     init(product: SKProduct) {
         self.product = product
-        
         setValues()
     }
     
@@ -46,7 +45,6 @@ class UpfulProductViewModel {
         totalCost = priceFormatter.string(from: product.price)!
         
         switch UpfulProducts.ProductID(rawValue: (product.productIdentifier)) {
-            
         case .oneMonth:
             subscriptionDuration = "1"
             setMonthlyCost(from: product.price.doubleValue, duration: 1)

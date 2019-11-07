@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 struct SubscriptionFeature {
     let title: String
     let description: String

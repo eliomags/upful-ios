@@ -9,8 +9,8 @@
 import Foundation
 import StoreKit
 
-
 class SubscriptionViewModel {
+    
     // MARK - Dependencies
     
     let suscriptionDataService = SubscriptionDataService()
@@ -27,14 +27,13 @@ class SubscriptionViewModel {
         case paymentSuccess
     }
     
-    private var state: State = .awaiting {
+    private(set) var state: State = .awaiting {
         didSet {
             handleStateChange()
             stateChanged?(state)
         }
     }
     
-    func getState() -> State { return self.state }
     var stateChanged: ((State) -> Void)?
     
     private func handleStateChange() {

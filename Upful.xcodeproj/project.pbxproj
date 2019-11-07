@@ -401,7 +401,7 @@
 			children = (
 				3DAB3EC6234E23310008CC18 /* Protocols */,
 				3DD42924234A689C0079DA18 /* Presenter */,
-				3D0C5F8A23423B6600F4A5FC /* Model */,
+				3D0C5F8A23423B6600F4A5FC /* Models */,
 				3D0C5F832341944D00F4A5FC /* Views */,
 				3D0C5F822341944800F4A5FC /* Controllers */,
 				3D0C5F8923423B4400F4A5FC /* View Models */,
@@ -437,13 +437,13 @@
 			path = "View Models";
 			sourceTree = "<group>";
 		};
-		3D0C5F8A23423B6600F4A5FC /* Model */ = {
+		3D0C5F8A23423B6600F4A5FC /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */,
 				3DAB3EC4234E21320008CC18 /* SubscriptionDataManager.swift */,
 			);
-			path = Model;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		3D0C5F8D23423D3000F4A5FC /* TableView Cells */ = {
