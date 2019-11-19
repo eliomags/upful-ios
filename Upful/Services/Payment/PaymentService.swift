@@ -29,9 +29,9 @@ open class PaymentService: NSObject {
           let purchased = UserDefaults.standard.bool(forKey: productIdentifier)
           if purchased {
             purchasedProductIdentifiers.insert(productIdentifier)
-            print("Previously purchased: \(productIdentifier)")
+//            print("Previously purchased: \(productIdentifier)")
           } else {
-            print("Not purchased: \(productIdentifier)")
+//            print("Not purchased: \(productIdentifier)")
           }
         }
         super.init()
@@ -120,7 +120,7 @@ extension PaymentService: SKPaymentTransactionObserver {
   // MARK: - Helper Methods
  
   private func complete(transaction: SKPaymentTransaction) {
-    print("complete...")
+//    print("complete...")
     deliverPurchaseNotificationFor(identifier: transaction.payment.productIdentifier)
     SKPaymentQueue.default().finishTransaction(transaction)
   }
@@ -128,13 +128,13 @@ extension PaymentService: SKPaymentTransactionObserver {
   private func restore(transaction: SKPaymentTransaction) {
     guard let productIdentifier = transaction.original?.payment.productIdentifier else { return }
  
-    print("restore... \(productIdentifier)")
+//    print("restore... \(productIdentifier)")
     deliverPurchaseNotificationFor(identifier: productIdentifier)
     SKPaymentQueue.default().finishTransaction(transaction)
   }
  
   private func fail(transaction: SKPaymentTransaction) {
-    print("fail...")
+//    print("fail...")
     if let transactionError = transaction.error as NSError?,
       let localizedDescription = transaction.error?.localizedDescription,
         transactionError.code != SKError.paymentCancelled.rawValue {

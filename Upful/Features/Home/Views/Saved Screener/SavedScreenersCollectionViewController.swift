@@ -19,6 +19,9 @@ protocol ActionHeaderDelegate: class {
 }
 
 class SavedScreenersCollectionViewController: UICollectionViewController, UIGestureRecognizerDelegate {
+    deinit {
+        print("Deinitialized", self)
+    }
     
     enum ReuseID {
         static let cell = "cell"

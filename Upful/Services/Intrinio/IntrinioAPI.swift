@@ -119,32 +119,28 @@ final class IntrinioAPI: StockScreenNetworkingProtocol {
     /// MARK: - Lookup historic financials
     enum FinancialsFrequency: String {
         case recent = "?frequency=yearly&start_date=2018-01-01"
-        case historic = "?frequency=yearly&start_date=2015-01-01&end_date=2021-01-01&sort_order=asc"
+        case historic = "?frequency=yearly&start_date=2016-01-01&end_date=2021-01-01&sort_order=asc"
     }
     
     private let historicLookupEnpoint = "https://api-v2.intrinio.com/securities/"
     private let searchType = "/historical_data/"
     
     func fetchStockSpecificFinancial(ticker: String, financial: SearchCriteria, frequency: FinancialsFrequency, completion: @escaping (Result<[CompanyHistoricalDatum], Error>) -> Void) {
-        guard let url = URL(string: historicLookupEnpoint + ticker + searchType + financial.rawValue + frequency.rawValue + apiKey) else { return }
+        guard let url = URL(string: historicLookupEnpoint + ticker + searchType +
+            financial.rawValue + frequency.rawValue + apiKey) else { return }
         let decoder = JSONDecoder()
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-            }
+            if let error = error { completion(.failure(error)) }
             guard let data = data else { return }
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
                 let companyData = try decoder.decode(HistoricalDataSearch.self, from: data)
                 completion(.success(companyData.historicalData))
-            } catch let error {
-                completion(.failure(error))
-            }
+            } catch let error { completion(.failure(error)) }
         }
         task.resume()
     }
-    
     
     /// MARK: - Lookup fundamentals
     

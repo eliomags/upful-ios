@@ -158,7 +158,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     // MARK: - Private Functions
     
     private func getRevenueData() {
-        self.intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .totalrevenue, frequency: .historic) { (result) in
+        intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .totalrevenue, frequency: .historic) { (result) in
             switch result {
             case .success(let downloadedData):
                 self.chartRevenueData = downloadedData
@@ -170,7 +170,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     }
     
     private func getEarningsData() {
-        self.intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .netincome, frequency: .historic) { (result) in
+        intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .netincome, frequency: .historic) { (result) in
             switch result {
             case .success(let downloadedData):
                 self.chartEarningsData = downloadedData

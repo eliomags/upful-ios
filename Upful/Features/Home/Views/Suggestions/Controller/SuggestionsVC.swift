@@ -76,7 +76,7 @@ class StockSuggestionViewController: UIViewController {
         super.viewWillAppear(animated)
         viewModel.setState()
     }
-        
+    
     // MARK: - View Updates
     
     func bindViewModelStateChanges() {

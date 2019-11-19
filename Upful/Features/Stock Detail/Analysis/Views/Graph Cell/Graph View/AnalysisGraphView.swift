@@ -6,13 +6,13 @@
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
 
-import UIKit
 import Charts
 
 class CombinedLineChartView: CombinedChartView {
     
     let chartViewModel = ChartViewModel()
 
+    // MARK: - Initializer Methods
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -102,25 +102,18 @@ class CombinedLineChartView: CombinedChartView {
     
     func generateLineData(dataPoints: [String], values: [Double], criteria: SearchCriteria) {
         var entries = [ChartDataEntry]()
-        if #available(iOS 13.0, *) {
-            xAxis.labelTextColor = .label
-        } else {
-            xAxis.labelTextColor = .black
-        }
+        if #available(iOS 13.0, *) { xAxis.labelTextColor = .label }
+        else { xAxis.labelTextColor = .black }
         setVisibleXRange(minXRange: 0, maxXRange: Double(dataPoints.count - 1))
         for i in 0..<dataPoints.count {
             let dataEntry = ChartDataEntry(x: Double(i), y: values[i])
             entries.append(dataEntry)
         }
-        
         let dataSet = LineChartDataSet(entries: entries, label: criteria.explicit)
         dataSet.setColor(NSUIColor.appAccent)
         dataSet.setCircleColors(NSUIColor.appAccent)
-        if #available(iOS 13.0, *) {
-            dataSet.valueTextColor = UIColor.label
-        } else {
-            dataSet.valueTextColor = UIColor.darkText
-        }
+        if #available(iOS 13.0, *) { dataSet.valueTextColor = UIColor.label
+        } else { dataSet.valueTextColor = UIColor.darkText }
         dataSet.mode = .cubicBezier
         dataSet.drawValuesEnabled = true
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 10, weight: .light)
@@ -179,6 +172,7 @@ class CombinedLineChartView: CombinedChartView {
         
         let chartData = BarChartData(dataSet: dataSet)
         chartData.barWidth = 0.3
+        
         if criteria.parameterType == .number {
             dataSet.valueFormatter = chartViewModel
             leftAxis.valueFormatter = chartViewModel

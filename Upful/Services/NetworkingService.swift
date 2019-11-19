@@ -20,7 +20,6 @@ final class NetworkService {
     
     let intrioAPI = IntrinioAPI()
     
-    
     private init() {}
 }
 

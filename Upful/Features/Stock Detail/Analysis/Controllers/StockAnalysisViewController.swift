@@ -296,6 +296,7 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
         case 0 :
             switch indexPath.row {
             case 0:
+                // MARK: - Graph Cell
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? AnalysisChartCell else { return UITableViewCell() }
                 cell.chartView.delegate = self
                 if !isLoading {
@@ -420,7 +421,7 @@ class GenericTableViewCell: UITableViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.details1
-        label.text = "Test"
+        label.text = "No Data"
         return label
     }()
     

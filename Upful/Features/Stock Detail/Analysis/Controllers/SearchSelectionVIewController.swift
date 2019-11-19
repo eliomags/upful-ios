@@ -33,7 +33,7 @@ class SearchSelectionViewController: UIViewController {
         header.heightAnchor.constraint(equalToConstant: header.intrinsicContentSize.height).isActive = true
         header.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         header.headerLabel.text = "Select a criteria."
-        header.detailsLabel.text = " "
+        header.detailsLabel.text = ""
         return header
     }()
     
@@ -73,15 +73,13 @@ class SearchSelectionViewController: UIViewController {
     // MARK: - View Setup
     
     fileprivate func setupNavBar() {
-        let saveButton = UIBarButtonItem(customView: cancelButton)
-        saveButton.tintColor = .black
-        navigationItem.leftBarButtonItem = saveButton
-        VersionManager.setNavigationBar(in: navigationController)
-        VersionManager.navigationBarColor(in: navigationController)
+        let cancel = UIBarButtonItem(customView: cancelButton)
+        cancel.tintColor = .black
+        navigationItem.leftBarButtonItem = cancel
     }
     
     fileprivate func setupTableView() {
-        if #available(iOS 12.0, *) {
+        if #available(iOS 13.0, *) {
             if traitCollection.userInterfaceStyle == .dark { tableView.backgroundColor = .black }
         } else { tableView.backgroundColor = .groupTableViewBackground }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.criteriaCell)

@@ -11,14 +11,14 @@ import XCTest
 
 class QuickSearchViewModelTest: XCTestCase {
 
-    var sut: QuickSearchViewModel!
+//    var sut: QuickSearchViewModel!
 
     override func setUp() {
-        sut = QuickSearchViewModel()
+//        sut = QuickSearchViewModel()
     }
 
     override func tearDown() {
-        sut = nil
+//        sut = nil
         super.tearDown()
     }
 

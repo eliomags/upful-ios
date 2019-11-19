@@ -8,48 +8,6 @@
 
 import UIKit
 
-class SavedItem {
-    var savedScreener: SavedScreener
-    var savedParameters: [SavedScreenerParameter]
-    
-    init(savedScreener: SavedScreener, savedParameters: [SavedScreenerParameter]) {
-        self.savedScreener = savedScreener
-        self.savedParameters = savedParameters
-    }
-    
-    func configureDescription() -> String {
-        var str = ""
-        for param in savedParameters {
-            var description = ""
-            description.append(SearchCriteria(rawValue: param.criteria)!.explicit + " ")
-            description.append(SearchParameter(rawValue: param.parameter)!.explicit + " ")
-            switch SearchCriteria(rawValue: param.criteria)!.parameterType {
-            case .percentage:
-                description.append("\(param.value.convertToPercent())%\n")
-            case .number:
-                description.append("$\(Int(param.value).formatUsingAbbreviation())\n")
-            case .ratio:
-                description.append("\(param.value.twoDecimal())\n")
-            default: break
-            }
-            str.append(description)
-        }
-        return str
-    }
-    
-    func configureURLComponents() -> [String] {
-        var urlComponents: [String] = []
-        savedParameters.forEach { (savedParam) in
-            let criteria = SearchCriteria(rawValue: savedParam.criteria)!.rawValue
-            let parameter = SearchParameter(rawValue: savedParam.parameter)!.rawValue
-            urlComponents.append(criteria + "\(parameter)~\(savedParam.value)")
-        }
-        return urlComponents
-    }
-}
-
-
-
 final class SaveViewController: UITableViewController, SaveScreenerDelegate, NoteVCDelegate, ActionHeaderDelegate {
     
     // MARK: - Dependencies
@@ -106,6 +64,23 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     // MARK: - Views
     
+    lazy var upgradeButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.setTitle("PREMIUM", for: .normal)
+        b.setTitleColor(.appAccent3, for: .normal)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        b.addTarget(self, action: #selector(handlePremiumTap), for: .touchUpInside)
+        return b
+    }()
+    
+    lazy var navigationHeader: NavigationHeaderView = {
+        let v = NavigationHeaderView()
+        v.headerLabel.text = "Home"
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+        return v
+    }()
+    
     lazy var preferenceVC: StockSuggestionViewController = {
         let preferenceVC = StockSuggestionViewController()
         return preferenceVC
@@ -137,8 +112,25 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         super.viewWillAppear(animated)
         loadSavedStocks()
         configureSavedItemsToDisplay()
+        showPremiumButton()
         configureNavBar()
     }
+    
+    // TODO: - Properly Handle Changing of TraitCollection
+    
+//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+//        super.traitCollectionDidChange(previousTraitCollection)
+//        if #available(iOS 13.0, *) {
+//            if previousTraitCollection?.userInterfaceStyle != UITraitCollection.current.userInterfaceStyle {
+//                self.tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
+//                VersionManager.navigationBarColor(in: navigationController)
+//                VersionManager.setTabBarColor(in: tabBarController)
+//                self.view.setNeedsLayout()
+//                self.navigationController?.navigationBar.setNeedsLayout()
+//                self.tabBarController?.tabBar.setNeedsLayout()
+//            }
+//        }
+//    }
     
     // MARK: - View Setup
     
@@ -146,7 +138,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
-        tableView.tableHeaderView = UIView()
+        tableView.tableHeaderView = navigationHeader
         tableView.tableFooterView = UIView()
         tableView.register(ActionableTableHeader.self, forHeaderFooterViewReuseIdentifier: ReuseID.screenerHeaderView)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedScreenCell)
@@ -160,23 +152,24 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         return button
     }()
     
+    fileprivate func showPremiumButton() {
+        if !PermissionManager.shared.isPremium {
+            navigationHeader.headerButtonStackView.addArrangedSubview(upgradeButton) }
+        else { upgradeButton.removeFromSuperview() }
+    }
+    
     fileprivate func configureNavBar() {
-        navigationItem.title = "Home"
+//        navigationItem.title = "Home"
 //        let notes = UIBarButtonItem(customView: notesButton)
 //        navigationItem.rightBarButtonItems = [notes]
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         VersionManager.navigationBarColor(in: navigationController)
     }
-    
-    @objc private func handleNotesTap(_ sender: Any) {
-        let presenter = NotesPresenter()
-        presenter.present(in: self)
-    }
-    
+
     // MARK: - Core Data
-    // TODO: - Refactor into Manager Service
     
     /// This method fetches and filters the [SavedScreenerParameters] with the corresponding title attribute
     private func getParameters(named title: String) -> [SavedScreenerParameter] {
@@ -261,7 +254,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         generator.impactOccurred()
     }
     
-    // MARK: - Delegate Methods
+    // MARK: - Custom Delegate Methods
     
     func editScreener(indexPath: IndexPath) {
         var manualScreenItems = [ManualScreenItem]()
@@ -305,6 +298,23 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         navigationController?.pushViewController(searchResultsVC, animated: true)
     }
     
+    @objc private func handleNotesTap(_ sender: Any) {
+        let presenter = NotesPresenter()
+        presenter.present(in: self)
+    }
+    
+    @objc fileprivate func handlePremiumTap(_ sender: UIButton) {
+        let presenter = SubscriptionPresenter()
+        presenter.present(in: self)
+    }
+    
+    // MARK: - ScrollView Delegate
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let threshold = navigationHeader.intrinsicContentSize.height - 10
+        if scrollView.contentOffset.y > threshold { navigationItem.title = "Home" }
+        if scrollView.contentOffset.y < threshold { navigationItem.title = "" }
+    }
     
     // MARK: - TableView Delegate Methods
     

@@ -63,7 +63,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         setupTableView()
         setupNavBar()
         setupPresentation()
-        
         observeStateChanges()
     }
 
