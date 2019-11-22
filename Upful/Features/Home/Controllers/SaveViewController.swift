@@ -78,6 +78,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         v.headerLabel.text = "Home"
         v.translatesAutoresizingMaskIntoConstraints = false
         v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+//        v.heightAnchor.constraint(equalToConstant: v.intrinsicContentSize.height).isActive = true
         return v
     }()
     
@@ -116,6 +117,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         configureNavBar()
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        setupHeaderView()
+    }
+    
     // TODO: - Properly Handle Changing of TraitCollection
     
 //    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -134,11 +140,16 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     // MARK: - View Setup
     
+    fileprivate func setupHeaderView() {
+        if tableView.tableHeaderView == nil {
+           tableView.tableHeaderView = navigationHeader
+       }
+    }
+    
     fileprivate func setUpTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
-        tableView.tableHeaderView = navigationHeader
         tableView.tableFooterView = UIView()
         tableView.register(ActionableTableHeader.self, forHeaderFooterViewReuseIdentifier: ReuseID.screenerHeaderView)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedScreenCell)
@@ -159,14 +170,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     fileprivate func configureNavBar() {
-//        navigationItem.title = "Home"
-//        let notes = UIBarButtonItem(customView: notesButton)
-//        navigationItem.rightBarButtonItems = [notes]
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         VersionManager.navigationBarColor(in: navigationController)
+        VersionManager.setNavigationBar(in: navigationController)
     }
 
     // MARK: - Core Data
@@ -429,7 +437,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 { return 70 }
+        if section == 0 { return 80 }
         return 60
     }
     
@@ -479,6 +487,15 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 30
+    }
+}
+
+
+// MARK: - Presentation Controller Delegate Methods
+
+extension SaveViewController: PresentationControllerDelegate {
+    func presentationControllerdDidDismiss() {
+        showPremiumButton()
     }
 }
 

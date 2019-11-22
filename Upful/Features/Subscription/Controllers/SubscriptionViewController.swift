@@ -8,11 +8,19 @@
 
 import UIKit
 
+/*
+ This will be replaced when the build target is moved to iOS 13
+ */
+protocol PresentationControllerDelegate: UIViewController {
+    func presentationControllerdDidDismiss()
+}
+
 class SubscriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - Dependencies
     
     let viewModel: SubscriptionViewModel = SubscriptionViewModel()
+    weak var presentationDelegate: PresentationControllerDelegate?
 
     // MARK: - Views
     
@@ -104,7 +112,9 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
                     self.present(alert, animated: true)
                     }
             case .paymentSuccess:
-                self.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: {
+                    self.presentationDelegate?.presentationControllerdDidDismiss()
+                })
             default:
                 break
             }

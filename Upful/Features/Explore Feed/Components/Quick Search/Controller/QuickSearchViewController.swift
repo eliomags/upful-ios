@@ -73,7 +73,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
         sc.searchBar.delegate = self
         sc.searchBar.tintColor = .appAccent3
         sc.searchBar.searchBarStyle = .minimal
-        sc.dimsBackgroundDuringPresentation = false
+        sc.obscuresBackgroundDuringPresentation = false
         sc.hidesNavigationBarDuringPresentation = false
         sc.definesPresentationContext = false
         return sc

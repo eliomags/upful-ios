@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingsViewController: UITableViewController {
+class SettingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let displayItems: [[String]] = [
         ["Preferences"],
@@ -24,6 +24,22 @@ class SettingsViewController: UITableViewController {
     
     // MARK: - Views
     
+    lazy var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.delegate = self
+        tv.dataSource = self
+        return tv
+    }()
+    
+    lazy var navigationHeader: NavigationHeaderView = {
+        let v = NavigationHeaderView()
+        v.headerLabel.text = "Settings"
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+        v.heightAnchor.constraint(equalToConstant: v.intrinsicContentSize.height).isActive = true
+        return v
+    }()
+    
     lazy var toggleTrackingSwitch: UISwitch = {
         let tswitch = UISwitch()
         tswitch.isOn = AnalyticsLogger.instance.getAnalyticsPermission()
@@ -32,59 +48,89 @@ class SettingsViewController: UITableViewController {
         return tswitch
     }()
     
-    @objc fileprivate func handleChange(_ sender: UISwitch) {
-        AnalyticsLogger.instance.toggleAnalytics()
-    }
-    
-    // MARK: - Initializer Methods
- 
+    // MARK: - View Life Cycle Methods
+
     override func loadView() {
         super.loadView()
-        setupNavBar()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.backgroundColor = .groupTableViewBackground
+        setupNavBar()
+        setupTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = true
         VersionManager.setNavigationBar(in: navigationController)
         VersionManager.navigationBarColor(in: navigationController)
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        setupHeaderView()
     }
     
     // MARK: - View Setup
     
+    fileprivate func setupHeaderView() {
+        if tableView.tableHeaderView == nil {
+            self.tableView.tableHeaderView = navigationHeader
+        }
+    }
+    
+    fileprivate func setupTableView() {
+        view.addSubview(tableView)
+        tableView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        tableView.backgroundColor = .systemGroupedBackground
+    }
+    
     fileprivate func setupNavBar() {
-        navigationItem.title = "Settings"
+        navigationItem.title = ""
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
+    // MARK: - Actions
+    
+    @objc fileprivate func handleChange(_ sender: UISwitch) {
+        AnalyticsLogger.instance.toggleAnalytics()
+    }
+    
+    // MARK: - ScrollView Delegate Methods
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let threshold = navigationHeader.intrinsicContentSize.height - 5
+        if scrollView.contentOffset.y > threshold {
+            navigationItem.title = "Settings"
+        } else {
+            navigationItem.title = ""
+        }
     }
     
     // MARK: - TableView DataSource Methods
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return displayItems.count
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return displayItems[section].count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
         cell.textLabel?.text = displayItems[indexPath.section][indexPath.row]
         if indexPath.section == 2 {
-            if indexPath.row == 2 {
-                cell.accessoryView = toggleTrackingSwitch
-            }
+            if indexPath.row == 2 { cell.accessoryView = toggleTrackingSwitch }
         }
         cell.accessoryType = .disclosureIndicator
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    // MARK: - TableView Delegate Methods
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = indexPath.section
         let row = indexPath.row
         switch section {
@@ -129,12 +175,11 @@ class SettingsViewController: UITableViewController {
                 AppStoreReviewHelper.requestAppStoreReview()
             default: break
             }
-            
         default: break
         }
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headers = ["","purchase","support",""]
         let view = UIView()
         let label = UILabel()
@@ -146,16 +191,17 @@ class SettingsViewController: UITableViewController {
         return view
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 { return 40 }
         if section == 3 { return 40 }
         return UITableView.automaticDimension
     }
     
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
     
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 2
     }
     
@@ -167,5 +213,8 @@ extension SettingsViewController: ReportDelegate {
     func showSuccess() {
         InformationViewPresenter.showReportSuccess(in: self)
     }
-    
+}
+
+extension SettingsViewController: PresentationControllerDelegate {
+    func presentationControllerdDidDismiss() {}
 }

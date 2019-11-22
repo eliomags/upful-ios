@@ -353,9 +353,11 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             return 0
         }
     }
-
 }
 
+extension ManualSearchViewController: PresentationControllerDelegate {
+    func presentationControllerdDidDismiss() {}
+}
 
 
 

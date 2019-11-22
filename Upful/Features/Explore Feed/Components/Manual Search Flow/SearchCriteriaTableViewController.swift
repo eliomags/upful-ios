@@ -51,7 +51,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         v.detailsLabel.text = ""
         v.headerLabel.text = "Select your search criteria."
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.heightAnchor.constraint(equalToConstant: v.intrinsicContentSize.height).isActive = true
+//        v.heightAnchor.constraint(equalToConstant: v.intrinsicContentSize.height).isActive = true
         v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         return v
     }()
@@ -85,9 +85,9 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .groupTableViewBackground
+        view.backgroundColor = .systemGroupedBackground
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        setupTableHeader()
+//        setupTableHeader()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,6 +108,11 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         addCriteriaButton.removeFromSuperview()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupTableHeader()
+    }
+    
     // MARK: - View Setup
     
     func setupTableView() {
@@ -117,7 +122,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         tableView.tableFooterView = UIView()
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.sectionHeaderHeight = 24
-        tableView.backgroundColor = .groupTableViewBackground
+        tableView.backgroundColor = .systemGroupedBackground
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
@@ -128,14 +133,16 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     }
     
     func setupTableHeader() {
-        tableView.tableHeaderView = tableHeader
-        if let parent = parent as? HomeFeedContainer {
-                   parent.collectionView.contentInset = UIEdgeInsets(top: tableHeader.intrinsicContentSize.height + 5,
-                   left: 0, bottom: 0, right: 0)
-            parent.collectionView.setNeedsLayout()
-            parent.collectionView.layoutIfNeeded()
-            tableView.setNeedsLayout()
-            tableView.layoutIfNeeded()
+        if tableView.tableHeaderView == nil {
+            tableView.tableHeaderView = tableHeader
+            if let parent = parent as? HomeFeedContainer {
+                       parent.collectionView.contentInset = UIEdgeInsets(top: tableHeader.intrinsicContentSize.height + 5,
+                       left: 0, bottom: 0, right: 0)
+//                parent.collectionView.setNeedsLayout()
+//                parent.collectionView.layoutIfNeeded()
+//                tableView.setNeedsLayout()
+//                tableView.layoutIfNeeded()
+            }
         }
     }
     

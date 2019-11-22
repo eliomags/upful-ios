@@ -44,9 +44,9 @@ struct VersionManager {
     static func collectionCellColor(in view: UITraitEnvironment) -> UIColor {
         if #available(iOS 13.0, *) {
             if UITraitCollection.current.userInterfaceStyle == .dark { return .secondarySystemGroupedBackground }
-            if UITraitCollection.current.userInterfaceStyle == .light { return .groupTableViewBackground }
+            if UITraitCollection.current.userInterfaceStyle == .light { return .systemGroupedBackground }
         }
-        return .groupTableViewBackground
+        return .systemGroupedBackground
     }
     
     static func collectionCellColor2(in view: UITraitEnvironment) -> UIColor {

@@ -19,13 +19,10 @@ class PopularCompanyViewController: UIViewController {
     let viewModel: PopularCompanyViewModel
     
     fileprivate func bindToViewModel() {
-        viewModel.sendUpdates = { [weak self] (state) in
-            switch state {
-            case .loaded, .loading:
+        DispatchQueue.main.async { [weak self] in
+            self?.viewModel.sendUpdates = { [weak self] (_) in
                 self?.popularCompanyCollectionView.reloadData()
-            default:
-                break
-            }
+           }
         }
     }
                 

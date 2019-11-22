@@ -38,7 +38,7 @@ final class StockSearchViewController: UITableViewController, UISearchController
         sc.delegate = self
         sc.searchBar.delegate = self
         sc.searchBar.tintColor = .black
-        sc.dimsBackgroundDuringPresentation = false
+        sc.obscuresBackgroundDuringPresentation = false
         return sc
     }()
     

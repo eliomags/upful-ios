@@ -12,7 +12,7 @@ class CancelButton: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor(white: 0.73, alpha: 0.92)
+        backgroundColor = UIColor(white: 0.45, alpha: 0.92)
         heightAnchor.constraint(equalToConstant: 26).isActive = true
         widthAnchor.constraint(equalToConstant: 26).isActive = true
         

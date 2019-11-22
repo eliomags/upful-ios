@@ -10,18 +10,11 @@ import UIKit
 import Charts
 
 final class StockOverviewViewController: UIViewController, ChartViewDelegate, MenuBarDisplayable {
-    var tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .grouped)
-        tv.translatesAutoresizingMaskIntoConstraints = false
-        return tv
-    }()
-    
     
     // MARK: - MenuBarDisplayable Protocol Properties
     
     var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Overview"
-    
 
     // MARK: - Dependencies
     
@@ -75,6 +68,12 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     // MARK: - Views
     
+    var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
+    
     private lazy var stockHeaderView: TableHeaderView = {
         let v = TableHeaderView()
         v.detailsLabel.text = companyName
@@ -86,13 +85,13 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     private lazy var refreshingControl: UIRefreshControl = {
         let rc = UIRefreshControl()
-        rc.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
+        rc.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return rc
     }()
     
     private var loadingView: UIView = {
         let v = UIView()
-        let activityView = UIActivityIndicatorView(style: .gray)
+        let activityView = UIActivityIndicatorView(style: .medium)
         activityView.startAnimating()
         v.addSubview(activityView)
         activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
@@ -115,6 +114,8 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - View Life Cycle Methods
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground(in: self)
@@ -163,6 +164,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
             case .success(let downloadedData):
                 self.chartRevenueData = downloadedData
                 self.isLoading = false
+                
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -175,6 +177,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
             case .success(let downloadedData):
                 self.chartEarningsData = downloadedData
                 self.isLoading = false
+                
             case .failure(let error):
                 print(error.localizedDescription)
             }

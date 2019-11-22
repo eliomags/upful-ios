@@ -95,7 +95,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     private var loadingView: UIView = {
         let v = UIView()
-        let activityView = UIActivityIndicatorView(style: .gray)
+        let activityView = UIActivityIndicatorView(style: .medium)
         activityView.startAnimating()
         v.addSubview(activityView)
         activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,

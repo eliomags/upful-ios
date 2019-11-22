@@ -45,7 +45,10 @@ class PopularCompanyViewModel {
     
     func initialFetch() {
         state = .loading
-        popularCompanyLoader.load()
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let self = self else { return }
+            self.popularCompanyLoader.load()
+        }
     }
     
     private func listenForDataUpdates() {

@@ -173,7 +173,9 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
 
 }
 
-
+extension StockDetailsContainerView: PresentationControllerDelegate {
+    func presentationControllerdDidDismiss() {}    
+}
 
 
 

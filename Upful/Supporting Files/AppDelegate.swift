@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func initializeVC() -> UIViewController {
         let homeVC = SaveViewController()
         let exploreVC = HomeFeedContainer(collectionViewLayout: UICollectionViewFlowLayout())
-        let settingsVC = SettingsViewController(style: .grouped)
+        let settingsVC = SettingsViewController()
         
         let controllers = [homeVC,exploreVC,settingsVC]
         homeVC.tabBarItem = UITabBarItem(title: "Home", image: #imageLiteral(resourceName: "icons8-home-page-30"), tag: 0)
