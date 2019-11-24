@@ -16,6 +16,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     let companyName: String
     var savedStocks: [SavedStock] = []
     
+    // MARK: - Views
     
     override var menubarControllers: [MenuBarDisplayable] {
         let controllers: [MenuBarDisplayable] = [
@@ -90,7 +91,8 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         }
     }
     
-    private func removeFavorite() {
+    private func removeFavorite(button: UIButton) {
+        button.isSelected = !button.isSelected
         let fetchRequest = SavedStock.createfetchRequest()
         let context = PersistenceService.shared.persistentContainer.viewContext
         fetchRequest.predicate = NSPredicate(format: "ticker = %@", ticker)
@@ -110,7 +112,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         savedStock.notes = ""
         savedStock.ticker = self.ticker
         savedStock.companyName = self.companyName
-        if !button.isSelected { self.removeFavorite() }
+        
         PersistenceService.shared.saveContext()
         if button.isSelected {
             Vibration.light.vibrate()
@@ -119,14 +121,17 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     }
     
     @objc fileprivate func handleSaveTap(_ sender: UIButton) {
+        if sender.isSelected {
+            self.removeFavorite(button: sender)
+            return
+        }
+
         PermissionManager.shared.getSaveStockPermission { [unowned self] (permissionGranted, error) in
             if !permissionGranted {
                 let presenter = SubscriptionPresenter()
                 presenter.present(in: self)
             }
-            if permissionGranted {
-                self.saveCompany(button: sender)
-            }
+            if permissionGranted { self.saveCompany(button: sender) }
             if let _ = error {
                 let alertVC = UIAlertController(title: "Error", message: "There was an error performing your request.", preferredStyle: .alert)
                 alertVC.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
@@ -134,7 +139,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
             }
         }
     }
-        
+    
     // MARK: - UIPopOverPresentationDelegate Methods
     
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {

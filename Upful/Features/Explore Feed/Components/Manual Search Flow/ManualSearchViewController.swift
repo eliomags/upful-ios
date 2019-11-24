@@ -36,13 +36,15 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         return v
     }()
     
-    lazy var searchButton: CustomButton = {
-        let b = CustomButton(type: .system)
+    lazy var searchButton: UIButton = {
+        let b = UIButton(type: .system)
         b.setTitle("SEARCH", for: .normal)
         b.layer.masksToBounds = true
         b.addTarget(self, action: #selector(handleSearch), for: .touchUpInside)
-        b.setupShadow(intensity: .intense, color: .black)
-        b.backgroundColor = VersionManager.buttonColor2()
+        b.backgroundColor = .appAccent3
+        b.layer.cornerRadius = 8
+        b.setTitleColor(.white, for: .normal)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         return b
     }()
     
@@ -72,17 +74,18 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         self.manualScreenItems = manualScreenItems
         super.init(nibName: nil, bundle: nil)
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
+    // MARK: - View Life Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavBar()
         view.backgroundColor = VersionManager.mainContainerBackground()
-        view.addSubview(manualSearchSearchTableView)
-        manualSearchSearchTableView.fillSuperview()
-        
-        view.addSubview(searchButton)
-        searchButton.anchor(top: nil, leading: view.layoutMarginsGuide.leadingAnchor, bottom: view.layoutMarginsGuide.bottomAnchor, trailing: view.layoutMarginsGuide.trailingAnchor,
-                            padding: .init(top: 0, left: 16, bottom: 70, right: 16))
+        setupViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -90,11 +93,33 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         navigationController?.navigationBar.prefersLargeTitles = false
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if self.manualSearchSearchTableView.shouldUpdateHeaderViewFrame() {
+            self.manualSearchSearchTableView.beginUpdates()
+            self.manualSearchSearchTableView.endUpdates()
+        }
     }
     
     // MARK: - View Functions
+    
+    fileprivate func setupViews() {
+        view.addSubview(searchButton)
+        searchButton.anchor(
+            top: nil,
+            leading: view.leadingAnchor,
+            bottom: view.layoutMarginsGuide.bottomAnchor,
+            trailing: view.trailingAnchor,
+            padding: .init(top: 0, left: 16, bottom: 16, right: 16),
+            size: .init(width: 0, height: 40))
+        
+        view.addSubview(manualSearchSearchTableView)
+        manualSearchSearchTableView.anchor(top: view.layoutMarginsGuide.topAnchor,
+                         leading: view.leadingAnchor,
+                         bottom: searchButton.topAnchor,
+                         trailing: view.trailingAnchor,
+                         padding: .init(top: 0, left: 0, bottom: 16, right: 0))
+    }
     
     fileprivate func configureNavBar() {
         navigationItem.title = ""

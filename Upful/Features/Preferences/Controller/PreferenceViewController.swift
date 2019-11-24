@@ -61,6 +61,8 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         fatalError()
     }
     
+    // MARK: - View Life Cycle Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground()
@@ -115,7 +117,6 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         AnalyticsLogger.instance.reportEvents(event: .preferencesSet)
         self.dismiss(animated: true)
     }
-    
     
     // MARK: - TableView DataSource Methods
     
