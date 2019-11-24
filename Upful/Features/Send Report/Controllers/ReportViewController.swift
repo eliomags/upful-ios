@@ -48,7 +48,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        view.backgroundColor = VersionManager.mainContainerBackground()
         view.addSubview(reportContentView)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
         reportContentView.fillSuperview()
@@ -58,6 +58,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     // MARK: - View Setup
     
     fileprivate func setupNavBar() {
+        navigationItem.largeTitleDisplayMode = .never
         navigationController?.navigationBar.backgroundColor = .white
         navigationController?.navigationBar.tintColor = .black
         navigationItem.title = headerTitle

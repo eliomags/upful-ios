@@ -54,26 +54,22 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        collectionView.backgroundColor = VersionManager.mainContainerBackground()
         configureNavBar()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
-        setupNavBar()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setupNavBar()
+        performSelector(inBackground: #selector(loadSavedStocks), with: nil)
     }
     
     // MARK: - View Setup
-    
-    func setupNavBar() {
-        navigationController?.navigationBar.prefersLargeTitles = false
-        performSelector(inBackground: #selector(loadSavedStocks), with: nil)
+
+    fileprivate func configureNavBar() {
+        navigationItem.title = ""
+        navigationItem.largeTitleDisplayMode = .never
+        let save = UIBarButtonItem(customView: saveButton)
+        navigationItem.rightBarButtonItems = [save]
         VersionManager.navigationBarColor(in: navigationController)
         VersionManager.setNavigationBar(in: navigationController)
     }
-    
     
     // MARK: - Core Data
     
@@ -160,15 +156,6 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         notesVC.modalPresentationStyle = .popover
         notesVC.popoverPresentationController?.delegate = self
         present(navVC, animated: true, completion: nil)
-    }
-
-    fileprivate func configureNavBar() {
-        navigationItem.title = ""
-        let save = UIBarButtonItem(customView: saveButton)
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.rightBarButtonItems = [save]
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     }
 
 }

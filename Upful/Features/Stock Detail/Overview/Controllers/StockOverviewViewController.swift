@@ -118,7 +118,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        view.backgroundColor = VersionManager.mainContainerBackground()
         setupViews()
         loadChartData()
     }
@@ -133,7 +133,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     // MARK: - View Setup
     
     private func setupViews() {
-        tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
         tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
         tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)

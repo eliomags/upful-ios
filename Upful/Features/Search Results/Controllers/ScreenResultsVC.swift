@@ -15,7 +15,6 @@ final class ScreenResultsViewController: UIViewController {
     let searchParameters: [String]
     let intrinioAPI: IntrinioAPI
     
-    
     // MARK:- State
     
     private(set) var isLoading: Bool = false {
@@ -25,7 +24,6 @@ final class ScreenResultsViewController: UIViewController {
     private func observeStateChanges(_ state: Bool) {
         self.showActivitySpinner(state)
     }
-    
 
     // MARK: - DataSource
     
@@ -38,7 +36,6 @@ final class ScreenResultsViewController: UIViewController {
     struct ReuseId {
         static let resultsCellID = "resultsCellID"
     }
-    
     
     // MARK: - Views
     
@@ -78,6 +75,7 @@ final class ScreenResultsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.largeTitleDisplayMode = .never
         fetchTableData(parameters: searchParameters, fetchType: .initial)
         view.addSubview(feedTableView)
         feedTableView.fillSuperview()
@@ -146,13 +144,9 @@ final class ScreenResultsViewController: UIViewController {
     
     fileprivate func setupNavBar() {
         navigationItem.title = "Results"
-        navigationController?.navigationBar.prefersLargeTitles = false
-        let sortButton = UIBarButtonItem(customView: self.sortButton)        
+        let sortButton = UIBarButtonItem(customView: self.sortButton)
         navigationItem.rightBarButtonItem = sortButton
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.setValue(false, forKey: "hidesShadow")
     }
-    
     
     // MARK: - Actions
     

@@ -129,7 +129,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         tableView.fillSuperview()
         tableView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
         view.backgroundColor = .appAccent3
-        tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.separatorStyle = .none
         tableView.contentInset = UIEdgeInsets(top: -(navigationController?.navigationBar.intrinsicContentSize.height ?? 0),
                                               left: 0,bottom: 0,right: 0)

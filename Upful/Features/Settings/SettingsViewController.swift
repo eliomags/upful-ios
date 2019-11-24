@@ -62,7 +62,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     fileprivate func setupNavBar() {
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
         navigationItem.title = "Settings"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }

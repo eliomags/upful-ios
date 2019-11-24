@@ -98,7 +98,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        view.backgroundColor = VersionManager.mainContainerBackground()
         initializeFeedData()
         setupTableView()
     }

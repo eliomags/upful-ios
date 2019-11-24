@@ -64,6 +64,12 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     // MARK: - Views
     
+    lazy var notesButton: NotesButton = {
+        let button = NotesButton()
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNotesTap)))
+        return button
+    }()
+    
     lazy var preferenceVC: StockSuggestionViewController = {
         let preferenceVC = StockSuggestionViewController()
         return preferenceVC
@@ -90,6 +96,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.largeTitleDisplayMode = .always
         setUpTableView()
     }
     
@@ -100,26 +107,10 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         configureNavBar()
     }
     
-    // TODO: - Properly Handle Changing of TraitCollection
-    
-//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-//        super.traitCollectionDidChange(previousTraitCollection)
-//        if #available(iOS 13.0, *) {
-//            if previousTraitCollection?.userInterfaceStyle != UITraitCollection.current.userInterfaceStyle {
-//                self.tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
-//                VersionManager.navigationBarColor(in: navigationController)
-//                VersionManager.setTabBarColor(in: tabBarController)
-//                self.view.setNeedsLayout()
-//                self.navigationController?.navigationBar.setNeedsLayout()
-//                self.tabBarController?.tabBar.setNeedsLayout()
-//            }
-//        }
-//    }
-    
     // MARK: - View Setup
         
     fileprivate func setUpTableView() {
-        tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
@@ -129,16 +120,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.suggestionCell)
     }
     
-    lazy var notesButton: NotesButton = {
-        let button = NotesButton()
-        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNotesTap)))
-        return button
-    }()
-    
     fileprivate func configureNavBar() {
         navigationItem.title = "Home"
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         navigationController?.navigationBar.prefersLargeTitles = true
         VersionManager.navigationBarColor(in: navigationController)
         VersionManager.setNavigationBar(in: navigationController)
@@ -370,13 +353,13 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             
         case 0:
             if self.preferenceVC.viewModel.state == .noPreferencesSet {
-                return tableView.frame.height / 5 - 30
+                return (tableView.frame.height / 5) - 30
             } else {
                 return 200
             }
         case 1:
             let height: CGFloat = 340
-            if isSavedScreenersEmpty { return tableView.frame.height/3 + 20 }
+            if isSavedScreenersEmpty { return (tableView.frame.height / 3) + 20 }
             if savedScreeners.count == 1 { return (height / 3) + 20 }
             if savedScreeners.count == 2 { return (height / 2) + 50 }
             if savedScreeners.count >= 3 { return height }

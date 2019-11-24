@@ -126,7 +126,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        view.backgroundColor = VersionManager.mainContainerBackground()
         setupViews()
         loadChart()
         fetchCompanyFilingsData()
@@ -154,7 +154,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.reportsCell)
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.tableHeaderView = stockHeaderView
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         tableView.refreshControl = refreshingControl

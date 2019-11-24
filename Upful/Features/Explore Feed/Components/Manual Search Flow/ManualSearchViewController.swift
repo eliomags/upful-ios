@@ -50,7 +50,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        tv.backgroundColor = VersionManager.mainContainerBackground()
         tv.separatorStyle = .singleLine
         tv.tableFooterView = UIView()
         return tv
@@ -76,7 +76,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavBar()
-        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        view.backgroundColor = VersionManager.mainContainerBackground()
         view.addSubview(manualSearchSearchTableView)
         manualSearchSearchTableView.fillSuperview()
         

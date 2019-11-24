@@ -20,16 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window?.rootViewController = initializeVC()
 
-        if #available(iOS 13.0, *) {
-            if window?.rootViewController?.traitCollection.userInterfaceStyle == .dark {
-                window?.backgroundColor = .black
-            }
-            if window?.rootViewController?.traitCollection.userInterfaceStyle == .light {
-                window?.backgroundColor = .white
-            }
-        } else {
-            window?.backgroundColor = .white
-        }
+        window?.backgroundColor = VersionManager.mainContainerBackground()
 
         FirebaseApp.configure()
         Mixpanel.initialize(token: Constants.MixPanel.token)
@@ -56,9 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         tabVC.viewControllers = controllers.map({
             let navVC = UINavigationController(rootViewController: $0)
-            navVC.navigationBar.prefersLargeTitles = false
+            navVC.navigationBar.prefersLargeTitles = true
             navVC.navigationBar.tintColor = .appAccent3
-            navVC.navigationBar.setValue(true, forKey: "hidesShadow")
             if #available(iOS 13.0, *) {
                 navVC.navigationBar.isTranslucent = true
                 navVC.navigationBar.shadowImage = UIImage()
@@ -68,7 +58,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 if navVC.traitCollection.userInterfaceStyle == .light {
                     navVC.navigationBar.backgroundColor = .white
-                    navVC.navigationBar.setValue(true, forKey: "hidesShadow")
                 }
             }
             return navVC

@@ -24,12 +24,11 @@ struct VersionManager {
         
     // MARK - Containers
     
-    static func mainContainerBackground(in view: UITraitEnvironment) -> UIColor {
+    static func mainContainerBackground() -> UIColor {
         UIColor.init { (trait) -> UIColor in
             return trait.userInterfaceStyle == .dark ? .black: .white
         }
     }
-    
     
     // MARK: - Cells
     
@@ -49,7 +48,6 @@ struct VersionManager {
    
    static func setNavigationBar(in view: UINavigationController?) {
         if let view = view {
-            view.navigationBar.setValue(true, forKey: "hidesShadow")
             view.navigationBar.isTranslucent = false
             let color = UIColor.init { (trait) -> UIColor in
                 return trait.userInterfaceStyle == .dark ? .black: .white
@@ -61,6 +59,8 @@ struct VersionManager {
     static func navigationBarColor(in view: UINavigationController?) {
         if let view = view {
             let app = UINavigationBarAppearance()
+            app.shadowImage = nil
+            app.shadowColor = nil
             app.backgroundColor = UIColor.init { (trait) -> UIColor in
                 return trait.userInterfaceStyle == .dark ? .black: .white
             }

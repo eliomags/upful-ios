@@ -20,26 +20,24 @@ class HomeFeedContainer: MenuContainerViewController {
         }
         return controllers
     }
-    
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavBar()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .newSession)
-        collectionView.backgroundColor = VersionManager.mainContainerBackground(in: self)
-        view.backgroundColor = VersionManager.mainContainerBackground(in: self)
+        collectionView.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = VersionManager.mainContainerBackground()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = false
         VersionManager.setNavigationBar(in: navigationController)
     }
     
     fileprivate func configureNavBar() {
+        navigationItem.largeTitleDisplayMode = .never
         navigationItem.title = "Explore"
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     }
     
 }
