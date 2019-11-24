@@ -54,8 +54,7 @@ class PopularCompanyViewModel {
     private func listenForDataUpdates() {
         popularCompanyLoader.dataUpdates = { [weak self] (data, error) in
             guard let self = self else { return }
-            if let error = error {
-                print(error)
+            if let error = error { print(error)
             } else {
                 self.popularCompanies = data
                 self.popularCompanies.forEach({ (company) in

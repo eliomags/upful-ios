@@ -17,26 +17,19 @@ class MenuBarControl: UISegmentedControl {
     override init(items: [Any]?) {
         super.init(items: items)
         selectedSegmentIndex = 0
-        if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark {
-                selectedSegmentTintColor = .black
-                backgroundColor = .secondarySystemBackground
-            }
-            setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
+        setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
                                     NSAttributedString.Key.foregroundColor: UIColor.lightGray
             ], for: .normal)
             setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
                                        NSAttributedString.Key.foregroundColor: UIColor.appAccent3
                 ], for: .selected)
-        } else {
-            setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
-                                           NSAttributedString.Key.foregroundColor: UIColor.gray
-                   ], for: .normal)
-            setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .semibold),
-                                              NSAttributedString.Key.foregroundColor: UIColor.black
-                    ], for: .selected)
+        selectedSegmentTintColor = UIColor.init { (trait) in
+            return trait.userInterfaceStyle == .dark ? .black: .white
         }
         
+        backgroundColor = UIColor.init { (trait) in
+            return trait.userInterfaceStyle == .dark ? .secondarySystemBackground: .white
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

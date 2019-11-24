@@ -9,26 +9,28 @@
 import UIKit
 
 class CreateScreenerTableViewController: SearchCriteriaTableViewController {
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nil, bundle: nil)
-        setupTableView()
-    }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func setupTableView() {
-        super.setupTableView()
-    }
+//    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+//        super.init(nibName: nil, bundle: nil)
+//        setupTableView()
+//    }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//
+//    override func setupTableView() {
+//        super.setupTableView()
+//    }
 }
 
 class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SearchCriteriaDelegate, MenuBarDisplayable {
     
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
-        tv.tableHeaderView = tableHeader
+//        tv.tableHeaderView = tableHeader
         tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.setTableHeaderView(headerView: tableHeader)
         return tv
     }()
     
@@ -87,7 +89,6 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         super.viewDidLoad()
         view.backgroundColor = .systemGroupedBackground
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-//        setupTableHeader()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,9 +109,9 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         addCriteriaButton.removeFromSuperview()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        setupTableHeader()
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.tableView.setTableHeaderView(headerView: tableHeader)
     }
     
     // MARK: - View Setup

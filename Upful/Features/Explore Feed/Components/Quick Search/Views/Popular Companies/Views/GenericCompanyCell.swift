@@ -55,7 +55,7 @@ class GenericCompanyCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = VersionManager.collectionCellColor2(in: self)
+        backgroundColor = VersionManager.collectionCellColor2()
         layer.borderColor = UIColor.lightGray.cgColor
         layer.borderWidth = 0.25
         layer.cornerRadius = 8

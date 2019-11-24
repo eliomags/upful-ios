@@ -308,7 +308,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = LargeSectionHeaderLabel(padding: 16)
-        header.backgroundColor = VersionManager.collectionCellColor2(in: self)
+        header.backgroundColor = VersionManager.collectionCellColor2()
         if !isLoading {
             let headerText = ["FINANCIALS", "METRICS", "NEWS"]
             header.text = headerText[section]

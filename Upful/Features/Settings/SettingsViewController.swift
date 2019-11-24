@@ -31,15 +31,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         return tv
     }()
     
-    lazy var navigationHeader: NavigationHeaderView = {
-        let v = NavigationHeaderView()
-        v.headerLabel.text = "Settings"
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
-        v.heightAnchor.constraint(equalToConstant: v.intrinsicContentSize.height).isActive = true
-        return v
-    }()
-    
     lazy var toggleTrackingSwitch: UISwitch = {
         let tswitch = UISwitch()
         tswitch.isOn = AnalyticsLogger.instance.getAnalyticsPermission()
@@ -49,10 +40,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     }()
     
     // MARK: - View Life Cycle Methods
-
-    override func loadView() {
-        super.loadView()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,21 +51,9 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewWillAppear(animated)
         VersionManager.setNavigationBar(in: navigationController)
         VersionManager.navigationBarColor(in: navigationController)
-        navigationController?.navigationBar.prefersLargeTitles = false
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        setupHeaderView()
     }
     
     // MARK: - View Setup
-    
-    fileprivate func setupHeaderView() {
-        if tableView.tableHeaderView == nil {
-            self.tableView.tableHeaderView = navigationHeader
-        }
-    }
     
     fileprivate func setupTableView() {
         view.addSubview(tableView)
@@ -87,7 +62,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     fileprivate func setupNavBar() {
-        navigationItem.title = ""
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "Settings"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
@@ -95,17 +71,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     @objc fileprivate func handleChange(_ sender: UISwitch) {
         AnalyticsLogger.instance.toggleAnalytics()
-    }
-    
-    // MARK: - ScrollView Delegate Methods
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let threshold = navigationHeader.intrinsicContentSize.height - 5
-        if scrollView.contentOffset.y > threshold {
-            navigationItem.title = "Settings"
-        } else {
-            navigationItem.title = ""
-        }
     }
     
     // MARK: - TableView DataSource Methods
@@ -157,7 +122,9 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 issueVC.present(in: self)
             case 2:
                 if !PermissionManager.shared.isPremium {
-                    let alertVC = UIAlertController(title: "Upgrade", message: "Tracking is used to gather data for improving your experience. Upgrade to premium to disable tracking.", preferredStyle: .alert)
+                    let alertVC = UIAlertController(
+                            title: "Upgrade",
+                            message: "Tracking is used to gather data for improving your experience. Upgrade to premium to disable tracking.", preferredStyle: .alert)
                     alertVC.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
                     alertVC.addAction(UIAlertAction(title: "Upgrade", style: .default, handler: { [weak self] (_) in
                         guard let self = self else { return }
@@ -216,5 +183,7 @@ extension SettingsViewController: ReportDelegate {
 }
 
 extension SettingsViewController: PresentationControllerDelegate {
-    func presentationControllerdDidDismiss() {}
+    func presentationControllerdDidDismiss() {
+        toggleTrackingSwitch.isEnabled = PermissionManager.shared.isPremium
+    }
 }

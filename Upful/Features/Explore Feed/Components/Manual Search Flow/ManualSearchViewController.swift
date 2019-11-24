@@ -42,7 +42,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         b.layer.masksToBounds = true
         b.addTarget(self, action: #selector(handleSearch), for: .touchUpInside)
         b.setupShadow(intensity: .intense, color: .black)
-        b.backgroundColor = VersionManager.buttonColor2(in: self)
+        b.backgroundColor = VersionManager.buttonColor2()
         return b
     }()
     

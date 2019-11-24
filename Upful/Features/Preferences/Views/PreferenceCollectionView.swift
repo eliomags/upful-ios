@@ -233,7 +233,8 @@ class PreferenceCollectionViewCell: UICollectionViewCell {
                         self.backgroundColor = self.isSelected ? UIColor.appAccent3 : .secondarySystemBackground
                     }
                     if self.traitCollection.userInterfaceStyle == .light {
-                        self.backgroundColor = self.isSelected ? UIColor.appAccent3 : VersionManager.collectionCellColor(in: self)
+                        self.backgroundColor = self.isSelected ? UIColor.appAccent3 : VersionManager.collectionCellColor()
+                        
                         self.label.textColor = self.isSelected ? UIColor.white : UIColor.black
                     }
                 } else {
@@ -249,8 +250,7 @@ class PreferenceCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        backgroundColor = VersionManager.collectionCellColor(in: self)
+        backgroundColor = VersionManager.collectionCellColor()
         
         addSubview(contentStackView)
         contentStackView.anchor(

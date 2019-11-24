@@ -41,6 +41,7 @@ class HomeFeedContainer: MenuContainerViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
     }
+    
 }
 
 

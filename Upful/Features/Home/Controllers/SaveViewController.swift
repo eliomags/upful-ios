@@ -64,24 +64,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     // MARK: - Views
     
-    lazy var upgradeButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.setTitle("PREMIUM", for: .normal)
-        b.setTitleColor(.appAccent3, for: .normal)
-        b.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-        b.addTarget(self, action: #selector(handlePremiumTap), for: .touchUpInside)
-        return b
-    }()
-    
-    lazy var navigationHeader: NavigationHeaderView = {
-        let v = NavigationHeaderView()
-        v.headerLabel.text = "Home"
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
-//        v.heightAnchor.constraint(equalToConstant: v.intrinsicContentSize.height).isActive = true
-        return v
-    }()
-    
     lazy var preferenceVC: StockSuggestionViewController = {
         let preferenceVC = StockSuggestionViewController()
         return preferenceVC
@@ -104,6 +86,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - View Life Cycle Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
@@ -113,13 +97,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         super.viewWillAppear(animated)
         loadSavedStocks()
         configureSavedItemsToDisplay()
-        showPremiumButton()
         configureNavBar()
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        setupHeaderView()
     }
     
     // TODO: - Properly Handle Changing of TraitCollection
@@ -139,13 +117,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
 //    }
     
     // MARK: - View Setup
-    
-    fileprivate func setupHeaderView() {
-        if tableView.tableHeaderView == nil {
-           tableView.tableHeaderView = navigationHeader
-       }
-    }
-    
+        
     fileprivate func setUpTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground(in: self)
         tableView.showsVerticalScrollIndicator = false
@@ -163,16 +135,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         return button
     }()
     
-    fileprivate func showPremiumButton() {
-        if !PermissionManager.shared.isPremium {
-            navigationHeader.headerButtonStackView.addArrangedSubview(upgradeButton) }
-        else { upgradeButton.removeFromSuperview() }
-    }
-    
     fileprivate func configureNavBar() {
+        navigationItem.title = "Home"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+        navigationController?.navigationBar.prefersLargeTitles = true
         VersionManager.navigationBarColor(in: navigationController)
         VersionManager.setNavigationBar(in: navigationController)
     }
@@ -258,8 +225,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         } catch {
             print(error.localizedDescription)
         }
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
+        Vibration.light.vibrate()
     }
     
     // MARK: - Custom Delegate Methods
@@ -309,19 +275,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     @objc private func handleNotesTap(_ sender: Any) {
         let presenter = NotesPresenter()
         presenter.present(in: self)
-    }
-    
-    @objc fileprivate func handlePremiumTap(_ sender: UIButton) {
-        let presenter = SubscriptionPresenter()
-        presenter.present(in: self)
-    }
-    
-    // MARK: - ScrollView Delegate
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let threshold = navigationHeader.intrinsicContentSize.height - 10
-        if scrollView.contentOffset.y > threshold { navigationItem.title = "Home" }
-        if scrollView.contentOffset.y < threshold { navigationItem.title = "" }
     }
     
     // MARK: - TableView Delegate Methods
@@ -428,6 +381,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             if savedScreeners.count == 2 { return (height / 2) + 50 }
             if savedScreeners.count >= 3 { return height }
             return UITableView.automaticDimension
+            
         case 2:
             if isSavedStocksEmpty { return tableView.frame.height/2 - 50 }
             if !isSavedStocksEmpty { return UITableView.automaticDimension }
@@ -487,15 +441,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 30
-    }
-}
-
-
-// MARK: - Presentation Controller Delegate Methods
-
-extension SaveViewController: PresentationControllerDelegate {
-    func presentationControllerdDidDismiss() {
-        showPremiumButton()
     }
 }
 

@@ -29,8 +29,9 @@ enum ScreenType: String {
 // MARK: - Analytics Events
 
 enum AnalyticsEventName {
-    case screenForStocks(screenType: ScreenType)
+    case selectedPremium
     case selectedNewsArticle
+    case screenForStocks(screenType: ScreenType)
     case selectedAnalysis(criteria: SearchCriteria)
     case selectedStock(selectionType: StockSelectionType)
     case selectedCompanyFiling
@@ -65,6 +66,8 @@ enum AnalyticsEventName {
             return "saved_ticker"
         case .savedScreener:
             return "saved_screener"
+        case .selectedPremium:
+            return "premium_selected"
         }
     }
 }
@@ -94,6 +97,9 @@ extension AnalyticsEventName {
             return ["ticker": ticker]
         case .savedScreener(let description):
             return ["screener": description]
+        case .selectedPremium:
+            return [:]
+
         }
     }
 }

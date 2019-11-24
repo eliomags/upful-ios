@@ -206,7 +206,7 @@ class SavedScreenerCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = VersionManager.collectionCellColor(in: self)
+        backgroundColor = VersionManager.collectionCellColor()
         layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         setupViews()

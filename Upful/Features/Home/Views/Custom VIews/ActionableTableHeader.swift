@@ -44,7 +44,7 @@ class ActionableTableHeader: UITableViewHeaderFooterView {
         button.alpha = 1
         button.isHidden = true
         button.setTitleColor(.appAccent3, for: .normal)
-        button.backgroundColor = VersionManager.buttonColor(in: self)
+        button.backgroundColor = VersionManager.buttonColor()
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         button.setTitle("DONE", for: .normal)
         button.layer.cornerRadius = 35/2

@@ -100,6 +100,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let distance = scrollView.contentOffset.x
         self.menuBarView.placementViewLeadingConstraint = distance
+        view.endEditing(true)
     }
     
     override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {

@@ -9,6 +9,7 @@
 import Foundation
 
 final class PreferenceDataLoader {
+    
     func load() -> [[PreferenceViewModel]] {
         let preferences = [
         createIndustryPreferences(),

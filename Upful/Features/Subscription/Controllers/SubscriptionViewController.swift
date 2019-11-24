@@ -8,9 +8,6 @@
 
 import UIKit
 
-/*
- This will be replaced when the build target is moved to iOS 13
- */
 protocol PresentationControllerDelegate: UIViewController {
     func presentationControllerdDidDismiss()
 }
@@ -19,7 +16,11 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - Dependencies
     
-    let viewModel: SubscriptionViewModel = SubscriptionViewModel()
+    lazy var viewModel: SubscriptionViewModel = {
+        let vm = SubscriptionViewModel()
+        return vm
+    }()
+
     weak var presentationDelegate: PresentationControllerDelegate?
 
     // MARK: - Views
@@ -146,7 +147,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.backgroundColor = .appAccent3
         navigationController?.navigationBar.barTintColor = .appAccent3
-        navigationController?.navigationBar.tintColor = .white
+//        navigationController?.navigationBar.tintColor = .white
         navigationItem.title = "Upgrade"
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
     }

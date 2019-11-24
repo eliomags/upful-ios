@@ -9,11 +9,11 @@
 import UIKit
 
 struct SubscriptionPresenter {
-    func present(in viewController: PresentationControllerDelegate) {
+    
+    func present(in viewController: UIViewController) {
         let subscriptionVC = SubscriptionViewController()
-        subscriptionVC.presentationDelegate = viewController
         let navVC = UINavigationController(rootViewController: subscriptionVC)
-//        navVC.modalPresentationStyle = .fullScreen
+        
         viewController.present(navVC, animated: true, completion: nil)
     }
 }

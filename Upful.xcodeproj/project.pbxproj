@@ -129,7 +129,7 @@
 		3DD5218C235293D60090CDE6 /* StockSuggestionVCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */; };
 		3DD521912354319E0090CDE6 /* EmptySuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */; };
 		3DD52195235444E60090CDE6 /* SuggestionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD52194235444E60090CDE6 /* SuggestionsVC.swift */; };
-		3DD75A30236BAF6700C298B9 /* VersionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A2F236BAF6700C298B9 /* VersionManager.swift */; };
+		3DD75A30236BAF6700C298B9 /* ColorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A2F236BAF6700C298B9 /* ColorManager.swift */; };
 		3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A362372456700C298B9 /* FirestoreService.swift */; };
 		3DD75A3A2372797A00C298B9 /* PopularStockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A392372797A00C298B9 /* PopularStockViewModel.swift */; };
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
@@ -308,7 +308,7 @@
 		3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSuggestionVCTest.swift; sourceTree = "<group>"; };
 		3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySuggestionCell.swift; sourceTree = "<group>"; };
 		3DD52194235444E60090CDE6 /* SuggestionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsVC.swift; sourceTree = "<group>"; };
-		3DD75A2F236BAF6700C298B9 /* VersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionManager.swift; sourceTree = "<group>"; };
+		3DD75A2F236BAF6700C298B9 /* ColorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorManager.swift; sourceTree = "<group>"; };
 		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		3DD75A392372797A00C298B9 /* PopularStockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularStockViewModel.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
@@ -664,7 +664,7 @@
 				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
 				3DD75A362372456700C298B9 /* FirestoreService.swift */,
 				3D586519231C946600495D79 /* AppStoreReviewHelper.swift */,
-				3DD75A2F236BAF6700C298B9 /* VersionManager.swift */,
+				3DD75A2F236BAF6700C298B9 /* ColorManager.swift */,
 				3DD4291C2347EC530079DA18 /* Vibration.swift */,
 			);
 			path = Services;
@@ -1116,8 +1116,9 @@
 		3DAB3EB5234C044D0008CC18 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				3DAB3EB6234C04520008CC18 /* Models */,
 				3DAB3ECB234F973C0008CC18 /* API */,
+				3DAB3EC1234D226D0008CC18 /* Presenter */,
+				3DAB3EB6234C04520008CC18 /* Models */,
 				3DAB3EBE234CA4310008CC18 /* Views */,
 				3DAB3EB7234C04D40008CC18 /* Controller */,
 			);
@@ -1169,7 +1170,6 @@
 		3DAB3ECB234F973C0008CC18 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				3DAB3EC1234D226D0008CC18 /* Presenter */,
 				3DAB3ECE234F98A40008CC18 /* Protocols.swift */,
 				3DAB3EBC234C139B0008CC18 /* PreferenceManager.swift */,
 				3DAB3ECC234F98860008CC18 /* PreferenceDataLoader.swift */,
@@ -1530,7 +1530,7 @@
 				3D20FB2222FB1F08007836DD /* Frameworks */,
 				3D20FB2322FB1F08007836DD /* Resources */,
 				3DA37C3223453049008832AB /* Embed Frameworks */,
-				02B67FFB2A716A8DA1AE6AF7 /* [CP] Embed Pods Frameworks */,
+				B757B96E2C34F9D22B06CA05 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1618,23 +1618,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		02B67FFB2A716A8DA1AE6AF7 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		6DA628A217B730F9C49336BC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1651,6 +1634,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B757B96E2C34F9D22B06CA05 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BA8A5399EEDABAAEA09927E9 /* [CP] Check Pods Manifest.lock */ = {
@@ -1792,7 +1792,7 @@
 				3D30D9342358862E00DC06B6 /* NotesPresenter.swift in Sources */,
 				3D90ADBA2301BE0F00C52455 /* Double+Extensions.swift in Sources */,
 				3DAB3EBD234C139B0008CC18 /* PreferenceManager.swift in Sources */,
-				3DD75A30236BAF6700C298B9 /* VersionManager.swift in Sources */,
+				3DD75A30236BAF6700C298B9 /* ColorManager.swift in Sources */,
 				3D4FB99C2384403C00B9BFE1 /* Saveditem.swift in Sources */,
 				3D6A83172373867E00A75B06 /* GenericCompanyCell.swift in Sources */,
 				3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */,

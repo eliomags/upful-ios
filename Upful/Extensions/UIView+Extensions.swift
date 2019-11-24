@@ -8,6 +8,14 @@
 
 import UIKit
 
+// MARK: - Dark Mode Detection
+
+extension UIView {
+    var isDarkMode: Bool {
+        return UITraitCollection.current.userInterfaceStyle == .dark
+    }
+}
+
 // MARK: - Background Shadow
 
 enum ShadowIntensity {

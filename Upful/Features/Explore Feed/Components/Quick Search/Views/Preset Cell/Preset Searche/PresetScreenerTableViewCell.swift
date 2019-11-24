@@ -174,7 +174,7 @@ class PresetScreenerCollectionViewCell: UICollectionViewCell {
             trailing: v.trailingAnchor,
             padding: .init(top: 15, left: 15, bottom: 0, right: 15)
         )
-        v.backgroundColor = VersionManager.collectionCellColor(in: self)
+        v.backgroundColor = VersionManager.collectionCellColor()
         return v
     }()
     
