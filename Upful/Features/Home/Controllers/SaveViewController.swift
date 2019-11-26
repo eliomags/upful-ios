@@ -319,21 +319,15 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         }
     }
     
-    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        if indexPath.section == 0 || indexPath.section == 1 { return [] }
-        if indexPath.section == 2 {
-            if !isSavedStocksEmpty {
-                guard let savedStock = displayData[indexPath.section][indexPath.row] as? SavedStock else { return nil }
-                let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-                    self.removeFavoriteCompany(savedStock.ticker)
-                    self.savedStocks.remove(at: indexPath.item)
-                }
-                return [delete]
-            } else {
-                return []
-            }
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if indexPath.section == 0 || indexPath.section == 1 { return nil }
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
+            guard let savedStock = self.displayData[indexPath.section][indexPath.row] as? SavedStock else { return }
+            self.removeFavoriteCompany(savedStock.ticker)
+            self.savedStocks.remove(at: indexPath.item)
         }
-        return nil
+        delete.image = UIImage(systemName: "trash")
+        return UISwipeActionsConfiguration(actions: [delete])
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
