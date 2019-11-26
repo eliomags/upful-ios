@@ -320,14 +320,16 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if indexPath.section == 0 || indexPath.section == 1 { return nil }
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
-            guard let savedStock = self.displayData[indexPath.section][indexPath.row] as? SavedStock else { return }
-            self.removeFavoriteCompany(savedStock.ticker)
-            self.savedStocks.remove(at: indexPath.item)
+        if indexPath.section == 2 {
+            let delete = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
+                guard let savedStock = self.displayData[indexPath.section][indexPath.row] as? SavedStock else { return }
+                self.removeFavoriteCompany(savedStock.ticker)
+                self.savedStocks.remove(at: indexPath.item)
+            }
+            delete.image = UIImage(systemName: "trash")
+            return UISwipeActionsConfiguration(actions: [delete])
         }
-        delete.image = UIImage(systemName: "trash")
-        return UISwipeActionsConfiguration(actions: [delete])
+        return nil
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
