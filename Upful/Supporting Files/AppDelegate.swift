@@ -37,9 +37,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let settingsVC = SettingsViewController()
         
         let controllers = [homeVC,exploreVC,settingsVC]
-        homeVC.tabBarItem = UITabBarItem(title: "Home", image: #imageLiteral(resourceName: "icons8-home-page-30"), tag: 0)
-        exploreVC.tabBarItem = UITabBarItem(title: "Explore", image: #imageLiteral(resourceName: "icons8-search-30"), tag: 1)
-        settingsVC.tabBarItem = UITabBarItem(title: "Settings", image: #imageLiteral(resourceName: "icons8-settings-25"), tag: 2)
+            
+        homeVC.tabBarItem = UITabBarItem(
+            title: "Home",
+            image: UIImage(systemName: "house.fill"),
+            tag: 0)
+        exploreVC.tabBarItem = UITabBarItem(
+            title: "Explore",
+            image: UIImage(systemName: "magnifyingglass",
+                            withConfiguration: UIImage.SymbolConfiguration(weight: .bold)),
+            tag: 1)
+        settingsVC.tabBarItem = UITabBarItem(
+            title: "Settings",
+            image: UIImage(systemName: "gear",
+                           withConfiguration: UIImage.SymbolConfiguration(weight: .bold)),
+            tag: 2)
         
         let tabVC = UITabBarController()
         tabVC.tabBar.tintColor = .appAccent3
