@@ -21,7 +21,7 @@ class SearchSelectionViewController: UIViewController {
     
     // MARK: - Views
     
-    lazy var cancelButton: CancelButton = {
+    lazy var cancelButton: CancelButton = { [unowned self] in
         let button = CancelButton()
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
         return button
@@ -37,7 +37,7 @@ class SearchSelectionViewController: UIViewController {
         return header
     }()
     
-    lazy var tableView: UITableView = {
+    lazy var tableView: UITableView = { [unowned self] in
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self

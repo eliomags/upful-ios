@@ -26,6 +26,12 @@ class LargeGradientButton: CustomButton {
         layer.insertSublayer(gradientLayer, at: 0)
     }
     
+    override var isSelected: Bool {
+        didSet {
+            isHighlighted ? highlightAnimation(): unhighlightAnimation()
+        }
+    }
+    
     override var isHighlighted: Bool {
         didSet {
             isHighlighted ? highlightAnimation(): unhighlightAnimation()

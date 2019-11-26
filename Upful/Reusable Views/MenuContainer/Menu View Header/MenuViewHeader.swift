@@ -65,18 +65,10 @@ final class MenuBarView: UIView {
     }
     
     fileprivate func setupViews() {
-        if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark { backgroundColor = .systemBackground }
-            if traitCollection.userInterfaceStyle == .light { backgroundColor = .white }
-        } else {
-            backgroundColor = .white
-        }
-        
+        backgroundColor = .clear
         addSubview(menuBarControl)
         addSubview(placementView)
-        
-        // Need to refactor segmented control to be 
-        
+                
         placementView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         placementView.widthAnchor.constraint(equalTo: menuBarControl.widthAnchor, multiplier: 1/CGFloat(menuBarControl.numberOfSegments)).isActive = true
         placementView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true

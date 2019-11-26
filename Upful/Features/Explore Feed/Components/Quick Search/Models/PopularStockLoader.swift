@@ -16,18 +16,20 @@ protocol DataLoader {
 }
 
 class PopularStockDataLoader: DataLoader {
-    typealias PopularStockCallBack = ((([PopularCompany]),Error?) -> Void)
     
     private let backendService: FirestoreAPI
     
+    typealias PopularStockCallBack = ((([PopularCompany]),Error?) -> Void)
+    var dataUpdates: PopularStockCallBack?
+
     init(backendService: FirestoreAPI) {
         self.backendService = backendService
     }
     
-    var dataUpdates: PopularStockCallBack?
-    
     func load() {
-        backendService.fetch(from: .popularStocks) { (result) in
+        backendService.fetch(from: .popularStocks) { [weak self] (result) in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let stockDocuments):
                 if let stockDictionary = stockDocuments as? [[String: String]] {
@@ -40,6 +42,7 @@ class PopularStockDataLoader: DataLoader {
                     })
                     self.dataUpdates?(popularStocks, nil)
                 }
+                
             case .failure(let error):
                 self.dataUpdates?([], error)
             }

@@ -36,6 +36,9 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         super.init(coder: aDecoder)
     }
     
+    // MARK: - View Life Cycle Functions
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
@@ -43,6 +46,8 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         menuBarView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
     }
     
+    // MARK: - View Set Up
+
     private func setupCollectionView() {
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
@@ -117,7 +122,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         view.addSubview(content.view)
         content.didMove(toParent: self)
     }
-    
 }
 
 extension MenuContainerViewController {

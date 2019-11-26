@@ -11,6 +11,7 @@ import SwiftyStoreKit
 import StoreKit
 
 class IAPService {
+    
     private let productIdentifiers: Set<String>
     private let secret = "0f2f374e72fa4144b1842dd7158f6ebf"
     
@@ -31,7 +32,7 @@ class IAPService {
 
 
     func completeTransactions() {
-        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
+        SwiftyStoreKit.completeTransactions(atomically: true) { [unowned self] purchases in
             for purchase in purchases {
                 switch purchase.transaction.transactionState {
                 case .purchased, .restored:
@@ -65,7 +66,9 @@ class IAPService {
     var purchaseCompletionHandler: PurchaseCompletionHandler?
     
     func purchaseProduct(_ product: SKProduct) {
-        SwiftyStoreKit.purchaseProduct(product.productIdentifier, quantity: 1, atomically: true) { result in
+        SwiftyStoreKit.purchaseProduct(product.productIdentifier, quantity: 1, atomically: true) { [weak self] result in
+            guard let self = self else { return }
+
             switch result {
                 
             case .success(let purchase):
@@ -80,7 +83,9 @@ class IAPService {
     // MARK: - Restoring Purchase
     
     func restorePurchases(completion: @escaping ((_ success: Bool) -> Void)) {
-        SwiftyStoreKit.restorePurchases(atomically: true) { results in
+        SwiftyStoreKit.restorePurchases(atomically: true) { [weak self] results in
+            guard let self = self else { return }
+
             if results.restoredPurchases.count > 0 {
                 self.isPremium = true
                 completion(true)
@@ -96,7 +101,9 @@ class IAPService {
     
     func verifyProductSubscription(_ product: SKProduct) {
         let appleValidator = AppleReceiptValidator(service: .production, sharedSecret: secret)
-        SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in
+        SwiftyStoreKit.verifyReceipt(using: appleValidator) { [weak self] result in
+            guard let self = self else { return }
+
             switch result {
                 
             case .success(let receipt):

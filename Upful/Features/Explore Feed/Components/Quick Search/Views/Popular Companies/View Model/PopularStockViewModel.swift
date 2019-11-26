@@ -71,7 +71,8 @@ class PopularCompanyViewModel {
         
     fileprivate func fetchPopularCompanyMarketCap(for popularCompany: PopularCompany) {
         stockDataGroup.enter()
-        intrinioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .marketcap, frequency: .recent, completion: { (result) in
+        intrinioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .marketcap, frequency: .recent, completion: { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
             case .success(let downloadedData):
                 if downloadedData.isEmpty { return }
@@ -85,7 +86,8 @@ class PopularCompanyViewModel {
 
     fileprivate func fetchPopularCompanyPE(for popularCompany: PopularCompany) {
         stockDataGroup.enter()
-        intrinioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .pricetoearnings, frequency: .recent, completion: { (result) in
+        intrinioAPI.fetchStockSpecificFinancial(ticker: popularCompany.header, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
             case .success(let downloadedData):
                 if downloadedData.isEmpty { return }

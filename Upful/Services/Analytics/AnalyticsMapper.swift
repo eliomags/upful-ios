@@ -47,7 +47,6 @@ final class AnalyticsLogger {
                 print("Logged event for:", event, analyticsItem)
             }
         }
-        
     }
     
 }

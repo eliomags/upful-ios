@@ -31,14 +31,14 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         return view
     }()
     
-    lazy var tableView: UITableView = {
+    lazy var tableView: UITableView = { [unowned self] in
         let tableV = UITableView(frame: .zero, style: .grouped)
         tableV.delegate = self
         tableV.dataSource = self
         return tableV
     }()
     
-    lazy var footerView: SubscriptionFooterView = {
+    lazy var footerView: SubscriptionFooterView = { [unowned self] in
         let view = SubscriptionFooterView()
         view.subscribeButton.addTarget(self, action: #selector(handleSubscribeTap), for: .touchUpInside)
         view.restoreButton.addTarget(self, action: #selector(handleRestoreTap), for: .touchUpInside)
@@ -59,13 +59,13 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    lazy var cancelButton: CancelButton = {
+    lazy var cancelButton: CancelButton = { [unowned self] in
         let view = CancelButton()
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleCancelTap)))
         return view
     }()
     
-    // MARK: - Initializer Methods
+    // MARK: - View Life Cycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,8 +83,8 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     func observeStateChanges() {
         viewModel.stateChanged = { [weak self] (state) in
             guard let self = self else { return }
+            
             switch state {
-                
             case .loaded:
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -147,7 +147,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.backgroundColor = .appAccent3
         navigationController?.navigationBar.barTintColor = .appAccent3
-//        navigationController?.navigationBar.tintColor = .white
         navigationItem.title = "Upgrade"
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
     }
@@ -163,10 +162,13 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @objc fileprivate func handleSubscribeTap(_ sender: UIButton) {
+        Vibration.light.vibrate()
         viewModel.buySelectedProduct()
     }
     
     @objc fileprivate func handleRestoreTap(_ sender: UIButton) {
+        Vibration.light.vibrate()
+
         sender.isEnabled = false
         viewModel.restorePurchase(completion: { [weak self] (success) in
           if !success {

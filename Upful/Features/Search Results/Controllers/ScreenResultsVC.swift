@@ -39,7 +39,7 @@ final class ScreenResultsViewController: UIViewController {
     
     // MARK: - Views
     
-    lazy var feedTableView: UITableView = {
+    lazy var feedTableView: UITableView = { [unowned self] in
         let tv = UITableView(frame: .zero, style: .plain)
         tv.dataSource = self
         tv.delegate = self
@@ -59,7 +59,7 @@ final class ScreenResultsViewController: UIViewController {
         return v
     }()
     
-    lazy var sortButton: SortButton = {
+    lazy var sortButton: SortButton = { [unowned self] in
         let button = SortButton()
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSortTap)))
         return button
@@ -99,7 +99,9 @@ final class ScreenResultsViewController: UIViewController {
         parameters.forEach { (parameter) in
             searchKeys += "\(parameter),"
         }
-        intrinioAPI.performStockScreening(parameters: searchKeys) { (result) in
+        intrinioAPI.performStockScreening(parameters: searchKeys) { [weak self] (result) in
+            guard let self = self else { return }
+
             switch result {
             case .success(let fetchedData):
                 switch fetchType {
@@ -118,7 +120,9 @@ final class ScreenResultsViewController: UIViewController {
     }
     
     private func getPriceToEarningsData(_ searchResult: Stock) {
-        NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: searchResult.ticker ?? "", financial: .pricetoearnings, frequency: .recent, completion: { (result) in
+        NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: searchResult.ticker ?? "", financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
+            guard let self = self else { return }
+
             switch result {
             case .success(let downloadedData):
                 guard !downloadedData.isEmpty else { return }

@@ -29,13 +29,13 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         return controllers
     }
     
-    lazy var notesButton: NotesButton = {
+    lazy var notesButton: NotesButton = { [unowned self] in
         let button = NotesButton()
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleOpenNotes)))
         return button
     }()
     
-    lazy var saveButton: SaveButton = {
+    lazy var saveButton: SaveButton = { [unowned self] in
         let button = SaveButton()
         button.addTarget(self, action: #selector(handleSaveTap), for: .touchUpInside)
         return button
@@ -126,7 +126,8 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
             return
         }
 
-        PermissionManager.shared.getSaveStockPermission { [unowned self] (permissionGranted, error) in
+        PermissionManager.shared.getSaveStockPermission { [weak self] (permissionGranted, error) in
+            guard let self = self else { return }
             if !permissionGranted {
                 let presenter = SubscriptionPresenter()
                 presenter.present(in: self)

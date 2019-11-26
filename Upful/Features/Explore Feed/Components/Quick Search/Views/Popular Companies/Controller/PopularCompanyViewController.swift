@@ -75,7 +75,6 @@ class PopularCompanyViewController: UIViewController {
         view.addSubview(popularCompanyCollectionView)
         popularCompanyCollectionView.fillSuperview()
     }
-    
 }
 
 extension PopularCompanyViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -90,16 +89,19 @@ extension PopularCompanyViewController: UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch viewModel.state {
+            
         case .loading:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell.rawValue, for: indexPath) as? GenericCompanyCollectionViewCell else { return UICollectionViewCell() }
             cell.setLoadingLabels()
             return cell
+            
         case .loaded:
             let data = viewModel.popularCompanies[indexPath.row]
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.companyCell.rawValue, for: indexPath) as? GenericCompanyCollectionViewCell else { return UICollectionViewCell() }
             cell.setLoadedLabels()
             cell.configureLabels(company: data)
             return cell
+            
         default: return UICollectionViewCell()
         }
     }

@@ -14,7 +14,7 @@ class PreferencePresenter {
     
     init(preferenceDataManager: PreferenceDataManager = .init()) {
         self.preferenceDataManager = preferenceDataManager
-        self.preferenceVC = PreferenceViewController(dataManager: self.preferenceDataManager)
+        self.preferenceVC = PreferenceViewController(dataManager: preferenceDataManager)
     }
  
     func present(in viewController: UIViewController) {

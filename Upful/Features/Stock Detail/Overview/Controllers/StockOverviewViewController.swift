@@ -83,7 +83,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         return v
     }()
     
-    private lazy var refreshingControl: UIRefreshControl = {
+    private lazy var refreshingControl: UIRefreshControl = { [unowned self] in
         let rc = UIRefreshControl()
         rc.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return rc
@@ -159,7 +159,10 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     // MARK: - Private Functions
     
     private func getRevenueData() {
-        intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .totalrevenue, frequency: .historic) { (result) in
+        intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker,
+                                                financial: .totalrevenue,
+                                                frequency: .historic) { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
             case .success(let downloadedData):
                 self.chartRevenueData = downloadedData
@@ -172,7 +175,11 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     }
     
     private func getEarningsData() {
-        intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker, financial: .netincome, frequency: .historic) { (result) in
+        intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker,
+                                                financial: .netincome,
+                                                frequency: .historic) { [weak self] (result) in
+            guard let self = self else { return }
+
             switch result {
             case .success(let downloadedData):
                 self.chartEarningsData = downloadedData
@@ -193,7 +200,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     }   
     
     private func configureNewsData() {
-        self.intrinioApi.getCompanyNewsData(ticker: self.ticker) { (results) in
+        self.intrinioApi.getCompanyNewsData(ticker: self.ticker) { [weak self] (results) in
+            guard let self = self else { return }
+            
             switch results {
             case .success(let downloadedNewsData):
                 self.newsData = downloadedNewsData.news ?? []
@@ -206,7 +215,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     }
     
     private func configureCalcData() {
-        self.intrinioApi.fetchStockBatchFinancials(ticker: self.ticker) { (results) in
+        self.intrinioApi.fetchStockBatchFinancials(ticker: self.ticker) { [weak self] (results) in
+            guard let self = self else { return }
+
             switch results {
             case .success(let financialData):
                 self.calcData = financialData

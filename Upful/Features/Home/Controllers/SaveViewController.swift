@@ -64,7 +64,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     // MARK: - Views
     
-    lazy var notesButton: NotesButton = {
+    lazy var notesButton: NotesButton = { [unowned self] in
         let button = NotesButton()
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNotesTap)))
         return button
@@ -75,7 +75,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         return preferenceVC
     }()
     
-    lazy var saveScreenerCollectionViewController: SavedScreenersCollectionViewController = {
+    lazy var saveScreenerCollectionViewController: SavedScreenersCollectionViewController = { [unowned self] in
         let controller = SavedScreenersCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
         controller.dataSource = self
         controller.delegate = self

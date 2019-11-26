@@ -56,7 +56,9 @@ class SubscriptionViewModel {
     // MARK: - Initializer
     
     init() {
-        iAPService.retreiveProducts { (result) in
+        iAPService.retreiveProducts { [weak self] (result) in
+            guard let self = self else { return }
+
             switch result {
             case .success(let fetchedProducts):
                 self.state = .loaded(products: fetchedProducts)
@@ -81,6 +83,7 @@ class SubscriptionViewModel {
     func listenForPurchaseCompletion() {
         iAPService.purchaseCompletionHandler = { [weak self] (success, error) in
             guard let self = self else { return }
+            
             if let error = error {
                 self.state = .paymentError(error: error)
             }

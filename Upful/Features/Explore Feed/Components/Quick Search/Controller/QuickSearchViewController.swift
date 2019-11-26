@@ -67,7 +67,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
         return tv
     }()
     
-    lazy var searchController: UISearchController = {
+    lazy var searchController: UISearchController = { [unowned self] in
         let sc = UISearchController(searchResultsController: nil)
         sc.delegate = self
         sc.searchBar.delegate = self
@@ -95,6 +95,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
         fatalError()
     }
 
+    // MARK: - View Life Cycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,9 +161,9 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     }
     
     fileprivate func fetchCompanies(_ searchText: String) {
-        NetworkService.shared.intrioAPI.searchByName(name: searchText) { (result) in
+        NetworkService.shared.intrioAPI.searchByName(name: searchText) { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
-                
             case .success(let fetchedCompanies):
                 self.searchDisplay = fetchedCompanies
                 DispatchQueue.main.async {
@@ -174,7 +175,8 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
                     }
                 }
             case .failure(_):
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
                     self.searchDisplay.removeAll()
                     self.tableView.setEmptyView(state: .errorState)
                 }

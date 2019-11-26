@@ -19,7 +19,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Views
     
-    lazy var reportContentView: ReportContentView = {
+    lazy var reportContentView: ReportContentView = { [unowned self] in
         let view = ReportContentView()
         view.contentHeaderLabel.text = reportInstructions
         view.submitButton.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
@@ -28,7 +28,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
         return view
     }()
     
-    lazy var cancelButton: CancelButton = {
+    lazy var cancelButton: CancelButton = { [unowned self] in
         let button = CancelButton()
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleCancel)))
         return button

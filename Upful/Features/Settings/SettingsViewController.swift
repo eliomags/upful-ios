@@ -24,14 +24,14 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: - Views
     
-    lazy var tableView: UITableView = {
+    lazy var tableView: UITableView = { [unowned self] in
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
         return tv
     }()
     
-    lazy var toggleTrackingSwitch: UISwitch = {
+    lazy var toggleTrackingSwitch: UISwitch = { [unowned self] in
         let tswitch = UISwitch()
         tswitch.isOn = AnalyticsLogger.instance.getAnalyticsPermission()
         tswitch.addTarget(self, action: #selector(handleChange), for: .touchUpInside)

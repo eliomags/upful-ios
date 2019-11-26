@@ -85,7 +85,7 @@ class GenericPreferenceCollectionViewController: UIViewController {
         return layout
     }()
     
-    lazy var collectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = { [unowned self] in
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.backgroundColor = .clear
         view.showsHorizontalScrollIndicator = false
@@ -120,6 +120,8 @@ class GenericPreferenceCollectionViewController: UIViewController {
         fatalError("Not set")
     }
     
+    // MARK: - View Life Cycle Method
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
@@ -133,7 +135,7 @@ class GenericPreferenceCollectionViewController: UIViewController {
     }
     
     
-    // MARK: - Helper
+    // MARK: - Helpers
     
     private func setupViews() {
         view.addSubview(collectionView)

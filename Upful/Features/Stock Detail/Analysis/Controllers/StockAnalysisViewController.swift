@@ -87,7 +87,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         return v
     }()
     
-    private lazy var refreshingControl: UIRefreshControl = {
+    private lazy var refreshingControl: UIRefreshControl = { [unowned self] in
         let rc = UIRefreshControl()
         rc.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return rc
@@ -197,7 +197,9 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     private func fetchCompanyFilingsData() {
         isLoading = true
-        intrinioApi.getCompanyFilings(ticker: ticker) { (results) in
+        intrinioApi.getCompanyFilings(ticker: ticker) { [weak self] (results) in
+            guard let self = self else { return }
+
             switch results {
             case .success(let fetchedFilings):
                 self.companyFilings = fetchedFilings
@@ -217,7 +219,9 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
             tableView.reloadData()
             return
         }
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: criteria, frequency: .historic) { (results) in
+        intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: criteria, frequency: .historic) { [weak self] (results) in
+            guard let self = self else { return }
+
             switch results {
             case .success(let downloadedData):
                 self.barChartData = downloadedData
@@ -237,7 +241,9 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
             tableView.reloadData()
             return
         }
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: criteria, frequency: .historic) { (results) in
+        intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: criteria, frequency: .historic) { [weak self] (results) in
+            guard let self = self else { return }
+
             switch results {
             case .success(let downloadedData):
                 self.lineChartData = downloadedData
