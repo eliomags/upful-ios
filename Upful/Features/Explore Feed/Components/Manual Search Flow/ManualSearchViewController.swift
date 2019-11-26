@@ -348,15 +348,15 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         self.navigationController?.pushViewController(searchParamsVC, animated: true)
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .normal, title: "Delete") { (action, indexPath) in
-            self.manualScreenItems.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            self.manualSearchSearchTableView.reloadData()
-            self.delegate?.remove(indexPath: indexPath)
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
+             self.manualScreenItems.remove(at: indexPath.row)
+                       tableView.deleteRows(at: [indexPath], with: .automatic)
+                       self.manualSearchSearchTableView.reloadData()
+                       self.delegate?.remove(indexPath: indexPath)
         }
-        delete.backgroundColor = .negative
-        return [delete]
+        delete.image = UIImage(systemName: "trash")
+        return UISwipeActionsConfiguration(actions: [delete])
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
