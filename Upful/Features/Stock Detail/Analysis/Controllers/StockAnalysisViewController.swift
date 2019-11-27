@@ -153,6 +153,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     @objc private func refreshData(_ sender: Any) {
         loadChart()
         fetchCompanyFilingsData()
+        listenForDataCompletion()
     }
     
     // MARK: - View Setup
@@ -420,8 +421,8 @@ class GenericCellImageView: UIImageView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
-        heightAnchor.constraint(equalToConstant: 22).isActive = true
-        widthAnchor.constraint(equalToConstant: 22).isActive = true
+        heightAnchor.constraint(equalToConstant: 20).isActive = true
+        widthAnchor.constraint(equalToConstant: 20).isActive = true
         layer.masksToBounds = true
         backgroundColor = .red
     }
