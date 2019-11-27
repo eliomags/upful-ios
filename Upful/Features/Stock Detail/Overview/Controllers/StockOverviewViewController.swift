@@ -273,20 +273,19 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         let primaryWorkItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             self.isLoading = false
-            self.getAllCalculatedData()
-            self.configureCalcData()
-            self.configureNewsData()
-            
-            self.secondaryGroup.notify(queue: .main, work: secondaryWorkItem)
         }
-        
         chartDataGroup.notify(queue: .main, work: primaryWorkItem)
+        secondaryGroup.notify(queue: .main, work: secondaryWorkItem)
+
     }
         
     fileprivate func loadOverviewData() {
         isLoading = true
         getRevenueData()
         getEarningsData()
+        getAllCalculatedData()
+        configureCalcData()
+        configureNewsData()
         handleDataFetchCompletion()
     }
     
