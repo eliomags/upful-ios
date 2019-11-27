@@ -34,11 +34,17 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     /// Charting Related Data
     private var lineCriteria: SearchCriteria = .revenuegrowth {
-        didSet { fetchLineData(criteria: lineCriteria) }
+        didSet {
+            fetchLineData(criteria: lineCriteria)
+            listenForDataCompletion()
+        }
     }
     
     private var barCriteria: SearchCriteria = .netincome {
-        didSet { fetchBarData(criteria: barCriteria) }
+        didSet {
+            fetchBarData(criteria: barCriteria)
+            listenForDataCompletion()
+        }
     }
     
     private var chartData: [[CompanyHistoricalDatum]] {
@@ -124,12 +130,15 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - View Life Cycle Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground()
         setupViews()
         loadChart()
         fetchCompanyFilingsData()
+        listenForDataCompletion()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -181,6 +190,20 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         }
     }
     
+    fileprivate func configureLineData(chartView: CombinedLineChartView, criteria: SearchCriteria) {
+        if lineChartData.isEmpty { return }
+        chartView.generateLineData(dataPoints: lineChartData.map({ $0.date.formatDate()}),
+                                   values: lineChartData.map({$0.value}),
+                                   criteria: criteria)
+    }
+    
+    fileprivate func configureBarData(chartView: CombinedLineChartView, criteria: SearchCriteria) {
+        if barChartData.isEmpty { return }
+        chartView.generateBarData(dataPoints: barChartData.map({ $0.date.formatDate()}),
+                                  values: barChartData.map({$0.value}),
+                                  criteria: criteria)
+    }
+    
     // MARK: - Delegate Methods
     
     /// ChartUpdatable protocol which updates the chart from the selected search criteria in SearchSelectionViewController
@@ -195,28 +218,32 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     // MARK: - Private Functions
     
-    private func fetchCompanyFilingsData() {
+    let analysisDataGroup = DispatchGroup()
+
+    fileprivate func fetchCompanyFilingsData() {
         isLoading = true
+        analysisDataGroup.enter()
+
         intrinioApi.getCompanyFilings(ticker: ticker) { [weak self] (results) in
             guard let self = self else { return }
 
             switch results {
             case .success(let fetchedFilings):
                 self.companyFilings = fetchedFilings
-                self.isLoading = false
+                self.analysisDataGroup.leave()
             case . failure(let error):
                 print(error.localizedDescription)
-                self.isLoading = false
+                self.analysisDataGroup.leave()
             }
         }
     }
-
-    private func fetchBarData(criteria: SearchCriteria) {
+    
+    fileprivate func fetchBarData(criteria: SearchCriteria) {
         isLoading = true
+        analysisDataGroup.enter()
         if criteria == .none {
             barChartData.removeAll()
-            self.isLoading = false
-            tableView.reloadData()
+            self.analysisDataGroup.leave()
             return
         }
         intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: criteria, frequency: .historic) { [weak self] (results) in
@@ -225,20 +252,21 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
             switch results {
             case .success(let downloadedData):
                 self.barChartData = downloadedData
-                self.isLoading = false
+                self.analysisDataGroup.leave()
             case .failure(let error):
                 print(error.localizedDescription)
-                self.isLoading = false
+                self.analysisDataGroup.leave()
             }
         }
     }
     
-    private func fetchLineData(criteria: SearchCriteria) {
+    fileprivate func fetchLineData(criteria: SearchCriteria) {
         isLoading = true
+        analysisDataGroup.enter()
+
         if criteria == .none {
             lineChartData.removeAll()
-            self.isLoading = false
-            tableView.reloadData()
+            self.analysisDataGroup.leave()
             return
         }
         intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: criteria, frequency: .historic) { [weak self] (results) in
@@ -247,33 +275,26 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
             switch results {
             case .success(let downloadedData):
                 self.lineChartData = downloadedData
-                self.isLoading = false
+                self.analysisDataGroup.leave()
             case .failure(let error):
-                self.isLoading = false
+                self.analysisDataGroup.leave()
                 print(error.localizedDescription)
             }
         }
     }
     
-    private func loadChart() {
+    fileprivate func listenForDataCompletion() {
+        analysisDataGroup.notify(queue: .main) { [weak self] in
+            guard let self = self else { return }
+            self.isLoading = false
+        }
+    }
+    
+    fileprivate func loadChart() {
         fetchLineData(criteria: lineCriteria)
         fetchBarData(criteria: barCriteria)
     }
-    
-    private func configureLineData(chartView: CombinedLineChartView, criteria: SearchCriteria) {
-        if lineChartData.isEmpty { return }
-        chartView.generateLineData(dataPoints: lineChartData.map({ $0.date.formatDate()}),
-                                   values: lineChartData.map({$0.value}),
-                                   criteria: criteria)
-    }
-    
-    private func configureBarData(chartView: CombinedLineChartView, criteria: SearchCriteria) {
-        if barChartData.isEmpty { return }
-        chartView.generateBarData(dataPoints: barChartData.map({ $0.date.formatDate()}),
-                                  values: barChartData.map({$0.value}),
-                                  criteria: criteria)
-    }
-    
+        
     // MARK: - Scroll View Delegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -396,7 +417,6 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
 
 class GenericCellImageView: UIImageView {
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
@@ -447,6 +467,7 @@ class GenericTableViewCell: UITableViewCell {
     }
     
     func setupView() {
+        addSeparator()
         accessoryType = .disclosureIndicator
         backgroundColor = .clear
         addSubview(contentStackView)
