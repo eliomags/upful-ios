@@ -118,7 +118,7 @@ final class IntrinioAPI: StockScreenNetworkingProtocol {
     
     /// MARK: - Lookup historic financials
     enum FinancialsFrequency: String {
-        case recent = "?frequency=yearly&start_date=2018-01-01"
+        case recent = "?frequency=yearly&start_date=2019-01-01"
         case historic = "?frequency=yearly&start_date=2016-01-01&end_date=2021-01-01&sort_order=asc"
     }
     

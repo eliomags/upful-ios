@@ -47,36 +47,24 @@ final class DetailsCalculationCell: UITableViewCell {
     }
     
     func setupCell(with financials: [StandardizedFinancial]) {
-        setValuationData(financials: financials)
         setFinancialData(financials: financials)
         setGrowthData(financials: financials)
     }
     
-    private func setValuationData(financials: [StandardizedFinancial]) {
-        financials.forEach { (financial) in
-            if (financial.dataTag?.tag)! == SearchCriteria.marketcap.rawValue {
-                valuationView.marketcapStackView.valueLabel.text = "$" + Int(financial.value ?? 0).formatUsingAbbreviation()
-                return
+    func setupWithLookUp(lookUp: [SearchCriteria: Double]) {
+        let keys = lookUp.keys
+        keys.forEach { (key) in
+            if key == .marketcap {
+                valuationView.marketcapStackView.valueLabel.text = "$" + Int(lookUp[key] ?? 0).formatUsingAbbreviation()
             }
-            if (financial.dataTag?.tag)! == SearchCriteria.pricetoearnings.rawValue {
-                valuationView.pricetoearningsStackView.valueLabel.text = financial.value?.twoDecimal()
-                return
+            if key == .pricetoearnings {
+                valuationView.pricetoearningsStackView.valueLabel.text = lookUp[key]?.twoDecimal()
             }
-            if (financial.dataTag?.tag)! == SearchCriteria.evtofcff.rawValue {
-                valuationView.evtofcfStackView.valueLabel.text = financial.value?.twoDecimal()
-                return
+            if key == .pricetobook {
+                valuationView.pricetobookStackView.valueLabel.text = lookUp[key]?.twoDecimal()
             }
-            if (financial.dataTag?.tag)! == SearchCriteria.evtoebit.rawValue {
-                valuationView.evtoebitStackView.valueLabel.text = financial.value?.twoDecimal()
-                return
-            }
-            if (financial.dataTag?.tag)! == SearchCriteria.pricetobook.rawValue {
-                valuationView.pricetobookStackView.valueLabel.text = financial.value?.twoDecimal()
-                return
-            }
-            if (financial.dataTag?.tag)! == SearchCriteria.pricetorevenue.rawValue {
-                valuationView.pricetosalesStackView.valueLabel.text = financial.value?.twoDecimal()
-                return
+            if key == .pricetorevenue {
+                valuationView.pricetosalesStackView.valueLabel.text = lookUp[key]?.twoDecimal()
             }
         }
     }
@@ -89,14 +77,6 @@ final class DetailsCalculationCell: UITableViewCell {
             }
             if (financial.dataTag?.tag)! == SearchCriteria.divpayoutratio.rawValue {
                 financialView.payoutRatioStackView.valueLabel.text = "\((financial.value ?? 0 / 100).convertToPercent())%"
-                return
-            }
-            if (financial.dataTag?.tag)! == SearchCriteria.debttoequity.rawValue {
-                financialView.debttoequityStackView.valueLabel.text = financial.value?.twoDecimal()
-                return
-            }
-            if (financial.dataTag?.tag)! == SearchCriteria.investedcapitalgrowth.rawValue {
-                financialView.investedcapitalStackView.valueLabel.text = (financial.value?.convertToPercent() ?? "") + "%"
                 return
             }
             if (financial.dataTag?.tag)! == SearchCriteria.grossmargin.rawValue {
@@ -124,20 +104,11 @@ final class DetailsCalculationCell: UITableViewCell {
                 growthView.revenuegrowthStackView.valueLabel.text = "\(financial.value?.convertToPercent() ?? "")%"
                 return
             }
-            if (financial.dataTag?.tag)! == SearchCriteria.revenueqoqgrowth.rawValue {
-                growthView.revenueqoqgrowthStackView.valueLabel.text = "\(financial.value?.convertToPercent() ?? "")%"
-                return
-            }
             if (financial.dataTag?.tag)! == SearchCriteria.epsgrowth.rawValue {
                 growthView.epsgrowthStackView.valueLabel.text = "\(financial.value?.convertToPercent() ?? "")%"
                 return
             }
-            if (financial.dataTag?.tag)! == SearchCriteria.fcffgrowth.rawValue {
-                growthView.fcfgrowthStackView.valueLabel.text = "\(financial.value?.convertToPercent() ?? "")%"
-                return
-            }
         }
-
     }
     
 }

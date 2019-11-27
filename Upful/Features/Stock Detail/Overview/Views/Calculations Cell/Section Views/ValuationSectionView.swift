@@ -73,7 +73,7 @@ final class ValuationSectionView: UIView {
     private lazy var valuationSV: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [
             row1SV,
-            row2SV,
+//            row2SV,
             row3SV,
             ])
         sv.axis = .vertical

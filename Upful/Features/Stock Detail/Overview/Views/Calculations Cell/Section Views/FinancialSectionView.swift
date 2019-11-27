@@ -27,6 +27,7 @@ final class FinancialSectionView: UIView {
         return sv
     }()
     
+    
     let debttoequityStackView: StockDetailStackView = {
         let sv = SectionedDetailsStackView(description: SearchCriteria.debttoequity.explicit)
         sv.valueLabel.text = "-"
@@ -62,7 +63,7 @@ final class FinancialSectionView: UIView {
     private lazy var valuationSV: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [
             row1SV,
-            row2SV,
+//            row2SV,
             row3SV,
             ])
         sv.axis = .vertical

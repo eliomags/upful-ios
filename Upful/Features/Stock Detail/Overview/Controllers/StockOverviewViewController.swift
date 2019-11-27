@@ -29,40 +29,30 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     }
     
     // MARK: - State
-    // TODO: - Better implementation of state
-    private enum State {
-        case Pending
-        case Loading
-        case Loaded(data: [[Any]])
-        case Error
-    }
-    
-    private var isLoading: Bool = false {
+
+    fileprivate var isLoading: Bool = false {
         didSet {
             observeStateChanges(isLoading)
         }
     }
     
     fileprivate func observeStateChanges(_ state: Bool) {
-        self.showActivitySpinner(state)
-        if !state {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.refreshingControl.endRefreshing()
-                self.tableView.contentInset = UIEdgeInsets(top: 70, left: 0, bottom: 0, right: 0)
-            }
-        }
+        showActivitySpinner(state)
+        tableView.reloadData()
+        refreshingControl.endRefreshing()
+        tableView.contentInset = UIEdgeInsets(top: 70, left: 0, bottom: 0, right: 0)
+        tableView.isScrollEnabled = !state
     }
     
-    private var chartRevenueData: [CompanyHistoricalDatum] = []
-    private var chartEarningsData: [CompanyHistoricalDatum] = []
-    private var chartData: [[CompanyHistoricalDatum]] {
+    fileprivate var chartRevenueData: [CompanyHistoricalDatum] = []
+    fileprivate var chartEarningsData: [CompanyHistoricalDatum] = []
+    fileprivate var chartData: [[CompanyHistoricalDatum]] {
         return [chartRevenueData, chartEarningsData]
     }
     
-    private var calcData: [StandardizedFinancial] = []
-    private var newsData: [CompanyNewsModel] = []
-    private var feedData: [[Any]] {
+    fileprivate var calcData: [StandardizedFinancial] = []
+    fileprivate var newsData: [CompanyNewsModel] = []
+    fileprivate var feedData: [[Any]] {
         return [chartData, calcData, newsData]
     }
     
@@ -166,10 +156,10 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     // MARK: - Private Functions
     
-    let group = DispatchGroup()
+    let chartDataGroup = DispatchGroup()
     
     fileprivate func getRevenueData() {
-        group.enter()
+        chartDataGroup.enter()
         
         intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
                                                 financial: .totalrevenue,
@@ -178,17 +168,16 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
             switch result {
             case .success(let downloadedData):
                 self.chartRevenueData = downloadedData
-                self.group.leave()
             
             case .failure(let error):
                 print(error.localizedDescription)
-                self.group.leave()
             }
+                self.chartDataGroup.leave()
         }
     }
     
     fileprivate func getEarningsData() {
-        group.enter()
+        chartDataGroup.enter()
         
         intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
                                                 financial: .netincome,
@@ -198,35 +187,18 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
             switch result {
             case .success(let downloadedData):
                 self.chartEarningsData = downloadedData
-                self.group.leave()
 
             case .failure(let error):
                 print(error.localizedDescription)
-                self.group.leave()
             }
+                self.chartDataGroup.leave()
         }
     }
-    
-    fileprivate func configureNewsData() {
-        group.enter()
-        
-        intrinioApi.getCompanyNewsData(ticker: ticker) { [weak self] (results) in
-            guard let self = self else { return }
-            
-            switch results {
-            case .success(let downloadedNewsData):
-                self.newsData = downloadedNewsData.news ?? []
-                self.group.leave()
 
-            case .failure(let error):
-                print(error)
-                self.group.leave()
-            }
-        }
-    }
+    let secondaryGroup = DispatchGroup()
     
     fileprivate func configureCalcData() {
-        group.enter()
+        secondaryGroup.enter()
 
         intrinioApi.fetchStockBatchFinancials(ticker: ticker) { [weak self] (results) in
             guard let self = self else { return }
@@ -234,26 +206,87 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
             switch results {
             case .success(let financialData):
                 self.calcData = financialData
-                self.group.leave()
 
             case .failure(let error):
                 print(error.localizedDescription)
-                self.group.leave()
             }
+            self.secondaryGroup.leave()
         }
     }
     
+    private var financialLookup: [SearchCriteria: Double] = [:]
+    
+    fileprivate func getAllCalculatedData() {
+        [
+            SearchCriteria.marketcap, .pricetoearnings,
+             .pricetobook, .pricetorevenue
+        ].forEach { (criteria) in
+            self.getFinancialData(financial: criteria)
+        }
+    }
+    
+    fileprivate func getFinancialData(financial: SearchCriteria) {
+        secondaryGroup.enter()
+
+        intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: financial, frequency: .recent, completion: { [weak self] (result) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let downloadedData):
+                guard !downloadedData.isEmpty else {
+                    self.secondaryGroup.leave()
+                    return
+                }
+                self.financialLookup[financial] = downloadedData.first?.value
+
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+            self.secondaryGroup.leave()
+        })
+    }
+    
+    fileprivate func configureNewsData() {
+        secondaryGroup.enter()
+        
+        intrinioApi.getCompanyNewsData(ticker: ticker) { [weak self] (results) in
+            guard let self = self else { return }
+            
+            switch results {
+            case .success(let downloadedNewsData):
+                self.newsData = downloadedNewsData.news ?? []
+
+            case .failure(let error):
+                print(error)
+            }
+            self.secondaryGroup.leave()
+        }
+    }
+    
+    fileprivate func handleDataFetchCompletion() {
+        let secondaryWorkItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            self.isLoading = false
+        }
+        
+        let primaryWorkItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            self.isLoading = false
+            self.getAllCalculatedData()
+            self.configureCalcData()
+            self.configureNewsData()
+            
+            self.secondaryGroup.notify(queue: .main, work: secondaryWorkItem)
+        }
+        
+        chartDataGroup.notify(queue: .main, work: primaryWorkItem)
+    }
+        
     fileprivate func loadOverviewData() {
         isLoading = true
         getRevenueData()
         getEarningsData()
-        configureNewsData()
-        configureCalcData()
-
-        group.notify(queue: .main) { [weak self] in
-            guard let self = self else { return }
-            self.isLoading = false
-        }
+        handleDataFetchCompletion()
     }
     
     // MARK: - Scroll View Delegate
@@ -310,13 +343,14 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
             barGraphCell.backgroundColor = .clear
             barGraphCell.chartView.delegate = self
             configureChart(chartView: barGraphCell.chartView)
-            
             return barGraphCell
+            
         case 1:
             guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath) as? DetailsCalculationCell else { return UITableViewCell() }
             calculationsCell.setupCell(with: calcData)
-            
+            calculationsCell.setupWithLookUp(lookUp: financialLookup)
             return calculationsCell
+            
         case 2:
             guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? NewsCell else { return UITableViewCell() }
             let news = feedData[indexPath.section] as? [CompanyNewsModel]

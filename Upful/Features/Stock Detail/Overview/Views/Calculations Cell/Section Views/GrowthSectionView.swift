@@ -40,7 +40,7 @@ final class GrowthSectionView: UIView {
         return sv
     }()
     private lazy var row2SV: RowStackView = {
-        let sv = RowStackView(arrangedSubviews: [revenuegrowthStackView, revenueqoqgrowthStackView])
+        let sv = RowStackView(arrangedSubviews: [revenuegrowthStackView, epsgrowthStackView])
         return sv
     }()
     
@@ -65,7 +65,7 @@ final class GrowthSectionView: UIView {
         let sv = UIStackView(arrangedSubviews: [
             row1SV,
             row2SV,
-            row3SV,
+//            row3SV,
             ])
         sv.axis = .vertical
         sv.distribution = .fillEqually

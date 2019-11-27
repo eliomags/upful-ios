@@ -73,6 +73,8 @@ final class ScreenResultsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    // MARK: - View Life Cycle Methods
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
@@ -185,6 +187,7 @@ final class ScreenResultsViewController: UIViewController {
 }
 
 extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableView.isScrollEnabled = !searchResults.isEmpty
         if searchResults.isEmpty { tableView.separatorStyle = .none }
