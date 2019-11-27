@@ -219,7 +219,8 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     fileprivate func getAllCalculatedData() {
         [
             SearchCriteria.marketcap, .pricetoearnings,
-             .pricetobook, .pricetorevenue
+             .pricetobook, .pricetorevenue,
+             .dividendyield
         ].forEach { (criteria) in
             self.getFinancialData(financial: criteria)
         }

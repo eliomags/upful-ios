@@ -66,15 +66,15 @@ final class DetailsCalculationCell: UITableViewCell {
             if key == .pricetorevenue {
                 valuationView.pricetosalesStackView.valueLabel.text = lookUp[key]?.twoDecimal()
             }
+            
+            if key == .dividendyield {
+                financialView.dividendyieldStackView.valueLabel.text = "\(lookUp[key]?.convertToPercent() ?? "")%"
+            }
         }
     }
     
     private func setFinancialData(financials: [StandardizedFinancial]) {
         financials.forEach { (financial) in
-            if (financial.dataTag?.tag)! == SearchCriteria.dividendyield.rawValue {
-                financialView.dividendyieldStackView.valueLabel.text = "\(financial.value?.convertToPercent() ?? "")%"
-                return
-            }
             if (financial.dataTag?.tag)! == SearchCriteria.divpayoutratio.rawValue {
                 financialView.payoutRatioStackView.valueLabel.text = "\((financial.value ?? 0 / 100).convertToPercent())%"
                 return
