@@ -277,6 +277,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
             case .success(let downloadedData):
                 self.lineChartData = downloadedData
                 self.analysisDataGroup.leave()
+                
             case .failure(let error):
                 self.analysisDataGroup.leave()
                 print(error.localizedDescription)

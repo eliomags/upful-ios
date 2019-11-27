@@ -190,8 +190,18 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
         state = .normal
     }
     
+    private var pendingRequestWorkItem: DispatchWorkItem?
+
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        state = .searching(searchText: searchText)
+        pendingRequestWorkItem?.cancel()
+        
+        let requestWorkItem = DispatchWorkItem { [weak self] in
+            self?.state = .searching(searchText: searchText)
+        }
+        
+        pendingRequestWorkItem = requestWorkItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250),
+                                      execute: requestWorkItem)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
