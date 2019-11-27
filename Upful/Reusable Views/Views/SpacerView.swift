@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// This view is used as a separator in stackViews as shown in StockDetailsVC Metrics Section
+/// This view is used as a separator in stackViews as shown in StockDetailsVC Metrics Section and tableview cells
 
 class SpacerView: UIView {
     override init(frame: CGRect) {

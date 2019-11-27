@@ -43,7 +43,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         }
     }
     
-    private func observeStateChanges(_ state: Bool) {
+    fileprivate func observeStateChanges(_ state: Bool) {
         self.showActivitySpinner(state)
         if !state {
             DispatchQueue.main.async {
@@ -120,7 +120,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground()
         setupViews()
-        loadChartData()
+        loadOverviewData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -152,89 +152,108 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
     }
     
-    @objc private func refreshData(_ sender: Any) {
-        loadChartData()
-    }
-    
-    // MARK: - Private Functions
-    
-    private func getRevenueData() {
-        intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker,
-                                                financial: .totalrevenue,
-                                                frequency: .historic) { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let downloadedData):
-                self.chartRevenueData = downloadedData
-                self.isLoading = false
-                
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    private func getEarningsData() {
-        intrinioApi.fetchStockSpecificFinancial(ticker: self.ticker,
-                                                financial: .netincome,
-                                                frequency: .historic) { [weak self] (result) in
-            guard let self = self else { return }
-
-            switch result {
-            case .success(let downloadedData):
-                self.chartEarningsData = downloadedData
-                self.isLoading = false
-                
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
     private func configureChart(chartView: GenericBarChartView) {
         guard !chartRevenueData.isEmpty && !chartEarningsData.isEmpty else { return }
         chartView.setupChart(
             dataPoints: chartRevenueData.map({ $0.date.formatDate() }),
             values: chartRevenueData.map({ $0.value }),
             values1: chartEarningsData.map({ $0.value }))
-    }   
+    }
     
-    private func configureNewsData() {
-        self.intrinioApi.getCompanyNewsData(ticker: self.ticker) { [weak self] (results) in
+    @objc private func refreshData(_ sender: Any) {
+        loadOverviewData()
+    }
+    
+    // MARK: - Private Functions
+    
+    let group = DispatchGroup()
+    
+    fileprivate func getRevenueData() {
+        group.enter()
+        
+        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
+                                                financial: .totalrevenue,
+                                                frequency: .historic) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let downloadedData):
+                self.chartRevenueData = downloadedData
+                self.group.leave()
+            
+            case .failure(let error):
+                print(error.localizedDescription)
+                self.group.leave()
+            }
+        }
+    }
+    
+    fileprivate func getEarningsData() {
+        group.enter()
+        
+        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
+                                                financial: .netincome,
+                                                frequency: .historic) { [weak self] (result) in
+            guard let self = self else { return }
+                                                    
+            switch result {
+            case .success(let downloadedData):
+                self.chartEarningsData = downloadedData
+                self.group.leave()
+
+            case .failure(let error):
+                print(error.localizedDescription)
+                self.group.leave()
+            }
+        }
+    }
+    
+    fileprivate func configureNewsData() {
+        group.enter()
+        
+        intrinioApi.getCompanyNewsData(ticker: ticker) { [weak self] (results) in
             guard let self = self else { return }
             
             switch results {
             case .success(let downloadedNewsData):
                 self.newsData = downloadedNewsData.news ?? []
-                self.isLoading = false
+                self.group.leave()
 
             case .failure(let error):
                 print(error)
+                self.group.leave()
             }
         }
     }
     
-    private func configureCalcData() {
-        self.intrinioApi.fetchStockBatchFinancials(ticker: self.ticker) { [weak self] (results) in
-            guard let self = self else { return }
+    fileprivate func configureCalcData() {
+        group.enter()
 
+        intrinioApi.fetchStockBatchFinancials(ticker: ticker) { [weak self] (results) in
+            guard let self = self else { return }
+            
             switch results {
             case .success(let financialData):
                 self.calcData = financialData
-                self.isLoading = false
+                self.group.leave()
 
             case .failure(let error):
                 print(error.localizedDescription)
+                self.group.leave()
             }
         }
     }
     
-    private func loadChartData() {
+    fileprivate func loadOverviewData() {
         isLoading = true
         getRevenueData()
         getEarningsData()
         configureNewsData()
         configureCalcData()
+
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self else { return }
+            self.isLoading = false
+        }
     }
     
     // MARK: - Scroll View Delegate
