@@ -10,10 +10,6 @@ import UIKit
 
 class EmptyScreenerFavoriteCell: GeneralEmptyCell {
     
-    override var emptyImage: UIImage {
-        return #imageLiteral(resourceName: "icons8-skyscrapers-100").withRenderingMode(.alwaysOriginal)
-    }
-    
     override var emptyHeaderText: String {
         return "Saved Screeners"
     }
@@ -25,6 +21,7 @@ class EmptyScreenerFavoriteCell: GeneralEmptyCell {
     override var buttonText: String {
         return "Add Screener"
     }
+    
 }
 
 
@@ -33,11 +30,7 @@ class EmptyStockFavoriteCell: GeneralEmptyCell {
     override var buttonLook: GeneralEmptyCell.ButtonLook {
         return .solid
     }
-    
-    override var emptyImage: UIImage {
-        return #imageLiteral(resourceName: "icons8-company-100").withRenderingMode(.alwaysOriginal)
-    }
-    
+
     override var emptyHeaderText: String {
         return "Saved Stocks"
     }

@@ -16,9 +16,13 @@ class GeneralEmptyCell: UITableViewCell {
     }
     
     var emptyImage: UIImage {
-        return UIImage()
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .bold)
+        let im = UIImage(systemName: "tray.fill", withConfiguration: largeConfig)?
+            .withTintColor(.systemGray3, renderingMode: .alwaysOriginal)
+            ?? UIImage()
+        return im
     }
-    
+        
     var emptyHeaderText: String {
         return String()
     }

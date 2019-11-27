@@ -15,8 +15,12 @@ class NotesButton: GenericNavBarButton {
 }
 
 class SortButton: GenericNavBarButton {
+    
     override var image: UIImage {
-        return #imageLiteral(resourceName: "icons8-more-22").withRenderingMode(.alwaysOriginal)
+        let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold)
+        let im = UIImage(systemName: "ellipsis", withConfiguration: config)?
+            .withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
+        return im
     }
     
     override init(frame: CGRect) {

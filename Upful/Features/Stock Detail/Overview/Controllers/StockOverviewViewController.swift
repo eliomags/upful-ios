@@ -276,7 +276,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         }
         chartDataGroup.notify(queue: .main, work: primaryWorkItem)
         secondaryGroup.notify(queue: .main, work: secondaryWorkItem)
-
     }
         
     fileprivate func loadOverviewData() {

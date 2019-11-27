@@ -16,7 +16,11 @@ class CancelButton: UIView {
         heightAnchor.constraint(equalToConstant: 26).isActive = true
         widthAnchor.constraint(equalToConstant: 26).isActive = true
         
-        let cancelImageView = UIImageView(image: #imageLiteral(resourceName: "icons8-delete-15").withRenderingMode(.alwaysOriginal))
+        let smallConfig = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold)
+        let xImage = UIImage(systemName: "xmark", withConfiguration: smallConfig)?
+            .withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
+        
+        let cancelImageView = UIImageView(image: xImage)
         cancelImageView.backgroundColor = .clear
         
         addSubview(cancelImageView)
