@@ -27,6 +27,8 @@ class ViewSuggestionsVC: UIViewController {
     lazy var tableView: UITableView = { [unowned self] in
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.backgroundColor = VersionManager.mainContainerBackground()
+        tv.register(SuggestionViewCell.self, forCellReuseIdentifier: "suggestionCell")
+        tv.separatorStyle = .none
         tv.delegate = self
         tv.dataSource = self
         return tv
@@ -71,9 +73,9 @@ class ViewSuggestionsVC: UIViewController {
     
     func incrementSuggestion(indexPath: IndexPath) {
         suggestions[indexPath.item].votes += 1
+        tableView.reloadData()
     }
     
-  
 }
 
 extension ViewSuggestionsVC: UITableViewDataSource {
@@ -82,19 +84,33 @@ extension ViewSuggestionsVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "suggestionCell", for: indexPath) as? SuggestionViewCell else { return UITableViewCell() }
         let suggestion = suggestions[indexPath.item]
-        cell.textLabel?.text = suggestion.title
-        cell.detailTextLabel?.text = suggestion.description
+        cell.titleLabel.text = suggestion.title
+        cell.descriptionLabel.text = suggestion.description
+        cell.voteCountLabel.text = "\(suggestion.votes)"
         return cell
     }
 }
 
 extension ViewSuggestionsVC: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         incrementSuggestion(indexPath: indexPath)
+        
+        let selectedCell = tableView.cellForRow(at: indexPath)
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
+            selectedCell?.transform = CGAffineTransform(scaleX: 1.01, y: 1.01)
+        }) { (_) in
+            UIView.animate(withDuration: 0.1) {
+               selectedCell?.transform = .identity
+           }
+        }
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return tableView.estimatedRowHeight
+    }
+    
 }
 
 
