@@ -70,6 +70,12 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         return button
     }()
     
+    lazy var suggestionsButton: UIButton = { [unowned self] in
+        let button = UIButton(type: .system)
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSeeSuggestionsTap)))
+        return button
+    }()
+    
     lazy var preferenceVC: StockSuggestionViewController = {
         let preferenceVC = StockSuggestionViewController()
         return preferenceVC
@@ -96,7 +102,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.largeTitleDisplayMode = .always
+        configureNavBar()
         setUpTableView()
     }
     
@@ -104,7 +110,6 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         super.viewWillAppear(animated)
         loadSavedStocks()
         configureSavedItemsToDisplay()
-        configureNavBar()
     }
     
     // MARK: - View Setup
@@ -122,7 +127,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     fileprivate func configureNavBar() {
         navigationItem.title = "Home"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: suggestionsButton)
         VersionManager.navigationBarColor(in: navigationController)
         VersionManager.setNavigationBar(in: navigationController)
     }
@@ -260,6 +266,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         presenter.present(in: self)
     }
     
+    @objc private func handleSeeSuggestionsTap(_ sender: Any) {
+        let seeSuggestionsVC = ViewSuggestionsVC()
+        navigationController?.pushViewController(seeSuggestionsVC, animated: true)
+    }
+    
     // MARK: - TableView Delegate Methods
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -348,21 +359,20 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         switch indexPath.section {
             
         case 0:
-            if self.preferenceVC.viewModel.state == .noPreferencesSet {
-                return (tableView.frame.height / 5) - 30
-            } else {
-                return 200
-            }
+            let noPreferenceSet = preferenceVC.viewModel.state == .noPreferencesSet
+            let noPreferenceRowHeight = (tableView.frame.height / 5) - 30
+            return noPreferenceSet ? noPreferenceRowHeight: 200
+            
         case 1:
             let height: CGFloat = 340
-            if isSavedScreenersEmpty { return (tableView.frame.height / 3) + 20 }
+            if isSavedScreenersEmpty { return (tableView.frame.height/2) - 150 }
             if savedScreeners.count == 1 { return (height / 3) + 20 }
             if savedScreeners.count == 2 { return (height / 2) + 50 }
             if savedScreeners.count >= 3 { return height }
             return UITableView.automaticDimension
             
         case 2:
-            if isSavedStocksEmpty { return tableView.frame.height/2 - 50 }
+            if isSavedStocksEmpty { return (tableView.frame.height/2) - 150 }
             if !isSavedStocksEmpty { return UITableView.automaticDimension }
             return UITableView.automaticDimension
         default: return UITableView.automaticDimension

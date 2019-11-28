@@ -34,6 +34,7 @@ class PopularStockDataLoader: DataLoader {
             case .success(let stockDocuments):
                 if let stockDictionary = stockDocuments as? [[String: String]] {
                     var popularStocks: [PopularCompany] = []
+                    
                     stockDictionary.forEach({ (dictionary) in
                         let ticker = dictionary["ticker"] ?? ""
                         let name = dictionary["name"] ?? ""
