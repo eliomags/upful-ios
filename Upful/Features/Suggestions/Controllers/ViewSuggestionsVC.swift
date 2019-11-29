@@ -98,6 +98,7 @@ class ViewSuggestionsVC: UIViewController {
             case .success(let data):
                 self.suggestions = data
                 self.state = .loaded
+                
             case .failure(_):
                 self.state = .error
             }
@@ -119,21 +120,22 @@ class ViewSuggestionsVC: UIViewController {
     deinit {
         suggestionDataLoader?.commitVotes()
     }
-    
 }
 
 extension ViewSuggestionsVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let loaded = state == .loaded
         if state == .error {
             tableView.setEmptyView(state: .emptyState(title: "Error Getting Suggestions.", message: ""))
         } else {
             tableView.restore()
         }
         
-        return suggestions.count
+        return loaded ? suggestions.count: 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let loaded = state == .loaded
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "suggestionCell", for: indexPath) as? SuggestionViewCell else { return UITableViewCell() }
         let suggestion = suggestions[indexPath.item]
         cell.titleLabel.text = suggestion.title
@@ -143,19 +145,20 @@ extension ViewSuggestionsVC: UITableViewDataSource {
             guard let self = self else { return }
             self.incrementSuggestion(indexPath: indexPath)
         }
-        return cell
+        return loaded ? cell: UITableViewCell()
     }
 }
 
 extension ViewSuggestionsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let loaded = state == .loaded
         let header = SelectionTableHeader()
         header.label.text = " "
         header.button.setTitle("Add Suggestion", for: .normal)
         header.buttonTapped = { [weak self] in
             self?.navigateToAddPreference()
         }
-        return header
+        return loaded ? header: nil
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
