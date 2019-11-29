@@ -26,7 +26,7 @@ class SelectionTableHeader: UIView {
         b.translatesAutoresizingMaskIntoConstraints = false
         b.setTitle("", for: .normal)
         b.setTitleColor(.appAccent3, for: .normal)
-        let font = UIFont(descriptor: .preferredFontDescriptor(withTextStyle: .title1), size: 17)
+        let font = UIFont(descriptor: .preferredFontDescriptor(withTextStyle: .title1), size: 18)
         b.titleLabel?.font = font
         b.addTarget(self, action: #selector(handleButtonTap), for: .touchUpInside)
         return b

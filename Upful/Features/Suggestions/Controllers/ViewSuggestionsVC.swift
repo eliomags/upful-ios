@@ -16,14 +16,36 @@ class ViewSuggestionsVC: UIViewController {
     
     // MARK: - State
     
-    var suggestions: [Suggestion] = [] {
+    enum State {
+        case pending
+        case loading
+        case loaded
+        case error
+    }
+    
+    var state: State = .pending {
         didSet {
+            showActivitySpinner(state == .loading)
             tableView.reloadData()
         }
     }
+    
+    var suggestions: [Suggestion] = []
 
     // MARK: - Views
     
+    lazy var loadingView: UIView = {
+        let v = UIView()
+        let activityView = UIActivityIndicatorView(style: .medium)
+        activityView.startAnimating()
+        v.addSubview(activityView)
+        activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
+                            padding: .init(top: 30, left: 30, bottom: 30, right: 30))
+        v.layer.cornerRadius = 15
+        v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
+        return v
+    }()
+
     lazy var tableHeader: PreferenceHeaderView = {
         let v = PreferenceHeaderView()
         v.headerLabel.text = ""
@@ -68,15 +90,16 @@ class ViewSuggestionsVC: UIViewController {
     // MARK: - Private Functions
     
     fileprivate func loadSuggestions() {
+        state = .loading
         suggestionDataLoader?.load { [weak self] (result) in
             guard let self = self else { return }
             
             switch result {
             case .success(let data):
                 self.suggestions = data
-   
+                self.state = .loaded
             case .failure(_):
-                break
+                self.state = .error
             }
         }
     }
@@ -101,6 +124,12 @@ class ViewSuggestionsVC: UIViewController {
 
 extension ViewSuggestionsVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if state == .error {
+            tableView.setEmptyView(state: .emptyState(title: "Error Getting Suggestions.", message: ""))
+        } else {
+            tableView.restore()
+        }
+        
         return suggestions.count
     }
     
@@ -135,7 +164,21 @@ extension ViewSuggestionsVC: UITableViewDelegate {
 }
 
 
-
+extension ViewSuggestionsVC {
+    func showActivitySpinner(_ shouldShowSpinner: Bool) {
+        if shouldShowSpinner {
+            self.view.addSubview(loadingView)
+            loadingView.translatesAutoresizingMaskIntoConstraints = false
+            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        }
+        if !shouldShowSpinner {
+            DispatchQueue.main.async {
+                self.loadingView.removeFromSuperview()
+            }
+        }
+    }
+}
 
 
 

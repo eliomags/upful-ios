@@ -87,12 +87,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         view.backgroundColor = VersionManager.mainContainerBackground()
         setupViews()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = false
-    }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if self.manualSearchSearchTableView.shouldUpdateHeaderViewFrame() {

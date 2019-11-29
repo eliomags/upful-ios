@@ -94,7 +94,6 @@ class ManualSearchParametersTableViewController: UITableViewController {
     
     fileprivate func configureNavBar() {
         navigationItem.title = criteria
-        navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     

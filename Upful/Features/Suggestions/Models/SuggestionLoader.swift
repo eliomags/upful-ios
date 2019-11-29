@@ -17,7 +17,6 @@ protocol SuggestionsLoaderProtocol {
 }
 
 class SuggestionDataLoader: SuggestionsLoaderProtocol {
-    
     typealias SuggestionLoaderCompletion = (Result<[Suggestion],Error>) -> Void
 
     private let backendService: FirestoreAPI = FirestoreAPI()
@@ -55,9 +54,7 @@ class SuggestionDataLoader: SuggestionsLoaderProtocol {
         batch.commit() { err in
             if let err = err {
                 print("Error writing batch \(err)")
-            } else {
-                print("Batch write succeeded.")
-            }
+            } 
         }
     }
 }

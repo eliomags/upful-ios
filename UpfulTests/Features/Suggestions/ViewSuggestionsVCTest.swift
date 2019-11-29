@@ -18,7 +18,6 @@ class ViewSuggestionsVCTest: XCTestCase {
         super.setUp()
         sut = ViewSuggestionsVC()
         sut.suggestionDataLoader = MockSuggestionLoader()
-        sut.viewDidLoad()
     }
 
     override func tearDown() {
@@ -26,11 +25,33 @@ class ViewSuggestionsVCTest: XCTestCase {
         super.tearDown()
     }
     
+    // MARK: - Test State
+    
+    func test_initialState() {
+        XCTAssertEqual(sut.state, ViewSuggestionsVC.State.pending)
+    }
+    
+//    func test_loadingState() {
+//        sut.viewDidLoad()
+//        XCTAssertEqual(sut.state, ViewSuggestionsVC.State.loading)
+//    }
+    
+    func test_loadedState() {
+        sut.viewDidLoad()
+        XCTAssertEqual(sut.state, ViewSuggestionsVC.State.loaded)
+    }
+    
+    // MARK: - Test Functions
+    
     func test_suggestionSetup() {
+        sut.viewDidLoad()
+
         XCTAssertEqual(sut.suggestions.count, 2)
     }
     
     func test_suggestionIncrementFirstSuggestion() {
+        sut.viewDidLoad()
+
         let indexPath = IndexPath(row: 0, section: 0)
         let firstSuggestion = sut.suggestions[0]
         
@@ -43,6 +64,14 @@ class ViewSuggestionsVCTest: XCTestCase {
 }
 
 class MockSuggestionLoader: SuggestionsLoaderProtocol {
+    func updateVote(document: String) {
+        
+    }
+    
+    func commitVotes() {
+        
+    }
+    
     func load(completion: @escaping SuggestionLoaderCompletion) {
         completion(Result {
             return [
