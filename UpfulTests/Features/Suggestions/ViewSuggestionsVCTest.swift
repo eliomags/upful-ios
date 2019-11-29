@@ -60,17 +60,12 @@ class ViewSuggestionsVCTest: XCTestCase {
 
         XCTAssertEqual(firstSuggestion.votes, 2)
     }
-
 }
 
 class MockSuggestionLoader: SuggestionsLoaderProtocol {
-    func updateVote(document: String) {
-        
-    }
+    func updateVote(document: String) {}
     
-    func commitVotes() {
-        
-    }
+    func commitVotes() {}
     
     func load(completion: @escaping SuggestionLoaderCompletion) {
         completion(Result {

@@ -99,7 +99,6 @@ class ViewSuggestionsVC: UIViewController {
             trailing: view.trailingAnchor,
             padding: .init(top: 0, left: 16, bottom: 16, right: 16),
             size: .init(width: 0, height: 40))
-    
     }
     
     fileprivate func setupTableView() {
@@ -119,7 +118,7 @@ class ViewSuggestionsVC: UIViewController {
     
     func showActivitySpinner(_ shouldShowSpinner: Bool) {
         if shouldShowSpinner {
-            self.view.addSubview(loadingView)
+            view.addSubview(loadingView)
             loadingView.translatesAutoresizingMaskIntoConstraints = false
             loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
             loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true

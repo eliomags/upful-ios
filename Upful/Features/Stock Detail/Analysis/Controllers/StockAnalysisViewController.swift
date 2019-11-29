@@ -16,13 +16,11 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Analysis"
     
-    
     // MARK: - Dependencies
     
     let ticker: String
     let companyName: String
     let intrinioApi: IntrinioAPI
-    
     
     // MARK: - State
 
@@ -111,9 +109,15 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         return v
     }()
     
-    var tableView: UITableView = {
+    lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.register(AnalysisChartCell.self, forCellReuseIdentifier: ReuseID.graphCell)
+        tv.register(GenericTableViewCell.self, forCellReuseIdentifier: ReuseID.graphConfigurationCell)
+        tv.register(NewsCell.self, forCellReuseIdentifier: ReuseID.reportsCell)
+        tv.setTableHeaderView(headerView: stockHeaderView)
+        tv.delegate = self
+        tv.dataSource = self
         return tv
     }()
     
@@ -159,18 +163,12 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     // MARK: - View Setup
     
     private func setupViews() {
-        tableView.register(AnalysisChartCell.self, forCellReuseIdentifier: ReuseID.graphCell)
-        tableView.register(GenericTableViewCell.self, forCellReuseIdentifier: ReuseID.graphConfigurationCell)
-        tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.reportsCell)
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.tableHeaderView = stockHeaderView
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         tableView.refreshControl = refreshingControl
         view.addSubview(tableView)
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
