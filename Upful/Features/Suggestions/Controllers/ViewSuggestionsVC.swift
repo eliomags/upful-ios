@@ -49,7 +49,7 @@ class ViewSuggestionsVC: UIViewController {
     lazy var tableHeader: PreferenceHeaderView = {
         let v = PreferenceHeaderView()
         v.headerLabel.text = ""
-        v.descriptionText.text = "Tap suggestion to vote. You can vote as many times as you wish."
+        v.descriptionText.text = "Double tap any suggestion to show your interest. You can vote as many times as you wish."
         v.translatesAutoresizingMaskIntoConstraints = false
         v.heightAnchor.constraint(equalToConstant: 80).isActive = true
         return v
@@ -66,25 +66,69 @@ class ViewSuggestionsVC: UIViewController {
         return tv
     }()
     
+    lazy var addSuggestionButton: UIButton = { [unowned self] in
+        let button = UIButton(type: .system)
+        button.setTitle("Add Suggestion", for: .normal)
+        button.backgroundColor = .appAccent3
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(navigateToAddPreference), for: .touchUpInside)
+        button.layer.cornerRadius = 8
+        button.layer.masksToBounds = true
+        return button
+    }()
+    
     // MARK: - View Life Cycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
+        setupSuggestionsButton()
         setupTableView()
         loadSuggestions()
     }
     
     // MARK: - View Setup
     
+    fileprivate func setupSuggestionsButton() {
+        view.addSubview(addSuggestionButton)
+        addSuggestionButton.anchor(
+            top: nil,
+            leading: view.leadingAnchor,
+            bottom: view.layoutMarginsGuide.bottomAnchor,
+            trailing: view.trailingAnchor,
+            padding: .init(top: 0, left: 16, bottom: 16, right: 16),
+            size: .init(width: 0, height: 40))
+    
+    }
+    
     fileprivate func setupTableView() {
         view.addSubview(tableView)
-        tableView.fillSuperview()
+        tableView.anchor(
+            top: view.layoutMarginsGuide.topAnchor,
+            leading: view.leadingAnchor,
+            bottom: addSuggestionButton.topAnchor,
+            trailing: view.trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 16, right: 0))
     }
     
     fileprivate func setupNavBar() {
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.title = "Suggestions"
+    }
+    
+    func showActivitySpinner(_ shouldShowSpinner: Bool) {
+        if shouldShowSpinner {
+            self.view.addSubview(loadingView)
+            loadingView.translatesAutoresizingMaskIntoConstraints = false
+            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        }
+        if !shouldShowSpinner {
+            DispatchQueue.main.async {
+                self.loadingView.removeFromSuperview()
+            }
+        }
     }
     
     // MARK: - Private Functions
@@ -112,7 +156,7 @@ class ViewSuggestionsVC: UIViewController {
         suggestionDataLoader?.updateVote(document: id)
     }
     
-    fileprivate func navigateToAddPreference() {
+    @objc fileprivate func navigateToAddPreference() {
         let presenter = ReportPresenter(reportType: .suggestion)
         presenter.present(in: self)
     }
@@ -130,7 +174,6 @@ extension ViewSuggestionsVC: UITableViewDataSource {
         } else {
             tableView.restore()
         }
-        
         return loaded ? suggestions.count: 0
     }
     
@@ -150,39 +193,10 @@ extension ViewSuggestionsVC: UITableViewDataSource {
 }
 
 extension ViewSuggestionsVC: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let loaded = state == .loaded
-        let header = SelectionTableHeader()
-        header.label.text = " "
-        header.button.setTitle("Add Suggestion", for: .normal)
-        header.buttonTapped = { [weak self] in
-            self?.navigateToAddPreference()
-        }
-        return loaded ? header: nil
-    }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return tableView.estimatedRowHeight
     }
 }
-
-
-extension ViewSuggestionsVC {
-    func showActivitySpinner(_ shouldShowSpinner: Bool) {
-        if shouldShowSpinner {
-            self.view.addSubview(loadingView)
-            loadingView.translatesAutoresizingMaskIntoConstraints = false
-            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        }
-        if !shouldShowSpinner {
-            DispatchQueue.main.async {
-                self.loadingView.removeFromSuperview()
-            }
-        }
-    }
-}
-
 
 
 

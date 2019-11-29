@@ -63,7 +63,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     // MARK: - Views
-    
+        
     lazy var notesButton: NotesButton = { [unowned self] in
         let button = NotesButton()
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNotesTap)))
@@ -72,8 +72,18 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     lazy var suggestionsButton: UIButton = { [unowned self] in
         let button = UIButton(type: .system)
+        button.setTitle("See Suggestions", for: .normal)
+        button.setTitleColor(.appAccent3, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSeeSuggestionsTap)))
         return button
+    }()
+    
+    lazy var navigationHeaderView: NavigationHeaderView = {
+        let h = NavigationHeaderView()
+        h.headerLabel.text = "Home"
+        h.headerButtonStackView.addArrangedSubview(suggestionsButton)
+        return h
     }()
     
     lazy var preferenceVC: StockSuggestionViewController = {
@@ -119,6 +129,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
+        tableView.setTableHeaderView(headerView: navigationHeaderView)
         tableView.register(ActionableTableHeader.self, forHeaderFooterViewReuseIdentifier: ReuseID.screenerHeaderView)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedScreenCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedCompanyCell)
@@ -126,9 +137,8 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     fileprivate func configureNavBar() {
-        navigationItem.title = "Home"
-        navigationItem.largeTitleDisplayMode = .always
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: suggestionsButton)
+        navigationItem.title = ""
+        navigationItem.largeTitleDisplayMode = .never
         VersionManager.navigationBarColor(in: navigationController)
         VersionManager.setNavigationBar(in: navigationController)
     }
@@ -271,6 +281,14 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         navigationController?.pushViewController(seeSuggestionsVC, animated: true)
     }
     
+    // MARK: - ScrollView Delegate Methods
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let threshold = navigationHeaderView.intrinsicContentSize.height
+        let scrollPassThreshold = scrollView.contentOffset.y > threshold
+        navigationItem.title = scrollPassThreshold ? "Home": ""
+    }
+    
     // MARK: - TableView Delegate Methods
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -332,7 +350,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.section == 2 {
-            let delete = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
+            let delete = UIContextualAction(style: .destructive, title: "Delete") { ( _, _, _) in
                 guard let savedStock = self.displayData[indexPath.section][indexPath.row] as? SavedStock else { return }
                 self.removeFavoriteCompany(savedStock.ticker)
                 self.savedStocks.remove(at: indexPath.item)
@@ -375,13 +393,14 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             if isSavedStocksEmpty { return (tableView.frame.height/2) - 150 }
             if !isSavedStocksEmpty { return UITableView.automaticDimension }
             return UITableView.automaticDimension
+            
         default: return UITableView.automaticDimension
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 { return 80 }
-        return 60
+        let isFirstSection = section == 0
+        return isFirstSection ? 80: 60
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
