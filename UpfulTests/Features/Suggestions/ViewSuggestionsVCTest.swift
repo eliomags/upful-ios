@@ -31,13 +31,15 @@ class ViewSuggestionsVCTest: XCTestCase {
         XCTAssertEqual(sut.state, ViewSuggestionsVC.State.pending)
     }
     
-//    func test_loadingState() {
-//        sut.viewDidLoad()
-//        XCTAssertEqual(sut.state, ViewSuggestionsVC.State.loading)
-//    }
+    func test_loadingState() {
+        sut.viewDidLoad()
+        
+        XCTAssertEqual(sut.state, ViewSuggestionsVC.State.loading)
+    }
     
     func test_loadedState() {
         sut.viewDidLoad()
+        
         XCTAssertEqual(sut.state, ViewSuggestionsVC.State.loaded)
     }
     
@@ -53,12 +55,12 @@ class ViewSuggestionsVCTest: XCTestCase {
         sut.viewDidLoad()
 
         let indexPath = IndexPath(row: 0, section: 0)
-        let firstSuggestion = sut.suggestions[0]
+        let firstSuggestion = sut.suggestions.first
         
         sut.incrementSuggestion(indexPath: indexPath)
         sut.incrementSuggestion(indexPath: indexPath)
 
-        XCTAssertEqual(firstSuggestion.votes, 2)
+        XCTAssertEqual(firstSuggestion?.votes, 2)
     }
 }
 
@@ -68,11 +70,13 @@ class MockSuggestionLoader: SuggestionsLoaderProtocol {
     func commitVotes() {}
     
     func load(completion: @escaping SuggestionLoaderCompletion) {
-        completion(Result {
-            return [
-                Suggestion(title: "Title 1", description: "Description 1", votes: 0),
-                Suggestion(title: "Title 2", description: "Description 2", votes: 0)
-            ]
-        })
+        DispatchQueue.global(qos: .background).async {
+            completion(Result {
+                return [
+                    Suggestion(title: "Title 1", description: "Description 1", votes: 0),
+                    Suggestion(title: "Title 2", description: "Description 2", votes: 0)
+                ]
+            })
+        }
     }
 }

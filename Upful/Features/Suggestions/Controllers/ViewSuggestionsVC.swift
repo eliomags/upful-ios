@@ -26,7 +26,7 @@ class ViewSuggestionsVC: UIViewController {
     var state: State = .pending {
         didSet {
             showActivitySpinner(state == .loading)
-            tableView.reloadData()
+            self.tableView.reloadData()
         }
     }
     

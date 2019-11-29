@@ -48,7 +48,7 @@ class NavigationHeaderView: UIView {
         
         addSubview(headerStackView)
         headerStackView.centerYAnchor.constraint(equalTo: headerButtonStackView.centerYAnchor).isActive = true
-        headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24).isActive = true
         headerStackView.trailingAnchor.constraint(equalTo: headerButtonStackView.leadingAnchor, constant: -16).isActive = true
     }
     
