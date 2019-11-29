@@ -12,7 +12,6 @@ import Firebase
 protocol FirestoreService {
     associatedtype T
     associatedtype U
-    func update(to : T)
     func fetch(from : T, completion: U)
 }
 
@@ -27,8 +26,9 @@ public class FirestoreAPI: FirestoreService {
     
     // MARK: - API
     
-    func update(to collection: Collection) {
-        
+    let db = Firestore.firestore()
+
+    func update(to collection: Collection, document: String) {
     }
     
     func fetch(from collection: Collection, completion: @escaping FirestoreFetchCompletion<Any>) {
@@ -47,6 +47,7 @@ public class FirestoreAPI: FirestoreService {
             }
         }
     }
+
 }
 
 

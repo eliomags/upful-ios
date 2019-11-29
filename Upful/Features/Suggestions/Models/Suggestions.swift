@@ -12,17 +12,20 @@ class Suggestion {
     let title: String
     let description: String
     var votes: Int
+    let id: String
     
     init(title: String, description: String, votes: Int) {
         self.title = title
         self.description = description
         self.votes = votes
+        self.id = ""
     }
     
     init(dictionary: [String: Any]) {
         self.title = dictionary["title"] as? String ?? ""
         self.description = dictionary["description"] as? String ?? ""
         self.votes = dictionary["votes"] as? Int ?? 0
+        self.id = dictionary["id"] as? String ?? ""
     }
 }
 

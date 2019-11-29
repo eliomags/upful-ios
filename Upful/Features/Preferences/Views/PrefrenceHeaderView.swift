@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class PreferenceHeaderView: UIView {
+class PreferenceHeaderView: UIView {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 0, height: 90)
     }
@@ -46,7 +46,7 @@ final class PreferenceHeaderView: UIView {
             leading: leadingAnchor,
             bottom: nil,
             trailing: trailingAnchor,
-            padding: .init(top: 18, left: 16, bottom: 8, right: 0))
+            padding: .init(top: 18, left: 16, bottom: 8, right: 16))
         
     }
     

@@ -7,13 +7,17 @@
 //
 
 import Foundation
+import Firebase
 
 protocol SuggestionsLoaderProtocol {
     typealias SuggestionLoaderCompletion = (Result<[Suggestion],Error>) -> Void
     func load(completion: @escaping SuggestionLoaderCompletion)
+    func updateVote(document: String)
+    func commitVotes()
 }
 
 class SuggestionDataLoader: SuggestionsLoaderProtocol {
+    
     typealias SuggestionLoaderCompletion = (Result<[Suggestion],Error>) -> Void
 
     private let backendService: FirestoreAPI = FirestoreAPI()
@@ -36,4 +40,24 @@ class SuggestionDataLoader: SuggestionsLoaderProtocol {
         }
     }
     
+    lazy var batch: WriteBatch = {
+        let b = backendService.db.batch()
+        return b
+    }()
+    
+    func updateVote(document: String) {
+        let collection = FirestoreAPI.Collection.suggestions.rawValue
+        let docRef = backendService.db.collection(collection).document(document)
+        batch.updateData(["votes": FieldValue.increment(Int64(1))], forDocument: docRef)
+    }
+    
+    func commitVotes() {
+        batch.commit() { err in
+            if let err = err {
+                print("Error writing batch \(err)")
+            } else {
+                print("Batch write succeeded.")
+            }
+        }
+    }
 }

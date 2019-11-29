@@ -24,6 +24,15 @@ class ViewSuggestionsVC: UIViewController {
 
     // MARK: - Views
     
+    lazy var tableHeader: PreferenceHeaderView = {
+        let v = PreferenceHeaderView()
+        v.headerLabel.text = ""
+        v.descriptionText.text = "Tap suggestion to vote. You can vote as many times as you wish."
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        return v
+    }()
+    
     lazy var tableView: UITableView = { [unowned self] in
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.backgroundColor = VersionManager.mainContainerBackground()
@@ -31,6 +40,7 @@ class ViewSuggestionsVC: UIViewController {
         tv.separatorStyle = .none
         tv.delegate = self
         tv.dataSource = self
+        tv.setTableHeaderView(headerView: tableHeader)
         return tv
     }()
     
@@ -74,6 +84,17 @@ class ViewSuggestionsVC: UIViewController {
     func incrementSuggestion(indexPath: IndexPath) {
         suggestions[indexPath.item].votes += 1
         tableView.reloadData()
+        let id = suggestions[indexPath.item].id
+        suggestionDataLoader?.updateVote(document: id)
+    }
+    
+    fileprivate func navigateToAddPreference() {
+        let presenter = ReportPresenter(reportType: .suggestion)
+        presenter.present(in: self)
+    }
+
+    deinit {
+        suggestionDataLoader?.commitVotes()
     }
     
 }
@@ -89,28 +110,28 @@ extension ViewSuggestionsVC: UITableViewDataSource {
         cell.titleLabel.text = suggestion.title
         cell.descriptionLabel.text = suggestion.description
         cell.voteCountLabel.text = "\(suggestion.votes)"
+        cell.doubleTappedAction = { [weak self] in
+            guard let self = self else { return }
+            self.incrementSuggestion(indexPath: indexPath)
+        }
         return cell
     }
 }
 
 extension ViewSuggestionsVC: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        incrementSuggestion(indexPath: indexPath)
-        
-        let selectedCell = tableView.cellForRow(at: indexPath)
-        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
-            selectedCell?.transform = CGAffineTransform(scaleX: 1.01, y: 1.01)
-        }) { (_) in
-            UIView.animate(withDuration: 0.1) {
-               selectedCell?.transform = .identity
-           }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = SelectionTableHeader()
+        header.label.text = " "
+        header.button.setTitle("Add Suggestion", for: .normal)
+        header.buttonTapped = { [weak self] in
+            self?.navigateToAddPreference()
         }
+        return header
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return tableView.estimatedRowHeight
     }
-    
 }
 
 

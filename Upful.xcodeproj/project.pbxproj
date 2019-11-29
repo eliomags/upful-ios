@@ -44,6 +44,7 @@
 		3D297A0B23902DD6001D02C3 /* SuggestionLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0A23902DD6001D02C3 /* SuggestionLoader.swift */; };
 		3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0D23902EDA001D02C3 /* ViewSuggestionsVCTest.swift */; };
 		3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0F23904BFE001D02C3 /* SuggestionViewCell.swift */; };
+		3D297A1223908FC9001D02C3 /* SelectionTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A1123908FC9001D02C3 /* SelectionTableHeader.swift */; };
 		3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F963B230F4922003811AB /* StockOverviewViewController.swift */; };
 		3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96402312B036003811AB /* AnalyticsEvents.swift */; };
 		3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96422312D44B003811AB /* AnalyticsTrackers.swift */; };
@@ -223,6 +224,7 @@
 		3D297A0A23902DD6001D02C3 /* SuggestionLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionLoader.swift; sourceTree = "<group>"; };
 		3D297A0D23902EDA001D02C3 /* ViewSuggestionsVCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSuggestionsVCTest.swift; sourceTree = "<group>"; };
 		3D297A0F23904BFE001D02C3 /* SuggestionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionViewCell.swift; sourceTree = "<group>"; };
+		3D297A1123908FC9001D02C3 /* SelectionTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionTableHeader.swift; sourceTree = "<group>"; };
 		3D2E37D72303942100DE8D12 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleMobileAds.framework"; sourceTree = "<group>"; };
 		3D2E37D92303946800DE8D12 /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleUtilities.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleUtilities.framework"; sourceTree = "<group>"; };
 		3D2E37DA2303946800DE8D12 /* GoogleAppMeasurement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAppMeasurement.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleAppMeasurement.framework"; sourceTree = "<group>"; };
@@ -752,6 +754,7 @@
 			isa = PBXGroup;
 			children = (
 				3D297A0F23904BFE001D02C3 /* SuggestionViewCell.swift */,
+				3D297A1123908FC9001D02C3 /* SelectionTableHeader.swift */,
 			);
 			path = VIews;
 			sourceTree = "<group>";
@@ -1790,6 +1793,7 @@
 				3D297A0923902D70001D02C3 /* Suggestions.swift in Sources */,
 				3DC710882335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift in Sources */,
 				3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */,
+				3D297A1223908FC9001D02C3 /* SelectionTableHeader.swift in Sources */,
 				3D917B5622FE088F001D5E39 /* UIViewController+Extensions.swift in Sources */,
 				3DC7108D2335D9BE00A2A0DA /* NotesViewController.swift in Sources */,
 				3D0C5F6423395CD500F4A5FC /* Notes+CoreDataClass.swift in Sources */,
