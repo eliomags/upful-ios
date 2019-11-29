@@ -30,6 +30,7 @@ enum ScreenType: String {
 
 enum AnalyticsEventName {
     case selectedPremium
+    case castedSuggestionVote
     case selectedNewsArticle
     case screenForStocks(screenType: ScreenType)
     case selectedAnalysis(criteria: SearchCriteria)
@@ -68,6 +69,8 @@ enum AnalyticsEventName {
             return "saved_screener"
         case .selectedPremium:
             return "premium_selected"
+        case .castedSuggestionVote:
+            return ""
         }
     }
 }
@@ -99,7 +102,8 @@ extension AnalyticsEventName {
             return ["screener": description]
         case .selectedPremium:
             return [:]
-
+        case .castedSuggestionVote:
+            return [:]
         }
     }
 }

@@ -153,6 +153,7 @@ class ViewSuggestionsVC: UIViewController {
         tableView.reloadData()
         let id = suggestions[indexPath.item].id
         suggestionDataLoader?.updateVote(document: id)
+        AnalyticsLogger.instance.reportEvents(event: .castedSuggestionVote)
     }
     
     @objc fileprivate func navigateToAddPreference() {
