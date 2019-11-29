@@ -59,12 +59,8 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     
     fileprivate func setupNavBar() {
         navigationItem.largeTitleDisplayMode = .never
-        navigationController?.navigationBar.backgroundColor = .white
-        navigationController?.navigationBar.tintColor = .black
         navigationItem.title = headerTitle
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
-        VersionManager.navigationBarColor(in: navigationController)
-        VersionManager.setNavigationBar(in: navigationController)
     }
     
     // MARK: - Actions
