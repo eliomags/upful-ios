@@ -157,9 +157,16 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 return
             }
         }
-        AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .manual))
-        let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents(), networkingAPI: IntrinioAPI())
-        navigationController?.pushViewController(screenerResultsVC, animated: true)
+        PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
+            if shouldNavigate {
+                AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .manual))
+                let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents(), networkingAPI: IntrinioAPI())
+                navigationController?.pushViewController(screenerResultsVC, animated: true)
+            } else {
+                let presenter = SubscriptionPresenter()
+                presenter.present(in: self)
+            }
+        }
     }
     
     @objc fileprivate func clearCriteriaTapped(_ sender: UIBarButtonItem) {

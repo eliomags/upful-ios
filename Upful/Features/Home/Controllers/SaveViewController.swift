@@ -112,6 +112,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        UNUserNotificationCenter.current().delegate = self
         configureNavBar()
         setUpTableView()
     }
@@ -452,5 +453,16 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
 }
 
+extension SaveViewController: UNUserNotificationCenterDelegate {
 
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .badge])
+        PermissionManager.shared.resetDateLoopUp()
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("Responded")
+        AnalyticsLogger.instance.reportEvents(event: .pushNotificationSelected)
+    }
+}
 

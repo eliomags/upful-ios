@@ -123,11 +123,18 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let urlComponents = (dataSource?.savedScreeners[indexPath.item].configureURLComponents()) ?? []
-        if urlComponents == []  { return }
-        let resultsVC = ScreenResultsViewController(searchParameters: urlComponents, networkingAPI: IntrinioAPI())
-        AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .saved))
-        parent?.navigationController?.pushViewController(resultsVC, animated: true)
+        PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
+            if shouldNavigate {
+                let urlComponents = (dataSource?.savedScreeners[indexPath.item].configureURLComponents()) ?? []
+                if urlComponents == []  { return }
+                let resultsVC = ScreenResultsViewController(searchParameters: urlComponents, networkingAPI: IntrinioAPI())
+                AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .saved))
+                parent?.navigationController?.pushViewController(resultsVC, animated: true)
+            } else {
+                let presenter = SubscriptionPresenter()
+                presenter.present(in: parent ?? self)
+            }
+        }
     }
     
 }

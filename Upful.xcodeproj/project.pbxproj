@@ -139,6 +139,7 @@
 		3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A362372456700C298B9 /* FirestoreService.swift */; };
 		3DD75A3A2372797A00C298B9 /* PopularStockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A392372797A00C298B9 /* PopularStockViewModel.swift */; };
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
+		3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
 		3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */; };
@@ -323,6 +324,7 @@
 		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		3DD75A392372797A00C298B9 /* PopularStockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularStockViewModel.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
+		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
 		3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisGraphView.swift; sourceTree = "<group>"; };
@@ -606,8 +608,8 @@
 			isa = PBXGroup;
 			children = (
 				3D20FB4822FB2086007836DD /* Supporting Files */,
-				3D20FB4D22FB258A007836DD /* Services */,
 				3D20FB4A22FB211C007836DD /* Extensions */,
+				3D20FB4D22FB258A007836DD /* Services */,
 				3DF5FBC023341ED600856205 /* Features */,
 				3D20FB5022FB3052007836DD /* Models */,
 				3D20FB6022FBC033007836DD /* Reusable Views */,
@@ -658,6 +660,7 @@
 				3D42BE57230E26A900806AFF /* UITableView+Extensions.swift */,
 				3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */,
 				3D2F9664231B7488003811AB /* String+Extensions.swift */,
+				3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1826,6 +1829,7 @@
 				3D0C5F6F233A49A800F4A5FC /* EmptyScreenFavoriteCell.swift in Sources */,
 				3DAB3EB9234C04E60008CC18 /* Preference.swift in Sources */,
 				3DA5408C232B366F00EE477C /* MenuViewHeader.swift in Sources */,
+				3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */,
 				3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */,
 				3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */,
 				3DF5FBBE2333A48B00856205 /* ChartUpdatable.swift in Sources */,
@@ -2020,7 +2024,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.0.7;
+				CURRENT_PROJECT_VERSION = 4.0.9;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2028,7 +2032,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1.3;
+				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2042,7 +2046,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.0.7;
+				CURRENT_PROJECT_VERSION = 4.0.9;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2050,7 +2054,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1.3;
+				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

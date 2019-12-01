@@ -210,9 +210,17 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     
     // MenubarDisplayable
     func navigateToScreenerResults(searchParameters: [String]) {
-        AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .quick))
-        let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters, networkingAPI: IntrinioAPI())
-        self.navigationController?.pushViewController(searchResultVC, animated: true)
+        PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
+            if shouldNavigate {
+                AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .quick))
+                let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters, networkingAPI: IntrinioAPI())
+                self.navigationController?.pushViewController(searchResultVC, animated: true)
+            }
+            if !shouldNavigate {
+                let presenter = SubscriptionPresenter()
+                presenter.present(in: self)
+            }
+        }
     }
     
 }

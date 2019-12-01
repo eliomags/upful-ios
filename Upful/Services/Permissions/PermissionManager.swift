@@ -8,17 +8,33 @@
 
 import Foundation
 import CoreData
+import UserNotifications
+
+extension DateComponents {
+    func toString() -> String {
+        return "\(self.month!)/\(self.day!)/\(self.year!)"
+    }
+}
 
 class PermissionManager {
+    
+    struct Constants {
+        struct UserDefaults {
+            static let isPremium = "isPremium"
+            static let screeningDateLookup = "selectedScreenerDictionary"
+        }
+    }
+    
     static let shared = PermissionManager()
     
     // MARK: - Parameters
     
     private let savedScreenerThreshold = 1
     private let savedStockThreshold = 3
+    private let screeningThreshold = 3
     
     var isPremium: Bool {
-        return UserDefaults.standard.bool(forKey: "isPremium")
+        return UserDefaults.standard.bool(forKey: Constants.UserDefaults.isPremium)
     }
 
     private init() {}
@@ -83,4 +99,112 @@ class PermissionManager {
         }
     }
     
+    // Configures current date
+    
+    private var dateComponent: DateComponents = {
+        let date = Date()
+        let calendar = Calendar.current
+        var components = calendar
+            .dateComponents([.year, .month, .day, .minute], from: date)
+        components.calendar = Calendar.current
+        return components
+    }()
+        
+    var screeningDateLookup: [String: Int] {
+        print(UserDefaults.standard.dictionary(forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int])
+        return UserDefaults.standard.dictionary(forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int] ?? [:]
+    }
+        
+    func incrementCurrentDateScreenerSelection() {
+        var dictionary: [String: Int] = screeningDateLookup
+        if let val = dictionary[dateComponent.toString()] {
+            dictionary[dateComponent.toString()] = val + 1
+        } else {
+            dictionary[dateComponent.toString()] = 1
+        }
+        UserDefaults.standard.set(dictionary, forKey: Constants.UserDefaults.screeningDateLookup)
+    }
+
+    func verifyScreenerNavigationPermission(completion: ((Bool) -> Void)) {
+        if isPremium { completion(true) }
+        else {
+            // check if should increment in the first place
+            let isBelowScreeningThreshold = screeningDateLookup[dateComponent.toString()] ?? 0 < screeningThreshold
+            if isBelowScreeningThreshold {
+                incrementCurrentDateScreenerSelection()
+                completion(true)
+            } else {
+                // Set up notification service
+                setupScreeningNotification()
+                completion(false)
+            }
+        }
+    }
+    
+    private func setupScreeningNotification() {
+        UNUserNotificationCenter.current().getNotificationSettings { (notificationSettings) in
+            switch notificationSettings.authorizationStatus {
+            case .notDetermined:
+                // Request Authorization
+                self.requestAuthorization { (success) in
+                    guard success else { return }
+                    self.scheduleLocalNotification()
+                }
+            case .authorized:
+                // Schedule Local Notification
+                self.scheduleLocalNotification()
+            default:
+                break
+            }
+        }
+    }
+    
+    private func requestAuthorization(completionHandler: @escaping (_ success: Bool) -> ()) {
+        // Request Authorization
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (success, error) in
+            if let error = error {
+                print("Request Authorization Failed (\(error), \(error.localizedDescription))")
+            }
+            completionHandler(success)
+        }
+    }
+    
+    private var getNextDateComponents: DateComponents {
+        let nextDate = dateComponent.calendar?.date(byAdding: .day, value: 1, to: dateComponent.date!)
+        return DateComponents(calendar: Calendar.current, year: nextDate?.year, month: nextDate?.month, day: nextDate?.day)
+    }
+    
+    private func scheduleLocalNotification() {
+        // Create Notification content
+        let notificationContent = UNMutableNotificationContent()
+        
+        notificationContent.title = "Upful"
+        notificationContent.subtitle = "Start Screening!"
+        notificationContent.body = "Your daily stock screening limit has been reset. Start searching for stocks again."
+        
+//        let notificationTrigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let notificationTrigger = UNCalendarNotificationTrigger(dateMatching: getNextDateComponents, repeats: false)
+        
+        // Create Notification Request
+        let notificationRequest = UNNotificationRequest(
+            identifier: "upful_local_notification",
+            content: notificationContent,
+            trigger: notificationTrigger)
+        
+        // Add Request to User Notification Center
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        UNUserNotificationCenter.current().add(notificationRequest) { (error) in
+            if let error = error {
+                print("Unable to Add Notification Request (\(error), \(error.localizedDescription))")
+            }
+        }
+    }
+    
+    func resetDateLoopUp() {
+        var dictionary: [String: Int] = screeningDateLookup
+        if screeningDateLookup.count > 5 { dictionary = [:] }
+        dictionary[dateComponent.toString()] = 0
+        UserDefaults.standard.set(dictionary, forKey: Constants.UserDefaults.screeningDateLookup)
+    }
+
 }
