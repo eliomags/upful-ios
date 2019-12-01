@@ -10,12 +10,6 @@ import Foundation
 import CoreData
 import UserNotifications
 
-extension DateComponents {
-    func toString() -> String {
-        return "\(self.month!)/\(self.day!)/\(self.year!)"
-    }
-}
-
 class PermissionManager {
     
     struct Constants {
@@ -37,7 +31,9 @@ class PermissionManager {
         return UserDefaults.standard.bool(forKey: Constants.UserDefaults.isPremium)
     }
 
-    private init() {}
+    private init() {
+        resetSavedDates()
+    }
     
     // MARK: - Core Data Helper
     
@@ -65,7 +61,7 @@ class PermissionManager {
         }
     }
     
-    // MARK: - API
+    // MARK: - Saved Screener and Stocks
     
     typealias PermissionCompletionHandler = (_ permissionGranted: Bool, _ error: Error?) -> Void
     
@@ -98,10 +94,10 @@ class PermissionManager {
             completion(false, NSError())
         }
     }
-    
-    // Configures current date
-    
-    private var dateComponent: DateComponents = {
+        
+    // MARK: - Screener Navigation
+
+    private var currentDateComponents: DateComponents = {
         let date = Date()
         let calendar = Calendar.current
         var components = calendar
@@ -110,31 +106,30 @@ class PermissionManager {
         return components
     }()
         
-    var screeningDateLookup: [String: Int] {
-        print(UserDefaults.standard.dictionary(forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int])
-        return UserDefaults.standard.dictionary(forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int] ?? [:]
+    var screeningDateLookup: [String: Int] = UserDefaults.standard.dictionary(forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int] ?? [:] {
+        didSet {
+            UserDefaults.standard.set(
+                screeningDateLookup,
+                forKey: Constants.UserDefaults.screeningDateLookup)
+        }
     }
         
-    func incrementCurrentDateScreenerSelection() {
-        var dictionary: [String: Int] = screeningDateLookup
-        if let val = dictionary[dateComponent.toString()] {
-            dictionary[dateComponent.toString()] = val + 1
+    private func incrementCurrentDateScreenerSelection() {
+        if let val = screeningDateLookup[currentDateComponents.toString()] {
+            screeningDateLookup[currentDateComponents.toString()] = val + 1
         } else {
-            dictionary[dateComponent.toString()] = 1
+            screeningDateLookup[currentDateComponents.toString()] = 1
         }
-        UserDefaults.standard.set(dictionary, forKey: Constants.UserDefaults.screeningDateLookup)
     }
 
     func verifyScreenerNavigationPermission(completion: ((Bool) -> Void)) {
         if isPremium { completion(true) }
         else {
-            // check if should increment in the first place
-            let isBelowScreeningThreshold = screeningDateLookup[dateComponent.toString()] ?? 0 < screeningThreshold
+            let isBelowScreeningThreshold = screeningDateLookup[currentDateComponents.toString()] ?? 0 < screeningThreshold
             if isBelowScreeningThreshold {
                 incrementCurrentDateScreenerSelection()
                 completion(true)
             } else {
-                // Set up notification service
                 setupScreeningNotification()
                 completion(false)
             }
@@ -159,7 +154,7 @@ class PermissionManager {
         }
     }
     
-    private func requestAuthorization(completionHandler: @escaping (_ success: Bool) -> ()) {
+    func requestAuthorization(completionHandler: @escaping (_ success: Bool) -> ()) {
         // Request Authorization
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (success, error) in
             if let error = error {
@@ -170,14 +165,12 @@ class PermissionManager {
     }
     
     private var getNextDateComponents: DateComponents {
-        let nextDate = dateComponent.calendar?.date(byAdding: .day, value: 1, to: dateComponent.date!)
+        let nextDate = currentDateComponents.calendar?.date(byAdding: .day, value: 1, to: currentDateComponents.date!)
         return DateComponents(calendar: Calendar.current, year: nextDate?.year, month: nextDate?.month, day: nextDate?.day)
     }
     
     private func scheduleLocalNotification() {
-        // Create Notification content
         let notificationContent = UNMutableNotificationContent()
-        
         notificationContent.title = "Upful"
         notificationContent.subtitle = "Start Screening!"
         notificationContent.body = "Your daily stock screening limit has been reset. Start searching for stocks again."
@@ -185,13 +178,11 @@ class PermissionManager {
 //        let notificationTrigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         let notificationTrigger = UNCalendarNotificationTrigger(dateMatching: getNextDateComponents, repeats: false)
         
-        // Create Notification Request
         let notificationRequest = UNNotificationRequest(
             identifier: "upful_local_notification",
             content: notificationContent,
             trigger: notificationTrigger)
         
-        // Add Request to User Notification Center
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         UNUserNotificationCenter.current().add(notificationRequest) { (error) in
             if let error = error {
@@ -200,11 +191,10 @@ class PermissionManager {
         }
     }
     
-    func resetDateLoopUp() {
-        var dictionary: [String: Int] = screeningDateLookup
-        if screeningDateLookup.count > 5 { dictionary = [:] }
-        dictionary[dateComponent.toString()] = 0
-        UserDefaults.standard.set(dictionary, forKey: Constants.UserDefaults.screeningDateLookup)
+    func resetSavedDates() {
+        if screeningDateLookup[currentDateComponents.toString()] == nil {
+            screeningDateLookup = [:]
+            screeningDateLookup[currentDateComponents.toString()] = 0
+        }
     }
-
 }

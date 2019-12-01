@@ -140,6 +140,7 @@
 		3DD75A3A2372797A00C298B9 /* PopularStockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A392372797A00C298B9 /* PopularStockViewModel.swift */; };
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
 		3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */; };
+		3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
 		3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */; };
@@ -325,6 +326,7 @@
 		3DD75A392372797A00C298B9 /* PopularStockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularStockViewModel.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupVC.swift; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
 		3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisGraphView.swift; sourceTree = "<group>"; };
@@ -724,6 +726,7 @@
 		3D20FB6022FBC033007836DD /* Reusable Views */ = {
 			isa = PBXGroup;
 			children = (
+				3DE8C7FE239420DE00CC0056 /* Assistance */,
 				3D7C85502337A92A00A2E63E /* Animator */,
 				3DA54083232B35F900EE477C /* MenuContainer */,
 				3D7C85482337476A00A2E63E /* Views */,
@@ -1383,6 +1386,22 @@
 			path = "Empty Suggestion";
 			sourceTree = "<group>";
 		};
+		3DE8C7FE239420DE00CC0056 /* Assistance */ = {
+			isa = PBXGroup;
+			children = (
+				3DE8C7FF2394212800CC0056 /* Notification Setup */,
+			);
+			path = Assistance;
+			sourceTree = "<group>";
+		};
+		3DE8C7FF2394212800CC0056 /* Notification Setup */ = {
+			isa = PBXGroup;
+			children = (
+				3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */,
+			);
+			path = "Notification Setup";
+			sourceTree = "<group>";
+		};
 		3DF5FBA0232BB9A400856205 /* Stock Details Container */ = {
 			isa = PBXGroup;
 			children = (
@@ -1831,6 +1850,7 @@
 				3DA5408C232B366F00EE477C /* MenuViewHeader.swift in Sources */,
 				3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */,
 				3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */,
+				3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */,
 				3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */,
 				3DF5FBBE2333A48B00856205 /* ChartUpdatable.swift in Sources */,
 				3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */,
