@@ -385,7 +385,7 @@ extension QuickSearchViewController {
 
 extension QuickSearchViewController: PresentationControllerDelegate {
     func presentationControllerdDidDismiss() {
-        showNotificaitionSetupView()
+        showNotificationSetupView()
     }
 }
 

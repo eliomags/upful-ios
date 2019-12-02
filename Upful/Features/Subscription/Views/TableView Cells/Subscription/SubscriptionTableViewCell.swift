@@ -130,9 +130,9 @@ class SubscriptionTableViewCell: UITableViewCell {
         if selected {
             UIView.animate(withDuration: 0.15) {
                 self.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-                self.contentBackgroundView.backgroundColor = UIColor(red: 243/255, green: 175/255, blue: 34/255, alpha: 0.3)
+                self.contentBackgroundView.backgroundColor = UIColor.appAccent3
                 self.contentBackgroundView.layer.borderWidth = 1
-                self.contentBackgroundView.layer.borderColor = UIColor.appAccent.cgColor
+                self.contentBackgroundView.layer.borderColor = UIColor.appAccent3.cgColor
                 
                 if #available(iOS 13.0, *) {
                     self.durationLabel.textColor = .label

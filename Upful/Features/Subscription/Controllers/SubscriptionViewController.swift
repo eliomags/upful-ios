@@ -15,13 +15,29 @@ protocol PresentationControllerDelegate: UIViewController {
 class SubscriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     deinit {
-        if presenterType != .settings {
-            presentationDelegate?.showNotificaitionSetupView()
+        if presenterType == .screeningLimit {
+            presentationDelegate?.showNotificationSetupView()
         }
     }
     
     // MARK: - Dependencies
         
+    var headerText: String {
+        var text = ""
+        switch presenterType {
+            
+        case .savedStockLimit:
+            text = "You've reached your limit for saved stocks.\nGet Premium to unlock unlimited access."
+        case .savedScreenerLimit:
+            text = "You've reached your limit for saved screeners.\nGet Premium to unlock unlimited access."
+        case .screeningLimit:
+            text = "You've reached your daily limit for stock screens.\nGet Premium to unlock unlimited access."
+        case .settings:
+            text = "Upgrade to Premium."
+        }
+        return text
+    }
+    
     let presenterType: SubscriptionPresenter.PresenterType
     
     lazy var viewModel: SubscriptionViewModel = {
@@ -33,10 +49,13 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
 
     // MARK: - Views
     
-    var tablHeader: PreferenceHeaderView = {
+    lazy var tableHeader: PreferenceHeaderView = {
         let v = PreferenceHeaderView()
         v.headerLabel.text = ""
-        v.descriptionText.text = "You've reached your limit."
+        v.descriptionText.textColor = .label
+        v.descriptionText.text = headerText
+        v.descriptionText.font = UIFont(name: "AvenirNext-Bold", size: 16)
+        v.descriptionText.textAlignment = .center
         return v
     }()
     
@@ -50,7 +69,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         let tableV = UITableView(frame: .zero, style: .grouped)
         tableV.delegate = self
         tableV.dataSource = self
-        tableV.setTableHeaderView(headerView: tablHeader)
+        tableV.setTableHeaderView(headerView: tableHeader)
         return tableV
     }()
     
@@ -97,16 +116,10 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
-        setupNavBar()
         setupPresentation()
         observeStateChanges()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        setupNavBar()
-    }
-    
     func observeStateChanges() {
         viewModel.stateChanged = { [weak self] (state) in
             guard let self = self else { return }
@@ -153,22 +166,18 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     fileprivate func setupTableView() {
         view.addSubview(tableView)
-        tableView.fillSuperview()
         tableView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
-        view.backgroundColor = .appAccent3
+        view.backgroundColor = VersionManager.mainContainerBackground()
         tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.separatorStyle = .none
-        tableView.contentInset = UIEdgeInsets(top: -(navigationController?.navigationBar.intrinsicContentSize.height ?? 0),
-                                              left: 0,bottom: 0,right: 0)
         tableView.bounces = false
-        tableView.contentInsetAdjustmentBehavior = .never
         tableView.estimatedSectionHeaderHeight = 0
     }
     
     fileprivate func setupPresentation() {
         navigationController?.navigationBar.isTranslucent = true
         navigationItem.title = "Premium"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
     }
     
     fileprivate func setupDefaultSelection() {
@@ -211,7 +220,10 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     // MARK: - TableView DataSource Methods
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        switch viewModel.state {
+        case .loaded(_): return 2
+        default: return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -224,7 +236,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         case 0:
             let cell = UITableViewCell()
             cell.selectionStyle = .none
-            cell.backgroundColor = .appAccent3
+            cell.backgroundColor = .secondarySystemBackground
             display(contentController: subscriptionDetailsCollectionView, on: cell)
             return cell
             
@@ -238,6 +250,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
                 cell.dueNowPricingLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].totalCost
                 cell.savingsValueLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].savingPercentage
                 return cell
+                
             default:
                 break
             }

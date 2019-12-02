@@ -141,7 +141,7 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
 
 extension SavedScreenersCollectionViewController: PresentationControllerDelegate {
     func presentationControllerdDidDismiss() {
-        showNotificaitionSetupView()
+        showNotificationSetupView()
     }
 }
 

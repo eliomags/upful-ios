@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIViewController {
-    func showNotificaitionSetupView() {
+    func showNotificationSetupView() {
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] (notificationSettings) in
             guard let self = self else { return }
             if notificationSettings.authorizationStatus == .notDetermined {

@@ -286,7 +286,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             }
             
             if !permissionGranted {
-                let presenter = SubscriptionPresenter(type: .screeningLimit)
+                let presenter = SubscriptionPresenter(type: .savedScreenerLimit)
                 presenter.present(in: self)
             }
             

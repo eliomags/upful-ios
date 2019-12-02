@@ -9,11 +9,13 @@
 import UIKit
 
 class SubscriptionDetailsCollectionView: UICollectionViewController {
-    // MARK: - weak var??
+
     weak var dataSource: SubscriptionFeatureDataSource?
     
     lazy var pageControl: UIPageControl = {
         let control = UIPageControl()
+        control.currentPageIndicatorTintColor = .appAccent3
+        control.pageIndicatorTintColor = .lightGray
         control.numberOfPages = dataSource?.subscriptionOfferings.count ?? 1
         control.currentPage = 0
         return control

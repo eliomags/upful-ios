@@ -27,7 +27,7 @@ class SubscriptionPresenter {
         let subscriptionVC = SubscriptionViewController(presenterType: type)
         subscriptionVC.presentationDelegate = viewController
         let navVC = UINavigationController(rootViewController: subscriptionVC)
-
+        navVC.modalPresentationStyle = .fullScreen
         viewController.present(navVC, animated: true, completion: nil)
     }
 }

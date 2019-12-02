@@ -9,6 +9,7 @@
 import UIKit
 
 class SubscriptionOfferingCell: UICollectionViewCell {
+    
     let offeringImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .clear
@@ -34,7 +35,7 @@ class SubscriptionOfferingCell: UICollectionViewCell {
     let offeringTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .center
         label.text = "Unlimited Saving"
         return label
@@ -43,7 +44,7 @@ class SubscriptionOfferingCell: UICollectionViewCell {
     let offeringDescriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "Save as many screeners and stocks as you wish"

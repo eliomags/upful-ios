@@ -20,13 +20,18 @@ struct SubscriptionFeatureViewModel {
     }
     
     var image: UIImage {
+        let config = UIImage.SymbolConfiguration.init(pointSize: 30, weight: .bold)
         switch feature {
-            
+
         case .saving:
-            return #imageLiteral(resourceName: "icons8-star-30 (2)").withRenderingMode(.alwaysOriginal)
+            let im = UIImage(systemName: "heart.fill", withConfiguration: config)?
+                .withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
+            return im!
             
         case .screens:
-            return #imageLiteral(resourceName: "icons8-sales-performance-48").withRenderingMode(.alwaysOriginal)
+            let im = UIImage(systemName: "chart.bar.fill", withConfiguration: config)?
+                .withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
+            return im!
 
         case .notes:
             return #imageLiteral(resourceName: "icons8-create-30").withRenderingMode(.alwaysOriginal)
