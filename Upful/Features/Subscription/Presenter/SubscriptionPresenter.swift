@@ -8,12 +8,26 @@
 
 import UIKit
 
-struct SubscriptionPresenter {
+class SubscriptionPresenter {
     
-    func present(in viewController: UIViewController) {
-        let subscriptionVC = SubscriptionViewController()
+    let type: PresenterType
+    
+    init(type: PresenterType) {
+        self.type = type
+    }
+    
+    enum PresenterType {
+        case savedStockLimit
+        case savedScreenerLimit
+        case screeningLimit
+        case settings
+    }
+    
+    func present(in viewController: PresentationControllerDelegate) {
+        let subscriptionVC = SubscriptionViewController(presenterType: type)
+        subscriptionVC.presentationDelegate = viewController
         let navVC = UINavigationController(rootViewController: subscriptionVC)
-        
+
         viewController.present(navVC, animated: true, completion: nil)
     }
 }

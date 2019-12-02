@@ -9,9 +9,25 @@
 import UIKit
 
 extension UIViewController {
-    func showSubscriptionView() {
-        let notificationSetupVC = NotificationSetupViewController()
-        self.display(contentController: notificationSetupVC, on: self.view)
+    func showNotificaitionSetupView() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] (notificationSettings) in
+            guard let self = self else { return }
+            if notificationSettings.authorizationStatus == .notDetermined {
+                DispatchQueue.main.async {
+                    let notificationSetupVC = NotificationSetupViewController()
+                    
+                    guard var parentVC = self.parent else {
+                        self.display(contentController: notificationSetupVC, on: self.view)
+                        return
+                    }
+                    while let next = parentVC.parent { parentVC = next }
+                    parentVC.display(contentController: notificationSetupVC, on: parentVC.view)
+                }
+            }
+            if notificationSettings.authorizationStatus == .authorized {
+                PermissionManager.shared.setupScreeningNotification()
+            }
+        }
     }
 }
 
@@ -19,18 +35,61 @@ class NotificationSetupViewController: UIViewController {
     
     // MARK: - Views
     
-    let containerView: UIView = {
+    private let containerView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = UIColor.init() { (trait) -> UIColor in
-            if trait.userInterfaceStyle == .light { return .white }
-            if trait.userInterfaceStyle == .dark { return .systemGray }
-            return .white
-        }
+        v.backgroundColor = .secondarySystemGroupedBackground
         v.layer.masksToBounds = false
         v.layer.cornerRadius = 16
-        v.heightAnchor.constraint(equalToConstant: 250).isActive = true
+        v.heightAnchor.constraint(equalToConstant: 175).isActive = true
         return v
+    }()
+    
+    private let headerLabel: UILabel = {
+        let l = UILabel()
+        l.text = "Push Notifications"
+        l.textAlignment = .center
+        l.textColor = .label
+        l.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        l.numberOfLines = 0
+        return l
+    }()
+    
+    private let descriptionLabel: UILabel = {
+        let l = UILabel()
+        l.text = "Would you like to be notified whenever your stock screening limit resets?"
+        l.textAlignment = .center
+        l.textColor = .secondaryLabel
+        l.numberOfLines = 0
+        return l
+    }()
+    
+    private lazy var dismissButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.setTitle("Not Right Now", for: .normal)
+        b.addTarget(self, action: #selector(handDismiss), for: .touchUpInside)
+        b.setTitleColor(.label, for: .normal)
+        return b
+    }()
+    
+    private lazy var acceptButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.setTitle("Yes, Please", for: .normal)
+        b.backgroundColor = .appAccent3
+        b.addTarget(self, action: #selector(handleAccept), for: .touchUpInside)
+        b.layer.masksToBounds = false
+        b.layer.cornerRadius = 8
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        b.setTitleColor(.white, for: .normal)
+        return b
+    }()
+    
+    private lazy var buttonStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [dismissButton, acceptButton])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .horizontal
+        sv.distribution = .fillEqually
+        return sv
     }()
     
     // MARK: - View Life Cycle Methods
@@ -38,15 +97,69 @@ class NotificationSetupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupContents()
+        layoutButtons()
+        layoutTextDescription()
     }
     
     // MARK: - View Set Up
     
     fileprivate func setupContents() {
+        view.backgroundColor =
+            UIColor.init() { [unowned self] (trait) -> UIColor in
+               if trait.userInterfaceStyle == .dark {
+                   self.containerView.setupShadow(intensity: .light, color: .systemGray)
+
+               }
+               if trait.userInterfaceStyle == .light {
+                   self.containerView.setupShadow(intensity: .light, color: .label)
+               }
+               return UIColor(white: 0.1, alpha: 0.4)
+           }
+       
+        
         view.addSubview(containerView)
-        containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true
-        containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32).isActive = true
+        containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50).isActive = true
+        containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
+        containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40).isActive = true
     }
     
+    fileprivate func layoutButtons() {
+        containerView.addSubview(buttonStackView)
+        buttonStackView.bottomAnchor.constraint(
+            equalTo: containerView.bottomAnchor, constant: -8).isActive = true
+        buttonStackView.leadingAnchor.constraint(
+            equalTo: containerView.leadingAnchor, constant: 16).isActive = true
+        buttonStackView.trailingAnchor.constraint(
+            equalTo: containerView.trailingAnchor, constant: -16).isActive = true
+    }
+    
+    fileprivate func layoutTextDescription() {
+        view.addSubview(headerLabel)
+        headerLabel.anchor(
+            top: containerView.topAnchor,
+            leading: containerView.leadingAnchor,
+            bottom: nil,
+            trailing: containerView.trailingAnchor,
+            padding: .init(top: 12, left: 16, bottom: 16, right: 16))
+        
+        view.addSubview(descriptionLabel)
+        descriptionLabel.anchor(
+            top: headerLabel.bottomAnchor,
+            leading: containerView.leadingAnchor,
+            bottom: buttonStackView.topAnchor,
+            trailing: containerView.trailingAnchor,
+            padding: .init(top: 4, left: 16, bottom: 16, right: 16))
+    }
+    
+    // MARK: - Actions
+    
+    @objc fileprivate func handDismiss(_ sender: UIButton) {
+        remove()
+    }
+    
+    @objc fileprivate func handleAccept(_ sender: UIButton) {
+        remove()
+        PermissionManager.shared.setupScreeningNotification()
+    }
 }
+

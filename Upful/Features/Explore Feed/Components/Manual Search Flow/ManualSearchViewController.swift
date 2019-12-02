@@ -163,7 +163,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents(), networkingAPI: IntrinioAPI())
                 navigationController?.pushViewController(screenerResultsVC, animated: true)
             } else {
-                let presenter = SubscriptionPresenter()
+                let presenter = SubscriptionPresenter(type: .screeningLimit)
                 presenter.present(in: self)
             }
         }
@@ -286,7 +286,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             }
             
             if !permissionGranted {
-                let presenter = SubscriptionPresenter()
+                let presenter = SubscriptionPresenter(type: .screeningLimit)
                 presenter.present(in: self)
             }
             

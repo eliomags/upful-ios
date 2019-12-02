@@ -217,12 +217,11 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
                 self.navigationController?.pushViewController(searchResultVC, animated: true)
             }
             if !shouldNavigate {
-                let presenter = SubscriptionPresenter()
+                let presenter = SubscriptionPresenter(type: .screeningLimit)
                 presenter.present(in: self)
             }
         }
     }
-    
 }
 
 extension QuickSearchViewController: UITableViewDataSource, UITableViewDelegate {
@@ -381,6 +380,12 @@ extension QuickSearchViewController {
         case .searching:
             return 0
         }
+    }
+}
+
+extension QuickSearchViewController: PresentationControllerDelegate {
+    func presentationControllerdDidDismiss() {
+        showNotificaitionSetupView()
     }
 }
 

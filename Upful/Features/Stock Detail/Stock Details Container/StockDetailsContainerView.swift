@@ -129,7 +129,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         PermissionManager.shared.getSaveStockPermission { [weak self] (permissionGranted, error) in
             guard let self = self else { return }
             if !permissionGranted {
-                let presenter = SubscriptionPresenter()
+                let presenter = SubscriptionPresenter(type: .savedStockLimit)
                 presenter.present(in: self)
             }
             if permissionGranted { self.saveCompany(button: sender) }

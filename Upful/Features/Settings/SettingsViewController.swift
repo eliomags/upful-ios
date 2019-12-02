@@ -107,7 +107,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         case 1:
             switch row {
             case 0:
-                let presenter = SubscriptionPresenter()
+                let presenter = SubscriptionPresenter(type: .settings)
                 presenter.present(in: self)
             default: break
             }
@@ -128,7 +128,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                     alertVC.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
                     alertVC.addAction(UIAlertAction(title: "Upgrade", style: .default, handler: { [weak self] (_) in
                         guard let self = self else { return }
-                        let presenter = SubscriptionPresenter()
+                        let presenter = SubscriptionPresenter(type: .settings)
                         presenter.present(in: self)
                     }))
                     self.present(alertVC, animated: true, completion: nil)

@@ -14,7 +14,15 @@ protocol PresentationControllerDelegate: UIViewController {
 
 class SubscriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    deinit {
+        if presenterType != .settings {
+            presentationDelegate?.showNotificaitionSetupView()
+        }
+    }
+    
     // MARK: - Dependencies
+        
+    let presenterType: SubscriptionPresenter.PresenterType
     
     lazy var viewModel: SubscriptionViewModel = {
         let vm = SubscriptionViewModel()
@@ -24,6 +32,13 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     weak var presentationDelegate: PresentationControllerDelegate?
 
     // MARK: - Views
+    
+    var tablHeader: PreferenceHeaderView = {
+        let v = PreferenceHeaderView()
+        v.headerLabel.text = ""
+        v.descriptionText.text = "You've reached your limit."
+        return v
+    }()
     
     lazy var subscriptionDetailsCollectionView: SubscriptionDetailsCollectionView = {
         let view = SubscriptionDetailsCollectionView(collectionViewLayout: UICollectionViewFlowLayout())
@@ -35,6 +50,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         let tableV = UITableView(frame: .zero, style: .grouped)
         tableV.delegate = self
         tableV.dataSource = self
+        tableV.setTableHeaderView(headerView: tablHeader)
         return tableV
     }()
     
@@ -64,6 +80,17 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleCancelTap)))
         return view
     }()
+    
+    // MARK: - Initializer Functions
+    
+    init(presenterType: SubscriptionPresenter.PresenterType) {
+        self.presenterType = presenterType
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - View Life Cycle Methods
     
@@ -114,7 +141,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
                     }
             case .paymentSuccess:
                 self.dismiss(animated: true, completion: {
-                    self.presentationDelegate?.presentationControllerdDidDismiss()
+//                    self.presentationDelegate?.presentationControllerdDidDismiss()
                 })
             default:
                 break
@@ -138,16 +165,9 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         tableView.estimatedSectionHeaderHeight = 0
     }
     
-    fileprivate func setupNavBar() {
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
-    }
-    
     fileprivate func setupPresentation() {
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.backgroundColor = .appAccent3
-        navigationController?.navigationBar.barTintColor = .appAccent3
-        navigationItem.title = "Upgrade"
+        navigationController?.navigationBar.isTranslucent = true
+        navigationItem.title = "Premium"
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
     }
     

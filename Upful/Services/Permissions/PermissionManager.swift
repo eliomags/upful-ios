@@ -130,13 +130,13 @@ class PermissionManager {
                 incrementCurrentDateScreenerSelection()
                 completion(true)
             } else {
-                setupScreeningNotification()
+//                setupScreeningNotification()
                 completion(false)
             }
         }
     }
     
-    private func setupScreeningNotification() {
+    func setupScreeningNotification() {
         UNUserNotificationCenter.current().getNotificationSettings { (notificationSettings) in
             switch notificationSettings.authorizationStatus {
             case .notDetermined:

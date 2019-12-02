@@ -131,12 +131,18 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
                 AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .saved))
                 parent?.navigationController?.pushViewController(resultsVC, animated: true)
             } else {
-                let presenter = SubscriptionPresenter()
-                presenter.present(in: parent ?? self)
+                let presenter = SubscriptionPresenter(type: .screeningLimit)
+                presenter.present(in: self)
             }
         }
     }
     
+}
+
+extension SavedScreenersCollectionViewController: PresentationControllerDelegate {
+    func presentationControllerdDidDismiss() {
+        showNotificaitionSetupView()
+    }
 }
 
 class SavedScreenerCollectionViewCell: UICollectionViewCell {
