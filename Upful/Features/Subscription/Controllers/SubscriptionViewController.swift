@@ -15,7 +15,7 @@ protocol PresentationControllerDelegate: UIViewController {
 class SubscriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     deinit {
-        if presenterType == .screeningLimit {
+        if !PermissionManager.shared.isPremium && presenterType == .screeningLimit {
             presentationDelegate?.showNotificationSetupView()
         }
     }
