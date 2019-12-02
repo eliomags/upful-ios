@@ -28,6 +28,7 @@ class PermissionManager {
     private let screeningThreshold = 3
     
     var isPremium: Bool {
+        print(UserDefaults.standard.bool(forKey: Constants.UserDefaults.isPremium))
         return UserDefaults.standard.bool(forKey: Constants.UserDefaults.isPremium)
     }
 

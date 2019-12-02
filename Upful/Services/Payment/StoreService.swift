@@ -15,17 +15,12 @@ class IAPService {
     private let productIdentifiers: Set<String>
     private let secret = "0f2f374e72fa4144b1842dd7158f6ebf"
     
-    var isPremium = false {
+    var isPremium = UserDefaults.standard.bool(forKey: PermissionManager.Constants.UserDefaults.isPremium) {
         didSet {
-            saveSubscription()
+            UserDefaults.standard.set(isPremium, forKey: PermissionManager.Constants.UserDefaults.isPremium)
         }
     }
-    
-    private func saveSubscription() {
-        UserDefaults.standard.set(isPremium, forKey: "isPremium")
-    }
-
-    
+        
     init() {
         self.productIdentifiers = UpfulProducts.productIds
     }
@@ -74,6 +69,7 @@ class IAPService {
             case .success(let purchase):
                 self.verifyProductSubscription(purchase.product)
                 self.purchaseCompletionHandler?(true, nil)
+                
             case .error(let error):
                 self.purchaseCompletionHandler?(true, error.code)
             }
@@ -117,8 +113,10 @@ class IAPService {
                     
                 case .purchased:
                     self.isPremium = true
+                    
                 case .expired:
                     self.isPremium = false
+                    
                 case .notPurchased:
                     self.isPremium = false
                 }
