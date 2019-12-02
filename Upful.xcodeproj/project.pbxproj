@@ -74,7 +74,7 @@
 		3D4FB99E238444B200B9BFE1 /* NavigationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */; };
 		3D562C8B235F17EA00837B2F /* UpfulProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D562C8A235F17EA00837B2F /* UpfulProducts.swift */; };
 		3D562C8D235F248E00837B2F /* SubscriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D562C8C235F248E00837B2F /* SubscriptionViewModel.swift */; };
-		3D562C8F2360828800837B2F /* StoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D562C8E2360828800837B2F /* StoreService.swift */; };
+		3D562C8F2360828800837B2F /* IAPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D562C8E2360828800837B2F /* IAPService.swift */; };
 		3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D586517231C8AEB00495D79 /* StockSearchCell.swift */; };
 		3D58651A231C946600495D79 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D586519231C946600495D79 /* AppStoreReviewHelper.swift */; };
 		3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651B231D777C00495D79 /* TableHeaderView.swift */; };
@@ -260,7 +260,7 @@
 		3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationHeaderView.swift; sourceTree = "<group>"; };
 		3D562C8A235F17EA00837B2F /* UpfulProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpfulProducts.swift; sourceTree = "<group>"; };
 		3D562C8C235F248E00837B2F /* SubscriptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionViewModel.swift; sourceTree = "<group>"; };
-		3D562C8E2360828800837B2F /* StoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreService.swift; sourceTree = "<group>"; };
+		3D562C8E2360828800837B2F /* IAPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPService.swift; sourceTree = "<group>"; };
 		3D586517231C8AEB00495D79 /* StockSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchCell.swift; sourceTree = "<group>"; };
 		3D586519231C946600495D79 /* AppStoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewHelper.swift; sourceTree = "<group>"; };
 		3D58651B231D777C00495D79 /* TableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderView.swift; sourceTree = "<group>"; };
@@ -1564,7 +1564,7 @@
 			isa = PBXGroup;
 			children = (
 				3D562C8A235F17EA00837B2F /* UpfulProducts.swift */,
-				3D562C8E2360828800837B2F /* StoreService.swift */,
+				3D562C8E2360828800837B2F /* IAPService.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -1861,7 +1861,7 @@
 				3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */,
 				3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */,
 				3D42BE52230C672C00806AFF /* CompanyFundamentals.swift in Sources */,
-				3D562C8F2360828800837B2F /* StoreService.swift in Sources */,
+				3D562C8F2360828800837B2F /* IAPService.swift in Sources */,
 				3DC710962336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift in Sources */,
 				3DAB3EC0234CA4490008CC18 /* PreferenceCollectionView.swift in Sources */,
 				3DF5FBB5232FA48600856205 /* MenuBarControl.swift in Sources */,

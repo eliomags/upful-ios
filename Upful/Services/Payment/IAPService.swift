@@ -35,6 +35,7 @@ class IAPService {
                         SwiftyStoreKit.finishTransaction(purchase.transaction)
                     }
                     self.isPremium = true
+                    
                 case .failed, .purchasing, .deferred:
                     self.isPremium = false
                 @unknown default:
@@ -48,12 +49,12 @@ class IAPService {
     
     func retreiveProducts(completion: @escaping (Result<[SKProduct],Error>) -> Void) {
         SwiftyStoreKit.retrieveProductsInfo(productIdentifiers) { result in
-            if let _ = result.retrievedProducts.first {
-                completion(.success(Array(result.retrievedProducts)))
-            }
-            else {
+            guard !result.retrievedProducts.isEmpty else {
                 completion(.failure(NSError()))
+                return
             }
+            completion(.success(Array(result.retrievedProducts)))
+
         }
     }
     
@@ -65,11 +66,11 @@ class IAPService {
             guard let self = self else { return }
 
             switch result {
-                
             case .success(let purchase):
                 self.verifyProductSubscription(purchase.product)
                 self.purchaseCompletionHandler?(true, nil)
-                
+                self.isPremium = true
+
             case .error(let error):
                 self.purchaseCompletionHandler?(true, error.code)
             }
@@ -87,7 +88,6 @@ class IAPService {
                 completion(true)
             }
             else {
-                print("Nothing to Restore")
                 completion(false)
             }
         }
@@ -105,20 +105,22 @@ class IAPService {
             case .success(let receipt):
                 let productId = product.productIdentifier
                 let purchaseResult = SwiftyStoreKit.verifySubscription(
-                    ofType: .autoRenewable,
-                    productId: productId,
-                    inReceipt: receipt)
+                        ofType: .autoRenewable,
+                        productId: productId,
+                        inReceipt: receipt)
                     
                 switch purchaseResult {
                     
                 case .purchased:
                     self.isPremium = true
-                    
+
                 case .expired:
                     self.isPremium = false
                     
                 case .notPurchased:
                     self.isPremium = false
+
+                    
                 }
             case .error(let error):
                 print("Receipt verification failed: \(error)")
