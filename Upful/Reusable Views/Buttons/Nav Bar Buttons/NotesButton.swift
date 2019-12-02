@@ -42,6 +42,22 @@ class SortButton: GenericNavBarButton {
 
 
 class SaveButton: UIButton {
+    
+    let normalImage: UIImage = {
+        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
+        let im = UIImage(systemName: "heart.fill", withConfiguration: config)?
+            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+        return im ?? UIImage()
+    }()
+
+    
+    let selectedImage: UIImage = {
+        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
+        let im = UIImage(systemName: "heart.fill", withConfiguration: config)?
+            .withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
+        return im ?? UIImage()
+    }()
+    
     override var isHighlighted: Bool {
         didSet {
             UIView.animate(withDuration: 0.2) {
@@ -54,8 +70,8 @@ class SaveButton: UIButton {
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: 33).isActive = true
         widthAnchor.constraint(equalToConstant: 33).isActive = true
-        setImage(#imageLiteral(resourceName: "icons8-heart-25 (2)").withRenderingMode(.alwaysOriginal), for: .normal)
-        setImage(#imageLiteral(resourceName: "icons8-heart-25 (1)").withRenderingMode(.alwaysOriginal), for: .selected)
+        setImage(normalImage, for: .normal)
+        setImage(selectedImage, for: .selected)
         setTitle("", for: .normal)
         backgroundColor = .clear
         tintColor = .clear
