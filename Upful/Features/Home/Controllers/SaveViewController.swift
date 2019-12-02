@@ -23,24 +23,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     
     // MARK: - State
             
-    var isSavedScreenersEmpty: Bool {
-        return savedScreeners.isEmpty
-    }
-    
-    var isSavedStocksEmpty: Bool {
-        return savedStocks.isEmpty
-    }
-    
-    fileprivate func observeScreenerState() {
-        saveScreenerCollectionViewController.collectionView.reloadData()
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-        if isSavedScreenersEmpty { tableView.reloadData() }
-    }
-    
-    private func observeSavedStockState() {
-        tableView.reloadData()
-    }
-    
+
     // MARK: - Display Data
     
     var savedScreeners: [SavedItem] = [] {
@@ -60,6 +43,24 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
             [saveScreenerCollectionViewController],
             savedStocks
         ]
+    }
+    
+    fileprivate func observeScreenerState() {
+        saveScreenerCollectionViewController.collectionView.reloadData()
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        if isSavedScreenersEmpty { tableView.reloadData() }
+    }
+    
+    private func observeSavedStockState() {
+        tableView.reloadData()
+    }
+        
+    var isSavedScreenersEmpty: Bool {
+        return savedScreeners.isEmpty
+    }
+    
+    var isSavedStocksEmpty: Bool {
+        return savedStocks.isEmpty
     }
     
     // MARK: - Views

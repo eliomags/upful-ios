@@ -55,12 +55,16 @@ class PopularCompanyViewController: UIViewController {
     init(viewModel: PopularCompanyViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        setupViews()
         bindToViewModel()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    override func loadView() {
+        super.loadView()
+        setupViews()
     }
     
     override func viewDidLoad() {
