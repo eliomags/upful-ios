@@ -191,6 +191,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @objc fileprivate func handleSubscribeTap(_ sender: UIButton) {
+        AnalyticsLogger.instance.reportEvents(event: .signUpAttempt)
         Vibration.light.vibrate()
         viewModel.buySelectedProduct()
     }

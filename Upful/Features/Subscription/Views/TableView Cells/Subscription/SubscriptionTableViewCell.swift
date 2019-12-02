@@ -130,26 +130,19 @@ class SubscriptionTableViewCell: UITableViewCell {
         if selected {
             UIView.animate(withDuration: 0.15) {
                 self.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-                self.contentBackgroundView.backgroundColor = UIColor.appAccent3
+                self.contentBackgroundView.backgroundColor = UIColor.init() { (trait) -> UIColor in
+                    if trait.userInterfaceStyle == .light { return .systemGray3 }
+                    if trait.userInterfaceStyle == .dark { return .tertiarySystemGroupedBackground }
+                    return UIColor(white: 0.95, alpha: 1)
+                }
                 self.contentBackgroundView.layer.borderWidth = 1
                 self.contentBackgroundView.layer.borderColor = UIColor.appAccent3.cgColor
-                
-                if #available(iOS 13.0, *) {
-                    self.durationLabel.textColor = .label
-                    self.monthLabel.textColor = .label
-                    self.dueNowPricingLabel.textColor = .label
-                    self.monthlyPricingLabel.textColor = .label
-                    self.savingsValueLabel.textColor = .label
-                    self.saveLabel.textColor = .label
-                } else {
-                    // Fallback on earlier versions
-                    self.durationLabel.textColor = .black
-                    self.monthLabel.textColor = .black
-                    self.dueNowPricingLabel.textColor = .black
-                    self.monthlyPricingLabel.textColor = .black
-                    self.savingsValueLabel.textColor = .black
-                    self.saveLabel.textColor = .black
-                }
+                self.durationLabel.textColor = .label
+                self.monthLabel.textColor = .label
+                self.dueNowPricingLabel.textColor = .label
+                self.monthlyPricingLabel.textColor = .label
+                self.savingsValueLabel.textColor = .label
+                self.saveLabel.textColor = .label
             }
         }
         if !selected {

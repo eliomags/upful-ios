@@ -84,7 +84,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         navigationItem.title = "Preferences"
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.tintColor = .black
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
         navigationController?.navigationBar.prefersLargeTitles = false
     }
     
