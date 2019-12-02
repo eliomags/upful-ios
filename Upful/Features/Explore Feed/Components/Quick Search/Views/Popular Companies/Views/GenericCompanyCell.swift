@@ -57,7 +57,7 @@ class GenericCompanyCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         backgroundColor = VersionManager.collectionCellColor2()
         layer.borderColor = UIColor.lightGray.cgColor
-        layer.borderWidth = 1
+        layer.borderWidth = 0.75
         layer.cornerRadius = 8
         layer.masksToBounds = true
         addSubview(companyDescriptionStackView)
