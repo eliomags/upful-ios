@@ -40,7 +40,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         showActivitySpinner(state)
         tableView.reloadData()
         refreshingControl.endRefreshing()
-        tableView.contentInset = UIEdgeInsets(top: 70, left: 0, bottom: 0, right: 0)
         tableView.isScrollEnabled = !state
     }
     
@@ -58,9 +57,15 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     // MARK: - Views
     
-    var tableView: UITableView = {
+    lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.setTableHeaderView(headerView: stockHeaderView)
+        tv.refreshControl = refreshingControl
+        tv.showsVerticalScrollIndicator = false
+        tv.separatorStyle = .none
+        tv.dataSource = self
+        tv.delegate = self
         return tv
     }()
     
@@ -113,29 +118,15 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         loadOverviewData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        VersionManager.navigationBarColor(in: navigationController)
-        VersionManager.setNavigationBar(in: navigationController)
-        navigationController?.navigationBar.isTranslucent = false
-    }
-    
     // MARK: - View Setup
     
     private func setupViews() {
-        tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
         tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
         tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
-        tableView.showsVerticalScrollIndicator = false
-        tableView.separatorStyle = .none
+        tableView.contentInset = UIEdgeInsets(top: stockHeaderView.intrinsicContentSize.height + 8, left: 0, bottom: 0, right: 0)
         tableView.backgroundColor = .clear
-        tableView.tableHeaderView = stockHeaderView
-        tableView.contentInset = UIEdgeInsets(top: -10, left: 0, bottom: 0, right: 0)
-        tableView.refreshControl = refreshingControl
         view.addSubview(tableView)
-        tableView.dataSource = self
-        tableView.delegate = self
         tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -291,15 +282,12 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     // MARK: - Scroll View Delegate
      
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let heightThreshold = stockHeaderView.frame.height - (delegate?.menuBarView.frame.height ?? 40) - 36
-        if scrollView.contentOffset.y > heightThreshold {
-            parent?.navigationItem.title = ticker
-        }
-        if scrollView.contentOffset.y < heightThreshold {
-            parent?.navigationItem.title = ""
-        }
+        let bufferHeight: CGFloat = 15
+        let heightThreshold: CGFloat = (delegate?.menuBarView.frame.height ?? 55) - stockHeaderView.intrinsicContentSize.height + bufferHeight
+        let didReachThreshold = scrollView.contentOffset.y >= heightThreshold
+        parent?.navigationItem.title = didReachThreshold ? ticker : ""
     }
-    
+
 }
 
 extension StockOverviewViewController {

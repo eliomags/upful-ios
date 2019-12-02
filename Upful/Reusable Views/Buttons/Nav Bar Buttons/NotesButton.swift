@@ -44,8 +44,8 @@ class SortButton: GenericNavBarButton {
 class SaveButton: UIButton {
     
     let normalImage: UIImage = {
-        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
-        let im = UIImage(systemName: "heart.fill", withConfiguration: config)?
+        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .semibold)
+        let im = UIImage(systemName: "heart", withConfiguration: config)?
             .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
         return im ?? UIImage()
     }()
