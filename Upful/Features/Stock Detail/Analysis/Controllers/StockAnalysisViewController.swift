@@ -52,8 +52,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     private var barChartData: [CompanyHistoricalDatum] = []
     private var lineChartData: [CompanyHistoricalDatum] = []
     
-    
-    /// Company Filings
     private var companyFilings: [Filings] = []
     
     private var feedData: [[Any]] {
@@ -111,6 +109,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.contentInset = UIEdgeInsets(top: stockHeaderView.intrinsicContentSize.height + 7, left: 0, bottom: 0, right: 0)
         tv.register(AnalysisChartCell.self, forCellReuseIdentifier: ReuseID.graphCell)
         tv.register(GenericTableViewCell.self, forCellReuseIdentifier: ReuseID.graphConfigurationCell)
         tv.register(NewsCell.self, forCellReuseIdentifier: ReuseID.reportsCell)
@@ -144,13 +143,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         listenForDataCompletion()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        VersionManager.navigationBarColor(in: navigationController)
-        VersionManager.setNavigationBar(in: navigationController)
-        navigationController?.navigationBar.isTranslucent = false
-    }
-    
     // MARK: - Actions
     
     @objc private func refreshData(_ sender: Any) {
@@ -165,7 +157,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         tableView.refreshControl = refreshingControl
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
@@ -298,19 +289,14 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let heightThreshold = stockHeaderView.frame.height - (delegate?.menuBarView.frame.height ?? 40) - 36
-        if scrollView.contentOffset.y > heightThreshold {
-            parent?.navigationItem.title = ticker
-        }
-        if scrollView.contentOffset.y < heightThreshold {
-            parent?.navigationItem.title = ""
-        }
+        let reachedThreshold = scrollView.contentOffset.y > heightThreshold
+        parent?.navigationItem.title = reachedThreshold ? ticker: ""
     }
 }
 
 extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return feedData.count
-    }
+    func numberOfSections(in tableView: UITableView) -> Int { return feedData.count }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 { return feedData[section].count }
         if section == 1 { return companyFilings.count }
@@ -471,7 +457,6 @@ class GenericTableViewCell: UITableViewCell {
         backgroundColor = .clear
         addSubview(contentStackView)
         contentStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        contentStackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         if let accessoryView = accessoryView {
             contentStackView.trailingAnchor.constraint(equalTo: accessoryView.leadingAnchor, constant: -8).isActive = true

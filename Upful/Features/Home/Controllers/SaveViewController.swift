@@ -128,11 +128,11 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         
     fileprivate func setUpTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
         tableView.setTableHeaderView(headerView: navigationHeaderView)
-        tableView.register(ActionableTableHeader.self, forHeaderFooterViewReuseIdentifier: ReuseID.screenerHeaderView)
+        tableView.register(ActionableTableHeader.self,
+                           forHeaderFooterViewReuseIdentifier: ReuseID.screenerHeaderView)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedScreenCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.savedCompanyCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.suggestionCell)
