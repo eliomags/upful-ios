@@ -194,7 +194,7 @@ class PermissionManager {
     func resetSavedDates() {
         if screeningDateLookup[currentDateComponents.toString()] == nil {
             screeningDateLookup = [:]
-            screeningDateLookup[currentDateComponents.toString()] = 0
+            screeningDateLookup[currentDateComponents.toString()] = 1
         }
     }
 }
