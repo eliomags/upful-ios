@@ -13,7 +13,9 @@ class GenericNavBarButton: UIView {
     // MARK: - Sizing
     
     let padding: CGFloat = 4
-    let size: CGFloat = 33
+    var size: CGFloat {
+        return 33
+    }
     
     var image: UIImage {
         return #imageLiteral(resourceName: "icons8-create-30").withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
@@ -39,7 +41,6 @@ class GenericNavBarButton: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        backgroundColor = #colorLiteral(red: 0.4042032957, green: 0.4036494493, blue: 0.4210765362, alpha: 0.4323095034)
         backgroundColor = .clear
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: size).isActive = true

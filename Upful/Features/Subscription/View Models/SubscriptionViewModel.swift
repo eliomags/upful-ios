@@ -56,6 +56,7 @@ class SubscriptionViewModel {
     // MARK: - Initializer
     
     init() {
+        state = .loading
         iAPService.retreiveProducts { [weak self] (result) in
             guard let self = self else { return }
 

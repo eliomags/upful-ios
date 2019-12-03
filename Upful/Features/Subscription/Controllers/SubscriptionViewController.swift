@@ -49,6 +49,18 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
 
     // MARK: - Views
     
+    lazy var loadingView: UIView = {
+        let v = UIView()
+        let activityView = UIActivityIndicatorView(style: .medium)
+        activityView.startAnimating()
+        v.addSubview(activityView)
+        activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
+                            padding: .init(top: 30, left: 30, bottom: 30, right: 30))
+        v.layer.cornerRadius = 15
+        v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
+        return v
+    }()
+    
     lazy var tableHeader: PreferenceHeaderView = {
         let v = PreferenceHeaderView()
         v.headerLabel.text = ""
@@ -123,15 +135,20 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     func observeStateChanges() {
         viewModel.stateChanged = { [weak self] (state) in
             guard let self = self else { return }
-            
+
             switch state {
+            case .loading:
+                self.showActivitySpinner(true)
+
             case .loaded:
                 DispatchQueue.main.async {
+                    self.showActivitySpinner(false)
                     self.tableView.reloadData()
                     self.setupDefaultSelection()
                 }
             case .paymentError(let error):
                 DispatchQueue.main.async {
+                    self.showActivitySpinner(false)
                     let alert = UIAlertController(title: "Error", message: "An error has occured while performing the purchase. Please contact support.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { [weak self] _ in
                         self?.dismiss(animated: true, completion: nil)
@@ -153,11 +170,12 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
                     self.present(alert, animated: true)
                     }
             case .paymentSuccess:
+                self.showActivitySpinner(false)
                 self.dismiss(animated: true, completion: {
 //                    self.presentationDelegate?.presentationControllerdDidDismiss()
                 })
             default:
-                break
+                self.showActivitySpinner(false)
             }
         }
     }
@@ -182,6 +200,20 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     fileprivate func setupDefaultSelection() {
         tableView.selectRow(at: IndexPath(row: 0, section: 1), animated: true, scrollPosition: .bottom)
+    }
+    
+    fileprivate func showActivitySpinner(_ shouldShowSpinner: Bool) {
+        if shouldShowSpinner {
+            view.addSubview(loadingView)
+            loadingView.translatesAutoresizingMaskIntoConstraints = false
+            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        }
+        if !shouldShowSpinner {
+            DispatchQueue.main.async {
+                self.loadingView.removeFromSuperview()
+            }
+        }
     }
     
     // MARK: - Actions

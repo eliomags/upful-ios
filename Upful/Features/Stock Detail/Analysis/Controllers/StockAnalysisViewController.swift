@@ -451,6 +451,10 @@ class GenericTableViewCell: UITableViewCell {
         setupView()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func setupView() {
         addSeparator()
         accessoryType = .disclosureIndicator
@@ -464,11 +468,5 @@ class GenericTableViewCell: UITableViewCell {
             contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         }
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-
 }
 

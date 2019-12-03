@@ -77,16 +77,20 @@ final class ScreenResultsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.largeTitleDisplayMode = .never
+        setupNavBar()
         fetchTableData(parameters: searchParameters, fetchType: .initial)
         view.addSubview(feedTableView)
         feedTableView.fillSuperview()
         isLoading = true
     }
+
+    // MARK: - View Set Up
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setupNavBar()
+    fileprivate func setupNavBar() {
+        navigationItem.title = "Results"
+        navigationItem.largeTitleDisplayMode = .never
+        let sortButton = UIBarButtonItem(customView: self.sortButton)
+        navigationItem.rightBarButtonItem = sortButton
     }
     
 
@@ -147,13 +151,7 @@ final class ScreenResultsViewController: UIViewController {
             getPriceToEarningsData(searchResult)
         }
     }
-    
-    fileprivate func setupNavBar() {
-        navigationItem.title = "Results"
-        let sortButton = UIBarButtonItem(customView: self.sortButton)
-        navigationItem.rightBarButtonItem = sortButton
-    }
-    
+
     // MARK: - Actions
     
     /// Handles sorting the loaded Search Results by Market Cap through a UIAlertController

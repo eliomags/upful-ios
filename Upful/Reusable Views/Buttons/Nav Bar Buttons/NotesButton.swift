@@ -16,6 +16,10 @@ class NotesButton: GenericNavBarButton {
 
 class SortButton: GenericNavBarButton {
     
+    override var size: CGFloat {
+        return 27
+    }
+    
     override var image: UIImage {
         let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold)
         let im = UIImage(systemName: "ellipsis", withConfiguration: config)?
@@ -26,18 +30,17 @@ class SortButton: GenericNavBarButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .appAccent3
-        heightAnchor.constraint(equalToConstant: 27).isActive = true
-        widthAnchor.constraint(equalToConstant: 27).isActive = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = bounds.height / 2
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+
 }
 
 
