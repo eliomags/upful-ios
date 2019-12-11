@@ -150,7 +150,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     // MARK: - Delegate Methods
     
     func displaySuccessNote() {
-        InformationViewPresenter.showSaveSuccess(in: self)
+        InformationViewPresenter().showSaveSuccess(in: self)
     }
     
     // MARK: - Actions

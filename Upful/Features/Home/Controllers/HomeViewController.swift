@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class SaveViewController: UITableViewController, SaveScreenerDelegate, NoteVCDelegate, ActionHeaderDelegate {
+final class HomeViewController: UITableViewController, SaveScreenerDelegate, NoteVCDelegate, ActionHeaderDelegate {
     
     // MARK: - Dependencies
     
@@ -148,7 +148,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     // MARK: - Core Data
     
     /// This method fetches and filters the [SavedScreenerParameters] with the corresponding title attribute
-    private func getParameters(named title: String) -> [SavedScreenerParameter] {
+    func getParameters(named title: String) -> [SavedScreenerParameter] {
         var parameters = [SavedScreenerParameter]()
         let savedParameters = SavedScreenerParameter.createfetchRequest()
         savedParameters.predicate = NSPredicate(format: "savedScreener.title == %@", title)
@@ -160,7 +160,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         return parameters
     }
     
-    private func configureSavedItemsToDisplay() {
+    func configureSavedItemsToDisplay() {
         let request = SavedScreener.createfetchRequest()
         var screeners: [SavedScreener] = []
         var items: [SavedItem] = []
@@ -170,13 +170,14 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
                 let savedItem = SavedItem(savedScreener: screener, savedParameters: getParameters(named: screener.title))
                 items.append(savedItem)
             }
+            
             self.savedScreeners = items
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    private func loadSavedStocks() {
+    func loadSavedStocks() {
         let request = SavedStock.createfetchRequest()
         do {
             savedStocks = try persistenceService.persistentContainer.viewContext.fetch(request)
@@ -186,7 +187,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         }
     }
     
-    private func removeFavoriteCompany(_ ticker: String) {
+    func removeFavoriteCompany(_ ticker: String) {
         let fetchRequest = SavedStock.createfetchRequest()
         let context = PersistenceService.shared.persistentContainer.viewContext
         fetchRequest.predicate = NSPredicate(format: "ticker = %@", ticker)
@@ -201,7 +202,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
         }
     }
     
-    private func removeFavoriteScreener(_ title: String) {
+    func removeFavoriteScreener(_ title: String) {
         let context = PersistenceService.shared.persistentContainer.viewContext
         
         /// We need to delete all search parameters corresponding to the deleted Screener title
@@ -251,7 +252,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
     
     func displaySuccessNote() {
-        InformationViewPresenter.showSaveSuccess(in: self)
+        InformationViewPresenter().showSaveSuccess(in: self)
     }
     
     func observeSavedScreenerState(isEditing: Bool) {
@@ -454,7 +455,7 @@ final class SaveViewController: UITableViewController, SaveScreenerDelegate, Not
     }
 }
 
-extension SaveViewController: UNUserNotificationCenterDelegate {
+extension HomeViewController: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         print("Responded")
         AnalyticsLogger.instance.reportEvents(event: .pushNotificationSelected)

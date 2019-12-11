@@ -8,8 +8,7 @@
 
 import Foundation
 
-final class PreferenceDataLoader {
-    
+struct PreferenceDataLoader {
     func load() -> [[PreferenceViewModel]] {
         let preferences = [
         createIndustryPreferences(),
@@ -17,7 +16,6 @@ final class PreferenceDataLoader {
         createProfitabilityPreferences(),
         createDividendPreferences()
             ]
-        
         return preferences.map({ $0.map({ PreferenceViewModel(preference: $0) })})
     }
     

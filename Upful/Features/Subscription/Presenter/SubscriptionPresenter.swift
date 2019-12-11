@@ -16,10 +16,10 @@ class SubscriptionPresenter {
         self.type = type
     }
     
-    enum PresenterType {
-        case savedStockLimit
-        case savedScreenerLimit
-        case screeningLimit
+    enum PresenterType: String {
+        case savedStockLimit = "saved_stock_limit"
+        case savedScreenerLimit = "saved_screener_limit"
+        case screeningLimit = "screening_navigation_limit"
         case settings
     }
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PreferencePresenter {
+struct PreferencePresenter {
     var preferenceVC: PreferenceViewController!
     let preferenceDataManager: PreferenceDataManager!
     
@@ -22,6 +22,5 @@ class PreferencePresenter {
         navVC.modalPresentationStyle = .fullScreen
         viewController.present(navVC, animated: true)
     }
-    
 }
 

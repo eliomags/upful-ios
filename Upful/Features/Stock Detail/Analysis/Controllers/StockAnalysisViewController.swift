@@ -355,8 +355,9 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
             }
         case 1:
             let filing = feedData[indexPath.section][indexPath.row] as? Filings
-            let filings = filing!.reportUrl!
-            let webViewController = FilingsWebViewController(urlString: filings)
+            let selectedFiling = filing!.reportUrl!
+            print(selectedFiling)
+            let webViewController = FilingsWebViewController(urlString: selectedFiling)
             navigationController?.pushViewController(webViewController, animated: true)
             
         default: break

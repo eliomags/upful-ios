@@ -116,6 +116,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     init(presenterType: SubscriptionPresenter.PresenterType) {
         self.presenterType = presenterType
+        AnalyticsLogger.instance.reportEvents(event: .signUpForPremiumPresented(trigger: presenterType.rawValue))
         super.init(nibName: nil, bundle: nil)
     }
     

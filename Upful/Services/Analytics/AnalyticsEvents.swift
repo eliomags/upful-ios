@@ -29,6 +29,7 @@ enum ScreenType: String {
 // MARK: - Analytics Events
 
 enum AnalyticsEventName {
+    case signUpForPremiumPresented(trigger: String)
     case signUpAttempt
     case selectedPremium
     case castedSuggestionVote
@@ -77,6 +78,8 @@ enum AnalyticsEventName {
             return "selected_push_notification"
         case .signUpAttempt:
             return "sign_up_attempty"
+        case .signUpForPremiumPresented(_):
+            return "sign_up_presented"
         }
     }
 }
@@ -114,6 +117,8 @@ extension AnalyticsEventName {
             return [:]
         case .signUpAttempt:
             return ["current_status": "\(PermissionManager.shared.isPremium)"]
+        case .signUpForPremiumPresented(let trigger):
+            return ["trigger_event": trigger]
         }
     }
 }

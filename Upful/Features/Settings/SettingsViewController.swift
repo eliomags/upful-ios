@@ -178,7 +178,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
 
 extension SettingsViewController: ReportDelegate {
     func showSuccess() {
-        InformationViewPresenter.showReportSuccess(in: self)
+        InformationViewPresenter().showReportSuccess(in: self)
     }
 }
 

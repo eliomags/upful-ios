@@ -8,21 +8,31 @@
 
 import UIKit
 
-class InformationView: UIView, Animatable {
+class InformationView: UIView {
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 0, height: 45)
+        return CGSize(width: 230, height: 230)
     }
     
-    let animation = Animator()
+    fileprivate let animation = Animator()
+        
+    let descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        return label
+    }()
     
-    var actionImage: UIImage {
-        return #imageLiteral(resourceName: "icons8-checkmark").withRenderingMode(.alwaysOriginal)
-    }
+    fileprivate let blurredEffectView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.prominent)
+        let v = UIVisualEffectView(effect: blurEffect)
+        return v
+    }()
     
-    
-    lazy var actionImageView: SmallImageView = {
-        let imageView = SmallImageView(image: actionImage)
-        let constant: CGFloat = 20
+    lazy var actionImageView: UIImageView = {
+        let imageView = UIImageView()
+        let constant: CGFloat = 130
         imageView.backgroundColor = .clear
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.heightAnchor.constraint(equalToConstant: constant).isActive = true
@@ -32,36 +42,31 @@ class InformationView: UIView, Animatable {
         return imageView
     }()
     
-    let descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-        return label
-    }()
-    
-    lazy var actionStackView: UIStackView = {
+    private lazy var actionStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [actionImageView,descriptionLabel])
-        sv.axis = .horizontal
-        sv.spacing = 22
-        sv.alignment = .leading
+        sv.axis = .vertical
+        sv.spacing = 12
+        sv.alignment = .center
         sv.distribution = .fill
         return sv
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        layer.cornerRadius = 4
+        layer.cornerRadius = 10
         layer.masksToBounds = true
-        backgroundColor = UIColor(red: 243/255, green: 175/255, blue: 34/255, alpha: 1)
-        addSubview(actionStackView)
+        addSubview(blurredEffectView)
+        blurredEffectView.contentView.addSubview(actionStackView)
         actionStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 8, left: 8, bottom: 8, right: 8))
     }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
+        blurredEffectView.frame = bounds
         animation.displayAnimation(view: self)
     }
     

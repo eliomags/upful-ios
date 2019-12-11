@@ -141,6 +141,8 @@
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
 		3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */; };
 		3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */; };
+		3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */; };
+		3DE8C80623997B5C00CC0056 /* HomePersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C80523997B5C00CC0056 /* HomePersistenceManager.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
 		3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */; };
@@ -150,7 +152,7 @@
 		3DF5FBB92330FF6D00856205 /* CompanyFillings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBB82330FF6D00856205 /* CompanyFillings.swift */; };
 		3DF5FBBB233114D700856205 /* CompanyReportsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBBA233114D700856205 /* CompanyReportsCell.swift */; };
 		3DF5FBBE2333A48B00856205 /* ChartUpdatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBBD2333A48B00856205 /* ChartUpdatable.swift */; };
-		3DF5FBC323341F3F00856205 /* SaveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBC223341F3F00856205 /* SaveViewController.swift */; };
+		3DF5FBC323341F3F00856205 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBC223341F3F00856205 /* HomeViewController.swift */; };
 		3DF5FBC6233429B600856205 /* StockDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBC4233429B600856205 /* StockDataModel.xcdatamodeld */; };
 		3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC0523342BED00856205 /* PersistenceService.swift */; };
 		3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */; };
@@ -327,6 +329,8 @@
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupVC.swift; sourceTree = "<group>"; };
+		3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePersistenceManagerTest.swift; sourceTree = "<group>"; };
+		3DE8C80523997B5C00CC0056 /* HomePersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePersistenceManager.swift; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
 		3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisGraphView.swift; sourceTree = "<group>"; };
@@ -336,7 +340,7 @@
 		3DF5FBB82330FF6D00856205 /* CompanyFillings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyFillings.swift; sourceTree = "<group>"; };
 		3DF5FBBA233114D700856205 /* CompanyReportsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyReportsCell.swift; sourceTree = "<group>"; };
 		3DF5FBBD2333A48B00856205 /* ChartUpdatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartUpdatable.swift; sourceTree = "<group>"; };
-		3DF5FBC223341F3F00856205 /* SaveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveViewController.swift; sourceTree = "<group>"; };
+		3DF5FBC223341F3F00856205 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		3DF5FBC5233429B600856205 /* StockDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StockDataModel.xcdatamodel; sourceTree = "<group>"; };
 		3DF5FC0523342BED00856205 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedStock+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -369,6 +373,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3D0127D423A12A92002B08D5 /* Custom Modal Views */ = {
+			isa = PBXGroup;
+			children = (
+				3D7C854D233747A800A2E63E /* InformationView.swift */,
+			);
+			path = "Custom Modal Views";
+			sourceTree = "<group>";
+		};
 		3D0C5F6623395CE000F4A5FC /* Notes */ = {
 			isa = PBXGroup;
 			children = (
@@ -964,6 +976,7 @@
 			isa = PBXGroup;
 			children = (
 				3D4FB99A2384402F00B9BFE1 /* Data */,
+				3DE8C80523997B5C00CC0056 /* HomePersistenceManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1005,7 +1018,6 @@
 			children = (
 				3D58651B231D777C00495D79 /* TableHeaderView.swift */,
 				3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */,
-				3D7C854D233747A800A2E63E /* InformationView.swift */,
 				3D2F966023196881003811AB /* SpacerView.swift */,
 				3D7C854B2337479300A2E63E /* CustomSizeImageView.swift */,
 			);
@@ -1041,6 +1053,7 @@
 		3D7C85502337A92A00A2E63E /* Animator */ = {
 			isa = PBXGroup;
 			children = (
+				3D0127D423A12A92002B08D5 /* Custom Modal Views */,
 				3D7C85512337A93500A2E63E /* Animator.swift */,
 			);
 			path = Animator;
@@ -1365,6 +1378,7 @@
 		3DD52189235293A40090CDE6 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				3DE8C80223997AA600CC0056 /* Models */,
 				3DD5218A235293B60090CDE6 /* Views */,
 			);
 			path = Home;
@@ -1400,6 +1414,14 @@
 				3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */,
 			);
 			path = "Notification Setup";
+			sourceTree = "<group>";
+		};
+		3DE8C80223997AA600CC0056 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		3DF5FBA0232BB9A400856205 /* Stock Details Container */ = {
@@ -1535,7 +1557,7 @@
 		3DF5FBC123341F1E00856205 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				3DF5FBC223341F3F00856205 /* SaveViewController.swift */,
+				3DF5FBC223341F3F00856205 /* HomeViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1760,13 +1782,14 @@
 				3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */,
 				3DD521912354319E0090CDE6 /* EmptySuggestionCell.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
-				3DF5FBC323341F3F00856205 /* SaveViewController.swift in Sources */,
+				3DF5FBC323341F3F00856205 /* HomeViewController.swift in Sources */,
 				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
 				3DAB3EC5234E21320008CC18 /* SubscriptionDataManager.swift in Sources */,
 				3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */,
 				3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */,
 				3D0C5F9B2343C59300F4A5FC /* SubscriptionFeatures.swift in Sources */,
 				3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */,
+				3DE8C80623997B5C00CC0056 /* HomePersistenceManager.swift in Sources */,
 				3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */,
 				3D2F964D23169CC7003811AB /* BarGraphTableViewCell.swift in Sources */,
 				3D42BE4123098BD200806AFF /* ResultsTableViewCell.swift in Sources */,
@@ -1907,6 +1930,7 @@
 				3D8D32652372FAE300123731 /* QuickSearchTests.swift in Sources */,
 				3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */,
 				3DD5218C235293D60090CDE6 /* StockSuggestionVCTest.swift in Sources */,
+				3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */,
 				3DD52185235276580090CDE6 /* PreferenceDataManagerTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2044,7 +2068,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.0.9;
+				CURRENT_PROJECT_VERSION = 4.2;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2052,7 +2076,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1.5;
+				MARKETING_VERSION = 4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2066,7 +2090,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.0.9;
+				CURRENT_PROJECT_VERSION = 4.2;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2074,7 +2098,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1.5;
+				MARKETING_VERSION = 4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

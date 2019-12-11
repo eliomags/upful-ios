@@ -19,7 +19,7 @@ extension Double {
 }
 
 class UpfulProductViewModel {
-    private static let oneMonthPricing = 1.99
+    private static let oneMonthPricing = 2.99
     private let priceFormatter: NumberFormatter = {
       let formatter = NumberFormatter()
       formatter.formatterBehavior = .behavior10_4

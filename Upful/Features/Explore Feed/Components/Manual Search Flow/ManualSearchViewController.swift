@@ -179,17 +179,17 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     private func checkCurrentParameters(completion: (()->())) {
-        var isSuitable = true
+        var doesNotContainEmptyParameter = true
         manualScreenItems.forEach { (manualScreenItem) in
             if manualScreenItem.parameter.rawValue == SearchParameter.none.rawValue {
-                isSuitable = false
+                doesNotContainEmptyParameter = false
             }
         }
-        if !isSuitable {
-            InformationViewPresenter.displayErrorActionView(in: self, message: "Please add search parameters to your screen before saving.")
+        if !doesNotContainEmptyParameter {
+            InformationViewPresenter().displayErrorActionView(in: self, message: "Please add search parameters before saving")
             return
         }
-        if isSuitable { completion() }
+        if doesNotContainEmptyParameter { completion() }
     }
     
     
@@ -251,7 +251,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             self.saveParameters(with: savedScreener)
             AnalyticsLogger.instance.reportEvents(event: .savedScreener(description: configureURLComponents().joined(separator: ",")))
             PersistenceService.shared.saveContextWithCompletion(completion: { [unowned self] in
-                InformationViewPresenter.showSaveSuccess(in: self)
+                InformationViewPresenter().showSaveSuccess(in: self)
             })
         })
     }

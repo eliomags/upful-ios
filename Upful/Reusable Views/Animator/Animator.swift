@@ -8,14 +8,12 @@
 
 import UIKit
 
-protocol Animatable: UIView {}
-
 class Animator {
-    func displayAnimation(view: Animatable) {
-        UIView.animate(withDuration: 0.3, animations: {
+    func displayAnimation(view: UIView) {
+        UIView.animate(withDuration: 0.2, animations: {
             view.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
         }) { (_) in
-            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
                 view.transform = .identity
             }, completion: { (_) in
                 self.removeView(view)
@@ -23,10 +21,10 @@ class Animator {
         }
     }
     
-    func removeView(_ view: Animatable) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            UIView.animate(withDuration: 0.4, animations: {
-                view.transform = CGAffineTransform(translationX: 0, y: UIScreen.main.bounds.height)
+    fileprivate func removeView(_ view: UIView) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
+            UIView.animate(withDuration: 0.2, animations: {
+                view.alpha = 0
             }, completion: { (_) in
                 view.removeFromSuperview()
             })
