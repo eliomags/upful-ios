@@ -57,7 +57,12 @@ class InformationView: UIView {
         layer.masksToBounds = true
         addSubview(blurredEffectView)
         blurredEffectView.contentView.addSubview(actionStackView)
-        actionStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 8, left: 8, bottom: 8, right: 8))
+        actionStackView.anchor(top: topAnchor,
+                               leading: leadingAnchor,
+                               bottom: bottomAnchor,
+                               trailing: trailingAnchor,
+                               padding: .init(top: 8, left: 8, bottom: 8, right: 8)
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeFeedContainer: MenuContainerViewController {
+class ExploreFeedContainer: MenuContainerViewController {
     
     override var menubarControllers: [MenuBarDisplayable] {
         let controllers: [MenuBarDisplayable] = [

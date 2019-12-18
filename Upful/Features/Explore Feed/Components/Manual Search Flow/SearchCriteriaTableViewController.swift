@@ -122,7 +122,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     func setupTableHeader() {
         if tableView.tableHeaderView == nil {
             tableView.tableHeaderView = tableHeader
-            if let parent = parent as? HomeFeedContainer {
+            if let parent = parent as? ExploreFeedContainer {
                        parent.collectionView.contentInset = UIEdgeInsets(top: tableHeader.intrinsicContentSize.height + 5,
                        left: 0, bottom: 0, right: 0)
             }

@@ -116,7 +116,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let parent = parent as? HomeFeedContainer {
+        if let parent = parent as? ExploreFeedContainer {
             parent.collectionView.contentInset = UIEdgeInsets(top: searchController.searchBar.intrinsicContentSize.height + 5,
             left: 0, bottom: 0, right: 0)
              parent.collectionView.setNeedsLayout()

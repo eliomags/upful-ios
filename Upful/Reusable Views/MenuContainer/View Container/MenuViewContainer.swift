@@ -8,7 +8,11 @@
 
 import UIKit
 
-class MenuContainerViewController: UICollectionViewController, MenuBarViewDelegate, MenuViewItemDelegate {
+protocol MenubarContainerProtocol {
+    var menubarControllers: [MenuBarDisplayable] { get }
+}
+
+class MenuContainerViewController: UICollectionViewController, MenuBarViewDelegate, MenuViewItemDelegate, MenubarContainerProtocol {
     private struct Constants {
         static let cell1 = "cell1"
     }
