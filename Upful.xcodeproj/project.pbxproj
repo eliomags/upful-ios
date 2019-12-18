@@ -119,6 +119,11 @@
 		3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */; };
 		3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB004FC2360F5D1002F704D /* PermissionManager.swift */; };
 		3DBEFFC223A9BD7C00BA407E /* HomeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */; };
+		3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */; };
+		3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */; };
+		3DBEFFCB23A9CCA000BA407E /* SavedScreenersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */; };
+		3DBEFFD023A9D0B900BA407E /* SavedStockLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */; };
+		3DBEFFD223A9D5E900BA407E /* SavedStockVCViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFD123A9D5E900BA407E /* SavedStockVCViewModel.swift */; };
 		3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */; };
 		3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */; };
 		3DC710882335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */; };
@@ -308,6 +313,11 @@
 		3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceViewModel.swift; sourceTree = "<group>"; };
 		3DB004FC2360F5D1002F704D /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContainerViewController.swift; sourceTree = "<group>"; };
+		3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewController.swift; sourceTree = "<group>"; };
+		3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStocksViewController.swift; sourceTree = "<group>"; };
+		3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersViewController.swift; sourceTree = "<group>"; };
+		3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStockLoader.swift; sourceTree = "<group>"; };
+		3DBEFFD123A9D5E900BA407E /* SavedStockVCViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStockVCViewModel.swift; sourceTree = "<group>"; };
 		3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenResultsVC.swift; sourceTree = "<group>"; };
 		3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrinioAPI.swift; sourceTree = "<group>"; };
 		3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersCollectionViewController.swift; sourceTree = "<group>"; };
@@ -1282,7 +1292,10 @@
 		3DBEFFBF23A9BD6900BA407E /* New */ = {
 			isa = PBXGroup;
 			children = (
+				3DBEFFCE23A9D09700BA407E /* View Models */,
+				3DBEFFCD23A9D06400BA407E /* Models */,
 				3DBEFFC023A9BD6D00BA407E /* Container */,
+				3DBEFFCC23A9CD4000BA407E /* Controllers */,
 			);
 			path = New;
 			sourceTree = "<group>";
@@ -1294,6 +1307,32 @@
 			);
 			name = Container;
 			path = "../New Group/Container";
+			sourceTree = "<group>";
+		};
+		3DBEFFCC23A9CD4000BA407E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */,
+				3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */,
+				3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		3DBEFFCD23A9D06400BA407E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3DBEFFCE23A9D09700BA407E /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				3DBEFFD123A9D5E900BA407E /* SavedStockVCViewModel.swift */,
+			);
+			path = "View Models";
 			sourceTree = "<group>";
 		};
 		3DC4ED2F22FE671100232155 /* Manual Search Flow */ = {
@@ -1797,6 +1836,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */,
 				3DD75A3A2372797A00C298B9 /* PopularStockViewModel.swift in Sources */,
 				3D8D3268237320A600123731 /* PopularStockLoader.swift in Sources */,
 				3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */,
@@ -1842,6 +1882,7 @@
 				3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */,
 				3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */,
 				3D0C5F7E233FC1BC00F4A5FC /* SettingsViewController.swift in Sources */,
+				3DBEFFD223A9D5E900BA407E /* SavedStockVCViewModel.swift in Sources */,
 				3D0C5F6523395CD500F4A5FC /* Notes+CoreDataProperties.swift in Sources */,
 				3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */,
 				3D2F965D2318CC4E003811AB /* FinancialSectionView.swift in Sources */,
@@ -1877,6 +1918,7 @@
 				3DA5408F232B37C700EE477C /* ExploreFeedContainer.swift in Sources */,
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
 				3DF5FBB92330FF6D00856205 /* CompanyFillings.swift in Sources */,
+				3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */,
 				3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */,
 				3D5865262323024A00495D79 /* PieChartView.swift in Sources */,
 				3D0C5F7B233FB61A00F4A5FC /* FilingsWebView.swift in Sources */,
@@ -1900,6 +1942,7 @@
 				3DF5FBB0232BFCF100856205 /* AnalysisChartCell.swift in Sources */,
 				3D0C5F9023423E1700F4A5FC /* SubscriptionDetailsCollectionView.swift in Sources */,
 				3DAB3ED1234F9F590008CC18 /* PrefrenceHeaderView.swift in Sources */,
+				3DBEFFCB23A9CCA000BA407E /* SavedScreenersViewController.swift in Sources */,
 				3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */,
 				3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */,
 				3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */,
@@ -1924,6 +1967,7 @@
 				3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */,
 				3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */,
 				3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */,
+				3DBEFFD023A9D0B900BA407E /* SavedStockLoader.swift in Sources */,
 				3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */,
 				3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */,
 				3DD42929234A92CD0079DA18 /* ReportViewController.swift in Sources */,

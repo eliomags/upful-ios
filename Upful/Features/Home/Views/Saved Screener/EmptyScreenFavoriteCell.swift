@@ -36,7 +36,7 @@ class EmptyStockFavoriteCell: GeneralEmptyCell {
     }
     
     override var emptyDescriptionText: String {
-        return "You have no stocks saved."
+        return "No saved stocks to display. Tap add button to get started."
     }
     
     override var buttonText: String {

@@ -16,13 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         window = UIWindow()
         window?.rootViewController = initializeVC()
 
         window?.backgroundColor = VersionManager.mainContainerBackground()
 
-        FirebaseApp.configure()
+//        FirebaseApp.configure()
         Mixpanel.initialize(token: Constants.MixPanel.token)
         IAPService().completeTransactions()
 
@@ -32,7 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func initializeVC() -> UIViewController {
-        let homeVC = HomeViewController()
+//        let homeVC = HomeViewController()
+        let homeVC = HomeContainerViewController(collectionViewLayout: UICollectionViewFlowLayout())
         let exploreVC = ExploreFeedContainer(collectionViewLayout: UICollectionViewFlowLayout())
         let settingsVC = SettingsViewController()
         

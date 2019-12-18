@@ -8,18 +8,14 @@
 
 import UIKit
 
-
 protocol MenuViewItemDelegate: class {
     var menuBarView: MenuBarView { get }
     
     func hideMenuBar()
     func presentMenuBar()
-    func navigateTo(_ viewController: UIViewController)
-    func presentViewController(_ viewController: UIViewController)
 }
 
 protocol MenuBarDisplayable: UIViewController {
-    var tableView: UITableView { get set }
     var delegate: MenuViewItemDelegate? { get set }
     var menubarTitle: String { get set }
 }

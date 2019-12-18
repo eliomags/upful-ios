@@ -34,7 +34,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     override init(collectionViewLayout layout: UICollectionViewLayout) {
         super.init(collectionViewLayout: layout)
-        setDelegateForChildren()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -43,23 +42,25 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     // MARK: - View Life Cycle Functions
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupCollectionView()
+        setDelegateForChildren()
         view.addSubview(menuBarView)
         menuBarView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
+        setupCollectionView()
     }
     
     // MARK: - View Set Up
 
     private func setupCollectionView() {
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.topAnchor.constraint(equalTo: menuBarView.bottomAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Constants.cell1)
-        collectionView.contentInset = UIEdgeInsets(top: -menuBarView.intrinsicContentSize.height,
-                                                   left: 0, bottom: 0, right: 0)
-        collectionView.contentInsetAdjustmentBehavior = .never
         if let flowlayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             flowlayout.scrollDirection = .horizontal
             flowlayout.minimumLineSpacing = 0
@@ -101,14 +102,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
             }
             isMenuBarVisible = !isMenuBarVisible
         }
-    }
-    
-    func navigateTo(_ viewController: UIViewController) {
-        self.navigationController?.pushViewController(viewController, animated: true)
-    }
-    
-    func presentViewController(_ viewController: UIViewController) {
-        self.present(viewController, animated: true, completion: nil)
     }
     
     // MARK: - ScrollView Delegate Methods

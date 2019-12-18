@@ -9,15 +9,25 @@
 import UIKit
 
 class HomeContainerViewController: MenuContainerViewController {
-    
     override var menubarControllers: [MenuBarDisplayable] {
-        return []
+        let generalVC = HomeGeneralViewController()
+        let savedStocksVC = SavedStocksViewController()
+        let savedScreenerVC = SavedScreenerViewController()
+        return [generalVC, savedStocksVC, savedScreenerVC]
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.isScrollEnabled = false
+        view.backgroundColor = VersionManager.mainContainerBackground()
+        collectionView.backgroundColor = VersionManager.mainContainerBackground()
+        configureNavBar()
     }
     
-    
-    
+    fileprivate func configureNavBar() {
+        navigationItem.largeTitleDisplayMode = .never
+        navigationItem.title = "Home"
+    }
 }
+
+

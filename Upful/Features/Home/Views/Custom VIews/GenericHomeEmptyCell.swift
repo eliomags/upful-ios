@@ -16,7 +16,7 @@ class GeneralEmptyCell: UITableViewCell {
     }
     
     var emptyImage: UIImage {
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .bold)
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 100, weight: .bold)
         let im = UIImage(systemName: "tray.fill", withConfiguration: largeConfig)?
             .withTintColor(.systemGray3, renderingMode: .alwaysOriginal)
             ?? UIImage()
@@ -36,16 +36,18 @@ class GeneralEmptyCell: UITableViewCell {
     }
     
     
-    lazy var cellImageView: UIImageView = {
+    private lazy var cellImageView: UIImageView = {
         let imageView = UIImageView(image: emptyImage)
-        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     lazy var headerLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        let font = UIFont.preferredFont(forTextStyle: .title3)
+        label.font = UIFont.systemFont(ofSize: font.pointSize, weight: .bold)
         label.text = emptyHeaderText
+        label.textColor = .label
         return label
     }()
     
@@ -53,9 +55,9 @@ class GeneralEmptyCell: UITableViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.font = .details1
+        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         label.text = emptyDescriptionText
-        label.textColor = .gray
+        label.textColor = .lightGray
         return label
     }()
     
@@ -63,20 +65,32 @@ class GeneralEmptyCell: UITableViewCell {
         return .bordered
     }
     
-    lazy var emptyCellActionButton: UIButton = {
+    private lazy var emptyCellActionButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(buttonText, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        button.layer.cornerRadius = 17.5
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(handleCellAction), for: .touchUpInside)
         return button
     }()
     
-    lazy var stackViewEmpty: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [cellImageView, headerLabel, descriptionLabel, emptyCellActionButton])
+    private let contentBackground: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = .secondarySystemGroupedBackground
+        v.layer.masksToBounds = false
+        v.layer.cornerRadius = 16
+        v.heightAnchor.constraint(equalToConstant: 175).isActive = true
+        v.backgroundColor = VersionManager.collectionCellColor()
+        return v
+    }()
+    
+    private lazy var contentStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [headerLabel, descriptionLabel])
+        sv.translatesAutoresizingMaskIntoConstraints = false
         sv.axis = .vertical
         sv.distribution = .fill
         sv.alignment = .center
@@ -84,26 +98,15 @@ class GeneralEmptyCell: UITableViewCell {
         return sv
     }()
     
-    lazy var contentBackgroundView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        view.addSubview(stackViewEmpty)
-        stackViewEmpty.centerInSuperview()
-        return view
-    }()
-    
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
         selectionStyle = .none
-        addSubview(contentBackgroundView)
-        contentBackgroundView.fillSuperview()
-
-        emptyCellActionButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 45).isActive = true
-        emptyCellActionButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -45).isActive = true
-
+        setupContentView()
+        setupContentStackView()
+        setupActionButton()
         configureButton()
+        setupImageView()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -111,11 +114,9 @@ class GeneralEmptyCell: UITableViewCell {
     }
     
     var cellAction: (() ->())?
-    
 
     fileprivate func configureButton() {
-        switch self.buttonLook {
-            
+        switch buttonLook {
         case .bordered:
             emptyCellActionButton.setTitleColor(.appAccent3, for: .normal)
             emptyCellActionButton.backgroundColor = .clear
@@ -131,6 +132,33 @@ class GeneralEmptyCell: UITableViewCell {
         cellAction?()
     }
     
+    fileprivate func setupContentView() {
+        addSubview(contentBackground)
+        contentBackground.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 30).isActive = true
+        contentBackground.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        contentBackground.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24).isActive = true
+        contentBackground.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24).isActive = true
+    }
+    
+    fileprivate func setupContentStackView() {
+        contentBackground.addSubview(contentStackView)
+        contentStackView.topAnchor.constraint(equalTo: contentBackground.topAnchor, constant: 12).isActive = true
+        contentStackView.leadingAnchor.constraint(equalTo: contentBackground.leadingAnchor, constant: 16).isActive = true
+        contentStackView.trailingAnchor.constraint(equalTo: contentBackground.trailingAnchor, constant: -16).isActive = true
+    }
+    
+    fileprivate func setupImageView() {
+        addSubview(cellImageView)
+        cellImageView.bottomAnchor.constraint(equalTo: contentStackView.topAnchor, constant: -50).isActive = true
+        cellImageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+    }
+    
+    fileprivate func setupActionButton() {
+        contentBackground.addSubview(emptyCellActionButton)
+        emptyCellActionButton.topAnchor.constraint(equalTo: contentStackView.bottomAnchor, constant: 24).isActive = true
+        emptyCellActionButton.leadingAnchor.constraint(equalTo: contentBackground.leadingAnchor, constant: 16).isActive = true
+        emptyCellActionButton.trailingAnchor.constraint(equalTo: contentBackground.trailingAnchor, constant: -16).isActive = true
+    }
 }
 
 

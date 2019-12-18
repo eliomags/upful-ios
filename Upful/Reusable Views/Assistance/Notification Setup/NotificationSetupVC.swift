@@ -116,7 +116,6 @@ class NotificationSetupViewController: UIViewController {
                return UIColor(white: 0.1, alpha: 0.4)
            }
        
-        
         view.addSubview(containerView)
         containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50).isActive = true
         containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true

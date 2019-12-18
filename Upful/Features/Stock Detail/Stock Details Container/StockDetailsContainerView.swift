@@ -23,9 +23,6 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
             StockOverviewViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI()),
             StockAnalysisViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI())
         ]
-        controllers.forEach { (controller) in
-            controller.delegate = self
-        }
         return controllers
     }
     

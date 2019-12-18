@@ -119,7 +119,7 @@ class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UI
         if let parent = parent as? ExploreFeedContainer {
             parent.collectionView.contentInset = UIEdgeInsets(top: searchController.searchBar.intrinsicContentSize.height + 5,
             left: 0, bottom: 0, right: 0)
-             parent.collectionView.setNeedsLayout()
+            parent.collectionView.setNeedsLayout()
             parent.collectionView.layoutIfNeeded()
             tableView.setNeedsLayout()
             tableView.layoutIfNeeded()
