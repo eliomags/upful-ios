@@ -34,6 +34,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     override init(collectionViewLayout layout: UICollectionViewLayout) {
         super.init(collectionViewLayout: layout)
+        setDelegateForChildren()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -63,6 +64,12 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
             flowlayout.scrollDirection = .horizontal
             flowlayout.minimumLineSpacing = 0
             flowlayout.minimumInteritemSpacing = 0
+        }
+    }
+    
+    fileprivate func setDelegateForChildren() {
+        menubarControllers.forEach { [unowned self] (controller) in
+            controller.delegate = self
         }
     }
     

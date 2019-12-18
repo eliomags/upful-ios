@@ -15,9 +15,6 @@ class ExploreFeedContainer: MenuContainerViewController {
             QuickSearchViewController(presetDataLoader: PresetFeedDataLoader()),
             SearchCriteriaTableViewController()
         ]
-        controllers.forEach { [unowned self] (controller) in
-            controller.delegate = self
-        }
         return controllers
     }
 
