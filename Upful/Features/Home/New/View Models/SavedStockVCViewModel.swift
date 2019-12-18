@@ -9,6 +9,7 @@
 import Foundation
 
 class SavedStockVCViewModel {
+    
     // MARK: - Dependencies
 
     private let savedStockDataManager = SavedStockDataManager()
@@ -36,7 +37,7 @@ class SavedStockVCViewModel {
 
     var sendStateUpdates: ((State) -> Void)?
     
-    
+
     func loadSavedStocks() {
         state = .loading
         savedStockDataManager.loadSavedStocks { (result) in
@@ -54,5 +55,4 @@ class SavedStockVCViewModel {
             self?.loadSavedStocks()
         }
     }
-    
 }

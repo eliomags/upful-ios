@@ -405,7 +405,6 @@
 		3D0C5F71233AFCF000F4A5FC /* Custom VIews */ = {
 			isa = PBXGroup;
 			children = (
-				3D0C5F6C233A451600F4A5FC /* GenericHomeEmptyCell.swift */,
 				3D0C5F72233AFD0300F4A5FC /* ActionableTableHeader.swift */,
 				3DD4291A2345A3BA0079DA18 /* AddButton.swift */,
 			);
@@ -547,7 +546,6 @@
 		3D20EB722354C53200D1093A /* Saved Screener */ = {
 			isa = PBXGroup;
 			children = (
-				3D0C5F6E233A49A800F4A5FC /* EmptyScreenFavoriteCell.swift */,
 				3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */,
 			);
 			path = "Saved Screener";
@@ -987,8 +985,6 @@
 		3D4FB9992384402300B9BFE1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				3D4FB99A2384402F00B9BFE1 /* Data */,
-				3DE8C80523997B5C00CC0056 /* HomePersistenceManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1292,10 +1288,10 @@
 		3DBEFFBF23A9BD6900BA407E /* New */ = {
 			isa = PBXGroup;
 			children = (
-				3DBEFFCE23A9D09700BA407E /* View Models */,
+				3DBEFFD323AACE6A00BA407E /* Views */,
 				3DBEFFCD23A9D06400BA407E /* Models */,
-				3DBEFFC023A9BD6D00BA407E /* Container */,
 				3DBEFFCC23A9CD4000BA407E /* Controllers */,
+				3DBEFFCE23A9D09700BA407E /* View Models */,
 			);
 			path = New;
 			sourceTree = "<group>";
@@ -1305,13 +1301,13 @@
 			children = (
 				3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */,
 			);
-			name = Container;
-			path = "../New Group/Container";
+			path = Container;
 			sourceTree = "<group>";
 		};
 		3DBEFFCC23A9CD4000BA407E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3DBEFFC023A9BD6D00BA407E /* Container */,
 				3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */,
 				3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */,
 				3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */,
@@ -1322,6 +1318,8 @@
 		3DBEFFCD23A9D06400BA407E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3D4FB99A2384402F00B9BFE1 /* Data */,
+				3DE8C80523997B5C00CC0056 /* HomePersistenceManager.swift */,
 				3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */,
 			);
 			path = Models;
@@ -1333,6 +1331,15 @@
 				3DBEFFD123A9D5E900BA407E /* SavedStockVCViewModel.swift */,
 			);
 			path = "View Models";
+			sourceTree = "<group>";
+		};
+		3DBEFFD323AACE6A00BA407E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C5F6C233A451600F4A5FC /* GenericHomeEmptyCell.swift */,
+				3D0C5F6E233A49A800F4A5FC /* EmptyScreenFavoriteCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		3DC4ED2F22FE671100232155 /* Manual Search Flow */ = {

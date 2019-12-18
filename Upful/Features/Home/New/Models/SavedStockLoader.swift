@@ -22,7 +22,15 @@ class SavedStockDataManager {
         }
     }
     
-    func removeFavoriteCompany(_ ticker: String, completion: (() -> Void)) {
+    func saveCompany(ticker: String, companyName: String) {
+        let stockToSave = SavedStock(context: persistenceService.persistentContainer.viewContext)
+        stockToSave.notes = ""
+        stockToSave.ticker = ticker
+        stockToSave.companyName = companyName
+        persistenceService.saveContext()
+    }
+    
+    func removeFavoriteCompany(_ ticker: String, completion: (() -> Void)?) {
         let fetchRequest = SavedStock.createfetchRequest()
         let context = PersistenceService.shared.persistentContainer.viewContext
         fetchRequest.predicate = NSPredicate(format: "ticker = %@", ticker)
@@ -32,9 +40,9 @@ class SavedStockDataManager {
                 context.delete(object)
             }
             persistenceService.saveContext()
-            completion()
+            completion?()
         } catch {
-            completion()
+            completion?()
         }
     }
 }

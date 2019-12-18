@@ -35,7 +35,6 @@ class GeneralEmptyCell: UITableViewCell {
         return String()
     }
     
-    
     private lazy var cellImageView: UIImageView = {
         let imageView = UIImageView(image: emptyImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -44,8 +43,7 @@ class GeneralEmptyCell: UITableViewCell {
     
     lazy var headerLabel: UILabel = {
         let label = UILabel()
-        let font = UIFont.preferredFont(forTextStyle: .title3)
-        label.font = UIFont.systemFont(ofSize: font.pointSize, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         label.text = emptyHeaderText
         label.textColor = .label
         return label
@@ -65,7 +63,7 @@ class GeneralEmptyCell: UITableViewCell {
         return .bordered
     }
     
-    private lazy var emptyCellActionButton: UIButton = {
+    lazy var emptyCellActionButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(buttonText, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .heavy)

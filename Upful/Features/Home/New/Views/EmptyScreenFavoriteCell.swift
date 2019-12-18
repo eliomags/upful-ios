@@ -9,7 +9,6 @@
 import UIKit
 
 class EmptyScreenerFavoriteCell: GeneralEmptyCell {
-    
     override var emptyHeaderText: String {
         return "Saved Screeners"
     }
@@ -21,12 +20,10 @@ class EmptyScreenerFavoriteCell: GeneralEmptyCell {
     override var buttonText: String {
         return "Add Screener"
     }
-    
 }
 
 
 class EmptyStockFavoriteCell: GeneralEmptyCell {
-    
     override var buttonLook: GeneralEmptyCell.ButtonLook {
         return .solid
     }
@@ -41,6 +38,30 @@ class EmptyStockFavoriteCell: GeneralEmptyCell {
     
     override var buttonText: String {
         return "Add Stock"
+    }
+}
+
+class ErrorFavoriteCell: GeneralEmptyCell {
+    override var emptyImage: UIImage {
+        return UIImage(systemName: "exclamationmark.icloud")?
+            .withTintColor(.systemGray3, renderingMode: .alwaysOriginal)
+            ?? UIImage()
+    }
+    
+    override var buttonLook: GeneralEmptyCell.ButtonLook {
+        return .bordered
+    }
+
+    override var emptyHeaderText: String {
+        return "Error"
+    }
+    
+    override var emptyDescriptionText: String {
+        return "Error getting your data. Refresh to try again."
+    }
+    
+    override var buttonText: String {
+        return "Refresh"
     }
 }
 

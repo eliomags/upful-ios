@@ -71,46 +71,31 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     
     // MARK: - Core Data
     
+    let savedStockDataManager = SavedStockDataManager()
+
     @objc private func loadSavedStocks() {
-        let request = SavedStock.createfetchRequest()
-        do {
-            savedStocks = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
-            for savedStock in savedStocks {
-                if savedStock.ticker == ticker {
-                    DispatchQueue.main.async { self.saveButton.isSelected = true }
-                    break
-                } else {
-                    DispatchQueue.main.async { self.saveButton.isSelected = false }
+        savedStockDataManager.loadSavedStocks { (result) in
+            switch result {
+            case .success(let savedStocks):
+                let stockTickers = savedStocks.map({ $0.ticker })
+                DispatchQueue.main.async {
+                    self.saveButton.isSelected = stockTickers.contains(self.ticker)
                 }
+            case .failure(let err):
+                print(err.localizedDescription)
             }
-        } catch {
-            print("Fetch failed", error.localizedDescription)
         }
     }
-    
+
     private func removeFavorite(button: UIButton) {
         button.isSelected = !button.isSelected
-        let fetchRequest = SavedStock.createfetchRequest()
-        let context = PersistenceService.shared.persistentContainer.viewContext
-        fetchRequest.predicate = NSPredicate(format: "ticker = %@", ticker)
-        do {
-            let objects = try context.fetch(fetchRequest)
-            for object in objects {
-                context.delete(object)
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
+        savedStockDataManager.removeFavoriteCompany(ticker, completion: nil)
     }
-    
+         
     private func saveCompany(button: UIButton) {
         button.isSelected = !button.isSelected
-        let savedStock = SavedStock(context: PersistenceService.shared.persistentContainer.viewContext)
-        savedStock.notes = ""
-        savedStock.ticker = self.ticker
-        savedStock.companyName = self.companyName
+        savedStockDataManager.saveCompany(ticker: ticker, companyName: companyName)
         
-        PersistenceService.shared.saveContext()
         if button.isSelected {
             Vibration.light.vibrate()
             AnalyticsLogger.instance.reportEvents(event: .savedTicker(ticker: self.ticker))
