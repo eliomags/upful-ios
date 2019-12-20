@@ -92,7 +92,6 @@ final class ScreenResultsViewController: UIViewController {
         let sortButton = UIBarButtonItem(customView: self.sortButton)
         navigationItem.rightBarButtonItem = sortButton
     }
-    
 
     // MARK: - Fileprivate Functions
     
@@ -126,14 +125,15 @@ final class ScreenResultsViewController: UIViewController {
     }
     
     private func getPriceToEarningsData(_ searchResult: Stock) {
-        NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: searchResult.ticker ?? "", financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
+        NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: searchResult.ticker, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
             guard let self = self else { return }
 
             switch result {
-            case .success(let downloadedData):
-                guard !downloadedData.isEmpty else { return }
+            case .success(let companyHistorics):
+                guard !companyHistorics.isEmpty else { return }
+                
                 DispatchQueue.main.async {
-                    searchResult.pricetoearnings = downloadedData.first?.value
+                    searchResult.pricetoearnings = companyHistorics.first?.value
                     self.feedTableView.reloadData()
                 }
             case .failure(_):
@@ -200,7 +200,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
         guard let resultsCell = tableView.dequeueReusableCell(withIdentifier: ReuseId.resultsCellID) as? ResultsTableViewCell else { return UITableViewCell() }
 
         let screenResult = searchResults[indexPath.item]
-        guard let ticker = screenResult.ticker else { return resultsCell }
+        let ticker = screenResult.ticker
         resultsCell.accessoryType = .disclosureIndicator
         resultsCell.companyTickerLabel.text = ticker
         resultsCell.companyNameLabel.text = screenResult.name
@@ -219,7 +219,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .searchResult))
         let selectedCompany = searchResults[indexPath.item]
-        let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
+        let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker, companyName: selectedCompany.name ?? "")
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }

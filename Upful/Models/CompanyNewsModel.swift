@@ -15,15 +15,31 @@ struct ScreeningResponse: Decodable {
     var pageSize: Int?
 }
 
-class Stock: Decodable {
-    let name: String?
-    let ticker: String?
-    let marketcap: Int?
+class Stock: Decodable, Hashable {
+    static func == (lhs: Stock, rhs: Stock) -> Bool {
+        return lhs.ticker == rhs.ticker
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ticker)
+    }
+    
+    let name: String
+    let ticker: String
+    var marketcap: Int?
     var divyield: Double?
     var pricetoearnings: Double?
     var ebitgrowth: Double?
     var standardizedFinancials: [StandardizedFinancial]?
     var news: [CompanyNewsModel]?
+    
+    init(name: String,ticker: String) {
+        self.name = name
+        self.ticker = ticker
+    }
+}
+
+extension Stock {
+    static let cache = NSCache<NSString,Stock>()
 }
 
 struct CompanyNewsModel: Decodable {

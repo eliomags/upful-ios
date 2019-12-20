@@ -9,6 +9,7 @@
 import Foundation
 
 class SavedStockDataManager {
+    
     let persistenceService = PersistenceService.shared
 
     typealias SavedStockFetchCompletion = (Result<[SavedStock], Error>) -> Void

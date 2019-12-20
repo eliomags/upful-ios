@@ -8,14 +8,12 @@
 
 import Foundation
 
+
+// Old
+
 class HomePersistenceManager {
     
     let persistenceService = PersistenceService.shared
-
-    
-    init() {
-        
-    }
     
     func getParameters(named title: String) -> [SavedScreenerParameter] {
         var parameters = [SavedScreenerParameter]()

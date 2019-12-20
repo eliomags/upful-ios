@@ -43,7 +43,7 @@ class GeneralEmptyCell: UITableViewCell {
     
     lazy var headerLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         label.text = emptyHeaderText
         label.textColor = .label
         return label
@@ -69,9 +69,11 @@ class GeneralEmptyCell: UITableViewCell {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        button.layer.cornerRadius = 8
+        button.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        button.layer.cornerRadius = 22
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(handleCellAction), for: .touchUpInside)
+        button.setupShadow(intensity: .medium, color: .darkGray)
         return button
     }()
     
@@ -154,8 +156,9 @@ class GeneralEmptyCell: UITableViewCell {
     fileprivate func setupActionButton() {
         contentBackground.addSubview(emptyCellActionButton)
         emptyCellActionButton.topAnchor.constraint(equalTo: contentStackView.bottomAnchor, constant: 24).isActive = true
-        emptyCellActionButton.leadingAnchor.constraint(equalTo: contentBackground.leadingAnchor, constant: 16).isActive = true
-        emptyCellActionButton.trailingAnchor.constraint(equalTo: contentBackground.trailingAnchor, constant: -16).isActive = true
+        emptyCellActionButton.centerXAnchor.constraint(equalTo: contentBackground.centerXAnchor).isActive = true
+//        emptyCellActionButton.leadingAnchor.constraint(equalTo: contentBackground.leadingAnchor, constant: 16).isActive = true
+//        emptyCellActionButton.trailingAnchor.constraint(equalTo: contentBackground.trailingAnchor, constant: -16).isActive = true
     }
 }
 

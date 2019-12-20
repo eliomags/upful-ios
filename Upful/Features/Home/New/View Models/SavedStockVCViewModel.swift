@@ -29,21 +29,24 @@ class SavedStockVCViewModel {
             sendStateUpdates?(state)
         }
     }
-    private(set) var savedStocks: [SavedStock] = [] {
+
+    var stocks: [Stock] = [] {
         didSet {
-            state = savedStocks.isEmpty ? .empty: .loaded
+            print(stocks.map({ $0.ticker }))
+            state = stocks.isEmpty ? .empty: .loaded
         }
     }
-
+    
     var sendStateUpdates: ((State) -> Void)?
     
-
+    
     func loadSavedStocks() {
         state = .loading
         savedStockDataManager.loadSavedStocks { (result) in
             switch result {
-            case .success(let stocks):
-                self.savedStocks = stocks
+            case .success(let savedStocks):
+                self.mapToStocks(savedStocks)
+                self.getPreviewData()
             case .failure(_):
                 self.state = .error
             }
@@ -55,4 +58,42 @@ class SavedStockVCViewModel {
             self?.loadSavedStocks()
         }
     }
+
+    func mapToStocks(_ savedStocks: [SavedStock]) {
+        var newStocks: [Stock] = []
+        savedStocks.forEach { stock in
+            let newStock = Stock(name: stock.companyName, ticker: stock.ticker)
+            newStocks.append(newStock)
+        }
+        self.stocks = newStocks
+    }
+    
+    fileprivate func getPreviewData() {
+        for stock in stocks {            
+            loadOperations(for: stock)
+        }
+    }
+    
+    // MARK: - Fetch Preview Data
+    
+    lazy var pendingPreviewDataFetch: [String: StockPreviewDataFetch] = [:]
+    lazy var operationQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.name = "Stock Financial Preview Fetch Queue"
+        return queue
+    }()
+    
+    func loadOperations(for stock: Stock) {
+        if !pendingPreviewDataFetch.contains(where: { $0.key == stock.ticker }) {
+            let operation = StockPreviewDataFetch(stock: stock)
+            operation.completionBlock = { [weak self] in
+                guard let self = self else { return }
+                self.pendingPreviewDataFetch = self.pendingPreviewDataFetch.filter({ $0.value.isFinished != true })
+                DispatchQueue.main.async { self.state = .loaded }
+            }
+            pendingPreviewDataFetch[stock.ticker] = operation
+            operationQueue.addOperation(operation)
+        }
+    }
+
 }

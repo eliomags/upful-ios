@@ -55,7 +55,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         collectionView.backgroundColor = VersionManager.mainContainerBackground()
         configureNavBar()
         AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
-        performSelector(inBackground: #selector(loadSavedStocks), with: nil)
+        performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
     }
     
     // MARK: - View Setup
@@ -73,7 +73,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     
     let savedStockDataManager = SavedStockDataManager()
 
-    @objc private func loadSavedStocks() {
+    @objc private func checkIfCurrentlySaved() {
         savedStockDataManager.loadSavedStocks { (result) in
             switch result {
             case .success(let savedStocks):

@@ -118,7 +118,7 @@ class PermissionManager {
         if let val = screeningDateLookup[currentDateComponents.toString()] {
             screeningDateLookup[currentDateComponents.toString()] = val + 1
         } else {
-            screeningDateLookup[currentDateComponents.toString()] = 1
+            screeningDateLookup[currentDateComponents.toString()] = 0
         }
     }
 
