@@ -12,7 +12,7 @@ class SavedStockVCViewModel {
     
     // MARK: - Dependencies
 
-    private let savedStockDataManager = SavedStockDataManager()
+    private let savedStockDataManager: SavedStockDataManagerProtocol
     
     // MARK: - State
 
@@ -38,13 +38,16 @@ class SavedStockVCViewModel {
     
     var sendStateUpdates: ((State) -> Void)?
     
+    init(savedStockDataManager: SavedStockDataManagerProtocol = SavedStockDataManager()) {
+        self.savedStockDataManager = savedStockDataManager
+    }
     
     func loadSavedStocks() {
         state = .loading
         savedStockDataManager.loadSavedStocks { (result) in
             switch result {
             case .success(let savedStocks):
-                self.mapToStocks(savedStocks)
+                self.stocks = savedStocks
                 self.getPreviewData()
             case .failure(_):
                 self.state = .error
@@ -53,18 +56,8 @@ class SavedStockVCViewModel {
     }
     
     func removeTicker(_ ticker: String) {
-        savedStockDataManager.removeFavoriteCompany(ticker) { [weak self] in
-            self?.loadSavedStocks()
-        }
-    }
-
-    func mapToStocks(_ savedStocks: [SavedStock]) {
-        var newStocks: [Stock] = []
-        savedStocks.forEach { stock in
-            let newStock = Stock(name: stock.companyName, ticker: stock.ticker)
-            newStocks.append(newStock)
-        }
-        self.stocks = newStocks
+        self.stocks.removeAll(where: { $0.ticker == ticker })
+        savedStockDataManager.removeFavoriteCompany(ticker) {}
     }
     
     fileprivate func getPreviewData() {
@@ -96,6 +89,8 @@ class SavedStockVCViewModel {
     }
     
     func saveDatasourceConfiguration() {
+        // TODO: - Find cleaner way to batch update the Core Data
+        
         stocks.forEach { (stock) in
             savedStockDataManager.removeFavoriteCompany(stock.ticker) {}
         }

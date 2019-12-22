@@ -12,6 +12,7 @@ class ActionableTableHeader: UITableViewHeaderFooterView {
 
     lazy var headerTextLabel: LargeSectionHeaderLabel = {
         let label = LargeSectionHeaderLabel(padding: 0)
+        label.font = UIFont.systemFont(ofSize: 21, weight: .heavy)
         return label
     }()
     
@@ -70,19 +71,18 @@ class ActionableTableHeader: UITableViewHeaderFooterView {
         addSubview(doneButton)
         
         addButton.anchor(
-            top: nil, leading: nil, bottom: nil, trailing: trailingAnchor,
+            top: nil, leading: nil, bottom: bottomAnchor, trailing: trailingAnchor,
             padding: .init(top: 0, left: 0, bottom: 8, right: 16))
-        addButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+//        addButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 
         doneButton.anchor(
-            top: nil, leading: nil, bottom: nil, trailing: trailingAnchor,
+            top: nil, leading: nil, bottom: bottomAnchor, trailing: trailingAnchor,
             padding: .init(top: 0, left: 0, bottom: 8, right: 16))
-        doneButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+//        doneButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 
         textStackView.anchor(
-            top: nil, leading: leadingAnchor, bottom: nil, trailing: doneButton.leadingAnchor,
-            padding: .init(top: 0, left: 16, bottom: 8, right: 8))
-        textStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: doneButton.leadingAnchor,
+            padding: .init(top: 0, left: 16, bottom: 0, right: 8))
     }
     
     required init?(coder aDecoder: NSCoder) {

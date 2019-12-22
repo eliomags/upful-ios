@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window?.backgroundColor = VersionManager.mainContainerBackground()
 
-//        FirebaseApp.configure()
+        FirebaseApp.configure()
         Mixpanel.initialize(token: Constants.MixPanel.token)
         IAPService().completeTransactions()
 

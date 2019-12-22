@@ -8,19 +8,27 @@
 
 import Foundation
 
-class SavedStockDataManager {
+protocol SavedStockDataManagerProtocol {
+    typealias SavedStockFetchCompletion = (Result<[Stock], Error>) -> Void
+    func loadSavedStocks(completion: @escaping SavedStockFetchCompletion)
+    func saveCompany(ticker: String, companyName: String)
+    func removeFavoriteCompany(_ ticker: String, completion: (() -> Void)?)
+}
+
+class SavedStockDataManager: SavedStockDataManagerProtocol {
     
     let persistenceService = PersistenceService.shared
 
-    typealias SavedStockFetchCompletion = (Result<[SavedStock], Error>) -> Void
     func loadSavedStocks(completion: @escaping SavedStockFetchCompletion) {
         let request = SavedStock.createfetchRequest()
-        do {
+        completion(Result {
             let savedStocks = try persistenceService.persistentContainer.viewContext.fetch(request)
-            completion(.success(savedStocks))
-        } catch let error {
-            completion(.failure(error))
-        }
+            return mapToStocks(savedStocks)
+        })
+    }
+    
+    func mapToStocks(_ savedStocks: [SavedStock]) -> [Stock] {
+        return savedStocks.map({ Stock(name: $0.companyName, ticker: $0.ticker)})
     }
     
     func saveCompany(ticker: String, companyName: String) {
@@ -46,6 +54,8 @@ class SavedStockDataManager {
             completion?()
         }
     }
+    
+    
 }
 
 

@@ -10,7 +10,6 @@
 import Foundation
 import CoreData
 
-//@objc(SavedStock)
 public class SavedStock: NSManagedObject {
-
+    
 }
