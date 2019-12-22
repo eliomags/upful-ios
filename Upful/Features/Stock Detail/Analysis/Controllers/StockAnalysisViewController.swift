@@ -13,7 +13,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     // MARK: - MenuBarDisplay Protocol
     
-    var delegate: MenuViewItemDelegate?
+    weak var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Analysis"
     
     // MARK: - Dependencies

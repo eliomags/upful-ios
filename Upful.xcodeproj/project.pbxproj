@@ -122,7 +122,7 @@
 		3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */; };
 		3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */; };
 		3DBEFFCB23A9CCA000BA407E /* SavedScreenersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */; };
-		3DBEFFD023A9D0B900BA407E /* SavedStockLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */; };
+		3DBEFFD023A9D0B900BA407E /* SavedStockDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFCF23A9D0B900BA407E /* SavedStockDataManager.swift */; };
 		3DBEFFD223A9D5E900BA407E /* SavedStockVCViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFD123A9D5E900BA407E /* SavedStockVCViewModel.swift */; };
 		3DBEFFD723ABCCF400BA407E /* StockPreviewDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFD623ABCCF400BA407E /* StockPreviewDataLoader.swift */; };
 		3DBEFFD923AD7ED200BA407E /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFD823AD7ED200BA407E /* Array+Extensions.swift */; };
@@ -318,7 +318,7 @@
 		3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStocksViewController.swift; sourceTree = "<group>"; };
 		3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersViewController.swift; sourceTree = "<group>"; };
-		3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStockLoader.swift; sourceTree = "<group>"; };
+		3DBEFFCF23A9D0B900BA407E /* SavedStockDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStockDataManager.swift; sourceTree = "<group>"; };
 		3DBEFFD123A9D5E900BA407E /* SavedStockVCViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStockVCViewModel.swift; sourceTree = "<group>"; };
 		3DBEFFD623ABCCF400BA407E /* StockPreviewDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockPreviewDataLoader.swift; sourceTree = "<group>"; };
 		3DBEFFD823AD7ED200BA407E /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
@@ -1325,7 +1325,7 @@
 			children = (
 				3D4FB99A2384402F00B9BFE1 /* Data */,
 				3DE8C80523997B5C00CC0056 /* HomePersistenceManager.swift */,
-				3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */,
+				3DBEFFCF23A9D0B900BA407E /* SavedStockDataManager.swift */,
 				3DBEFFD623ABCCF400BA407E /* StockPreviewDataLoader.swift */,
 			);
 			path = Models;
@@ -1981,7 +1981,7 @@
 				3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */,
 				3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */,
 				3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */,
-				3DBEFFD023A9D0B900BA407E /* SavedStockLoader.swift in Sources */,
+				3DBEFFD023A9D0B900BA407E /* SavedStockDataManager.swift in Sources */,
 				3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */,
 				3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */,
 				3DD42929234A92CD0079DA18 /* ReportViewController.swift in Sources */,

@@ -13,7 +13,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     // MARK: - MenuBarDisplayable Protocol Properties
     
-    var delegate: MenuViewItemDelegate?
+    weak var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Overview"
 
     // MARK: - Dependencies

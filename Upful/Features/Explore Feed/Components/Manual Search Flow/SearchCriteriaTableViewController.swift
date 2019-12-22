@@ -21,7 +21,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         return tv
     }()
     
-    var delegate: MenuViewItemDelegate?
+    weak var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Manual Search"
     
     private enum ReuseID {

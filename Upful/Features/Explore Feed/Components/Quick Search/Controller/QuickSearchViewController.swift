@@ -10,7 +10,7 @@ import UIKit
 
 class QuickSearchViewController: UIViewController,UISearchControllerDelegate, UISearchBarDelegate, HomeFeedNavigationDelegate, MenuBarDisplayable {
     
-    var delegate: MenuViewItemDelegate?
+    weak var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "Quick Search"
     
     private enum ReuseID {

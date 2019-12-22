@@ -32,7 +32,6 @@ class SavedStockVCViewModel {
 
     var stocks: [Stock] = [] {
         didSet {
-            print(stocks.map({ $0.ticker }))
             state = stocks.isEmpty ? .empty: .loaded
         }
     }
@@ -95,5 +94,13 @@ class SavedStockVCViewModel {
             operationQueue.addOperation(operation)
         }
     }
-
+    
+    func saveDatasourceConfiguration() {
+        stocks.forEach { (stock) in
+            savedStockDataManager.removeFavoriteCompany(stock.ticker) {}
+        }
+        stocks.forEach { (stock) in
+            savedStockDataManager.saveCompany(ticker: stock.ticker, companyName: stock.name)
+        }
+    }
 }
