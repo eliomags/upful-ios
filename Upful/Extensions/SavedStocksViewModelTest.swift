@@ -32,9 +32,20 @@ class SavedStocksViewModelTest: XCTestCase {
     func testStateLoading() {
         sut = makeSUTnoData()
         let initialState = SavedStockVCViewModel.State.loading
-        
+        let loadingExpectation = expectation(description: #function)
+
+        sut!.sendStateUpdates = { newState in
+            switch newState {
+            case .loading:
+                loadingExpectation.fulfill()
+            default:
+                break
+            }
+        }
         sut!.loadSavedStocks()
         
+        wait(for: [loadingExpectation], timeout: 1)
+
         XCTAssertEqual(sut!.state, initialState)
         XCTAssertTrue(sut!.stocks.isEmpty)
     }
@@ -76,19 +87,30 @@ class SavedStocksViewModelTest: XCTestCase {
         wait(for: [loadExpectation], timeout: 1)
         
         XCTAssertEqual(sut!.state, SavedStockVCViewModel.State.loaded)
-        XCTAssertEqual(sut!.stocks.count, 2)
+        XCTAssertEqual(sut!.stocks.count, 1)
     }
     
     func testRemoveTickerWithData() {
         sut = makeSUTwithData()
-
+        let loadExpectation = expectation(description: #function)
+        
         sut!.loadSavedStocks()
+
+        sut!.sendStateUpdates = { newState in
+            switch newState {
+            case .loaded:
+                loadExpectation.fulfill()
+            default:
+                break
+            }
+        }
+        wait(for: [loadExpectation], timeout: 1)
         
-        XCTAssertEqual(sut!.stocks.count, 2)
-        
+        XCTAssertEqual(sut!.stocks.count, 1)
         let tickerToRemove = sut!.stocks.first!.ticker
         sut!.removeTicker(tickerToRemove)
-        XCTAssertEqual(sut!.stocks.count, 1)
+        XCTAssertEqual(sut!.stocks.count, 0)
+        XCTAssertEqual(sut!.state, SavedStockVCViewModel.State.empty)
     }
     
     // TODO: - Test Load Operations
@@ -126,8 +148,7 @@ private class MockSavedStockDataManagerWithData: SavedStockDataManagerProtocol {
         DispatchQueue.global().async {
             completion(Result {
                 return [
-                    Stock(name: "Apple", ticker: "AAPL"),
-                    Stock(name: "Facebook", ticker: "FB")
+                    Stock(name: "Apple", ticker: "AAPL")
                 ]
             })
         }

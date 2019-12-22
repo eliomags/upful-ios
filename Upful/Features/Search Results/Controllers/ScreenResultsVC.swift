@@ -219,7 +219,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .searchResult))
         let selectedCompany = searchResults[indexPath.item]
-        let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker, companyName: selectedCompany.name ?? "")
+        let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker, companyName: selectedCompany.name)
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
