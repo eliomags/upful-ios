@@ -248,8 +248,11 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             let savedScreener = SavedScreener(context: PersistenceService.shared.persistentContainer.viewContext)
             savedScreener.title = titleTextFieldText ?? "No Title"
             savedScreener.screenDescription = ""
+            
             self.saveParameters(with: savedScreener)
+            
             AnalyticsLogger.instance.reportEvents(event: .savedScreener(description: configureURLComponents().joined(separator: ",")))
+            
             PersistenceService.shared.saveContextWithCompletion(completion: { [unowned self] in
                 InformationViewPresenter().showSaveSuccess(in: self)
             })
@@ -278,7 +281,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     // MARK: - Action
     
     @objc private func handleSaveTap(_ sender: UIBarButtonItem) {
-        PermissionManager.shared.getSaveScreenerPermission { [unowned self] (permissionGranted, error) in
+        PermissionManager.shared.getSaveScreenerPermission { [weak self] (permissionGranted, error) in
+            guard let self = self else { return }
             if let _ = error {
                 let alertVC = UIAlertController(title: "Error", message: "There was an error.", preferredStyle: .alert)
                 alertVC.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))

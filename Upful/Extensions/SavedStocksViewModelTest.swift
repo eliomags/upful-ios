@@ -131,7 +131,7 @@ class SavedStocksViewModelTest: XCTestCase {
     }
 }
 
-private class MockSavedStockDataManager: SavedStockDataManagerProtocol {
+private class MockSavedStockDataManager: SavedStockDataLoaderProtocol {
     func loadSavedStocks(completion: @escaping MockSavedStockDataManager.SavedStockFetchCompletion) {
         DispatchQueue.global().async {
             completion(Result {
@@ -143,7 +143,7 @@ private class MockSavedStockDataManager: SavedStockDataManagerProtocol {
     func removeFavoriteCompany(_ ticker: String, completion: (() -> Void)?) {}
 }
 
-private class MockSavedStockDataManagerWithData: SavedStockDataManagerProtocol {
+private class MockSavedStockDataManagerWithData: SavedStockDataLoaderProtocol {
     func loadSavedStocks(completion: @escaping MockSavedStockDataManager.SavedStockFetchCompletion) {
         DispatchQueue.global().async {
             completion(Result {

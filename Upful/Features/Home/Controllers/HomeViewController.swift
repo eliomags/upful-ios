@@ -26,7 +26,7 @@ final class HomeViewController: UITableViewController, SaveScreenerDelegate, Not
 
     // MARK: - Display Data
     
-    var savedScreeners: [SavedItem] = [] {
+    var savedScreeners: [Screener] = [] {
         didSet {
             observeScreenerState()
         }
@@ -163,11 +163,11 @@ final class HomeViewController: UITableViewController, SaveScreenerDelegate, Not
     func configureSavedItemsToDisplay() {
         let request = SavedScreener.createfetchRequest()
         var screeners: [SavedScreener] = []
-        var items: [SavedItem] = []
+        var items: [Screener] = []
         do {
             screeners = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
             screeners.forEach { (screener) in
-                let savedItem = SavedItem(savedScreener: screener, savedParameters: getParameters(named: screener.title))
+                let savedItem = Screener(savedScreener: screener, savedParameters: getParameters(named: screener.title))
                 items.append(savedItem)
             }
             

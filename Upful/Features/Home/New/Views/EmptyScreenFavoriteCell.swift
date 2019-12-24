@@ -9,6 +9,11 @@
 import UIKit
 
 class EmptyScreenerFavoriteCell: GeneralEmptyCell {
+    
+    override var buttonLook: GeneralEmptyCell.ButtonLook {
+        return .bordered
+     }
+    
     override var emptyHeaderText: String {
         return "Saved Screeners"
     }
@@ -64,4 +69,3 @@ class ErrorFavoriteCell: GeneralEmptyCell {
         return "Refresh"
     }
 }
-

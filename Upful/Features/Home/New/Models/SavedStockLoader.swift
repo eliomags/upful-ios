@@ -8,14 +8,14 @@
 
 import Foundation
 
-protocol SavedStockDataManagerProtocol {
+protocol SavedStockDataLoaderProtocol {
     typealias SavedStockFetchCompletion = (Result<[Stock], Error>) -> Void
     func loadSavedStocks(completion: @escaping SavedStockFetchCompletion)
     func saveCompany(ticker: String, companyName: String)
     func removeFavoriteCompany(_ ticker: String, completion: (() -> Void)?)
 }
 
-class SavedStockDataManager: SavedStockDataManagerProtocol {
+class SavedStockLoader: SavedStockDataLoaderProtocol {
     
     let persistenceService = PersistenceService.shared
 
@@ -54,8 +54,6 @@ class SavedStockDataManager: SavedStockDataManagerProtocol {
             completion?()
         }
     }
-    
-    
 }
 
 

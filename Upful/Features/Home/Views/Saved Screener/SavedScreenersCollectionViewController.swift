@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SaveScreenerDelegate: class {
-    var savedScreeners: [SavedItem] { get set }
+    var savedScreeners: [Screener] { get set }
     func editScreener(indexPath: IndexPath)
     func deleteScreener(indexPath: IndexPath)
 }
@@ -68,7 +68,6 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
         super.viewWillDisappear(animated)
         isLongPressEnabled = false
     }
-    
     
     // MARK: - Gesture Setup
     

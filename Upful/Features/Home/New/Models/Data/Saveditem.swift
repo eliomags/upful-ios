@@ -8,13 +8,25 @@
 
 import Foundation
 
-class SavedItem {
+struct Screener: Hashable {
+    static func == (lhs: Screener, rhs: Screener) -> Bool {
+        return lhs.savedScreener.title == rhs.savedScreener.title
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(savedScreener.title)
+    }
+    
     var savedScreener: SavedScreener
     var savedParameters: [SavedScreenerParameter]
+    let title: String
+    let description: String
     
     init(savedScreener: SavedScreener, savedParameters: [SavedScreenerParameter]) {
         self.savedScreener = savedScreener
         self.savedParameters = savedParameters
+        self.title = savedScreener.title
+        self.description = savedScreener.screenDescription ?? "No Description"
     }
     
     func configureDescription() -> String {

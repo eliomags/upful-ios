@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 // Old
 
 class HomePersistenceManager {
@@ -27,14 +26,15 @@ class HomePersistenceManager {
         return parameters
     }
     
-    func configureSavedItemsToDisplay(completion: @escaping (Result<[SavedItem],Error>) -> Void) {
+    func configureSavedItemsToDisplay(completion: @escaping (Result<[Screener],Error>) -> Void) {
         let request = SavedScreener.createfetchRequest()
         do {
             var screeners: [SavedScreener] = []
-            var savedItems: [SavedItem] = []
+            var savedItems: [Screener] = []
             screeners = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
             screeners.forEach { (screener) in
-                let savedItem = SavedItem(savedScreener: screener, savedParameters: getParameters(named: screener.title))
+                let savedItem = Screener(savedScreener: screener,
+                                         savedParameters: getParameters(named: screener.title))
                 savedItems.append(savedItem)
             }
             completion(.success(savedItems))
