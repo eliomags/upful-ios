@@ -47,10 +47,10 @@ class SavedStockVCViewModel {
             case .success(let savedStocks):
                 self.stocks = savedStocks
                 self.getPreviewData()
+                self.refreshState()
             case .failure(_):
                 self.state = .error
             }
-            self.refreshState()
         }
     }
     

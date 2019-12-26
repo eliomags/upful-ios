@@ -7,7 +7,6 @@
 //
 
 import XCTest
-import CoreData
 @testable import Upful
 
 class SavedScreenersViewModelTest: XCTestCase {
@@ -21,7 +20,7 @@ class SavedScreenersViewModelTest: XCTestCase {
         sut = nil
     }
     
-    // MARK: - Init
+    // MARK: - Load Screener
     
     func testStateAfterInitialized() {
         sut = makeSUTwithEmptyData()
@@ -29,25 +28,79 @@ class SavedScreenersViewModelTest: XCTestCase {
         XCTAssertTrue(sut!.screeners.isEmpty)
     }
     
-    func testEmptyState() {
+    func testLoadWithEmpty() {
         sut = makeSUTwithEmptyData()
+        let expected = expectation(description: #function)
         
+        sut.sendStateChanges = { (newState) in
+            switch newState {
+            case .empty:
+                expected.fulfill()
+            default: break
+            }
+        }
         sut.loadScreeners()
         
+        wait(for: [expected], timeout: 1)
         XCTAssertEqual(sut!.state, SavedScreenersViewModel.State.empty)
         XCTAssertTrue(sut!.screeners.isEmpty)
     }
     
-    func testLoadedState() {
+    func testLoadWithData() {
         sut = makeSUTwithData()
+        let expected = expectation(description: #function)
         
+        sut.sendStateChanges = { (newState) in
+            switch newState {
+            case .loaded:
+                expected.fulfill()
+            default: break
+            }
+        }
         sut.loadScreeners()
         
+        wait(for: [expected], timeout: 1)
         XCTAssertEqual(sut!.state, SavedScreenersViewModel.State.loaded)
         XCTAssertTrue(!sut!.screeners.isEmpty)
     }
+    
+    func testLoadWithError() {
+        sut = makeSUTwithError()
+        let expected = expectation(description: #function)
+        
+        sut.sendStateChanges = { (newState) in
+            switch newState {
+            case .error:
+                expected.fulfill()
+            default: break
+            }
+        }
+        sut.loadScreeners()
+        
+        wait(for: [expected], timeout: 1)
+        XCTAssertEqual(sut!.state, SavedScreenersViewModel.State.error)
+        XCTAssertTrue(sut!.screeners.isEmpty)
+    }
 
+    // MARK: - Remove Screener
 
+    func testRemoveScreener() {
+        sut = makeSUTwithData()
+        sut!.screeners = [
+            Screener(title: "No Title1", description: "test description1", urlComponents: [], manualScreenItems: []),
+            Screener(title: "No Title2", description: "test description2", urlComponents: [], manualScreenItems: [])
+        ]
+        
+        XCTAssertEqual(sut!.screeners.count, 2)
+
+        sut!.removeScreener("No Title1")
+        XCTAssertEqual(sut!.screeners.count, 1)
+        
+        sut!.removeScreener("No Title2")
+        sut!.refreshState()
+        XCTAssertEqual(sut!.screeners.count, 0)
+        XCTAssertEqual(sut!.state, SavedScreenersViewModel.State.empty)
+    }
 
     // MARK: - Helpers
     
@@ -60,7 +113,11 @@ class SavedScreenersViewModelTest: XCTestCase {
         let screenerLoader = MockSavedScreenerLoaderLoaded()
         return SavedScreenersViewModel(savedScreenerLoader: screenerLoader)
     }
-
+    
+    fileprivate func makeSUTwithError() -> SavedScreenersViewModel {
+        let screenerLoader = MockSavedScreenerLoaderError()
+        return SavedScreenersViewModel(savedScreenerLoader: screenerLoader)
+    }
 }
 
 private class MockSavedScreenerLoaderEmpty: SavedScreenerLoaderProtocol {
@@ -75,17 +132,25 @@ private class MockSavedScreenerLoaderEmpty: SavedScreenerLoaderProtocol {
     func removeScreener(with title: String) {}
     func saveScreener(screener: Screener) {}
 }
-
 private class MockSavedScreenerLoaderLoaded: SavedScreenerLoaderProtocol {
     func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion) {
         DispatchQueue.global().async {
             completion(Result {
-                let entity = NSEntityDescription()
-                entity.name = "SavedScreener"
                 return [
-                
+                    Screener(title: "No Title1", description: "test description1", urlComponents: [], manualScreenItems: []),
+                    Screener(title: "No Title2", description: "test description2", urlComponents: [], manualScreenItems: [])
                 ]
             })
+        }
+    }
+    func removeScreenerParameters(with title: String) {}
+    func removeScreener(with title: String) {}
+    func saveScreener(screener: Screener) {}
+}
+private class MockSavedScreenerLoaderError: SavedScreenerLoaderProtocol {
+    func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion) {
+        DispatchQueue.global().async {
+            completion(.failure(NSError()))
         }
     }
     func removeScreenerParameters(with title: String) {}

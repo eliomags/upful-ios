@@ -11,7 +11,7 @@ import XCTest
 
 class SavedStocksViewModelTest: XCTestCase {
     
-    var sut: SavedStockVCViewModel?
+    var sut: SavedStockVCViewModel!
     
     override func setUp() {
         super.setUp()
@@ -25,27 +25,6 @@ class SavedStocksViewModelTest: XCTestCase {
     func testStateAfterInitialized() {
         sut = makeSUTwithData()
         let initialState = SavedStockVCViewModel.State.new
-        XCTAssertEqual(sut!.state, initialState)
-        XCTAssertTrue(sut!.stocks.isEmpty)
-    }
-    
-    func testStateLoading() {
-        sut = makeSUTnoData()
-        let initialState = SavedStockVCViewModel.State.loading
-        let loadingExpectation = expectation(description: #function)
-
-        sut!.sendStateUpdates = { newState in
-            switch newState {
-            case .loading:
-                loadingExpectation.fulfill()
-            default:
-                break
-            }
-        }
-        sut!.loadSavedStocks()
-        
-        wait(for: [loadingExpectation], timeout: 1)
-
         XCTAssertEqual(sut!.state, initialState)
         XCTAssertTrue(sut!.stocks.isEmpty)
     }
@@ -94,8 +73,6 @@ class SavedStocksViewModelTest: XCTestCase {
         sut = makeSUTwithData()
         let loadExpectation = expectation(description: #function)
         
-        sut!.loadSavedStocks()
-
         sut!.sendStateUpdates = { newState in
             switch newState {
             case .loaded:
@@ -104,11 +81,15 @@ class SavedStocksViewModelTest: XCTestCase {
                 break
             }
         }
+        sut!.loadSavedStocks()
+
         wait(for: [loadExpectation], timeout: 1)
-        
         XCTAssertEqual(sut!.stocks.count, 1)
+        
         let tickerToRemove = sut!.stocks.first!.ticker
         sut!.removeTicker(tickerToRemove)
+        sut!.refreshState()
+        
         XCTAssertEqual(sut!.stocks.count, 0)
         XCTAssertEqual(sut!.state, SavedStockVCViewModel.State.empty)
     }
