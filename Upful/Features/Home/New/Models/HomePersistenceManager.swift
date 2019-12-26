@@ -33,8 +33,11 @@ class HomePersistenceManager {
             var savedItems: [Screener] = []
             screeners = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
             screeners.forEach { (screener) in
-                let savedItem = Screener(savedScreener: screener,
-                                         savedParameters: getParameters(named: screener.title))
+                let savedItem = Screener(
+                                         title: screener.title,
+                                         description: screener.screenDescription ?? "",
+                                         urlComponents: [],
+                                         manualScreenItems: [])
                 savedItems.append(savedItem)
             }
             completion(.success(savedItems))

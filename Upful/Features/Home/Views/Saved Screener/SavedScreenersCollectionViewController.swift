@@ -108,14 +108,10 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseID.cell, for: indexPath) as? SavedScreenerCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.titleLabel.text = dataSource?.savedScreeners[indexPath.item].savedScreener.title
-        cell.descriptionLabel.text = dataSource?.savedScreeners[indexPath.item].configureDescription()
-        cell.editSelected = { [weak self] in
-            self?.dataSource?.editScreener(indexPath: indexPath)
-        }
-        cell.removeSelected = { [weak self] in
-            self?.dataSource?.deleteScreener(indexPath: indexPath)
-        }
+        cell.titleLabel.text = dataSource?.savedScreeners[indexPath.item].title
+        cell.descriptionLabel.text = dataSource?.savedScreeners[indexPath.item].description
+        cell.editSelected = { [weak self] in self?.dataSource?.editScreener(indexPath: indexPath) }
+        cell.removeSelected = { [weak self] in self?.dataSource?.deleteScreener(indexPath: indexPath) }
         if isLongPressEnabled { cell.startAnimate() }
         if !isLongPressEnabled { cell.stopAnimate() }
         return cell
@@ -124,8 +120,8 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
             if shouldNavigate {
-                let urlComponents = (dataSource?.savedScreeners[indexPath.item].configureURLComponents()) ?? []
-                if urlComponents == []  { return }
+                let urlComponents = (dataSource?.savedScreeners[indexPath.item].urlComponents) ?? []
+                if urlComponents.isEmpty  { return }
                 let resultsVC = ScreenResultsViewController(searchParameters: urlComponents, networkingAPI: IntrinioAPI())
                 AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .saved))
                 parent?.navigationController?.pushViewController(resultsVC, animated: true)
@@ -135,7 +131,6 @@ class SavedScreenersCollectionViewController: UICollectionViewController, UIGest
             }
         }
     }
-    
 }
 
 extension SavedScreenersCollectionViewController: PresentationControllerDelegate {

@@ -167,7 +167,12 @@ final class HomeViewController: UITableViewController, SaveScreenerDelegate, Not
         do {
             screeners = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
             screeners.forEach { (screener) in
-                let savedItem = Screener(savedScreener: screener, savedParameters: getParameters(named: screener.title))
+                let savedItem = Screener(
+                                         title: screener.title,
+                                         description: screener.screenDescription ?? "",
+                                         urlComponents: getParameters(named: screener.title).configureURLComponents(),
+                                         manualScreenItems: getParameters(named: screener.title).mapToManualScreenItems())
+                                        
                 items.append(savedItem)
             }
             
@@ -233,21 +238,15 @@ final class HomeViewController: UITableViewController, SaveScreenerDelegate, Not
     // MARK: - Custom Delegate Methods
     
     func editScreener(indexPath: IndexPath) {
-        var manualScreenItems = [ManualScreenItem]()
         /// Create [ManualScreenItems] to pass to the ManualSearchVC to configure the items
-        savedScreeners[indexPath.item].savedParameters.forEach { (param) in
-            let criteria = SearchCriteria(rawValue: param.criteria)
-            let parameter = SearchParameter(rawValue: param.parameter)
-            let manualScreenItem = ManualScreenItem(criteria: criteria!, parameter: parameter!, value: param.value)
-            manualScreenItems.append(manualScreenItem)
-        }
+        let manualScreenItems = savedScreeners[indexPath.item].manualScreenItems
         let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems)
-        manualSearchVC.screenerTitleText = savedScreeners[indexPath.item].savedScreener.title
+        manualSearchVC.screenerTitleText = savedScreeners[indexPath.item].title
         navigationController?.pushViewController(manualSearchVC, animated: true)
     }
     
     func deleteScreener(indexPath: IndexPath) {
-        removeFavoriteScreener(savedScreeners[indexPath.item].savedScreener.title)
+        removeFavoriteScreener(savedScreeners[indexPath.item].title)
         savedScreeners.remove(at: indexPath.item)
     }
     

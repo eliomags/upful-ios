@@ -63,9 +63,9 @@ class SavedScreenerLoader: SavedScreenerLoaderProtocol {
         let context = persistenceService.persistentContainer.viewContext
         let savingScreener = SavedScreener(context: context)
         
-        savingScreener.title = screener.savedScreener.title
+        savingScreener.title = screener.title
         savingScreener.screenDescription = ""
-        saveParameters(for: savingScreener, manualScreeningParameters: mapToManualSearchItems(screener: screener))
+        saveParameters(for: savingScreener, manualScreeningParameters: screener.manualScreenItems)
 
         persistenceService.saveContext()
     }
@@ -86,19 +86,14 @@ class SavedScreenerLoader: SavedScreenerLoaderProtocol {
     // MARK: - Fileprivate Functions
     
     fileprivate func mapToScreener(_ savedScreeners: [SavedScreener]) -> [Screener] {
-        return savedScreeners.map({ Screener(savedScreener: $0,
-                                             savedParameters: getParameters(for: $0.title))
-                })
-    }
-    
-    fileprivate func mapToManualSearchItems(screener: Screener) -> [ManualScreenItem] {
-        let manualScreeningParameters = screener.savedParameters.map { (param) -> ManualScreenItem in
-            let criteria = SearchCriteria(rawValue: param.criteria)
-            let parameter = SearchParameter(rawValue: param.parameter)
+        let screeners = savedScreeners.map { (screener) -> Screener in
+            let parameters = getParameters(for: screener.title)
             
-            return ManualScreenItem(criteria: criteria ?? SearchCriteria.dividendyield, parameter: parameter ?? SearchParameter.lt, value: param.value )
+            return Screener(title: screener.title,
+                            description: parameters.configureDescription(),
+                            urlComponents: parameters.configureURLComponents(),
+                            manualScreenItems: parameters.mapToManualScreenItems())
         }
-        
-        return manualScreeningParameters
+        return screeners
     }
 }

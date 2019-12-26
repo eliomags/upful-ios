@@ -200,10 +200,12 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
                 guard let self = self else { return }
                 let stock = self.viewModel.stocks[indexPath.item]
                 self.viewModel.removeTicker(stock.ticker)
+                
                 tableView.deleteRows(at: [indexPath], with: .automatic)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.viewModel.refreshState()
                 }
+                Vibration.light.vibrate()
             }
             delete.image = UIImage(systemName: "trash")
             return UISwipeActionsConfiguration(actions: [delete])

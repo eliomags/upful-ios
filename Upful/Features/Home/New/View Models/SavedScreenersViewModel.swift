@@ -56,15 +56,15 @@ class SavedScreenersViewModel {
     }
     
     func removeScreener(_ title: String) {
-        screeners.removeAll(where: { $0.savedScreener.title == title })
+        screeners.removeAll(where: { $0.title == title })
         savedScreenerLoader.removeScreenerParameters(with: title)
         savedScreenerLoader.removeScreener(with: title)
     }
     
     func saveDatasourceConfiguration() {        
         screeners.forEach { (screener) in
-            savedScreenerLoader.removeScreenerParameters(with: screener.savedScreener.title)
-            savedScreenerLoader.removeScreener(with: screener.savedScreener.title)
+            savedScreenerLoader.removeScreenerParameters(with: screener.title)
+            savedScreenerLoader.removeScreener(with: screener.title)
         }
         
         screeners.forEach({ savedScreenerLoader.saveScreener(screener: $0) })

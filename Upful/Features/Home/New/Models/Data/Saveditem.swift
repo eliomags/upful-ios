@@ -10,28 +10,41 @@ import Foundation
 
 struct Screener: Hashable {
     static func == (lhs: Screener, rhs: Screener) -> Bool {
-        return lhs.savedScreener.title == rhs.savedScreener.title
+        return lhs.title == rhs.title
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(savedScreener.title)
+        hasher.combine(title)
     }
     
-    var savedScreener: SavedScreener
-    var savedParameters: [SavedScreenerParameter]
     let title: String
     let description: String
+    let urlComponents: [String]
+    let manualScreenItems: [ManualScreenItem]
     
-    init(savedScreener: SavedScreener, savedParameters: [SavedScreenerParameter]) {
-        self.savedScreener = savedScreener
-        self.savedParameters = savedParameters
-        self.title = savedScreener.title
-        self.description = savedScreener.screenDescription ?? "No Description"
+    init(title: String, description: String, urlComponents: [String], manualScreenItems: [ManualScreenItem]) {
+        self.title = title
+        self.description = description
+        self.urlComponents = urlComponents
+        self.manualScreenItems = manualScreenItems
+    }
+    
+}
+
+extension Array where Element: SavedScreenerParameter {
+    func configureURLComponents() -> [String] {
+        var urlComponents: [String] = []
+        self.forEach { (savedParam) in
+            let criteria = SearchCriteria(rawValue: savedParam.criteria)!.rawValue
+            let parameter = SearchParameter(rawValue: savedParam.parameter)!.rawValue
+            urlComponents.append(criteria + "\(parameter)~\(savedParam.value)")
+        }
+        return urlComponents
     }
     
     func configureDescription() -> String {
         var str = ""
-        for param in savedParameters {
+        for param in self {
             var description = ""
             description.append(SearchCriteria(rawValue: param.criteria)!.explicit + " ")
             description.append(SearchParameter(rawValue: param.parameter)!.explicit + " ")
@@ -49,14 +62,13 @@ struct Screener: Hashable {
         return str
     }
     
-    func configureURLComponents() -> [String] {
-        var urlComponents: [String] = []
-        savedParameters.forEach { (savedParam) in
-            let criteria = SearchCriteria(rawValue: savedParam.criteria)!.rawValue
-            let parameter = SearchParameter(rawValue: savedParam.parameter)!.rawValue
-            urlComponents.append(criteria + "\(parameter)~\(savedParam.value)")
+    func mapToManualScreenItems() -> [ManualScreenItem] {
+        let manualScreeningParameters = self.map { (param) -> ManualScreenItem in
+            let criteria = SearchCriteria(rawValue: param.criteria)
+            let parameter = SearchParameter(rawValue: param.parameter)
+            return ManualScreenItem(criteria: criteria!, parameter: parameter!, value: param.value)
         }
-        return urlComponents
+        return manualScreeningParameters
     }
 }
 

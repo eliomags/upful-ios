@@ -132,7 +132,7 @@ class SavedStocksViewModelTest: XCTestCase {
 }
 
 private class MockSavedStockDataManager: SavedStockDataLoaderProtocol {
-    func loadSavedStocks(completion: @escaping MockSavedStockDataManager.SavedStockFetchCompletion) {
+    func loadSavedStocks(completion: @escaping SavedStockFetchCompletion) {
         DispatchQueue.global().async {
             completion(Result {
                 return []
@@ -144,7 +144,7 @@ private class MockSavedStockDataManager: SavedStockDataLoaderProtocol {
 }
 
 private class MockSavedStockDataManagerWithData: SavedStockDataLoaderProtocol {
-    func loadSavedStocks(completion: @escaping MockSavedStockDataManager.SavedStockFetchCompletion) {
+    func loadSavedStocks(completion: @escaping SavedStockFetchCompletion) {
         DispatchQueue.global().async {
             completion(Result {
                 return [
