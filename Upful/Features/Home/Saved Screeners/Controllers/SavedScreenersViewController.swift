@@ -162,10 +162,10 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
         }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    fileprivate func handleSearchResultNavigation(with screener: Screener) {
         PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
             if shouldNavigate {
-                let urlComponents = self.viewModel.screeners[indexPath.row].urlComponents
+                let urlComponents = screener.urlComponents
                 let resultsVC = ScreenResultsViewController(searchParameters: urlComponents, networkingAPI: IntrinioAPI())
                 parent?.navigationController?.pushViewController(resultsVC, animated: true)
             }
@@ -173,6 +173,17 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
                 let presenter = SubscriptionPresenter(type: .screeningLimit)
                 presenter.present(in: self)
             }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch viewModel.state {
+        case .loaded:
+            let screener = viewModel.screeners[indexPath.row]
+            handleSearchResultNavigation(with: screener)
+        default:
+            break
+            
         }
     }
     

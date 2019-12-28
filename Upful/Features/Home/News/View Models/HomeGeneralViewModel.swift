@@ -18,7 +18,7 @@ class HomeGeneralViewModel {
     
     // MARK: - State
     
-    private(set) var stockNews: [StockNews] = [] {
+    private(set) var stockNews: [StockNewsViewModel] = [] {
         didSet {
             sendUpdates?()
         }
@@ -33,7 +33,10 @@ class HomeGeneralViewModel {
     }
     
     
-    // MARK: -
+    // MARK: - Functions
+    
+    // TODO: - Cache View Models
+    // TODO: - Check if view models are in the cache before performing the networking
     
     func loadSavedStocks() {
         savedStockDataManager.loadSavedStocks { (result) in
@@ -47,26 +50,33 @@ class HomeGeneralViewModel {
     }
         
     fileprivate func loadNews(_ savedStocks: [Stock]) {
-        if savedStocks.isEmpty {
-            stockNewsLoader.get(router: .getMarketNews) { (result) in
-                switch result {
-                case.success(let news):
-                    print(news.map({ $0.title }))
-                case .failure(let err):
-                    print(err.localizedDescription)
-                }
-            }
-        }
-        if !savedStocks.isEmpty {
-            let stocks = savedStocks.map({ $0.ticker }).joined(separator: ",")
-            stockNewsLoader.get(router: .getTickerNews(tickers: stocks)) { (result) in
-                switch result {
-                case .success(let news):
-                    self.stockNews = news
-                case .failure(let err):
-                    print(err.localizedDescription)
-                }
+        if savedStocks.isEmpty { getNewsForTickers() }
+        if !savedStocks.isEmpty { getGeneralMarketNews(savedStocks) }
+    }
+    
+    fileprivate func getNewsForTickers() {
+        stockNewsLoader.get(router: .getMarketNews) { (result) in
+            switch result {
+            case.success(let news):
+                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
+                self.stockNews = mappedNews
+            case .failure(let err):
+                print(err.localizedDescription)
             }
         }
     }
+    
+    fileprivate func getGeneralMarketNews(_ savedStocks: [Stock])  {
+        let stocks = savedStocks.map({ $0.ticker }).joined(separator: ",")
+        stockNewsLoader.get(router: .getTickerNews(tickers: stocks)) { (result) in
+            switch result {
+            case .success(let news):
+                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
+                self.stockNews = mappedNews
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
+    
 }

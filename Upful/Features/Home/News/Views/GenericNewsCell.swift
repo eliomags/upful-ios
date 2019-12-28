@@ -10,7 +10,7 @@ import UIKit
 
 class GenericNewsCell: UITableViewCell {
     
-    var stockNews: StockNews? {
+    var stockNews: StockNewsViewModel? {
         didSet {
             guard let stockNews = stockNews else { return }
             setLoaded()
@@ -105,10 +105,14 @@ class GenericNewsCell: UITableViewCell {
     
     func setImage() {
         guard let stocknews = stockNews else { return }
-        let data = try? Data(contentsOf: URL(string: stocknews.imageUrl)!)
-        let image = UIImage(data: data!)?.resizeImage(120, opaque: false)
-        articleImageView.image = image
-        articleImageView.backgroundColor = .clear
+        DispatchQueue.global().async {
+            let data = try? Data(contentsOf: URL(string: stocknews.imageUrl)!)
+            let image = UIImage(data: data!)?.resizeImage(120, opaque: false)
+            
+            DispatchQueue.main.async {
+                self.articleImageView.image = image
+            }
+        }
     }
     
     fileprivate func setLoading() {

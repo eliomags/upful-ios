@@ -41,7 +41,7 @@ class NewsHeaderTableCell: GenericNewsCell {
         sentimentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
         
         addSubview(detailStackView)
-            detailStackView.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+            detailStackView.topAnchor.constraint(equalTo: topAnchor, constant: 12).isActive = true
             detailStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
             
         addSubview(contentStackView)
@@ -49,7 +49,8 @@ class NewsHeaderTableCell: GenericNewsCell {
                                 leading: leadingAnchor,
                                 bottom: sentimentView.topAnchor,
                                 trailing: trailingAnchor,
-                                padding: .init(top: 8, left: 16, bottom: 6, right: 16))
+                                padding: .init(top: 8, left: 16, bottom: 10, right: 16))
     }
     
 }
+

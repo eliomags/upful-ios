@@ -45,7 +45,7 @@ final class SentimentView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
         addSubview(sentimentStackView)
-        sentimentStackView.fillSuperview(padding: .init(top: 2, left: 6, bottom: 2, right: 6))
+        sentimentStackView.fillSuperview(padding: .init(top: 2, left: 8, bottom: 2, right: 8))
     }
     
     required init?(coder: NSCoder) {

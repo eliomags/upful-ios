@@ -62,6 +62,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     
     func setupTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
+        tableView.tableHeaderView = UIView()
         view.addSubview(tableView)
         tableView.fillSuperview()
     }
