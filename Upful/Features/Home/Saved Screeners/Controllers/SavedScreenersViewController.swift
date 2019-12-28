@@ -1,0 +1,263 @@
+//
+//  SavedScreenersViewController.swift
+//  Upful
+//
+//  Created by Yanik Simpson on 12/17/19.
+//  Copyright © 2019 Yanik Simpson. All rights reserved.
+//
+
+import UIKit
+
+class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITableViewDelegate, UITableViewDataSource {
+    
+    weak var delegate: MenuViewItemDelegate?
+    var menubarTitle: String = "Screeners"
+    
+    lazy var viewModel: SavedScreenersViewModel = {
+        let vm = SavedScreenersViewModel()
+        return vm
+    }()
+    
+    // MARK: - Views
+    
+    lazy var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.delegate = self
+        tv.dataSource = self
+        return tv
+    }()
+    
+    // MARK: - View Lifecycle
+    
+    override func loadView() {
+        super.loadView()
+        setupTableView()
+        setupTableViewFunctionality()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        observeStateUpdates()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.loadScreeners()
+    }
+    
+    // MARK: - TableView Updates
+    
+    func observeStateUpdates() {
+        viewModel.sendStateChanges = { [weak self] (state) in
+            guard let self = self else { return }
+            switch state {
+            case .new:
+                break
+            case .loading:
+                self.handleLoadingState()
+            case .loaded:
+                self.handleLoadedState()
+            case .error:
+                self.handleErrorState()
+            case .empty:
+                self.handleEmptyState()
+            }
+        }
+    }
+    
+    fileprivate func handleLoadingState() {
+        self.tableView.separatorStyle = .none
+        self.tableView.isScrollEnabled = false
+        self.tableView.showsVerticalScrollIndicator = false
+    }
+    
+    fileprivate func handleLoadedState() {
+        self.tableView.separatorStyle = .singleLine
+        self.tableView.isScrollEnabled = true
+        self.tableView.showsVerticalScrollIndicator = true
+        self.tableView.reloadData()
+    }
+    
+    fileprivate func handleErrorState() {
+        self.tableView.separatorStyle = .none
+        self.tableView.isScrollEnabled = false
+        self.tableView.showsVerticalScrollIndicator = false
+        self.tableView.reloadData()
+    }
+    
+    fileprivate func handleEmptyState() {
+        self.tableView.separatorStyle = .none
+        self.tableView.isScrollEnabled = false
+        self.tableView.showsVerticalScrollIndicator = false
+        self.tableView.reloadData()
+    }
+    
+    // MARK: - View Setup
+    
+    func setupTableView() {
+        tableView.backgroundColor = VersionManager.mainContainerBackground()
+        tableView.register(SavedScreenerTableViewCell.self, forCellReuseIdentifier: "screenerCell")
+        view.addSubview(tableView)
+        tableView.fillSuperview()
+    }
+    
+    fileprivate func setupTableViewFunctionality() {
+        tableView.dragInteractionEnabled = true
+        tableView.dragDelegate = self
+        tableView.dropDelegate = self
+    }
+    
+    // MARK: - Navigation
+    
+    fileprivate func handleScreenerEdit(_ screener: Screener) {
+        let manualScreenItems = screener.manualScreenItems
+        let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems)
+        navigationController?.pushViewController(manualSearchVC, animated: true)
+    }
+    
+    fileprivate func navigateToAddScreener() {
+        let manualSearchVC = SearchCriteriaTableViewController()
+        navigationController?.pushViewController(manualSearchVC, animated: true)
+    }
+    
+    // MARK: - TableView Cells
+    
+    fileprivate func showLoadedCell(for indexPath: IndexPath) -> UITableViewCell {
+        guard let screenerCell = tableView.dequeueReusableCell(withIdentifier: "screenerCell", for: indexPath) as? SavedScreenerTableViewCell  else { return UITableViewCell() }
+        let screener = viewModel.screeners[indexPath.row]
+        screenerCell.titleLabel.text = screener.title
+        screenerCell.descriptionLabel.text = screener.description
+        return screenerCell
+    }
+    
+    fileprivate func showEmptyCell(for indexPath: IndexPath) -> UITableViewCell {
+        let emptyCell = EmptyScreenerFavoriteCell(style: .default, reuseIdentifier: nil)
+        emptyCell.cellAction = { [weak self] in self?.navigateToAddScreener() }
+        return emptyCell
+    }
+    
+    fileprivate func showErrorCell(for indexPath: IndexPath) -> UITableViewCell {
+        let errorCell = ErrorFavoriteCell(style: .default, reuseIdentifier: nil)
+        errorCell.cellAction = { [weak self] in self?.viewModel.loadScreeners() }
+        return errorCell
+    }
+    
+    // MARK: - TableView Delegate/Datasource Methods
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let isLoaded = viewModel.state == .loaded
+        return isLoaded ? viewModel.screeners.count: 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch viewModel.state {
+        case .loaded:
+            return showLoadedCell(for: indexPath)
+        case .empty:
+            return showEmptyCell(for: indexPath)
+        case .error:
+            return showErrorCell(for: indexPath)
+        default:
+            return UITableViewCell()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
+            if shouldNavigate {
+                let urlComponents = self.viewModel.screeners[indexPath.row].urlComponents
+                let resultsVC = ScreenResultsViewController(searchParameters: urlComponents, networkingAPI: IntrinioAPI())
+                parent?.navigationController?.pushViewController(resultsVC, animated: true)
+            }
+            if !shouldNavigate {
+                let presenter = SubscriptionPresenter(type: .screeningLimit)
+                presenter.present(in: self)
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let isLoaded = viewModel.state == .loaded
+        return isLoaded ? UITableView.automaticDimension: tableView.frame.height
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let isLoaded = viewModel.state == .loaded
+        let screenerHeader = ActionableTableHeader()
+        screenerHeader.headerTextLabel.text = "Saved Screeners"
+        screenerHeader.showButton(viewModel.screeners.isEmpty)
+        screenerHeader.buttonAction = { [weak self] in self?.navigateToAddScreener() }
+        return isLoaded ? screenerHeader: nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let isLoaded = viewModel.state == .loaded
+        return isLoaded ? 75: 0
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if viewModel.state == .loaded {
+            let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] ( _, _, _) in
+                guard let self = self else { return }
+                let screener = self.viewModel.screeners[indexPath.row]
+                self.viewModel.removeScreener(screener.title)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.viewModel.refreshState()
+                }
+                Vibration.light.vibrate()
+            }
+            let edit = UIContextualAction(style: .normal, title: "Edit") { [weak self] ( _, _, _) in
+                guard let self = self else { return }
+                let screener = self.viewModel.screeners[indexPath.row]
+                self.handleScreenerEdit(screener)
+            }
+            edit.backgroundColor = .appAccent2
+            edit.image = UIImage(systemName: "pencil")
+            delete.image = UIImage(systemName: "trash")
+            return UISwipeActionsConfiguration(actions: [delete,edit])
+        }
+        return nil
+    }
+}
+
+// MARK: - TableView Drag/Drop Delegate Methods
+
+extension SavedScreenerViewController: UITableViewDragDelegate, UITableViewDropDelegate {
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        switch viewModel.state {
+        case .loaded:
+            let screenerTitle = viewModel.screeners[indexPath.item].title
+            guard let data = screenerTitle.data(using: .utf8) else { return [] }
+            let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: "kUTTypePlainText")
+            let dragItem = UIDragItem(itemProvider: itemProvider)
+            dragItem.localObject = screenerTitle
+            Vibration.light.vibrate()
+            return [dragItem]
+        default:
+            return []
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+        guard let sourceIndexPath = coordinator.items[0].sourceIndexPath else { return }
+        
+        viewModel.screeners.moveItem(from: sourceIndexPath.row, to: destinationIndexPath.row)
+        viewModel.saveDatasourceConfiguration()
+        tableView.reloadData()
+        coordinator.drop(coordinator.items[0].dragItem, toRowAt: destinationIndexPath)
+        Vibration.success.vibrate()
+    }
+    
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+}
+
+extension SavedScreenerViewController: PresentationControllerDelegate {
+    func presentationControllerdDidDismiss() {
+        showNotificationSetupView()
+    }
+}

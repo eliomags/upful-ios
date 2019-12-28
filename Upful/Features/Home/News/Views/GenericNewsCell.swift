@@ -1,0 +1,127 @@
+//
+//  GenericNewsCell.swift
+//  Upful
+//
+//  Created by Yanik Simpson on 12/28/19.
+//  Copyright © 2019 Yanik Simpson. All rights reserved.
+//
+
+import UIKit
+
+class GenericNewsCell: UITableViewCell {
+    
+    var stockNews: StockNews? {
+        didSet {
+            guard let stockNews = stockNews else { return }
+            setLoaded()
+            titleLabel.text = stockNews.title
+            sourceLabel.text = stockNews.sourceName
+            dateLabel.text = stockNews.date
+            sentimentView.sentimentLabel.text = stockNews.sentiment
+            sentimentView.setSentiment(with: stockNews.sentiment)
+            setImage()
+        }
+    }
+    
+    
+    // MARK: - Views
+    
+    // MARK: Detail View
+    let sourceLabel: UILabel = {
+        let l = UILabel()
+        let font = UIFont.preferredFont(forTextStyle: .caption1)
+        l.font = UIFont.systemFont(ofSize: font.pointSize, weight: .heavy)
+        l.text = ""
+        l.numberOfLines = 0
+        return l
+    }()
+    let dateLabel: UILabel = {
+        let l = UILabel()
+        l.font = UIFont.preferredFont(forTextStyle: .caption2)
+        l.text = ""
+        l.numberOfLines = 0
+        return l
+    }()
+    lazy var detailStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [sourceLabel, dateLabel])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.spacing = 3
+        return sv
+    }()
+    
+    
+    // MARK: Text View
+    let titleLabel: UILabel = {
+        let l = UILabel()
+        l.font = UIFont.preferredFont(forTextStyle: .headline)
+        l.text = ""
+        l.numberOfLines = 0
+        return l
+    }()
+        
+    lazy var textContextStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [titleLabel])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.spacing = 4
+        return sv
+    }()
+    
+    let articleImageView: UIImageView = {
+        let v = UIImageView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        v.backgroundColor = .systemGray2
+        v.layer.masksToBounds = true
+        v.layer.cornerRadius = 4
+        return v
+    }()
+    
+    
+    // MARK: Sentiment View
+    
+    let sentimentView: SentimentView = {
+        let v = SentimentView()
+        return v
+    }()
+    
+    
+    // MARK: - Initializer
+    
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+        setLoading()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    
+    // MARK: - Fileprivate Methods
+    
+    func setImage() {
+        guard let stocknews = stockNews else { return }
+        let data = try? Data(contentsOf: URL(string: stocknews.imageUrl)!)
+        let image = UIImage(data: data!)?.resizeImage(120, opaque: false)
+        articleImageView.image = image
+        articleImageView.backgroundColor = .clear
+    }
+    
+    fileprivate func setLoading() {
+        articleImageView.backgroundColor = .systemGray2
+        titleLabel.backgroundColor = .systemGray2
+        sourceLabel.backgroundColor = .systemGray2
+        dateLabel.backgroundColor = .systemGray2
+    }
+    
+    fileprivate func setLoaded() {
+        articleImageView.backgroundColor = .clear
+        titleLabel.backgroundColor = .clear
+        sourceLabel.backgroundColor = .clear
+        dateLabel.backgroundColor = .clear
+    }
+}

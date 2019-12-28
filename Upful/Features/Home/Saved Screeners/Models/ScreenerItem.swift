@@ -28,7 +28,6 @@ struct Screener: Hashable {
         self.urlComponents = urlComponents
         self.manualScreenItems = manualScreenItems
     }
-    
 }
 
 extension Array where Element: SavedScreenerParameter {

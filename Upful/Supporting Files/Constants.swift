@@ -22,4 +22,8 @@ public struct Constants {
         static let privacyPolicy = "https://app.termly.io/document/privacy-policy/75ab3001-a1a2-42a9-afce-443837abfbac"
         static let termsOfUse = "https://app.termly.io/document/terms-of-use-for-saas/b1adf4c2-6320-4de7-acbc-d702d7ed4c1a"
     }
+    
+    struct StockNewsAPI {
+        static let token = "dkbfimvongik3r4pbn1dgbbstvesox5ufkl6q0cl"
+    }
 }
