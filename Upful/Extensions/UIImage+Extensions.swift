@@ -9,6 +9,36 @@
 import UIKit
 
 extension UIImage {
+    static var cache = NSCache<NSString,UIImage>()
+    
+    static func loadImage(from urlString: String, resize: CGFloat?, completion: @escaping (Result<UIImage,Error>) -> Void) {
+        guard let url = URL(string: urlString) else { return }
+        
+        if let cachedImage = cache.object(forKey: urlString as NSString) {
+            completion(.success(cachedImage))
+            return
+        } else {
+            DispatchQueue.global().async {
+                guard let data = try? Data(contentsOf: url) else {
+                    completion(.failure(NSError()))
+                    return
+                }
+                guard let image = UIImage(data: data) else { return }
+                
+                if let resize = resize {
+                    let resizedImage = image.resizeImage(resize, opaque: false)
+                    cache.setObject(resizedImage, forKey: urlString as NSString)
+                } else {
+                    cache.setObject(image, forKey: urlString as NSString)
+                }
+                
+                DispatchQueue.main.async { completion(.success(image)) }
+            }
+        }
+    }
+}
+
+extension UIImage {
     func resizeImage(_ dimension: CGFloat, opaque: Bool, contentMode: UIView.ContentMode = .scaleAspectFit) -> UIImage {
         var width: CGFloat
         var height: CGFloat

@@ -20,13 +20,12 @@ struct StockNews: Decodable {
     let sourceName: String
     let date: String
     let sentiment: String
-    let tickers: [String]
     
     enum CodingKeys: String, CodingKey {
         case newsUrl = "news_url"
         case imageUrl = "image_url"
         case title, text
         case sourceName = "source_name"
-        case date, sentiment, tickers
+        case date, sentiment
     }
 }

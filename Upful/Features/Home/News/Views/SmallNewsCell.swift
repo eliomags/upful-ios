@@ -25,6 +25,8 @@ class SmallNewsCell: GenericNewsCell {
     // MARK: - View Setup
     
     fileprivate func setupViews() {
+        articleImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
+
         addSubview(sentimentView)
         sentimentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         sentimentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true

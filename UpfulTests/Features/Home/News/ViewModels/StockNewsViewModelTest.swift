@@ -38,7 +38,7 @@ class StockNewsViewModelTest: XCTestCase {
         formatter.dateFormat = "E, d MMM yyyy HH:mm:ss Z"
         let date = formatter.string(from: Date())
         
-        return StockNewsViewModel(stockNews: StockNews(newsUrl: "", imageUrl: "", title: "", text: "", sourceName: "", date: date, sentiment: "", tickers: []))
+        return StockNewsViewModel(stockNews: StockNews(newsUrl: "", imageUrl: "", title: "", text: "", sourceName: "", date: date, sentiment: ""))
     }
     
     fileprivate func makeSUTYesterday() -> StockNewsViewModel {
@@ -47,7 +47,7 @@ class StockNewsViewModelTest: XCTestCase {
         let convertingDate = Date().dayBefore
         let date = formatter.string(from: convertingDate)
         
-        return StockNewsViewModel(stockNews: StockNews(newsUrl: "", imageUrl: "", title: "", text: "", sourceName: "", date: date, sentiment: "", tickers: []))
+        return StockNewsViewModel(stockNews: StockNews(newsUrl: "", imageUrl: "", title: "", text: "", sourceName: "", date: date, sentiment: ""))
     }
     
     fileprivate func makeSUT2DaysAgo() -> StockNewsViewModel {
@@ -56,6 +56,6 @@ class StockNewsViewModelTest: XCTestCase {
         let convertingDate = Date().getPreviousDate(days: 2)
         let date = formatter.string(from: convertingDate)
         
-        return StockNewsViewModel(stockNews: StockNews(newsUrl: "", imageUrl: "", title: "", text: "", sourceName: "", date: date, sentiment: "", tickers: []))
+        return StockNewsViewModel(stockNews: StockNews(newsUrl: "", imageUrl: "", title: "", text: "", sourceName: "", date: date, sentiment: ""))
     }
 }

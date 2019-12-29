@@ -30,8 +30,10 @@ class StockNewsLoader {
         
         var path: String {
             switch self {
-            case .getTickerNews, .getTickerBatchNews, .getMarketNews:
+            case .getTickerNews, .getTickerBatchNews:
                 return "/api/v1"
+            case .getMarketNews:
+                return "/api/v1/category"
             }
         }
         
@@ -84,14 +86,14 @@ extension StockNewsLoader {
         components.queryItems = router.parameters
         
         guard let url = components.url else { return }
-        
+
         let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
             if let err = err {
                 completion(.failure(err))
                 return
             }
             guard let data = data else { return }
-            
+
             DispatchQueue.main.async {
                 completion(Result{
                     let stockNews = try JSONDecoder().decode(StockNewsData.self, from: data)

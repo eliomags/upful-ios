@@ -11,7 +11,7 @@ import UIKit
 class NewsHeaderTableCell: GenericNewsCell {
 
     private lazy var contentStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [titleLabel, articleImageView])
+        let sv = UIStackView(arrangedSubviews: [titleLabel])
         sv.distribution = .fill
         sv.axis = .vertical
         sv.spacing = 8
@@ -34,22 +34,34 @@ class NewsHeaderTableCell: GenericNewsCell {
     // MARK: - View Setup
     
     fileprivate func setupViews() {
-        articleImageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-
         addSubview(sentimentView)
-        sentimentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
-        sentimentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+        sentimentView.anchor(top: nil,
+                                leading: nil,
+                                bottom: bottomAnchor,
+                                trailing: trailingAnchor,
+                                padding: .init(top: 0, left: 0, bottom: 8, right: 16))
         
         addSubview(detailStackView)
-            detailStackView.topAnchor.constraint(equalTo: topAnchor, constant: 12).isActive = true
-            detailStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        detailStackView.anchor(top: topAnchor,
+                               leading: leadingAnchor,
+                               bottom: nil,
+                               trailing: nil,
+                               padding: .init(top: 12, left: 16, bottom: 0, right: 0))
             
         addSubview(contentStackView)
         contentStackView.anchor(top: detailStackView.bottomAnchor,
                                 leading: leadingAnchor,
-                                bottom: sentimentView.topAnchor,
+                                bottom: nil,
                                 trailing: trailingAnchor,
                                 padding: .init(top: 8, left: 16, bottom: 10, right: 16))
+        
+        addSubview(articleImageView)
+        articleImageView.topAnchor.constraint(equalTo: contentStackView.bottomAnchor, constant: 8).isActive = true
+        articleImageView.heightAnchor.constraint(equalToConstant: 170).isActive = true
+        articleImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32).isActive = true
+        articleImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32).isActive = true
+        articleImageView.bottomAnchor.constraint(equalTo: sentimentView.topAnchor, constant: -8).isActive = true
+
     }
     
 }

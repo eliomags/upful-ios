@@ -90,10 +90,10 @@ class GenericCompanyCollectionViewCell: UICollectionViewCell {
     
     
     func setLoadingLabels() {
-        companyNameLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
-        tickerLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
-        marketcapStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
-        peStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor(in: self)
+        companyNameLabel.backgroundColor = VersionManager.loadingLabelColor()
+        tickerLabel.backgroundColor = VersionManager.loadingLabelColor()
+        marketcapStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor()
+        peStackView.valueLabel.backgroundColor = VersionManager.loadingLabelColor()
     }
     
     func setLoadedLabels() {

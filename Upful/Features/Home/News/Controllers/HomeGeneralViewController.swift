@@ -123,9 +123,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let newsHeader = ActionableTableHeader()
+        let newsHeader = TableSectionHeaderView()
         newsHeader.headerTextLabel.text = "Recent News"
-        newsHeader.showButton(true)
 //        stockHeader.buttonAction = { [weak self] in self?.navigateToAddStock() }
         return newsHeader
     }
@@ -139,10 +138,17 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         UIView.animate(withDuration: 0.3) {
             cell?.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
         }
+        UIView.animate(withDuration: 0.3, animations: {
+            cell?.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+        })
     }
     
     func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
-        UIView.animate(withDuration: 0.15) { cell?.transform = .identity }
+        UIView.animate(withDuration: 0.15, animations: {
+            cell?.transform = .identity
+        }) { (_) in
+            cell?.isSelected = false
+        }
     }
 }

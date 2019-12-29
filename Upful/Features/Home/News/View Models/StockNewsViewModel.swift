@@ -8,7 +8,7 @@
 
 import Foundation
 
-class StockNewsViewModel {
+struct StockNewsViewModel {
     let newsUrl: String
     let imageUrl: String
     let title: String

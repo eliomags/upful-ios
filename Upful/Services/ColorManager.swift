@@ -82,7 +82,7 @@ struct VersionManager {
     
     // MARK: - Labels
     
-    static func loadingLabelColor(in view: UITraitEnvironment) -> UIColor {
+    static func loadingLabelColor() -> UIColor {
         UIColor.init { (trait) -> UIColor in
             return trait.userInterfaceStyle == .dark ? .secondarySystemBackground: UIColor(white: 0.92, alpha: 0.8)
         }

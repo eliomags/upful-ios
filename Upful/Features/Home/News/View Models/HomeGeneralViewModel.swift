@@ -44,17 +44,17 @@ class HomeGeneralViewModel {
             case .success(let savedStocks):
                 self.loadNews(savedStocks)
             case .failure(_):
-                break
+                self.getGeneralMarketNews()
             }
         }
     }
         
     fileprivate func loadNews(_ savedStocks: [Stock]) {
-        if savedStocks.isEmpty { getNewsForTickers() }
-        if !savedStocks.isEmpty { getGeneralMarketNews(savedStocks) }
+        if !savedStocks.isEmpty { getNewsForTickers(savedStocks)  }
+        if savedStocks.isEmpty { getGeneralMarketNews() }
     }
     
-    fileprivate func getNewsForTickers() {
+    fileprivate func getGeneralMarketNews() {
         stockNewsLoader.get(router: .getMarketNews) { (result) in
             switch result {
             case.success(let news):
@@ -66,7 +66,7 @@ class HomeGeneralViewModel {
         }
     }
     
-    fileprivate func getGeneralMarketNews(_ savedStocks: [Stock])  {
+    fileprivate func getNewsForTickers(_ savedStocks: [Stock])  {
         let stocks = savedStocks.map({ $0.ticker }).joined(separator: ",")
         stockNewsLoader.get(router: .getTickerNews(tickers: stocks)) { (result) in
             switch result {

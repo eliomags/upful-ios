@@ -71,7 +71,6 @@ class GenericNewsCell: UITableViewCell {
     let articleImageView: UIImageView = {
         let v = UIImageView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.widthAnchor.constraint(equalToConstant: 120).isActive = true
         v.backgroundColor = .systemGray2
         v.layer.masksToBounds = true
         v.layer.cornerRadius = 4
@@ -89,7 +88,6 @@ class GenericNewsCell: UITableViewCell {
     
     // MARK: - Initializer
     
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
@@ -105,25 +103,30 @@ class GenericNewsCell: UITableViewCell {
     
     func setImage() {
         guard let stocknews = stockNews else { return }
-        DispatchQueue.global().async {
-            let data = try? Data(contentsOf: URL(string: stocknews.imageUrl)!)
-            let image = UIImage(data: data!)?.resizeImage(120, opaque: false)
-            
-            DispatchQueue.main.async {
+        UIImage.loadImage(from: stocknews.imageUrl, resize: 120) { (result) in
+            switch result {
+            case .success(let image):
                 self.articleImageView.image = image
+                self.articleImageView.backgroundColor = .clear
+            case .failure(_):
+                break
             }
         }
+
     }
     
     fileprivate func setLoading() {
-        articleImageView.backgroundColor = .systemGray2
-        titleLabel.backgroundColor = .systemGray2
-        sourceLabel.backgroundColor = .systemGray2
-        dateLabel.backgroundColor = .systemGray2
+        sourceLabel.backgroundColor = VersionManager.loadingLabelColor()
+        dateLabel.backgroundColor = VersionManager.loadingLabelColor()
+        articleImageView.backgroundColor = VersionManager.loadingLabelColor()
+        titleLabel.backgroundColor = VersionManager.loadingLabelColor()
+        sourceLabel.backgroundColor = VersionManager.loadingLabelColor()
+        dateLabel.backgroundColor = VersionManager.loadingLabelColor()
     }
     
     fileprivate func setLoaded() {
-        articleImageView.backgroundColor = .clear
+        sourceLabel.backgroundColor = .clear
+        dateLabel.backgroundColor = .clear
         titleLabel.backgroundColor = .clear
         sourceLabel.backgroundColor = .clear
         dateLabel.backgroundColor = .clear
