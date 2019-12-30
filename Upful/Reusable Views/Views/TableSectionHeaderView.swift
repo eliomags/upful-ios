@@ -37,7 +37,7 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
         let button = UIButton(type: .system)
         button.setTitle("See More", for: .normal)
         let font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: font.pointSize, weight: .regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: font.pointSize, weight: .semibold)
         button.setTitleColor(.appAccent3, for: .normal)
         button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false

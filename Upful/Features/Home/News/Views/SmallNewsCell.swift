@@ -14,6 +14,7 @@ class SmallNewsCell: GenericNewsCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        titleLabel.numberOfLines = 3
         setupViews()
     }
     

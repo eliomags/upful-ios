@@ -13,17 +13,18 @@ class StockNewsLoader {
         case getTickerNews(tickers: String)
         case getTickerBatchNews(tickers: String)
         case getMarketNews
+        case getBatchMarketNews
         
         var scheme: String {
           switch self {
-          case .getTickerNews, .getTickerBatchNews, .getMarketNews:
+          case .getTickerNews, .getTickerBatchNews, .getMarketNews, .getBatchMarketNews:
             return "https"
           }
         }
         
         var host: String {
           switch self {
-          case .getTickerNews, .getTickerBatchNews, .getMarketNews:
+          case .getTickerNews, .getTickerBatchNews, .getMarketNews, .getBatchMarketNews:
             return "stocknewsapi.com"
           }
         }
@@ -32,7 +33,7 @@ class StockNewsLoader {
             switch self {
             case .getTickerNews, .getTickerBatchNews:
                 return "/api/v1"
-            case .getMarketNews:
+            case .getMarketNews, .getBatchMarketNews:
                 return "/api/v1/category"
             }
         }
@@ -51,7 +52,7 @@ class StockNewsLoader {
             case .getTickerBatchNews(let savedTickers):
                 return [
                     URLQueryItem(name: "tickers", value: savedTickers),
-                    URLQueryItem(name: "items", value: "15"),
+                    URLQueryItem(name: "items", value: "8"),
                     URLQueryItem(name: "type", value: "article"),
                     URLQueryItem(name: "token", value: apiKey)
                 ]
@@ -62,12 +63,19 @@ class StockNewsLoader {
                     URLQueryItem(name: "type", value: "article"),
                     URLQueryItem(name: "token", value: apiKey)
                 ]
+            case .getBatchMarketNews:
+                return [
+                    URLQueryItem(name: "section", value: "general"),
+                    URLQueryItem(name: "items", value: "8"),
+                    URLQueryItem(name: "type", value: "article"),
+                    URLQueryItem(name: "token", value: apiKey)
+                ]
             }
         }
         
         var method: String {
           switch self {
-            case .getTickerNews, .getTickerBatchNews, .getMarketNews:
+          case .getTickerNews, .getTickerBatchNews, .getMarketNews, .getBatchMarketNews:
               return "GET"
           }
         }

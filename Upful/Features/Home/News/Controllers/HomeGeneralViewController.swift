@@ -11,7 +11,7 @@ import UIKit
 final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     
     weak var delegate: MenuViewItemDelegate?
-    var menubarTitle: String = "Home"
+    var menubarTitle: String = "General"
     
     private enum Section: Int {
         case news = 0
@@ -25,8 +25,15 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     
     // MARK: - Views
     
+    private lazy var refreshControl: UIRefreshControl = {
+        let control = UIRefreshControl()
+        control.addTarget(self, action: #selector(handleResfreshing), for: .valueChanged)
+        return control
+    }()
+    
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
+        tv.refreshControl = refreshControl
         tv.delegate = self
         tv.dataSource = self
         return tv
@@ -38,29 +45,30 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     override func loadView() {
         super.loadView()
         setupTableView()
+        setupTableViewCells()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableViewCells()
         observeUpdates()
-        viewModel.loadSavedStocks()
+        viewModel.startNewsLoad()
     }
     
     
-    // MARK: -
+    // MARK: - View Model Binding
     
     fileprivate func observeUpdates() {
         viewModel.sendUpdates = { [weak self] in
             guard let self = self else { return }
             self.tableView.reloadData()
+            self.refreshControl.endRefreshing()
         }
     }
     
     
     // MARK: - View Setup
     
-    func setupTableView() {
+    fileprivate func setupTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.tableHeaderView = UIView()
         view.addSubview(tableView)
@@ -70,6 +78,21 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     fileprivate func setupTableViewCells() {
         tableView.register(NewsHeaderTableCell.self, forCellReuseIdentifier: "newsHeaderCell")
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: "newsCell")
+    }
+    
+    
+    // MARK: - Actions
+    
+    @objc fileprivate func handleResfreshing(_ sender: Any) {
+        refreshControl.endRefreshing()
+        viewModel.startNewsLoad()
+    }
+    
+    // MARK: - Navigation
+    
+    fileprivate func handleSeeMoreNews() {
+        let newsVC = NewsViewController()
+        navigationController?.pushViewController(newsVC, animated: true)
     }
     
     
@@ -97,12 +120,15 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
 }
 
 extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case Section.news.rawValue:
             return 3
         default:
-            return 1
+            return 0
         }
     }
     
@@ -114,8 +140,6 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         default:
             return UITableViewCell()
         }
-        
-        // Preference Section
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -123,10 +147,15 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let newsHeader = TableSectionHeaderView()
-        newsHeader.headerTextLabel.text = "Recent News"
-//        stockHeader.buttonAction = { [weak self] in self?.navigateToAddStock() }
-        return newsHeader
+        switch section {
+        case Section.news.rawValue:
+            let newsHeader = TableSectionHeaderView()
+            newsHeader.headerTextLabel.text = "Recent News"
+            newsHeader.buttonAction = { [weak self] in self?.handleSeeMoreNews() }
+            return newsHeader
+        default:
+            return nil
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

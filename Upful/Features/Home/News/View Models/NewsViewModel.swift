@@ -1,14 +1,14 @@
 //
-//  HomeGeneralViewModel.swift
+//  NewsViewModel.swift
 //  Upful
 //
-//  Created by Yanik Simpson on 12/27/19.
+//  Created by Yanik Simpson on 12/29/19.
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
 
 import Foundation
 
-class HomeGeneralViewModel {
+class NewsViewModel {
     
     // MARK: - Dependencies
     
@@ -44,14 +44,14 @@ class HomeGeneralViewModel {
             }
         }
     }
-        
+    
     fileprivate func loadNews(_ savedStocks: [Stock]) {
         if !savedStocks.isEmpty { getNewsForTickers(savedStocks)  }
         if savedStocks.isEmpty { getGeneralMarketNews() }
     }
     
     fileprivate func getGeneralMarketNews() {
-        stockNewsLoader.get(router: .getMarketNews) { (result) in
+        stockNewsLoader.get(router: .getBatchMarketNews) { (result) in
             switch result {
             case.success(let news):
                 let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
@@ -64,7 +64,7 @@ class HomeGeneralViewModel {
     
     fileprivate func getNewsForTickers(_ savedStocks: [Stock])  {
         let stocks = savedStocks.map({ $0.ticker }).joined(separator: ",")
-        stockNewsLoader.get(router: .getTickerNews(tickers: stocks)) { (result) in
+        stockNewsLoader.get(router: .getTickerBatchNews(tickers: stocks)) { (result) in
             switch result {
             case .success(let news):
                 let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
