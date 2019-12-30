@@ -24,6 +24,7 @@ class NewsHeaderTableCell: GenericNewsCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+        titleLabel.text = "\n"
     }
     
     required init?(coder: NSCoder) {

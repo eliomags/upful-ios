@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct StockNewsViewModel {
+struct StockNewsViewModel: Hashable {
     let newsUrl: String
     let imageUrl: String
     let title: String
@@ -46,3 +46,4 @@ struct StockNewsViewModel {
         }
     }
 }
+

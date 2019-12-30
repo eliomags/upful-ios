@@ -12,11 +12,20 @@ class HomeGeneralViewModel {
     
     // MARK: - Dependencies
     
+    private let preferenceDataManager: PreferenceDataManager
+    private let stockScreeningService = StockScreeningService()
+    
     private let savedStockDataManager: SavedStockDataLoaderProtocol
     private let stockNewsLoader = StockNewsLoader()
     
+    
     // MARK: - State
     
+    private(set) var stocksYouMayLike: [Stock] = [] {
+        didSet {
+            sendUpdates?()
+        }
+    }
     private(set) var stockNews: [StockNewsViewModel] = [] {
         didSet {
             sendUpdates?()
@@ -25,14 +34,51 @@ class HomeGeneralViewModel {
 
     var sendUpdates: (() -> ())?
     
+    
     // MARK: - Initializer
     
-    init(savedStockDataManager: SavedStockDataLoaderProtocol = SavedStockLoader()) {
+    init(savedStockDataManager: SavedStockDataLoaderProtocol = SavedStockLoader(),
+         preferenceDataManager: PreferenceDataManager = .init()) {
+        self.preferenceDataManager = preferenceDataManager
         self.savedStockDataManager = savedStockDataManager
     }
     
     
-    // MARK: - Functions
+    // MARK: - Stock Preference Loading
+    
+    func startPreferenceLoad() {
+        let groupedPreferences = preferenceDataManager.getGroupedPreferences()
+        if groupedPreferences.isEmpty { fetchSuggestedStocks(parameters: "") }
+        
+        guard !groupedPreferences.isEmpty else { return }
+        
+        groupedPreferences.forEach { (preferenceArray) in
+            let preferenceParameters = preferenceArray.joined(separator: ",")
+            print(preferenceParameters)
+            fetchSuggestedStocks(parameters: preferenceParameters)
+        }
+    }
+
+    fileprivate func fetchSuggestedStocks(parameters: String) {
+        self.stockScreeningService.get(router: .getScreeningResults(parameters: parameters, numberOfResults: 8), completion: {
+            (result) in
+            switch result {
+            case .success(let fetchedStocks):
+                self.configureStockChoices(fetchedStocks)
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        })
+    }
+    
+    fileprivate func configureStockChoices(_ stocks: [Stock]) {
+        // randomize the stocks
+        // get the top 4 results
+        // add them to stocks you may like
+    }
+    
+    
+    // MARK: - News Loading
         
     func startNewsLoad() {
         savedStockDataManager.loadSavedStocks { (result) in

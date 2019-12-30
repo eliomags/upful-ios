@@ -51,13 +51,18 @@ class NewsViewController: UITableViewController {
     // MARK: - TableView Delegate/Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.stockNews.count
+        let isEmptyViewModel = viewModel.stockNews.isEmpty
+        return isEmptyViewModel ? 5: viewModel.stockNews.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let newsCell = tableView.dequeueReusableCell(withIdentifier: "newsCell", for: indexPath) as? SmallNewsCell else { return UITableViewCell() }
-        let stockNewsViewModel = viewModel.stockNews[indexPath.row]
-        newsCell.stockNews = stockNewsViewModel
+        
+        if !viewModel.stockNews.isEmpty {
+            let stockNewsViewModel = viewModel.stockNews[indexPath.row]
+            newsCell.stockNews = stockNewsViewModel
+        }
+        
         return newsCell
     }
     

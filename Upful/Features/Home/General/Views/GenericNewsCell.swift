@@ -55,7 +55,7 @@ class GenericNewsCell: UITableViewCell {
     let titleLabel: UILabel = {
         let l = UILabel()
         l.font = UIFont.preferredFont(forTextStyle: .headline)
-        l.text = ""
+        l.text = "\n"
         l.numberOfLines = 0
         return l
     }()

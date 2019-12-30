@@ -15,6 +15,7 @@ class SmallNewsCell: GenericNewsCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         titleLabel.numberOfLines = 3
+        titleLabel.text = "\n\n"
         setupViews()
     }
     
@@ -39,7 +40,7 @@ class SmallNewsCell: GenericNewsCell {
         addSubview(articleImageView)
         articleImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         articleImageView.topAnchor.constraint(equalTo: detailStackView.bottomAnchor, constant: 8).isActive = true
-        articleImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
+        articleImageView.bottomAnchor.constraint(equalTo: sentimentView.topAnchor, constant: -8).isActive = true
         
         addSubview(textContextStackView)
         textContextStackView.leadingAnchor.constraint(equalTo: articleImageView.trailingAnchor, constant: 12).isActive = true

@@ -65,6 +65,7 @@
 		3D3749AA23B9B1D9000D0597 /* ScreenerSelectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749A923B9B1D9000D0597 /* ScreenerSelectionPresenter.swift */; };
 		3D3749AC23B9B40A000D0597 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AB23B9B40A000D0597 /* NewsViewController.swift */; };
 		3D3749B023B9BA66000D0597 /* NewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AF23B9BA66000D0597 /* NewsViewModel.swift */; };
+		3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B123BA830D000D0597 /* StockScreeningService.swift */; };
 		3D42BE4123098BD200806AFF /* ResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE4023098BD200806AFF /* ResultsTableViewCell.swift */; };
 		3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE442309A55900806AFF /* PresetScreener.swift */; };
 		3D42BE492309A59800806AFF /* Screener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE482309A59800806AFF /* Screener.swift */; };
@@ -282,6 +283,7 @@
 		3D3749A923B9B1D9000D0597 /* ScreenerSelectionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScreenerSelectionPresenter.swift; path = "Upful/Features/Home/Reusabile Views/ScreenerSelectionPresenter.swift"; sourceTree = SOURCE_ROOT; };
 		3D3749AB23B9B40A000D0597 /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
 		3D3749AF23B9BA66000D0597 /* NewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModel.swift; sourceTree = "<group>"; };
+		3D3749B123BA830D000D0597 /* StockScreeningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockScreeningService.swift; sourceTree = "<group>"; };
 		3D42BE4023098BD200806AFF /* ResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableViewCell.swift; sourceTree = "<group>"; };
 		3D42BE442309A55900806AFF /* PresetScreener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetScreener.swift; sourceTree = "<group>"; };
 		3D42BE482309A59800806AFF /* Screener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screener.swift; sourceTree = "<group>"; };
@@ -1458,7 +1460,7 @@
 			path = Permissions;
 			sourceTree = "<group>";
 		};
-		3DBEFFBF23A9BD6900BA407E /* News */ = {
+		3DBEFFBF23A9BD6900BA407E /* General */ = {
 			isa = PBXGroup;
 			children = (
 				3DBEFFD323AACE6A00BA407E /* Views */,
@@ -1466,7 +1468,7 @@
 				3DBEFFCC23A9CD4000BA407E /* Controllers */,
 				3DBEFFCE23A9D09700BA407E /* View Models */,
 			);
-			path = News;
+			path = General;
 			sourceTree = "<group>";
 		};
 		3DBEFFC023A9BD6D00BA407E /* Container */ = {
@@ -1491,6 +1493,7 @@
 			children = (
 				3D55BD5F23B69EAD00B4FDF0 /* StockNewsLoader.swift */,
 				3D55BD6723B803C300B4FDF0 /* StockNews.swift */,
+				3D3749B123BA830D000D0597 /* StockScreeningService.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1771,9 +1774,9 @@
 			isa = PBXGroup;
 			children = (
 				3D6BD0C123B5075F00FBC1ED /* Archive */,
-				3DBEFFC023A9BD6D00BA407E /* Container */,
 				3D6BD0C323B5079900FBC1ED /* Reusabile Views */,
-				3DBEFFBF23A9BD6900BA407E /* News */,
+				3DBEFFC023A9BD6D00BA407E /* Container */,
+				3DBEFFBF23A9BD6900BA407E /* General */,
 				3D6BD0C223B5077700FBC1ED /* Saved Stocks */,
 				3D6BD0BC23B506F400FBC1ED /* Saved Screeners */,
 			);
@@ -2113,6 +2116,7 @@
 				3DAB3EB4234B6C440008CC18 /* ReportContentView.swift in Sources */,
 				3D3749AA23B9B1D9000D0597 /* ScreenerSelectionPresenter.swift in Sources */,
 				3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */,
+				3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */,
 				3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */,
 				3D0C5F7E233FC1BC00F4A5FC /* SettingsViewController.swift in Sources */,
 				3DBEFFD223A9D5E900BA407E /* SavedStockVCViewModel.swift in Sources */,

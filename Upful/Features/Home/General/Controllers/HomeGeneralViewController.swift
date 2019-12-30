@@ -14,8 +14,8 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     var menubarTitle: String = "General"
     
     private enum Section: Int {
-        case news = 0
-        case preference = 1
+        case news = 1
+        case preference = 0
     }
     
     lazy var viewModel: HomeGeneralViewModel = {
@@ -51,6 +51,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     override func viewDidLoad() {
         super.viewDidLoad()
         observeUpdates()
+        viewModel.startPreferenceLoad()
         viewModel.startNewsLoad()
     }
     
@@ -87,6 +88,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
         refreshControl.endRefreshing()
         viewModel.startNewsLoad()
     }
+    
     
     // MARK: - Navigation
     
@@ -128,7 +130,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.news.rawValue:
             return 3
         default:
-            return 0
+            return 1
         }
     }
     
@@ -153,6 +155,12 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             newsHeader.headerTextLabel.text = "Recent News"
             newsHeader.buttonAction = { [weak self] in self?.handleSeeMoreNews() }
             return newsHeader
+            
+        case Section.preference.rawValue:
+            let preferenceHeader = TableSectionHeaderView()
+            preferenceHeader.headerTextLabel.text = "Stocks You May Like"
+            preferenceHeader.buttonAction = { [weak self] in self?.handleSeeMoreNews() }
+            return preferenceHeader
         default:
             return nil
         }
