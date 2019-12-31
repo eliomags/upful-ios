@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class SettingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PreferenceDelegate {
     
     let displayItems: [[String]] = [
         ["Preferences"],
@@ -73,6 +73,18 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         AnalyticsLogger.instance.toggleAnalytics()
     }
     
+    
+    // MARK: - Preference Delegate Methods
+    
+    func didCancelSaving() {
+        
+    }
+    
+    func didCompleteSaving() {
+        
+    }
+    
+    
     // MARK: - TableView DataSource Methods
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -101,8 +113,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         switch section {
             // MARK - Preferences
         case 0 :
-            let preferencePresenter = PreferencePresenter()
-            preferencePresenter.present(in: self)
+            let preferencePresenter = PreferencePresenter(presentingViewController: self)
+            preferencePresenter.present()
             // MARK - Purchase
         case 1:
             switch row {

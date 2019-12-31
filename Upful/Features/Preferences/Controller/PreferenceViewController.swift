@@ -9,6 +9,10 @@
 import UIKit
 
 class PreferenceViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    weak var delegate: PreferenceDelegate?
+    
+    
     // MARK: - Dependencies
     
     let dataManager: PreferenceDataManager
@@ -109,13 +113,17 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     // MARK: - Actions
     
     @objc fileprivate func handleDismiss() {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {
+            self.delegate?.didCancelSaving()
+        })
     }
     
     @objc fileprivate func handleDone() {
         dataManager.save()
         AnalyticsLogger.instance.reportEvents(event: .preferencesSet)
-        self.dismiss(animated: true)
+        self.dismiss(animated: true, completion: {
+            self.delegate?.didCompleteSaving()
+        })
     }
     
     // MARK: - TableView DataSource Methods

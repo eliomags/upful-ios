@@ -70,7 +70,7 @@ class HomeGeneralViewModel {
     
     func fetchTableData() {        
         startPreferenceLoad()
-        startNewsLoad()
+//        startNewsLoad()
     }
     
     

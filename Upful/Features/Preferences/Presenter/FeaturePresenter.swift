@@ -8,19 +8,28 @@
 
 import UIKit
 
+protocol PreferenceDelegate: class {
+    func didCancelSaving()
+    func didCompleteSaving()
+}
+
 struct PreferencePresenter {
+    let presentingViewController: PreferenceDelegate
     var preferenceVC: PreferenceViewController!
     let preferenceDataManager: PreferenceDataManager!
     
-    init(preferenceDataManager: PreferenceDataManager = .init()) {
+    init(presentingViewController: PreferenceDelegate, preferenceDataManager: PreferenceDataManager = .init()) {
         self.preferenceDataManager = preferenceDataManager
         self.preferenceVC = PreferenceViewController(dataManager: preferenceDataManager)
+        self.presentingViewController = presentingViewController
     }
  
-    func present(in viewController: UIViewController) {
+    func present() {
+        guard let vc = presentingViewController as? UIViewController else { return }
+        preferenceVC.delegate = presentingViewController
         let navVC = UINavigationController(rootViewController: preferenceVC)
         navVC.modalPresentationStyle = .fullScreen
-        viewController.present(navVC, animated: true)
+        vc.present(navVC, animated: true)
     }
 }
 

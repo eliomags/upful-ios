@@ -8,11 +8,7 @@
 
 import UIKit
 
-protocol SuggestionDelegate: class {
-    func reload()
-}
-
-class StockSuggestionViewController: UIViewController {
+class StockSuggestionViewController: UIViewController, PreferenceDelegate {
     
     // MARK: - Dependencies
 
@@ -91,6 +87,16 @@ class StockSuggestionViewController: UIViewController {
         let detailsVC = StockDetailsContainerView(ticker: ticker, companyName: name)
         self.navigationController?.pushViewController(detailsVC, animated: true)
     }
+    
+    // MARK: - Preference Delegate Methods
+    
+    func didCancelSaving() {
+        
+    }
+    
+    func didCompleteSaving() {
+        
+    }
 
 }
 
@@ -146,8 +152,8 @@ extension StockSuggestionViewController: UICollectionViewDataSource, UICollectio
             navigateToStockDetails(ticker: data.ticker, name: data.name)
             
         case .empty, .noPreferencesSet:
-            let presenter = PreferencePresenter()
-            presenter.present(in: self)
+            let presenter = PreferencePresenter(presentingViewController: self)
+            presenter.present()
             
         default:
             break

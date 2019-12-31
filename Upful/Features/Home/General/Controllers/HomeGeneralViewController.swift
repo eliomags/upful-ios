@@ -8,8 +8,8 @@
 
 import UIKit
 
-final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
-    
+final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, PreferenceDelegate {
+        
     weak var delegate: MenuViewItemDelegate?
     var menubarTitle: String = "General"
     
@@ -62,7 +62,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
         viewModel.sendPreferenceStateUpdates = { [weak self] (state) in
             guard let self = self else { return }
             switch state {
-            case .loaded:
+            case .loaded, .new:
                 self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
                 self.refreshControl.endRefreshing()
             default:
@@ -93,6 +93,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
         tableView.register(NewsHeaderTableCell.self, forCellReuseIdentifier: "newsHeaderCell")
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: "newsCell")
         tableView.register(ResultsTableViewCell.self, forCellReuseIdentifier: "resultsCellID")
+        tableView.register(NoPreferenceTableViewCell.self, forCellReuseIdentifier: "noPreferenceCellID")
     }
     
     
@@ -106,7 +107,8 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
         switch viewModel.preferenceState{
         case .new:
-            break
+            let presenter = PreferencePresenter(presentingViewController: self)
+            presenter.present()
         case .loaded:
             let ticker = viewModel.stocksYouMayLike[indexPath.row].ticker
             let name = viewModel.stocksYouMayLike[indexPath.row].name
@@ -127,6 +129,15 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     }
     
     
+    // MARK: - Preference Delegate Methods
+    
+    func didCancelSaving() {}
+    
+    func didCompleteSaving() {
+        viewModel.startPreferenceLoad()
+    }
+    
+    
     // MARK: - Navigation
     
     fileprivate func handleSeeMoreNews() {
@@ -135,13 +146,19 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     }
     
     fileprivate func handleSeeMoreSuggestedStocks() {
-        // TODO: - Handle SearchResults Parameters
+        // TODO: - Handle SearchResults Parameters from View Model
+        
         let resultsVC = ScreenResultsViewController(searchParameters: [])
         navigationController?.pushViewController(resultsVC, animated: true)
     }
     
     
     // MARK: - TableView Cells
+    
+    fileprivate func makeNoPreferenceSetCell(_ indexPath: IndexPath) -> UITableViewCell {
+        guard let noPreferenceSetCell = tableView.dequeueReusableCell(withIdentifier: "noPreferenceCellID") as? NoPreferenceTableViewCell else { return UITableViewCell() }
+        return noPreferenceSetCell
+    }
     
     fileprivate func makeStockCells(_ indexPath: IndexPath) -> UITableViewCell {
         guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: "resultsCellID") as? ResultsTableViewCell else { return UITableViewCell() }
@@ -190,7 +207,10 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         switch section {
         case Section.preference.rawValue:
             let isLoadedState = viewModel.preferenceState == .loaded
-            return isLoadedState ? viewModel.stocksYouMayLike.count: 3
+            let isNewState = viewModel.preferenceState == .new
+            if isNewState { return 1 }
+            if isLoadedState { return viewModel.stocksYouMayLike.count }
+            else { return 3 }
         case Section.news.rawValue:
             return 3
         default:
@@ -204,10 +224,11 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.news.rawValue:
             return makeNewsCells(indexPath)
         case Section.preference.rawValue:
-            return makeStockCells(indexPath)
-        default:
-            return UITableViewCell()
+            if viewModel.preferenceState == .loaded { return makeStockCells(indexPath) }
+            if viewModel.preferenceState == .new { return makeNoPreferenceSetCell(indexPath) }
+        default: return UITableViewCell()
         }
+        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
