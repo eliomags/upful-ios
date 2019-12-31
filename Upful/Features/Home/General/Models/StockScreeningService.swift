@@ -49,7 +49,7 @@ class StockScreeningService {
                                       let pageNumber,
                                       let sortOrder):
                 return [
-                    URLQueryItem(name: "conditions", value: "name~gt~0," + parameters),
+                    URLQueryItem(name: "conditions", value: "name~gt~0,pricetoearnings~gt~0," + parameters),
                     URLQueryItem(name: "order_direction", value: sortOrder.rawValue),
                     URLQueryItem(name: "primary_only", value: "true"),
                     URLQueryItem(name: "order_column", value: "marketcap"),
@@ -78,10 +78,12 @@ extension StockScreeningService {
         let task = URLSession.shared.dataTask(with: url) { (data, _, err) in
             if let err = err { completion(.failure(err)) }
             if let data = data {
-                completion(Result {
-                    let screeningResponse = try JSONDecoder().decode(ScreeningResponse.self, from: data)
-                    return screeningResponse.data
-                })
+                DispatchQueue.main.async {
+                    completion(Result {
+                        let screeningResponse = try JSONDecoder().decode(ScreeningResponse.self, from: data)
+                        return screeningResponse.data
+                    })
+                }
             }
         }
         task.resume()

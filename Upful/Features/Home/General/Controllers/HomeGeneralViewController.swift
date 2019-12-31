@@ -50,18 +50,31 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        observeUpdates()
-        viewModel.startPreferenceLoad()
-        viewModel.startNewsLoad()
+        observeViewModelNewsUpdates()
+        observeViewModelPreferenceUpdates()
+        viewModel.fetchTableData()
     }
     
     
     // MARK: - View Model Binding
-    
-    fileprivate func observeUpdates() {
-        viewModel.sendUpdates = { [weak self] in
+
+    fileprivate func observeViewModelPreferenceUpdates() {
+        viewModel.sendPreferenceStateUpdates = { [weak self] (state) in
             guard let self = self else { return }
-            self.tableView.reloadData()
+            switch state {
+            case .loaded:
+                self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
+                self.refreshControl.endRefreshing()
+            default:
+                break
+            }
+        }
+    }
+    
+    fileprivate func observeViewModelNewsUpdates() {
+        viewModel.sendNewsStateUpdates = { [weak self] in
+            guard let self = self else { return }
+            self.tableView.reloadSections([Section.news.rawValue], with: .automatic)
             self.refreshControl.endRefreshing()
         }
     }
@@ -79,6 +92,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     fileprivate func setupTableViewCells() {
         tableView.register(NewsHeaderTableCell.self, forCellReuseIdentifier: "newsHeaderCell")
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: "newsCell")
+        tableView.register(ResultsTableViewCell.self, forCellReuseIdentifier: "resultsCellID")
     }
     
     
@@ -86,7 +100,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     
     @objc fileprivate func handleResfreshing(_ sender: Any) {
         refreshControl.endRefreshing()
-        viewModel.startNewsLoad()
+        viewModel.fetchTableData()
     }
     
     
@@ -97,8 +111,29 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
         navigationController?.pushViewController(newsVC, animated: true)
     }
     
+    fileprivate func handleSeeMoreSuggestedStocks() {
+        let resultsVC = ScreenResultsViewController(searchParameters: [])
+        navigationController?.pushViewController(resultsVC, animated: true)
+    }
+    
     
     // MARK: - TableView Cells
+    
+    fileprivate func makeStockCells(_ indexPath: IndexPath) -> UITableViewCell {
+        guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: "resultsCellID") as? ResultsTableViewCell else { return UITableViewCell() }
+        loadedCell.accessoryType = .disclosureIndicator
+        loadedCell.backgroundColor = VersionManager.mainContainerBackground()
+
+        if !viewModel.stocksYouMayLike.isEmpty {
+            let stock = viewModel.stocksYouMayLike[indexPath.item]
+            loadedCell.companyTickerLabel.text = stock.ticker
+            loadedCell.companyNameLabel.text = stock.name
+            loadedCell.marketcapStackView.valueLabel.text = "$\(stock.marketcap?.formatUsingAbbreviation() ?? " -")"
+            loadedCell.pricetoearningsStackView.valueLabel.text = "\(stock.pricetoearnings?.twoDecimal() ?? "-")"
+        }
+        
+        return loadedCell
+    }
     
     fileprivate func makeNewsCells(_ indexPath: IndexPath) -> UITableViewCell {
         let row = indexPath.row
@@ -122,11 +157,12 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
 }
 
 extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
+    func numberOfSections(in tableView: UITableView) -> Int { return 2 }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
+        case Section.preference.rawValue:
+            return viewModel.stocksYouMayLike.isEmpty ? 3: viewModel.stocksYouMayLike.count
         case Section.news.rawValue:
             return 3
         default:
@@ -139,6 +175,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         switch section {
         case Section.news.rawValue:
             return makeNewsCells(indexPath)
+        case Section.preference.rawValue:
+            return makeStockCells(indexPath)
         default:
             return UITableViewCell()
         }
@@ -150,17 +188,16 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch section {
+        case Section.preference.rawValue:
+            let preferenceHeader = TableSectionHeaderView()
+            preferenceHeader.headerTextLabel.text = "Stocks You May Like"
+            preferenceHeader.buttonAction = { [weak self] in self?.handleSeeMoreSuggestedStocks() }
+            return preferenceHeader
         case Section.news.rawValue:
             let newsHeader = TableSectionHeaderView()
             newsHeader.headerTextLabel.text = "Recent News"
             newsHeader.buttonAction = { [weak self] in self?.handleSeeMoreNews() }
             return newsHeader
-            
-        case Section.preference.rawValue:
-            let preferenceHeader = TableSectionHeaderView()
-            preferenceHeader.headerTextLabel.text = "Stocks You May Like"
-            preferenceHeader.buttonAction = { [weak self] in self?.handleSeeMoreNews() }
-            return preferenceHeader
         default:
             return nil
         }

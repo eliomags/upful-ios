@@ -8,20 +8,21 @@
 
 import UIKit
 
-
 class ResultsTableViewCell: UITableViewCell {
     
     let companyTickerLabel: UILabel = {
         let l = UILabel()
         l.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
+        l.text = ""
         return l
     }()
     let companyNameLabel: UILabel = {
         let l = UILabel()
         l.font = .details1
+        l.text = ""
         return l
     }()
-    lazy var companyDescriptionStackView: UIStackView = {
+    private lazy var companyDescriptionStackView: UIStackView = {
         let l = UIStackView(arrangedSubviews: [companyTickerLabel,companyNameLabel])
         l.axis = .vertical
         l.spacing = 1
@@ -72,5 +73,7 @@ class ResultsTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+
 }
 

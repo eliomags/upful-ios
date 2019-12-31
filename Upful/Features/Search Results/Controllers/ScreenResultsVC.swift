@@ -67,7 +67,7 @@ final class ScreenResultsViewController: UIViewController {
     
     // MARK: - Initializer Methods
     
-    init(searchParameters: [String], networkingAPI: IntrinioAPI) {
+    init(searchParameters: [String], networkingAPI: IntrinioAPI = .init()) {
         self.searchParameters = searchParameters
         self.intrinioAPI = networkingAPI
         super.init(nibName: nil, bundle: nil)

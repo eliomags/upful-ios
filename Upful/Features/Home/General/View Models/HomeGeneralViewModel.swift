@@ -21,19 +21,28 @@ class HomeGeneralViewModel {
     
     // MARK: - State
     
-    private(set) var stocksYouMayLike: [Stock] = [] {
+    enum PreferenceState {
+        case new
+        case loading
+        case loaded
+        case error
+    }
+    private(set) var stocksYouMayLike: [Stock] = []
+    private(set) var preferenceState: PreferenceState = .loading {
         didSet {
-            sendUpdates?()
+            handlePreferenceStateChange()
         }
     }
-    private(set) var stockNews: [StockNewsViewModel] = [] {
-        didSet {
-            sendUpdates?()
-        }
-    }
-
-    var sendUpdates: (() -> ())?
     
+    private(set) var stockNews: [StockNewsViewModel] = []
+    private(set) var isNewsLoaded = false {
+        didSet {
+            sendNewsStateUpdates?()
+        }
+    }
+    
+    var sendPreferenceStateUpdates: ((PreferenceState) -> Void)?
+    var sendNewsStateUpdates: (() -> Void)?
     
     // MARK: - Initializer
     
@@ -44,37 +53,75 @@ class HomeGeneralViewModel {
     }
     
     
-    // MARK: - Stock Preference Loading
+    // MARK: - Handle State Changes
     
-    func startPreferenceLoad() {
-        let groupedPreferences = preferenceDataManager.getGroupedPreferences()
-        if groupedPreferences.isEmpty { fetchSuggestedStocks(parameters: "") }
-        
-        guard !groupedPreferences.isEmpty else { return }
-        
-        groupedPreferences.forEach { (preferenceArray) in
-            let preferenceParameters = preferenceArray.joined(separator: ",")
-            print(preferenceParameters)
-            fetchSuggestedStocks(parameters: preferenceParameters)
+    fileprivate func handlePreferenceStateChange() {
+        switch preferenceState {
+        case .loaded:
+            sendPreferenceStateUpdates?(preferenceState)
+        default:
+            break
         }
     }
-
+    
+    
+    // MARK: - API
+    
+    func fetchTableData() {
+        startPreferenceLoad()
+        startNewsLoad()
+    }
+    
+    // MARK: - Stock Preference Loading
+    
+    private let preferenceFetchingGroup = DispatchGroup()
+    
+    func startPreferenceLoad() {
+        preferenceState = .loading
+        let groupedPreferences = preferenceDataManager.getGroupedPreferences()
+        if groupedPreferences.isEmpty {
+            preferenceState = .new
+            return
+        }
+        
+        groupedPreferences.forEach { (preferenceArray) in
+            preferenceFetchingGroup.enter()
+            let preferenceParameters = preferenceArray.joined(separator: ",")
+            fetchSuggestedStocks(parameters: preferenceParameters)
+        }
+        
+        handlePreferenceFetchCompletion()
+    }
+    
     fileprivate func fetchSuggestedStocks(parameters: String) {
         self.stockScreeningService.get(router: .getScreeningResults(parameters: parameters, numberOfResults: 8), completion: {
             (result) in
             switch result {
             case .success(let fetchedStocks):
-                self.configureStockChoices(fetchedStocks)
-            case .failure(let err):
-                print(err.localizedDescription)
+                self.stocksYouMayLike.append(contentsOf: fetchedStocks)
+            case .failure(_):
+                self.preferenceState = .error
             }
+            self.preferenceFetchingGroup.leave()
         })
     }
     
-    fileprivate func configureStockChoices(_ stocks: [Stock]) {
-        // randomize the stocks
-        // get the top 4 results
-        // add them to stocks you may like
+    fileprivate func randomizeSuggestedStocks() {
+        stocksYouMayLike.removeDuplicates()
+        if stocksYouMayLike.count > 3 { stocksYouMayLike = Array(stocksYouMayLike[0...2]) }
+    }
+    
+    fileprivate func handlePreferenceFetchCompletion() {
+        preferenceFetchingGroup.notify(queue: .main) {
+            if self.preferenceState == .error { return }
+            
+            if self.stocksYouMayLike.isEmpty {
+                self.fetchSuggestedStocks(parameters: "")
+            } else {
+                self.randomizeSuggestedStocks()
+                self.preferenceState = .loaded
+            }
+        }
     }
     
     
@@ -100,8 +147,7 @@ class HomeGeneralViewModel {
         stockNewsLoader.get(router: .getMarketNews) { (result) in
             switch result {
             case.success(let news):
-                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
-                self.stockNews = mappedNews
+                self.handleNewsFetchCompletion(news: news)
             case .failure(let err):
                 print(err.localizedDescription)
             }
@@ -113,12 +159,16 @@ class HomeGeneralViewModel {
         stockNewsLoader.get(router: .getTickerNews(tickers: stocks)) { (result) in
             switch result {
             case .success(let news):
-                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
-                self.stockNews = mappedNews
+                self.handleNewsFetchCompletion(news: news)
             case .failure(let err):
                 print(err.localizedDescription)
             }
         }
     }
     
+    fileprivate func handleNewsFetchCompletion(news: [StockNews]) {
+        let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
+        self.stockNews = mappedNews
+        self.isNewsLoaded = true
+    }
 }

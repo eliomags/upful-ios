@@ -14,4 +14,8 @@ extension Array where Element: Hashable {
         self.remove(at: source)
         self.insert(item, at: destination)
     }
+    
+    mutating func removeDuplicates() {
+        self = Array(Set(self))
+    }
 }
