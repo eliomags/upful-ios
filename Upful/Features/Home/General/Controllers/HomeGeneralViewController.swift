@@ -112,12 +112,18 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
             let name = viewModel.stocksYouMayLike[indexPath.row].name
             let detailsVC = StockDetailsContainerView(ticker: ticker, companyName: name)
             navigationController?.pushViewController(detailsVC, animated: true)
-        default: break
+        default:
+            break
         }
     }
     
     fileprivate func handleNewsCellSelection(for indexPath: IndexPath) {
-        
+        if viewModel.isNewsLoaded {
+            let newsURLString = viewModel.stockNews[indexPath.row].newsUrl
+            let newsWebVC = WebViewViewController(urlString: newsURLString)
+            let navVC = UINavigationController(rootViewController: newsWebVC)
+            self.present(navVC, animated: true, completion: nil)
+        }
     }
     
     
@@ -174,13 +180,17 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     }
 }
 
+
+// MARK: - TableView Delegate/Datasource Methods
+
 extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int { return 2 }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case Section.preference.rawValue:
-            return viewModel.stocksYouMayLike.isEmpty ? 3: viewModel.stocksYouMayLike.count
+            let isLoadedState = viewModel.preferenceState == .loaded
+            return isLoadedState ? viewModel.stocksYouMayLike.count: 3
         case Section.news.rawValue:
             return 3
         default:
@@ -221,6 +231,20 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         }
     }
     
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        switch section {
+        case Section.preference.rawValue:
+            return 15
+        case Section.news.rawValue:
+            return 120
+        default: return 0
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 75
     }
@@ -249,6 +273,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         switch section {
         case Section.preference.rawValue:
             handleStockSuggestionCellSelection(for: indexPath)
+        case Section.news.rawValue:
+            handleNewsCellSelection(for: indexPath)
         default: break
         }
     }

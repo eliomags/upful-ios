@@ -27,6 +27,7 @@ class HomeGeneralViewModel {
         case loaded
         case error
     }
+    
     private(set) var stocksYouMayLike: [Stock] = []
     private(set) var preferenceState: PreferenceState = .loading {
         didSet {
@@ -67,10 +68,11 @@ class HomeGeneralViewModel {
     
     // MARK: - API
     
-    func fetchTableData() {
+    func fetchTableData() {        
         startPreferenceLoad()
         startNewsLoad()
     }
+    
     
     // MARK: - Stock Preference Loading
     
