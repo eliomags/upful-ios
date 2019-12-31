@@ -103,6 +103,23 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
         viewModel.fetchTableData()
     }
     
+    fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
+        switch viewModel.preferenceState{
+        case .new:
+            break
+        case .loaded:
+            let ticker = viewModel.stocksYouMayLike[indexPath.row].ticker
+            let name = viewModel.stocksYouMayLike[indexPath.row].name
+            let detailsVC = StockDetailsContainerView(ticker: ticker, companyName: name)
+            navigationController?.pushViewController(detailsVC, animated: true)
+        default: break
+        }
+    }
+    
+    fileprivate func handleNewsCellSelection(for indexPath: IndexPath) {
+        
+    }
+    
     
     // MARK: - Navigation
     
@@ -112,6 +129,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable {
     }
     
     fileprivate func handleSeeMoreSuggestedStocks() {
+        // TODO: - Handle SearchResults Parameters
         let resultsVC = ScreenResultsViewController(searchParameters: [])
         navigationController?.pushViewController(resultsVC, animated: true)
     }
@@ -223,6 +241,15 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             cell?.transform = .identity
         }) { (_) in
             cell?.isSelected = false
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let section = indexPath.section
+        switch section {
+        case Section.preference.rawValue:
+            handleStockSuggestionCellSelection(for: indexPath)
+        default: break
         }
     }
 }
