@@ -128,6 +128,17 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         }
     }
     
+    fileprivate func handleSeeMoreNews() {
+        let newsVC = NewsViewController()
+        navigationController?.pushViewController(newsVC, animated: true)
+    }
+    
+    fileprivate func handleSeeMoreSuggestedStocks() {
+        let randomSavedSearchParameters = viewModel.getRandomPreferenceGroup()
+        let resultsVC = ScreenResultsViewController(searchParameters: randomSavedSearchParameters)
+        navigationController?.pushViewController(resultsVC, animated: true)
+    }
+    
     
     // MARK: - Preference Delegate Methods
     
@@ -135,21 +146,6 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     
     func didCompleteSaving() {
         viewModel.startPreferenceLoad()
-    }
-    
-    
-    // MARK: - Navigation
-    
-    fileprivate func handleSeeMoreNews() {
-        let newsVC = NewsViewController()
-        navigationController?.pushViewController(newsVC, animated: true)
-    }
-    
-    fileprivate func handleSeeMoreSuggestedStocks() {
-        // TODO: - Handle SearchResults Parameters from View Model
-        
-        let resultsVC = ScreenResultsViewController(searchParameters: [])
-        navigationController?.pushViewController(resultsVC, animated: true)
     }
     
     
@@ -275,9 +271,6 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         UIView.animate(withDuration: 0.3) {
             cell?.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
         }
-        UIView.animate(withDuration: 0.3, animations: {
-            cell?.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
-        })
     }
     
     func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {

@@ -66,11 +66,19 @@ class HomeGeneralViewModel {
     }
     
     
-    // MARK: - API
+    // MARK: - API Methods
     
     func fetchTableData() {        
         startPreferenceLoad()
 //        startNewsLoad()
+    }
+    
+    func getRandomPreferenceGroup() -> [String] {
+        let groupedPreferences = preferenceDataManager.getGroupedPreferences()
+        if groupedPreferences.isEmpty { return [] }
+        
+        let randomElement = Int.random(in: 0...(groupedPreferences.count-1))
+        return groupedPreferences[randomElement]
     }
     
     
