@@ -9,6 +9,8 @@
 import Foundation
 
 class StockPreviewDataFetch: Operation {
+    
+    let intrinioAPI = IntrinioAPI()
 
     private let stock: Stock
     
@@ -95,7 +97,7 @@ class StockPreviewDataFetch: Operation {
     // MARK: - Data Fetching
     
     private func getPriceToEarningsPreviewData() {
-        NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: stock.ticker, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
+        intrinioAPI.fetchStockSpecificFinancial(ticker: stock.ticker, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let companyHistorics):
@@ -109,7 +111,7 @@ class StockPreviewDataFetch: Operation {
     }
         
     private func getMarketCapPreviewData() {
-        NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: stock.ticker, financial: .marketcap, frequency: .recent, completion: { [weak self] (result) in
+        intrinioAPI.fetchStockSpecificFinancial(ticker: stock.ticker, financial: .marketcap, frequency: .recent, completion: { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let companyHistorics):

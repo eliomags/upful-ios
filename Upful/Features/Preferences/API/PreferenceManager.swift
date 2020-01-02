@@ -22,7 +22,11 @@ class PreferenceDataManager: DataManager {
     }
     
     var data: [[PreferenceViewModel]] = []
-    var savedPreferences: [String] = []
+    var savedPreferences: [String] = [] {
+        didSet {
+            print(savedPreferences)
+        }
+    }
     var didUpdateData: Bool = false
     
     // MARK: - Initializer
@@ -40,7 +44,7 @@ class PreferenceDataManager: DataManager {
     // MARK: - API
     
     func update(_ preferenceType: PreferenceID) {
-        self.savedPreferences.append(preferenceType.rawValue)
+        savedPreferences.append(preferenceType.rawValue)
         didUpdateData = true
     }
     

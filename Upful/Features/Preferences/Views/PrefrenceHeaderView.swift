@@ -10,7 +10,7 @@ import UIKit
 
 class PreferenceHeaderView: UIView {
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 0, height: 90)
+        return CGSize(width: 0, height: 120)
     }
     var headerLabel: UILabel = {
         let label = UILabel()
@@ -46,7 +46,7 @@ class PreferenceHeaderView: UIView {
             leading: leadingAnchor,
             bottom: nil,
             trailing: trailingAnchor,
-            padding: .init(top: 18, left: 16, bottom: 8, right: 16))
+            padding: .init(top: 18, left: 16, bottom: 16, right: 16))
         
     }
     

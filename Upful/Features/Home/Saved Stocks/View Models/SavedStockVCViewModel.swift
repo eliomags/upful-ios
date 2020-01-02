@@ -64,9 +64,7 @@ class SavedStockVCViewModel {
     }
     
     fileprivate func getPreviewData() {
-        for stock in stocks {            
-            loadOperations(for: stock)
-        }
+        for stock in stocks { loadOperations(for: stock) }
     }
     
     

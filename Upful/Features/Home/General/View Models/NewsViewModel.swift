@@ -15,6 +15,7 @@ class NewsViewModel {
     private let savedStockDataManager: SavedStockDataLoaderProtocol
     private let stockNewsLoader = StockNewsLoader()
     
+    
     // MARK: - State
     
     private(set) var stockNews: [StockNewsViewModel] = [] {
@@ -74,5 +75,4 @@ class NewsViewModel {
             }
         }
     }
-    
 }

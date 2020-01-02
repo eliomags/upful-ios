@@ -25,7 +25,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         return view
     }()
     
-    lazy var tableView: UITableView = { [unowned self] in
+    lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .grouped)
         view.backgroundColor = VersionManager.mainContainerBackground()
         view.separatorStyle = .none
@@ -36,13 +36,13 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         return view
     }()
     
-    lazy var cancelButton: CancelButton = { [unowned self] in
+    lazy var cancelButton: CancelButton = {
         let view = CancelButton()
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
         return view
     }()
     
-    lazy var saveButton: UIButton = { [unowned self] in
+    lazy var saveButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Save", for: .normal)
         button.backgroundColor = .appAccent3

@@ -102,9 +102,7 @@ final class ScreenResultsViewController: UIViewController {
     private func fetchTableData(parameters: [String], fetchType: FetchType) {
         let searchKeys = parameters.joined(separator: ",").filter({ $0 != " " })
         intrinioAPI.performStockScreening(parameters: searchKeys) { [weak self] (result) in
-            print(result)
             guard let self = self else { return }
-
             switch result {
             case .success(let fetchedData):
                 switch fetchType {

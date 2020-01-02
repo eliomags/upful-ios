@@ -49,6 +49,11 @@ class IndustryPreferenceCollectionViewController: GenericPreferenceCollectionVie
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         savedPreferenceCount -= 1
         preferenceDeSelected?(preferences[indexPath.row].id)
+        
+        if savedPreferenceCount == 0 {
+            collectionView.selectItem(at: [0,0], animated: true, scrollPosition: .centeredVertically)
+            preferenceSelected?(.industryAny)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -58,6 +63,10 @@ class IndustryPreferenceCollectionViewController: GenericPreferenceCollectionVie
             return true
         }
         return !(savedPreferenceCount == maxNumberOfPreferences)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        return !(preferences[indexPath.row].id == .industryAny)
     }
 }
 
