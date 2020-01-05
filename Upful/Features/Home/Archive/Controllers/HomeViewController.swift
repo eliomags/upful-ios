@@ -171,6 +171,7 @@ final class HomeViewController: UITableViewController, SaveScreenerDelegate, Not
                                          title: screener.title,
                                          description: screener.screenDescription ?? "",
                                          urlComponents: getParameters(named: screener.title).configureURLComponents(),
+                                         imageData: screener.imageData,
                                          manualScreenItems: getParameters(named: screener.title).mapToManualScreenItems())
                                         
                 items.append(savedItem)

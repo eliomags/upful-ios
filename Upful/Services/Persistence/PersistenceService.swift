@@ -13,8 +13,7 @@ class PersistenceService {
     
     static let shared = PersistenceService()
     
-    private init() {
-    }
+    private init() {}
     
     // MARK: - Core Data stack
     

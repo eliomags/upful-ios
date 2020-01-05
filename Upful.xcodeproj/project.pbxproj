@@ -67,6 +67,8 @@
 		3D3749B023B9BA66000D0597 /* NewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AF23B9BA66000D0597 /* NewsViewModel.swift */; };
 		3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B123BA830D000D0597 /* StockScreeningService.swift */; };
 		3D3749B523BBADB1000D0597 /* NoPreferenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B423BBADB1000D0597 /* NoPreferenceTableViewCell.swift */; };
+		3D3749B823BE60F4000D0597 /* ScreenerSelectionContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B723BE60F4000D0597 /* ScreenerSelectionContainerView.swift */; };
+		3D3749BA23BE66B4000D0597 /* ScreenerPreviewCollectionVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B923BE66B4000D0597 /* ScreenerPreviewCollectionVIewCell.swift */; };
 		3D42BE4123098BD200806AFF /* ResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE4023098BD200806AFF /* ResultsTableViewCell.swift */; };
 		3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE442309A55900806AFF /* PresetScreener.swift */; };
 		3D42BE492309A59800806AFF /* Screener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE482309A59800806AFF /* Screener.swift */; };
@@ -286,6 +288,8 @@
 		3D3749AF23B9BA66000D0597 /* NewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModel.swift; sourceTree = "<group>"; };
 		3D3749B123BA830D000D0597 /* StockScreeningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockScreeningService.swift; sourceTree = "<group>"; };
 		3D3749B423BBADB1000D0597 /* NoPreferenceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPreferenceTableViewCell.swift; sourceTree = "<group>"; };
+		3D3749B723BE60F4000D0597 /* ScreenerSelectionContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenerSelectionContainerView.swift; sourceTree = "<group>"; };
+		3D3749B923BE66B4000D0597 /* ScreenerPreviewCollectionVIewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenerPreviewCollectionVIewCell.swift; sourceTree = "<group>"; };
 		3D42BE4023098BD200806AFF /* ResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableViewCell.swift; sourceTree = "<group>"; };
 		3D42BE442309A55900806AFF /* PresetScreener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetScreener.swift; sourceTree = "<group>"; };
 		3D42BE482309A59800806AFF /* Screener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screener.swift; sourceTree = "<group>"; };
@@ -974,6 +978,14 @@
 				3D3749B423BBADB1000D0597 /* NoPreferenceTableViewCell.swift */,
 			);
 			path = TableViewCells;
+			sourceTree = "<group>";
+		};
+		3D3749B623BE60D9000D0597 /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				3D3749B723BE60F4000D0597 /* ScreenerSelectionContainerView.swift */,
+			);
+			path = Container;
 			sourceTree = "<group>";
 		};
 		3D42BE3E23098BB400806AFF /* Controllers */ = {
@@ -1847,6 +1859,7 @@
 			children = (
 				3D3749A823B9B1CC000D0597 /* Presenter */,
 				3DFAC57D23B9B08600378AF0 /* Views */,
+				3D3749B623BE60D9000D0597 /* Container */,
 				3DFAC57C23B9B07900378AF0 /* Controllers */,
 				3DFAC57E23B9B08800378AF0 /* View Models */,
 			);
@@ -1864,6 +1877,7 @@
 		3DFAC57D23B9B08600378AF0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3D3749B923BE66B4000D0597 /* ScreenerPreviewCollectionVIewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2184,6 +2198,7 @@
 				3DA54089232B364000EE477C /* MenuViewContainer.swift in Sources */,
 				3D0C5F78233FA42300F4A5FC /* WebViewViewController.swift in Sources */,
 				3D0C5F6F233A49A800F4A5FC /* EmptyStockCell.swift in Sources */,
+				3D3749BA23BE66B4000D0597 /* ScreenerPreviewCollectionVIewCell.swift in Sources */,
 				3DAB3EB9234C04E60008CC18 /* Preference.swift in Sources */,
 				3DA5408C232B366F00EE477C /* MenuViewHeader.swift in Sources */,
 				3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */,
@@ -2199,6 +2214,7 @@
 				3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */,
 				3D42BE452309A55900806AFF /* PresetScreener.swift in Sources */,
 				3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */,
+				3D3749B823BE60F4000D0597 /* ScreenerSelectionContainerView.swift in Sources */,
 				3D42BE52230C672C00806AFF /* CompanyFundamentals.swift in Sources */,
 				3D562C8F2360828800837B2F /* IAPService.swift in Sources */,
 				3DC710962336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift in Sources */,

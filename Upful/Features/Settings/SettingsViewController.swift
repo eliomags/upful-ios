@@ -25,7 +25,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - Views
     
     lazy var tableView: UITableView = { [unowned self] in
-        let tv = UITableView(frame: .zero, style: .grouped)
+        let tv = UITableView(frame: .zero, style: UITableView.Style.insetGrouped)
         tv.delegate = self
         tv.dataSource = self
         return tv

@@ -12,8 +12,12 @@ struct ScreenerSelectionPresenter {
     let displayingViewController: UIViewController
     
     func present() {
-        let screenerSelectionVC = ScreenerSelectionViewController()
+        let screenerSelectionVC = ScreenerSelectionContainerView(collectionViewLayout: UICollectionViewFlowLayout())
         let navVC = UINavigationController(rootViewController: screenerSelectionVC)
+        navVC.navigationBar.prefersLargeTitles = true
+        navVC.navigationItem.largeTitleDisplayMode = .never
+        navVC.navigationBar.tintColor = .appAccent3
+        
         displayingViewController.present(navVC, animated: true, completion: nil)
     }
 }

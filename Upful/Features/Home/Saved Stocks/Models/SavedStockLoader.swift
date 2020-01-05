@@ -28,7 +28,7 @@ class SavedStockLoader: SavedStockDataLoaderProtocol {
     }
     
     func mapToStocks(_ savedStocks: [SavedStock]) -> [Stock] {
-        return savedStocks.map({ Stock(name: $0.companyName, ticker: $0.ticker)})
+        return savedStocks.map{ Stock(name: $0.companyName, ticker: $0.ticker) }
     }
     
     func saveCompany(ticker: String, companyName: String) {

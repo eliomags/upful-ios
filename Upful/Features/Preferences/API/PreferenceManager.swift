@@ -9,6 +9,7 @@
 import Foundation
 
 class PreferenceDataManager: DataManager {
+    
     // MARK: - Dependencies
 
     let dataLoader: PreferenceDataLoader
@@ -22,11 +23,7 @@ class PreferenceDataManager: DataManager {
     }
     
     var data: [[PreferenceViewModel]] = []
-    var savedPreferences: [String] = [] {
-        didSet {
-            print(savedPreferences)
-        }
-    }
+    var savedPreferences: [String] = []
     var didUpdateData: Bool = false
     
     // MARK: - Initializer

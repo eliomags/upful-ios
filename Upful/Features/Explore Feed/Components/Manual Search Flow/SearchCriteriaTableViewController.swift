@@ -15,14 +15,14 @@ class CreateScreenerTableViewController: SearchCriteriaTableViewController {
 class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SearchCriteriaDelegate, MenuBarDisplayable {
     
     lazy var tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .grouped)
+        let tv = UITableView(frame: .zero, style: .insetGrouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.setTableHeaderView(headerView: tableHeader)
         return tv
     }()
     
     weak var delegate: MenuViewItemDelegate?
-    var menubarTitle: String = "Manual Search"
+    var menubarTitle: String = "Custom"
     
     private enum ReuseID {
         static let criteriaCell = "criteriaCell"

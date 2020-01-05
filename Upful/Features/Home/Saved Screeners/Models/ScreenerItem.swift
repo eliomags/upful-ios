@@ -21,12 +21,15 @@ struct Screener: Hashable {
     let description: String
     let urlComponents: [String]
     let manualScreenItems: [ManualScreenItem]
+    let imageData: Data?
     
-    init(title: String, description: String, urlComponents: [String], manualScreenItems: [ManualScreenItem]) {
+    
+    init(title: String, description: String, urlComponents: [String], imageData: Data?, manualScreenItems: [ManualScreenItem]) {
         self.title = title
         self.description = description
         self.urlComponents = urlComponents
         self.manualScreenItems = manualScreenItems
+        self.imageData = imageData
     }
 }
 
