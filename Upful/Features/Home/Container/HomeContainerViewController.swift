@@ -21,11 +21,7 @@ class HomeContainerViewController: MenuContainerViewController {
     
     private lazy var screenerSelectionButton: CustomRoundButton = {
         let b = CustomRoundButton()
-        b.translatesAutoresizingMaskIntoConstraints = false
-        b.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        b.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        b.layer.cornerRadius = 50/2
-        b.setupShadow(intensity: .light, color: .secondarySystemGroupedBackground)
+
         b.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleScreenerSelectionTap)))
         return b
     }()
@@ -42,7 +38,6 @@ class HomeContainerViewController: MenuContainerViewController {
         setUpViews()
     }
     
-    
     // MARK: - View Setup
      
     fileprivate func configureNavBar() {
@@ -53,10 +48,12 @@ class HomeContainerViewController: MenuContainerViewController {
     fileprivate func setUpViews() {
         view.addSubview(screenerSelectionButton)
         screenerSelectionButton.anchor(top: nil, leading: nil,
-                                 bottom: view.layoutMarginsGuide.bottomAnchor,
-                                 trailing: view.trailingAnchor,
-                                 padding: .init(top: 0, left: 0, bottom: 45, right: 25))
+                                       bottom: view.layoutMarginsGuide.bottomAnchor,
+                                       trailing: view.trailingAnchor,
+                                       padding: .init(top: 0, left: 0, bottom: 45, right: 25))
     }
+    
+    // MARK: - Actions
     
     @objc fileprivate func handleScreenerSelectionTap(sender: UIButton) {
         let presenter = ScreenerSelectionPresenter(displayingViewController: self)
@@ -64,4 +61,9 @@ class HomeContainerViewController: MenuContainerViewController {
     }
 }
 
-
+extension HomeContainerViewController: ScreenerSelectionDelegate {
+    func didSelectScreener(searchParameters: [String]) {
+        let searchResultsVC = ScreenResultsViewController(searchParameters: searchParameters)
+        navigationController?.pushViewController(searchResultsVC, animated: true)
+    }
+}

@@ -10,7 +10,7 @@ import UIKit
 
 final class ScreenerSelectionViewController: UICollectionViewController, MenuBarDisplayable {
     
-    // Dependencies
+    // MARK: - Dependencies
     // Core data for knowing currently saved screeners based on name
     // Core data for saving screener
     // Firestore for loading screeners
@@ -40,11 +40,6 @@ final class ScreenerSelectionViewController: UICollectionViewController, MenuBar
     }
     
     // MARK: - View Lifecycle Methods
-    
-    override func loadView() {
-        super.loadView()
-        collectionView.backgroundColor = VersionManager.mainContainerBackground()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,7 +79,10 @@ final class ScreenerSelectionViewController: UICollectionViewController, MenuBar
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: {
+            let parentVC = self.parent as? ScreenerSelectionContainerView
+            parentVC?.screenerSelectionDelegate?.didSelectScreener(searchParameters: [])
+        })
     }
     
     override func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {

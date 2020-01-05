@@ -60,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabVC.viewControllers = controllers.map({
             let navVC = UINavigationController(rootViewController: $0)
             navVC.navigationBar.prefersLargeTitles = true
+            navVC.navigationBar.isTranslucent = false
             navVC.navigationBar.tintColor = .appAccent3
             if #available(iOS 13.0, *) {
                 navVC.navigationBar.isTranslucent = true

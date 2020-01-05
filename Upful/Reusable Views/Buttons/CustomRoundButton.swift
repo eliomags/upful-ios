@@ -10,7 +10,7 @@ import UIKit
 
 class CustomRoundButton: UIView {
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 45, height: 45)
+        return CGSize(width: 50, height: 50)
     }
     var buttonColor: UIColor {
         return .appAccent3
@@ -29,16 +29,8 @@ class CustomRoundButton: UIView {
     
     init() {
         super.init(frame: .zero)
-        layer.masksToBounds = true
-        backgroundColor = buttonColor
-        
-        addSubview(buttonImageView)
-        buttonImageView.anchor(
-            top: self.topAnchor,
-            leading: self.leadingAnchor,
-            bottom: self.bottomAnchor,
-            trailing: self.trailingAnchor,
-            padding: .init(top: 6, left: 6, bottom: 6, right: 6))
+        setupView()
+        setupButtonImage()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -47,10 +39,31 @@ class CustomRoundButton: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = 45/2
+        layer.cornerRadius = 50/2
     }
     
-    // MARK: -
+    // MARK: - View Setup
+    
+    private func setupView() {
+        layer.masksToBounds = true
+        backgroundColor = buttonColor
+        translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(equalToConstant: 50).isActive = true
+        widthAnchor.constraint(equalToConstant: 50).isActive = true
+        setupShadow(intensity: .medium, color: .label)
+    }
+    
+    private func setupButtonImage() {
+        addSubview(buttonImageView)
+        buttonImageView.anchor(top: topAnchor,
+                               leading: leadingAnchor,
+                               bottom: bottomAnchor,
+                               trailing: trailingAnchor,
+                               padding: .init(top: 6, left: 6, bottom: 6, right: 6)
+        )
+    }
+    
+    // MARK: - Animations
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         UIView.animate(withDuration: 0.2) {
@@ -69,7 +82,6 @@ class CustomRoundButton: UIView {
             self.transform = .identity
         }
     }
-
 }
 
 

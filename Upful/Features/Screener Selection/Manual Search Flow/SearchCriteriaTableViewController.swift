@@ -8,10 +8,6 @@
 
 import UIKit
 
-class CreateScreenerTableViewController: SearchCriteriaTableViewController {
-
-}
-
 class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SearchCriteriaDelegate, MenuBarDisplayable {
     
     lazy var tableView: UITableView = {
@@ -43,17 +39,28 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         return v
     }()
-
-    private lazy var addCriteriaButton: CustomRoundButton = {
-        let b = CustomRoundButton()
-        b.translatesAutoresizingMaskIntoConstraints = false
-        b.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        b.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        b.layer.cornerRadius = 50/2
-        b.setupShadow(intensity: .light, color: .black)
-        b.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNavigation)))
+    
+    private lazy var searchButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.setTitle("Add Parameters", for: .normal)
+        b.layer.masksToBounds = true
+        b.addTarget(self, action: #selector(handleNavigation), for: .touchUpInside)
+        b.backgroundColor = .appAccent3
+        b.layer.cornerRadius = 8
+        b.setTitleColor(.white, for: .normal)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         return b
     }()
+    
+    private lazy var footer: UIView = {
+        let v = UIView()
+        v.addSubview(searchButton)
+        searchButton.anchor(top: nil, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
+                            padding: .init(top: 0, left: 16, bottom: 50, right: 16))
+        v.backgroundColor = .clear
+        return v
+    }()
+    
     
     // MARK: - Initializer Methods
     
@@ -74,22 +81,8 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
-        view.backgroundColor = .systemGroupedBackground
+        view.backgroundColor = VersionManager.mainContainerBackground()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        navigationController?.navigationBar.isTranslucent = false
-        tableView.addSubview(addCriteriaButton)
-        addCriteriaButton.anchor(
-            top: nil, leading: nil, bottom: self.parent?.view.layoutMarginsGuide.bottomAnchor, trailing: self.parent?.view.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 45, right: 25))
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        addCriteriaButton.removeFromSuperview()
     }
     
     override func viewDidLayoutSubviews() {
@@ -103,20 +96,30 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     // MARK: - View Setup
     
     func setupTableView() {
+        tableView.backgroundColor = .clear
         tableView.allowsMultipleSelection = true
         tableView.allowsMultipleSelectionDuringEditing = true
         tableView.register(ManualSearchCriteriaCell.self, forCellReuseIdentifier: ReuseID.criteriaCell)
         tableView.tableFooterView = UIView()
-        tableView.contentInsetAdjustmentBehavior = .never
         tableView.sectionHeaderHeight = 24
-        tableView.backgroundColor = .systemGroupedBackground
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        
+        view.addSubview(searchButton)
+        searchButton.anchor(top: nil,
+                            leading: view.leadingAnchor,
+                            bottom: view.layoutMarginsGuide.bottomAnchor,
+                            trailing: view.trailingAnchor,
+                            padding: .init(top: 0, left: 16, bottom: 16, right: 16),
+                            size: .init(width: 0, height: 40))
+        
+        view.addSubview(tableView)
+        tableView.anchor(top: view.layoutMarginsGuide.topAnchor,
+                         leading: view.leadingAnchor,
+                         bottom: searchButton.topAnchor,
+                         trailing: view.trailingAnchor,
+                         padding: .init(top: 0, left: 0, bottom: 16, right: 0))
     }
     
     func setupTableHeader() {
@@ -154,7 +157,8 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
             return
         }
         let manualSearchVC = ManualSearchViewController(manualScreenItems: self.manualScreenItems)
-        manualSearchVC.delegate = self
+        manualSearchVC.screenerSelectionDelegate = (parent as? ScreenerSelectionContainerView)?.screenerSelectionDelegate
+        manualSearchVC.searchCriteriaDelegate = self
         self.navigationController?.pushViewController(manualSearchVC, animated: true)
     }
     

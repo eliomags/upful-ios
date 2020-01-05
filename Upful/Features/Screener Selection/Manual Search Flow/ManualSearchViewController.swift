@@ -24,8 +24,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
     }
-    
-    weak var delegate: SearchCriteriaDelegate?
+    weak var screenerSelectionDelegate: ScreenerSelectionDelegate?
+    weak var searchCriteriaDelegate: SearchCriteriaDelegate?
 
     // MARK:- Views
     
@@ -160,8 +160,10 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
             if shouldNavigate {
                 AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .manual))
-                let screenerResultsVC = ScreenResultsViewController(searchParameters: configureURLComponents(), networkingAPI: IntrinioAPI())
-                navigationController?.pushViewController(screenerResultsVC, animated: true)
+                
+                dismiss(animated: true) {
+                    self.screenerSelectionDelegate?.didSelectScreener(searchParameters: self.configureURLComponents())
+                }
             } else {
                 let presenter = SubscriptionPresenter(type: .screeningLimit)
                 presenter.present(in: self)
@@ -172,9 +174,9 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     @objc fileprivate func clearCriteriaTapped(_ sender: UIBarButtonItem) {
         for _ in 0..<manualScreenItems.count {
             guard manualScreenItems.count > 0 else { return }
-            delegate?.remove(indexPath: IndexPath(row: 0, section: 0))
+            searchCriteriaDelegate?.remove(indexPath: IndexPath(row: 0, section: 0))
         }
-        delegate?.updateScreenerItems(with: [])
+        searchCriteriaDelegate?.updateScreenerItems(with: [])
         manualScreenItems.removeAll()
     }
     
@@ -310,7 +312,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     func addSearchParameter(parameterItem: ParameterItem, indexPath: IndexPath) {
         manualScreenItems[indexPath.item].parameter = parameterItem.parameter
         manualScreenItems[indexPath.item].value = parameterItem.value
-        delegate?.updateScreenerItems(with: manualScreenItems)
+        searchCriteriaDelegate?.updateScreenerItems(with: manualScreenItems)
         manualSearchSearchTableView.reloadData()
     }
     
@@ -359,7 +361,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
              self.manualScreenItems.remove(at: indexPath.row)
                        tableView.deleteRows(at: [indexPath], with: .automatic)
                        self.manualSearchSearchTableView.reloadData()
-                       self.delegate?.remove(indexPath: indexPath)
+                       self.searchCriteriaDelegate?.remove(indexPath: indexPath)
         }
         delete.image = UIImage(systemName: "trash")
         return UISwipeActionsConfiguration(actions: [delete])

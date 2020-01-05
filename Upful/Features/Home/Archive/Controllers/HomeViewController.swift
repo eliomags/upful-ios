@@ -265,7 +265,7 @@ final class HomeViewController: UITableViewController, SaveScreenerDelegate, Not
     // MARK: - Navigation
     
     fileprivate func navigateToAddScreener() {
-        let searchCriteriaVC = CreateScreenerTableViewController()
+        let searchCriteriaVC = SearchCriteriaTableViewController()
         navigationController?.pushViewController(searchCriteriaVC, animated: true)
     }
     

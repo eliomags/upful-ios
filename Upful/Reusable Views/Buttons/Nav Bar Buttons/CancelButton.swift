@@ -25,8 +25,9 @@ class CancelButton: UIView {
         
         addSubview(cancelImageView)
         cancelImageView.anchor(
-            top: self.topAnchor, leading: self.leadingAnchor, bottom: self.bottomAnchor, trailing: self.trailingAnchor,
+            top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
             padding: .init(top: 7, left: 7, bottom: 7, right: 7))
+        
     }
     
     required init?(coder: NSCoder) {
@@ -35,7 +36,7 @@ class CancelButton: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = 13
+        layer.cornerRadius = frame.height / 2
         layer.masksToBounds = true
     }
 }

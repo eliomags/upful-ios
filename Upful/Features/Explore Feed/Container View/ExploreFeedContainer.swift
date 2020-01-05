@@ -22,7 +22,9 @@ class ExploreFeedContainer: MenuContainerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavBar()
+        
         AppStoreReviewHelper.checkAndAskForReview(checkType: .newSession)
+        
         collectionView.backgroundColor = VersionManager.mainContainerBackground()
         view.backgroundColor = VersionManager.mainContainerBackground()
     }
