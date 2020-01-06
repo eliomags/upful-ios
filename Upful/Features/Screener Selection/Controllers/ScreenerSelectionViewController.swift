@@ -16,7 +16,7 @@ final class ScreenerSelectionViewController: UICollectionViewController, MenuBar
     // Firestore for loading screeners
     // Delegate for dismissing and passing values to home
     
-    weak var delegate: MenuViewItemDelegate?
+    weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "Pre-built"
     
     private let layout: UICollectionViewFlowLayout = {

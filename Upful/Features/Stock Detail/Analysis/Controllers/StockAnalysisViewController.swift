@@ -13,7 +13,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     // MARK: - MenuBarDisplay Protocol
     
-    weak var delegate: MenuViewItemDelegate?
+    weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "Analysis"
     
     // MARK: - Dependencies
@@ -288,7 +288,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     // MARK: - Scroll View Delegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let heightThreshold = stockHeaderView.frame.height - (delegate?.menuBarView.frame.height ?? 40) - 36
+        let heightThreshold = stockHeaderView.frame.height - (menuViewItemDelegate?.menuBarView.frame.height ?? 40) - 36
         let reachedThreshold = scrollView.contentOffset.y > heightThreshold
         parent?.navigationItem.title = reachedThreshold ? ticker: ""
     }

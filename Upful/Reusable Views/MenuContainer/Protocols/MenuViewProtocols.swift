@@ -16,7 +16,7 @@ protocol MenuViewItemDelegate: class {
 }
 
 protocol MenuBarDisplayable: UIViewController {
-    var delegate: MenuViewItemDelegate? { get set }
+    var menuViewItemDelegate: MenuViewItemDelegate? { get set }
     var menubarTitle: String { get set }
 }
 

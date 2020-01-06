@@ -10,7 +10,7 @@ import UIKit
 
 class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITableViewDelegate, UITableViewDataSource {
     
-    weak var delegate: MenuViewItemDelegate?
+    weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "Screeners"
     
     lazy var viewModel: SavedScreenersViewModel = {

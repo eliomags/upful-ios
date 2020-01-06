@@ -13,7 +13,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     // MARK: - MenuBarDisplayable Protocol Properties
     
-    weak var delegate: MenuViewItemDelegate?
+    weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "Overview"
 
     // MARK: - Dependencies
@@ -283,7 +283,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
      
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let bufferHeight: CGFloat = 15
-        let heightThreshold: CGFloat = (delegate?.menuBarView.frame.height ?? 55) - stockHeaderView.intrinsicContentSize.height + bufferHeight
+        let heightThreshold: CGFloat = (menuViewItemDelegate?.menuBarView.frame.height ?? 55) - stockHeaderView.intrinsicContentSize.height + bufferHeight
         let didReachThreshold = scrollView.contentOffset.y >= heightThreshold
         parent?.navigationItem.title = didReachThreshold ? ticker : ""
     }

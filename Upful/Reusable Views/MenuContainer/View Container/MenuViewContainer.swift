@@ -70,7 +70,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     fileprivate func setDelegateForChildren() {
         menubarControllers.forEach { [unowned self] (controller) in
-            controller.delegate = self
+            controller.menuViewItemDelegate = self
         }
     }
     

@@ -10,7 +10,7 @@ import UIKit
 
 class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MenuBarDisplayable {
     
-    weak var delegate: MenuViewItemDelegate?
+    weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "Stocks"
     
     lazy var viewModel: SavedStockVCViewModel = {

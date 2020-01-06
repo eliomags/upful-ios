@@ -10,7 +10,7 @@ import UIKit
 
 final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, PreferenceDelegate {
         
-    weak var delegate: MenuViewItemDelegate?
+    weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "General"
     
     private enum Section: Int {
