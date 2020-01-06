@@ -12,7 +12,7 @@ class SavedScreenerTableViewCell: UITableViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 1
+        label.numberOfLines = 2
         label.text = "No Title Data"
         label.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         return label
@@ -20,19 +20,18 @@ class SavedScreenerTableViewCell: UITableViewCell {
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "No Description Data"
-        label.numberOfLines = 5
-        label.textColor = .gray
+        label.text = "description\ndescription\ndescription"
+        label.numberOfLines = 3
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         return label
     }()
     
-    private lazy var textStackView: UIStackView = {
+    lazy var textStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
         stackView.axis = .vertical
         stackView.distribution = .fill
-        stackView.alignment = .leading
         stackView.spacing = 8
+        stackView.isBaselineRelativeArrangement = true
         return stackView
     }()
     
@@ -48,7 +47,7 @@ class SavedScreenerTableViewCell: UITableViewCell {
     
     // MARK: - View Setup
     
-    fileprivate func setupViews() {
+    func setupViews() {
         addSubview(textStackView)
         textStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
                              padding: .init(top: 12, left: 16, bottom: 8, right: 16))

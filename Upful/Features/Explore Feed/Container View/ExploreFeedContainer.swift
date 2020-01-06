@@ -12,8 +12,7 @@ class ExploreFeedContainer: MenuContainerViewController {
     
     override var menubarControllers: [MenuBarDisplayable] {
         let controllers: [MenuBarDisplayable] = [
-            QuickSearchViewController(presetDataLoader: PresetFeedDataLoader()),
-            SearchCriteriaTableViewController()
+            QuickSearchViewController(presetDataLoader: PresetFeedDataLoader())
         ]
         return controllers
     }

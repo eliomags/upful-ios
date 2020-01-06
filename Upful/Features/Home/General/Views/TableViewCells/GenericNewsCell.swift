@@ -112,7 +112,6 @@ class GenericNewsCell: UITableViewCell {
                 break
             }
         }
-
     }
     
     fileprivate func setLoading() {

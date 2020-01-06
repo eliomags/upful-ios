@@ -19,7 +19,7 @@ extension SavedScreener {
 
     @NSManaged public var screenDescription: String?
     @NSManaged public var title: String
-    @NSManaged public var imageData: Data?
+    @NSManaged public var imageUrlString: String?
     @NSManaged public var savedScreenerParameter: NSSet
 
 }

@@ -88,16 +88,14 @@ class SavedScreenerLoader: SavedScreenerLoaderProtocol {
     
     // MARK: - Fileprivate Functions
     
-    fileprivate func mapToScreener(_ savedScreeners: [SavedScreener]) -> [Screener] {
-        print(savedScreeners.map({ $0.imageData?.count }))
-        
+    fileprivate func mapToScreener(_ savedScreeners: [SavedScreener]) -> [Screener] {        
         let screeners = savedScreeners.map { (screener) -> Screener in
             let parameters = getParameters(for: screener.title)
             
             return Screener(title: screener.title,
                             description: parameters.configureDescription(),
                             urlComponents: parameters.configureURLComponents(),
-                            imageData: screener.imageData,
+                            imageUrlString: screener.imageUrlString,
                             manualScreenItems: parameters.mapToManualScreenItems())
         }
         return screeners

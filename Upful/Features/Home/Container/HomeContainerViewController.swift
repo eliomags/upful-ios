@@ -43,6 +43,7 @@ class HomeContainerViewController: MenuContainerViewController {
     fileprivate func configureNavBar() {
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.title = "Home"
+        navigationController?.navigationBar.isTranslucent = false
     }
     
     fileprivate func setUpViews() {

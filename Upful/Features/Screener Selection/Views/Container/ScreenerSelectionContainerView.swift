@@ -11,7 +11,7 @@ import UIKit
 final class ScreenerSelectionContainerView: MenuContainerViewController {
 
     override var menubarControllers: [MenuBarDisplayable] {
-        let preBuiltScreenerVC = ScreenerSelectionViewController()
+        let preBuiltScreenerVC = PrebuiltScreenerViewController()
         let customSearchVC = SearchCriteriaTableViewController()
         return [preBuiltScreenerVC, customSearchVC]
     }

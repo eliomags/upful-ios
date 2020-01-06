@@ -22,6 +22,7 @@ public class FirestoreAPI: FirestoreService {
         case popularStocks
         case savedCompanies
         case suggestions
+        case screeners
     }
     
     // MARK: - API

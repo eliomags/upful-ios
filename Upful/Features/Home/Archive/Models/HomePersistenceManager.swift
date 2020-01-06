@@ -37,7 +37,7 @@ class HomePersistenceManager {
                                          title: screener.title,
                                          description: screener.screenDescription ?? "",
                                          urlComponents: [],
-                                         imageData: screener.imageData,
+                                         imageUrlString: screener.imageUrlString,
                                          manualScreenItems: [])
                 savedItems.append(savedItem)
             }

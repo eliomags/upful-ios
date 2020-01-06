@@ -20,7 +20,9 @@ extension UIImage {
         } else {
             DispatchQueue.global().async {
                 guard let data = try? Data(contentsOf: url) else {
-                    completion(.failure(NSError()))
+                    DispatchQueue.main.async {
+                        completion(.failure(NSError()))
+                    }
                     return
                 }
                 guard let image = UIImage(data: data) else { return }

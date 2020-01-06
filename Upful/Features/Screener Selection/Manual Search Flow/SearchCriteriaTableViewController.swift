@@ -10,6 +10,7 @@ import UIKit
 
 class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SearchCriteriaDelegate, MenuBarDisplayable {
     
+    
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .insetGrouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -17,7 +18,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         return tv
     }()
     
-    weak var menuViewItemdelegate: MenuViewItemDelegate?
+    var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "Custom"
     
     private enum ReuseID {
