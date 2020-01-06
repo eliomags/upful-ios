@@ -39,6 +39,7 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        showLoading()
     }
     
     required init?(coder: NSCoder) {
@@ -74,5 +75,15 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
                                                .withTintColor(.systemGray2, renderingMode: .alwaysOriginal)
             }
         }
+    }
+    
+    private func showLoading() {
+        titleLabel.backgroundColor = VersionManager.loadingLabelColor()
+        descriptionLabel.backgroundColor = VersionManager.loadingLabelColor()
+    }
+    
+    func showLoaded() {
+        titleLabel.backgroundColor = .clear
+        descriptionLabel.backgroundColor = .clear
     }
 }

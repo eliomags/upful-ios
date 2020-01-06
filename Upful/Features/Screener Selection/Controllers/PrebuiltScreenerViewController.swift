@@ -72,11 +72,16 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     
     fileprivate func makeScreenerCells(for indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ScreenerPreviewTableViewCell
-        let viewModel = getScreenerViewModel(for: indexPath)
         cell?.saveButton.addTarget(self, action: #selector(handleSaveTap), for: .touchUpInside)
-        cell?.titleLabel.text = viewModel.title
-        cell?.descriptionLabel.text = viewModel.description
-        cell?.loadImage(urlString: viewModel.imageUrlString)
+        
+        if !logicController.screenerViewModels.isEmpty {
+            cell?.showLoaded()
+            let viewModel = getScreenerViewModel(for: indexPath)
+            cell?.titleLabel.text = viewModel.title
+            cell?.descriptionLabel.text = viewModel.description
+            cell?.loadImage(urlString: viewModel.imageUrlString)
+        }
+
         return cell ?? UITableViewCell()
     }
     
@@ -89,7 +94,8 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     // MARK: - TableView Delegate/Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return logicController.screenerViewModels.count
+        let isEmpty = logicController.screenerViewModels.isEmpty
+        return isEmpty ? 10 : logicController.screenerViewModels.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -97,11 +103,13 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dismiss(animated: true, completion: {
-            let searchParameters = self.getScreenerViewModel(for: indexPath).searchParameters
-            let parentVC = self.parent as? ScreenerSelectionContainerView
-            parentVC?.screenerSelectionDelegate?.didSelectScreener(searchParameters: searchParameters)
-        })
+        if !logicController.screenerViewModels.isEmpty {
+            dismiss(animated: true, completion: {
+                let searchParameters = self.getScreenerViewModel(for: indexPath).searchParameters
+                let parentVC = self.parent as? ScreenerSelectionContainerView
+                parentVC?.screenerSelectionDelegate?.didSelectScreener(searchParameters: searchParameters)
+            })
+        }
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
