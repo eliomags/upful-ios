@@ -189,7 +189,7 @@
 		3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC0523342BED00856205 /* PersistenceService.swift */; };
 		3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */; };
 		3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC082334360200856205 /* SavedStock+CoreDataProperties.swift */; };
-		3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift */; };
+		3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */; };
 		3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */; };
 		3DFD240023B672950027F5CF /* SentimentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FF23B672950027F5CF /* SentimentView.swift */; };
 		3DFD240223B67BE50027F5CF /* HomeGeneralViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD240123B67BE50027F5CF /* HomeGeneralViewModel.swift */; };
@@ -413,7 +413,7 @@
 		3DF5FC0523342BED00856205 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedStock+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3DF5FC082334360200856205 /* SavedStock+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedStock+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrebuiltScreenerViewController.swift; path = "Upful/Features/Screener Selection/Controllers/PrebuiltScreenerViewController.swift"; sourceTree = SOURCE_ROOT; };
+		3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrebuiltScreenerViewController.swift.swift; path = "Upful/Features/Screener Selection/Prebuilt/Controllers/PrebuiltScreenerViewController.swift.swift"; sourceTree = SOURCE_ROOT; };
 		3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsHeaderTableCell.swift; sourceTree = "<group>"; };
 		3DFD23FF23B672950027F5CF /* SentimentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentimentView.swift; sourceTree = "<group>"; };
 		3DFD240123B67BE50027F5CF /* HomeGeneralViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewModel.swift; sourceTree = "<group>"; };
@@ -1527,10 +1527,19 @@
 			children = (
 				3DB345DE23C39D1400EADFFD /* Models */,
 				3D061D1E23C273E000B8FB14 /* Protocols */,
+				3DB345E423C3E42400EADFFD /* Controllers */,
 				3DFAC57E23B9B08800378AF0 /* View Models */,
 				3D061D5023C3749900B8FB14 /* Logic Controllers */,
 			);
 			path = Prebuilt;
+			sourceTree = "<group>";
+		};
+		3DB345E423C3E42400EADFFD /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		3DBEFFBF23A9BD6900BA407E /* General */ = {
@@ -1905,21 +1914,12 @@
 		3DFAC57923B9AFDF00378AF0 /* Screener Selection */ = {
 			isa = PBXGroup;
 			children = (
-				3DFAC57C23B9B07900378AF0 /* Controllers */,
 				3D3749A823B9B1CC000D0597 /* Presenter */,
 				3DFAC57D23B9B08600378AF0 /* Views */,
 				3DB345DF23C39D2B00EADFFD /* Prebuilt */,
 				3DC4ED2F22FE671100232155 /* Manual Search Flow */,
 			);
 			path = "Screener Selection";
-			sourceTree = "<group>";
-		};
-		3DFAC57C23B9B07900378AF0 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift */,
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 		3DFAC57D23B9B08600378AF0 /* Views */ = {
@@ -2143,7 +2143,7 @@
 				3D3749B523BBADB1000D0597 /* NoPreferenceTableViewCell.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
 				3DF5FBC323341F3F00856205 /* HomeViewController.swift in Sources */,
-				3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift in Sources */,
+				3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */,
 				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
 				3DAB3EC5234E21320008CC18 /* SubscriptionDataManager.swift in Sources */,
 				3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */,

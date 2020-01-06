@@ -12,19 +12,20 @@ import XCTest
 class PreferenceDataManagerTest: XCTestCase {
     
     var sut: PreferenceDataManager!
-    
+    var userDefaults: UserDefaults?
+    let userDefaultsSuiteName = "TestDefaults"
     
     override func setUp() {
-        sut = PreferenceDataManager()
+        sut = PreferenceDataManager(userDefaults: UserDefaults(suiteName: userDefaultsSuiteName)!
+            , dataLoader: .init())
         sut.savedPreferences.removeAll()
     }
 
     override func tearDown() {
         sut = nil
-        
+        UserDefaults().removePersistentDomain(forName: userDefaultsSuiteName)
         super.tearDown()
     }
-    
     
     func testInit_data() {
         XCTAssertNotEqual(sut.data.count, 0)
@@ -89,6 +90,8 @@ class PreferenceDataManagerTest: XCTestCase {
         sut.update(.growthAny)
         sut.update(.dividendHigh)
         
+        sut.save()
+        
         // then
         let networkingStrings = sut.getGroupedPreferences()
         XCTAssertEqual(networkingStrings.count, 1)
@@ -102,6 +105,8 @@ class PreferenceDataManagerTest: XCTestCase {
         sut.update(.growthAny)
         sut.update(.dividendHigh)
         
+        sut.save()
+
         // then
         let networkingStrings = sut.getGroupedPreferences()
         XCTAssertEqual(networkingStrings.count, 2)
@@ -116,6 +121,8 @@ class PreferenceDataManagerTest: XCTestCase {
         sut.update(.growthAny)
         sut.update(.dividendHigh)
         
+        sut.save()
+
         // then
         let networkingStrings = sut.getGroupedPreferences()
         XCTAssertEqual(networkingStrings.count, 3)

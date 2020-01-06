@@ -13,8 +13,6 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     // MARK: - Dependencies
     // Core data for knowing currently saved screeners based on name
     // Core data for saving screener
-    // Firestore for loading screeners
-    // Delegate for dismissing and passing values to home
     
     weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "Pre-built"
@@ -95,7 +93,7 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let isEmpty = logicController.screenerViewModels.isEmpty
-        return isEmpty ? 10 : logicController.screenerViewModels.count
+        return isEmpty ? 5 : logicController.screenerViewModels.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

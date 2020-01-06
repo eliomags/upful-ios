@@ -47,10 +47,12 @@ class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
     }
 }
 
-struct ScreenerViewModel: Codable {
+struct ScreenerViewModel {
     let title: String
     let description: String
     let imageUrlString: String
     let searchParameters: [String]
     var counter: Int
 }
+
+extension ScreenerViewModel: Codable {}

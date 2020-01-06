@@ -13,6 +13,7 @@ class PreferenceDataManager: DataManager {
     // MARK: - Dependencies
 
     let dataLoader: PreferenceDataLoader
+    let userDefaults: UserDefaults
     
     // MARK: - State
     
@@ -28,7 +29,9 @@ class PreferenceDataManager: DataManager {
     
     // MARK: - Initializer
     
-    init(dataLoader: PreferenceDataLoader = .init()) {
+    init(userDefaults: UserDefaults = UserDefaults.standard,
+        dataLoader: PreferenceDataLoader = .init()) {
+        self.userDefaults = userDefaults
         self.dataLoader = dataLoader
         data = dataLoader.load()
         fetchRecent()
@@ -51,7 +54,7 @@ class PreferenceDataManager: DataManager {
     
     func save() {
         let newPreferences: [String] = self.savedPreferences.map({ $0 })
-        UserDefaults.standard.set(newPreferences, forKey: PreferenceName.metricPreferences)
+        userDefaults.set(newPreferences, forKey: PreferenceName.metricPreferences)
     }
     
     // MARK: - Helpers
@@ -118,7 +121,7 @@ class PreferenceDataManager: DataManager {
     }
     
     func retrieveSavedPreferences() -> [String] {
-        let items: [String] = UserDefaults.standard.stringArray(forKey: PreferenceName.metricPreferences) ?? []
+        let items: [String] = userDefaults.stringArray(forKey: PreferenceName.metricPreferences) ?? []
         return items
     }
     

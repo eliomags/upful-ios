@@ -87,8 +87,8 @@ class SavedScreenersViewModelTest: XCTestCase {
     func testRemoveScreener() {
         sut = makeSUTwithData()
         sut!.screeners = [
-            Screener(title: "No Title1", description: "test description1", urlComponents: [], manualScreenItems: []),
-            Screener(title: "No Title2", description: "test description2", urlComponents: [], manualScreenItems: [])
+            Screener(title: "No Title1", description: "test description1", urlComponents: [], imageUrlString: nil, manualScreenItems: []),
+            Screener(title: "No Title2", description: "test description2", urlComponents: [], imageUrlString: nil, manualScreenItems: [])
         ]
         
         XCTAssertEqual(sut!.screeners.count, 2)
@@ -137,8 +137,8 @@ private class MockSavedScreenerLoaderLoaded: SavedScreenerLoaderProtocol {
         DispatchQueue.global().async {
             completion(Result {
                 return [
-                    Screener(title: "No Title1", description: "test description1", urlComponents: [], manualScreenItems: []),
-                    Screener(title: "No Title2", description: "test description2", urlComponents: [], manualScreenItems: [])
+                    Screener(title: "No Title1", description: "test description1", urlComponents: [], imageUrlString: nil, manualScreenItems: []),
+                    Screener(title: "No Title2", description: "test description2", urlComponents: [], imageUrlString: nil, manualScreenItems: []),
                 ]
             })
         }
