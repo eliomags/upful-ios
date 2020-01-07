@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol SavedScreenerLoaderProtocol {
+protocol LocalScreenerLoaderProtocol {
     typealias SavedScreenerLoadingCompletion = (Result<[Screener],Error>) -> Void
     func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion)
     func removeScreenerParameters(with title: String)
@@ -16,7 +16,7 @@ protocol SavedScreenerLoaderProtocol {
     func saveScreener(screener: Screener)
 }
 
-class SavedScreenerLoader: SavedScreenerLoaderProtocol {
+class LocalScreenerLoader: LocalScreenerLoaderProtocol {
     
     let persistenceService = PersistenceService.shared
     
@@ -64,9 +64,8 @@ class SavedScreenerLoader: SavedScreenerLoaderProtocol {
         let savingScreener = SavedScreener(context: context)
         
         savingScreener.title = screener.title
-        savingScreener.screenDescription = ""
-        
-        // TODO: - Handle saving image data
+        savingScreener.screenDescription = screener.description
+        savingScreener.imageUrlString = screener.imageUrlString
         
         saveParameters(for: savingScreener, manualScreeningParameters: screener.manualScreenItems)
 

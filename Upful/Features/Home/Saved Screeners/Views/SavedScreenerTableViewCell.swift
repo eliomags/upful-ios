@@ -22,7 +22,7 @@ class SavedScreenerTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = "description\ndescription\ndescription"
         label.numberOfLines = 3
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         return label
     }()
     
@@ -30,11 +30,10 @@ class SavedScreenerTableViewCell: UITableViewCell {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
         stackView.axis = .vertical
         stackView.distribution = .fill
-        stackView.spacing = 8
+        stackView.spacing = 12
         stackView.isBaselineRelativeArrangement = true
         return stackView
     }()
-    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

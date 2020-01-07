@@ -12,7 +12,7 @@ class SavedScreenersViewModel {
     
     // MARK: - Depenedencies
     
-    let savedScreenerLoader: SavedScreenerLoaderProtocol
+    let savedScreenerLoader: LocalScreenerLoaderProtocol
     
     
     // MARK: - State
@@ -31,7 +31,7 @@ class SavedScreenersViewModel {
     var sendStateChanges: ((State) -> Void)?
     
     
-    init(savedScreenerLoader: SavedScreenerLoaderProtocol = SavedScreenerLoader()) {
+    init(savedScreenerLoader: LocalScreenerLoaderProtocol = LocalScreenerLoader()) {
         self.savedScreenerLoader = savedScreenerLoader
     }
     

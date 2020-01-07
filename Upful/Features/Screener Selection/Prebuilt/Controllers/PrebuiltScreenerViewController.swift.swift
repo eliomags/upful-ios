@@ -9,10 +9,9 @@
 import UIKit
 
 final class PrebuiltScreenerViewController: UITableViewController, MenuBarDisplayable {
-    
-    // MARK: - Dependencies
-    // Core data for knowing currently saved screeners based on name
-    // Core data for saving screener
+    enum Section: Int {
+        case popular, all
+    }
     
     weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "Pre-built"
@@ -37,10 +36,6 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     override func viewDidLoad() {
         super.viewDidLoad()
         getStateUpdates()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         logicController.loadScreeners()
     }
     
@@ -55,45 +50,55 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     
     fileprivate func getStateUpdates() {
         logicController.sendStateUpdates = { [weak self] (state) in
-            self?.tableView.reloadData()
+            guard let self = self else { return }
+            switch state {
+            case .loading:
+                LoadingViewPresenter.show(in: self)
+            default:
+                LoadingViewPresenter.remove()
+            }
+            self.tableView.reloadData()
         }
     }
-    
-    // MARK: - Actions
-    
-    @objc fileprivate func handleSaveTap(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
-        // TODO: - Handle Saving/Deletion
-    }
-        
+     
     // MARK: - Cell Creation
     
     fileprivate func makeScreenerCells(for indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ScreenerPreviewTableViewCell
-        cell?.saveButton.addTarget(self, action: #selector(handleSaveTap), for: .touchUpInside)
+        let section = indexPath.section
+        var viewModel: ScreenerViewModel
         
-        if !logicController.screenerViewModels.isEmpty {
-            cell?.showLoaded()
-            let viewModel = getScreenerViewModel(for: indexPath)
+        if section == Section.popular.rawValue {
+            viewModel = logicController.popularScreenerViewModels[indexPath.row]
             cell?.titleLabel.text = viewModel.title
             cell?.descriptionLabel.text = viewModel.description
             cell?.loadImage(urlString: viewModel.imageUrlString)
         }
-
+        if section == Section.all.rawValue {
+            viewModel = logicController.screenerViewModels[indexPath.row]
+            cell?.titleLabel.text = viewModel.title
+            cell?.descriptionLabel.text = viewModel.description
+            cell?.loadImage(urlString: viewModel.imageUrlString)
+        }
+        cell?.showLoaded()
+        
         return cell ?? UITableViewCell()
-    }
-    
-    // MARK: - Helpers
-    
-    fileprivate func getScreenerViewModel(for indexPath: IndexPath) -> ScreenerViewModel {
-        return logicController.screenerViewModels[indexPath.row]
     }
     
     // MARK: - TableView Delegate/Datasource Methods
     
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let isEmpty = logicController.screenerViewModels.isEmpty
-        return isEmpty ? 5 : logicController.screenerViewModels.count
+        switch section {
+        case Section.popular.rawValue:
+            return logicController.popularScreenerViewModels.count
+        case Section.all.rawValue:
+            return logicController.screenerViewModels.count
+        default: return 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -101,18 +106,32 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if !logicController.screenerViewModels.isEmpty {
-            dismiss(animated: true, completion: {
-                let searchParameters = self.getScreenerViewModel(for: indexPath).searchParameters
-                let parentVC = self.parent as? ScreenerSelectionContainerView
+        let section = indexPath.section
+        logicController.incrementScreenerInterest(at: indexPath)
+        let parentVC = self.parent as? ScreenerSelectionContainerView
+        
+        dismiss(animated: true, completion: {
+            switch section {
+            case Section.popular.rawValue:
+                let searchParameters = self.logicController.popularScreenerViewModels[indexPath.row].searchParameters
                 parentVC?.screenerSelectionDelegate?.didSelectScreener(searchParameters: searchParameters)
-            })
-        }
+            case Section.all.rawValue:
+                let searchParameters = self.logicController.screenerViewModels[indexPath.row].searchParameters
+                parentVC?.screenerSelectionDelegate?.didSelectScreener(searchParameters: searchParameters)
+            default: break
+            }
+        })
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = TableSectionHeaderView()
-        header.headerTextLabel.text = "Available Screeners"
+        switch section {
+        case Section.popular.rawValue:
+            header.headerTextLabel.text = "Popular Screeners"
+        case Section.all.rawValue:
+            header.headerTextLabel.text = "Available Screeners"
+        default: break
+        }
         header.addButton.setTitle("", for: .normal)
         return header
     }

@@ -22,12 +22,6 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
         return v
     }()
     
-    let saveButton: SaveButton = {
-        let v = SaveButton()
-        v.translatesAutoresizingMaskIntoConstraints = false
-        return v
-    }()
-    
     private lazy var contentStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [screenerImage, textStackView])
         sv.translatesAutoresizingMaskIntoConstraints = false
@@ -45,18 +39,12 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func setupViews() {
-        addSubview(saveButton)
-        NSLayoutConstraint.activate([
-            saveButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            saveButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
-        ])
         
+    override func setupViews() {
         addSubview(contentStackView)
         NSLayoutConstraint.activate([
             contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            contentStackView.trailingAnchor.constraint(equalTo: saveButton.leadingAnchor, constant: 0),
+            contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
         ])
         
         NSLayoutConstraint.activate([

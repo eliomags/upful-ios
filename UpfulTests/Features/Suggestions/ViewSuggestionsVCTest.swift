@@ -9,7 +9,6 @@
 import XCTest
 @testable import Upful
 
-
 class ViewSuggestionsVCTest: XCTestCase {
 
     var sut: ViewSuggestionsVC!

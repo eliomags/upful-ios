@@ -16,13 +16,14 @@ enum ViewControllerState {
 }
 
 class PrebuiltScreenerLogicController {
-    
+
     // MARK: - Dependencies
     
-    private let screenerLoader: RemoteScreenerLoaderProtocol
+    private let remoteScreenerLoader: RemoteScreenerLoaderProtocol
     
     // MARK: - State
     
+    private(set) var popularScreenerViewModels: [ScreenerViewModel] = []
     private(set) var screenerViewModels: [ScreenerViewModel] = []
     private(set) var state: ViewControllerState = .waiting {
         didSet {
@@ -34,14 +35,19 @@ class PrebuiltScreenerLogicController {
     
     // MARK: - Initializer
     
-    init(screenerLoader: RemoteScreenerLoaderProtocol = RemoteScreenerLoader()) {
-        self.screenerLoader = screenerLoader
+    init(remoteScreenerLoader: RemoteScreenerLoaderProtocol = RemoteScreenerLoader()) {
+        self.remoteScreenerLoader = remoteScreenerLoader
     }
     
     // MARK: - API
     
     func loadScreeners() {
-        screenerLoader.load { (result) in
+        state = .loading
+        getRemoteScreeners()
+    }
+    
+    fileprivate func getRemoteScreeners() {
+        remoteScreenerLoader.load { (result) in
             switch result {
             case .success(let vms):
                 self.handleLoadingSuccess(viewModels: vms)
@@ -51,14 +57,39 @@ class PrebuiltScreenerLogicController {
         }
     }
     
+    func getPopularScreeners(retrievedScreeners: [ScreenerViewModel]) {
+        if retrievedScreeners.count > 3 {
+            let sortedScreeners = retrievedScreeners.sorted(by: { $0.interest > $1.interest })
+            let topScreeners = Array(sortedScreeners[0...2])
+            let restOfScreeners = Array(sortedScreeners[3...]).shuffled()
+            popularScreenerViewModels = topScreeners
+            screenerViewModels = restOfScreeners
+        } else {
+            screenerViewModels = retrievedScreeners
+        }
+    }
+    
+    func incrementScreenerInterest(at indexPath: IndexPath) {
+        let section = indexPath.section
+        var docID = ""
+        
+        if section == PrebuiltScreenerViewController.Section.popular.rawValue {
+            docID = popularScreenerViewModels[indexPath.row].documentID ?? ""
+        }
+        if section == PrebuiltScreenerViewController.Section.all.rawValue {
+            docID = screenerViewModels[indexPath.row].documentID ?? ""
+        }
+        remoteScreenerLoader.incrementScreenerInterest(documentID: docID)
+    }
+    
+    
     fileprivate func handleLoadingSuccess(viewModels: [ScreenerViewModel]) {
-        screenerViewModels = viewModels
+        getPopularScreeners(retrievedScreeners: viewModels)
         state = .loaded
     }
     
     fileprivate func handleLoadingError() {
         state = .error
     }
-    
 }
 

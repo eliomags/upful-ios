@@ -120,7 +120,7 @@ class SavedScreenersViewModelTest: XCTestCase {
     }
 }
 
-private class MockSavedScreenerLoaderEmpty: SavedScreenerLoaderProtocol {
+private class MockSavedScreenerLoaderEmpty: LocalScreenerLoaderProtocol {
     func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion) {
         DispatchQueue.global().async {
             completion(Result {
@@ -132,7 +132,7 @@ private class MockSavedScreenerLoaderEmpty: SavedScreenerLoaderProtocol {
     func removeScreener(with title: String) {}
     func saveScreener(screener: Screener) {}
 }
-private class MockSavedScreenerLoaderLoaded: SavedScreenerLoaderProtocol {
+private class MockSavedScreenerLoaderLoaded: LocalScreenerLoaderProtocol {
     func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion) {
         DispatchQueue.global().async {
             completion(Result {
@@ -147,7 +147,7 @@ private class MockSavedScreenerLoaderLoaded: SavedScreenerLoaderProtocol {
     func removeScreener(with title: String) {}
     func saveScreener(screener: Screener) {}
 }
-private class MockSavedScreenerLoaderError: SavedScreenerLoaderProtocol {
+private class MockSavedScreenerLoaderError: LocalScreenerLoaderProtocol {
     func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion) {
         DispatchQueue.global().async {
             completion(.failure(NSError()))

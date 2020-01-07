@@ -7,14 +7,15 @@
 //
 
 import Foundation
+import Firebase
 
 protocol RemoteScreenerLoaderProtocol {
     typealias ScreenerLoadCompletion = (Result<[ScreenerViewModel],Error>) -> Void
     func load(completion: @escaping ScreenerLoadCompletion)
+    func incrementScreenerInterest(documentID: String)
 }
 
 class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
-    
     private let remoteService: FirestoreAPI
 
     init(remoteService: FirestoreAPI = .init()) {
@@ -33,7 +34,27 @@ class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
                     completion(.failure(NSError()))
                 }
             case .failure(_):
-                break
+                completion(.failure(NSError()))
+            }
+        }
+    }
+    
+    private lazy var batch: WriteBatch = {
+        let b = remoteService.db.batch()
+        return b
+    }()
+    
+    func incrementScreenerInterest(documentID: String) {
+        let collection = FirestoreAPI.Collection.screeners.rawValue
+        let docRef = remoteService.db.collection(collection).document(documentID)
+        batch.updateData(["interest": FieldValue.increment(Int64(1))], forDocument: docRef)
+        commitBatch()
+    }
+    
+    private func commitBatch() {
+        batch.commit() { err in
+            if let err = err {
+                print("Error writing batch \(err)")
             }
         }
     }
@@ -52,7 +73,8 @@ struct ScreenerViewModel {
     let description: String
     let imageUrlString: String
     let searchParameters: [String]
-    var counter: Int
+    var interest: Int
+    let documentID: String?
 }
 
 extension ScreenerViewModel: Codable {}
