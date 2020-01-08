@@ -14,13 +14,10 @@ class AnalysisChartCell: UITableViewCell {
     lazy var containerView: UIView = {
         let v = UIView()
         v.backgroundColor = VersionManager.collectionCellColor()
-
         v.addSubview(chartView)
         chartView.anchor(
             top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
             padding: .init(top: 15, left: 15, bottom: 15, right: 15))
-        v.layer.masksToBounds = true
-        v.layer.cornerRadius = 15
         return v
     }()
     
@@ -29,9 +26,7 @@ class AnalysisChartCell: UITableViewCell {
         selectionStyle = .none
         backgroundColor = .clear
         addSubview(containerView)
-        containerView.anchor(
-            top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
-            padding: .init(top: 8, left: 12, bottom: 8, right: 12))
+        containerView.fillSuperview()
     }
     
     required init?(coder aDecoder: NSCoder) {

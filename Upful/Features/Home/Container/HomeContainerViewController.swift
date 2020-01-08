@@ -21,7 +21,6 @@ class HomeContainerViewController: MenuContainerViewController {
     
     private lazy var screenerSelectionButton: CustomRoundButton = {
         let b = CustomRoundButton()
-
         b.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleScreenerSelectionTap)))
         return b
     }()
@@ -54,12 +53,31 @@ class HomeContainerViewController: MenuContainerViewController {
                                        padding: .init(top: 0, left: 0, bottom: 45, right: 25))
     }
     
+    func emphasizeButton() {
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+            self?.screenerSelectionButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        }) { (_) in
+            UIView.animate(withDuration: 0.3, animations: { [weak self] in
+                self?.screenerSelectionButton.transform = .identity
+            }) { (_) in
+                UIView.animate(withDuration: 0.3, animations: { [weak self] in
+                    self?.screenerSelectionButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                }) { (_) in
+                    UIView.animate(withDuration: 0.3, animations: { [weak self] in
+                        self?.screenerSelectionButton.transform = .identity
+                    })
+                }
+            }
+        }
+    }
+    
     // MARK: - Actions
     
     @objc fileprivate func handleScreenerSelectionTap(sender: UIButton) {
         let presenter = ScreenerSelectionPresenter(displayingViewController: self)
         presenter.present()
     }
+    
 }
 
 extension HomeContainerViewController: ScreenerSelectionDelegate {

@@ -319,9 +319,6 @@ final class HomeViewController: UITableViewController, SaveScreenerDelegate, Not
         case 1:
             if isSavedScreenersEmpty {
                 let emptyCell = EmptyScreenerFavoriteCell(style: .default, reuseIdentifier: nil)
-                    emptyCell.cellAction = { [weak self] in
-                        self?.navigateToAddScreener()
-                }
                 return emptyCell
             }
             let savedScreenerCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.savedScreenCell, for: indexPath)
@@ -332,9 +329,6 @@ final class HomeViewController: UITableViewController, SaveScreenerDelegate, Not
         case 2:
             if isSavedStocksEmpty {
                 let emptyCell = EmptyStockFavoriteCell(style: .default, reuseIdentifier: nil)
-                emptyCell.cellAction = { [weak self] in
-                    self?.navigateToAddStock()
-                }
                 return emptyCell
             }
             let cell = UITableViewCell(style: .subtitle, reuseIdentifier: ReuseID.savedCompanyCell)

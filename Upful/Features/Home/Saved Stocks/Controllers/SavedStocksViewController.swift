@@ -116,23 +116,20 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
         self.tableView.isScrollEnabled = false
         self.tableView.showsVerticalScrollIndicator = false
         self.tableView.reloadData()
+        if let container = parent as? HomeContainerViewController {
+            container.emphasizeButton()
+        }
     }
     
     // MARK: - TableViewCell Updates
     
     fileprivate func showEmptyCell(for indexPath: IndexPath) -> UITableViewCell {
         let emptyCell = EmptyStockFavoriteCell(style: .default, reuseIdentifier: nil)
-        emptyCell.cellAction = { [weak self] in
-            self?.navigateToAddStock()
-        }
         return emptyCell
     }
     
     fileprivate func showErrorCell(for indexPath: IndexPath) -> UITableViewCell {
         let errorCell = ErrorFavoriteCell(style: .default, reuseIdentifier: nil)
-        errorCell.cellAction = { [weak self] in
-            self?.viewModel.loadSavedStocks()
-        }
         return errorCell
     }
     

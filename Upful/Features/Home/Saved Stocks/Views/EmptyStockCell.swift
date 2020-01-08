@@ -9,8 +9,9 @@
 import UIKit
 
 class EmptyStockFavoriteCell: GeneralEmptyCell {
-    override var buttonLook: GeneralEmptyCell.ButtonLook {
-        return .solid
+    
+    override var emptyImage: UIImage {
+        return UIImage(named: "Looking1") ?? super.emptyImage
     }
 
     override var emptyHeaderText: String {
@@ -20,10 +21,6 @@ class EmptyStockFavoriteCell: GeneralEmptyCell {
     override var emptyDescriptionText: String {
         return "No saved stocks to display. Tap add button to get started."
     }
-    
-    override var buttonText: String {
-        return "Add Stock"
-    }
 }
 
 class ErrorFavoriteCell: GeneralEmptyCell {
@@ -32,10 +29,6 @@ class ErrorFavoriteCell: GeneralEmptyCell {
             .withTintColor(.systemGray3, renderingMode: .alwaysOriginal)
             ?? UIImage()
     }
-    
-    override var buttonLook: GeneralEmptyCell.ButtonLook {
-        return .bordered
-    }
 
     override var emptyHeaderText: String {
         return "Error"
@@ -43,9 +36,5 @@ class ErrorFavoriteCell: GeneralEmptyCell {
     
     override var emptyDescriptionText: String {
         return "Error getting your data. Refresh to try again."
-    }
-    
-    override var buttonText: String {
-        return "Refresh"
     }
 }

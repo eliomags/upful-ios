@@ -90,6 +90,9 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
         self.tableView.isScrollEnabled = false
         self.tableView.showsVerticalScrollIndicator = false
         self.tableView.reloadData()
+        if let container = parent as? HomeContainerViewController {
+            container.emphasizeButton()
+        }
     }
     
     // MARK: - View Setup
@@ -132,13 +135,11 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
     
     fileprivate func showEmptyCell(for indexPath: IndexPath) -> UITableViewCell {
         let emptyCell = EmptyScreenerFavoriteCell(style: .default, reuseIdentifier: nil)
-        emptyCell.cellAction = { [weak self] in self?.navigateToAddScreener() }
         return emptyCell
     }
     
     fileprivate func showErrorCell(for indexPath: IndexPath) -> UITableViewCell {
         let errorCell = ErrorFavoriteCell(style: .default, reuseIdentifier: nil)
-        errorCell.cellAction = { [weak self] in self?.viewModel.loadScreeners() }
         return errorCell
     }
     
