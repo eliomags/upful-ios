@@ -26,7 +26,7 @@ class GeneralEmptyCell: UITableViewCell {
         return String()
     }
     
-    private lazy var cellImageView: UIImageView = {
+    lazy var cellImageView: UIImageView = {
         let imageView = UIImageView(image: emptyImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -83,7 +83,7 @@ class GeneralEmptyCell: UITableViewCell {
         super.init(coder: aDecoder)
     }
     
-    fileprivate func setupImageView() {
+    func setupImageView() {
         addSubview(cellImageView)
         NSLayoutConstraint.activate([
             cellImageView.heightAnchor.constraint(equalToConstant: 250),

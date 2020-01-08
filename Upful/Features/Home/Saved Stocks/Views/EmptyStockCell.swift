@@ -9,17 +9,16 @@
 import UIKit
 
 class EmptyStockFavoriteCell: GeneralEmptyCell {
-    
     override var emptyImage: UIImage {
         return UIImage(named: "Looking1") ?? super.emptyImage
     }
 
     override var emptyHeaderText: String {
-        return "Saved Stocks"
+        return "No Stocks Saved"
     }
     
     override var emptyDescriptionText: String {
-        return "No saved stocks to display. Tap add button to get started."
+        return "Start searching for stocks. Tap add button to get started."
     }
 }
 

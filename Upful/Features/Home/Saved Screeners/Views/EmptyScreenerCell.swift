@@ -9,13 +9,26 @@
 import UIKit
 
 class EmptyScreenerFavoriteCell: GeneralEmptyCell {
+    override var emptyImage: UIImage {
+        return UIImage(named: "Looking2") ?? super.emptyImage
+    }
     
     override var emptyHeaderText: String {
-        return "Saved Screeners"
+        return "No Screeners Saved"
     }
     
     override var emptyDescriptionText: String {
-        return "You have no screeners saved.\nAdd and name a screener to get started."
+        return "Get started searching prebuilt screeners or build your own!."
+    }
+    
+    override func setupImageView() {
+        addSubview(cellImageView)
+        NSLayoutConstraint.activate([
+            cellImageView.heightAnchor.constraint(equalToConstant: 275),
+            cellImageView.bottomAnchor.constraint(equalTo: centerYAnchor, constant: 50),
+            cellImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70),
+            cellImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -75)
+        ])
     }
 }
 
