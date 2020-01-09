@@ -63,7 +63,6 @@
 		3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F9662231A16B7003811AB /* CompanyNewsModel.swift */; };
 		3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F9664231B7488003811AB /* String+Extensions.swift */; };
 		3D30D9342358862E00DC06B6 /* NotesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D30D9332358862E00DC06B6 /* NotesPresenter.swift */; };
-		3D3749AA23B9B1D9000D0597 /* ScreenerSelectionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749A923B9B1D9000D0597 /* ScreenerSelectionPresenter.swift */; };
 		3D3749AC23B9B40A000D0597 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AB23B9B40A000D0597 /* NewsViewController.swift */; };
 		3D3749B023B9BA66000D0597 /* NewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AF23B9BA66000D0597 /* NewsViewModel.swift */; };
 		3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B123BA830D000D0597 /* StockScreeningService.swift */; };
@@ -290,7 +289,6 @@
 		3D2F9662231A16B7003811AB /* CompanyNewsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyNewsModel.swift; sourceTree = "<group>"; };
 		3D2F9664231B7488003811AB /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		3D30D9332358862E00DC06B6 /* NotesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesPresenter.swift; sourceTree = "<group>"; };
-		3D3749A923B9B1D9000D0597 /* ScreenerSelectionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScreenerSelectionPresenter.swift; path = "Upful/Features/Home/Reusabile Views/ScreenerSelectionPresenter.swift"; sourceTree = SOURCE_ROOT; };
 		3D3749AB23B9B40A000D0597 /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
 		3D3749AF23B9BA66000D0597 /* NewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModel.swift; sourceTree = "<group>"; };
 		3D3749B123BA830D000D0597 /* StockScreeningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockScreeningService.swift; sourceTree = "<group>"; };
@@ -995,14 +993,6 @@
 				3D4D8606231C5B2F0065CF9F /* Stock Search */,
 			);
 			path = Archive;
-			sourceTree = "<group>";
-		};
-		3D3749A823B9B1CC000D0597 /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				3D3749A923B9B1D9000D0597 /* ScreenerSelectionPresenter.swift */,
-			);
-			path = Presenter;
 			sourceTree = "<group>";
 		};
 		3D3749B323BBAD8A000D0597 /* TableViewCells */ = {
@@ -1956,7 +1946,6 @@
 		3DFAC57923B9AFDF00378AF0 /* Screener Selection */ = {
 			isa = PBXGroup;
 			children = (
-				3D3749A823B9B1CC000D0597 /* Presenter */,
 				3DFAC57D23B9B08600378AF0 /* Views */,
 				3DB345DF23C39D2B00EADFFD /* Prebuilt */,
 				3DC4ED2F22FE671100232155 /* Manual Search Flow */,
@@ -2234,7 +2223,6 @@
 				3DAB3EB0234B6BAA0008CC18 /* ReportPresenter.swift in Sources */,
 				3DFD240023B672950027F5CF /* SentimentView.swift in Sources */,
 				3DAB3EB4234B6C440008CC18 /* ReportContentView.swift in Sources */,
-				3D3749AA23B9B1D9000D0597 /* ScreenerSelectionPresenter.swift in Sources */,
 				3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */,
 				3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */,
 				3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */,

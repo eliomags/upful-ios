@@ -82,15 +82,7 @@ class HomeContainerViewController: MenuContainerViewController {
     // MARK: - Actions
     
     @objc fileprivate func handleScreenerSelectionTap(sender: UIButton) {
-        let presenter = ScreenerSelectionPresenter(displayingViewController: self)
-        presenter.present()
-    }
-    
-}
-
-extension HomeContainerViewController: ScreenerSelectionDelegate {
-    func didSelectScreener(searchParameters: [String]) {
-        let searchResultsVC = ScreenResultsViewController(searchParameters: searchParameters)
-        navigationController?.pushViewController(searchResultsVC, animated: true)
+        let screenerSelectionVC = ScreenerSelectionContainerView(collectionViewLayout: UICollectionViewFlowLayout())
+        navigationController?.pushViewController(screenerSelectionVC, animated: true)
     }
 }

@@ -18,7 +18,7 @@ class EmptyScreenerFavoriteCell: GeneralEmptyCell {
     }
     
     override var emptyDescriptionText: String {
-        return "Get started searching prebuilt screeners or build your own!."
+        return "Get started! Search prebuilt screeners or build your own!."
     }
     
     override func setupImageView() {

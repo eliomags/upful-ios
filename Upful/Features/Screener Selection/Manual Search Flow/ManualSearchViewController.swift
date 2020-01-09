@@ -24,7 +24,6 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
     }
-    weak var screenerSelectionDelegate: ScreenerSelectionDelegate?
     weak var searchCriteriaDelegate: SearchCriteriaDelegate?
 
     // MARK:- Views
@@ -160,10 +159,9 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
             if shouldNavigate {
                 AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .manual))
-                
-                dismiss(animated: true) {
-                    self.screenerSelectionDelegate?.didSelectScreener(searchParameters: self.configureURLComponents())
-                }
+                let searchParameters = self.configureURLComponents()
+                let searchResultsVC = ScreenResultsViewController(searchParameters: searchParameters)
+                self.navigationController?.pushViewController(searchResultsVC, animated: true)
             } else {
                 let presenter = SubscriptionPresenter(type: .screeningLimit)
                 presenter.present(in: self)

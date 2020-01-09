@@ -108,19 +108,17 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = indexPath.section
         logicController.incrementScreenerInterest(at: indexPath)
-        let parentVC = self.parent as? ScreenerSelectionContainerView
-        
-        dismiss(animated: true, completion: {
-            switch section {
-            case Section.popular.rawValue:
-                let searchParameters = self.logicController.popularScreenerViewModels[indexPath.row].searchParameters
-                parentVC?.screenerSelectionDelegate?.didSelectScreener(searchParameters: searchParameters)
-            case Section.all.rawValue:
-                let searchParameters = self.logicController.screenerViewModels[indexPath.row].searchParameters
-                parentVC?.screenerSelectionDelegate?.didSelectScreener(searchParameters: searchParameters)
-            default: break
-            }
-        })
+        switch section {
+        case Section.popular.rawValue:
+            let searchParameters = logicController.popularScreenerViewModels[indexPath.row].searchParameters
+            let resultsVC = ScreenResultsViewController(searchParameters: searchParameters)
+            navigationController?.pushViewController(resultsVC, animated: true)
+        case Section.all.rawValue:
+            let searchParameters = logicController.screenerViewModels[indexPath.row].searchParameters
+            let resultsVC = ScreenResultsViewController(searchParameters: searchParameters)
+            navigationController?.pushViewController(resultsVC, animated: true)
+        default: break
+        }
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

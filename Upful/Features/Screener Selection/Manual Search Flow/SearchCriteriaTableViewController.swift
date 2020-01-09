@@ -158,8 +158,6 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
             return
         }
         let manualSearchVC = ManualSearchViewController(manualScreenItems: self.manualScreenItems)
-        manualSearchVC.screenerSelectionDelegate = (parent as? ScreenerSelectionContainerView)?.screenerSelectionDelegate
-        manualSearchVC.searchCriteriaDelegate = self
         self.navigationController?.pushViewController(manualSearchVC, animated: true)
     }
     

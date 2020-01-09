@@ -15,36 +15,19 @@ final class ScreenerSelectionContainerView: MenuContainerViewController {
         let customSearchVC = SearchCriteriaTableViewController()
         return [preBuiltScreenerVC, customSearchVC]
     }
-    
-    weak var screenerSelectionDelegate: ScreenerSelectionDelegate?
-    
-    // MARK: - Views
-    
-    private lazy var cancelButton: CancelButton = {
-         let button = CancelButton()
-         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
-         return button
-     }()
-     
-    // MARK: - Initializer Methods
+        
+    // MARK: - View Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavBar()
     }
         
-    // MARK: - Actions
-    
-    @objc fileprivate func handleDismiss() {
-        self.dismiss(animated: true)
-    }
-    
     // MARK: - View Setup
     
     fileprivate func configureNavBar() {
         navigationController?.navigationBar.isTranslucent = false
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.title = "Screeners"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
     }
 }
