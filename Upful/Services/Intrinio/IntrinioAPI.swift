@@ -146,25 +146,19 @@ final class IntrinioAPI: StockScreenNetworkingProtocol {
     
     private let lookupEndpoint = "https://api-v2.intrinio.com/fundamentals/"
     // Q1TTM, Q2TTM, Q3TTM, FY, Q1, Q2, Q3, Q4, Q2YTD, Q3YTD
-    private let documentType = "-calculations-2019-Q2TTM/standardized_financials?"
+    private let documentType = "-calculations-2019-Q3TTM/standardized_financials?"
     
     func fetchStockBatchFinancials(ticker: String, completion: @escaping (Result<[StandardizedFinancial], Error>) -> Void) {
         guard let url = URL(string: lookupEndpoint + ticker + documentType + apiKey) else { return }
-
-        let decoder = JSONDecoder()
-        let session = URLSession.shared
-        let task = session.dataTask(with: url) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-            }
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let error = error { completion(.failure(error)) }
             guard let data = data else { return }
+            let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
-            do {
-                let companyData = try decoder.decode(Stock.self, from: data)                
-                completion(.success(companyData.standardizedFinancials ?? []))
-            } catch let error {
-                completion(.failure(error))
-            }
+            completion(Result {
+                let stock = try decoder.decode(StockData.self, from: data)
+                return stock.standardizedFinancials ?? []
+            })
         }
         task.resume()
     }

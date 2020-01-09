@@ -8,29 +8,37 @@
 
 import Foundation
 
+struct CompanyNewsModel: Decodable {
+    let title: String
+    let publicationDate: String
+    let url: String
+    let summary: String
+}
+
+/*
+ Stock Data for a specified ticker
+ */
+struct StockData: Decodable {
+    var standardizedFinancials: [StandardizedFinancial]?
+    var news: [CompanyNewsModel]?
+}
+
+
 // MARK: - INTRINIO SEARCH RESULTS MODEL
+
 struct ScreeningResponse: Decodable {
     var data: [Stock]
     var resultCount: Int?
     var pageSize: Int?
 }
 
-class Stock: Decodable, Hashable {
-    static func == (lhs: Stock, rhs: Stock) -> Bool {
-        return lhs.ticker == rhs.ticker
-    }
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(ticker)
-    }
-    
+final class Stock {
     let name: String
     let ticker: String
     var marketcap: Int?
     var divyield: Double?
     var pricetoearnings: Double?
     var ebitgrowth: Double?
-    var standardizedFinancials: [StandardizedFinancial]?
-    var news: [CompanyNewsModel]?
     
     init(name: String,ticker: String) {
         self.name = name
@@ -38,15 +46,19 @@ class Stock: Decodable, Hashable {
     }
 }
 
-extension Stock {
-    static let cache = NSCache<NSString,Stock>()
+extension Stock: Decodable {}
+
+extension Stock: Hashable {
+    static func == (lhs: Stock, rhs: Stock) -> Bool {
+        return lhs.ticker == rhs.ticker
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ticker)
+    }
 }
 
-struct CompanyNewsModel: Decodable {
-    let title: String
-    let publicationDate: String
-    let url: String
-    let summary: String
+extension Stock {
+    static let cache = NSCache<NSString,Stock>()
 }
 
 

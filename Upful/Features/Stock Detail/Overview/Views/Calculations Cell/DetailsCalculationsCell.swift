@@ -29,21 +29,17 @@ final class DetailsCalculationCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .clear
+        backgroundColor = VersionManager.collectionCellColor()
         selectionStyle = .none
+        
         addSubview(calcSV)
         calcSV.anchor(
             top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
-            padding: .init(top: 8, left: 24, bottom: 16, right: 24))
+            padding: .init(top: 32, left: 24, bottom: 32, right: 24))
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-//        roundCorners(corners: [.bottomLeft, .bottomRight], radius: 16)
     }
     
     func setupCell(with financials: [StandardizedFinancial]) {

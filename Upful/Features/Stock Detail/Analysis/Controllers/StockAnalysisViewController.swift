@@ -67,13 +67,14 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         }
     }
     
-    private func observeStateChanges(_ state: Bool) {
-        self.showActivitySpinner(state)
-        if !state {
+    private func observeStateChanges(_ isLoading: Bool) {
+        if isLoading {
+            LoadingViewPresenter.show(in: self)
+        } else {
+            LoadingViewPresenter.remove()
             DispatchQueue.main.async { [weak self] in
                 self?.tableView.reloadData()
                 self?.refreshingControl.endRefreshing()
-                self?.tableView.contentInset = UIEdgeInsets(top: 70, left: 0, bottom: 0, right: 0)
             }
         }
     }
@@ -84,7 +85,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         let v = TableHeaderView()
         v.detailsLabel.text = companyName
         v.headerLabel.text = ticker
-
         return v
     }()
     
@@ -94,22 +94,9 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         return rc
     }()
     
-    private var loadingView: UIView = {
-        let v = UIView()
-        let activityView = UIActivityIndicatorView(style: .medium)
-        activityView.startAnimating()
-        v.addSubview(activityView)
-        activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
-                            padding: .init(top: 30, left: 30, bottom: 30, right: 30))
-        v.layer.cornerRadius = 15
-        v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
-        return v
-    }()
-    
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.contentInset = UIEdgeInsets(top: stockHeaderView.intrinsicContentSize.height + 7, left: 0, bottom: 0, right: 0)
         tv.register(AnalysisChartCell.self, forCellReuseIdentifier: ReuseID.graphCell)
         tv.register(GenericTableViewCell.self, forCellReuseIdentifier: ReuseID.graphConfigurationCell)
         tv.register(NewsCell.self, forCellReuseIdentifier: ReuseID.reportsCell)
@@ -159,24 +146,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.refreshControl = refreshingControl
         view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-    }
-    
-    func showActivitySpinner(_ shouldShowSpinner: Bool) {
-        if shouldShowSpinner {
-            self.view.addSubview(loadingView)
-            loadingView.translatesAutoresizingMaskIntoConstraints = false
-            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        }
-        if !shouldShowSpinner {
-            DispatchQueue.main.async {
-                self.loadingView.removeFromSuperview()
-            }
-        }
+        tableView.fillSuperview()
     }
     
     fileprivate func configureLineData(chartView: CombinedLineChartView, criteria: SearchCriteria) {
@@ -288,7 +258,8 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     // MARK: - Scroll View Delegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let heightThreshold = stockHeaderView.frame.height - (menuViewItemDelegate?.menuBarView.frame.height ?? 40) - 36
+        let bufferHeight: CGFloat = 15
+        let heightThreshold: CGFloat = stockHeaderView.intrinsicContentSize.height - bufferHeight
         let reachedThreshold = scrollView.contentOffset.y > heightThreshold
         parent?.navigationItem.title = reachedThreshold ? ticker: ""
     }

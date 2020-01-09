@@ -21,7 +21,8 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     let ticker: String
     let companyName: String
     let intrinioApi: IntrinioAPI
-    
+    private let stockNewsLoader = StockNewsLoader()
+
     private enum ReuseID {
         static let graphCell = "graphCell"
         static let calculationsCell = "calculationsCell"
@@ -36,11 +37,14 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         }
     }
     
-    fileprivate func observeStateChanges(_ state: Bool) {
-        showActivitySpinner(state)
-        tableView.reloadData()
-        refreshingControl.endRefreshing()
-        tableView.isScrollEnabled = !state
+    fileprivate func observeStateChanges(_ isLoading: Bool) {
+        if isLoading {
+            LoadingViewPresenter.show(in: self)
+        } else {
+            LoadingViewPresenter.remove()
+            tableView.reloadData()
+            refreshingControl.endRefreshing()
+        }
     }
     
     fileprivate var chartRevenueData: [CompanyHistoricalDatum] = []
@@ -50,9 +54,10 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     }
     
     fileprivate var calcData: [StandardizedFinancial] = []
-    fileprivate var newsData: [CompanyNewsModel] = []
+    private(set) var stockNews: [StockNewsViewModel] = []
+
     fileprivate var feedData: [[Any]] {
-        return [chartData, calcData, newsData]
+        return [chartData, calcData, stockNews]
     }
     
     // MARK: - Views
@@ -84,21 +89,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         return rc
     }()
     
-    private var loadingView: UIView = {
-        let v = UIView()
-        let activityView = UIActivityIndicatorView(style: .medium)
-        activityView.startAnimating()
-        v.addSubview(activityView)
-        activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
-                            padding: .init(top: 30, left: 30, bottom: 30, right: 30))
-        v.layer.cornerRadius = 15
-        v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
-        return v
-    }()
-    
     // MARK: - Initializer Methods
     
-    init(ticker: String, companyName: String, networkingAPI: IntrinioAPI) {
+    init(ticker: String, companyName: String, networkingAPI: IntrinioAPI = .init()) {
         self.ticker = ticker
         self.companyName = companyName
         self.intrinioApi = networkingAPI
@@ -109,7 +102,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - View Life Cycle Methods
+    // MARK: - View Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,8 +116,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     private func setupViews() {
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
         tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
-        tableView.register(NewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
-        tableView.contentInset = UIEdgeInsets(top: stockHeaderView.intrinsicContentSize.height + 8, left: 0, bottom: 0, right: 0)
+        tableView.register(SmallNewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
         tableView.backgroundColor = .clear
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
@@ -178,7 +170,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
             switch result {
             case .success(let downloadedData):
                 self.chartEarningsData = downloadedData
-
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -213,14 +204,16 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
              .pricetobook, .pricetorevenue,
              .dividendyield
         ].forEach { (criteria) in
-            self.getFinancialData(financial: criteria)
+            getFinancialData(financial: criteria)
         }
     }
     
     fileprivate func getFinancialData(financial: SearchCriteria) {
         secondaryGroup.enter()
 
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: financial, frequency: .recent, completion: { [weak self] (result) in
+        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
+                                                financial: financial,
+                                                frequency: .recent, completion: { [weak self] (result) in
             guard let self = self else { return }
             
             switch result {
@@ -238,18 +231,16 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         })
     }
     
-    fileprivate func configureNewsData() {
+    func startNewsLoad() {
         secondaryGroup.enter()
-        
-        intrinioApi.getCompanyNewsData(ticker: ticker) { [weak self] (results) in
-            guard let self = self else { return }
-            
-            switch results {
-            case .success(let downloadedNewsData):
-                self.newsData = downloadedNewsData.news ?? []
 
-            case .failure(let error):
-                print(error)
+        stockNewsLoader.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
+            switch result {
+            case .success(let news):
+                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
+                self.stockNews = mappedNews
+            case .failure(let err):
+                print(err.localizedDescription)
             }
             self.secondaryGroup.leave()
         }
@@ -275,7 +266,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         getEarningsData()
         getAllCalculatedData()
         configureCalcData()
-        configureNewsData()
+        startNewsLoad()
         handleDataFetchCompletion()
     }
     
@@ -283,33 +274,16 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
      
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let bufferHeight: CGFloat = 15
-        let heightThreshold: CGFloat = (menuViewItemDelegate?.menuBarView.frame.height ?? 55) - stockHeaderView.intrinsicContentSize.height + bufferHeight
+        let heightThreshold: CGFloat = stockHeaderView.intrinsicContentSize.height - bufferHeight
         let didReachThreshold = scrollView.contentOffset.y >= heightThreshold
         parent?.navigationItem.title = didReachThreshold ? ticker : ""
-    }
-
-}
-
-extension StockOverviewViewController {
-    func showActivitySpinner(_ shouldShowSpinner: Bool) {
-        if shouldShowSpinner {
-            self.view.addSubview(loadingView)
-            loadingView.translatesAutoresizingMaskIntoConstraints = false
-            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        }
-        if !shouldShowSpinner {
-            DispatchQueue.main.async {
-                self.loadingView.removeFromSuperview()
-            }
-        }
     }
 }
 
 extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.isLoading == true {
-            tableView.setEmptyView(state: .emptyState(title: "", message: "Loading..."))
+        if isLoading {
+            tableView.setEmptyView(state: .emptyState(title: "", message: ""))
             return 0
         } else {
             tableView.restore()
@@ -339,21 +313,23 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
             return calculationsCell
             
         case 2:
-            guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? NewsCell else { return UITableViewCell() }
-            let news = feedData[indexPath.section] as? [CompanyNewsModel]
-            newsCell.headerLabel.text = news?[indexPath.item].title
-            newsCell.detailLabel.text = news?[indexPath.item].summary
-            
+            guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? SmallNewsCell else { return UITableViewCell() }
+            newsCell.stockNews = stockNews[indexPath.row]
+
             return newsCell
         default: return UITableViewCell()
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath {
-        case IndexPath(row: 0, section: 0),IndexPath(row: 1, section: 0) :
+        let section = indexPath.section
+        switch section {
+        case 0:
             return (UIScreen.main.bounds.height / 2) - 50
-        default: return UITableView.automaticDimension
+        case 2:
+            return 140
+        default:
+            return UITableView.automaticDimension
         }
     }
     
@@ -369,11 +345,12 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let _ = tableView.cellForRow(at: indexPath) as? NewsCell else { return }
-        let newsArticleURL = newsData[indexPath.item].url
-
-        let webViewController = WebViewViewController(urlString: newsArticleURL)
-        self.navigationController?.pushViewController(webViewController, animated: true)
+        guard let _ = tableView.cellForRow(at: indexPath) as? SmallNewsCell else { return }
+    
+        let newsURLString = stockNews[indexPath.row].newsUrl
+        let newsWebVC = WebViewViewController(urlString: newsURLString)
+        let navVC = UINavigationController(rootViewController: newsWebVC)
+        self.present(navVC, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
