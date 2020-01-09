@@ -262,16 +262,21 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     fileprivate func saveScreener() {
         self.checkCurrentParameters { [weak self] in
             guard let self = self else { return }
-            let alert = UIAlertController(title: "Add to Favorites", message: "Give your screener a name.", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Add to Favorites",
+                                          message: "Give your screener a name.",
+                                          preferredStyle: .alert)
+            
             alert.addTextField { (titleTextField) in
                 titleTextField.text = self.screenerTitleText
                 titleTextField.placeholder = "Title"
             }
+            
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
                 var titleTextFieldText = alert?.textFields![0].text
                 if titleTextFieldText == "" { titleTextFieldText = "No Title" }
                 self.handleSaveCompletion(titleTextFieldText)
             }))
+            
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
@@ -294,9 +299,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 presenter.present(in: self)
             }
             
-            if permissionGranted {
-                self.saveScreener()
-            }
+            if permissionGranted { self.saveScreener() }
         }
     }
     

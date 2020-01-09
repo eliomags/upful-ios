@@ -65,15 +65,6 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     
     // MARK: - Initializer Methods
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nil, bundle: nil)
-        initializeDisplayData()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
     override func loadView() {
         super.loadView()
         setupTableView()
@@ -81,6 +72,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initializeDisplayData()
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = VersionManager.mainContainerBackground()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
@@ -88,9 +80,9 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if self.tableView.shouldUpdateHeaderViewFrame() {
-            self.tableView.beginUpdates()
-            self.tableView.endUpdates()
+        if tableView.shouldUpdateHeaderViewFrame() {
+            tableView.beginUpdates()
+            tableView.endUpdates()
         }
     }
     
@@ -121,16 +113,6 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
                          bottom: searchButton.topAnchor,
                          trailing: view.trailingAnchor,
                          padding: .init(top: 0, left: 0, bottom: 16, right: 0))
-    }
-    
-    func setupTableHeader() {
-        if tableView.tableHeaderView == nil {
-            tableView.tableHeaderView = tableHeader
-            if let parent = parent as? ExploreFeedContainer {
-                       parent.collectionView.contentInset = UIEdgeInsets(top: tableHeader.intrinsicContentSize.height + 5,
-                       left: 0, bottom: 0, right: 0)
-            }
-        }
     }
     
     // MARK: - Delegate Method
@@ -239,7 +221,6 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 { return 40 }
         return 25
     }
     

@@ -20,9 +20,9 @@ class SavedScreenerTableViewCell: UITableViewCell {
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "description\ndescription\ndescription"
+        label.text = "No description"
         label.numberOfLines = 3
-        label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         return label
     }()
     

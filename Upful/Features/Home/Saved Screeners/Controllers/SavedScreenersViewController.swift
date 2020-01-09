@@ -115,11 +115,7 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
     fileprivate func handleScreenerEdit(_ screener: Screener) {
         let manualScreenItems = screener.manualScreenItems
         let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems)
-        navigationController?.pushViewController(manualSearchVC, animated: true)
-    }
-    
-    fileprivate func navigateToAddScreener() {
-        let manualSearchVC = SearchCriteriaTableViewController()
+        manualSearchVC.screenerTitleText = screener.title
         navigationController?.pushViewController(manualSearchVC, animated: true)
     }
     
@@ -132,22 +128,12 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
         screenerCell.descriptionLabel.text = screener.description
         return screenerCell
     }
-    
-    fileprivate func showEmptyCell(for indexPath: IndexPath) -> UITableViewCell {
-        let emptyCell = EmptyScreenerFavoriteCell(style: .default, reuseIdentifier: nil)
-        return emptyCell
-    }
-    
-    fileprivate func showErrorCell(for indexPath: IndexPath) -> UITableViewCell {
-        let errorCell = ErrorFavoriteCell(style: .default, reuseIdentifier: nil)
-        return errorCell
-    }
-    
+
     // MARK: - TableView Delegate/Datasource Methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let isLoaded = viewModel.state == .loaded
-        return isLoaded ? viewModel.screeners.count: 1
+        return isLoaded ? viewModel.screeners.count : 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -155,9 +141,9 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
         case .loaded:
             return showLoadedCell(for: indexPath)
         case .empty:
-            return showEmptyCell(for: indexPath)
+            return EmptyScreenerFavoriteCell(style: .default, reuseIdentifier: nil)
         case .error:
-            return showErrorCell(for: indexPath)
+            return ErrorFavoriteCell(style: .default, reuseIdentifier: nil)
         default:
             return UITableViewCell()
         }
@@ -167,7 +153,7 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
         PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
             if shouldNavigate {
                 let urlComponents = screener.urlComponents
-                let resultsVC = ScreenResultsViewController(searchParameters: urlComponents, networkingAPI: IntrinioAPI())
+                let resultsVC = ScreenResultsViewController(searchParameters: urlComponents)
                 parent?.navigationController?.pushViewController(resultsVC, animated: true)
             }
             if !shouldNavigate {
@@ -184,27 +170,25 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
             handleSearchResultNavigation(with: screener)
         default:
             break
-            
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let isLoaded = viewModel.state == .loaded
-        return isLoaded ? UITableView.automaticDimension: tableView.frame.height
+        return isLoaded ? 104 : tableView.frame.height
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let isLoaded = viewModel.state == .loaded
-        let screenerHeader = ActionableTableHeader()
+        let screenerHeader = TableSectionHeaderView()
         screenerHeader.headerTextLabel.text = "Saved Screeners"
-        screenerHeader.showButton(viewModel.screeners.isEmpty)
-        screenerHeader.buttonAction = { [weak self] in self?.navigateToAddScreener() }
-        return isLoaded ? screenerHeader: nil
+        screenerHeader.addButton.setTitle("", for: .normal)
+        return isLoaded ? screenerHeader : nil
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let isLoaded = viewModel.state == .loaded
-        return isLoaded ? 75: 0
+        return isLoaded ? 75 : 0
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

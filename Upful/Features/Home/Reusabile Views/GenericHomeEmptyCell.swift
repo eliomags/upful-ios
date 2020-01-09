@@ -44,7 +44,7 @@ class GeneralEmptyCell: UITableViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         label.text = emptyDescriptionText
         label.textColor = .lightGray
         return label

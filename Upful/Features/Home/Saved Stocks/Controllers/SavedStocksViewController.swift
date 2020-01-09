@@ -22,7 +22,6 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
     
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
-        tv.translatesAutoresizingMaskIntoConstraints = false
         tv.dataSource = self
         tv.delegate = self
         return tv
@@ -145,13 +144,6 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
         return loadedCell
     }
     
-    // MARK: - Fileprivate Functions
-    
-    fileprivate func navigateToAddStock() {
-        let searchResultsVC = ScreenResultsViewController(searchParameters: [], networkingAPI: IntrinioAPI())
-        navigationController?.pushViewController(searchResultsVC, animated: true)
-    }
-    
     // MARK: - TableView Delegate/Datasource Methods
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -176,13 +168,12 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
         let loaded = viewModel.state == .loaded
         return loaded ? UITableView.automaticDimension: tableView.frame.height
     }
-    
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let isLoaded = viewModel.state == .loaded
-        let stockHeader = ActionableTableHeader()
+        let stockHeader = TableSectionHeaderView()
         stockHeader.headerTextLabel.text = "Saved Stocks"
-        stockHeader.showButton(viewModel.stocks.isEmpty)
-        stockHeader.buttonAction = { [weak self] in self?.navigateToAddStock() }
+        stockHeader.addButton.setTitle("", for: .normal)
         return isLoaded ? stockHeader: nil
     }
     
@@ -242,7 +233,7 @@ extension SavedStocksViewController: UITableViewDragDelegate, UITableViewDropDel
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
         guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
         guard let sourceIndexPath = coordinator.items[0].sourceIndexPath else { return }
-        
+
         viewModel.stocks.moveItem(from: sourceIndexPath.row, to: destinationIndexPath.row)
         viewModel.saveDatasourceConfiguration()
         tableView.reloadData()

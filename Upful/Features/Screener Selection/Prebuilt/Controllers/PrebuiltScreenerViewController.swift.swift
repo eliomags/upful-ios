@@ -20,7 +20,7 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
         let lc = PrebuiltScreenerLogicController()
         return lc
     }()
-    
+        
     // MARK: - Initializer
     
     init() { super.init(style: .grouped) }
@@ -43,7 +43,7 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     
     fileprivate func setupTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.register(ScreenerPreviewTableViewCell.self, forCellReuseIdentifier: "cell") 
+        tableView.register(ScreenerPreviewTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     // MARK: - Controller Binding
