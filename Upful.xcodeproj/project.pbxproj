@@ -140,6 +140,7 @@
 		3DB345E923C3EBE500EADFFD /* PrebuiltScreenerLogicControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345E823C3EBE500EADFFD /* PrebuiltScreenerLogicControllerTests.swift */; };
 		3DB345EC23C4C6D800EADFFD /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345EB23C4C6D700EADFFD /* LoadingViewController.swift */; };
 		3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345ED23C4C87600EADFFD /* LoadingViewPresenter.swift */; };
+		3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F023C7F67800EADFFD /* RemoteStockManager.swift */; };
 		3DBEFFC223A9BD7C00BA407E /* HomeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */; };
 		3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */; };
 		3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */; };
@@ -366,6 +367,7 @@
 		3DB345E823C3EBE500EADFFD /* PrebuiltScreenerLogicControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltScreenerLogicControllerTests.swift; sourceTree = "<group>"; };
 		3DB345EB23C4C6D700EADFFD /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		3DB345ED23C4C87600EADFFD /* LoadingViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewPresenter.swift; sourceTree = "<group>"; };
+		3DB345F023C7F67800EADFFD /* RemoteStockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStockManager.swift; sourceTree = "<group>"; };
 		3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContainerViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStocksViewController.swift; sourceTree = "<group>"; };
@@ -1526,7 +1528,6 @@
 				3DB345DE23C39D1400EADFFD /* Models */,
 				3D061D1E23C273E000B8FB14 /* Protocols */,
 				3DB345E423C3E42400EADFFD /* Controllers */,
-				3DFAC57E23B9B08800378AF0 /* View Models */,
 				3D061D5023C3749900B8FB14 /* Logic Controllers */,
 			);
 			path = Prebuilt;
@@ -1572,6 +1573,14 @@
 				3DB345ED23C4C87600EADFFD /* LoadingViewPresenter.swift */,
 			);
 			path = Loading;
+			sourceTree = "<group>";
+		};
+		3DB345EF23C7F65000EADFFD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3DB345F023C7F67800EADFFD /* RemoteStockManager.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		3DBEFFBF23A9BD6900BA407E /* General */ = {
@@ -1645,6 +1654,7 @@
 		3DC4ED3022FE6EAA00232155 /* Search Results */ = {
 			isa = PBXGroup;
 			children = (
+				3DB345EF23C7F65000EADFFD /* Models */,
 				3D42BE3F23098BBB00806AFF /* Views */,
 				3D42BE3E23098BB400806AFF /* Controllers */,
 			);
@@ -1962,13 +1972,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		3DFAC57E23B9B08800378AF0 /* View Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "View Models";
-			sourceTree = "<group>";
-		};
 		3DFB62B8235E3B140026D3DC /* Payment */ = {
 			isa = PBXGroup;
 			children = (
@@ -2244,6 +2247,7 @@
 				3D55BD6023B69EAD00B4FDF0 /* StockNewsLoader.swift in Sources */,
 				3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */,
 				3D55BD7023B847EC00B4FDF0 /* TableSectionHeaderView.swift in Sources */,
+				3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */,
 				3D297A0923902D70001D02C3 /* Suggestions.swift in Sources */,
 				3DC710882335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift in Sources */,
 				3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */,

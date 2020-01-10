@@ -39,7 +39,6 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         return tv
     }()
     
-    
     // MARK: - View Lifecycle Methods
     
     override func loadView() {
@@ -54,7 +53,6 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         observeViewModelPreferenceUpdates()
         viewModel.fetchTableData()
     }
-    
     
     // MARK: - View Model Binding
 
@@ -79,7 +77,6 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         }
     }
     
-    
     // MARK: - View Setup
     
     fileprivate func setupTableView() {
@@ -95,7 +92,6 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         tableView.register(ResultsTableViewCell.self, forCellReuseIdentifier: "resultsCellID")
         tableView.register(NoPreferenceTableViewCell.self, forCellReuseIdentifier: "noPreferenceCellID")
     }
-    
     
     // MARK: - Actions
     
@@ -113,6 +109,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
             let ticker = viewModel.stocksYouMayLike[indexPath.row].ticker
             let name = viewModel.stocksYouMayLike[indexPath.row].name
             let detailsVC = StockDetailsContainerView(ticker: ticker, companyName: name)
+            RemoteStockManager.update(ticker, name: name)
             navigationController?.pushViewController(detailsVC, animated: true)
         default:
             break
@@ -139,7 +136,6 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         navigationController?.pushViewController(resultsVC, animated: true)
     }
     
-    
     // MARK: - Preference Delegate Methods
     
     func didCancelSaving() {}
@@ -147,7 +143,6 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     func didCompleteSaving() {
         viewModel.startPreferenceLoad()
     }
-    
     
     // MARK: - TableView Cells
     
@@ -257,7 +252,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.preference.rawValue:
             return 15
         case Section.news.rawValue:
-            return 120
+            return 140
         default: return 0
         }
     }

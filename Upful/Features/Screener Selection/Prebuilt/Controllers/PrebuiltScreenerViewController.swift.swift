@@ -20,6 +20,14 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
         let lc = PrebuiltScreenerLogicController()
         return lc
     }()
+    
+    // MARK: - Views
+    
+    private lazy var tableRefreshControl: UIRefreshControl = {
+        let control = UIRefreshControl()
+        control.addTarget(self, action: #selector(handleResfreshing), for: .valueChanged)
+        return control
+    }()
         
     // MARK: - Initializer
     
@@ -42,6 +50,7 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     // MARK: - View Setup
     
     fileprivate func setupTableView() {
+        tableView.refreshControl = tableRefreshControl
         tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.register(ScreenerPreviewTableViewCell.self, forCellReuseIdentifier: "cell")
     }
@@ -58,7 +67,16 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
                 LoadingViewPresenter.remove()
             }
             self.tableView.reloadData()
+            self.tableRefreshControl.endRefreshing()
         }
+    }
+    
+    // MARK: - Actions
+    
+    @objc fileprivate func handleResfreshing(_ sender: UIRefreshControl) {
+        tableRefreshControl.endRefreshing()
+        logicController.loadScreeners()
+
     }
      
     // MARK: - Cell Creation

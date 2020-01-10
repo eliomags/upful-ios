@@ -21,8 +21,14 @@ final class ScreenResultsViewController: UIViewController {
         didSet { observeStateChanges(isLoading) }
     }
     
-    private func observeStateChanges(_ state: Bool) {
-        self.showActivitySpinner(state)
+    private func observeStateChanges(_ isLoading: Bool) {
+        DispatchQueue.main.async {
+            if isLoading {
+                LoadingViewPresenter.show(in: self)
+            } else {
+                LoadingViewPresenter.remove()
+            }
+        }
     }
 
     // MARK: - DataSource
@@ -45,18 +51,6 @@ final class ScreenResultsViewController: UIViewController {
         tv.delegate = self
         tv.register(ResultsTableViewCell.self, forCellReuseIdentifier: ReuseId.resultsCellID)
         return tv
-    }()
-    
-    var loadingView: UIView = {
-        let v = UIView()
-        let activityView = UIActivityIndicatorView(style: .medium)
-        activityView.startAnimating()
-        v.addSubview(activityView)
-        activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
-                            padding: .init(top: 30, left: 30, bottom: 30, right: 30))
-        v.layer.cornerRadius = 15
-        v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
-        return v
     }()
     
     lazy var sortButton: SortButton = { [unowned self] in
@@ -106,8 +100,10 @@ final class ScreenResultsViewController: UIViewController {
             switch result {
             case .success(let fetchedData):
                 switch fetchType {
-                case .initial: self.searchResults = fetchedData
-                case .appending: self.searchResults.append(contentsOf: fetchedData)
+                case .initial:
+                    self.searchResults = fetchedData
+                case .appending:
+                    self.searchResults.append(contentsOf: fetchedData)
                 }
                 self.fetchCompanyFinancialData(searchResults: fetchedData)
                 self.isLoading = false
@@ -181,7 +177,6 @@ final class ScreenResultsViewController: UIViewController {
 }
 
 extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableView.isScrollEnabled = !searchResults.isEmpty
         if searchResults.isEmpty { tableView.separatorStyle = .none }
@@ -216,23 +211,9 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
         AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .searchResult))
         let selectedCompany = searchResults[indexPath.item]
         let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker, companyName: selectedCompany.name)
+        
+        RemoteStockManager.update(selectedCompany.ticker, name: selectedCompany.name)
+        
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
-
-extension ScreenResultsViewController {
-    func showActivitySpinner(_ shouldShowSpinner: Bool) {
-        if shouldShowSpinner {
-            self.view.addSubview(loadingView)
-            loadingView.translatesAutoresizingMaskIntoConstraints = false
-            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        }
-        if !shouldShowSpinner {
-            DispatchQueue.main.async {
-                self.loadingView.removeFromSuperview()
-            }
-        }
-    }
-}
-
