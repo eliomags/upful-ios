@@ -32,7 +32,6 @@
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
 		3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */; };
 		3D20FB3022FB1F0A007836DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D20FB2F22FB1F0A007836DD /* Assets.xcassets */; };
-		3D20FB3E22FB1F0A007836DD /* UpfulTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB3D22FB1F0A007836DD /* UpfulTests.swift */; };
 		3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4B22FB2129007836DD /* UIView+Extensions.swift */; };
 		3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4E22FB259D007836DD /* NetworkingService.swift */; };
 		3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5122FB3068007836DD /* FeedItem.swift */; };
@@ -79,7 +78,7 @@
 		3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */; };
 		3D4FB99C2384403C00B9BFE1 /* ScreenerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FB99B2384403C00B9BFE1 /* ScreenerItem.swift */; };
 		3D4FB99E238444B200B9BFE1 /* NavigationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */; };
-		3D55BD6023B69EAD00B4FDF0 /* StockNewsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD5F23B69EAD00B4FDF0 /* StockNewsLoader.swift */; };
+		3D55BD6023B69EAD00B4FDF0 /* NewsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD5F23B69EAD00B4FDF0 /* NewsLoader.swift */; };
 		3D55BD6223B7BE8B00B4FDF0 /* SmallNewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD6123B7BE8B00B4FDF0 /* SmallNewsCell.swift */; };
 		3D55BD6423B7BEBB00B4FDF0 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD6323B7BEBB00B4FDF0 /* UIImage+Extensions.swift */; };
 		3D55BD6623B7C76200B4FDF0 /* GenericNewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD6523B7C76200B4FDF0 /* GenericNewsCell.swift */; };
@@ -120,7 +119,6 @@
 		3DA54086232B361B00EE477C /* MenuViewProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA54085232B361B00EE477C /* MenuViewProtocols.swift */; };
 		3DA54089232B364000EE477C /* MenuViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA54088232B364000EE477C /* MenuViewContainer.swift */; };
 		3DA5408C232B366F00EE477C /* MenuViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA5408B232B366F00EE477C /* MenuViewHeader.swift */; };
-		3DA5408F232B37C700EE477C /* ExploreFeedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA5408E232B37C700EE477C /* ExploreFeedContainer.swift */; };
 		3DAB3EB0234B6BAA0008CC18 /* ReportPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3EAF234B6BAA0008CC18 /* ReportPresenter.swift */; };
 		3DAB3EB4234B6C440008CC18 /* ReportContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3EB3234B6C440008CC18 /* ReportContentView.swift */; };
 		3DAB3EB9234C04E60008CC18 /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3EB8234C04E60008CC18 /* Preference.swift */; };
@@ -141,6 +139,9 @@
 		3DB345EC23C4C6D800EADFFD /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345EB23C4C6D700EADFFD /* LoadingViewController.swift */; };
 		3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345ED23C4C87600EADFFD /* LoadingViewPresenter.swift */; };
 		3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F023C7F67800EADFFD /* RemoteStockManager.swift */; };
+		3DB345F423C8A64D00EADFFD /* ExploreLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F323C8A64D00EADFFD /* ExploreLogicController.swift */; };
+		3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F523CAD74400EADFFD /* StockSearchService.swift */; };
+		3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */; };
 		3DBEFFC223A9BD7C00BA407E /* HomeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */; };
 		3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */; };
 		3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */; };
@@ -254,7 +255,6 @@
 		3D20FB2F22FB1F0A007836DD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D20FB3422FB1F0A007836DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D20FB3922FB1F0A007836DD /* UpfulTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UpfulTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D20FB3D22FB1F0A007836DD /* UpfulTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpfulTests.swift; sourceTree = "<group>"; };
 		3D20FB3F22FB1F0A007836DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D20FB4B22FB2129007836DD /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		3D20FB4E22FB259D007836DD /* NetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingService.swift; sourceTree = "<group>"; };
@@ -306,7 +306,7 @@
 		3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchViewController.swift; sourceTree = "<group>"; };
 		3D4FB99B2384403C00B9BFE1 /* ScreenerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenerItem.swift; sourceTree = "<group>"; };
 		3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationHeaderView.swift; sourceTree = "<group>"; };
-		3D55BD5F23B69EAD00B4FDF0 /* StockNewsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockNewsLoader.swift; sourceTree = "<group>"; };
+		3D55BD5F23B69EAD00B4FDF0 /* NewsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsLoader.swift; sourceTree = "<group>"; };
 		3D55BD6123B7BE8B00B4FDF0 /* SmallNewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallNewsCell.swift; sourceTree = "<group>"; };
 		3D55BD6323B7BEBB00B4FDF0 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		3D55BD6523B7C76200B4FDF0 /* GenericNewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericNewsCell.swift; sourceTree = "<group>"; };
@@ -332,7 +332,7 @@
 		3D7C85512337A93500A2E63E /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
 		3D7C855323380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreenerParameter+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3D7C855423380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreenerParameter+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		3D8D32642372FAE300123731 /* QuickSearchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchTests.swift; sourceTree = "<group>"; };
+		3D8D32642372FAE300123731 /* QuickSearchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = QuickSearchTests.swift; path = "../New Group/QuickSearchTests.swift"; sourceTree = "<group>"; };
 		3D8D3267237320A600123731 /* PopularStockLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularStockLoader.swift; sourceTree = "<group>"; };
 		3D90ADB022FFC33C00C52455 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchParametersTableViewController.swift; sourceTree = "<group>"; };
@@ -347,7 +347,6 @@
 		3DA54085232B361B00EE477C /* MenuViewProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewProtocols.swift; sourceTree = "<group>"; };
 		3DA54088232B364000EE477C /* MenuViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewContainer.swift; sourceTree = "<group>"; };
 		3DA5408B232B366F00EE477C /* MenuViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewHeader.swift; sourceTree = "<group>"; };
-		3DA5408E232B37C700EE477C /* ExploreFeedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreFeedContainer.swift; sourceTree = "<group>"; };
 		3DAB3EAF234B6BAA0008CC18 /* ReportPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPresenter.swift; sourceTree = "<group>"; };
 		3DAB3EB3234B6C440008CC18 /* ReportContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportContentView.swift; sourceTree = "<group>"; };
 		3DAB3EB8234C04E60008CC18 /* Preference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preference.swift; sourceTree = "<group>"; };
@@ -368,6 +367,9 @@
 		3DB345EB23C4C6D700EADFFD /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		3DB345ED23C4C87600EADFFD /* LoadingViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewPresenter.swift; sourceTree = "<group>"; };
 		3DB345F023C7F67800EADFFD /* RemoteStockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStockManager.swift; sourceTree = "<group>"; };
+		3DB345F323C8A64D00EADFFD /* ExploreLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreLogicController.swift; sourceTree = "<group>"; };
+		3DB345F523CAD74400EADFFD /* StockSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchService.swift; sourceTree = "<group>"; };
+		3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockViewModelTests.swift; sourceTree = "<group>"; };
 		3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContainerViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStocksViewController.swift; sourceTree = "<group>"; };
@@ -737,7 +739,7 @@
 		3D20FB3C22FB1F0A007836DD /* UpfulTests */ = {
 			isa = PBXGroup;
 			children = (
-				3D20FB3D22FB1F0A007836DD /* UpfulTests.swift */,
+				3DB345FB23CBFAF200EADFFD /* VIewModels */,
 				3DAB3ED6235130970008CC18 /* Features */,
 				3D20FB3F22FB1F0A007836DD /* Info.plist */,
 			);
@@ -756,8 +758,10 @@
 		3D20FB4922FB209F007836DD /* Explore Feed */ = {
 			isa = PBXGroup;
 			children = (
-				3DA5408D232B37B700EE477C /* Container View */,
-				3D20FB5322FB34F5007836DD /* Components */,
+				3D20FB5422FB34FB007836DD /* Views */,
+				3D6A831823762B3900A75B06 /* Models */,
+				3DD4291E2348F7D20079DA18 /* Controller */,
+				3DB345F223C8A44C00EADFFD /* Logic Controller */,
 			);
 			path = "Explore Feed";
 			sourceTree = "<group>";
@@ -808,14 +812,6 @@
 				3D2F9662231A16B7003811AB /* CompanyNewsModel.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		3D20FB5322FB34F5007836DD /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				3D42BE432309A35300806AFF /* Quick Search */,
-			);
-			path = Components;
 			sourceTree = "<group>";
 		};
 		3D20FB5422FB34FB007836DD /* Views */ = {
@@ -1032,16 +1028,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		3D42BE432309A35300806AFF /* Quick Search */ = {
-			isa = PBXGroup;
-			children = (
-				3D6A831823762B3900A75B06 /* Models */,
-				3D20FB5422FB34FB007836DD /* Views */,
-				3DD4291E2348F7D20079DA18 /* Controller */,
-			);
-			path = "Quick Search";
-			sourceTree = "<group>";
-		};
 		3D42BE462309A56F00806AFF /* Intrinio */ = {
 			isa = PBXGroup;
 			children = (
@@ -1129,6 +1115,7 @@
 			isa = PBXGroup;
 			children = (
 				3D8D3267237320A600123731 /* PopularStockLoader.swift */,
+				3DB345F523CAD74400EADFFD /* StockSearchService.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1315,17 +1302,9 @@
 		3D8D32622372FABD00123731 /* Explore */ = {
 			isa = PBXGroup;
 			children = (
-				3D8D32632372FAD100123731 /* Quick Search */,
+				3DB345F723CB724100EADFFD /* Logic Controller */,
 			);
 			path = Explore;
-			sourceTree = "<group>";
-		};
-		3D8D32632372FAD100123731 /* Quick Search */ = {
-			isa = PBXGroup;
-			children = (
-				3D8D32642372FAE300123731 /* QuickSearchTests.swift */,
-			);
-			path = "Quick Search";
 			sourceTree = "<group>";
 		};
 		3D90ADB223005F2200C52455 /* Home Feed Items */ = {
@@ -1388,14 +1367,6 @@
 				3DA5408B232B366F00EE477C /* MenuViewHeader.swift */,
 			);
 			path = "Menu View Header";
-			sourceTree = "<group>";
-		};
-		3DA5408D232B37B700EE477C /* Container View */ = {
-			isa = PBXGroup;
-			children = (
-				3DA5408E232B37C700EE477C /* ExploreFeedContainer.swift */,
-			);
-			path = "Container View";
 			sourceTree = "<group>";
 		};
 		3DAB3EAE234AD1D60008CC18 /* Presenter */ = {
@@ -1583,6 +1554,30 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		3DB345F223C8A44C00EADFFD /* Logic Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3DB345F323C8A64D00EADFFD /* ExploreLogicController.swift */,
+			);
+			path = "Logic Controller";
+			sourceTree = "<group>";
+		};
+		3DB345F723CB724100EADFFD /* Logic Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3D8D32642372FAE300123731 /* QuickSearchTests.swift */,
+			);
+			path = "Logic Controller";
+			sourceTree = "<group>";
+		};
+		3DB345FB23CBFAF200EADFFD /* VIewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */,
+			);
+			path = VIewModels;
+			sourceTree = "<group>";
+		};
 		3DBEFFBF23A9BD6900BA407E /* General */ = {
 			isa = PBXGroup;
 			children = (
@@ -1614,7 +1609,7 @@
 		3DBEFFCD23A9D06400BA407E /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				3D55BD5F23B69EAD00B4FDF0 /* StockNewsLoader.swift */,
+				3D55BD5F23B69EAD00B4FDF0 /* NewsLoader.swift */,
 				3D55BD6723B803C300B4FDF0 /* StockNews.swift */,
 				3D3749B123BA830D000D0597 /* StockScreeningService.swift */,
 			);
@@ -2244,7 +2239,7 @@
 				3DAB3EBB234C13100008CC18 /* PreferenceViewController.swift in Sources */,
 				3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */,
 				3D2F965823171F52003811AB /* CompanyNewsCell.swift in Sources */,
-				3D55BD6023B69EAD00B4FDF0 /* StockNewsLoader.swift in Sources */,
+				3D55BD6023B69EAD00B4FDF0 /* NewsLoader.swift in Sources */,
 				3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */,
 				3D55BD7023B847EC00B4FDF0 /* TableSectionHeaderView.swift in Sources */,
 				3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */,
@@ -2268,10 +2263,10 @@
 				3D20FB5D22FBA772007836DD /* PresetFeedDataLoader.swift in Sources */,
 				3D7C855623380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift in Sources */,
 				3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */,
-				3DA5408F232B37C700EE477C /* ExploreFeedContainer.swift in Sources */,
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
 				3DF5FBB92330FF6D00856205 /* CompanyFillings.swift in Sources */,
 				3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */,
+				3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */,
 				3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */,
 				3D5865262323024A00495D79 /* PieChartView.swift in Sources */,
 				3D0C5F7B233FB61A00F4A5FC /* FilingsWebView.swift in Sources */,
@@ -2306,6 +2301,7 @@
 				3DB345E123C39D5F00EADFFD /* RemoteScreenerLoader.swift in Sources */,
 				3DC710962336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift in Sources */,
 				3DAB3EC0234CA4490008CC18 /* PreferenceCollectionView.swift in Sources */,
+				3DB345F423C8A64D00EADFFD /* ExploreLogicController.swift in Sources */,
 				3DF5FBB5232FA48600856205 /* MenuBarControl.swift in Sources */,
 				3D42BE58230E26A900806AFF /* UITableView+Extensions.swift in Sources */,
 				3D42BE50230C421D00806AFF /* StockDetailsStackView.swift in Sources */,
@@ -2351,8 +2347,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D20FB3E22FB1F0A007836DD /* UpfulTests.swift in Sources */,
 				3D8D32652372FAE300123731 /* QuickSearchTests.swift in Sources */,
+				3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */,
 				3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */,
 				3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */,
 				3DD5218C235293D60090CDE6 /* StockSuggestionVCTest.swift in Sources */,

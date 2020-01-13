@@ -21,7 +21,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     let ticker: String
     let companyName: String
     let intrinioApi: IntrinioAPI
-    private let stockNewsLoader = StockNewsLoader()
+    private let stockNewsLoader = NewsLoader()
 
     private enum ReuseID {
         static let graphCell = "graphCell"
@@ -143,7 +143,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     fileprivate func getRevenueData() {
         chartDataGroup.enter()
-        
         intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
                                                 financial: .totalrevenue,
                                                 frequency: .historic) { [weak self] (result) in
@@ -161,7 +160,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     fileprivate func getEarningsData() {
         chartDataGroup.enter()
-        
         intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
                                                 financial: .netincome,
                                                 frequency: .historic) { [weak self] (result) in
@@ -181,7 +179,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     fileprivate func configureCalcData() {
         secondaryGroup.enter()
-
         intrinioApi.fetchStockBatchFinancials(ticker: ticker) { [weak self] (results) in
             guard let self = self else { return }
             
@@ -210,7 +207,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     fileprivate func getFinancialData(financial: SearchCriteria) {
         secondaryGroup.enter()
-
         intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
                                                 financial: financial,
                                                 frequency: .recent, completion: { [weak self] (result) in
@@ -231,19 +227,20 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         })
     }
     
+    // TODO: - Enable before release
+    
     func startNewsLoad() {
-        secondaryGroup.enter()
-
-        stockNewsLoader.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
-            switch result {
-            case .success(let news):
-                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
-                self.stockNews = mappedNews
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
-            self.secondaryGroup.leave()
-        }
+//        secondaryGroup.enter()
+//        stockNewsLoader.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
+//            switch result {
+//            case .success(let news):
+//                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
+//                self.stockNews = mappedNews
+//            case .failure(let err):
+//                print(err.localizedDescription)
+//            }
+//            self.secondaryGroup.leave()
+//        }
     }
     
     fileprivate func handleDataFetchCompletion() {

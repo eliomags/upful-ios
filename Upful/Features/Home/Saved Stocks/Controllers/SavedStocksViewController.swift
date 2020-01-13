@@ -133,14 +133,14 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     fileprivate func showLoadedCell(for indexPath: IndexPath) -> UITableViewCell {
-        let savedStock = viewModel.stocks[indexPath.item]
+        let stockViewModels = viewModel.stockViewModels[indexPath.item]
         guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: "resultsCellID") as? ResultsTableViewCell else { return UITableViewCell() }
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
-        loadedCell.companyTickerLabel.text = savedStock.ticker
-        loadedCell.companyNameLabel.text = savedStock.name
-        loadedCell.marketcapStackView.valueLabel.text = "$\(savedStock.marketcap?.formatUsingAbbreviation() ?? " -")"
-        loadedCell.pricetoearningsStackView.valueLabel.text = "\(savedStock.pricetoearnings?.twoDecimal() ?? "-")"
+        loadedCell.companyTickerLabel.text = stockViewModels.stock.ticker
+        loadedCell.companyNameLabel.text = stockViewModels.stock.name
+        loadedCell.marketcapStackView.valueLabel.text = "$\(stockViewModels.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
+        loadedCell.pricetoearningsStackView.valueLabel.text = "\(stockViewModels.stock.pricetoearnings?.twoDecimal() ?? "-")"
         return loadedCell
     }
     
@@ -148,7 +148,7 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let isLoaded = viewModel.state == .loaded
-        return isLoaded ? viewModel.stocks.count: 1
+        return isLoaded ? viewModel.stockViewModels.count: 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -186,8 +186,8 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
         if viewModel.state == .loaded {
             let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] ( _, _, _) in
                 guard let self = self else { return }
-                let stock = self.viewModel.stocks[indexPath.item]
-                self.viewModel.removeTicker(stock.ticker)
+                let stockViewModels = self.viewModel.stockViewModels[indexPath.item]
+                self.viewModel.removeTicker(stockViewModels.stock.ticker)
                 
                 tableView.deleteRows(at: [indexPath], with: .automatic)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -204,8 +204,8 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if viewModel.state == .loaded {
             let detailsVC = StockDetailsContainerView(
-                ticker: viewModel.stocks[indexPath.item].ticker,
-                companyName: viewModel.stocks[indexPath.item].name)
+                ticker: viewModel.stockViewModels[indexPath.item].stock.ticker,
+                companyName: viewModel.stockViewModels[indexPath.item].stock.name)
             AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .savedStock))
             self.navigationController?.pushViewController(detailsVC, animated: true)
         }
@@ -218,7 +218,7 @@ extension SavedStocksViewController: UITableViewDragDelegate, UITableViewDropDel
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         switch viewModel.state {
         case .loaded:
-            let ticker = viewModel.stocks[indexPath.item].ticker
+            let ticker = viewModel.stockViewModels[indexPath.item].stock.ticker
             guard let data = ticker.data(using: .utf8) else { return [] }
             let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: "kUTTypePlainText")
             let dragItem = UIDragItem(itemProvider: itemProvider)
@@ -234,7 +234,7 @@ extension SavedStocksViewController: UITableViewDragDelegate, UITableViewDropDel
         guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
         guard let sourceIndexPath = coordinator.items[0].sourceIndexPath else { return }
 
-        viewModel.stocks.moveItem(from: sourceIndexPath.row, to: destinationIndexPath.row)
+        viewModel.stockViewModels.moveItem(from: sourceIndexPath.row, to: destinationIndexPath.row)
         viewModel.saveDatasourceConfiguration()
         tableView.reloadData()
         coordinator.drop(coordinator.items[0].dragItem, toRowAt: destinationIndexPath)

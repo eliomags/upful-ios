@@ -39,24 +39,12 @@ class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
         }
     }
     
-    private lazy var batch: WriteBatch = {
-        let b = remoteService.db.batch()
-        return b
-    }()
-    
     func incrementScreenerInterest(documentID: String) {
         let collection = FirestoreAPI.Collection.screeners.rawValue
         let docRef = remoteService.db.collection(collection).document(documentID)
-        batch.updateData(["interest": FieldValue.increment(Int64(1))], forDocument: docRef)
-        commitBatch()
-    }
-    
-    private func commitBatch() {
-        batch.commit() { err in
-            if let err = err {
-                print("Error writing batch \(err)")
-            }
-        }
+        docRef.updateData([
+            "interest": FieldValue.increment(Int64(1))
+        ])
     }
     
     fileprivate func map(items: [[String: Any]]) throws -> [ScreenerViewModel] {

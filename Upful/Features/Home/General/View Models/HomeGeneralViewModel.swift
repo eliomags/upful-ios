@@ -16,7 +16,7 @@ class HomeGeneralViewModel {
     private let stockScreeningService = StockScreeningService()
     
     private let savedStockDataManager: SavedStockDataLoaderProtocol
-    private let stockNewsLoader = StockNewsLoader()
+    private let stockNewsLoader = NewsLoader()
     
     
     // MARK: - State
@@ -53,7 +53,6 @@ class HomeGeneralViewModel {
         self.savedStockDataManager = savedStockDataManager
     }
     
-    
     // MARK: - Handle State Changes
     
     fileprivate func handlePreferenceStateChange() {
@@ -64,7 +63,6 @@ class HomeGeneralViewModel {
             break
         }
     }
-    
     
     // MARK: - API Methods
     
@@ -80,7 +78,6 @@ class HomeGeneralViewModel {
         let randomElement = Int.random(in: 0...(groupedPreferences.count-1))
         return groupedPreferences[randomElement]
     }
-    
     
     // MARK: - Stock Preference Loading
     
@@ -133,7 +130,6 @@ class HomeGeneralViewModel {
             }
         }
     }
-    
     
     // MARK: - News Loading
         

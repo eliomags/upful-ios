@@ -14,7 +14,6 @@ class SavedStockVCViewModel {
 
     private let savedStockDataManager: SavedStockDataLoaderProtocol
     
-    
     // MARK: - State
 
     enum State {
@@ -25,27 +24,31 @@ class SavedStockVCViewModel {
         case error
     }
     
+    var sendStateUpdates: ((State) -> Void)?
+
     private(set) var state: State = .new {
         didSet {
             sendStateUpdates?(state)
         }
     }
-    var sendStateUpdates: ((State) -> Void)?
-
-    var stocks: [Stock] = []
+    var stockViewModels: [StockViewModel] = []
     
+    // MARK: - Initializer
     
     init(savedStockDataManager: SavedStockDataLoaderProtocol = SavedStockLoader()) {
         self.savedStockDataManager = savedStockDataManager
     }
     
+    // MARK: - API Methods
     
     func loadSavedStocks() {
         state = .loading
         savedStockDataManager.loadSavedStocks { (result) in
             switch result {
             case .success(let savedStocks):
-                self.stocks = savedStocks
+                let mappedViewModels = savedStocks.map { StockViewModel(stock: $0,
+                                                                       stockPreviewLoader: StockPreviewLoader(ticker: $0.ticker, name: $0.name))}
+                self.stockViewModels = mappedViewModels
                 self.getPreviewData()
                 self.refreshState()
             case .failure(_):
@@ -55,45 +58,28 @@ class SavedStockVCViewModel {
     }
     
     func removeTicker(_ ticker: String) {
-        self.stocks.removeAll(where: { $0.ticker == ticker })
+        stockViewModels.removeAll(where: { $0.stock.ticker == ticker })
         savedStockDataManager.removeFavoriteCompany(ticker) {}
     }
     
     func refreshState() {
-        state = stocks.isEmpty ? .empty: .loaded
+        state = stockViewModels.isEmpty ? .empty : .loaded
     }
     
     fileprivate func getPreviewData() {
-        for stock in stocks { loadOperations(for: stock) }
-    }
-    
-    
-    // MARK: - Fetch Preview Data
-    
-    lazy var pendingPreviewDataFetch: [String: StockPreviewDataFetch] = [:]
-    lazy var operationQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.name = "Stock Financial Preview Fetch Queue"
-        return queue
-    }()
-    
-    func loadOperations(for stock: Stock) {
-        if !pendingPreviewDataFetch.contains(where: { $0.key == stock.ticker }) {
-            let operation = StockPreviewDataFetch(stock: stock)
-            operation.completionBlock = { [weak self] in
+        stockViewModels.forEach {
+            $0.previewFetchCompletion = { [weak self] in
                 guard let self = self else { return }
-                self.pendingPreviewDataFetch = self.pendingPreviewDataFetch.filter({ $0.value.isFinished != true })
-                DispatchQueue.main.async { self.state = .loaded }
+                self.state = .loaded
             }
-            pendingPreviewDataFetch[stock.ticker] = operation
-            operationQueue.addOperation(operation)
+            $0.loadPreviewData()
         }
     }
-    
+        
     func saveDatasourceConfiguration() {
-        stocks.forEach { (stock) in
-            savedStockDataManager.removeFavoriteCompany(stock.ticker) {}
-            savedStockDataManager.saveCompany(ticker: stock.ticker, companyName: stock.name)
+        stockViewModels.forEach { (vm) in
+            savedStockDataManager.removeFavoriteCompany(vm.stock.ticker) {}
+            savedStockDataManager.saveCompany(ticker: vm.stock.ticker, companyName: vm.stock.name)
         }
     }
 }

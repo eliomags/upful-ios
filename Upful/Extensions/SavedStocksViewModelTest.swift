@@ -26,7 +26,7 @@ class SavedStocksViewModelTest: XCTestCase {
         sut = makeSUTwithData()
         let initialState = SavedStockVCViewModel.State.new
         XCTAssertEqual(sut!.state, initialState)
-        XCTAssertTrue(sut!.stocks.isEmpty)
+        XCTAssertTrue(sut!.stockViewModels.isEmpty)
     }
     
     func testLoadDataWithNoSavedStocks() {
@@ -46,7 +46,7 @@ class SavedStocksViewModelTest: XCTestCase {
         wait(for: [loadExpectation], timeout: 1)
         
         XCTAssertEqual(sut!.state, SavedStockVCViewModel.State.empty)
-        XCTAssertEqual(sut!.stocks.count, 0)
+        XCTAssertEqual(sut!.stockViewModels.count, 0)
     }
     
     func testLoadedStateWithData() {
@@ -66,7 +66,7 @@ class SavedStocksViewModelTest: XCTestCase {
         wait(for: [loadExpectation], timeout: 1)
         
         XCTAssertEqual(sut!.state, SavedStockVCViewModel.State.loaded)
-        XCTAssertEqual(sut!.stocks.count, 1)
+        XCTAssertEqual(sut!.stockViewModels.count, 1)
     }
     
     func testRemoveTickerWithData() {
@@ -84,13 +84,13 @@ class SavedStocksViewModelTest: XCTestCase {
         sut!.loadSavedStocks()
 
         wait(for: [loadExpectation], timeout: 1)
-        XCTAssertEqual(sut!.stocks.count, 1)
+        XCTAssertEqual(sut!.stockViewModels.count, 1)
         
-        let tickerToRemove = sut!.stocks.first!.ticker
+        let tickerToRemove = sut!.stockViewModels.first!.stock.ticker
         sut!.removeTicker(tickerToRemove)
         sut!.refreshState()
         
-        XCTAssertEqual(sut!.stocks.count, 0)
+        XCTAssertEqual(sut!.stockViewModels.count, 0)
         XCTAssertEqual(sut!.state, SavedStockVCViewModel.State.empty)
     }
     

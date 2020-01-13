@@ -28,9 +28,6 @@ public class FirestoreAPI: FirestoreService {
     // MARK: - API
     
     let db = Firestore.firestore()
-
-    func update(to collection: Collection, document: String) {
-    }
     
     func fetch(from collection: Collection, completion: @escaping FirestoreFetchCompletion<Any>) {
         let db = Firestore.firestore()

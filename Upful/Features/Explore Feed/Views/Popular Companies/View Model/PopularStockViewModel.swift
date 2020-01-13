@@ -13,7 +13,6 @@ class PopularCompanyViewModel {
     // MARK: - Dependencies
     
     private let intrinioAPI: IntrinioAPI
-    private let popularCompanyLoader: PopularStockDataLoader
     private let stockDataGroup = DispatchGroup()
 
     // MARK: - State
@@ -37,36 +36,35 @@ class PopularCompanyViewModel {
     
     // MARK: - Initializer
     
-    init(popularStockLoader: PopularStockDataLoader = .init(backendService: FirestoreAPI())) {
-        self.popularCompanyLoader = popularStockLoader
+    init() {
         self.intrinioAPI = IntrinioAPI()
         listenForDataUpdates()
     }
     
     func initialFetch() {
         state = .loading
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let self = self else { return }
-            self.popularCompanyLoader.load()
-        }
+//        DispatchQueue.global(qos: .background).async { [weak self] in
+//            guard let self = self else { return }
+////            self.popularCompanyLoader.load()
+//        }
     }
     
     private func listenForDataUpdates() {
-        popularCompanyLoader.dataUpdates = { [weak self] (data, error) in
-            guard let self = self else { return }
-            if let error = error { print(error)
-            } else {
-                self.popularCompanies = data
-                self.popularCompanies.forEach({ (company) in
-                    self.fetchPopularCompanyMarketCap(for: company)
-                    self.fetchPopularCompanyPE(for: company)
-                })
-                self.stockDataGroup.notify(queue: .main, execute: { [weak self] in
-                    guard let self = self else { return }
-                    self.state = .loaded
-                })
-            }
-        }
+//        popularCompanyLoader.dataUpdates = { [weak self] (data, error) in
+//            guard let self = self else { return }
+//            if let error = error { print(error)
+//            } else {
+//                self.popularCompanies = data
+//                self.popularCompanies.forEach({ (company) in
+//                    self.fetchPopularCompanyMarketCap(for: company)
+//                    self.fetchPopularCompanyPE(for: company)
+//                })
+//                self.stockDataGroup.notify(queue: .main, execute: { [weak self] in
+//                    guard let self = self else { return }
+//                    self.state = .loaded
+//                })
+//            }
+//        }
     }
         
     fileprivate func fetchPopularCompanyMarketCap(for popularCompany: PopularCompany) {

@@ -14,8 +14,8 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     var menubarTitle: String = "General"
     
     private enum Section: Int {
-        case news = 1
         case preference = 0
+        case news = 1
     }
     
     lazy var viewModel: HomeGeneralViewModel = {

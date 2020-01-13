@@ -18,7 +18,7 @@ enum ScreenerIdentifier: String{
     case dividend1, dividend2, dividend3
 }
 
-struct PresetScreener: FeedItem {
+struct PresetScreener {
     var header: String
     var details: String?
     let screenType: PresetScreenType

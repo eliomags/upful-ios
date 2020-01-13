@@ -29,8 +29,6 @@ class StockNewsViewModelTest: XCTestCase {
         XCTAssertEqual(sut!.date, "2D Ago")
     }
      
-    
-    
     // MARK: - Helpers
     
     fileprivate func makeSUTToday() -> StockNewsViewModel {

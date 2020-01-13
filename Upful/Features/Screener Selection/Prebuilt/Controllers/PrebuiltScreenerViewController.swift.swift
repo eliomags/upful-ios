@@ -85,7 +85,7 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ScreenerPreviewTableViewCell
         let section = indexPath.section
         var viewModel: ScreenerViewModel
-        
+
         if section == Section.popular.rawValue {
             viewModel = logicController.popularScreenerViewModels[indexPath.row]
             cell?.titleLabel.text = viewModel.title

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class StockNewsLoader {
+class NewsLoader {
     enum Router {
         case getTickerNews(tickers: String)
         case getTickerBatchNews(tickers: String)
@@ -79,13 +79,15 @@ class StockNewsLoader {
               return "GET"
           }
         }
-    
     }
 }
 
-extension StockNewsLoader {
-    typealias StockNewsCompletion = (Result<[StockNews],Error>) -> Void
-    
+protocol NewsLoaderProtocol {
+    typealias StockNewsCompletion = (Result<[StockNews],NetworkingError>) -> Void
+    func get(router: NewsLoader.Router, completion: @escaping StockNewsCompletion)
+}
+
+extension NewsLoader: NewsLoaderProtocol {
     func get(router: Router, completion: @escaping StockNewsCompletion) {
         var components = URLComponents()
         components.scheme = router.scheme
@@ -96,17 +98,17 @@ extension StockNewsLoader {
         guard let url = components.url else { return }
 
         let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
-            if let err = err {
-                completion(.failure(err))
-                return
-            }
-            guard let data = data else { return }
-
             DispatchQueue.main.async {
-                completion(Result{
-                    let stockNews = try JSONDecoder().decode(StockNewsData.self, from: data)
-                    return stockNews.data
-                })
+                if let _ = err { completion(.failure(.urlError)) }
+                guard let data = data else {
+                    completion(.failure(.noData))
+                    return
+                }
+                if let stockNews = try? JSONDecoder().decode(StockNewsData.self, from: data) {
+                    completion(.success(stockNews.data))
+                } else {
+                    completion(.failure(.parsingError))
+                }
             }
         }
         task.resume()

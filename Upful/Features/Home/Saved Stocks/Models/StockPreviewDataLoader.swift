@@ -8,68 +8,80 @@
 
 import Foundation
 
-class StockPreviewDataFetch: Operation {
+final class StockViewModel {
+    var previewFetchCompletion: (() -> Void)?
     
-    let intrinioAPI = IntrinioAPI()
-
-    private let stock: Stock
+    let stock: Stock
+    var stockPreviewLoader: StockPreviewLoaderProtocol?
     
-    enum State: String {
-        case isReady, isExecuting, isFinished
-    }
-    
-    private(set) var state: State = .isReady {
-        didSet {
-            willChangeValue(forKey: state.rawValue)
-            didChangeValue(forKey: state.rawValue)
-        }
-    }
-    
-    override var isAsynchronous: Bool {
-        return true
-    }
-    override var isExecuting: Bool {
-        return state == .isExecuting
-    }
-    override var isFinished: Bool {
-        return state == .isFinished
-    }
-    
-    var peDataCompleted = false {
-        didSet {
-            if peDataCompleted && marketcapCompleted {
-                state = .isFinished
-            }
-        }
-    }
-    var marketcapCompleted = false {
-       didSet {
-           if peDataCompleted && marketcapCompleted {
-               state = .isFinished
-           }
-       }
-   }
-    
-    init(stock: Stock) {
+    init(stock: Stock, stockPreviewLoader: StockPreviewLoaderProtocol) {
         self.stock = stock
+        self.stockPreviewLoader = stockPreviewLoader
+        self.stockPreviewLoader?.delegate = self
     }
     
-    // MARK: - Operation Methods
-    
-    override func main() {
-        if isCancelled { return }
+    func loadPreviewData() {
+        stockPreviewLoader?.start()
     }
     
-    override func start() {
-        state = .isExecuting
+}
+
+extension StockViewModel: StockPreviewLoaderDelegate {
+    func didLoadMarketcap(with value: Int) {
+        DispatchQueue.main.async {
+            self.stock.marketcap = value
+            self.previewFetchCompletion?()
+        }
+    }
+    
+    func didLoadPriceToEarnings(with value: Double) {
+        DispatchQueue.main.async {
+            self.stock.pricetoearnings = value
+            self.previewFetchCompletion?()
+        }
+    }
+}
+
+extension StockViewModel: Hashable {
+    static func == (lhs: StockViewModel, rhs: StockViewModel) -> Bool {
+        return lhs.stock.ticker == rhs.stock.ticker
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(stock.ticker)
+    }
+}
+
+protocol StockPreviewLoaderDelegate: class {
+    var stockPreviewLoader: StockPreviewLoaderProtocol? { get set }
+    func didLoadMarketcap(with value: Int)
+    func didLoadPriceToEarnings(with value: Double)
+}
+
+protocol StockPreviewLoaderProtocol: class {
+    var delegate: StockPreviewLoaderDelegate? { get set }
+    func start()
+    func getPriceToEarningsPreviewData()
+    func getMarketCapPreviewData()
+}
+
+class StockPreviewLoader: StockPreviewLoaderProtocol {
+    let intrinioAPI = IntrinioAPI()
+    weak var delegate: StockPreviewLoaderDelegate?
+    
+    let name: String
+    let ticker: String
+    
+    init(ticker: String, name: String) {
+        self.name = name
+        self.ticker = ticker
+    }
+    
+    func start() {
         checkCache { (shouldMakeHTTPRequest) in
             if shouldMakeHTTPRequest {
                 /// instantiated only for the first time this function is called, subsequent calls to this function will pull data from cache
-                stockToCache = Stock(name: stock.name, ticker: stock.ticker)
-                
-                if isCancelled { return }
+                stockToCache = Stock(name: name, ticker: ticker)
                 getPriceToEarningsPreviewData()
-                if isCancelled { return }
                 getMarketCapPreviewData()
             }
         }
@@ -80,48 +92,46 @@ class StockPreviewDataFetch: Operation {
     private var stockToCache: Stock? {
         didSet {
             /// stores cache for first checkCache function call
-            Stock.cache.setObject(self.stockToCache!, forKey: self.stock.ticker as NSString)
+            Stock.cache.setObject(stockToCache!, forKey: ticker as NSString)
         }
     }
     
-    private func checkCache(completion: ((Bool) -> Void)) {
-        if let cachedStock = Stock.cache.object(forKey: stock.ticker as NSString) {
-            stock.pricetoearnings = cachedStock.pricetoearnings
-            stock.marketcap = cachedStock.marketcap
-            state = .isFinished
+    private func checkCache(shouldMakeHTTPRequest: ((Bool) -> Void)) {
+        if let cachedStock = Stock.cache.object(forKey: ticker as NSString) {
+            delegate?.didLoadMarketcap(with: cachedStock.marketcap ?? 0 )
+            delegate?.didLoadPriceToEarnings(with: cachedStock.pricetoearnings ?? 0)
         } else {
-            completion(true)
+            shouldMakeHTTPRequest(true)
         }
     }
     
     // MARK: - Data Fetching
     
-    private func getPriceToEarningsPreviewData() {
-        intrinioAPI.fetchStockSpecificFinancial(ticker: stock.ticker, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
+    func getPriceToEarningsPreviewData() {
+        intrinioAPI.fetchStockSpecificFinancial(ticker: ticker, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let companyHistorics):
                 guard !companyHistorics.isEmpty else { return }
-                self.stock.pricetoearnings = companyHistorics.first?.value
                 self.stockToCache?.pricetoearnings = companyHistorics.first?.value
-            case .failure(_): break
+                self.delegate?.didLoadPriceToEarnings(with: companyHistorics.first?.value ?? 0)
+            case .failure(_):
+                break
             }
-            self.peDataCompleted = true
         })
     }
         
-    private func getMarketCapPreviewData() {
-        intrinioAPI.fetchStockSpecificFinancial(ticker: stock.ticker, financial: .marketcap, frequency: .recent, completion: { [weak self] (result) in
+    func getMarketCapPreviewData() {
+        intrinioAPI.fetchStockSpecificFinancial(ticker: ticker, financial: .marketcap, frequency: .recent, completion: { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let companyHistorics):
                 guard !companyHistorics.isEmpty else { return }
-                self.stock.marketcap = Int(companyHistorics.first?.value ?? 0)
                 self.stockToCache?.marketcap = Int(companyHistorics.first?.value ?? 0)
-            case .failure(_): break
+                self.delegate?.didLoadMarketcap(with: Int(companyHistorics.first?.value ?? 0))
+            case .failure(_):
+                break
             }
-            self.marketcapCompleted = true
         })
     }
-    
 }

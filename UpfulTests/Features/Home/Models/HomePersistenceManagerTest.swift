@@ -21,7 +21,5 @@ class HomePersistenceManagerTest: XCTestCase {
         sut = nil
     }
 
-    func test_getParameter() {
-        
-    }
+
 }

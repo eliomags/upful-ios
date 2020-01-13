@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func initializeVC() -> UIViewController {
 //        let homeVC = HomeViewController()
         let homeVC = HomeContainerViewController(collectionViewLayout: UICollectionViewFlowLayout())
-        let exploreVC = ExploreFeedContainer(collectionViewLayout: UICollectionViewFlowLayout())
+        let exploreVC = ExploreViewController()
         let settingsVC = SettingsViewController()
         
         let controllers = [homeVC,exploreVC,settingsVC]

@@ -13,7 +13,7 @@ class NewsViewModel {
     // MARK: - Dependencies
     
     private let savedStockDataManager: SavedStockDataLoaderProtocol
-    private let stockNewsLoader = StockNewsLoader()
+    private let stockNewsLoader = NewsLoader()
     
     
     // MARK: - State
