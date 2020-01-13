@@ -14,27 +14,22 @@ protocol RemoteStockLoaderProtocol {
 
 class RemoteStockLoader: RemoteStockLoaderProtocol {
     
-    private let backendService: FirestoreAPI
-    
-    init(backendService: FirestoreAPI) {
-        self.backendService = backendService
-    }
+    private let backendService = FirestoreAPI()
     
     func load(completion: @escaping (Result<[Stock],Error>) -> Void) {
-        backendService.fetch(from: .popularStocks) { (result) in
-            switch result {
-            case .success(let stockDocuments):
-                if let stockDictionaries = stockDocuments as? [[String: Any]] {
-                    completion(Result {
-                        return try self.map(dictionaries: stockDictionaries)
-                    })
-                }
-            case .failure(_):
-                completion(.failure(NSError()))
+        let collectionRef = backendService.db.collection(FirestoreAPI.Collection.popularStocks.rawValue)
+        collectionRef.order(by: "vote", descending: true).limit(to: 4).getDocuments { (snapshot, err) in
+            if let err = err { completion(.failure(err)) }
+            
+            if let snapshot = snapshot {
+                let documentData = snapshot.documents.map { $0.data() }
+                completion(Result {
+                    return try self.map(dictionaries: documentData)
+                })
             }
         }
     }
-    
+
     fileprivate func map(dictionaries: [[String: Any]]) throws -> [Stock] {
         return (try dictionaries.map { (dictionary) -> Stock in
             let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: [])
