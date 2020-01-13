@@ -20,11 +20,17 @@ class ExploreLogicControllerTests: XCTestCase {
         XCTAssertEqual(sut.state, ExploreLogicController.State.normal, "State should be normal upon initialization.")
     }
     
-    // MARK: -
+    // MARK: - Remote Stock Loading
     
-    func testNewsFetchWithCompletion() {
+    func testPopularStockLoading() {
+        sut = makeSUT(mockNewsLoaderType: .withValues, stockSearcherType: .twoValues)
         
+        sut.startLoad()
+        
+        XCTAssertEqual(sut.stockViewModels.map { $0.stock.ticker }, ["FB", "AAPL"])
     }
+    
+    // TODO: Test Error Case
     
     // MARK: - Search For Company
     
@@ -79,11 +85,14 @@ class ExploreLogicControllerTests: XCTestCase {
     fileprivate func makeSUT(mockNewsLoaderType: MockNewsLoader.InitType,
                              stockSearcherType: MockStockSearcher.InitType) -> ExploreLogicController {
         let screenerLoader = MockRemoteScreenerLoader()
+        let remoteStockLoader = MockRemoteStockLoader()
         let stockSearcher = MockStockSearcher(initType: stockSearcherType)
         let newsLoader = MockNewsLoader(initType: mockNewsLoaderType)
+        
         let systemUnderTest = ExploreLogicController(newsLoader: newsLoader,
-                               remoteScreenerLoader: screenerLoader,
-                               stockSearcher: stockSearcher)
+                                                     remoteStockLoader: remoteStockLoader,
+                                                     remoteScreenerLoader: screenerLoader,
+                                                     stockSearcher: stockSearcher)
         return systemUnderTest
     }
 }
@@ -114,11 +123,21 @@ class MockNewsLoader: NewsLoaderProtocol {
     }
 }
 
+class MockRemoteStockLoader: RemoteStockLoaderProtocol {
+    func load(completion: @escaping (Result<[Stock], Error>) -> Void) {
+        completion(Result {
+            let stock1 = Stock(name: "Facebook", ticker: "FB")
+            let stock2 = Stock(name: "Apple", ticker: "AAPL")
+            
+            return [stock1, stock2]
+        })
+    }
+}
+
 class MockStockSearcher: StockSearcherProtocol {
     enum InitType {
         case empty, twoValues, error
     }
-    
     private let initType: InitType
 
     init(initType: InitType) {
