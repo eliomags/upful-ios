@@ -14,6 +14,7 @@ class ExploreLogicController {
     
     private let newsLoader: NewsLoaderProtocol
     private let stockSearcher: StockSearcherProtocol
+    private let remoteStockLoader: RemoteStockLoaderProtocol
     private let remoteScreenerLoader: RemoteScreenerLoaderProtocol
     
     // MARK: - State
@@ -27,8 +28,9 @@ class ExploreLogicController {
             handleStateUpdates?(state)
         }
     }
-    private(set) var stockSearchDisplay: [Company]  = []
     private(set) var marketNewsViewModels: [StockNewsViewModel] = []
+    private(set) var stockViewModels: [StockViewModel] = []
+    private(set) var stockSearchDisplay: [Company]  = []
     
     var handleCompletion: (() -> Void)?
     var handleStateUpdates: ((State) -> Void)?
@@ -36,10 +38,12 @@ class ExploreLogicController {
     // MARK: - Initializer
     
     init(newsLoader: NewsLoaderProtocol = NewsLoader(),
+         remoteStockLoader: RemoteStockLoaderProtocol = RemoteStockLoader(),
          remoteScreenerLoader: RemoteScreenerLoaderProtocol = RemoteScreenerLoader(),
          stockSearcher: StockSearcherProtocol = StockSearchService()
          ) {
         self.newsLoader = newsLoader
+        self.remoteStockLoader = remoteStockLoader
         self.remoteScreenerLoader = remoteScreenerLoader
         self.stockSearcher = stockSearcher
     }
@@ -48,6 +52,7 @@ class ExploreLogicController {
     
     func startLoad() {
         loadNews()
+        loadRemoteStocks()
     }
     
     // MARK: Normal State
@@ -63,6 +68,18 @@ class ExploreLogicController {
 //            }
 //            self?.handleCompletion?()
 //        }
+    }
+
+    func loadRemoteStocks() {
+        remoteStockLoader.load { (result) in
+            switch result {
+            case .success(let loadedStocks):
+                let mappedLoadedStocks = loadedStocks.map { StockViewModel(stock: $0, stockPreviewLoader: StockPreviewLoader(ticker: $0.ticker, name: $0.name))}
+                self.stockViewModels = mappedLoadedStocks
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
     }
     
     // MARK: Search State
@@ -104,7 +121,5 @@ class ExploreLogicController {
     fileprivate func handleStockSearchFailure() {
         stockSearchDisplay.removeAll()
         handleCompletion?()
-//                     self.tableView.setEmptyView(state: .errorState)
     }
-    
 }
