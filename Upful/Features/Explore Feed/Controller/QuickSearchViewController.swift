@@ -239,14 +239,16 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     }
     
     fileprivate func showPopularStockCell(at indexPath: IndexPath) -> UITableViewCell {
-//        let savedStock = viewModel.stocks[indexPath.item]
         let loadedCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.popularStockCell) as? ResultsTableViewCell
         loadedCell?.accessoryType = .disclosureIndicator
         loadedCell?.backgroundColor = VersionManager.mainContainerBackground()
-//        loadedCell.companyTickerLabel.text = savedStock.ticker
-//        loadedCell.companyNameLabel.text = savedStock.name
-//        loadedCell.marketcapStackView.valueLabel.text = "$\(savedStock.marketcap?.formatUsingAbbreviation() ?? " -")"
-//        loadedCell.pricetoearningsStackView.valueLabel.text = "\(savedStock.pricetoearnings?.twoDecimal() ?? "-")"
+        if !logicController.stockViewModels.isEmpty {
+            let savedStock = logicController.stockViewModels[indexPath.item]
+            loadedCell?.companyTickerLabel.text = savedStock.stock.ticker
+            loadedCell?.companyNameLabel.text = savedStock.stock.name
+            loadedCell?.marketcapStackView.valueLabel.text = "$\(savedStock.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
+            loadedCell?.pricetoearningsStackView.valueLabel.text = "\(savedStock.stock.pricetoearnings?.twoDecimal() ?? "-")"
+        }
         return loadedCell ?? UITableViewCell()
     }
 
@@ -339,7 +341,17 @@ extension ExploreViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension ExploreViewController {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        let section = indexPath.section
+        switch section {
+        case Section.news.rawValue:
+            return UITableView.automaticDimension
+        case Section.stocks.rawValue:
+            return 115
+        case Section.screeners.rawValue:
+            return 100
+        default:
+            return UITableView.automaticDimension
+        }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
