@@ -10,6 +10,9 @@ import Foundation
 
 class ExploreLogicController {
     
+    var handleCompletion: (() -> Void)?
+    var handleStateUpdates: ((State) -> Void)?
+    
     // MARK: - Dependencies
     
     private let newsLoader: NewsLoaderProtocol
@@ -31,9 +34,6 @@ class ExploreLogicController {
     private(set) var marketNewsViewModels: [StockNewsViewModel] = []
     private(set) var stockViewModels: [StockViewModel] = []
     private(set) var stockSearchDisplay: [Company]  = []
-    
-    var handleCompletion: (() -> Void)?
-    var handleStateUpdates: ((State) -> Void)?
     
     // MARK: - Initializer
     
@@ -58,27 +58,36 @@ class ExploreLogicController {
     // MARK: Normal State
     
     func loadNews() {
-//        newsLoader.get(router: .getMarketNews) { [weak self] (result) in
-//            switch result {
-//            case .success(let fetchedMarketNews):
-//                let mappedNews = fetchedMarketNews.map({ StockNewsViewModel(stockNews: $0 )})
-//                self?.marketNewsViewModels = mappedNews
-//            case .failure(let err):
-//                print(err)
-//            }
-//            self?.handleCompletion?()
-//        }
+        newsLoader.get(router: .getMarketNews) { [weak self] (result) in
+            switch result {
+            case .success(let fetchedMarketNews):
+                let mappedNews = fetchedMarketNews.map { StockNewsViewModel(stockNews: $0) }
+                self?.marketNewsViewModels = mappedNews
+            case .failure(let err):
+                print(err)
+            }
+            self?.handleCompletion?()
+        }
     }
 
     func loadRemoteStocks() {
         remoteStockLoader.load { (result) in
             switch result {
             case .success(let loadedStocks):
-                let mappedLoadedStocks = loadedStocks.map { StockViewModel(stock: $0, stockPreviewLoader: StockPreviewLoader(ticker: $0.ticker, name: $0.name))}
-                self.stockViewModels = mappedLoadedStocks
+                self.loadStockViewModels(from: loadedStocks)
             case .failure(let err):
                 print(err.localizedDescription)
             }
+        }
+    }
+    
+    fileprivate func loadStockViewModels(from stocks: [Stock]) {
+        let mappedLoadedStocks = stocks.map { StockViewModel(stock: $0,
+                                                             stockPreviewLoader: StockPreviewLoader(ticker: $0.ticker, name: $0.name)) }
+        stockViewModels = mappedLoadedStocks
+        stockViewModels.forEach { (viewModel) in
+            viewModel.previewFetchCompletion = handleCompletion
+            viewModel.loadPreviewData()
         }
     }
     
