@@ -52,25 +52,25 @@ extension StockViewModel: Hashable {
 }
 
 protocol StockPreviewLoaderDelegate: class {
-    var stockPreviewLoader: StockPreviewLoaderProtocol? { get set }
     func didLoadMarketcap(with value: Int)
     func didLoadPriceToEarnings(with value: Double)
 }
 
 protocol StockPreviewLoaderProtocol: class {
     var delegate: StockPreviewLoaderDelegate? { get set }
+    
     func start()
     func getPriceToEarningsPreviewData()
     func getMarketCapPreviewData()
 }
 
-class StockPreviewLoader: StockPreviewLoaderProtocol {
+final class StockPreviewLoader: StockPreviewLoaderProtocol {
     let intrinioAPI = IntrinioAPI()
-    weak var delegate: StockPreviewLoaderDelegate?
     
     let name: String
     let ticker: String
-    
+    weak var delegate: StockPreviewLoaderDelegate?
+
     init(ticker: String, name: String) {
         self.name = name
         self.ticker = ticker
