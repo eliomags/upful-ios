@@ -355,7 +355,6 @@ extension ExploreViewController {
             let isPopularStocksEmpty = logicController.stockViewModels.isEmpty
             return isPopularStocksEmpty ? 115 : UITableView.automaticDimension
         case Section.screeners.rawValue:
-//            let isPopularScreenersEmpty = logicController.screenerViewModels.isEmpty
             return 100
         default:
             return UITableView.automaticDimension

@@ -140,16 +140,21 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = TableSectionHeaderView()
-        switch section {
-        case Section.popular.rawValue:
-            header.headerTextLabel.text = "Popular Screeners"
-        case Section.all.rawValue:
-            header.headerTextLabel.text = "Available Screeners"
-        default: break
+        let isDataLoaded = logicController.popularScreenerViewModels.isEmpty && logicController.screenerViewModels.isEmpty
+        if !isDataLoaded {
+            let header = TableSectionHeaderView()
+            switch section {
+            case Section.popular.rawValue:
+                header.headerTextLabel.text = "Popular Screeners"
+            case Section.all.rawValue:
+                header.headerTextLabel.text = "Available Screeners"
+            default: break
+            }
+            header.addButton.setTitle("", for: .normal)
+            return header
+        } else {
+            return nil
         }
-        header.addButton.setTitle("", for: .normal)
-        return header
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

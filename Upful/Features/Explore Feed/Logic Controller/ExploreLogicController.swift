@@ -60,16 +60,16 @@ class ExploreLogicController {
     // MARK: Normal State
     
     func loadNews() {
-        newsLoader.get(router: .getMarketNews) { [weak self] (result) in
-            switch result {
-            case .success(let fetchedMarketNews):
-                let mappedNews = fetchedMarketNews.map { StockNewsViewModel(stockNews: $0) }
-                self?.marketNewsViewModels = mappedNews
-            case .failure(let err):
-                print(err)
-            }
-            self?.handleCompletion?()
-        }
+//        newsLoader.get(router: .getMarketNews) { [weak self] (result) in
+//            switch result {
+//            case .success(let fetchedMarketNews):
+//                let mappedNews = fetchedMarketNews.map { StockNewsViewModel(stockNews: $0) }
+//                self?.marketNewsViewModels = mappedNews
+//            case .failure(let err):
+//                print(err)
+//            }
+//            self?.handleCompletion?()
+//        }
     }
 
     func loadRemoteStocks() {
