@@ -8,12 +8,19 @@
 
 import UIKit
 
-
 // MARK: - Adding Child View Controller
+
 extension UIViewController {
     func add(_ child: UIViewController) {
         addChild(child)
         view.addSubview(child.view)
+        
+        child.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            child.view.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            child.view.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
         child.didMove(toParent: self)
     }
     

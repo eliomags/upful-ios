@@ -31,34 +31,6 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         return lc
     }()
 
-    // MARK: - Data Source
-
-    
-    // MARK: - State
-    
-//    private enum State {
-//        case normal
-//        case searching(searchText: String)
-//    }
-    
-//    private var state: State = .normal {
-//        didSet {
-//            handleStateChange()
-//        }
-//    }
-//
-//    private func handleStateChange() {
-//        switch state {
-//        case .normal:
-//            searchDisplay.removeAll()
-//            tableView.isScrollEnabled = true
-//        case .searching(let searchText):
-////            fetchCompanies(searchText)
-//            tableView.reloadData()
-//            tableView.isScrollEnabled = true
-//        }
-//    }
-//
     // MARK: - Views
     
     private lazy var tableView: UITableView = {
@@ -200,17 +172,39 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         logicController.state = .searching
     }
     
+    // MARK: - Navigation
+    
     func navigateToScreenerResults(searchParameters: [String]) {
-        PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
-            if shouldNavigate {
+        PermissionManager.shared.verifyScreenerNavigationPermission { (canNavigate) in
+            if canNavigate {
                 AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .quick))
                 let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters)
                 self.navigationController?.pushViewController(searchResultVC, animated: true)
             }
-            if !shouldNavigate {
+            if !canNavigate {
                 let presenter = SubscriptionPresenter(type: .screeningLimit)
                 presenter.present(in: self)
             }
+        }
+    }
+
+    fileprivate func handleNormalStateNavigation(_ indexPath: IndexPath) {
+        let section = indexPath.section
+        switch section {
+        case Section.news.rawValue:
+            let selectedNewsURL = logicController.marketNewsViewModels[indexPath.row].newsUrl
+            let webviewVC = WebViewViewController(urlString: selectedNewsURL)
+            present(webviewVC, animated: true, completion: nil)
+        case Section.stocks.rawValue:
+            let selectedPopularStock = logicController.stockViewModels[indexPath.row]
+            let stockDetailsVC = StockDetailsContainerView(ticker: selectedPopularStock.stock.ticker,
+                                                           companyName: selectedPopularStock.stock.name)
+            self.navigationController?.pushViewController(stockDetailsVC, animated: true)
+        case Section.screeners.rawValue:
+            let screenerParameters = logicController.screenerViewModels[indexPath.row].searchParameters
+            navigateToScreenerResults(searchParameters: screenerParameters)
+        default:
+            break
         }
     }
     
@@ -329,23 +323,23 @@ extension ExploreViewController: UITableViewDataSource, UITableViewDelegate {
             return makeSearchCell(at: indexPath)
         }
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch logicController.state {
-        case .searching:
-            let selectedCompany = logicController.stockSearchDisplay[indexPath.row]
-            let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
-            AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .nameSearch))
-            navigationController?.pushViewController(detailsVC, animated: true)
-        default:
-            break
-        }
-    }
 }
 
 // MARK: - TableView Delegate Methods
 
 extension ExploreViewController {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch logicController.state {
+        case .normal:
+            handleNormalStateNavigation(indexPath)
+        case .searching:
+            let selectedCompany = logicController.stockSearchDisplay[indexPath.row]
+            let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
+            AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .nameSearch))
+            navigationController?.pushViewController(detailsVC, animated: true)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let section = indexPath.section
         switch section {
@@ -373,7 +367,8 @@ extension ExploreViewController {
                 sectionHeader.headerTextLabel.text = "Popular Stocks"
             case Section.screeners.rawValue:
                 sectionHeader.headerTextLabel.text = "Popular Screeners"
-            default: return nil
+            default:
+                return nil
             }
             return sectionHeader
         case .searching:
@@ -391,9 +386,24 @@ extension ExploreViewController {
     }
     
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        // TODO: - Checks whether data is empty, so empty cells are not worthy
-        return false
+        switch logicController.state {
+        case .normal:
+            let section = indexPath.section
+            switch section {
+            case Section.news.rawValue:
+                return !logicController.marketNewsViewModels.isEmpty
+            case Section.stocks.rawValue:
+                return !logicController.stockViewModels.isEmpty
+            case Section.screeners.rawValue:
+                return !logicController.screenerViewModels.isEmpty
+            default:
+                return false
+            }
+        case .searching:
+            return true
+        }
     }
+    
     func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         UIView.animate(withDuration: 0.3) {

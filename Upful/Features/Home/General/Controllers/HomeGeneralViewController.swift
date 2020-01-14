@@ -163,7 +163,6 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
             loadedCell.marketcapStackView.valueLabel.text = "$\(stock.marketcap?.formatUsingAbbreviation() ?? " -")"
             loadedCell.pricetoearningsStackView.valueLabel.text = "\(stock.pricetoearnings?.twoDecimal() ?? "-")"
         }
-        
         return loadedCell
     }
     
@@ -188,7 +187,6 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     }
 }
 
-
 // MARK: - TableView Delegate/Datasource Methods
 
 extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource {
@@ -201,7 +199,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             let isNewState = viewModel.preferenceState == .new
             if isNewState { return 1 }
             if isLoadedState { return viewModel.stocksYouMayLike.count }
-            else { return 3 }
+            else { return 0 }
         case Section.news.rawValue:
             return 3
         default:
@@ -259,6 +257,27 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 75
+    }
+    
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        let section = indexPath.section
+        switch section {
+        case Section.preference.rawValue:
+            switch viewModel.preferenceState {
+            case .new:
+                return true
+            case .loading:
+                return false
+            case .loaded:
+                return true
+            case .error:
+                return false
+            }
+        case Section.news.rawValue:
+            return !viewModel.stockNews.isEmpty
+        default:
+            return false
+        }
     }
     
     func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {

@@ -12,6 +12,7 @@ struct LoadingViewPresenter {
     static let loadingView = LoadingViewController()
     
     static func show(in viewcontroller: UIViewController) {
+        
         viewcontroller.add(loadingView)
     }
     

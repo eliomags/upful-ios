@@ -28,6 +28,7 @@ class ExploreLogicController {
     
     var state: State = .normal {
         didSet {
+            print(state, stockSearchDisplay.count)
             handleStateUpdates?(state)
         }
     }

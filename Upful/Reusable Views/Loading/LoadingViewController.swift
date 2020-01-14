@@ -24,7 +24,12 @@ class LoadingViewController: UIViewController {
         super.loadView()
         view.addSubview(loadingSpinner)
         loadingSpinner.translatesAutoresizingMaskIntoConstraints = false
-        loadingSpinner.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        loadingSpinner.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        
+        NSLayoutConstraint.activate([
+            loadingSpinner.heightAnchor.constraint(equalToConstant: 200),
+            loadingSpinner.widthAnchor.constraint(equalToConstant: 200),
+            loadingSpinner.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            loadingSpinner.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+        ])
     }
 }

@@ -81,7 +81,7 @@ final class ScreenResultsViewController: UIViewController {
     // MARK: - View Set Up
     
     fileprivate func setupNavBar() {
-        navigationItem.title = "Results"
+        navigationItem.title = ""
         navigationItem.largeTitleDisplayMode = .never
         let sortButton = UIBarButtonItem(customView: self.sortButton)
         navigationItem.rightBarButtonItem = sortButton
