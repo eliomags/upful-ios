@@ -242,6 +242,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         let loadedCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.popularStockCell) as? ResultsTableViewCell
         loadedCell?.accessoryType = .disclosureIndicator
         loadedCell?.backgroundColor = VersionManager.mainContainerBackground()
+        
         if !logicController.stockViewModels.isEmpty {
             let savedStock = logicController.stockViewModels[indexPath.item]
             loadedCell?.companyTickerLabel.text = savedStock.stock.ticker
@@ -254,11 +255,14 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
 
     fileprivate func makeScreenerCells(at indexPath: IndexPath) -> UITableViewCell {
         let screenerCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.screenerCell, for: indexPath) as? ScreenerPreviewTableViewCell
-//        viewModel = logicController.popularScreenerViewModels[indexPath.row]
-//        cell?.titleLabel.text = viewModel.title
-//        cell?.descriptionLabel.text = viewModel.description
-//        cell?.loadImage(urlString: viewModel.imageUrlString)
-//        cell?.showLoaded()
+        
+        if !logicController.screenerViewModels.isEmpty {
+            let viewModel = logicController.screenerViewModels[indexPath.row]
+            screenerCell?.titleLabel.text = viewModel.title
+            screenerCell?.descriptionLabel.text = viewModel.description
+            screenerCell?.loadImage(urlString: viewModel.imageUrlString)
+            screenerCell?.showLoaded()
+        }
         return screenerCell ?? UITableViewCell()
     }
     
@@ -267,9 +271,11 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         if logicController.stockSearchDisplay.isEmpty { return cell }
         let stockSearchDisplay = logicController.stockSearchDisplay
         
-        cell.textLabel?.text = stockSearchDisplay[indexPath.item].name
-        cell.detailTextLabel?.text = stockSearchDisplay[indexPath.item].ticker
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        if !logicController.stockSearchDisplay.isEmpty {
+            cell.textLabel?.text = stockSearchDisplay[indexPath.item].name
+            cell.detailTextLabel?.text = stockSearchDisplay[indexPath.item].ticker
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        }
         cell.accessoryType = .disclosureIndicator
         return cell
     }
@@ -346,8 +352,10 @@ extension ExploreViewController {
         case Section.news.rawValue:
             return UITableView.automaticDimension
         case Section.stocks.rawValue:
-            return 115
+            let isPopularStocksEmpty = logicController.stockViewModels.isEmpty
+            return isPopularStocksEmpty ? 115 : UITableView.automaticDimension
         case Section.screeners.rawValue:
+//            let isPopularScreenersEmpty = logicController.screenerViewModels.isEmpty
             return 100
         default:
             return UITableView.automaticDimension

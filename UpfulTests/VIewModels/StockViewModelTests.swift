@@ -31,6 +31,17 @@ class StockViewModelTests: XCTestCase {
         XCTAssertEqual(sut.stock.marketcap, 50)
     }
 
+//    func testIfPreviewLoaderRetained() {
+//        let stock = Stock(name: "Facebook", ticker: "FB")
+//        var previewLoader = MockStockPreviewLoader()
+//        sut = StockViewModel(stock: stock, stockPreviewLoader: previewLoader)
+//
+//        XCTAssertNotNil(sut.stockPreviewLoader)
+//        previewLoader = MockStockPreviewLoader()
+//
+////        XCTAssertNil(sut.stockPreviewLoader)
+//    }
+    
     func makeSUT() -> StockViewModel {
         let stock = Stock(name: "Facebook", ticker: "FB")
         let previewLoader = MockStockPreviewLoader()

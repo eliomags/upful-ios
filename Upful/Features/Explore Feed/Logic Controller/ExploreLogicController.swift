@@ -33,6 +33,7 @@ class ExploreLogicController {
     }
     private(set) var marketNewsViewModels: [StockNewsViewModel] = []
     private(set) var stockViewModels: [StockViewModel] = []
+    private(set) var screenerViewModels: [ScreenerViewModel] = []
     private(set) var stockSearchDisplay: [Company]  = []
     
     // MARK: - Initializer
@@ -53,21 +54,22 @@ class ExploreLogicController {
     func startLoad() {
         loadNews()
         loadRemoteStocks()
+        loadRemoteScreeners()
     }
     
     // MARK: Normal State
     
     func loadNews() {
-        newsLoader.get(router: .getMarketNews) { [weak self] (result) in
-            switch result {
-            case .success(let fetchedMarketNews):
-                let mappedNews = fetchedMarketNews.map { StockNewsViewModel(stockNews: $0) }
-                self?.marketNewsViewModels = mappedNews
-            case .failure(let err):
-                print(err)
-            }
-            self?.handleCompletion?()
-        }
+//        newsLoader.get(router: .getMarketNews) { [weak self] (result) in
+//            switch result {
+//            case .success(let fetchedMarketNews):
+//                let mappedNews = fetchedMarketNews.map { StockNewsViewModel(stockNews: $0) }
+//                self?.marketNewsViewModels = mappedNews
+//            case .failure(let err):
+//                print(err)
+//            }
+//            self?.handleCompletion?()
+//        }
     }
 
     func loadRemoteStocks() {
@@ -89,6 +91,23 @@ class ExploreLogicController {
             viewModel.previewFetchCompletion = handleCompletion
             viewModel.loadPreviewData()
         }
+    }
+    
+    func loadRemoteScreeners() {
+        remoteScreenerLoader.load { (result) in
+            switch result {
+            case .success(let fetchedScreenerViewModels):
+                self.handleRemoteScreenerLoadCompletion(for: fetchedScreenerViewModels)
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
+    
+    fileprivate func handleRemoteScreenerLoadCompletion(for screenerViewModels: [ScreenerViewModel]) {
+        guard screenerViewModels.count > 0 else { return }
+        self.screenerViewModels = Array(screenerViewModels[0...3])
+        handleCompletion?()
     }
     
     // MARK: Search State
