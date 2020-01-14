@@ -72,6 +72,7 @@ class SavedStocksViewModelTest: XCTestCase {
     func testRemoveTickerWithData() {
         sut = makeSUTwithData()
         let loadExpectation = expectation(description: #function)
+        loadExpectation.expectedFulfillmentCount = 1
         
         sut!.sendStateUpdates = { newState in
             switch newState {

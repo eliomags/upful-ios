@@ -32,9 +32,46 @@ class ExploreLogicControllerTests: XCTestCase {
     
     // TODO: Test Error Case
     
-    // MARK: - Search For Company
+    // MARK: - Remote Screener Loader
     
-    func testSearchForCompanyWithData() {
+    func testScreenerLoadingWithSuccessResult() {
+        sut = makeSUT(mockNewsLoaderType: .withValues, stockSearcherType: .empty)
+        let testExpectation = expectation(description: #function)
+
+        sut.handleCompletion = { testExpectation.fulfill() }
+        sut.loadRemoteScreeners()
+        
+        wait(for: [testExpectation], timeout: 1)
+        XCTAssertEqual(sut.screenerViewModels.map { $0.title }, ["Title0", "Title1", "Title2", "Title3"])
+    }
+    
+    // MARK: - News Fetch
+    
+    func testNewsFetchWithSuccessResult() {
+        sut = makeSUT(mockNewsLoaderType: .withValues, stockSearcherType: .empty)
+        let testExpectation = expectation(description: #function)
+        
+        sut.handleCompletion = { testExpectation.fulfill() }
+        sut.loadNews()
+        
+        wait(for: [testExpectation], timeout: 1)
+        XCTAssertEqual(sut.marketNewsViewModels.map { $0.title }, ["title1", "title2"])
+    }
+    
+    func testNewsFetchWithErrorResult() {
+        sut = makeSUT(mockNewsLoaderType: .error, stockSearcherType: .empty)
+        let testExpectation = expectation(description: #function)
+        
+        sut.handleCompletion = { testExpectation.fulfill() }
+        sut.loadNews()
+        
+        wait(for: [testExpectation], timeout: 1)
+        XCTAssertEqual(sut.marketNewsViewModels.map { $0.title }, [])
+    }
+    
+    // MARK: - Search For Manual Company Searcb
+    
+    func testSearchForCompanyWithSuccessResult() {
         sut = makeSUT(mockNewsLoaderType: .withValues, stockSearcherType: .twoValues)
         let testExpectation = expectation(description: #function)
         
@@ -54,30 +91,6 @@ class ExploreLogicControllerTests: XCTestCase {
         
         wait(for: [testExpectation], timeout: 1)
         XCTAssertEqual(sut.stockSearchDisplay.map { $0.ticker }, [])
-    }
-    
-    // MARK: - News Fetch
-    
-    func testNewsFetchWithResults() {
-        sut = makeSUT(mockNewsLoaderType: .withValues, stockSearcherType: .empty)
-        let testExpectation = expectation(description: #function)
-        
-        sut.handleCompletion = { testExpectation.fulfill() }
-        sut.loadNews()
-        
-        wait(for: [testExpectation], timeout: 1)
-        XCTAssertEqual(sut.marketNewsViewModels.map { $0.title }, ["title1", "title2"])
-    }
-    
-    func testNewsFetchWithError() {
-        sut = makeSUT(mockNewsLoaderType: .error, stockSearcherType: .empty)
-        let testExpectation = expectation(description: #function)
-        
-        sut.handleCompletion = { testExpectation.fulfill() }
-        sut.loadNews()
-        
-        wait(for: [testExpectation], timeout: 1)
-        XCTAssertEqual(sut.marketNewsViewModels.map { $0.title }, [])
     }
     
     // MARK: - Helpers

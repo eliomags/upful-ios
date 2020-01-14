@@ -65,21 +65,20 @@ class PrebuiltScreenerLogicControllerTests: XCTestCase {
     // MARK: - Mocks
 
 final class MockRemoteScreenerLoader: RemoteScreenerLoaderProtocol {
-    enum Configuration {
-        case error, oneScreener, multipleScreeners
-    }
-    
     func incrementScreenerInterest(documentID: String) {}
     
     func load(completion: @escaping ScreenerLoadCompletion) {
         DispatchQueue.global().async {
-            completion(Result { return self.showSingle() })
+            completion(Result { return self.handleSuccess() })
         }
     }
     
-    private func showSingle() -> [ScreenerViewModel] {
-        let vm = ScreenerViewModel(title: "Cash Burn", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID")
-        return [vm]
+    private func handleSuccess() -> [ScreenerViewModel] {
+        let vm1 = ScreenerViewModel(title: "Title0", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID")
+        let vm2 = ScreenerViewModel(title: "Title1", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID")
+        let vm3 = ScreenerViewModel(title: "Title2", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID")
+        let vm4 = ScreenerViewModel(title: "Title3", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID")
+        return [vm1, vm2, vm3, vm4]
     }
 }
 final class MockRemoteScreenerLoaderError: RemoteScreenerLoaderProtocol {
