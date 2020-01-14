@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class IntrinioAPI: StockScreenNetworkingProtocol {
+final class IntrinioAPI {
     private let apiKey = Constants.Intrinio.apiKey
     
     /// Used to fetch company filings in the details screen

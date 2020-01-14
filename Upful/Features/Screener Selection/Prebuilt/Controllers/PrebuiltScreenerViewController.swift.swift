@@ -130,10 +130,12 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
         case Section.popular.rawValue:
             let searchParameters = logicController.popularScreenerViewModels[indexPath.row].searchParameters
             let resultsVC = ScreenResultsViewController(searchParameters: searchParameters)
+            resultsVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
             navigationController?.pushViewController(resultsVC, animated: true)
         case Section.all.rawValue:
             let searchParameters = logicController.screenerViewModels[indexPath.row].searchParameters
             let resultsVC = ScreenResultsViewController(searchParameters: searchParameters)
+            resultsVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
             navigationController?.pushViewController(resultsVC, animated: true)
         default: break
         }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ExploreViewController: UIViewController, UISearchControllerDelegate, UISearchBarDelegate, HomeFeedNavigationDelegate {
+class ExploreViewController: UIViewController, UISearchControllerDelegate, UISearchBarDelegate {
     
     private enum ReuseID {
         static let largeNewsCell = "largeNewsCellID"
@@ -174,11 +174,12 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     
     // MARK: - Navigation
     
-    func navigateToScreenerResults(searchParameters: [String]) {
+    func navigateToScreenerResults(indexPath: IndexPath, searchParameters: [String]) {
         PermissionManager.shared.verifyScreenerNavigationPermission { (canNavigate) in
             if canNavigate {
                 AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .quick))
                 let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters)
+                searchResultVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
                 self.navigationController?.pushViewController(searchResultVC, animated: true)
             }
             if !canNavigate {
@@ -202,7 +203,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
             self.navigationController?.pushViewController(stockDetailsVC, animated: true)
         case Section.screeners.rawValue:
             let screenerParameters = logicController.screenerViewModels[indexPath.row].searchParameters
-            navigateToScreenerResults(searchParameters: screenerParameters)
+            navigateToScreenerResults(indexPath: indexPath, searchParameters: screenerParameters)
         default:
             break
         }

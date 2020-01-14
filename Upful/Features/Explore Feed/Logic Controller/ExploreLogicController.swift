@@ -107,7 +107,8 @@ class ExploreLogicController {
     
     fileprivate func handleRemoteScreenerLoadCompletion(for screenerViewModels: [ScreenerViewModel]) {
         guard screenerViewModels.count > 0 else { return }
-        self.screenerViewModels = Array(screenerViewModels[0...3])
+        let sortedVMs = screenerViewModels.sorted(by: { $0.interest > $1.interest })
+        self.screenerViewModels = Array(sortedVMs[0...3])
         handleCompletion?()
     }
     

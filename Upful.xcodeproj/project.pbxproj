@@ -25,8 +25,6 @@
 		3D0C5F972343C48A00F4A5FC /* SubscriptionOfferingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F962343C48A00F4A5FC /* SubscriptionOfferingsCell.swift */; };
 		3D0C5F9B2343C59300F4A5FC /* SubscriptionFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */; };
 		3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */; };
-		3D20EB762354E3D800D1093A /* AddPreferenceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */; };
-		3D20EB7A235627D000D1093A /* SuggestionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB79235627D000D1093A /* SuggestionViewModel.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -35,9 +33,6 @@
 		3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4B22FB2129007836DD /* UIView+Extensions.swift */; };
 		3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4E22FB259D007836DD /* NetworkingService.swift */; };
 		3D20FB5222FB3068007836DD /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5122FB3068007836DD /* FeedItem.swift */; };
-		3D20FB5822FB46DD007836DD /* PresetScreenerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5722FB46DD007836DD /* PresetScreenerTableViewCell.swift */; };
-		3D20FB5A22FB49EC007836DD /* PopularCompanyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5922FB49EC007836DD /* PopularCompanyViewController.swift */; };
-		3D20FB5D22FBA772007836DD /* PresetFeedDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB5C22FBA772007836DD /* PresetFeedDataLoader.swift */; };
 		3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB6122FBC03F007836DD /* CustomHeaderLabel.swift */; };
 		3D297A072390226A001D02C3 /* ViewSuggestionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A062390226A001D02C3 /* ViewSuggestionsVC.swift */; };
 		3D297A0923902D70001D02C3 /* Suggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0823902D70001D02C3 /* Suggestions.swift */; };
@@ -93,9 +88,7 @@
 		3D58651A231C946600495D79 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D586519231C946600495D79 /* AppStoreReviewHelper.swift */; };
 		3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651B231D777C00495D79 /* TableHeaderView.swift */; };
 		3D58651F231DE67B00495D79 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651E231DE67B00495D79 /* Constants.swift */; };
-		3D5865242321E61400495D79 /* Preset Screener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5865232321E61400495D79 /* Preset Screener.swift */; };
 		3D5865262323024A00495D79 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5865252323024A00495D79 /* PieChartView.swift */; };
-		3D6A83172373867E00A75B06 /* GenericCompanyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A83162373867E00A75B06 /* GenericCompanyCell.swift */; };
 		3D6BD0BB23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */; };
 		3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6BD0C423B507DE00FBC1ED /* EmptyScreenerCell.swift */; };
 		3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C85462337344300A2E63E /* InformationViewPresenter.swift */; };
@@ -156,7 +149,6 @@
 		3DBEFFE223B0280300BA407E /* LocalScreenerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFE123B0280300BA407E /* LocalScreenerLoader.swift */; };
 		3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */; };
 		3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */; };
-		3DC710882335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */; };
 		3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710892335D70000A2A0DA /* CustomRoundButton.swift */; };
 		3DC7108D2335D9BE00A2A0DA /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */; };
 		3DC710952336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710932336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift */; };
@@ -169,16 +161,12 @@
 		3DD42929234A92CD0079DA18 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD42928234A92CD0079DA18 /* ReportViewController.swift */; };
 		3DD52185235276580090CDE6 /* PreferenceDataManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD52184235276580090CDE6 /* PreferenceDataManagerTest.swift */; };
 		3DD5218C235293D60090CDE6 /* StockSuggestionVCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */; };
-		3DD521912354319E0090CDE6 /* EmptySuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */; };
-		3DD52195235444E60090CDE6 /* SuggestionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD52194235444E60090CDE6 /* SuggestionsVC.swift */; };
 		3DD75A30236BAF6700C298B9 /* ColorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A2F236BAF6700C298B9 /* ColorManager.swift */; };
 		3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A362372456700C298B9 /* FirestoreService.swift */; };
-		3DD75A3A2372797A00C298B9 /* PopularStockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A392372797A00C298B9 /* PopularStockViewModel.swift */; };
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
 		3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */; };
 		3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */; };
 		3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */; };
-		3DE8C80623997B5C00CC0056 /* HomePersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C80523997B5C00CC0056 /* HomePersistenceManager.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
 		3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */; };
@@ -188,7 +176,6 @@
 		3DF5FBB92330FF6D00856205 /* CompanyFillings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBB82330FF6D00856205 /* CompanyFillings.swift */; };
 		3DF5FBBB233114D700856205 /* CompanyReportsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBBA233114D700856205 /* CompanyReportsCell.swift */; };
 		3DF5FBBE2333A48B00856205 /* ChartUpdatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBBD2333A48B00856205 /* ChartUpdatable.swift */; };
-		3DF5FBC323341F3F00856205 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBC223341F3F00856205 /* HomeViewController.swift */; };
 		3DF5FBC6233429B600856205 /* StockDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBC4233429B600856205 /* StockDataModel.xcdatamodeld */; };
 		3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC0523342BED00856205 /* PersistenceService.swift */; };
 		3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */; };
@@ -245,8 +232,6 @@
 		3D0C5F962343C48A00F4A5FC /* SubscriptionOfferingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionOfferingsCell.swift; sourceTree = "<group>"; };
 		3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionFeatures.swift; sourceTree = "<group>"; };
 		3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGradientButton.swift; sourceTree = "<group>"; };
-		3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPreferenceCollectionViewCell.swift; sourceTree = "<group>"; };
-		3D20EB79235627D000D1093A /* SuggestionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionViewModel.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -259,9 +244,6 @@
 		3D20FB4B22FB2129007836DD /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		3D20FB4E22FB259D007836DD /* NetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingService.swift; sourceTree = "<group>"; };
 		3D20FB5122FB3068007836DD /* FeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
-		3D20FB5722FB46DD007836DD /* PresetScreenerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetScreenerTableViewCell.swift; sourceTree = "<group>"; };
-		3D20FB5922FB49EC007836DD /* PopularCompanyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularCompanyViewController.swift; sourceTree = "<group>"; };
-		3D20FB5C22FBA772007836DD /* PresetFeedDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetFeedDataLoader.swift; sourceTree = "<group>"; };
 		3D20FB6122FBC03F007836DD /* CustomHeaderLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeaderLabel.swift; sourceTree = "<group>"; };
 		3D297A062390226A001D02C3 /* ViewSuggestionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSuggestionsVC.swift; sourceTree = "<group>"; };
 		3D297A0823902D70001D02C3 /* Suggestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestions.swift; sourceTree = "<group>"; };
@@ -321,9 +303,7 @@
 		3D586519231C946600495D79 /* AppStoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewHelper.swift; sourceTree = "<group>"; };
 		3D58651B231D777C00495D79 /* TableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderView.swift; sourceTree = "<group>"; };
 		3D58651E231DE67B00495D79 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		3D5865232321E61400495D79 /* Preset Screener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preset Screener.swift"; sourceTree = "<group>"; };
 		3D5865252323024A00495D79 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
-		3D6A83162373867E00A75B06 /* GenericCompanyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericCompanyCell.swift; sourceTree = "<group>"; };
 		3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersViewModelTest.swift; sourceTree = "<group>"; };
 		3D6BD0C423B507DE00FBC1ED /* EmptyScreenerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenerCell.swift; sourceTree = "<group>"; };
 		3D7C85462337344300A2E63E /* InformationViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewPresenter.swift; sourceTree = "<group>"; };
@@ -384,7 +364,6 @@
 		3DBEFFE123B0280300BA407E /* LocalScreenerLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalScreenerLoader.swift; sourceTree = "<group>"; };
 		3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenResultsVC.swift; sourceTree = "<group>"; };
 		3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrinioAPI.swift; sourceTree = "<group>"; };
-		3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersCollectionViewController.swift; sourceTree = "<group>"; };
 		3DC710892335D70000A2A0DA /* CustomRoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoundButton.swift; sourceTree = "<group>"; };
 		3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		3DC710932336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreener+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -397,16 +376,12 @@
 		3DD42928234A92CD0079DA18 /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		3DD52184235276580090CDE6 /* PreferenceDataManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceDataManagerTest.swift; sourceTree = "<group>"; };
 		3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSuggestionVCTest.swift; sourceTree = "<group>"; };
-		3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySuggestionCell.swift; sourceTree = "<group>"; };
-		3DD52194235444E60090CDE6 /* SuggestionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsVC.swift; sourceTree = "<group>"; };
 		3DD75A2F236BAF6700C298B9 /* ColorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorManager.swift; sourceTree = "<group>"; };
 		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FirestoreService.swift; path = ../FirestoreService.swift; sourceTree = "<group>"; };
-		3DD75A392372797A00C298B9 /* PopularStockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularStockViewModel.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupVC.swift; sourceTree = "<group>"; };
 		3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePersistenceManagerTest.swift; sourceTree = "<group>"; };
-		3DE8C80523997B5C00CC0056 /* HomePersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePersistenceManager.swift; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
 		3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisGraphView.swift; sourceTree = "<group>"; };
@@ -416,7 +391,6 @@
 		3DF5FBB82330FF6D00856205 /* CompanyFillings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyFillings.swift; sourceTree = "<group>"; };
 		3DF5FBBA233114D700856205 /* CompanyReportsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyReportsCell.swift; sourceTree = "<group>"; };
 		3DF5FBBD2333A48B00856205 /* ChartUpdatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartUpdatable.swift; sourceTree = "<group>"; };
-		3DF5FBC223341F3F00856205 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		3DF5FBC5233429B600856205 /* StockDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StockDataModel.xcdatamodel; sourceTree = "<group>"; };
 		3DF5FC0523342BED00856205 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedStock+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -635,38 +609,6 @@
 			path = "Custom Views";
 			sourceTree = "<group>";
 		};
-		3D20EB722354C53200D1093A /* Saved Screener */ = {
-			isa = PBXGroup;
-			children = (
-				3DC710872335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift */,
-			);
-			path = "Saved Screener";
-			sourceTree = "<group>";
-		};
-		3D20EB742354E3C900D1093A /* Add Preference */ = {
-			isa = PBXGroup;
-			children = (
-				3D20EB752354E3D800D1093A /* AddPreferenceCollectionViewCell.swift */,
-			);
-			path = "Add Preference";
-			sourceTree = "<group>";
-		};
-		3D20EB78235627C300D1093A /* View Model */ = {
-			isa = PBXGroup;
-			children = (
-				3D20EB79235627D000D1093A /* SuggestionViewModel.swift */,
-			);
-			path = "View Model";
-			sourceTree = "<group>";
-		};
-		3D20EB7B2356452000D1093A /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				3DD52194235444E60090CDE6 /* SuggestionsVC.swift */,
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
 		3D20EB7C2357963C00D1093A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -681,22 +623,6 @@
 				3D20EB7E2357965700D1093A /* NotesViewModel.swift */,
 			);
 			path = "View Model";
-			sourceTree = "<group>";
-		};
-		3D20EB802357CA5800D1093A /* View Model */ = {
-			isa = PBXGroup;
-			children = (
-				3DD75A392372797A00C298B9 /* PopularStockViewModel.swift */,
-			);
-			path = "View Model";
-			sourceTree = "<group>";
-		};
-		3D20EB812357D05E00D1093A /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				3D20FB5922FB49EC007836DD /* PopularCompanyViewController.swift */,
-			);
-			path = Controller;
 			sourceTree = "<group>";
 		};
 		3D20FB1C22FB1F08007836DD = {
@@ -758,7 +684,6 @@
 		3D20FB4922FB209F007836DD /* Explore Feed */ = {
 			isa = PBXGroup;
 			children = (
-				3D20FB5422FB34FB007836DD /* Views */,
 				3D6A831823762B3900A75B06 /* Models */,
 				3DD4291E2348F7D20079DA18 /* Controller */,
 				3DB345F223C8A44C00EADFFD /* Logic Controller */,
@@ -812,24 +737,6 @@
 				3D2F9662231A16B7003811AB /* CompanyNewsModel.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		3D20FB5422FB34FB007836DD /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				3D42BE4B230AFE7000806AFF /* Popular Companies */,
-				3D917B5422FE0849001D5E39 /* Preset Cell */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		3D20FB5B22FBA754007836DD /* View Models */ = {
-			isa = PBXGroup;
-			children = (
-				3D20FB5C22FBA772007836DD /* PresetFeedDataLoader.swift */,
-				3D5865232321E61400495D79 /* Preset Screener.swift */,
-			);
-			path = "View Models";
 			sourceTree = "<group>";
 		};
 		3D20FB6022FBC033007836DD /* Reusable Views */ = {
@@ -1036,24 +943,6 @@
 			path = Intrinio;
 			sourceTree = "<group>";
 		};
-		3D42BE4B230AFE7000806AFF /* Popular Companies */ = {
-			isa = PBXGroup;
-			children = (
-				3D6A83152373866300A75B06 /* Views */,
-				3D20EB802357CA5800D1093A /* View Model */,
-				3D20EB812357D05E00D1093A /* Controller */,
-			);
-			path = "Popular Companies";
-			sourceTree = "<group>";
-		};
-		3D42BE4E230B032F00806AFF /* Preset Searche */ = {
-			isa = PBXGroup;
-			children = (
-				3D20FB5722FB46DD007836DD /* PresetScreenerTableViewCell.swift */,
-			);
-			path = "Preset Searche";
-			sourceTree = "<group>";
-		};
 		3D4D8606231C5B2F0065CF9F /* Stock Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -1079,14 +968,6 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		3D4FB9992384402300B9BFE1 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				3DE8C80523997B5C00CC0056 /* HomePersistenceManager.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		3D55BD6B23B805DD00B4FDF0 /* News */ = {
 			isa = PBXGroup;
 			children = (
@@ -1101,14 +982,6 @@
 				3D55BD6D23B805F400B4FDF0 /* StockNewsViewModelTest.swift */,
 			);
 			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		3D6A83152373866300A75B06 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				3D6A83162373867E00A75B06 /* GenericCompanyCell.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		3D6A831823762B3900A75B06 /* Models */ = {
@@ -1168,9 +1041,7 @@
 		3D6BD0C123B5075F00FBC1ED /* Archive */ = {
 			isa = PBXGroup;
 			children = (
-				3D4FB9992384402300B9BFE1 /* Models */,
 				3DC710862335CF4100A2A0DA /* Views */,
-				3DF5FBC123341F1E00856205 /* Controllers */,
 			);
 			path = Archive;
 			sourceTree = "<group>";
@@ -1323,15 +1194,6 @@
 				3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		3D917B5422FE0849001D5E39 /* Preset Cell */ = {
-			isa = PBXGroup;
-			children = (
-				3D20FB5B22FBA754007836DD /* View Models */,
-				3D42BE4E230B032F00806AFF /* Preset Searche */,
-			);
-			path = "Preset Cell";
 			sourceTree = "<group>";
 		};
 		3DA54083232B35F900EE477C /* MenuContainer */ = {
@@ -1660,8 +1522,6 @@
 			isa = PBXGroup;
 			children = (
 				3D0C5F71233AFCF000F4A5FC /* Custom VIews */,
-				3D20EB722354C53200D1093A /* Saved Screener */,
-				3DD5218623527A3C0090CDE6 /* Suggestions */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1723,17 +1583,6 @@
 			path = Reports;
 			sourceTree = "<group>";
 		};
-		3DD5218623527A3C0090CDE6 /* Suggestions */ = {
-			isa = PBXGroup;
-			children = (
-				3D20EB742354E3C900D1093A /* Add Preference */,
-				3DD5218F235431840090CDE6 /* Empty Suggestion */,
-				3D20EB7B2356452000D1093A /* Controller */,
-				3D20EB78235627C300D1093A /* View Model */,
-			);
-			path = Suggestions;
-			sourceTree = "<group>";
-		};
 		3DD52189235293A40090CDE6 /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -1752,14 +1601,6 @@
 				3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */,
 			);
 			path = "View Models";
-			sourceTree = "<group>";
-		};
-		3DD5218F235431840090CDE6 /* Empty Suggestion */ = {
-			isa = PBXGroup;
-			children = (
-				3DD521902354319E0090CDE6 /* EmptySuggestionCell.swift */,
-			);
-			path = "Empty Suggestion";
 			sourceTree = "<group>";
 		};
 		3DE8C7FE239420DE00CC0056 /* Assistance */ = {
@@ -1918,14 +1759,6 @@
 				3DC7108B2335D9AD00A2A0DA /* Notes View */,
 			);
 			path = Features;
-			sourceTree = "<group>";
-		};
-		3DF5FBC123341F1E00856205 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				3DF5FBC223341F3F00856205 /* HomeViewController.swift */,
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 		3DF5FC0423342BDF00856205 /* Persistence */ = {
@@ -2165,13 +1998,10 @@
 				3DBEFFE023B01F0A00BA407E /* SavedScreenerTableViewCell.swift in Sources */,
 				3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */,
 				3DBEFFDE23B018CC00BA407E /* SavedScreenersViewModel.swift in Sources */,
-				3DD75A3A2372797A00C298B9 /* PopularStockViewModel.swift in Sources */,
 				3D8D3268237320A600123731 /* PopularStockLoader.swift in Sources */,
 				3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */,
-				3DD521912354319E0090CDE6 /* EmptySuggestionCell.swift in Sources */,
 				3D3749B523BBADB1000D0597 /* NoPreferenceTableViewCell.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
-				3DF5FBC323341F3F00856205 /* HomeViewController.swift in Sources */,
 				3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */,
 				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
 				3DAB3EC5234E21320008CC18 /* SubscriptionDataManager.swift in Sources */,
@@ -2180,7 +2010,6 @@
 				3D55BD6623B7C76200B4FDF0 /* GenericNewsCell.swift in Sources */,
 				3D0C5F9B2343C59300F4A5FC /* SubscriptionFeatures.swift in Sources */,
 				3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */,
-				3DE8C80623997B5C00CC0056 /* HomePersistenceManager.swift in Sources */,
 				3DB345EC23C4C6D800EADFFD /* LoadingViewController.swift in Sources */,
 				3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */,
 				3D2F964D23169CC7003811AB /* BarGraphTableViewCell.swift in Sources */,
@@ -2196,7 +2025,6 @@
 				3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */,
 				3D562C8D235F248E00837B2F /* SubscriptionViewModel.swift in Sources */,
 				3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */,
-				3D5865242321E61400495D79 /* Preset Screener.swift in Sources */,
 				3DF5FBBB233114D700856205 /* CompanyReportsCell.swift in Sources */,
 				3DA54086232B361B00EE477C /* MenuViewProtocols.swift in Sources */,
 				3DBEFFE223B0280300BA407E /* LocalScreenerLoader.swift in Sources */,
@@ -2213,7 +2041,6 @@
 				3D297A0B23902DD6001D02C3 /* SuggestionLoader.swift in Sources */,
 				3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */,
 				3D297A072390226A001D02C3 /* ViewSuggestionsVC.swift in Sources */,
-				3DD52195235444E60090CDE6 /* SuggestionsVC.swift in Sources */,
 				3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
 				3D55BD6423B7BEBB00B4FDF0 /* UIImage+Extensions.swift in Sources */,
@@ -2232,10 +2059,8 @@
 				3DAB3ECD234F98860008CC18 /* PreferenceDataLoader.swift in Sources */,
 				3D2F964B2315CD34003811AB /* BarChartView.swift in Sources */,
 				3D55BD6823B803C300B4FDF0 /* StockNews.swift in Sources */,
-				3D20FB5A22FB49EC007836DD /* PopularCompanyViewController.swift in Sources */,
 				3D2F966123196881003811AB /* SpacerView.swift in Sources */,
 				3D917B5A22FE24C4001D5E39 /* SearchCriteriaTableViewController.swift in Sources */,
-				3D20EB7A235627D000D1093A /* SuggestionViewModel.swift in Sources */,
 				3DAB3EBB234C13100008CC18 /* PreferenceViewController.swift in Sources */,
 				3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */,
 				3D2F965823171F52003811AB /* CompanyNewsCell.swift in Sources */,
@@ -2244,7 +2069,6 @@
 				3D55BD7023B847EC00B4FDF0 /* TableSectionHeaderView.swift in Sources */,
 				3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */,
 				3D297A0923902D70001D02C3 /* Suggestions.swift in Sources */,
-				3DC710882335D01F00A2A0DA /* SavedScreenersCollectionViewController.swift in Sources */,
 				3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */,
 				3D297A1223908FC9001D02C3 /* SelectionTableHeader.swift in Sources */,
 				3D917B5622FE088F001D5E39 /* UIViewController+Extensions.swift in Sources */,
@@ -2257,10 +2081,7 @@
 				3D42BE492309A59800806AFF /* Screener.swift in Sources */,
 				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
 				3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */,
-				3D20FB5822FB46DD007836DD /* PresetScreenerTableViewCell.swift in Sources */,
 				3DF5FBB2232F16F300856205 /* SearchSelectionVIewController.swift in Sources */,
-				3D20EB762354E3D800D1093A /* AddPreferenceCollectionViewCell.swift in Sources */,
-				3D20FB5D22FBA772007836DD /* PresetFeedDataLoader.swift in Sources */,
 				3D7C855623380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift in Sources */,
 				3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */,
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
@@ -2315,7 +2136,6 @@
 				3DAB3EBD234C139B0008CC18 /* PreferenceManager.swift in Sources */,
 				3DD75A30236BAF6700C298B9 /* ColorManager.swift in Sources */,
 				3D4FB99C2384403C00B9BFE1 /* ScreenerItem.swift in Sources */,
-				3D6A83172373867E00A75B06 /* GenericCompanyCell.swift in Sources */,
 				3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */,
 				3DFD240223B67BE50027F5CF /* HomeGeneralViewModel.swift in Sources */,
 				3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */,
