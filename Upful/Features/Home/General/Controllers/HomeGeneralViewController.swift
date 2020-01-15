@@ -89,7 +89,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     fileprivate func setupTableViewCells() {
         tableView.register(NewsHeaderTableCell.self, forCellReuseIdentifier: "newsHeaderCell")
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: "newsCell")
-        tableView.register(ResultsTableViewCell.self, forCellReuseIdentifier: "resultsCellID")
+        tableView.register(CompanyPreviewTableViewCell.self, forCellReuseIdentifier: "resultsCellID")
         tableView.register(NoPreferenceTableViewCell.self, forCellReuseIdentifier: "noPreferenceCellID")
     }
     
@@ -152,7 +152,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     }
     
     fileprivate func makeStockCells(_ indexPath: IndexPath) -> UITableViewCell {
-        guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: "resultsCellID") as? ResultsTableViewCell else { return UITableViewCell() }
+        guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: "resultsCellID") as? CompanyPreviewTableViewCell else { return UITableViewCell() }
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
 

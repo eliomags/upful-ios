@@ -49,7 +49,7 @@ final class ScreenResultsViewController: UIViewController {
         let tv = UITableView(frame: .zero, style: .plain)
         tv.dataSource = self
         tv.delegate = self
-        tv.register(ResultsTableViewCell.self, forCellReuseIdentifier: ReuseId.resultsCellID)
+        tv.register(CompanyPreviewTableViewCell.self, forCellReuseIdentifier: ReuseId.resultsCellID)
         return tv
     }()
     
@@ -188,7 +188,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let resultsCell = tableView.dequeueReusableCell(withIdentifier: ReuseId.resultsCellID) as? ResultsTableViewCell else { return UITableViewCell() }
+        guard let resultsCell = tableView.dequeueReusableCell(withIdentifier: ReuseId.resultsCellID) as? CompanyPreviewTableViewCell else { return UITableViewCell() }
 
         let screenResult = searchResults[indexPath.item]
         let ticker = screenResult.ticker

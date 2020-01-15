@@ -59,7 +59,7 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
     
     fileprivate func setupTableViewView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.register(ResultsTableViewCell.self, forCellReuseIdentifier: "resultsCellID")
+        tableView.register(CompanyPreviewTableViewCell.self, forCellReuseIdentifier: "resultsCellID")
     }
     
     fileprivate func setupTableViewFunctionality() {
@@ -134,7 +134,7 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
     
     fileprivate func showLoadedCell(for indexPath: IndexPath) -> UITableViewCell {
         let stockViewModels = viewModel.stockViewModels[indexPath.item]
-        guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: "resultsCellID") as? ResultsTableViewCell else { return UITableViewCell() }
+        guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: "resultsCellID") as? CompanyPreviewTableViewCell else { return UITableViewCell() }
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
         loadedCell.companyTickerLabel.text = stockViewModels.stock.ticker

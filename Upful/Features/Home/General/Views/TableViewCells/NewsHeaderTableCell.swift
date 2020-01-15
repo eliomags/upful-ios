@@ -31,7 +31,6 @@ class NewsHeaderTableCell: GenericNewsCell {
         super.init(coder: coder)
     }
     
-    
     // MARK: - View Setup
     
     fileprivate func setupViews() {

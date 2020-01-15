@@ -146,7 +146,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     fileprivate func setupTableViewCells() {
         tableView.register(NewsHeaderTableCell.self, forCellReuseIdentifier: ReuseID.largeNewsCell)
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: ReuseID.smallNewsCell)
-        tableView.register(ResultsTableViewCell.self, forCellReuseIdentifier: ReuseID.popularStockCell)
+        tableView.register(CompanyPreviewTableViewCell.self, forCellReuseIdentifier: ReuseID.popularStockCell)
         tableView.register(ScreenerPreviewTableViewCell.self, forCellReuseIdentifier: ReuseID.screenerCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseID.searchCell)
     }
@@ -234,7 +234,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     }
     
     fileprivate func showPopularStockCell(at indexPath: IndexPath) -> UITableViewCell {
-        let loadedCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.popularStockCell) as? ResultsTableViewCell
+        let loadedCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.popularStockCell) as? CompanyPreviewTableViewCell
         loadedCell?.accessoryType = .disclosureIndicator
         loadedCell?.backgroundColor = VersionManager.mainContainerBackground()
         

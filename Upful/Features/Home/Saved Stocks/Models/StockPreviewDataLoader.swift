@@ -26,6 +26,8 @@ final class StockViewModel {
     
 }
 
+// MARK: - StockPreviewLoaderDelegate Methods
+
 extension StockViewModel: StockPreviewLoaderDelegate {
     func didLoadMarketcap(with value: Int) {
         DispatchQueue.main.async {

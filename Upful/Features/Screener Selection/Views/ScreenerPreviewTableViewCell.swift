@@ -53,6 +53,14 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
         ])
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        descriptionLabel.text = ""
+        titleLabel.text = ""
+        screenerImage.image = UIImage(systemName: "magnifyingglass.circle.fill")?
+                            .withTintColor(.systemGray2, renderingMode: .alwaysOriginal)
+    }
+    
     func loadImage(urlString: String) {
         UIImage.loadImage(from: urlString, resize: 120) { (result) in
             switch result {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ResultsTableViewCell: UITableViewCell {
+class CompanyPreviewTableViewCell: UITableViewCell {
     
     let companyTickerLabel: UILabel = {
         let l = UILabel()
@@ -74,6 +74,13 @@ class ResultsTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        companyTickerLabel.text = ""
+        companyNameLabel.text = ""
+        marketcapStackView.valueLabel.text = "$ -"
+        pricetoearningsStackView.valueLabel.text = "-"
+    }
 
 }
 

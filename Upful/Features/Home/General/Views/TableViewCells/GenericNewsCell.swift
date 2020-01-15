@@ -23,7 +23,6 @@ class GenericNewsCell: UITableViewCell {
         }
     }
     
-    
     // MARK: - Views
     
     // MARK: Detail View
@@ -50,8 +49,8 @@ class GenericNewsCell: UITableViewCell {
         return sv
     }()
     
-    
     // MARK: Text View
+    
     let titleLabel: UILabel = {
         let l = UILabel()
         l.font = UIFont.preferredFont(forTextStyle: .headline)
@@ -77,14 +76,12 @@ class GenericNewsCell: UITableViewCell {
         return v
     }()
     
-    
     // MARK: Sentiment View
     
     let sentimentView: SentimentView = {
         let v = SentimentView()
         return v
     }()
-    
     
     // MARK: - Initializer
     
@@ -98,6 +95,13 @@ class GenericNewsCell: UITableViewCell {
         super.init(coder: coder)
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        articleImageView.image = UIImage()
+        titleLabel.text = ""
+        sourceLabel.text = ""
+        dateLabel.text = ""
+    }
     
     // MARK: - Fileprivate Methods
     
