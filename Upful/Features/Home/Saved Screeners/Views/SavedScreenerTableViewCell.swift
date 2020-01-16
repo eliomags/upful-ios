@@ -15,6 +15,7 @@ class SavedScreenerTableViewCell: UITableViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
+        label.text = "\n"
         label.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         return label
     }()
@@ -22,6 +23,7 @@ class SavedScreenerTableViewCell: UITableViewCell {
     let descriptionLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 3
+        label.text = "\n\n"
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         return label
     }()
@@ -40,9 +42,9 @@ class SavedScreenerTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+        addBottomSeparator()
         let isLoading = (titleLabel.text?.isEmpty ?? true) && (descriptionLabel.text?.isEmpty ?? true)
         isLoading ? setLoading() : setLoaded()
-        addBottomSeparator()
     }
     
     required init?(coder: NSCoder) {
@@ -51,8 +53,9 @@ class SavedScreenerTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        descriptionLabel.text = ""
-        titleLabel.text = ""
+    
+        descriptionLabel.text = "\n"
+        titleLabel.text = "\n\n"
     }
     
     // MARK: - View Setup

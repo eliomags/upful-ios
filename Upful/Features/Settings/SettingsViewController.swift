@@ -162,7 +162,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         let headers = ["","purchase","support",""]
         let view = UIView()
         let label = UILabel()
-        label.textColor = .darkText
+        label.textColor = .secondaryText
         label.font = UIFont.systemFont(ofSize: 11, weight: .light)
         view.addSubview(label)
         label.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 15, left: 16, bottom: 4, right: 0))
@@ -172,8 +172,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 { return 40 }
-        if section == 3 { return 40 }
-        return UITableView.automaticDimension
+        return 50
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

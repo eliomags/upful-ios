@@ -24,7 +24,7 @@ class NewsHeaderTableCell: GenericNewsCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
-        titleLabel.text = "\n"
+        addBottomSeparator()
     }
     
     required init?(coder: NSCoder) {
@@ -61,8 +61,6 @@ class NewsHeaderTableCell: GenericNewsCell {
         articleImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32).isActive = true
         articleImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32).isActive = true
         articleImageView.bottomAnchor.constraint(equalTo: sentimentView.topAnchor, constant: -8).isActive = true
-
     }
-    
 }
 

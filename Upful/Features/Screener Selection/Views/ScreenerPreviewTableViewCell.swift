@@ -15,7 +15,7 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     let defaultImage = UIImage(systemName: "magnifyingglass.circle.fill")?
                         .withTintColor(.systemGray2, renderingMode: .alwaysOriginal)
     
-    private let screenerImage: UIImageView = {
+    let screenerImage: UIImageView = {
         let v = UIImageView()
         v.translatesAutoresizingMaskIntoConstraints = false
         v.backgroundColor = .lightGray
@@ -58,6 +58,7 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        screenerImage.image = nil
         descriptionLabel.text = ""
         titleLabel.text = ""
         screenerImage.image = defaultImage

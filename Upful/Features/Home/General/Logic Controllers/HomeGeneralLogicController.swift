@@ -64,7 +64,9 @@ class HomeGeneralLogicController {
         startPreferenceLoad()
 //        startNewsLoad()
     }
-    
+    /*
+     Gets a random combination of search parameters to perform search for Show More
+     */
     func getRandomPreferenceGroup() -> [String] {
         let groupedPreferences = preferenceDataManager.getGroupedPreferences()
         if groupedPreferences.isEmpty { return [] }

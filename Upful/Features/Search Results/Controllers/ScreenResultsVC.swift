@@ -18,12 +18,12 @@ final class ScreenResultsViewController: UIViewController {
     // MARK:- State
     
     private(set) var isLoading: Bool = false {
-        didSet { observeStateChanges(isLoading) }
+        didSet { observeStateChanges() }
     }
     
-    private func observeStateChanges(_ isLoading: Bool) {
+    private func observeStateChanges() {
         DispatchQueue.main.async {
-            if isLoading {
+            if self.isLoading {
                 LoadingViewPresenter.show(in: self)
             } else {
                 LoadingViewPresenter.remove()
@@ -33,7 +33,7 @@ final class ScreenResultsViewController: UIViewController {
 
     // MARK: - DataSource
     
-    var searchResults = [Stock]() {
+    private var searchResults = [Stock]() {
         didSet {
             feedTableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
         }
@@ -212,7 +212,8 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
         let selectedCompany = searchResults[indexPath.item]
         let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker, companyName: selectedCompany.name)
         
-        RemoteStockManager.update(selectedCompany.ticker, name: selectedCompany.name)
+        // TODO: - Enable before push
+//        RemoteStockManager.update(selectedCompany.ticker, name: selectedCompany.name)
         
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
