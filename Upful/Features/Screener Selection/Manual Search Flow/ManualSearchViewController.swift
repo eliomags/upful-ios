@@ -57,15 +57,6 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         return tv
     }()
     
-    lazy var footer: UIView = {
-        let v = UIView()
-        v.backgroundColor = .clear
-        v.addSubview(searchButton)
-        searchButton.anchor(top: nil, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
-                            padding: .init(top: 0, left: 16, bottom: 50, right: 16))
-        return v
-    }()
-    
     
     // MARK:- Initializer Methods
     
@@ -105,7 +96,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             bottom: view.layoutMarginsGuide.bottomAnchor,
             trailing: view.trailingAnchor,
             padding: .init(top: 0, left: 16, bottom: 16, right: 16),
-            size: .init(width: 0, height: 40))
+            size: .init(width: 0, height: 50))
         
         view.addSubview(manualSearchSearchTableView)
         manualSearchSearchTableView.anchor(top: view.layoutMarginsGuide.topAnchor,

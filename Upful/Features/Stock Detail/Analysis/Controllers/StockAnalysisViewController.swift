@@ -428,7 +428,7 @@ class GenericTableViewCell: UITableViewCell {
     }
     
     func setupView() {
-        addSeparator()
+        addBottomSeparator()
         accessoryType = .disclosureIndicator
         backgroundColor = .clear
         addSubview(contentStackView)

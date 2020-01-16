@@ -9,7 +9,7 @@
 import UIKit
 
 struct LoadingViewPresenter {
-    static let loadingView = LoadingViewController()
+    private static let loadingView = LoadingViewController()
     
     static func show(in viewcontroller: UIViewController) {
         

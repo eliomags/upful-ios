@@ -51,6 +51,7 @@ class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
         let url = URL(string: urlString)
         let myRequest = URLRequest(url: url!)
         webView.load(myRequest)
+        LoadingViewPresenter.show(in: self)
     }
     
     // MARK: - View Setup
@@ -79,8 +80,13 @@ class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     func displaySuccessNote() {
         InformationViewPresenter().showSaveSuccess(in: self)
     }
-    
+        
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        LoadingViewPresenter.remove()
+    }
 }
+
+
 
 
 

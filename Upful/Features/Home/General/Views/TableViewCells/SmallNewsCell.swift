@@ -17,6 +17,8 @@ class SmallNewsCell: GenericNewsCell {
         titleLabel.numberOfLines = 3
         titleLabel.text = "\n\n"
         setupViews()
+        
+        addBottomSeparator()
     }
     
     required init?(coder: NSCoder) {

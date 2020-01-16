@@ -41,7 +41,6 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         return sv
     }()
 
-    
     lazy var companyFundamentalsStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [marketcapStackView, pricetoearningsStackView])
         sv.distribution = .fillEqually
@@ -50,6 +49,7 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         return sv
     }()
     
+    // MARK: - Initializer
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: nil)
@@ -68,6 +68,8 @@ class CompanyPreviewTableViewCell: UITableViewCell {
             bottom: bottomAnchor,
             trailing: trailingAnchor,
             padding: .init(top: 4, left: 32, bottom: 12, right: 48))
+
+        addBottomSeparator()
     }
 
     required init?(coder aDecoder: NSCoder) {

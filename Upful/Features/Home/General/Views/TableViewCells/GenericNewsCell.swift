@@ -97,6 +97,7 @@ class GenericNewsCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        articleImageView.image = nil
         titleLabel.text = ""
         sourceLabel.text = ""
         dateLabel.text = ""

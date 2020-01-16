@@ -84,6 +84,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     
     fileprivate func handleNormalState() {
         tableView.restore()
+        tableView.separatorStyle = .none
         tableView.isScrollEnabled = true
         tableView.reloadData()
     }
@@ -94,6 +95,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
                                                       message: "Search by company or by ticker."))
         } else {
             tableView.restore()
+            tableView.separatorStyle = .singleLine
         }
         tableView.reloadData()
     }
@@ -101,19 +103,23 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     fileprivate func observeCompletionUpdates() {
         logicController.handleCompletion = { [weak self] in
             guard let self = self else { return }
-            self.handleSearchCompletion()
-            self.handleNormalCompletion()
+            switch self.logicController.state {
+            case .normal:
+                self.handleNormalCompletion()
+            case .searching:
+                self.handleSearchCompletion()
+            }
             self.tableView.restore()
+            self.tableView.separatorStyle = .none
             self.tableView.reloadData()
         }
     }
     
     fileprivate func handleSearchCompletion() {
-        guard logicController.state == .searching else { return }
         tableView.isScrollEnabled = false
         if logicController.stockSearchDisplay.isEmpty {
             tableView.setEmptyView(state: .emptyState(title: "Get Started.",
-                                                                message: "Search by company or by ticker."))
+                                                      message: "Search by company or by ticker."))
         }
         if logicController.stockSearchDisplay.isEmpty && (searchController.searchBar.text != nil) {
             tableView.setEmptyView(state: .emptyState(title: "No Data.",
@@ -122,7 +128,6 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     }
     
     fileprivate func handleNormalCompletion() {
-        guard logicController.state == .normal else { return }
         tableView.isScrollEnabled = true
     }
 
@@ -132,7 +137,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         tableView.showsVerticalScrollIndicator = false
         tableView.backgroundColor = .clear
         tableView.backgroundView = UIView()
-        tableView.separatorStyle = .singleLine
+        tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag
         tableView.tableFooterView = UIView()
         view.addSubview(tableView)

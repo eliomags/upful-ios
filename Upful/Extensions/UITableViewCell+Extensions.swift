@@ -9,7 +9,7 @@
 import UIKit
 
 extension UITableViewCell {
-    func addSeparator() {
+    func addBottomSeparator() {
         let separator = SpacerView()
         separator.translatesAutoresizingMaskIntoConstraints = false
         

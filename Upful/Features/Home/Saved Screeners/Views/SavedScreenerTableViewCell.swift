@@ -42,6 +42,7 @@ class SavedScreenerTableViewCell: UITableViewCell {
         setupViews()
         let isLoading = (titleLabel.text?.isEmpty ?? true) && (descriptionLabel.text?.isEmpty ?? true)
         isLoading ? setLoading() : setLoaded()
+        addBottomSeparator()
     }
     
     required init?(coder: NSCoder) {

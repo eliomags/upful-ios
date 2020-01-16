@@ -35,12 +35,7 @@ class HomeGeneralLogicController {
     }
     
     private(set) var stockNews: [StockNewsViewModel] = []
-    private(set) var isNewsLoaded = false {
-        didSet {
-            sendNewsStateUpdates?()
-        }
-    }
-    
+
     var sendPreferenceStateUpdates: ((PreferenceState) -> Void)?
     var sendNewsStateUpdates: (() -> Void)?
     
@@ -91,8 +86,6 @@ class HomeGeneralLogicController {
             let preferenceParameters = preferenceArray.joined(separator: ",")
             fetchSuggestedStocks(parameters: preferenceParameters)
         }
-        
-//        handlePreferenceFetchCompletion()
     }
     
     fileprivate func fetchSuggestedStocks(parameters: String) {
@@ -170,6 +163,6 @@ class HomeGeneralLogicController {
     fileprivate func handleNewsFetchCompletion(news: [StockNews]) {
         let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
         self.stockNews = mappedNews
-        self.isNewsLoaded = true
+        sendNewsStateUpdates?()
     }
 }

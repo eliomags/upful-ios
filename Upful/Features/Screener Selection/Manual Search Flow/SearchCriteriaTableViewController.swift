@@ -12,7 +12,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     
     
     lazy var tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .insetGrouped)
+        let tv = UITableView(frame: .zero, style: .grouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.setTableHeaderView(headerView: tableHeader)
         return tv
@@ -53,27 +53,17 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         return b
     }()
     
-    private lazy var footer: UIView = {
-        let v = UIView()
-        v.addSubview(searchButton)
-        searchButton.anchor(top: nil, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
-                            padding: .init(top: 0, left: 16, bottom: 50, right: 16))
-        v.backgroundColor = .clear
-        return v
-    }()
-    
-    
     // MARK: - Initializer Methods
     
     override func loadView() {
         super.loadView()
+        navigationItem.largeTitleDisplayMode = .never
         setupTableView()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initializeDisplayData()
-        navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = VersionManager.mainContainerBackground()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
@@ -105,7 +95,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
                             bottom: view.layoutMarginsGuide.bottomAnchor,
                             trailing: view.trailingAnchor,
                             padding: .init(top: 0, left: 16, bottom: 16, right: 16),
-                            size: .init(width: 0, height: 40))
+                            size: .init(width: 0, height: 50))
         
         view.addSubview(tableView)
         tableView.anchor(top: view.layoutMarginsGuide.topAnchor,
@@ -221,7 +211,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 25
+        return 44
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -240,13 +230,13 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
 class ManualSearchCriteriaCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .none
+        selectionStyle = .none
+        backgroundColor = VersionManager.collectionCellColor()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

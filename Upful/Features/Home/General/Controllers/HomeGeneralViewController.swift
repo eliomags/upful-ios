@@ -81,6 +81,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     
     fileprivate func setupTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
+        tableView.separatorStyle = .none
         tableView.tableHeaderView = UIView()
         view.addSubview(tableView)
         tableView.fillSuperview()
@@ -117,7 +118,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     }
     
     fileprivate func handleNewsCellSelection(for indexPath: IndexPath) {
-        if logicController.isNewsLoaded {
+        if !logicController.stockNews.isEmpty {
             let newsURLString = logicController.stockNews[indexPath.row].newsUrl
             let newsWebVC = WebViewViewController(urlString: newsURLString)
             let navVC = UINavigationController(rootViewController: newsWebVC)
