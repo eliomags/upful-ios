@@ -8,7 +8,7 @@
 
 import Foundation
 
-class NewsViewModel {
+class NewsLogicController {
     
     // MARK: - Dependencies
     

@@ -12,7 +12,6 @@
 		3D0C5F6523395CD500F4A5FC /* Notes+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F6323395CD500F4A5FC /* Notes+CoreDataProperties.swift */; };
 		3D0C5F6D233A451600F4A5FC /* GenericHomeEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F6C233A451600F4A5FC /* GenericHomeEmptyCell.swift */; };
 		3D0C5F6F233A49A800F4A5FC /* EmptyStockCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F6E233A49A800F4A5FC /* EmptyStockCell.swift */; };
-		3D0C5F73233AFD0300F4A5FC /* ActionableTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F72233AFD0300F4A5FC /* ActionableTableHeader.swift */; };
 		3D0C5F78233FA42300F4A5FC /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F77233FA42300F4A5FC /* WebViewViewController.swift */; };
 		3D0C5F7B233FB61A00F4A5FC /* FilingsWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F7A233FB61A00F4A5FC /* FilingsWebView.swift */; };
 		3D0C5F7E233FC1BC00F4A5FC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F7D233FC1BC00F4A5FC /* SettingsViewController.swift */; };
@@ -28,7 +27,7 @@
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
-		3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */; };
+		3D20FB2B22FB1F08007836DD /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2A22FB1F08007836DD /* ExploreViewController.swift */; };
 		3D20FB3022FB1F0A007836DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D20FB2F22FB1F0A007836DD /* Assets.xcassets */; };
 		3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4B22FB2129007836DD /* UIView+Extensions.swift */; };
 		3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4E22FB259D007836DD /* NetworkingService.swift */; };
@@ -58,7 +57,7 @@
 		3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F9664231B7488003811AB /* String+Extensions.swift */; };
 		3D30D9342358862E00DC06B6 /* NotesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D30D9332358862E00DC06B6 /* NotesPresenter.swift */; };
 		3D3749AC23B9B40A000D0597 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AB23B9B40A000D0597 /* NewsViewController.swift */; };
-		3D3749B023B9BA66000D0597 /* NewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AF23B9BA66000D0597 /* NewsViewModel.swift */; };
+		3D3749B023B9BA66000D0597 /* NewsLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AF23B9BA66000D0597 /* NewsLogicController.swift */; };
 		3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B123BA830D000D0597 /* StockScreeningService.swift */; };
 		3D3749B523BBADB1000D0597 /* NoPreferenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B423BBADB1000D0597 /* NoPreferenceTableViewCell.swift */; };
 		3D3749B823BE60F4000D0597 /* ScreenerSelectionContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B723BE60F4000D0597 /* ScreenerSelectionContainerView.swift */; };
@@ -153,7 +152,6 @@
 		3DC7108D2335D9BE00A2A0DA /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */; };
 		3DC710952336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710932336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift */; };
 		3DC710962336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710942336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift */; };
-		3DD4291B2345A3BA0079DA18 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291A2345A3BA0079DA18 /* AddButton.swift */; };
 		3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291C2347EC530079DA18 /* Vibration.swift */; };
 		3DD42920234959FD0079DA18 /* NotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291F234959FD0079DA18 /* NotesButton.swift */; };
 		3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD429222349633E0079DA18 /* GenericNavBarButton.swift */; };
@@ -183,7 +181,7 @@
 		3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */; };
 		3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */; };
 		3DFD240023B672950027F5CF /* SentimentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FF23B672950027F5CF /* SentimentView.swift */; };
-		3DFD240223B67BE50027F5CF /* HomeGeneralViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD240123B67BE50027F5CF /* HomeGeneralViewModel.swift */; };
+		3DFD240223B67BE50027F5CF /* HomeGeneralLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD240123B67BE50027F5CF /* HomeGeneralLogicController.swift */; };
 		9EACA51EBDB9027C65ED019D /* Pods_UpfulTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC0A134A6E928314BD6D8405 /* Pods_UpfulTests.framework */; };
 		DBF9A52BC5915E42042B6760 /* Pods_Upful.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59C76C07469A281B054B28FF /* Pods_Upful.framework */; };
 /* End PBXBuildFile section */
@@ -219,7 +217,6 @@
 		3D0C5F6323395CD500F4A5FC /* Notes+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notes+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3D0C5F6C233A451600F4A5FC /* GenericHomeEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericHomeEmptyCell.swift; sourceTree = "<group>"; };
 		3D0C5F6E233A49A800F4A5FC /* EmptyStockCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStockCell.swift; sourceTree = "<group>"; };
-		3D0C5F72233AFD0300F4A5FC /* ActionableTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionableTableHeader.swift; sourceTree = "<group>"; };
 		3D0C5F77233FA42300F4A5FC /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		3D0C5F7A233FB61A00F4A5FC /* FilingsWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilingsWebView.swift; sourceTree = "<group>"; };
 		3D0C5F7D233FC1BC00F4A5FC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -236,7 +233,7 @@
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D20FB2822FB1F08007836DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchViewController.swift; sourceTree = "<group>"; };
+		3D20FB2A22FB1F08007836DD /* ExploreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; };
 		3D20FB2F22FB1F0A007836DD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D20FB3422FB1F0A007836DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D20FB3922FB1F0A007836DD /* UpfulTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UpfulTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -273,7 +270,7 @@
 		3D2F9664231B7488003811AB /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		3D30D9332358862E00DC06B6 /* NotesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesPresenter.swift; sourceTree = "<group>"; };
 		3D3749AB23B9B40A000D0597 /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
-		3D3749AF23B9BA66000D0597 /* NewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModel.swift; sourceTree = "<group>"; };
+		3D3749AF23B9BA66000D0597 /* NewsLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsLogicController.swift; sourceTree = "<group>"; };
 		3D3749B123BA830D000D0597 /* StockScreeningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockScreeningService.swift; sourceTree = "<group>"; };
 		3D3749B423BBADB1000D0597 /* NoPreferenceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPreferenceTableViewCell.swift; sourceTree = "<group>"; };
 		3D3749B723BE60F4000D0597 /* ScreenerSelectionContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenerSelectionContainerView.swift; sourceTree = "<group>"; };
@@ -368,7 +365,6 @@
 		3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		3DC710932336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreener+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3DC710942336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreener+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		3DD4291A2345A3BA0079DA18 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
 		3DD4291C2347EC530079DA18 /* Vibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibration.swift; sourceTree = "<group>"; };
 		3DD4291F234959FD0079DA18 /* NotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesButton.swift; sourceTree = "<group>"; };
 		3DD429222349633E0079DA18 /* GenericNavBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericNavBarButton.swift; sourceTree = "<group>"; };
@@ -398,7 +394,7 @@
 		3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrebuiltScreenerViewController.swift.swift; path = "Upful/Features/Screener Selection/Prebuilt/Controllers/PrebuiltScreenerViewController.swift.swift"; sourceTree = SOURCE_ROOT; };
 		3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsHeaderTableCell.swift; sourceTree = "<group>"; };
 		3DFD23FF23B672950027F5CF /* SentimentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentimentView.swift; sourceTree = "<group>"; };
-		3DFD240123B67BE50027F5CF /* HomeGeneralViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewModel.swift; sourceTree = "<group>"; };
+		3DFD240123B67BE50027F5CF /* HomeGeneralLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralLogicController.swift; sourceTree = "<group>"; };
 		59C76C07469A281B054B28FF /* Pods_Upful.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Upful.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A3615F7902317CD398E45C9 /* Pods-UpfulTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UpfulTests/Pods-UpfulTests.release.xcconfig"; sourceTree = "<group>"; };
 		9315B80D35508D89B49F5501 /* Pods-UpfulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UpfulTests/Pods-UpfulTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -466,15 +462,6 @@
 				3D0C5F6323395CD500F4A5FC /* Notes+CoreDataProperties.swift */,
 			);
 			path = Notes;
-			sourceTree = "<group>";
-		};
-		3D0C5F71233AFCF000F4A5FC /* Custom VIews */ = {
-			isa = PBXGroup;
-			children = (
-				3D0C5F72233AFD0300F4A5FC /* ActionableTableHeader.swift */,
-				3DD4291A2345A3BA0079DA18 /* AddButton.swift */,
-			);
-			path = "Custom VIews";
 			sourceTree = "<group>";
 		};
 		3D0C5F76233FA3EA00F4A5FC /* WebNavigation */ = {
@@ -1038,14 +1025,6 @@
 			path = "View Models";
 			sourceTree = "<group>";
 		};
-		3D6BD0C123B5075F00FBC1ED /* Archive */ = {
-			isa = PBXGroup;
-			children = (
-				3DC710862335CF4100A2A0DA /* Views */,
-			);
-			path = Archive;
-			sourceTree = "<group>";
-		};
 		3D6BD0C223B5077700FBC1ED /* Saved Stocks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1446,7 +1425,7 @@
 				3DBEFFD323AACE6A00BA407E /* Views */,
 				3DBEFFCD23A9D06400BA407E /* Models */,
 				3DBEFFCC23A9CD4000BA407E /* Controllers */,
-				3DBEFFCE23A9D09700BA407E /* View Models */,
+				3DBEFFCE23A9D09700BA407E /* Logic Controllers */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -1478,14 +1457,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		3DBEFFCE23A9D09700BA407E /* View Models */ = {
+		3DBEFFCE23A9D09700BA407E /* Logic Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				3DFD240123B67BE50027F5CF /* HomeGeneralViewModel.swift */,
+				3DFD240123B67BE50027F5CF /* HomeGeneralLogicController.swift */,
 				3D55BD6923B8052200B4FDF0 /* StockNewsViewModel.swift */,
-				3D3749AF23B9BA66000D0597 /* NewsViewModel.swift */,
+				3D3749AF23B9BA66000D0597 /* NewsLogicController.swift */,
 			);
-			path = "View Models";
+			path = "Logic Controllers";
 			sourceTree = "<group>";
 		};
 		3DBEFFD323AACE6A00BA407E /* Views */ = {
@@ -1518,14 +1497,6 @@
 			path = "Search Results";
 			sourceTree = "<group>";
 		};
-		3DC710862335CF4100A2A0DA /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				3D0C5F71233AFCF000F4A5FC /* Custom VIews */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		3DC7108B2335D9AD00A2A0DA /* Notes View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1550,7 +1521,7 @@
 		3DD4291E2348F7D20079DA18 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				3D20FB2A22FB1F08007836DD /* QuickSearchViewController.swift */,
+				3D20FB2A22FB1F08007836DD /* ExploreViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1731,7 +1702,6 @@
 		3DF5FBBF23341EC500856205 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				3D6BD0C123B5075F00FBC1ED /* Archive */,
 				3D6BD0C323B5079900FBC1ED /* Reusabile Views */,
 				3DBEFFC023A9BD6D00BA407E /* Container */,
 				3DBEFFBF23A9BD6900BA407E /* General */,
@@ -2028,7 +1998,6 @@
 				3DF5FBBB233114D700856205 /* CompanyReportsCell.swift in Sources */,
 				3DA54086232B361B00EE477C /* MenuViewProtocols.swift in Sources */,
 				3DBEFFE223B0280300BA407E /* LocalScreenerLoader.swift in Sources */,
-				3D0C5F73233AFD0300F4A5FC /* ActionableTableHeader.swift in Sources */,
 				3DBEFFD923AD7ED200BA407E /* Array+Extensions.swift in Sources */,
 				3DD42920234959FD0079DA18 /* NotesButton.swift in Sources */,
 				3D0C5F6D233A451600F4A5FC /* GenericHomeEmptyCell.swift in Sources */,
@@ -2088,7 +2057,7 @@
 				3DF5FBB92330FF6D00856205 /* CompanyFillings.swift in Sources */,
 				3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */,
 				3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */,
-				3D20FB2B22FB1F08007836DD /* QuickSearchViewController.swift in Sources */,
+				3D20FB2B22FB1F08007836DD /* ExploreViewController.swift in Sources */,
 				3D5865262323024A00495D79 /* PieChartView.swift in Sources */,
 				3D0C5F7B233FB61A00F4A5FC /* FilingsWebView.swift in Sources */,
 				3D0C5F8823419F1600F4A5FC /* SubscriptionTableViewCell.swift in Sources */,
@@ -2137,12 +2106,12 @@
 				3DD75A30236BAF6700C298B9 /* ColorManager.swift in Sources */,
 				3D4FB99C2384403C00B9BFE1 /* ScreenerItem.swift in Sources */,
 				3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */,
-				3DFD240223B67BE50027F5CF /* HomeGeneralViewModel.swift in Sources */,
+				3DFD240223B67BE50027F5CF /* HomeGeneralLogicController.swift in Sources */,
 				3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */,
 				3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */,
 				3DBEFFD023A9D0B900BA407E /* SavedStockLoader.swift in Sources */,
 				3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */,
-				3D3749B023B9BA66000D0597 /* NewsViewModel.swift in Sources */,
+				3D3749B023B9BA66000D0597 /* NewsLogicController.swift in Sources */,
 				3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */,
 				3DD42929234A92CD0079DA18 /* ReportViewController.swift in Sources */,
 				3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */,
@@ -2159,7 +2128,6 @@
 				3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */,
 				3D0C5F972343C48A00F4A5FC /* SubscriptionOfferingsCell.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
-				3DD4291B2345A3BA0079DA18 /* AddButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

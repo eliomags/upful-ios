@@ -8,7 +8,7 @@
 
 import Foundation
 
-class HomeGeneralViewModel {
+class HomeGeneralLogicController {
     
     // MARK: - Dependencies
     
@@ -17,7 +17,6 @@ class HomeGeneralViewModel {
     
     private let savedStockDataManager: SavedStockDataLoaderProtocol
     private let stockNewsLoader = NewsLoader()
-    
     
     // MARK: - State
     
@@ -66,7 +65,7 @@ class HomeGeneralViewModel {
     
     // MARK: - API Methods
     
-    func fetchTableData() {        
+    func fetchTableData() {
         startPreferenceLoad()
 //        startNewsLoad()
     }
@@ -80,9 +79,7 @@ class HomeGeneralViewModel {
     }
     
     // MARK: - Stock Preference Loading
-    
-    private let preferenceFetchingGroup = DispatchGroup()
-    
+        
     func startPreferenceLoad() {
         preferenceState = .loading
         let groupedPreferences = preferenceDataManager.getGroupedPreferences()
@@ -90,44 +87,42 @@ class HomeGeneralViewModel {
             preferenceState = .new
             return
         }
-        
         groupedPreferences.forEach { (preferenceArray) in
-            preferenceFetchingGroup.enter()
             let preferenceParameters = preferenceArray.joined(separator: ",")
             fetchSuggestedStocks(parameters: preferenceParameters)
         }
         
-        handlePreferenceFetchCompletion()
+//        handlePreferenceFetchCompletion()
     }
     
     fileprivate func fetchSuggestedStocks(parameters: String) {
-        self.stockScreeningService.get(router: .getScreeningResults(parameters: parameters, numberOfResults: 8), completion: {
+        stockScreeningService.get(router: .getScreeningResults(parameters: parameters, numberOfResults: 8), completion: {
             (result) in
             switch result {
             case .success(let fetchedStocks):
-                self.stocksYouMayLike.append(contentsOf: fetchedStocks)
+                self.handlePreferenceFetchSuccess(with: fetchedStocks)
             case .failure(_):
                 self.preferenceState = .error
             }
-            self.preferenceFetchingGroup.leave()
         })
     }
     
-    fileprivate func randomizeSuggestedStocks() {
-        stocksYouMayLike.removeDuplicates()
-        if stocksYouMayLike.count > 3 { stocksYouMayLike = Array(stocksYouMayLike[0...2]) }
+    fileprivate func randomizeSuggestedStocks(stocks: [Stock]) -> [Stock] {
+        var duplicateStocks = stocks
+        
+        duplicateStocks.removeDuplicates()
+        if duplicateStocks.count > 3 { duplicateStocks = Array(duplicateStocks[0...2]) }
+        return duplicateStocks
     }
     
-    fileprivate func handlePreferenceFetchCompletion() {
-        preferenceFetchingGroup.notify(queue: .main) {
-            if self.preferenceState == .error { return }
-            
-            if self.stocksYouMayLike.isEmpty {
-                self.fetchSuggestedStocks(parameters: "")
-            } else {
-                self.randomizeSuggestedStocks()
-                self.preferenceState = .loaded
-            }
+    fileprivate func handlePreferenceFetchSuccess(with fetchedStocks: [Stock]) {
+        if self.preferenceState == .error { return }
+        
+        if fetchedStocks.isEmpty {
+            self.fetchSuggestedStocks(parameters: "")
+        } else {
+            stocksYouMayLike = randomizeSuggestedStocks(stocks: fetchedStocks)
+            preferenceState = .loaded
         }
     }
     

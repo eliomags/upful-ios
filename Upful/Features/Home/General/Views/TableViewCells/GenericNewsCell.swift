@@ -97,7 +97,6 @@ class GenericNewsCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        articleImageView.image = UIImage()
         titleLabel.text = ""
         sourceLabel.text = ""
         dateLabel.text = ""
@@ -117,7 +116,6 @@ class GenericNewsCell: UITableViewCell {
             }
         }
     }
-    
     fileprivate func setLoading() {
         sourceLabel.backgroundColor = VersionManager.loadingLabelColor()
         dateLabel.backgroundColor = VersionManager.loadingLabelColor()

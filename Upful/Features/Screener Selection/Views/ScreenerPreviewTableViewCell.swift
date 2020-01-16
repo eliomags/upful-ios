@@ -12,6 +12,9 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     
     // MARK: - Views
 
+    let defaultImage = UIImage(systemName: "magnifyingglass.circle.fill")?
+                        .withTintColor(.systemGray2, renderingMode: .alwaysOriginal)
+    
     private let screenerImage: UIImageView = {
         let v = UIImageView()
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -57,18 +60,16 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
         super.prepareForReuse()
         descriptionLabel.text = ""
         titleLabel.text = ""
-        screenerImage.image = UIImage(systemName: "magnifyingglass.circle.fill")?
-                            .withTintColor(.systemGray2, renderingMode: .alwaysOriginal)
+        screenerImage.image = defaultImage
     }
-    
+
     func loadImage(urlString: String) {
         UIImage.loadImage(from: urlString, resize: 120) { (result) in
             switch result {
             case .success(let im):
                 self.screenerImage.image = im
             case .failure(_):
-                self.screenerImage.image = UIImage(systemName: "magnifyingglass.circle.fill")?
-                                               .withTintColor(.systemGray2, renderingMode: .alwaysOriginal)
+                self.screenerImage.image = self.defaultImage
             }
         }
     }

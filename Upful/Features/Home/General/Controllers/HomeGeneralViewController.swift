@@ -18,8 +18,8 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         case news = 1
     }
     
-    lazy var viewModel: HomeGeneralViewModel = {
-        let vm = HomeGeneralViewModel()
+    lazy var logicController: HomeGeneralLogicController = {
+        let vm = HomeGeneralLogicController()
         return vm
     }()
     
@@ -51,13 +51,13 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         super.viewDidLoad()
         observeViewModelNewsUpdates()
         observeViewModelPreferenceUpdates()
-        viewModel.fetchTableData()
+        logicController.fetchTableData()
     }
     
     // MARK: - View Model Binding
 
     fileprivate func observeViewModelPreferenceUpdates() {
-        viewModel.sendPreferenceStateUpdates = { [weak self] (state) in
+        logicController.sendPreferenceStateUpdates = { [weak self] (state) in
             guard let self = self else { return }
             switch state {
             case .loaded, .new:
@@ -70,7 +70,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     }
     
     fileprivate func observeViewModelNewsUpdates() {
-        viewModel.sendNewsStateUpdates = { [weak self] in
+        logicController.sendNewsStateUpdates = { [weak self] in
             guard let self = self else { return }
             self.tableView.reloadSections([Section.news.rawValue], with: .automatic)
             self.refreshControl.endRefreshing()
@@ -97,17 +97,17 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     
     @objc fileprivate func handleResfreshing(_ sender: Any) {
         refreshControl.endRefreshing()
-        viewModel.fetchTableData()
+        logicController.fetchTableData()
     }
     
     fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
-        switch viewModel.preferenceState{
+        switch logicController.preferenceState{
         case .new:
             let presenter = PreferencePresenter(presentingViewController: self)
             presenter.present()
         case .loaded:
-            let ticker = viewModel.stocksYouMayLike[indexPath.row].ticker
-            let name = viewModel.stocksYouMayLike[indexPath.row].name
+            let ticker = logicController.stocksYouMayLike[indexPath.row].ticker
+            let name = logicController.stocksYouMayLike[indexPath.row].name
             let detailsVC = StockDetailsContainerView(ticker: ticker, companyName: name)
             RemoteStockManager.update(ticker, name: name)
             navigationController?.pushViewController(detailsVC, animated: true)
@@ -117,8 +117,8 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     }
     
     fileprivate func handleNewsCellSelection(for indexPath: IndexPath) {
-        if viewModel.isNewsLoaded {
-            let newsURLString = viewModel.stockNews[indexPath.row].newsUrl
+        if logicController.isNewsLoaded {
+            let newsURLString = logicController.stockNews[indexPath.row].newsUrl
             let newsWebVC = WebViewViewController(urlString: newsURLString)
             let navVC = UINavigationController(rootViewController: newsWebVC)
             self.present(navVC, animated: true, completion: nil)
@@ -131,7 +131,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     }
     
     fileprivate func handleSeeMoreSuggestedStocks() {
-        let randomSavedSearchParameters = viewModel.getRandomPreferenceGroup()
+        let randomSavedSearchParameters = logicController.getRandomPreferenceGroup()
         let resultsVC = ScreenResultsViewController(searchParameters: randomSavedSearchParameters)
         navigationController?.pushViewController(resultsVC, animated: true)
     }
@@ -141,7 +141,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     func didCancelSaving() {}
     
     func didCompleteSaving() {
-        viewModel.startPreferenceLoad()
+        logicController.startPreferenceLoad()
     }
     
     // MARK: - TableView Cells
@@ -156,8 +156,8 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
 
-        if !viewModel.stocksYouMayLike.isEmpty {
-            let stock = viewModel.stocksYouMayLike[indexPath.item]
+        if !logicController.stocksYouMayLike.isEmpty {
+            let stock = logicController.stocksYouMayLike[indexPath.item]
             loadedCell.companyTickerLabel.text = stock.ticker
             loadedCell.companyNameLabel.text = stock.name
             loadedCell.marketcapStackView.valueLabel.text = "$\(stock.marketcap?.formatUsingAbbreviation() ?? " -")"
@@ -171,14 +171,14 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         switch row {
         case 0:
             let newsHeaderCell = tableView.dequeueReusableCell(withIdentifier: "newsHeaderCell", for: indexPath) as! NewsHeaderTableCell
-            if !viewModel.stockNews.isEmpty {
-                newsHeaderCell.stockNews = viewModel.stockNews[indexPath.row]
+            if !logicController.stockNews.isEmpty {
+                newsHeaderCell.stockNews = logicController.stockNews[indexPath.row]
             }
             return newsHeaderCell
         case 1,2:
             let newsCell = tableView.dequeueReusableCell(withIdentifier: "newsCell", for: indexPath) as! SmallNewsCell
-            if !viewModel.stockNews.isEmpty {
-                newsCell.stockNews = viewModel.stockNews[indexPath.row]
+            if !logicController.stockNews.isEmpty {
+                newsCell.stockNews = logicController.stockNews[indexPath.row]
             }
             return newsCell
         default:
@@ -195,10 +195,10 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case Section.preference.rawValue:
-            let isLoadedState = viewModel.preferenceState == .loaded
-            let isNewState = viewModel.preferenceState == .new
+            let isLoadedState = logicController.preferenceState == .loaded
+            let isNewState = logicController.preferenceState == .new
             if isNewState { return 1 }
-            if isLoadedState { return viewModel.stocksYouMayLike.count }
+            if isLoadedState { return logicController.stocksYouMayLike.count }
             else { return 0 }
         case Section.news.rawValue:
             return 3
@@ -213,8 +213,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.news.rawValue:
             return makeNewsCells(indexPath)
         case Section.preference.rawValue:
-            if viewModel.preferenceState == .loaded { return makeStockCells(indexPath) }
-            if viewModel.preferenceState == .new { return makeNoPreferenceSetCell(indexPath) }
+            if logicController.preferenceState == .loaded { return makeStockCells(indexPath) }
+            if logicController.preferenceState == .new { return makeNoPreferenceSetCell(indexPath) }
         default: return UITableViewCell()
         }
         return UITableViewCell()
@@ -263,7 +263,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         let section = indexPath.section
         switch section {
         case Section.preference.rawValue:
-            switch viewModel.preferenceState {
+            switch logicController.preferenceState {
             case .new:
                 return true
             case .loading:
@@ -274,7 +274,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
                 return false
             }
         case Section.news.rawValue:
-            return !viewModel.stockNews.isEmpty
+            return !logicController.stockNews.isEmpty
         default:
             return false
         }

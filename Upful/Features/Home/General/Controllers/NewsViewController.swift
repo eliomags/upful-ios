@@ -10,11 +10,10 @@ import UIKit
 
 class NewsViewController: UITableViewController {
     
-    fileprivate lazy var viewModel: NewsViewModel = {
-        let vm = NewsViewModel()
-        return vm
+    fileprivate lazy var logicController: NewsLogicController = {
+        let lc = NewsLogicController()
+        return lc
     }()
-    
     
     // MARK: - View Lifecycle
 
@@ -23,19 +22,17 @@ class NewsViewController: UITableViewController {
         setupNavBar()
         setupTableViewCells()
         observeUpdates()
-        viewModel.startNewsLoad()
+        logicController.startNewsLoad()
     }
-    
 
     // MARK: -
     
     fileprivate func observeUpdates() {
-        viewModel.sendUpdates = { [weak self] in
+        logicController.sendUpdates = { [weak self] in
             guard let self = self else { return }
             self.tableView.reloadData()
         }
     }
-    
     
     // MARK: - View Setup
     
@@ -47,27 +44,27 @@ class NewsViewController: UITableViewController {
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: "newsCell")
     }
     
-    
     // MARK: - TableView Delegate/Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let isEmptyViewModel = viewModel.stockNews.isEmpty
-        return isEmptyViewModel ? 5: viewModel.stockNews.count
+        let isEmptyViewModel = logicController.stockNews.isEmpty
+        return isEmptyViewModel ? 5: logicController.stockNews.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let newsCell = tableView.dequeueReusableCell(withIdentifier: "newsCell", for: indexPath) as? SmallNewsCell else { return UITableViewCell() }
-        
-        if !viewModel.stockNews.isEmpty {
-            let stockNewsViewModel = viewModel.stockNews[indexPath.row]
+        if !logicController.stockNews.isEmpty {
+            let stockNewsViewModel = logicController.stockNews[indexPath.row]
             newsCell.stockNews = stockNewsViewModel
         }
-        
         return newsCell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Selected", indexPath)
+        let selectedNewsURLString = logicController.stockNews[indexPath.row].newsUrl
+        let webVC = WebViewViewController(urlString: selectedNewsURLString)
+        let navVC = UINavigationController(rootViewController: webVC)
+        present(navVC, animated: true, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

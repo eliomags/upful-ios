@@ -12,13 +12,13 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
 
     // MARK: - Views
     
-    lazy var headerTextLabel: LargeSectionHeaderLabel = {
+    let headerTextLabel: LargeSectionHeaderLabel = {
         let label = LargeSectionHeaderLabel(padding: 0)
-        label.font = UIFont.systemFont(ofSize: 21, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         return label
     }()
     
-    var viewDescriptionLabel: UILabel = {
+    let viewDescriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         label.textColor = .gray
@@ -37,7 +37,7 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
         let button = UIButton(type: .system)
         button.setTitle("See More", for: .normal)
         let font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: font.pointSize, weight: .semibold)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: font.pointSize, weight: .regular)
         button.setTitleColor(.appAccent3, for: .normal)
         button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false

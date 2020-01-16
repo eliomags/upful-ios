@@ -10,17 +10,17 @@ import UIKit
 
 class SavedScreenerTableViewCell: UITableViewCell {
     
+    // MARK: - Views
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
-        label.text = "No Title Data"
         label.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         return label
     }()
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "No description"
         label.numberOfLines = 3
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         return label
@@ -35,13 +35,23 @@ class SavedScreenerTableViewCell: UITableViewCell {
         return stackView
     }()
     
+    // MARK: - Initializer
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+        let isLoading = (titleLabel.text?.isEmpty ?? true) && (descriptionLabel.text?.isEmpty ?? true)
+        isLoading ? setLoading() : setLoaded()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        descriptionLabel.text = ""
+        titleLabel.text = ""
     }
     
     // MARK: - View Setup
@@ -52,6 +62,15 @@ class SavedScreenerTableViewCell: UITableViewCell {
                              padding: .init(top: 12, left: 16, bottom: 8, right: 16))
     }
     
+    fileprivate func setLoading() {
+        descriptionLabel.backgroundColor = VersionManager.loadingLabelColor()
+        titleLabel.backgroundColor = VersionManager.loadingLabelColor()
+    }
+    
+    fileprivate func setLoaded() {
+        descriptionLabel.backgroundColor = .clear
+        titleLabel.backgroundColor = .clear
+    }
 }
 
 

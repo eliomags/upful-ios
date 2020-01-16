@@ -11,6 +11,7 @@ import WebKit
 
 class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, NoteVCDelegate {
     
+    
     // MARK: - Dependencies
     
     let urlString: String
@@ -23,6 +24,11 @@ class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     
     var webView: WKWebView!
 
+    lazy var dismissButton: CancelButton = {
+        let b = CancelButton()
+        b.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismissTap)))
+        return b
+    }()
     
     // MARK: - Inititializer Methods
     
@@ -42,18 +48,16 @@ class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-        
         let url = URL(string: urlString)
         let myRequest = URLRequest(url: url!)
         webView.load(myRequest)
     }
     
-    
     // MARK: - View Setup
     
     fileprivate func setupNavBar() {
         navigationItem.title = headerText
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: dismissButton)
     }
     
     fileprivate func setUpWebView() {
@@ -64,14 +68,12 @@ class WebViewViewController: UIViewController, WKUIDelegate, WKNavigationDelegat
         view = webView
     }
     
+    // MARK: - Actions
     
-    @objc fileprivate func handleNotesTap(_ sender: UIButton) {
-        let notesVC = NotesViewController(delegate: self)
-        let navVC = UINavigationController(rootViewController: notesVC)
-        self.present(navVC, animated: true, completion: nil)
+    @objc fileprivate func handleDismissTap(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
     }
-    
-    
+        
     // MARK: - Delegate Methods
     
     func displaySuccessNote() {
