@@ -143,9 +143,10 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     fileprivate func getRevenueData() {
         chartDataGroup.enter()
+        let isPremium = PermissionManager.shared.isPremium
         intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
                                                 financial: .totalrevenue,
-                                                frequency: .historic) { [weak self] (result) in
+                                                frequency: .historic(isPremium: isPremium)) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let downloadedData):
@@ -160,9 +161,10 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     fileprivate func getEarningsData() {
         chartDataGroup.enter()
+        let isPremium = PermissionManager.shared.isPremium
         intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
                                                 financial: .netincome,
-                                                frequency: .historic) { [weak self] (result) in
+                                                frequency: .historic(isPremium: isPremium)) { [weak self] (result) in
             guard let self = self else { return }
                                                     
             switch result {

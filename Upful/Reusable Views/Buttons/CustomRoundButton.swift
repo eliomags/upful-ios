@@ -17,7 +17,8 @@ class CustomRoundButton: UIView {
     }
     
     var buttonImage: UIImage {
-        return #imageLiteral(resourceName: "icons8-plus-math-50 (1)").withRenderingMode(.alwaysOriginal)
+        let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        return plusImage ?? UIImage()
     }
     
     lazy var buttonImageView: UIImageView = {

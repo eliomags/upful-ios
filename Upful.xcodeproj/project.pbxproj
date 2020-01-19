@@ -81,13 +81,14 @@
 		3D55BD6E23B805F400B4FDF0 /* StockNewsViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD6D23B805F400B4FDF0 /* StockNewsViewModelTest.swift */; };
 		3D55BD7023B847EC00B4FDF0 /* TableSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD6F23B847EC00B4FDF0 /* TableSectionHeaderView.swift */; };
 		3D562C8B235F17EA00837B2F /* UpfulProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D562C8A235F17EA00837B2F /* UpfulProducts.swift */; };
-		3D562C8D235F248E00837B2F /* SubscriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D562C8C235F248E00837B2F /* SubscriptionViewModel.swift */; };
+		3D562C8D235F248E00837B2F /* SubscriptionLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D562C8C235F248E00837B2F /* SubscriptionLogicController.swift */; };
 		3D562C8F2360828800837B2F /* IAPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D562C8E2360828800837B2F /* IAPService.swift */; };
 		3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D586517231C8AEB00495D79 /* StockSearchCell.swift */; };
 		3D58651A231C946600495D79 /* AppStoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D586519231C946600495D79 /* AppStoreReviewHelper.swift */; };
 		3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651B231D777C00495D79 /* TableHeaderView.swift */; };
 		3D58651F231DE67B00495D79 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651E231DE67B00495D79 /* Constants.swift */; };
 		3D5865262323024A00495D79 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5865252323024A00495D79 /* PieChartView.swift */; };
+		3D6B01CB23D2839A007A2F19 /* SubscriptionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6B01CA23D2839A007A2F19 /* SubscriptionHeaderView.swift */; };
 		3D6BD0BB23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */; };
 		3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6BD0C423B507DE00FBC1ED /* EmptyScreenerCell.swift */; };
 		3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C85462337344300A2E63E /* InformationViewPresenter.swift */; };
@@ -138,8 +139,8 @@
 		3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */; };
 		3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */; };
 		3DBEFFCB23A9CCA000BA407E /* SavedScreenersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */; };
-		3DBEFFD023A9D0B900BA407E /* SavedStockLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */; };
-		3DBEFFD223A9D5E900BA407E /* SavedStockVCViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFD123A9D5E900BA407E /* SavedStockVCViewModel.swift */; };
+		3DBEFFD023A9D0B900BA407E /* LocalStockLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFCF23A9D0B900BA407E /* LocalStockLoader.swift */; };
+		3DBEFFD223A9D5E900BA407E /* SavedStockLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFD123A9D5E900BA407E /* SavedStockLogicController.swift */; };
 		3DBEFFD723ABCCF400BA407E /* StockPreviewDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFD623ABCCF400BA407E /* StockPreviewDataLoader.swift */; };
 		3DBEFFD923AD7ED200BA407E /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFD823AD7ED200BA407E /* Array+Extensions.swift */; };
 		3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFDB23AFD86300BA407E /* SavedStocksViewModelTest.swift */; };
@@ -158,7 +159,7 @@
 		3DD42926234A68B00079DA18 /* SubscriptionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD42925234A68B00079DA18 /* SubscriptionPresenter.swift */; };
 		3DD42929234A92CD0079DA18 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD42928234A92CD0079DA18 /* ReportViewController.swift */; };
 		3DD52185235276580090CDE6 /* PreferenceDataManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD52184235276580090CDE6 /* PreferenceDataManagerTest.swift */; };
-		3DD5218C235293D60090CDE6 /* StockSuggestionVCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */; };
+		3DD5218C235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD5218B235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift */; };
 		3DD75A30236BAF6700C298B9 /* ColorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A2F236BAF6700C298B9 /* ColorManager.swift */; };
 		3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A362372456700C298B9 /* FirestoreService.swift */; };
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
@@ -221,7 +222,7 @@
 		3D0C5F7A233FB61A00F4A5FC /* FilingsWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilingsWebView.swift; sourceTree = "<group>"; };
 		3D0C5F7D233FC1BC00F4A5FC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		3D0C5F80234170D900F4A5FC /* SubscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionViewController.swift; sourceTree = "<group>"; };
-		3D0C5F84234199BD00F4A5FC /* SubcriptionFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubcriptionFooterView.swift; sourceTree = "<group>"; };
+		3D0C5F84234199BD00F4A5FC /* SubcriptionFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SubcriptionFooterView.swift; path = "Table Footer/SubcriptionFooterView.swift"; sourceTree = "<group>"; };
 		3D0C5F8723419F1600F4A5FC /* SubscriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTableViewCell.swift; sourceTree = "<group>"; };
 		3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionItem.swift; sourceTree = "<group>"; };
 		3D0C5F8F23423E1700F4A5FC /* SubscriptionDetailsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionDetailsCollectionView.swift; sourceTree = "<group>"; };
@@ -294,13 +295,14 @@
 		3D55BD6D23B805F400B4FDF0 /* StockNewsViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockNewsViewModelTest.swift; sourceTree = "<group>"; };
 		3D55BD6F23B847EC00B4FDF0 /* TableSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSectionHeaderView.swift; sourceTree = "<group>"; };
 		3D562C8A235F17EA00837B2F /* UpfulProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpfulProducts.swift; sourceTree = "<group>"; };
-		3D562C8C235F248E00837B2F /* SubscriptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionViewModel.swift; sourceTree = "<group>"; };
+		3D562C8C235F248E00837B2F /* SubscriptionLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionLogicController.swift; sourceTree = "<group>"; };
 		3D562C8E2360828800837B2F /* IAPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPService.swift; sourceTree = "<group>"; };
 		3D586517231C8AEB00495D79 /* StockSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchCell.swift; sourceTree = "<group>"; };
 		3D586519231C946600495D79 /* AppStoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewHelper.swift; sourceTree = "<group>"; };
 		3D58651B231D777C00495D79 /* TableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderView.swift; sourceTree = "<group>"; };
 		3D58651E231DE67B00495D79 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3D5865252323024A00495D79 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
+		3D6B01CA23D2839A007A2F19 /* SubscriptionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionHeaderView.swift; sourceTree = "<group>"; };
 		3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersViewModelTest.swift; sourceTree = "<group>"; };
 		3D6BD0C423B507DE00FBC1ED /* EmptyScreenerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenerCell.swift; sourceTree = "<group>"; };
 		3D7C85462337344300A2E63E /* InformationViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewPresenter.swift; sourceTree = "<group>"; };
@@ -351,8 +353,8 @@
 		3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStocksViewController.swift; sourceTree = "<group>"; };
 		3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersViewController.swift; sourceTree = "<group>"; };
-		3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStockLoader.swift; sourceTree = "<group>"; };
-		3DBEFFD123A9D5E900BA407E /* SavedStockVCViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStockVCViewModel.swift; sourceTree = "<group>"; };
+		3DBEFFCF23A9D0B900BA407E /* LocalStockLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStockLoader.swift; sourceTree = "<group>"; };
+		3DBEFFD123A9D5E900BA407E /* SavedStockLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStockLogicController.swift; sourceTree = "<group>"; };
 		3DBEFFD623ABCCF400BA407E /* StockPreviewDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockPreviewDataLoader.swift; sourceTree = "<group>"; };
 		3DBEFFD823AD7ED200BA407E /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		3DBEFFDB23AFD86300BA407E /* SavedStocksViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SavedStocksViewModelTest.swift; path = Upful/Extensions/SavedStocksViewModelTest.swift; sourceTree = SOURCE_ROOT; };
@@ -371,7 +373,7 @@
 		3DD42925234A68B00079DA18 /* SubscriptionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPresenter.swift; sourceTree = "<group>"; };
 		3DD42928234A92CD0079DA18 /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		3DD52184235276580090CDE6 /* PreferenceDataManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceDataManagerTest.swift; sourceTree = "<group>"; };
-		3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSuggestionVCTest.swift; sourceTree = "<group>"; };
+		3DD5218B235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralLogicControllerTests.swift; sourceTree = "<group>"; };
 		3DD75A2F236BAF6700C298B9 /* ColorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorManager.swift; sourceTree = "<group>"; };
 		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FirestoreService.swift; path = ../FirestoreService.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
@@ -512,8 +514,9 @@
 		3D0C5F832341944D00F4A5FC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3D6B01CA23D2839A007A2F19 /* SubscriptionHeaderView.swift */,
+				3D0C5F84234199BD00F4A5FC /* SubcriptionFooterView.swift */,
 				3D0C5F9D2343EA6000F4A5FC /* Custom Views */,
-				3D0C5F8E23423D4500F4A5FC /* Table Footer */,
 				3D0C5F8D23423D3000F4A5FC /* TableView Cells */,
 			);
 			path = Views;
@@ -522,7 +525,7 @@
 		3D0C5F8923423B4400F4A5FC /* View Models */ = {
 			isa = PBXGroup;
 			children = (
-				3D562C8C235F248E00837B2F /* SubscriptionViewModel.swift */,
+				3D562C8C235F248E00837B2F /* SubscriptionLogicController.swift */,
 				3D0C5F992343C56700F4A5FC /* Subscription Features */,
 				3D0C5F982343C55C00F4A5FC /* Subscription Item */,
 			);
@@ -545,14 +548,6 @@
 				3D0C5F9C2343E4F300F4A5FC /* Subscription */,
 			);
 			path = "TableView Cells";
-			sourceTree = "<group>";
-		};
-		3D0C5F8E23423D4500F4A5FC /* Table Footer */ = {
-			isa = PBXGroup;
-			children = (
-				3D0C5F84234199BD00F4A5FC /* SubcriptionFooterView.swift */,
-			);
-			path = "Table Footer";
 			sourceTree = "<group>";
 		};
 		3D0C5F952343BDEB00F4A5FC /* Perks */ = {
@@ -1063,7 +1058,7 @@
 		3D6BFE6423B50C1600E76253 /* View Models */ = {
 			isa = PBXGroup;
 			children = (
-				3DBEFFD123A9D5E900BA407E /* SavedStockVCViewModel.swift */,
+				3DBEFFD123A9D5E900BA407E /* SavedStockLogicController.swift */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
@@ -1071,7 +1066,7 @@
 		3D6BFE6523B50C1900E76253 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				3DBEFFCF23A9D0B900BA407E /* SavedStockLoader.swift */,
+				3DBEFFCF23A9D0B900BA407E /* LocalStockLoader.swift */,
 				3DBEFFD623ABCCF400BA407E /* StockPreviewDataLoader.swift */,
 			);
 			path = Models;
@@ -1559,19 +1554,19 @@
 			children = (
 				3D55BD6B23B805DD00B4FDF0 /* News */,
 				3DE8C80223997AA600CC0056 /* Models */,
-				3DD5218A235293B60090CDE6 /* View Models */,
+				3DD5218A235293B60090CDE6 /* Logic Controllers */,
 			);
 			path = Home;
 			sourceTree = "<group>";
 		};
-		3DD5218A235293B60090CDE6 /* View Models */ = {
+		3DD5218A235293B60090CDE6 /* Logic Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				3DD5218B235293D60090CDE6 /* StockSuggestionVCTest.swift */,
+				3DD5218B235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift */,
 				3DBEFFDB23AFD86300BA407E /* SavedStocksViewModelTest.swift */,
 				3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */,
 			);
-			path = "View Models";
+			path = "Logic Controllers";
 			sourceTree = "<group>";
 		};
 		3DE8C7FE239420DE00CC0056 /* Assistance */ = {
@@ -1973,6 +1968,7 @@
 				3D3749B523BBADB1000D0597 /* NoPreferenceTableViewCell.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
 				3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */,
+				3D6B01CB23D2839A007A2F19 /* SubscriptionHeaderView.swift in Sources */,
 				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
 				3DAB3EC5234E21320008CC18 /* SubscriptionDataManager.swift in Sources */,
 				3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */,
@@ -1993,7 +1989,7 @@
 				3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */,
 				3D7C855523380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift in Sources */,
 				3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */,
-				3D562C8D235F248E00837B2F /* SubscriptionViewModel.swift in Sources */,
+				3D562C8D235F248E00837B2F /* SubscriptionLogicController.swift in Sources */,
 				3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */,
 				3DF5FBBB233114D700856205 /* CompanyReportsCell.swift in Sources */,
 				3DA54086232B361B00EE477C /* MenuViewProtocols.swift in Sources */,
@@ -2021,7 +2017,7 @@
 				3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */,
 				3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */,
 				3D0C5F7E233FC1BC00F4A5FC /* SettingsViewController.swift in Sources */,
-				3DBEFFD223A9D5E900BA407E /* SavedStockVCViewModel.swift in Sources */,
+				3DBEFFD223A9D5E900BA407E /* SavedStockLogicController.swift in Sources */,
 				3D0C5F6523395CD500F4A5FC /* Notes+CoreDataProperties.swift in Sources */,
 				3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */,
 				3D2F965D2318CC4E003811AB /* FinancialSectionView.swift in Sources */,
@@ -2109,7 +2105,7 @@
 				3DFD240223B67BE50027F5CF /* HomeGeneralLogicController.swift in Sources */,
 				3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */,
 				3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */,
-				3DBEFFD023A9D0B900BA407E /* SavedStockLoader.swift in Sources */,
+				3DBEFFD023A9D0B900BA407E /* LocalStockLoader.swift in Sources */,
 				3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */,
 				3D3749B023B9BA66000D0597 /* NewsLogicController.swift in Sources */,
 				3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */,
@@ -2139,7 +2135,7 @@
 				3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */,
 				3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */,
 				3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */,
-				3DD5218C235293D60090CDE6 /* StockSuggestionVCTest.swift in Sources */,
+				3DD5218C235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift in Sources */,
 				3D55BD6E23B805F400B4FDF0 /* StockNewsViewModelTest.swift in Sources */,
 				3DB345E923C3EBE500EADFFD /* PrebuiltScreenerLogicControllerTests.swift in Sources */,
 				3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */,

@@ -77,6 +77,7 @@ class ExploreLogicController {
             switch result {
             case .success(let loadedStocks):
                 self.loadStockViewModels(from: loadedStocks)
+                self.loadStockPreviewData()
             case .failure(let err):
                 print(err.localizedDescription)
             }
@@ -87,6 +88,10 @@ class ExploreLogicController {
         let mappedLoadedStocks = stocks.map { StockViewModel(stock: $0,
                                                              stockPreviewLoader: StockPreviewLoader(ticker: $0.ticker, name: $0.name)) }
         stockViewModels = mappedLoadedStocks
+        handleCompletion?()
+    }
+    
+    fileprivate func loadStockPreviewData() {
         stockViewModels.forEach { (viewModel) in
             viewModel.previewFetchCompletion = handleCompletion
             viewModel.loadPreviewData()

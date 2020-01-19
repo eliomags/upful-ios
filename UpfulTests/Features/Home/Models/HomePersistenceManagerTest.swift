@@ -9,17 +9,4 @@
 import XCTest
 @testable import Upful
 
-class HomePersistenceManagerTest: XCTestCase {
 
-    var sut: HomePersistenceManager!
-    
-    override func setUp() {
-        sut = HomePersistenceManager()
-    }
-
-    override func tearDown() {
-        sut = nil
-    }
-
-
-}

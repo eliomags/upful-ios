@@ -117,17 +117,33 @@ final class IntrinioAPI {
     }
     
     /// MARK: - Lookup historic financials
-    enum FinancialsFrequency: String {
-        case recent = "?frequency=yearly&start_date=2019-01-01"
-        case historic = "?frequency=yearly&start_date=2016-01-01&end_date=2021-01-01&sort_order=asc"
+    enum FinancialsFrequency: Equatable {
+        case recent
+        case historic(isPremium: Bool)
+        
+        var asString: String {
+            switch self {
+            case .recent:
+                return "?frequency=yearly&start_date=2019-01-01"
+            case .historic(let isPremium):
+                if isPremium {
+                    return "?frequency=yearly&start_date=2014-01-01&end_date=2021-01-01&sort_order=asc"
+                } else {
+                    return "?frequency=yearly&start_date=2016-01-01&end_date=2021-01-01&sort_order=asc"
+                }
+            }
+        }
     }
     
     private let historicLookupEnpoint = "https://api-v2.intrinio.com/securities/"
     private let searchType = "/historical_data/"
     
-    func fetchStockSpecificFinancial(ticker: String, financial: SearchCriteria, frequency: FinancialsFrequency, completion: @escaping (Result<[CompanyHistoricalDatum], Error>) -> Void) {
+    func fetchStockSpecificFinancial(ticker: String,
+                                     financial: SearchCriteria,
+                                     frequency: FinancialsFrequency,
+                                     completion: @escaping (Result<[CompanyHistoricalDatum], Error>) -> Void) {
         guard let url = URL(string: historicLookupEnpoint + ticker + searchType +
-            financial.rawValue + frequency.rawValue + apiKey) else { return }
+            financial.rawValue + frequency.asString + apiKey) else { return }
         let decoder = JSONDecoder()
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, response, error) in

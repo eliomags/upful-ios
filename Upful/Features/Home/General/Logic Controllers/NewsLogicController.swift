@@ -12,7 +12,7 @@ class NewsLogicController {
     
     // MARK: - Dependencies
     
-    private let savedStockDataManager: SavedStockDataLoaderProtocol
+    private let savedStockDataManager: LocalStockDataLoaderProtocol
     private let stockNewsLoader = NewsLoader()
     
     
@@ -28,7 +28,7 @@ class NewsLogicController {
     
     // MARK: - Initializer
     
-    init(savedStockDataManager: SavedStockDataLoaderProtocol = SavedStockLoader()) {
+    init(savedStockDataManager: LocalStockDataLoaderProtocol = LocalStockLoader()) {
         self.savedStockDataManager = savedStockDataManager
     }
     

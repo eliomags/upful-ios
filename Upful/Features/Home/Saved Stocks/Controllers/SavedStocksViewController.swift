@@ -13,8 +13,8 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
     weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "Stocks"
     
-    lazy var viewModel: SavedStockVCViewModel = {
-        let vm = SavedStockVCViewModel()
+    lazy var viewModel: SavedStockLogicController = {
+        let vm = SavedStockLogicController()
         return vm
     }()
     

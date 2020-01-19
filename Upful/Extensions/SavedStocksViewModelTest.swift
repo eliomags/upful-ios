@@ -9,9 +9,9 @@
 import XCTest
 @testable import Upful
 
-class SavedStocksViewModelTest: XCTestCase {
+class SavedStockLogicControllerTests: XCTestCase {
     
-    var sut: SavedStockVCViewModel!
+    var sut: SavedStockLogicController!
     
     override func setUp() {
         super.setUp()
@@ -24,7 +24,7 @@ class SavedStocksViewModelTest: XCTestCase {
     
     func testStateAfterInitialized() {
         sut = makeSUTwithData()
-        let initialState = SavedStockVCViewModel.State.new
+        let initialState = SavedStockLogicController.State.new
         XCTAssertEqual(sut!.state, initialState)
         XCTAssertTrue(sut!.stockViewModels.isEmpty)
     }
@@ -45,7 +45,7 @@ class SavedStocksViewModelTest: XCTestCase {
         
         wait(for: [loadExpectation], timeout: 1)
         
-        XCTAssertEqual(sut!.state, SavedStockVCViewModel.State.empty)
+        XCTAssertEqual(sut!.state, SavedStockLogicController.State.empty)
         XCTAssertEqual(sut!.stockViewModels.count, 0)
     }
     
@@ -65,7 +65,7 @@ class SavedStocksViewModelTest: XCTestCase {
         
         wait(for: [loadExpectation], timeout: 1)
         
-        XCTAssertEqual(sut!.state, SavedStockVCViewModel.State.loaded)
+        XCTAssertEqual(sut!.state, SavedStockLogicController.State.loaded)
         XCTAssertEqual(sut!.stockViewModels.count, 1)
     }
     
@@ -92,7 +92,7 @@ class SavedStocksViewModelTest: XCTestCase {
         sut!.refreshState()
         
         XCTAssertEqual(sut!.stockViewModels.count, 0)
-        XCTAssertEqual(sut!.state, SavedStockVCViewModel.State.empty)
+        XCTAssertEqual(sut!.state, SavedStockLogicController.State.empty)
     }
     
     // TODO: - Test Load Operations
@@ -100,20 +100,20 @@ class SavedStocksViewModelTest: XCTestCase {
     
     // MARK: - Fileprivate Functions
     
-    fileprivate func makeSUTnoData() -> SavedStockVCViewModel {
+    fileprivate func makeSUTnoData() -> SavedStockLogicController {
         let mock = MockSavedStockDataManager()
-        let vm = SavedStockVCViewModel(savedStockDataManager: mock)
+        let vm = SavedStockLogicController(savedStockDataManager: mock)
         return vm
     }
     
-    fileprivate func makeSUTwithData() -> SavedStockVCViewModel {
+    fileprivate func makeSUTwithData() -> SavedStockLogicController {
         let mock = MockSavedStockDataManagerWithData()
-        let vm = SavedStockVCViewModel(savedStockDataManager: mock)
+        let vm = SavedStockLogicController(savedStockDataManager: mock)
         return vm
     }
 }
 
-private class MockSavedStockDataManager: SavedStockDataLoaderProtocol {
+class MockSavedStockDataManager: LocalStockDataLoaderProtocol {
     func loadSavedStocks(completion: @escaping SavedStockFetchCompletion) {
         DispatchQueue.global().async {
             completion(Result {
@@ -125,7 +125,7 @@ private class MockSavedStockDataManager: SavedStockDataLoaderProtocol {
     func removeFavoriteCompany(_ ticker: String, completion: (() -> Void)?) {}
 }
 
-private class MockSavedStockDataManagerWithData: SavedStockDataLoaderProtocol {
+class MockSavedStockDataManagerWithData: LocalStockDataLoaderProtocol {
     func loadSavedStocks(completion: @escaping SavedStockFetchCompletion) {
         DispatchQueue.global().async {
             completion(Result {

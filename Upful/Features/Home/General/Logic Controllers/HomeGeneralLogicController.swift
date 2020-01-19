@@ -15,7 +15,7 @@ class HomeGeneralLogicController {
     private let preferenceDataManager: PreferenceDataManager
     private let stockScreeningService = StockScreeningService()
     
-    private let savedStockDataManager: SavedStockDataLoaderProtocol
+    private let savedStockDataManager: LocalStockDataLoaderProtocol
     private let stockNewsLoader = NewsLoader()
     
     // MARK: - State
@@ -41,7 +41,7 @@ class HomeGeneralLogicController {
     
     // MARK: - Initializer
     
-    init(savedStockDataManager: SavedStockDataLoaderProtocol = SavedStockLoader(),
+    init(savedStockDataManager: LocalStockDataLoaderProtocol = LocalStockLoader(),
          preferenceDataManager: PreferenceDataManager = .init()) {
         self.preferenceDataManager = preferenceDataManager
         self.savedStockDataManager = savedStockDataManager
@@ -64,6 +64,7 @@ class HomeGeneralLogicController {
         startPreferenceLoad()
 //        startNewsLoad()
     }
+    
     /*
      Gets a random combination of search parameters to perform search for Show More
      */
@@ -77,6 +78,8 @@ class HomeGeneralLogicController {
     
     // MARK: - Stock Preference Loading
         
+    let preferenceFetchGroup = DispatchGroup()
+    
     func startPreferenceLoad() {
         preferenceState = .loading
         let groupedPreferences = preferenceDataManager.getGroupedPreferences()
@@ -88,9 +91,14 @@ class HomeGeneralLogicController {
             let preferenceParameters = preferenceArray.joined(separator: ",")
             fetchSuggestedStocks(parameters: preferenceParameters)
         }
+        preferenceFetchGroup.notify(queue: .main) {
+            self.preferenceState = .loaded
+        }
     }
     
     fileprivate func fetchSuggestedStocks(parameters: String) {
+        preferenceFetchGroup.enter()
+        
         stockScreeningService.get(router: .getScreeningResults(parameters: parameters, numberOfResults: 8), completion: {
             (result) in
             switch result {
@@ -99,6 +107,7 @@ class HomeGeneralLogicController {
             case .failure(_):
                 self.preferenceState = .error
             }
+            self.preferenceFetchGroup.leave()
         })
     }
     
@@ -112,12 +121,10 @@ class HomeGeneralLogicController {
     
     fileprivate func handlePreferenceFetchSuccess(with fetchedStocks: [Stock]) {
         if self.preferenceState == .error { return }
-        
         if fetchedStocks.isEmpty {
             self.fetchSuggestedStocks(parameters: "")
         } else {
             stocksYouMayLike = randomizeSuggestedStocks(stocks: fetchedStocks)
-            preferenceState = .loaded
         }
     }
     

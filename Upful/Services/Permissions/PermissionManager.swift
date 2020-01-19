@@ -63,35 +63,35 @@ class PermissionManager {
     
     // MARK: - Saved Screener and Stocks
     
-    typealias PermissionCompletionHandler = (_ permissionGranted: Bool, _ error: Error?) -> Void
+    typealias PermissionCompletionHandler = (_ permissionGranted: Bool) -> Void
     
     func getSaveScreenerPermission(completion: @escaping PermissionCompletionHandler) {
         if isPremium {
-            completion(isPremium, nil)
+            completion(isPremium)
             return
         }
         if let savedScreenerCount = getSavedScreenerCount() {
-            completion(savedScreenerCount < savedScreenerThreshold, nil)
+            completion(savedScreenerCount < savedScreenerThreshold)
             return
         }
         
         if getSavedScreenerCount() == nil {
-            completion(false, NSError())
+            completion(false)
         }
     }
     
     func getSaveStockPermission(completion: @escaping PermissionCompletionHandler) {
         if isPremium {
-            completion(isPremium, nil)
+            completion(isPremium)
             return
         }
         if let savedStockCount = getSavedStockCount() {
-            completion(savedStockCount < savedStockThreshold, nil)
+            completion(savedStockCount < savedStockThreshold)
             return
         }
         
         if getSavedStockCount() == nil {
-            completion(false, NSError())
+            completion(false)
         }
     }
         

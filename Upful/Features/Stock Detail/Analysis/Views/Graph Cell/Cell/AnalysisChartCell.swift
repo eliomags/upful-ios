@@ -9,6 +9,7 @@
 import UIKit
 
 class AnalysisChartCell: UITableViewCell {
+        
     let chartView = CombinedLineChartView()
     
     lazy var containerView: UIView = {

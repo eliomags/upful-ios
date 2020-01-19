@@ -13,7 +13,6 @@ protocol PresentationControllerDelegate: UIViewController {
 }
 
 class SubscriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
     deinit {
         if !PermissionManager.shared.isPremium && presenterType == .screeningLimit {
             presentationDelegate?.showNotificationSetupView()
@@ -25,7 +24,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     var headerText: String {
         var text = ""
         switch presenterType {
-            
         case .savedStockLimit:
             text = "You've reached your limit for saved stocks.\nGet Premium to unlock unlimited access."
         case .savedScreenerLimit:
@@ -40,26 +38,14 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     let presenterType: SubscriptionPresenter.PresenterType
     
-    lazy var viewModel: SubscriptionViewModel = {
-        let vm = SubscriptionViewModel()
+    lazy var logicController: SubscriptionLogicController = {
+        let vm = SubscriptionLogicController()
         return vm
     }()
 
     weak var presentationDelegate: PresentationControllerDelegate?
 
     // MARK: - Views
-    
-    lazy var loadingView: UIView = {
-        let v = UIView()
-        let activityView = UIActivityIndicatorView(style: .medium)
-        activityView.startAnimating()
-        v.addSubview(activityView)
-        activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
-                            padding: .init(top: 30, left: 30, bottom: 30, right: 30))
-        v.layer.cornerRadius = 15
-        v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
-        return v
-    }()
     
     lazy var tableHeader: PreferenceHeaderView = {
         let v = PreferenceHeaderView()
@@ -71,22 +57,19 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         return v
     }()
     
-    lazy var subscriptionDetailsCollectionView: SubscriptionDetailsCollectionView = {
-        let view = SubscriptionDetailsCollectionView(collectionViewLayout: UICollectionViewFlowLayout())
-        view.dataSource = viewModel.suscriptionDataService
-        return view
-    }()
+    private let newHeader = SubscriptionHeaderView()
     
-    lazy var tableView: UITableView = { [unowned self] in
+    lazy var tableView: UITableView = {
         let tableV = UITableView(frame: .zero, style: .grouped)
         tableV.delegate = self
         tableV.dataSource = self
-        tableV.setTableHeaderView(headerView: tableHeader)
+        tableV.setTableHeaderView(headerView: newHeader)
         return tableV
     }()
     
-    lazy var footerView: SubscriptionFooterView = { [unowned self] in
+    lazy var footerView: SubscriptionFooterView = {
         let view = SubscriptionFooterView()
+        view.backgroundColor = view.backgroundColor?.withAlphaComponent(0.9)
         view.subscribeButton.addTarget(self, action: #selector(handleSubscribeTap), for: .touchUpInside)
         view.restoreButton.addTarget(self, action: #selector(handleRestoreTap), for: .touchUpInside)
         view.privacyButton.addTarget(self, action: #selector(handlePrivacyTap), for: .touchUpInside)
@@ -106,7 +89,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    lazy var cancelButton: CancelButton = { [unowned self] in
+    lazy var cancelButton: CancelButton = {
         let view = CancelButton()
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleCancelTap)))
         return view
@@ -124,59 +107,57 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - View Life Cycle Methods
+    // MARK: - View Lifecycle Methods
+    
+    override func loadView() {
+        super.loadView()
+        setupTableView()
+        setupPresentation()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
-        setupPresentation()
         observeStateChanges()
     }
 
     func observeStateChanges() {
-        viewModel.stateChanged = { [weak self] (state) in
+        logicController.stateChanged = { [weak self] (state) in
             guard let self = self else { return }
-
             switch state {
             case .loading:
-                self.showActivitySpinner(true)
-
+                break
             case .loaded:
-                DispatchQueue.main.async {
-                    self.showActivitySpinner(false)
-                    self.tableView.reloadData()
-                    self.setupDefaultSelection()
-                }
+                self.tableView.reloadData()
+                self.setupDefaultSelection()
             case .paymentError(let error):
-                DispatchQueue.main.async {
-                    self.showActivitySpinner(false)
-                    let alert = UIAlertController(title: "Error", message: "An error has occured while performing the purchase. Please contact support.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { [weak self] _ in
-                        self?.dismiss(animated: true, completion: nil)
-                    }))
-                    switch error {
-                    case .paymentCancelled:
-                        return
-                    case .unknown:
-                        alert.message = "Unknown error. Please contact support"
-                    case .clientInvalid:
-                        alert.message = "Not allowed to make the payment"
-                    case .paymentNotAllowed:
-                        alert.message = "The device is not allowed to make the payment"
-                    case .storeProductNotAvailable:
-                        alert.message = "The product is not available in the current storefront"
-                    default:
-                        break
-                        }
-                    self.present(alert, animated: true)
-                    }
+                let alert = UIAlertController(title: "Error",
+                                              message: "An error has occured while performing the purchase. Please contact support.",
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { [weak self] _ in
+                    self?.dismiss(animated: true, completion: nil)
+                }))
+                switch error {
+                case .paymentCancelled:
+                    return
+                case .unknown:
+                    alert.message = "Unknown error. Please contact support"
+                case .clientInvalid:
+                    alert.message = "Not allowed to make the payment"
+                case .paymentNotAllowed:
+                    alert.message = "The device is not allowed to make the payment"
+                case .storeProductNotAvailable:
+                    alert.message = "The product is not available in the current storefront"
+                default:
+                    break
+                }
+                self.present(alert, animated: true)
+                    
             case .paymentSuccess:
-                self.showActivitySpinner(false)
                 self.dismiss(animated: true, completion: {
 //                    self.presentationDelegate?.presentationControllerdDidDismiss()
                 })
             default:
-                self.showActivitySpinner(false)
+                break
             }
         }
     }
@@ -185,36 +166,26 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     fileprivate func setupTableView() {
         view.addSubview(tableView)
-        tableView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        tableView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor,
+                         bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        view.addSubview(footerView)
+        footerView.anchor(top: nil, leading: view.leadingAnchor,
+                          bottom: view.bottomAnchor, trailing: view.trailingAnchor)
         view.backgroundColor = VersionManager.mainContainerBackground()
         tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.separatorStyle = .none
         tableView.bounces = false
-        tableView.estimatedSectionHeaderHeight = 0
     }
     
     fileprivate func setupPresentation() {
-        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = false
         navigationItem.title = "Premium"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
     }
     
     fileprivate func setupDefaultSelection() {
-        tableView.selectRow(at: IndexPath(row: 0, section: 1), animated: true, scrollPosition: .bottom)
-    }
-    
-    fileprivate func showActivitySpinner(_ shouldShowSpinner: Bool) {
-        if shouldShowSpinner {
-            view.addSubview(loadingView)
-            loadingView.translatesAutoresizingMaskIntoConstraints = false
-            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        }
-        if !shouldShowSpinner {
-            DispatchQueue.main.async {
-                self.loadingView.removeFromSuperview()
-            }
-        }
+        tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .bottom)
     }
     
     // MARK: - Actions
@@ -226,14 +197,14 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     @objc fileprivate func handleSubscribeTap(_ sender: UIButton) {
         AnalyticsLogger.instance.reportEvents(event: .signUpAttempt)
         Vibration.light.vibrate()
-        viewModel.buySelectedProduct()
+        logicController.buySelectedProduct()
     }
     
     @objc fileprivate func handleRestoreTap(_ sender: UIButton) {
         Vibration.light.vibrate()
-
+        
         sender.isEnabled = false
-        viewModel.restorePurchase(completion: { [weak self] (success) in
+        logicController.restorePurchase(completion: { [weak self] (success) in
           if !success {
               let actionVC = UIAlertController(title: "Purchase Not Found", message: "No purchase to restore.", preferredStyle: .alert)
               actionVC.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { (_) in
@@ -253,88 +224,55 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - TableView DataSource Methods
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        switch viewModel.state {
-        case .loaded(_): return 2
-        default: return 0
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch logicController.state {
+        case .loaded(_):
+            return logicController.productViewModels.count
+        default:
+            return 0
         }
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let section = indexPath.section
-        switch section {
-        case 0:
-            let cell = UITableViewCell()
-            cell.selectionStyle = .none
-            cell.backgroundColor = .secondarySystemBackground
-            display(contentController: subscriptionDetailsCollectionView, on: cell)
+        let cell = SubscriptionTableViewCell(style: .default, reuseIdentifier: nil)
+        switch logicController.state {
+        case .loaded:
+            cell.monthlyPricingLabel.text = logicController.productViewModels[indexPath.row].monthlyPricing
             return cell
-            
-        case 1:
-            let cell = SubscriptionTableViewCell(style: .default, reuseIdentifier: nil)
-            if section == 1 { cell.monthLabel.text = "month" }
-            switch viewModel.state {
-            case .loaded:
-                cell.durationLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].subscriptionDuration
-                cell.monthlyPricingLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].monthlyPricing
-                cell.dueNowPricingLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].totalCost
-                cell.savingsValueLabel.text = viewModel.productViewModels[indexPath.section][indexPath.row].savingPercentage
-                return cell
-                
-            default:
-                break
-            }
         default:
             break
         }
         return UITableViewCell()
     }
     
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        switch indexPath.section{
-        case 0: return nil
-        default: return indexPath
-        }
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let product = viewModel.productViewModels[indexPath.section][indexPath.row].product
-        viewModel.setSelectedProduct(product)
+        let product = logicController.productViewModels[indexPath.row].product
+        logicController.setSelectedProduct(product)
     }
     
     // MARK: - TableView Delegate Methods
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0: return (tableView.frame.height / 4) + 20
-        default: return UITableView.automaticDimension
-        }
+        return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView()
-        headerView.backgroundColor = .clear
+        let headerView = TableSectionHeaderView()
+        headerView.headerTextLabel.text = "Options"
+        headerView.addButton.setTitle("", for: .normal)
         return headerView
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 { return 0 }
-        if section == 1 { return 15 }
-        return 8
+        return 60
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 1 { return footerView }
-        return nil
+        return UIView()
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 1 { return 300 }
-        return 0
+        return 250
     }
 }
 

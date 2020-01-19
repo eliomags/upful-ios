@@ -12,7 +12,6 @@ import XCTest
 class PreferenceDataManagerTest: XCTestCase {
     
     var sut: PreferenceDataManager!
-    var userDefaults: UserDefaults?
     let userDefaultsSuiteName = "TestDefaults"
     
     override func setUp() {

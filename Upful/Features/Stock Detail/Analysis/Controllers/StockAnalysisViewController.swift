@@ -200,14 +200,17 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     fileprivate func fetchBarData(criteria: SearchCriteria) {
         isLoading = true
         analysisDataGroup.enter()
+        let isPremium = PermissionManager.shared.isPremium
+
         if criteria == .none {
             barChartData.removeAll()
             self.analysisDataGroup.leave()
             return
         }
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: criteria, frequency: .historic) { [weak self] (results) in
+        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
+                                                financial: criteria,
+                                                frequency: .historic(isPremium: isPremium)) { [weak self] (results) in
             guard let self = self else { return }
-
             switch results {
             case .success(let downloadedData):
                 self.barChartData = downloadedData
@@ -222,13 +225,16 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     fileprivate func fetchLineData(criteria: SearchCriteria) {
         isLoading = true
         analysisDataGroup.enter()
+        let isPremium = PermissionManager.shared.isPremium
 
         if criteria == .none {
             lineChartData.removeAll()
             self.analysisDataGroup.leave()
             return
         }
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker, financial: criteria, frequency: .historic) { [weak self] (results) in
+        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
+                                                financial: criteria,
+                                                frequency: .historic(isPremium: isPremium)) { [weak self] (results) in
             guard let self = self else { return }
 
             switch results {

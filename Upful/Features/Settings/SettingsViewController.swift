@@ -162,7 +162,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         let headers = ["","purchase","support",""]
         let view = UIView()
         let label = UILabel()
-        label.textColor = .secondaryText
+        label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: 11, weight: .light)
         view.addSubview(label)
         label.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 15, left: 16, bottom: 4, right: 0))

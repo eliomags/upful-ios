@@ -157,7 +157,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
 
-        if !logicController.stocksYouMayLike.isEmpty {
+        if logicController.preferenceState == .loaded {
             let stock = logicController.stocksYouMayLike[indexPath.item]
             loadedCell.companyTickerLabel.text = stock.ticker
             loadedCell.companyNameLabel.text = stock.name

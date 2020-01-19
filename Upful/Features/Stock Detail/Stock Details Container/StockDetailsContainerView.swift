@@ -71,7 +71,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     
     // MARK: - Core Data
     
-    let savedStockDataManager = SavedStockLoader()
+    let savedStockDataManager = LocalStockLoader()
 
     @objc private func checkIfCurrentlySaved() {
         savedStockDataManager.loadSavedStocks { (result) in
