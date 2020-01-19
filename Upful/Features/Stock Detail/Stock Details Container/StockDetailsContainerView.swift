@@ -108,18 +108,13 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
             return
         }
 
-        PermissionManager.shared.getSaveStockPermission { [weak self] (permissionGranted, error) in
+        PermissionManager.shared.getSaveStockPermission { [weak self] (permissionGranted) in
             guard let self = self else { return }
             if !permissionGranted {
                 let presenter = SubscriptionPresenter(type: .savedStockLimit)
                 presenter.present(in: self)
             }
             if permissionGranted { self.saveCompany(button: sender) }
-            if let _ = error {
-                let alertVC = UIAlertController(title: "Error", message: "There was an error performing your request.", preferredStyle: .alert)
-                alertVC.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-                self.present(alertVC, animated: true, completion: nil)
-            }
         }
     }
     

@@ -49,7 +49,7 @@ class PermissionManager {
         }
     }
     
-    private func getSavedStockCount() -> Int? {
+    private func getSavedStockCount() -> Int {
         let request = SavedStock.createfetchRequest()
         var savedStocks: [SavedStock] = []
         do {
@@ -57,7 +57,7 @@ class PermissionManager {
             return savedStocks.count
         } catch let error {
             print("Fetch failed", error.localizedDescription)
-            return nil
+            return 0
         }
     }
     
@@ -85,15 +85,13 @@ class PermissionManager {
             completion(isPremium)
             return
         }
-        if let savedStockCount = getSavedStockCount() {
+        else {
+            let savedStockCount = getSavedStockCount()
             completion(savedStockCount < savedStockThreshold)
             return
         }
-        
-        if getSavedStockCount() == nil {
-            completion(false)
-        }
     }
+    
         
     // MARK: - Screener Navigation
 
@@ -106,7 +104,7 @@ class PermissionManager {
         return components
     }()
         
-    var screeningDateLookup: [String: Int] = UserDefaults.standard.dictionary(forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int] ?? [:] {
+    private var screeningDateLookup: [String: Int] = UserDefaults.standard.dictionary(forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int] ?? [:] {
         didSet {
             UserDefaults.standard.set(
                 screeningDateLookup,

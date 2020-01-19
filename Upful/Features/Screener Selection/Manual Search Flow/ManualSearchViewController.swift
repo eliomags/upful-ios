@@ -277,14 +277,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     // MARK: - Action
     
     @objc private func handleSaveTap(_ sender: UIBarButtonItem) {
-        PermissionManager.shared.getSaveScreenerPermission { [weak self] (permissionGranted, error) in
+        PermissionManager.shared.getSaveScreenerPermission { [weak self] (permissionGranted) in
             guard let self = self else { return }
-            if let _ = error {
-                let alertVC = UIAlertController(title: "Error", message: "There was an error.", preferredStyle: .alert)
-                alertVC.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-                self.present(alertVC, animated: true)
-            }
-            
             if !permissionGranted {
                 let presenter = SubscriptionPresenter(type: .savedScreenerLimit)
                 presenter.present(in: self)
