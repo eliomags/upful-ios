@@ -60,6 +60,7 @@ class SubscriptionTableViewCell: UITableViewCell {
                              bottom: view.bottomAnchor, trailing: view.trailingAnchor,
                              padding: .init(top: 18, left: 18, bottom: 16, right: 18))
         view.addSubview(selectionStateView)
+        
         selectionStateView.anchor(top: nil, leading: view.leadingAnchor,
                                   bottom: view.bottomAnchor, trailing: nil,
                                   padding: .init(top: 12, left: 16, bottom: 12, right: 0))

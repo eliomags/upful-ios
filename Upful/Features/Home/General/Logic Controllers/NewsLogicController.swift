@@ -15,7 +15,6 @@ class NewsLogicController {
     private let savedStockDataManager: LocalStockDataLoaderProtocol
     private let stockNewsLoader = NewsLoader()
     
-    
     // MARK: - State
     
     private(set) var stockNews: [StockNewsViewModel] = [] {
@@ -31,7 +30,6 @@ class NewsLogicController {
     init(savedStockDataManager: LocalStockDataLoaderProtocol = LocalStockLoader()) {
         self.savedStockDataManager = savedStockDataManager
     }
-    
     
     // MARK: - Functions
         

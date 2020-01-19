@@ -25,7 +25,8 @@ struct Screener: Hashable {
     var count: Int?
     
     
-    init(title: String, description: String, urlComponents: [String], imageUrlString: String?, manualScreenItems: [ManualScreenItem]) {
+    init(title: String, description: String, urlComponents: [String],
+         imageUrlString: String?, manualScreenItems: [ManualScreenItem]) {
         self.title = title
         self.description = description
         self.urlComponents = urlComponents

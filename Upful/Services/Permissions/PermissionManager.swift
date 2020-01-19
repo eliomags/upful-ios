@@ -74,7 +74,6 @@ class PermissionManager {
             completion(savedScreenerCount < savedScreenerThreshold)
             return
         }
-        
         if getSavedScreenerCount() == nil {
             completion(false)
         }
@@ -84,14 +83,12 @@ class PermissionManager {
         if isPremium {
             completion(isPremium)
             return
-        }
-        else {
+        } else {
             let savedStockCount = getSavedStockCount()
             completion(savedStockCount < savedStockThreshold)
             return
         }
     }
-    
         
     // MARK: - Screener Navigation
 

@@ -273,7 +273,6 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    
     // MARK: - Action
     
     @objc private func handleSaveTap(_ sender: UIBarButtonItem) {
@@ -283,11 +282,9 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 let presenter = SubscriptionPresenter(type: .savedScreenerLimit)
                 presenter.present(in: self)
             }
-            
             if permissionGranted { self.saveScreener() }
         }
     }
-    
 
     // MARK:- Delegate Methods
     

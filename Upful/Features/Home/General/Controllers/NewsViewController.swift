@@ -67,13 +67,5 @@ class NewsViewController: UITableViewController {
         let navVC = UINavigationController(rootViewController: webVC)
         present(navVC, animated: true, completion: nil)
     }
-    
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 44
-    }
 }
 

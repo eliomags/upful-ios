@@ -48,7 +48,7 @@ class SubscriptionHeaderView: UIView {
         super.init(frame: frame)
         setupUnlimitedScreeningStackView()
         setupUnlimitedSavingStackView()
-        setupStopTrackingStackView()
+        setupGetFiveYearData()
         setupIndieDeveloperStackView()
         setupContentView()
     }
@@ -60,42 +60,59 @@ class SubscriptionHeaderView: UIView {
     // MARK: - View Setup
     
     fileprivate func setupUnlimitedScreeningStackView() {
-        let atString1 = NSMutableAttributedString(string: "Unlimited screening 🔍")
+        let attributedString = NSMutableAttributedString(string: "Unlimited screening ")
+        let chartImageAttachment = NSTextAttachment()
+        let barChartImage = UIImage(systemName: "magnifyingglass")?
+                        .withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
+                        .resizeImage(22, opaque: false)
+        chartImageAttachment.image = barChartImage
         
-        contentStackView.addArrangedSubview(makeStackView(with: atString1))
+        let chartString = NSAttributedString(attachment: chartImageAttachment)
+        attributedString.append(chartString)
+        
+        contentStackView.addArrangedSubview(makeStackView(with: attributedString))
     }
     
     fileprivate func setupUnlimitedSavingStackView() {
-        let atString2 = NSMutableAttributedString(string: "Save unlimited stocks and screeners ")
+        let attributedString = NSMutableAttributedString(string: "Save unlimited stocks and screeners ")
         let heartAttachment = NSTextAttachment()
         let heartImage = UIImage(systemName: "heart.fill")?
                         .withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
                         .resizeImage(22, opaque: false)
         heartAttachment.image = heartImage
-        let heartString = NSAttributedString(attachment: heartAttachment)
-        atString2.append(heartString)
         
-        contentStackView.addArrangedSubview(makeStackView(with: atString2))
+        let heartString = NSAttributedString(attachment: heartAttachment)
+        attributedString.append(heartString)
+        
+        contentStackView.addArrangedSubview(makeStackView(with: attributedString))
     }
     
-    fileprivate func setupStopTrackingStackView() {
-        let atString3 = NSMutableAttributedString(string: "Stop tracking! 🔦")
+    fileprivate func setupGetFiveYearData() {
+        let attributedString = NSMutableAttributedString(string: "Get 5 year analysis data ")
+        let chartImageAttachment = NSTextAttachment()
+        let barChartImage = UIImage(systemName: "chart.bar.fill")?
+                        .withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
+                        .resizeImage(22, opaque: false)
+        chartImageAttachment.image = barChartImage
         
-        contentStackView.addArrangedSubview(makeStackView(with: atString3))
+        let chartString = NSAttributedString(attachment: chartImageAttachment)
+        attributedString.append(chartString)
+        
+        contentStackView.addArrangedSubview(makeStackView(with: attributedString))
     }
     
     fileprivate func setupIndieDeveloperStackView() {
-        let indieString = NSMutableAttributedString(string: "Support an Indie Developer! 🧔🏾\n")
+        let attributedString = NSMutableAttributedString(string: "Support an Indie Developer! 🧔🏾\n")
         let restOfIndieString = NSMutableAttributedString(string: "Hi, I'm Yanik. I developed this app to...\n\nSubscribing will help support ongoing development...")
-        
+
 //        let yanikImageAttachment = NSTextAttachment()
 //        let yanikImage = UIImage(named: "yanik-memoji")?.resizeImage(22, opaque: false)
 //        yanikImageAttachment.image = yanikImage
 //        let imageString = NSAttributedString(attachment: yanikImageAttachment)
 //        indieString.append(imageString)
-        indieString.append(restOfIndieString)
+        attributedString.append(restOfIndieString)
         
-        contentStackView.addArrangedSubview(makeStackView(with: indieString))
+        contentStackView.addArrangedSubview(makeStackView(with: attributedString))
     }
     
     fileprivate func setupContentView() {

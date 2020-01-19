@@ -239,7 +239,8 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     }
     
     fileprivate func showPopularStockCell(at indexPath: IndexPath) -> UITableViewCell {
-        let loadedCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.popularStockCell) as? CompanyPreviewTableViewCell
+        let loadedCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.popularStockCell,
+                                                       for: indexPath) as? CompanyPreviewTableViewCell
         loadedCell?.accessoryType = .disclosureIndicator
         loadedCell?.backgroundColor = VersionManager.mainContainerBackground()
         
@@ -254,7 +255,8 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     }
 
     fileprivate func makeScreenerCells(at indexPath: IndexPath) -> UITableViewCell {
-        let screenerCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.screenerCell, for: indexPath) as? ScreenerPreviewTableViewCell
+        let screenerCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.screenerCell,
+                                                         for: indexPath) as? ScreenerPreviewTableViewCell
         
         if !logicController.screenerViewModels.isEmpty {
             let viewModel = logicController.screenerViewModels[indexPath.row]
