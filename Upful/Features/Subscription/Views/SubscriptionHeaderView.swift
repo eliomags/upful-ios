@@ -60,7 +60,7 @@ class SubscriptionHeaderView: UIView {
     // MARK: - View Setup
     
     fileprivate func setupUnlimitedScreeningStackView() {
-        let attributedString = NSMutableAttributedString(string: "Unlimited screening ")
+        let attributedString = NSMutableAttributedString(string: "Unlimited stock screening ")
         let chartImageAttachment = NSTextAttachment()
         let barChartImage = UIImage(systemName: "magnifyingglass")?
                         .withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
@@ -102,14 +102,15 @@ class SubscriptionHeaderView: UIView {
     }
     
     fileprivate func setupIndieDeveloperStackView() {
-        let attributedString = NSMutableAttributedString(string: "Support an Indie Developer! 🧔🏾\n")
-        let restOfIndieString = NSMutableAttributedString(string: "Hi, I'm Yanik. I developed this app to...\n\nSubscribing will help support ongoing development...")
+        let attributedString = NSMutableAttributedString(string: "Support an Indie Developer! \n\n")
+        let restOfIndieString = NSMutableAttributedString(string: " Hi, I'm Yanik!. I developed this app to assist me in finding stocks to invest in based on their financials.\n\nSubscribe to help support ongoing development!")
 
-//        let yanikImageAttachment = NSTextAttachment()
-//        let yanikImage = UIImage(named: "yanik-memoji")?.resizeImage(22, opaque: false)
-//        yanikImageAttachment.image = yanikImage
-//        let imageString = NSAttributedString(attachment: yanikImageAttachment)
-//        indieString.append(imageString)
+        let yanikImageAttachment = NSTextAttachment()
+        let yanikImage = UIImage(named: "yanik-memoji")?.resizeImage(37, opaque: false)
+        yanikImageAttachment.image = yanikImage
+        let imageString = NSAttributedString(attachment: yanikImageAttachment)
+        
+        attributedString.append(imageString)
         attributedString.append(restOfIndieString)
         
         contentStackView.addArrangedSubview(makeStackView(with: attributedString))

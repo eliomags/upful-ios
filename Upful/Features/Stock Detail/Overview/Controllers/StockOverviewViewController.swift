@@ -345,7 +345,6 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let _ = tableView.cellForRow(at: indexPath) as? SmallNewsCell else { return }
-    
         let newsURLString = stockNews[indexPath.row].newsUrl
         let newsWebVC = WebViewViewController(urlString: newsURLString)
         let navVC = UINavigationController(rootViewController: newsWebVC)

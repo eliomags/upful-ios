@@ -281,6 +281,17 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let section = indexPath.section
+        switch section {
+        case Section.preference.rawValue:
+            handleStockSuggestionCellSelection(for: indexPath)
+        case Section.news.rawValue:
+            handleNewsCellSelection(for: indexPath)
+        default: break
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         UIView.animate(withDuration: 0.3) {
@@ -294,17 +305,6 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             cell?.transform = .identity
         }) { (_) in
             cell?.isSelected = false
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let section = indexPath.section
-        switch section {
-        case Section.preference.rawValue:
-            handleStockSuggestionCellSelection(for: indexPath)
-        case Section.news.rawValue:
-            handleNewsCellSelection(for: indexPath)
-        default: break
         }
     }
 }
