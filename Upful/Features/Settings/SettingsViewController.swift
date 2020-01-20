@@ -127,8 +127,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         case 2:
             switch row {
             case 0:
-                let suggestionVC = ReportPresenter(reportType: .suggestion)
-                suggestionVC.present(in: self)
+                let suggestionVC = ViewSuggestionsVC()
+                navigationController?.pushViewController(suggestionVC, animated: true)
             case 1:
                 let issueVC = ReportPresenter(reportType: .issue)
                 issueVC.present(in: self)
