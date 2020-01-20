@@ -51,7 +51,6 @@ class CustomRoundButton: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: 50).isActive = true
         widthAnchor.constraint(equalToConstant: 50).isActive = true
-        setupShadow(intensity: .medium, color: .label)
     }
     
     private func setupButtonImage() {

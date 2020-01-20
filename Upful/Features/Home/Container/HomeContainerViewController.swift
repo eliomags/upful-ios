@@ -65,15 +65,7 @@ class HomeContainerViewController: MenuContainerViewController {
                 }) { (_) in
                     UIView.animate(withDuration: 0.2, animations: { [weak self] in
                         self?.screenerSelectionButton.transform = .identity
-                    }) { (_) in
-                        UIView.animate(withDuration: 0.2, animations: { [weak self] in
-                            self?.screenerSelectionButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-                        }) { (_) in
-                            UIView.animate(withDuration: 0.2, animations: { [weak self] in
-                                self?.screenerSelectionButton.transform = .identity
-                            })
-                        }
-                    }
+                    })
                 }
             }
         }

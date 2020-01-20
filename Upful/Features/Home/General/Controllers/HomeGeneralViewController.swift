@@ -150,6 +150,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     fileprivate func makeNoPreferenceSetCell(_ indexPath: IndexPath) -> UITableViewCell {
         guard let noPreferenceSetCell = tableView.dequeueReusableCell(withIdentifier: "noPreferenceCellID") as? NoPreferenceTableViewCell else { return UITableViewCell() }
         noPreferenceSetCell.selectionStyle = .none
+        noPreferenceSetCell.backgroundColor = .clear
         return noPreferenceSetCell
     }
     
