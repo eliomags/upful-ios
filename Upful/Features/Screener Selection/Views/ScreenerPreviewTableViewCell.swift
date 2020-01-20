@@ -58,10 +58,8 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        screenerImage.image = nil
         descriptionLabel.text = ""
         titleLabel.text = ""
-        screenerImage.image = defaultImage
     }
 
     private func showLoading() {

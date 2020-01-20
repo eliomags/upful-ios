@@ -99,6 +99,13 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
             cell?.descriptionLabel.text = viewModel.description
             cell?.screenerImage.loadImage(from: viewModel.imageUrlString, resize: 120,
                                           placeHolder: cell?.defaultImage ?? UIImage())
+            cell?.screenerImage.kf.setImage(
+                with: URL(string: viewModel.imageUrlString),
+                placeholder: UIImage(),
+                options: [
+                    .transition(.fade(0.5)),
+                    .cacheOriginalImage
+                ])
         }
         cell?.showLoaded()
         

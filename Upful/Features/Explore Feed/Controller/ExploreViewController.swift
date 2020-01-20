@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ExploreViewController: UIViewController, UISearchControllerDelegate, UISearchBarDelegate {
     
@@ -262,8 +263,13 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
             let viewModel = logicController.screenerViewModels[indexPath.row]
             screenerCell?.titleLabel.text = viewModel.title
             screenerCell?.descriptionLabel.text = viewModel.description
-            screenerCell?.screenerImage.loadImage(from: viewModel.imageUrlString, resize: 120,
-                                                  placeHolder: screenerCell?.defaultImage ?? UIImage())
+            screenerCell?.screenerImage.kf.setImage(
+                with: URL(string: viewModel.imageUrlString),
+                placeholder: UIImage(),
+                options: [
+                    .transition(.fade(0.5)),
+                    .cacheOriginalImage
+                ])
             screenerCell?.showLoaded()
         }
         return screenerCell ?? UITableViewCell()
