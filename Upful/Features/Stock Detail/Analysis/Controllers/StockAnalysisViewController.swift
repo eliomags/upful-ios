@@ -333,14 +333,12 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
         case 1:
             let filing = feedData[indexPath.section][indexPath.row] as? Filings
             let selectedFiling = filing!.reportUrl!
-            print(selectedFiling)
-            let webViewController = FilingsWebViewController(urlString: selectedFiling)
-            navigationController?.pushViewController(webViewController, animated: true)
-            
+            let webViewController = UINavigationController(rootViewController:
+                FilingsWebViewController(urlString: selectedFiling))
+            present(webViewController, animated: true, completion: nil)
         default: break
         }
     }
-
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = LargeSectionHeaderLabel(padding: 16)

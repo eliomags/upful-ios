@@ -262,7 +262,8 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
             let viewModel = logicController.screenerViewModels[indexPath.row]
             screenerCell?.titleLabel.text = viewModel.title
             screenerCell?.descriptionLabel.text = viewModel.description
-            screenerCell?.loadImage(urlString: viewModel.imageUrlString)
+            screenerCell?.screenerImage.loadImage(from: viewModel.imageUrlString, resize: 120,
+                                                  placeHolder: screenerCell?.defaultImage ?? UIImage())
             screenerCell?.showLoaded()
         }
         return screenerCell ?? UITableViewCell()

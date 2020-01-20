@@ -90,7 +90,8 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
             viewModel = logicController.popularScreenerViewModels[indexPath.row]
             cell?.titleLabel.text = viewModel.title
             cell?.descriptionLabel.text = viewModel.description
-            cell?.loadImage(urlString: viewModel.imageUrlString)
+            cell?.screenerImage.loadImage(from: viewModel.imageUrlString, resize: 120,
+                                          placeHolder: cell?.defaultImage ?? UIImage())
         }
         if section == Section.all.rawValue {
             viewModel = logicController.screenerViewModels[indexPath.row]
