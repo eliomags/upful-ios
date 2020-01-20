@@ -26,13 +26,13 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         return controllers
     }
     
-    lazy var notesButton: NotesButton = { [unowned self] in
+    lazy var notesButton: NotesButton = {
         let button = NotesButton()
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleOpenNotes)))
         return button
     }()
     
-    lazy var saveButton: SaveButton = { [unowned self] in
+    lazy var saveButton: SaveButton = {
         let button = SaveButton()
         button.addTarget(self, action: #selector(handleSaveTap), for: .touchUpInside)
         return button
@@ -131,6 +131,12 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     }
     
     // MARK: - Actions
+    
+    @objc fileprivate func handleLearnMoreTap(_ sender: UIButton) {
+        if let url = URL(string: "https://www.amazon.com/gp/product/0060555661/ref=as_li_tl?ie=UTF8&tag=simpsony-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=0060555661&linkId=a0d1469b9cc7763a5f4f89b8c2ab12ba") {
+            UIApplication.shared.open(url)
+        }
+    }
     
     @objc fileprivate func handleOpenNotes( _ sender: UIBarButtonItem) {
         let notesVC = NotesViewController(delegate: self)

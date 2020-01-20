@@ -324,8 +324,7 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
             if indexPath.row == 1 || indexPath.row == 2 {
                 if indexPath.row == 1 { chartType = .line }
                 if indexPath.row == 2 { chartType = .bar }
-                let criteriaVC = SearchSelectionViewController(
-                    chartType: chartType)
+                let criteriaVC = SearchSelectionViewController(chartType: chartType)
                 criteriaVC.delegate = self
                 let navVC = UINavigationController(rootViewController: criteriaVC)
                 self.parent?.present(navVC, animated: true, completion: nil)
