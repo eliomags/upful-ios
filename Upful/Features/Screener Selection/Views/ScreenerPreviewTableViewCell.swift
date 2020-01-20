@@ -64,17 +64,6 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
         screenerImage.image = defaultImage
     }
 
-    func loadImage(urlString: String) {
-        UIImage.loadImage(from: urlString, resize: 120) { (result) in
-            switch result {
-            case .success(let im):
-                self.screenerImage.image = im
-            case .failure(_):
-                self.screenerImage.image = self.defaultImage
-            }
-        }
-    }
-    
     private func showLoading() {
         titleLabel.backgroundColor = VersionManager.loadingLabelColor()
         descriptionLabel.backgroundColor = VersionManager.loadingLabelColor()

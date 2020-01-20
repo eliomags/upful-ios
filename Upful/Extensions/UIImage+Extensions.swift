@@ -8,12 +8,47 @@
 
 import UIKit
 
+
+extension UIImageView {
+    func loadImage(from urlString: String, resize: CGFloat?, placeHolder: UIImage) {
+        guard let url = URL(string: urlString) else {
+            self.image = placeHolder
+            return
+        }
+        let cache = NSCache<NSString,UIImage>()
+        
+        if let cachedImage = cache.object(forKey: urlString as NSString) {
+            self.image = cachedImage
+            return
+        } else {
+            DispatchQueue.global().async {
+                guard let data = try? Data(contentsOf: url) else {
+                    DispatchQueue.main.async {
+                        self.image = placeHolder
+                    }
+                    return
+                }
+                guard let image = UIImage(data: data) else { return }
+                
+                if let resize = resize {
+                    let resizedImage = image.resizeImage(resize, opaque: false)
+                    cache.setObject(resizedImage, forKey: urlString as NSString)
+                } else {
+                    cache.setObject(image, forKey: urlString as NSString)
+                }
+                DispatchQueue.main.async { self.image = image }
+            }
+        }
+        
+    }
+}
+
 extension UIImage {
     static var cache = NSCache<NSString,UIImage>()
     
     static func loadImage(from urlString: String, resize: CGFloat?, completion: @escaping (Result<UIImage,Error>) -> Void) {
         guard let url = URL(string: urlString) else { return }
-        
+
         if let cachedImage = cache.object(forKey: urlString as NSString) {
             completion(.success(cachedImage))
             return
