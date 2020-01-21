@@ -25,7 +25,11 @@ class ViewSuggestionsVC: UIViewController {
     
     var state: State = .pending {
         didSet {
-            showActivitySpinner(state == .loading)
+            if state == .loading {
+                LoadingViewPresenter.show(in: self)
+            } else {
+                LoadingViewPresenter.remove()
+            }
             self.tableView.reloadData()
         }
     }
@@ -33,18 +37,6 @@ class ViewSuggestionsVC: UIViewController {
     var suggestions: [Suggestion] = []
 
     // MARK: - Views
-    
-    lazy var loadingView: UIView = {
-        let v = UIView()
-        let activityView = UIActivityIndicatorView(style: .medium)
-        activityView.startAnimating()
-        v.addSubview(activityView)
-        activityView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
-                            padding: .init(top: 30, left: 30, bottom: 30, right: 30))
-        v.layer.cornerRadius = 15
-        v.backgroundColor = UIColor(white: 0.7, alpha: 0.7)
-        return v
-    }()
 
     lazy var tableHeader: PreferenceHeaderView = {
         let v = PreferenceHeaderView()
@@ -114,20 +106,6 @@ class ViewSuggestionsVC: UIViewController {
     fileprivate func setupNavBar() {
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.title = "Suggestions"
-    }
-    
-    func showActivitySpinner(_ shouldShowSpinner: Bool) {
-        if shouldShowSpinner {
-            view.addSubview(loadingView)
-            loadingView.translatesAutoresizingMaskIntoConstraints = false
-            loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-            loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        }
-        if !shouldShowSpinner {
-            DispatchQueue.main.async {
-                self.loadingView.removeFromSuperview()
-            }
-        }
     }
     
     // MARK: - Private Functions

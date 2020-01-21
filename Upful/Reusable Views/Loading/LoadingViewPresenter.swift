@@ -12,11 +12,14 @@ struct LoadingViewPresenter {
     private static let loadingView = LoadingViewController()
     
     static func show(in viewcontroller: UIViewController) {
-        
-        viewcontroller.add(loadingView)
+        DispatchQueue.main.async {
+             viewcontroller.add(loadingView)
+        }
     }
     
     static func remove() {
-        loadingView.remove()
+        DispatchQueue.main.async {
+            loadingView.remove()
+        }
     }
 }
