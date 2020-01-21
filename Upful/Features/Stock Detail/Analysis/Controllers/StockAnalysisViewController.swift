@@ -81,6 +81,20 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     
     // MARK: - Views
     
+    lazy var get5YearDataButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.setTitle("Unlock 5 Year Data", for: .normal)
+        b.backgroundColor = UIColor.appAccent3.withAlphaComponent(0.9)
+        b.setTitleColor(.white, for: .normal)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        b.layer.masksToBounds = true
+        b.layer.cornerRadius = 15
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        b.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        return b
+    }()
+    
     private lazy var stockHeaderView: TableHeaderView = {
         let v = TableHeaderView()
         v.detailsLabel.text = companyName
@@ -124,6 +138,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground()
+        setUpPremiumButton()
         setupViews()
         loadChart()
         fetchCompanyFilingsData()
@@ -138,7 +153,19 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         listenForDataCompletion()
     }
     
+    @objc private func handle5YearDataInterest(_ sender: UIButton) {
+        let presenter = SubscriptionPresenter(type: .fiveYearDataInterest)
+        presenter.present(in: self)
+    }
+    
     // MARK: - View Setup
+    
+    private func setUpPremiumButton() {
+        if !PermissionManager.shared.isPremium {
+            stockHeaderView.accessoryStackView.addArrangedSubview(get5YearDataButton)
+            get5YearDataButton.addTarget(self, action: #selector(handle5YearDataInterest), for: .touchUpInside)
+        }
+    }
     
     private func setupViews() {
         tableView.showsVerticalScrollIndicator = false
@@ -396,6 +423,22 @@ class GenericCellImageView: UIImageView {
     }
     
 }
+
+// MARK: - SubscriptionViewControllerDelegate Methods
+
+extension StockAnalysisViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {}
+    
+    func userDidSignUp() {
+        if PermissionManager.shared.isPremium {
+            get5YearDataButton.removeFromSuperview()
+            loadChart()
+            fetchCompanyFilingsData()
+            listenForDataCompletion()
+        }
+    }
+}
+
 
 class GenericTableViewCell: UITableViewCell {
     

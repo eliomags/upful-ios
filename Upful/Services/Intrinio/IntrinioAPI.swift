@@ -129,7 +129,7 @@ final class IntrinioAPI {
                 if isPremium {
                     return "?frequency=yearly&start_date=2014-01-01&end_date=2021-01-01&sort_order=asc"
                 } else {
-                    return "?frequency=yearly&start_date=2016-01-01&end_date=2021-01-01&sort_order=asc"
+                    return "?frequency=yearly&start_date=2017-01-01&end_date=2021-01-01&sort_order=asc"
                 }
             }
         }

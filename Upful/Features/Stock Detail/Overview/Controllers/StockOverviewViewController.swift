@@ -80,8 +80,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         let v = TableHeaderView()
         v.detailsLabel.text = companyName
         v.headerLabel.text = ticker
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         return v
     }()
     
