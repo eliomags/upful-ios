@@ -63,6 +63,8 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
             case .loaded, .new:
                 self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
                 self.refreshControl.endRefreshing()
+            case .loading:
+                self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
             default:
                 break
             }

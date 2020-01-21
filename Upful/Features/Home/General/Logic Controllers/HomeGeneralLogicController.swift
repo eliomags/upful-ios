@@ -170,7 +170,7 @@ class HomeGeneralLogicController {
     }
     
     fileprivate func handleNewsFetchCompletion(news: [StockNews]) {
-        let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
+        let mappedNews = news.map { StockNewsViewModel(stockNews: $0) }
         self.stockNews = mappedNews
         sendNewsStateUpdates?()
     }
