@@ -62,7 +62,7 @@ class HomeGeneralLogicController {
     
     func fetchTableData() {
         startPreferenceLoad()
-//        startNewsLoad()
+        startNewsLoad()
     }
     
     /*

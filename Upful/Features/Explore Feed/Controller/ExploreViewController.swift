@@ -200,7 +200,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         switch section {
         case Section.news.rawValue:
             let selectedNewsURL = logicController.marketNewsViewModels[indexPath.row].newsUrl
-            let webviewVC = WebViewViewController(urlString: selectedNewsURL)
+            let webviewVC = UINavigationController(rootViewController: WebViewViewController(urlString: selectedNewsURL))            
             present(webviewVC, animated: true, completion: nil)
         case Section.stocks.rawValue:
             let selectedPopularStock = logicController.stockViewModels[indexPath.row]

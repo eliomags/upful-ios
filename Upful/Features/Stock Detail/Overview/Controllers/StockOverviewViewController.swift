@@ -232,17 +232,17 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     // TODO: - Enable before release
     
     func startNewsLoad() {
-//        secondaryGroup.enter()
-//        stockNewsLoader.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
-//            switch result {
-//            case .success(let news):
-//                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
-//                self.stockNews = mappedNews
-//            case .failure(let err):
-//                print(err.localizedDescription)
-//            }
-//            self.secondaryGroup.leave()
-//        }
+        secondaryGroup.enter()
+        stockNewsLoader.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
+            switch result {
+            case .success(let news):
+                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
+                self.stockNews = mappedNews
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+            self.secondaryGroup.leave()
+        }
     }
     
     fileprivate func handleDataFetchCompletion() {
