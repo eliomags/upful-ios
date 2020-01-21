@@ -371,8 +371,10 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     }
 }
 
-extension ManualSearchViewController: PresentationControllerDelegate {
-    func presentationControllerdDidDismiss() {}
+extension ManualSearchViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {}
+    
+    func userDidSignUp() {}
 }
 
 

@@ -27,7 +27,7 @@ class IAPService {
 
 
     func completeTransactions() {
-        SwiftyStoreKit.completeTransactions(atomically: true) { [unowned self] purchases in
+        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
             for purchase in purchases {
                 switch purchase.transaction.transactionState {
                 case .purchased, .restored:
@@ -72,22 +72,22 @@ class IAPService {
                 self.isPremium = true
 
             case .error(let error):
-                self.purchaseCompletionHandler?(true, error.code)
+                self.purchaseCompletionHandler?(false, error.code)
             }
         }
     }
     
     // MARK: - Restoring Purchase
     
-    func restorePurchases(completion: @escaping ((_ success: Bool) -> Void)) {
+    func restorePurchases(completion: @escaping (_ success: Bool) -> Void) {
         SwiftyStoreKit.restorePurchases(atomically: true) { [weak self] results in
             guard let self = self else { return }
 
             if results.restoredPurchases.count > 0 {
                 self.isPremium = true
+                self.purchaseCompletionHandler?(true, nil)
                 completion(true)
-            }
-            else {
+            } else {
                 completion(false)
             }
         }
@@ -96,7 +96,7 @@ class IAPService {
     // MARK: - Verification
     
     func verifyProductSubscription(_ product: SKProduct) {
-        let appleValidator = AppleReceiptValidator(service: .production, sharedSecret: secret)
+        let appleValidator = AppleReceiptValidator(service: .sandbox, sharedSecret: secret)
         SwiftyStoreKit.verifyReceipt(using: appleValidator) { [weak self] result in
             guard let self = self else { return }
 
@@ -119,7 +119,6 @@ class IAPService {
                     
                 case .notPurchased:
                     self.isPremium = false
-
                     
                 }
             case .error(let error):

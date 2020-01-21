@@ -24,6 +24,7 @@ enum ScreenType: String {
     case quick
     case manual
     case saved = "currently_saved"
+    case popular
 }
 
 // MARK: - Analytics Events

@@ -12,18 +12,18 @@ import Firebase
 protocol RemoteScreenerLoaderProtocol {
     typealias ScreenerLoadCompletion = (Result<[ScreenerViewModel],Error>) -> Void
     func load(completion: @escaping ScreenerLoadCompletion)
-    func incrementScreenerInterest(documentID: String)
+    static func incrementScreenerInterest(documentID: String)
 }
 
 class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
-    private let remoteService: FirestoreAPI
+    private static var remoteService: FirestoreAPI = FirestoreAPI()
 
     init(remoteService: FirestoreAPI = .init()) {
-        self.remoteService = remoteService
+        RemoteScreenerLoader.remoteService = remoteService
     }
     
     func load(completion: @escaping ScreenerLoadCompletion) {
-        remoteService.fetch(from: .screeners) { (result) in
+        RemoteScreenerLoader.remoteService.fetch(from: .screeners) { (result) in
             switch result {
             case .success(let screenerDocs):
                 if let screenerItems = screenerDocs as? [[String: Any]] {
@@ -39,7 +39,7 @@ class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
         }
     }
     
-    func incrementScreenerInterest(documentID: String) {
+    class func incrementScreenerInterest(documentID: String) {
         let collection = FirestoreAPI.Collection.screeners.rawValue
         let docRef = remoteService.db.collection(collection).document(documentID)
         docRef.updateData([

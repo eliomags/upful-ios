@@ -134,7 +134,9 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = indexPath.section
+        AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .quick))
         logicController.incrementScreenerInterest(at: indexPath)
+        
         switch section {
         case Section.popular.rawValue:
             let searchParameters = logicController.popularScreenerViewModels[indexPath.row].searchParameters

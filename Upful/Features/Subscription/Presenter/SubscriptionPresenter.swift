@@ -21,11 +21,12 @@ class SubscriptionPresenter {
         case savedScreenerLimit = "saved_screener_limit"
         case screeningLimit = "screening_navigation_limit"
         case settings
+        case fiveYearDataInterest = "5_year_data_interest"
     }
     
-    func present(in viewController: PresentationControllerDelegate) {
+    func present(in viewController: SubscriptionViewControllerDelegate) {
         let subscriptionVC = SubscriptionViewController(presenterType: type)
-        subscriptionVC.presentationDelegate = viewController
+        subscriptionVC.delegate = viewController
         let navVC = UINavigationController(rootViewController: subscriptionVC)
         navVC.modalPresentationStyle = .fullScreen
         viewController.present(navVC, animated: true, completion: nil)

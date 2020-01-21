@@ -12,7 +12,7 @@ import Firebase
 class RemoteStockManager {
     private static let backendService = FirestoreAPI().db
 
-    static func update(_ ticker: String, name: String) {
+    static func updateInterest(for ticker: String, name: String) {
         let popularStockCollection = FirestoreAPI.Collection.popularStocks.rawValue
         let docRef = backendService.collection(popularStockCollection).document(ticker)
     

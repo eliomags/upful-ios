@@ -62,6 +62,29 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     
     // MARK: - Views
     
+    lazy var get5YearDataButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.setTitle("Unlock 5 Year Data", for: .normal)
+        b.backgroundColor = UIColor.appAccent3.withAlphaComponent(0.9)
+        b.setTitleColor(.white, for: .normal)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        b.layer.masksToBounds = true
+        b.layer.cornerRadius = 15
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        b.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        return b
+    }()
+    
+    private lazy var stockHeaderView: TableHeaderView = {
+        let v = TableHeaderView()
+        v.detailsLabel.text = companyName
+        v.headerLabel.text = ticker
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+        return v
+    }()
+    
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -72,15 +95,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         tv.dataSource = self
         tv.delegate = self
         return tv
-    }()
-    
-    private lazy var stockHeaderView: TableHeaderView = {
-        let v = TableHeaderView()
-        v.detailsLabel.text = companyName
-        v.headerLabel.text = ticker
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
-        return v
     }()
     
     private lazy var refreshingControl: UIRefreshControl = { [unowned self] in
@@ -107,11 +121,19 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground()
+        setUpPremiumButton()
         setupViews()
         loadOverviewData()
     }
     
     // MARK: - View Setup
+    
+    private func setUpPremiumButton() {
+        if !PermissionManager.shared.isPremium {
+            stockHeaderView.accessoryStackView.addArrangedSubview(get5YearDataButton)
+            get5YearDataButton.addTarget(self, action: #selector(handle5YearDataInterest), for: .touchUpInside)
+        }
+    }
     
     private func setupViews() {
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
@@ -133,8 +155,15 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
             values1: chartEarningsData.map({ $0.value }))
     }
     
+    // MARK: - Actions
+    
     @objc private func refreshData(_ sender: Any) {
         loadOverviewData()
+    }
+    
+    @objc private func handle5YearDataInterest(_ sender: UIButton) {
+        let presenter = SubscriptionPresenter(type: .fiveYearDataInterest)
+        presenter.present(in: self)
     }
     
     // MARK: - Private Functions
@@ -228,21 +257,19 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
             self.secondaryGroup.leave()
         })
     }
-    
-    // TODO: - Enable before release
-    
+        
     func startNewsLoad() {
-        secondaryGroup.enter()
-        stockNewsLoader.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
-            switch result {
-            case .success(let news):
-                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
-                self.stockNews = mappedNews
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
-            self.secondaryGroup.leave()
-        }
+//        secondaryGroup.enter()
+//        stockNewsLoader.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
+//            switch result {
+//            case .success(let news):
+//                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
+//                self.stockNews = mappedNews
+//            case .failure(let err):
+//                print(err.localizedDescription)
+//            }
+//            self.secondaryGroup.leave()
+//        }
     }
     
     fileprivate func handleDataFetchCompletion() {
@@ -267,6 +294,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         configureCalcData()
         startNewsLoad()
         handleDataFetchCompletion()
+        if PermissionManager.shared.isPremium {
+            get5YearDataButton.removeFromSuperview()
+        }
     }
     
     // MARK: - Scroll View Delegate
@@ -345,6 +375,8 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let _ = tableView.cellForRow(at: indexPath) as? SmallNewsCell else { return }
+        AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
+
         let newsURLString = stockNews[indexPath.row].newsUrl
         let newsWebVC = WebViewViewController(urlString: newsURLString)
         let navVC = UINavigationController(rootViewController: newsWebVC)
@@ -368,3 +400,15 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     }
 }
 
+// MARK: - SubscriptionViewControllerDelegate Methods
+
+extension StockOverviewViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {}
+    
+    func userDidSignUp() {
+        if PermissionManager.shared.isPremium {
+            get5YearDataButton.removeFromSuperview()
+            loadOverviewData()
+        }
+    }
+}

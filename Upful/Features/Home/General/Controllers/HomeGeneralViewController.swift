@@ -109,10 +109,11 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
             let presenter = PreferencePresenter(presentingViewController: self)
             presenter.present()
         case .loaded:
+            AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .preference))
             let ticker = logicController.stocksYouMayLike[indexPath.row].ticker
             let name = logicController.stocksYouMayLike[indexPath.row].name
             let detailsVC = StockDetailsContainerView(ticker: ticker, companyName: name)
-            RemoteStockManager.update(ticker, name: name)
+            RemoteStockManager.updateInterest(for: ticker, name: name)
             navigationController?.pushViewController(detailsVC, animated: true)
         default:
             break
@@ -291,6 +292,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.preference.rawValue:
             handleStockSuggestionCellSelection(for: indexPath)
         case Section.news.rawValue:
+            AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
             handleNewsCellSelection(for: indexPath)
         default: break
         }

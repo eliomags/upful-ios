@@ -193,8 +193,12 @@ extension SettingsViewController: ReportDelegate {
     }
 }
 
-extension SettingsViewController: PresentationControllerDelegate {
-    func presentationControllerdDidDismiss() {
+extension SettingsViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {
+        toggleTrackingSwitch.isEnabled = PermissionManager.shared.isPremium
+    }
+    
+    func userDidSignUp() {
         toggleTrackingSwitch.isEnabled = PermissionManager.shared.isPremium
     }
 }

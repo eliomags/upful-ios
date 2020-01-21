@@ -103,7 +103,7 @@ class SubscriptionHeaderView: UIView {
     
     fileprivate func setupIndieDeveloperStackView() {
         let attributedString = NSMutableAttributedString(string: "Support an Indie Developer! \n\n")
-        let restOfIndieString = NSMutableAttributedString(string: " Hi, I'm Yanik!. I developed this app to assist me in finding stocks to invest in based on their financials.\n\nSubscribe to help support ongoing development!")
+        let restOfIndieString = NSMutableAttributedString(string: " Hi, I'm Yanik! I developed this app to help me find stocks to invest in.\n\n Subscribing helps to support this app's ongoing development!")
 
         let yanikImageAttachment = NSTextAttachment()
         let yanikImage = UIImage(named: "yanik-memoji")?.resizeImage(37, opaque: false)

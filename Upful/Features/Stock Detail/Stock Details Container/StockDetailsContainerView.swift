@@ -149,8 +149,10 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
 
 }
 
-extension StockDetailsContainerView: PresentationControllerDelegate {
-    func presentationControllerdDidDismiss() {}    
+extension StockDetailsContainerView: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {}
+    
+    func userDidSignUp() {}    
 }
 
 

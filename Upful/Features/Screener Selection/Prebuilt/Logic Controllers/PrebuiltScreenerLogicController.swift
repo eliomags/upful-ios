@@ -79,7 +79,7 @@ class PrebuiltScreenerLogicController {
         if section == PrebuiltScreenerViewController.Section.all.rawValue {
             docID = screenerViewModels[indexPath.row].documentID ?? ""
         }
-        remoteScreenerLoader.incrementScreenerInterest(documentID: docID)
+        RemoteScreenerLoader.incrementScreenerInterest(documentID: docID)
     }
     
     

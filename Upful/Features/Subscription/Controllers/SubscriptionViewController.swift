@@ -8,14 +8,15 @@
 
 import UIKit
 
-protocol PresentationControllerDelegate: UIViewController {
-    func presentationControllerdDidDismiss()
+protocol SubscriptionViewControllerDelegate: UIViewController {
+    func presentationControllerdDidDismissWithoutSignup()
+    func userDidSignUp()
 }
 
 class SubscriptionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     deinit {
         if !PermissionManager.shared.isPremium && presenterType == .screeningLimit {
-            presentationDelegate?.showNotificationSetupView()
+            delegate?.showNotificationSetupView()
         }
     }
     
@@ -32,18 +33,19 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
             text = "You've reached your daily limit for stock screens.\nGet Premium to unlock unlimited access."
         case .settings:
             text = "Upgrade to Premium."
+        case .fiveYearDataInterest:
+            break
         }
         return text
     }
     
     let presenterType: SubscriptionPresenter.PresenterType
-    
+    weak var delegate: SubscriptionViewControllerDelegate?
+
     lazy var logicController: SubscriptionLogicController = {
         let vm = SubscriptionLogicController()
         return vm
     }()
-
-    weak var presentationDelegate: PresentationControllerDelegate?
 
     // MARK: - Views
     
@@ -154,7 +156,9 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
                     
             case .paymentSuccess:
                 self.dismiss(animated: true, completion: {
-//                    self.presentationDelegate?.presentationControllerdDidDismiss()
+//                    if PermissionManager.shared.isPremium {
+                        self.delegate?.userDidSignUp()
+//                    }
                 })
             default:
                 break

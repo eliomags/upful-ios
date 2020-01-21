@@ -11,25 +11,26 @@ import UIKit
 class TableHeaderView: UIView {
     
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 0, height: 60)
+        return CGSize(width: 0, height: 80)
     }
     let headerLabel: UILabel = {
         let l = UILabel()
-        l.text = "TWTR"
-        l.font = UIFont(name: "AvenirNext-Heavy", size: 21)
+        l.font = UIFont.systemFont(ofSize: 21, weight: .heavy)
         l.setContentHuggingPriority(.defaultLow, for: .horizontal)
         l.translatesAutoresizingMaskIntoConstraints = false
+        l.textAlignment = .left
         return l
     }()
     
-    var detailsLabel: UILabel = {
+    let detailsLabel: UILabel = {
         let l = UILabel()
         l.numberOfLines = 0
-        l.font = UIFont(name: "AvenirNext-Bold", size: 17)
+        l.textAlignment = .left
+        l.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         return l
     }()
     
-    lazy var headerStackView: UIStackView = {
+    private lazy var headerStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [headerLabel, detailsLabel])
         sv.axis = .vertical
         sv.spacing = 6
@@ -37,11 +38,27 @@ class TableHeaderView: UIView {
         return sv
     }()
     
+    lazy var accessoryStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [UIView()])
+        sv.axis = .vertical
+        sv.spacing = 6
+        sv.alignment = .trailing
+        return sv
+    }()
+    
+    private lazy var contentStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [headerStackView, accessoryStackView])
+        sv.axis = .horizontal
+        sv.spacing = 12
+        sv.alignment = .leading
+        return sv
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(headerStackView)
-        headerStackView.anchor(top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
-                               padding: .init(top: 0, left: 16, bottom: 1, right: 16))
+        addSubview(contentStackView)
+        contentStackView.anchor(top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
+                               padding: .init(top: 8, left: 16, bottom: 1, right: 16))
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

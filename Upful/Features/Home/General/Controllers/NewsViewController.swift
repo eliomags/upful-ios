@@ -62,6 +62,7 @@ class NewsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
         let selectedNewsURLString = logicController.stockNews[indexPath.row].newsUrl
         let webVC = WebViewViewController(urlString: selectedNewsURLString)
         let navVC = UINavigationController(rootViewController: webVC)

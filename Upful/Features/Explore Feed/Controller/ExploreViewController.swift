@@ -183,9 +183,12 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     func navigateToScreenerResults(indexPath: IndexPath, searchParameters: [String]) {
         PermissionManager.shared.verifyScreenerNavigationPermission { (canNavigate) in
             if canNavigate {
-                AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .quick))
+                let selectedPopularScreener = logicController.screenerViewModels[indexPath.row]
+                AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .popular))
+                RemoteScreenerLoader.incrementScreenerInterest(documentID: selectedPopularScreener.documentID ?? "")
                 let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters)
                 searchResultVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
+                
                 self.navigationController?.pushViewController(searchResultVC, animated: true)
             }
             if !canNavigate {
@@ -199,17 +202,28 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         let section = indexPath.section
         switch section {
         case Section.news.rawValue:
+            AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
+            
             let selectedNewsURL = logicController.marketNewsViewModels[indexPath.row].newsUrl
-            let webviewVC = UINavigationController(rootViewController: WebViewViewController(urlString: selectedNewsURL))            
+            let webviewVC = UINavigationController(rootViewController: WebViewViewController(urlString: selectedNewsURL))
             present(webviewVC, animated: true, completion: nil)
         case Section.stocks.rawValue:
+            AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .popular))
+            
             let selectedPopularStock = logicController.stockViewModels[indexPath.row]
-            let stockDetailsVC = StockDetailsContainerView(ticker: selectedPopularStock.stock.ticker,
-                                                           companyName: selectedPopularStock.stock.name)
+            RemoteStockManager.updateInterest(
+                for: selectedPopularStock.stock.ticker,
+                name: selectedPopularStock.stock.name
+            )
+            let stockDetailsVC = StockDetailsContainerView(
+                ticker: selectedPopularStock.stock.ticker,
+                companyName: selectedPopularStock.stock.name
+            )
             self.navigationController?.pushViewController(stockDetailsVC, animated: true)
+            
         case Section.screeners.rawValue:
-            let screenerParameters = logicController.screenerViewModels[indexPath.row].searchParameters
-            navigateToScreenerResults(indexPath: indexPath, searchParameters: screenerParameters)
+            let selectedPopularScreener = logicController.screenerViewModels[indexPath.row]
+            navigateToScreenerResults(indexPath: indexPath, searchParameters: selectedPopularScreener.searchParameters)
         default:
             break
         }
@@ -436,10 +450,12 @@ extension ExploreViewController {
     }
 }
 
-extension ExploreViewController: PresentationControllerDelegate {
-    func presentationControllerdDidDismiss() {
+extension ExploreViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {
         showNotificationSetupView()
     }
+    
+    func userDidSignUp() {}
 }
 
 

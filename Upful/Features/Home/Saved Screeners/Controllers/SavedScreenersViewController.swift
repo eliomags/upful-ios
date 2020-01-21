@@ -166,6 +166,7 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch viewModel.state {
         case .loaded:
+            AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .saved))
             let screener = viewModel.screeners[indexPath.row]
             handleSearchResultNavigation(with: screener)
         default:
@@ -252,8 +253,10 @@ extension SavedScreenerViewController: UITableViewDragDelegate, UITableViewDropD
     }
 }
 
-extension SavedScreenerViewController: PresentationControllerDelegate {
-    func presentationControllerdDidDismiss() {
+extension SavedScreenerViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {
         showNotificationSetupView()
     }
+    
+    func userDidSignUp() {}
 }
