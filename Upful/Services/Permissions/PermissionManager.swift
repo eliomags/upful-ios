@@ -35,9 +35,10 @@ class PermissionManager {
         resetSavedDates()
     }
     
+    
     // MARK: - Core Data Helper
     
-    private func getSavedScreenerCount() -> Int? {
+    var getSavedScreenerCount: Int? = {
         let request = SavedScreener.createfetchRequest()
         var savedScreeners: [SavedScreener] = []
         do {
@@ -47,9 +48,9 @@ class PermissionManager {
             print(error.localizedDescription)
             return nil
         }
-    }
+    }()
     
-    private func getSavedStockCount() -> Int {
+    var getSavedStockCount: Int? = {
         let request = SavedStock.createfetchRequest()
         var savedStocks: [SavedStock] = []
         do {
@@ -57,10 +58,10 @@ class PermissionManager {
             return savedStocks.count
         } catch let error {
             print("Fetch failed", error.localizedDescription)
-            return 0
+            return nil
         }
-    }
-    
+    }()
+
     // MARK: - Saved Screener and Stocks
     
     typealias PermissionCompletionHandler = (_ permissionGranted: Bool) -> Void
@@ -68,25 +69,26 @@ class PermissionManager {
     func getSaveScreenerPermission(completion: @escaping PermissionCompletionHandler) {
         if isPremium {
             completion(isPremium)
-            return
-        }
-        if let savedScreenerCount = getSavedScreenerCount() {
-            completion(savedScreenerCount < savedScreenerThreshold)
-            return
-        }
-        if getSavedScreenerCount() == nil {
-            completion(false)
+        } else {
+            if let savedScreenerCount = getSavedScreenerCount {
+                completion(savedScreenerCount < savedScreenerThreshold)
+                return
+            } else {
+                completion(false)
+            }
         }
     }
     
     func getSaveStockPermission(completion: @escaping PermissionCompletionHandler) {
         if isPremium {
             completion(isPremium)
-            return
         } else {
-            let savedStockCount = getSavedStockCount()
-            completion(savedStockCount < savedStockThreshold)
-            return
+            if let savedStockCount = getSavedStockCount {
+                completion(savedStockCount < savedStockThreshold)
+                return
+            } else {
+                completion(false)
+            }
         }
     }
         
