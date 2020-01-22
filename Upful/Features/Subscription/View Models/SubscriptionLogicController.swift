@@ -18,7 +18,7 @@ class SubscriptionLogicController {
     
     // MARK: - State
     
-    enum State {
+    enum State: Equatable {
         case awaiting
         case loading
         case loaded(products: [SKProduct])

@@ -264,7 +264,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         let headerView = TableSectionHeaderView()
         headerView.headerTextLabel.text = "Options"
         headerView.addButton.setTitle("", for: .normal)
-        return headerView
+        return logicController.state == .loading ? nil : headerView
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
