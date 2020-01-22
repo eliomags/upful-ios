@@ -32,7 +32,8 @@ class SavedScreenerTableViewCell: UITableViewCell {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
         stackView.axis = .vertical
         stackView.distribution = .fill
-        stackView.spacing = 12
+        stackView.alignment = .top
+        stackView.spacing = 8
         stackView.isBaselineRelativeArrangement = true
         return stackView
     }()

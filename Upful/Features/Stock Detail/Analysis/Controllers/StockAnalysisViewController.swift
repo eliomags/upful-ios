@@ -102,7 +102,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         return v
     }()
     
-    private lazy var refreshingControl: UIRefreshControl = { [unowned self] in
+    private lazy var refreshingControl: UIRefreshControl = { 
         let rc = UIRefreshControl()
         rc.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return rc

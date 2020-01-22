@@ -238,7 +238,7 @@ extension SavedStocksViewController: UITableViewDragDelegate, UITableViewDropDel
         viewModel.saveDatasourceConfiguration()
         tableView.reloadData()
         coordinator.drop(coordinator.items[0].dragItem, toRowAt: destinationIndexPath)
-        Vibration.success.vibrate()
+        Vibration.light.vibrate()
     }
     
     func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
