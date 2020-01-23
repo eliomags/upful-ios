@@ -179,6 +179,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.separatorStyle = .none
         tableView.bounces = false
+        tableView.showsVerticalScrollIndicator = false
     }
     
     fileprivate func setupPresentation() {

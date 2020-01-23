@@ -42,6 +42,22 @@ class SubscriptionHeaderView: UIView {
         return sv
     }()
     
+    lazy var indieIntroductionView: UIView = {
+        let attributedString = NSMutableAttributedString(string: "Hi, I'm Yanik!")
+        let restOfIndieString = NSMutableAttributedString(string: "\nI developed this app to help me find stocks to invest in.\n\nSubscribing helps to support this app's ongoing development!")
+
+        let yanikImageAttachment = NSTextAttachment()
+        let yanikImage = UIImage(named: "yanik-memoji")?.resizeImage(37, opaque: false)
+        yanikImageAttachment.image = yanikImage
+        let imageString = NSAttributedString(attachment: yanikImageAttachment)
+        
+        attributedString.append(imageString)
+        attributedString.append(restOfIndieString)
+        
+        let v = makeBlurbTextView(with: attributedString)
+        return v
+    }()
+    
     // MARK: - Initializer
 
     override init(frame: CGRect) {
@@ -102,16 +118,7 @@ class SubscriptionHeaderView: UIView {
     }
     
     fileprivate func setupIndieDeveloperStackView() {
-        let attributedString = NSMutableAttributedString(string: "Support an Indie Developer! \n\n")
-        let restOfIndieString = NSMutableAttributedString(string: " Hi, I'm Yanik! I developed this app to help me find stocks to invest in.\n\n Subscribing helps to support this app's ongoing development!")
-
-        let yanikImageAttachment = NSTextAttachment()
-        let yanikImage = UIImage(named: "yanik-memoji")?.resizeImage(37, opaque: false)
-        yanikImageAttachment.image = yanikImage
-        let imageString = NSAttributedString(attachment: yanikImageAttachment)
-        
-        attributedString.append(imageString)
-        attributedString.append(restOfIndieString)
+        let attributedString = NSMutableAttributedString(string: "Support an Indie Developer!")
         
         contentStackView.addArrangedSubview(makeStackView(with: attributedString))
     }
@@ -126,13 +133,40 @@ class SubscriptionHeaderView: UIView {
          addSubview(contentStackView)
          NSLayoutConstraint.activate([
              contentStackView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
-             contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 8),
              contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
              contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24)
          ])
+        
+        addSubview(indieIntroductionView)
+        NSLayoutConstraint.activate([
+            indieIntroductionView.topAnchor.constraint(equalTo: contentStackView.bottomAnchor, constant: 16),
+            indieIntroductionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 8),
+            indieIntroductionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            indieIntroductionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24)
+        ])
     }
     
     // MARK: - Helper Functions
+    
+    fileprivate func makeBlurbTextView(with description: NSMutableAttributedString) -> UIView {
+        let contentView = UIView()
+        contentView.backgroundColor = UIColor.appAccent3.withAlphaComponent(0.1)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.layer.masksToBounds = true
+        contentView.layer.cornerRadius = 8
+        
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.attributedText = description
+        label.textAlignment = .center
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        
+        contentView.addSubview(label)
+        label.fillSuperview(padding: .init(top: 12, left: 12, bottom: 12, right: 12))
+        
+        return contentView
+    }
     
     fileprivate func makeStackView(with description: NSMutableAttributedString) -> UIStackView {
         let imageView = UIImageView()
@@ -146,6 +180,7 @@ class SubscriptionHeaderView: UIView {
         descriptionLabel.textColor = .gray
         descriptionLabel.attributedText = description
         descriptionLabel.numberOfLines = 0
+        descriptionLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         
         let stackView = UIStackView(arrangedSubviews: [imageView, descriptionLabel])
         stackView.alignment = .leading

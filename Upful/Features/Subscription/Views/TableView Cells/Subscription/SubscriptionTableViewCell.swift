@@ -17,57 +17,53 @@ class SubscriptionTableViewCell: UITableViewCell {
     private let selectionStateView: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .white
+        iv.translatesAutoresizingMaskIntoConstraints = false
         iv.heightAnchor.constraint(equalToConstant: 25).isActive = true
         iv.widthAnchor.constraint(equalToConstant: 25).isActive = true
         iv.layer.masksToBounds = true
         iv.layer.cornerRadius = 12.5
         return iv
     }()
-
-    let monthlyPricingLabel: UILabel = {
+    
+    private let oneWeekFreeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         label.textAlignment = .center
-        label.textColor = .gray
+        label.text = "Try 1 week free."
         return label
     }()
-        
-    private let freeTrialView: UIView = {
-        let v = UIView()
+    
+    let monthlyPricingLabel: UILabel = {
         let label = UILabel()
-        label.text = "Free Trial"
-        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        v.addSubview(label)
-        label.fillSuperview(padding: .init(top: 4, left: 4, bottom: 4, right: 4))
-        v.backgroundColor = UIColor.appAccent3.withAlphaComponent(0.9)
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        v.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        v.layer.masksToBounds = true
-        v.layer.cornerRadius = 8
-        return v
+        return label
+    }()
+    
+    private lazy var pricingStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [oneWeekFreeLabel, monthlyPricingLabel])
+        sv.axis = .vertical
+        sv.spacing = 6
+        sv.distribution = .fillEqually
+        sv.alignment = .center
+        return sv
     }()
     
     private lazy var contentBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.appAccent3.withAlphaComponent(0.4)
-        view.layer.cornerRadius = 8
+        view.layer.cornerRadius = 12
         view.layer.masksToBounds = true
-        view.addSubview(freeTrialView)
-        freeTrialView.anchor(top: nil, leading: nil,
-                             bottom: view.bottomAnchor, trailing: view.trailingAnchor,
-                             padding: .init(top: 18, left: 18, bottom: 16, right: 18))
-        view.addSubview(selectionStateView)
         
-        selectionStateView.anchor(top: nil, leading: view.leadingAnchor,
-                                  bottom: view.bottomAnchor, trailing: nil,
-                                  padding: .init(top: 12, left: 16, bottom: 12, right: 0))
-        view.addSubview(monthlyPricingLabel)
-        monthlyPricingLabel.anchor(top: view.topAnchor, leading: selectionStateView.trailingAnchor,
-                                   bottom: view.bottomAnchor, trailing: freeTrialView.leadingAnchor,
-                                   padding: .init(top: 16, left: 16, bottom: 16, right: 0))
+        view.addSubview(pricingStackView)
+        pricingStackView.anchor(top: view.topAnchor, leading: view.leadingAnchor,
+                                bottom: view.bottomAnchor, trailing: view.trailingAnchor,
+                                padding: .init(top: 16, left: 16, bottom: 16, right: 16))
+        
+        view.addSubview(selectionStateView)
+        selectionStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        selectionStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+
         return view
     }()
     
