@@ -28,12 +28,11 @@ class PermissionManager {
     private let savedStockThreshold = 3
     private let screeningThreshold = 6
     
-    
     var isPremium: Bool {
         return userDefaults.bool(forKey: Constants.UserDefaults.isPremium)
     }
 
-    private init(userDefaults: UserDefaults = UserDefaults.standard) {
+    init(userDefaults: UserDefaults = UserDefaults.standard) {
         self.userDefaults = userDefaults
         resetSavedDates()
     }
@@ -42,9 +41,10 @@ class PermissionManager {
     
     var getSavedScreenerCount: Int? = {
         let request = SavedScreener.createfetchRequest()
-        var savedScreeners: [SavedScreener] = []
         do {
-            savedScreeners = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
+            var savedScreeners = try PersistenceService.shared
+                .persistentContainer
+                .viewContext.fetch(request)
             return savedScreeners.count
         } catch let error {
             print(error.localizedDescription)
@@ -54,9 +54,10 @@ class PermissionManager {
     
     var getSavedStockCount: Int? = {
         let request = SavedStock.createfetchRequest()
-        var savedStocks: [SavedStock] = []
         do {
-            savedStocks = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
+            var savedStocks = try PersistenceService.shared
+                .persistentContainer
+                .viewContext.fetch(request)
             return savedStocks.count
         } catch let error {
             print("Fetch failed", error.localizedDescription)

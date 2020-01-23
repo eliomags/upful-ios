@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D061D1F23C273F500B8FB14 /* ScreenerSelectionDelegate.swift */; };
+		3D0643CC23D94AE1002AAF28 /* PermissionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0643CB23D94AE1002AAF28 /* PermissionManagerTests.swift */; };
 		3D0C5F6423395CD500F4A5FC /* Notes+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F6223395CD500F4A5FC /* Notes+CoreDataClass.swift */; };
 		3D0C5F6523395CD500F4A5FC /* Notes+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F6323395CD500F4A5FC /* Notes+CoreDataProperties.swift */; };
 		3D0C5F6D233A451600F4A5FC /* GenericHomeEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F6C233A451600F4A5FC /* GenericHomeEmptyCell.swift */; };
@@ -214,6 +215,7 @@
 /* Begin PBXFileReference section */
 		023AAB374D3059C075004339 /* Pods-Upful.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Upful.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Upful/Pods-Upful.debug.xcconfig"; sourceTree = "<group>"; };
 		3D061D1F23C273F500B8FB14 /* ScreenerSelectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenerSelectionDelegate.swift; sourceTree = "<group>"; };
+		3D0643CB23D94AE1002AAF28 /* PermissionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManagerTests.swift; sourceTree = "<group>"; };
 		3D0A0B595AE359D529B34D3F /* Pods-Upful-UpfulTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Upful-UpfulTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Upful-UpfulTests/Pods-Upful-UpfulTests.release.xcconfig"; sourceTree = "<group>"; };
 		3D0C5F6223395CD500F4A5FC /* Notes+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notes+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3D0C5F6323395CD500F4A5FC /* Notes+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notes+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -1462,6 +1464,7 @@
 		3DBF0C5823D94A2C003023D7 /* Permissions */ = {
 			isa = PBXGroup;
 			children = (
+				3D0643CB23D94AE1002AAF28 /* PermissionManagerTests.swift */,
 			);
 			path = Permissions;
 			sourceTree = "<group>";
@@ -2137,6 +2140,7 @@
 				3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */,
 				3DD5218C235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift in Sources */,
 				3D55BD6E23B805F400B4FDF0 /* StockNewsViewModelTest.swift in Sources */,
+				3D0643CC23D94AE1002AAF28 /* PermissionManagerTests.swift in Sources */,
 				3DB345E923C3EBE500EADFFD /* PrebuiltScreenerLogicControllerTests.swift in Sources */,
 				3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */,
 				3DD52185235276580090CDE6 /* PreferenceDataManagerTest.swift in Sources */,

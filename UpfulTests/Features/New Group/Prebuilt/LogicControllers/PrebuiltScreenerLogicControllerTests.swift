@@ -65,8 +65,8 @@ class PrebuiltScreenerLogicControllerTests: XCTestCase {
     // MARK: - Mocks
 
 final class MockRemoteScreenerLoader: RemoteScreenerLoaderProtocol {
-    func incrementScreenerInterest(documentID: String) {}
-    
+    static func incrementScreenerInterest(documentID: String) {}
+        
     func load(completion: @escaping ScreenerLoadCompletion) {
         DispatchQueue.global().async {
             completion(Result { return self.handleSuccess() })
@@ -82,7 +82,8 @@ final class MockRemoteScreenerLoader: RemoteScreenerLoaderProtocol {
     }
 }
 final class MockRemoteScreenerLoaderError: RemoteScreenerLoaderProtocol {
-    func incrementScreenerInterest(documentID: String) {}
+    static func incrementScreenerInterest(documentID: String) {}
+    
     
     func load(completion: @escaping ScreenerLoadCompletion) {
         DispatchQueue.global().async {
