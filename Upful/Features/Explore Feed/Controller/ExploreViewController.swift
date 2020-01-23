@@ -180,22 +180,15 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     
     // MARK: - Navigation
     
-    func navigateToScreenerResults(indexPath: IndexPath, searchParameters: [String]) {
-        PermissionManager.shared.verifyScreenerNavigationPermission { (canNavigate) in
-            if canNavigate {
-                let selectedPopularScreener = logicController.screenerViewModels[indexPath.row]
-                AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .popular))
-                RemoteScreenerLoader.incrementScreenerInterest(documentID: selectedPopularScreener.documentID ?? "")
-                let searchResultVC = ScreenResultsViewController(searchParameters: searchParameters)
-                searchResultVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
-                
-                self.navigationController?.pushViewController(searchResultVC, animated: true)
-            }
-            if !canNavigate {
-                let presenter = SubscriptionPresenter(type: .screeningLimit)
-                presenter.present(in: self)
-            }
-        }
+    fileprivate func handleSelectedScreenerNavigation(at indexPath: IndexPath) {
+        let selectedPopularScreener = logicController.screenerViewModels[indexPath.row]
+        
+        AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .popular))
+        RemoteScreenerLoader.incrementScreenerInterest(documentID: selectedPopularScreener.documentID ?? "")
+        
+        let searchResultVC = ScreenResultsViewController(searchParameters: selectedPopularScreener.searchParameters)
+        searchResultVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
+        self.navigationController?.pushViewController(searchResultVC, animated: true)
     }
 
     fileprivate func handleNormalStateNavigation(_ indexPath: IndexPath) {
@@ -222,8 +215,14 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
             self.navigationController?.pushViewController(stockDetailsVC, animated: true)
             
         case Section.screeners.rawValue:
-            let selectedPopularScreener = logicController.screenerViewModels[indexPath.row]
-            navigateToScreenerResults(indexPath: indexPath, searchParameters: selectedPopularScreener.searchParameters)
+            PermissionManager.shared.verifyScreenerNavigationPermission { (permissionGranted) in
+                if permissionGranted {
+                    handleSelectedScreenerNavigation(at: indexPath)
+                } else {
+                    let presenter = SubscriptionPresenter(type: .screeningLimit)
+                    presenter.present(in: self)
+                }
+            }
         default:
             break
         }
