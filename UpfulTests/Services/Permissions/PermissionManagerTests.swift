@@ -65,6 +65,34 @@ class PermissionManagerTests: XCTestCase {
         }
     }
     
+    func testScreenerNavigationPermissionForFreeUser() {
+        sut = makeSUTWithFreeUser()
+        
+        // When saved 5 times
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertFalse(permissionGranted, "Should be false at  navigation limit")
+        }
+    }
+    
     // MARK: - Premium User Test
 
     func testPremiumUserSetup() {
@@ -107,6 +135,35 @@ class PermissionManagerTests: XCTestCase {
         sut.getSavedScreenerCount = 3
         sut.getSaveScreenerPermission { (permissionGranted) in
             XCTAssertTrue(permissionGranted)
+        }
+    }
+    
+    func testScreenerNavigationPermissionForPremiumUser() {
+        sut = makeSUTWithPremiumUser()
+        
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+            XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+           XCTAssertTrue(permissionGranted)
+        }
+        sut.verifyScreenerNavigationPermission { (permissionGranted) in
+           XCTAssertTrue(permissionGranted)
         }
     }
 

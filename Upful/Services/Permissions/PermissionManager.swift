@@ -36,9 +36,7 @@ class PermissionManager {
         self.userDefaults = userDefaults
         resetSavedDates()
     }
-    
-    // MARK: - Core Data Helper
-    
+        
     var getSavedScreenerCount: Int? = {
         let request = SavedScreener.createfetchRequest()
         do {
@@ -106,13 +104,15 @@ class PermissionManager {
         return components
     }()
         
-    private var screeningDateLookup: [String: Int] = UserDefaults.standard.dictionary(
-        forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int] ?? [:] {
-        didSet {
-            UserDefaults.standard.set(
-                screeningDateLookup,
-                forKey: Constants.UserDefaults.screeningDateLookup)
-        }
+    private lazy var screeningDateLookup: [String: Int] = {
+        let dict = self.userDefaults.dictionary(forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int] ?? [:]
+        return dict
+    }()
+    
+    private func saveScreeningDataLookup() {
+        self.userDefaults.set(
+            screeningDateLookup,
+            forKey: Constants.UserDefaults.screeningDateLookup)
     }
         
     private func incrementCurrentDateScreenerSelection() {
@@ -121,11 +121,13 @@ class PermissionManager {
         } else {
             screeningDateLookup[currentDateComponents.toString()] = 0
         }
+        saveScreeningDataLookup()
     }
 
     func verifyScreenerNavigationPermission(completion: ((Bool) -> Void)) {
-        if isPremium { completion(true) }
-        else {
+        if isPremium {
+            completion(true)
+        } else {
             let isBelowScreeningThreshold = screeningDateLookup[currentDateComponents.toString()] ?? 0 < screeningThreshold
             if isBelowScreeningThreshold {
                 incrementCurrentDateScreenerSelection()
@@ -192,10 +194,14 @@ class PermissionManager {
         }
     }
     
+    /*
+     Checks if today is a new day and if so, clears all user defaults values for previously saved dates.
+     */
     func resetSavedDates() {
         if screeningDateLookup[currentDateComponents.toString()] == nil {
             screeningDateLookup = [:]
-            screeningDateLookup[currentDateComponents.toString()] = 1
+            screeningDateLookup[currentDateComponents.toString()] = 0
         }
+        saveScreeningDataLookup()
     }
 }
