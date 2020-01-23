@@ -40,11 +40,12 @@ class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
     }
     
     class func incrementScreenerInterest(documentID: String) {
-        let collection = FirestoreAPI.Collection.screeners.rawValue
-        let docRef = remoteService.db.collection(collection).document(documentID)
-        docRef.updateData([
-            "interest": FieldValue.increment(Int64(1))
-        ])
+        print("Incrementing", documentID)
+//        let collection = FirestoreAPI.Collection.screeners.rawValue
+//        let docRef = remoteService.db.collection(collection).document(documentID)
+//        docRef.updateData([
+//            "interest": FieldValue.increment(Int64(1))
+//        ])
     }
     
     fileprivate func map(items: [[String: Any]]) throws -> [ScreenerViewModel] {

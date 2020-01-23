@@ -96,12 +96,11 @@ class IAPService {
     // MARK: - Verification
     
     func verifyProductSubscription(_ product: SKProduct) {
-        let appleValidator = AppleReceiptValidator(service: .production, sharedSecret: secret)
+        let appleValidator = AppleReceiptValidator(service: .sandbox, sharedSecret: secret)
         SwiftyStoreKit.verifyReceipt(using: appleValidator) { [weak self] result in
             guard let self = self else { return }
 
             switch result {
-                
             case .success(let receipt):
                 let productId = product.productIdentifier
                 let purchaseResult = SwiftyStoreKit.verifySubscription(

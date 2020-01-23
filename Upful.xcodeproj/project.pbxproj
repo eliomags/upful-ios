@@ -376,7 +376,7 @@
 		3DD52184235276580090CDE6 /* PreferenceDataManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceDataManagerTest.swift; sourceTree = "<group>"; };
 		3DD5218B235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralLogicControllerTests.swift; sourceTree = "<group>"; };
 		3DD75A2F236BAF6700C298B9 /* ColorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorManager.swift; sourceTree = "<group>"; };
-		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FirestoreService.swift; path = ../FirestoreService.swift; sourceTree = "<group>"; };
+		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupVC.swift; sourceTree = "<group>"; };
@@ -441,14 +441,6 @@
 				3D061D1F23C273F500B8FB14 /* ScreenerSelectionDelegate.swift */,
 			);
 			path = Protocols;
-			sourceTree = "<group>";
-		};
-		3D061D4F23C373F700B8FB14 /* FIrestoreService */ = {
-			isa = PBXGroup;
-			children = (
-				3DD75A362372456700C298B9 /* FirestoreService.swift */,
-			);
-			path = FIrestoreService;
 			sourceTree = "<group>";
 		};
 		3D061D5023C3749900B8FB14 /* Logic Controllers */ = {
@@ -649,6 +641,7 @@
 		3D20FB3C22FB1F0A007836DD /* UpfulTests */ = {
 			isa = PBXGroup;
 			children = (
+				3DBF0C5723D94A24003023D7 /* Services */,
 				3DB345FB23CBFAF200EADFFD /* VIewModels */,
 				3DAB3ED6235130970008CC18 /* Features */,
 				3D20FB3F22FB1F0A007836DD /* Info.plist */,
@@ -668,7 +661,6 @@
 		3D20FB4922FB209F007836DD /* Explore Feed */ = {
 			isa = PBXGroup;
 			children = (
-				3D6A831823762B3900A75B06 /* Models */,
 				3DD4291E2348F7D20079DA18 /* Controller */,
 				3DB345F223C8A44C00EADFFD /* Logic Controller */,
 			);
@@ -697,13 +689,13 @@
 		3D20FB4D22FB258A007836DD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3DBF0C5623D94690003023D7 /* Remote Loaders */,
 				3D42BE462309A56F00806AFF /* Intrinio */,
 				3D2F963F2312B025003811AB /* Analytics */,
 				3DB004FB2360F5C0002F704D /* Permissions */,
 				3DFB62B8235E3B140026D3DC /* Payment */,
 				3D7C85452337343400A2E63E /* informationViewPresenter */,
 				3DF5FC0423342BDF00856205 /* Persistence */,
-				3D061D4F23C373F700B8FB14 /* FIrestoreService */,
 				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
 				3D586519231C946600495D79 /* AppStoreReviewHelper.swift */,
 				3DD75A2F236BAF6700C298B9 /* ColorManager.swift */,
@@ -923,6 +915,7 @@
 			isa = PBXGroup;
 			children = (
 				3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */,
+				3DB345F523CAD74400EADFFD /* StockSearchService.swift */,
 			);
 			path = Intrinio;
 			sourceTree = "<group>";
@@ -966,15 +959,6 @@
 				3D55BD6D23B805F400B4FDF0 /* StockNewsViewModelTest.swift */,
 			);
 			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		3D6A831823762B3900A75B06 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				3D8D3267237320A600123731 /* PopularStockLoader.swift */,
-				3DB345F523CAD74400EADFFD /* StockSearchService.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		3D6BD0BC23B506F400FBC1ED /* Saved Screeners */ = {
@@ -1323,18 +1307,9 @@
 			path = Permissions;
 			sourceTree = "<group>";
 		};
-		3DB345DE23C39D1400EADFFD /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				3DB345E023C39D5F00EADFFD /* RemoteScreenerLoader.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		3DB345DF23C39D2B00EADFFD /* Prebuilt */ = {
 			isa = PBXGroup;
 			children = (
-				3DB345DE23C39D1400EADFFD /* Models */,
 				3D061D1E23C273E000B8FB14 /* Protocols */,
 				3DB345E423C3E42400EADFFD /* Controllers */,
 				3D061D5023C3749900B8FB14 /* Logic Controllers */,
@@ -1382,14 +1357,6 @@
 				3DB345ED23C4C87600EADFFD /* LoadingViewPresenter.swift */,
 			);
 			path = Loading;
-			sourceTree = "<group>";
-		};
-		3DB345EF23C7F65000EADFFD /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				3DB345F023C7F67800EADFFD /* RemoteStockManager.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		3DB345F223C8A44C00EADFFD /* Logic Controller */ = {
@@ -1473,6 +1440,32 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		3DBF0C5623D94690003023D7 /* Remote Loaders */ = {
+			isa = PBXGroup;
+			children = (
+				3DD75A362372456700C298B9 /* FirestoreService.swift */,
+				3DB345E023C39D5F00EADFFD /* RemoteScreenerLoader.swift */,
+				3DB345F023C7F67800EADFFD /* RemoteStockManager.swift */,
+				3D8D3267237320A600123731 /* PopularStockLoader.swift */,
+			);
+			path = "Remote Loaders";
+			sourceTree = "<group>";
+		};
+		3DBF0C5723D94A24003023D7 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3DBF0C5823D94A2C003023D7 /* Permissions */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3DBF0C5823D94A2C003023D7 /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Permissions;
+			sourceTree = "<group>";
+		};
 		3DC4ED2F22FE671100232155 /* Manual Search Flow */ = {
 			isa = PBXGroup;
 			children = (
@@ -1487,7 +1480,6 @@
 		3DC4ED3022FE6EAA00232155 /* Search Results */ = {
 			isa = PBXGroup;
 			children = (
-				3DB345EF23C7F65000EADFFD /* Models */,
 				3D42BE3F23098BBB00806AFF /* Views */,
 				3D42BE3E23098BB400806AFF /* Controllers */,
 			);
@@ -2285,7 +2277,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.3;
+				CURRENT_PROJECT_VERSION = 4.3.1;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2293,7 +2285,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.3;
+				MARKETING_VERSION = 4.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2307,7 +2299,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.3;
+				CURRENT_PROJECT_VERSION = 4.3.1;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2315,7 +2307,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.3;
+				MARKETING_VERSION = 4.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

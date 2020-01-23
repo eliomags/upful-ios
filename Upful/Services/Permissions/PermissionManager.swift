@@ -18,6 +18,7 @@ class PermissionManager {
             static let screeningDateLookup = "selectedScreenerDictionary"
         }
     }
+    private let userDefaults: UserDefaults
     
     static let shared = PermissionManager()
     
@@ -27,14 +28,15 @@ class PermissionManager {
     private let savedStockThreshold = 3
     private let screeningThreshold = 6
     
+    
     var isPremium: Bool {
-        return UserDefaults.standard.bool(forKey: Constants.UserDefaults.isPremium)
+        return userDefaults.bool(forKey: Constants.UserDefaults.isPremium)
     }
 
-    private init() {
+    private init(userDefaults: UserDefaults = UserDefaults.standard) {
+        self.userDefaults = userDefaults
         resetSavedDates()
     }
-    
     
     // MARK: - Core Data Helper
     
@@ -103,7 +105,8 @@ class PermissionManager {
         return components
     }()
         
-    private var screeningDateLookup: [String: Int] = UserDefaults.standard.dictionary(forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int] ?? [:] {
+    private var screeningDateLookup: [String: Int] = UserDefaults.standard.dictionary(
+        forKey: Constants.UserDefaults.screeningDateLookup) as? [String: Int] ?? [:] {
         didSet {
             UserDefaults.standard.set(
                 screeningDateLookup,

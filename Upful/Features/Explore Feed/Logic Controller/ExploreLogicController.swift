@@ -52,7 +52,7 @@ class ExploreLogicController {
     // MARK: - API Methods
     
     func startLoad() {
-        loadNews()
+//        loadNews()
         loadRemoteStocks()
         loadRemoteScreeners()
     }
