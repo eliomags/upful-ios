@@ -132,11 +132,8 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
         return makeScreenerCells(for: indexPath)
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    fileprivate func handleScreenerTap(at indexPath: IndexPath) {
         let section = indexPath.section
-        AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .quick))
-        logicController.incrementScreenerInterest(at: indexPath)
-        
         switch section {
         case Section.popular.rawValue:
             let searchParameters = logicController.popularScreenerViewModels[indexPath.row].searchParameters
@@ -149,6 +146,22 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
             resultsVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
             navigationController?.pushViewController(resultsVC, animated: true)
         default: break
+        }
+    }
+    
+    var pendingAction: ((_ indexPath: IndexPath) -> Void)?
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        PermissionManager.shared.verifyScreenerNavigationPermission { (permissionGranted) in
+            if permissionGranted {
+                AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .quick))
+                logicController.incrementScreenerInterest(at: indexPath)
+                handleScreenerTap(at: indexPath)
+            } else {
+                pendingAction?(indexPath)
+                let presenter = SubscriptionPresenter(type: .screeningLimit)
+                presenter.present(in: self)
+            }
         }
     }
     
@@ -189,6 +202,19 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
         let cell = tableView.cellForRow(at: indexPath)
         UIView.animate(withDuration: 0.2) {
             cell?.transform = .identity
+        }
+    }
+}
+
+// MARK: - SubscriptionViewControllerDelegate Methods
+
+extension PrebuiltScreenerViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {}
+    
+    func userDidSignUp() {
+        pendingAction = { [weak self] (indexPath) in
+            guard let self = self else { return }
+            self.handleScreenerTap(at: indexPath)
         }
     }
 }
