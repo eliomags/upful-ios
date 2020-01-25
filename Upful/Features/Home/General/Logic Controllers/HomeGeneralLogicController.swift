@@ -30,7 +30,7 @@ class HomeGeneralLogicController {
     private(set) var stocksYouMayLike: [Stock] = []
     private(set) var preferenceState: PreferenceState = .loading {
         didSet {
-            handlePreferenceStateChange()
+            sendPreferenceStateUpdates?(preferenceState)
         }
     }
     
@@ -54,7 +54,7 @@ class HomeGeneralLogicController {
         case .loaded:
             sendPreferenceStateUpdates?(preferenceState)
         default:
-            break
+            sendPreferenceStateUpdates?(preferenceState)
         }
     }
     

@@ -117,6 +117,15 @@ extension UITableView {
         headerView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         headerView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
     }
+    
+    func setTableFooterView(footerView: UIView) {
+        footerView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableFooterView = footerView
+        // ** Must setup AutoLayout after set tableFooterView.
+        footerView.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
+        footerView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        footerView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+    }
 
     // 2.
     func shouldUpdateHeaderViewFrame() -> Bool {

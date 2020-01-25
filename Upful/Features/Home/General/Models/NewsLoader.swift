@@ -94,7 +94,7 @@ extension NewsLoader: NewsLoaderProtocol {
         components.host = router.host
         components.path = router.path
         components.queryItems = router.parameters
-        
+
         guard let url = components.url else { return }
 
         let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
@@ -112,6 +112,9 @@ extension NewsLoader: NewsLoaderProtocol {
             }
         }
         task.resume()
+        
+//        completion(.success([]))
+
     }
 }
 

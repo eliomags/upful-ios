@@ -69,15 +69,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         return tableV
     }()
     
-    lazy var footerView: SubscriptionFooterView = {
-        let view = SubscriptionFooterView()
-        view.backgroundColor = view.backgroundColor?.withAlphaComponent(0.9)
-        view.subscribeButton.addTarget(self, action: #selector(handleSubscribeTap), for: .touchUpInside)
-        view.restoreButton.addTarget(self, action: #selector(handleRestoreTap), for: .touchUpInside)
-        view.privacyButton.addTarget(self, action: #selector(handlePrivacyTap), for: .touchUpInside)
-        view.termsOfUseButton.addTarget(self, action: #selector(handleTermsOfUseTap), for: .touchUpInside)
-        return view
-    }()
     
     @objc fileprivate func handlePrivacyTap(_ sender: UIButton) {
         if let url = URL(string: Constants.Legal.privacyPolicy) {
@@ -172,9 +163,11 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         view.addSubview(tableView)
         tableView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor,
                          bottom: view.bottomAnchor, trailing: view.trailingAnchor)
-        view.addSubview(footerView)
-        footerView.anchor(top: nil, leading: view.leadingAnchor,
-                          bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        
+//        view.addSubview(footerView)
+//        footerView.anchor(top: nil, leading: view.leadingAnchor,
+//                          bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        
         view.backgroundColor = VersionManager.mainContainerBackground()
         tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.separatorStyle = .none
@@ -273,7 +266,12 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return UIView()
+        let footer = SubscriptionFooterView()
+        footer.subscribeButton.addTarget(self, action: #selector(handleSubscribeTap), for: .touchUpInside)
+        footer.restoreButton.addTarget(self, action: #selector(handleRestoreTap), for: .touchUpInside)
+        footer.privacyButton.addTarget(self, action: #selector(handlePrivacyTap), for: .touchUpInside)
+        footer.termsOfUseButton.addTarget(self, action: #selector(handleTermsOfUseTap), for: .touchUpInside)
+        return footer
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
