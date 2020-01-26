@@ -26,6 +26,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     lazy var menuBarView: MenuBarView = {
         let menubarTitles = menubarControllers.map({ $0.menubarTitle })
         let view = MenuBarView(menuTitles: menubarTitles)
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
         return view
     }()
@@ -94,7 +95,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
             isMenuBarVisible = !isMenuBarVisible
         }
     }
-    
+
     func presentMenuBar() {
         if isMenuBarVisible == false {
             UIView.animate(withDuration: 0.2) {
@@ -115,7 +116,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let targetInt = targetContentOffset.move().x / menuBarView.frame.width
         menuBarView.setIndex(Int(targetInt))
-        presentMenuBar()
+//        presentMenuBar()
     }
     
     // MARK: - Fileprivate Functions

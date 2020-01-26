@@ -11,7 +11,7 @@ import UIKit
 class TableHeaderView: UIView {
     
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 0, height: 80)
+        return CGSize(width: 0, height: 90)
     }
     let headerLabel: UILabel = {
         let l = UILabel()
