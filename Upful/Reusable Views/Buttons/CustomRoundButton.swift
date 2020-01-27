@@ -18,11 +18,11 @@ class CustomRoundButton: UIView {
     
     var buttonImage: UIImage {
         let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        return plusImage ?? UIImage()
+        return plusImage?.resizeImage(20, opaque: false) ?? UIImage()
     }
     
     lazy var buttonImageView: UIImageView = {
-        let view = UIImageView(image: self.buttonImage)
+        let view = UIImageView(image: self.buttonImage.withAlignmentRectInsets(UIEdgeInsets(top: -3.5, left: -3.5, bottom: -3.5, right: -3.5)))
         return view
     }()
     

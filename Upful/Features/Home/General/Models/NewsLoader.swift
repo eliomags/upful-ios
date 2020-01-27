@@ -89,31 +89,31 @@ protocol NewsLoaderProtocol {
 
 extension NewsLoader: NewsLoaderProtocol {
     func get(router: Router, completion: @escaping StockNewsCompletion) {
-//        var components = URLComponents()
-//        components.scheme = router.scheme
-//        components.host = router.host
-//        components.path = router.path
-//        components.queryItems = router.parameters
-//
-//        guard let url = components.url else { return }
-//
-//        let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
-//            DispatchQueue.main.async {
-//                if let _ = err { completion(.failure(.urlError)) }
-//                guard let data = data else {
-//                    completion(.failure(.noData))
-//                    return
-//                }
-//                if let stockNews = try? JSONDecoder().decode(StockNewsData.self, from: data) {
-//                    completion(.success(stockNews.data))
-//                } else {
-//                    completion(.failure(.parsingError))
-//                }
-//            }
-//        }
-//        task.resume()
+        var components = URLComponents()
+        components.scheme = router.scheme
+        components.host = router.host
+        components.path = router.path
+        components.queryItems = router.parameters
+
+        guard let url = components.url else { return }
+
+        let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
+            DispatchQueue.main.async {
+                if let _ = err { completion(.failure(.urlError)) }
+                guard let data = data else {
+                    completion(.failure(.noData))
+                    return
+                }
+                if let stockNews = try? JSONDecoder().decode(StockNewsData.self, from: data) {
+                    completion(.success(stockNews.data))
+                } else {
+                    completion(.failure(.parsingError))
+                }
+            }
+        }
+        task.resume()
         
-        completion(.success([]))
+//        completion(.success([]))
 
     }
 }

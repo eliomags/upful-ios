@@ -16,7 +16,7 @@ class HomeGeneralLogicController {
     private let stockScreeningService = StockScreeningService()
     
     private let savedStockDataManager: LocalStockDataLoaderProtocol
-    private let stockNewsLoader = NewsLoader()
+    private let stockNewsLoader: NewsLoaderProtocol
     
     // MARK: - State
     
@@ -42,9 +42,11 @@ class HomeGeneralLogicController {
     // MARK: - Initializer
     
     init(savedStockDataManager: LocalStockDataLoaderProtocol = LocalStockLoader(),
-         preferenceDataManager: PreferenceDataManager = .init()) {
+         preferenceDataManager: PreferenceDataManager = .init(),
+         stockNewsLoader: NewsLoaderProtocol = NewsLoader()) {
         self.preferenceDataManager = preferenceDataManager
         self.savedStockDataManager = savedStockDataManager
+        self.stockNewsLoader = stockNewsLoader
     }
     
     // MARK: - Handle State Changes
