@@ -102,14 +102,10 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - View Lifecycle Methods
     
-    override func loadView() {
-        super.loadView()
-        setupTableView()
-        setupPresentation()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTableView()
+        setupPresentation()
         observeStateChanges()
     }
 
@@ -147,9 +143,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
                     
             case .paymentSuccess:
                 self.dismiss(animated: true, completion: {
-//                    if PermissionManager.shared.isPremium {
                         self.delegate?.userDidSignUp()
-//                    }
                 })
             default:
                 break
@@ -275,7 +269,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 250
+        return 250 
     }
 }
 
