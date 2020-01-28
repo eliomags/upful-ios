@@ -29,12 +29,12 @@ protocol IAPServiceProtocol {
     func verifyProductSubscription(_ product: SKProduct)
 }
 
-class IAPService: IAPServiceProtocol {
+final class IAPService: IAPServiceProtocol {
     
     private let productIdentifiers: Set<String>
     private let secret = "0f2f374e72fa4144b1842dd7158f6ebf"
     
-    var isPremium = UserDefaults.standard.bool(forKey: PermissionManager.Constants.UserDefaults.isPremium) {
+    private(set) var isPremium = UserDefaults.standard.bool(forKey: PermissionManager.Constants.UserDefaults.isPremium) {
         didSet {
             UserDefaults.standard.set(isPremium, forKey: PermissionManager.Constants.UserDefaults.isPremium)
         }

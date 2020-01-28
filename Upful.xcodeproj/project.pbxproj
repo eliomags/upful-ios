@@ -21,7 +21,6 @@
 		3D0C5F8823419F1600F4A5FC /* SubscriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F8723419F1600F4A5FC /* SubscriptionTableViewCell.swift */; };
 		3D0C5F8C23423B7100F4A5FC /* SubscriptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */; };
 		3D0C5F942342C88300F4A5FC /* UpfulProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F932342C88300F4A5FC /* UpfulProductViewModel.swift */; };
-		3D0C5F9B2343C59300F4A5FC /* SubscriptionFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */; };
 		3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
@@ -225,7 +224,6 @@
 		3D0C5F8723419F1600F4A5FC /* SubscriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTableViewCell.swift; sourceTree = "<group>"; };
 		3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionItem.swift; sourceTree = "<group>"; };
 		3D0C5F932342C88300F4A5FC /* UpfulProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpfulProductViewModel.swift; sourceTree = "<group>"; };
-		3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionFeatures.swift; sourceTree = "<group>"; };
 		3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGradientButton.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
@@ -513,7 +511,6 @@
 			isa = PBXGroup;
 			children = (
 				3D562C8C235F248E00837B2F /* SubscriptionLogicController.swift */,
-				3D0C5F992343C56700F4A5FC /* Subscription Features */,
 				3D0C5F982343C55C00F4A5FC /* Subscription Item */,
 			);
 			path = "View Models";
@@ -541,14 +538,6 @@
 				3D0C5F932342C88300F4A5FC /* UpfulProductViewModel.swift */,
 			);
 			path = "Subscription Item";
-			sourceTree = "<group>";
-		};
-		3D0C5F992343C56700F4A5FC /* Subscription Features */ = {
-			isa = PBXGroup;
-			children = (
-				3D0C5F9A2343C59300F4A5FC /* SubscriptionFeatures.swift */,
-			);
-			path = "Subscription Features";
 			sourceTree = "<group>";
 		};
 		3D0C5F9D2343EA6000F4A5FC /* Custom Views */ = {
@@ -1940,7 +1929,6 @@
 				3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */,
 				3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */,
 				3D55BD6623B7C76200B4FDF0 /* GenericNewsCell.swift in Sources */,
-				3D0C5F9B2343C59300F4A5FC /* SubscriptionFeatures.swift in Sources */,
 				3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */,
 				3DB345EC23C4C6D800EADFFD /* LoadingViewController.swift in Sources */,
 				3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */,

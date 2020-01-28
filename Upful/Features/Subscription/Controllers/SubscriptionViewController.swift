@@ -49,25 +49,19 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
 
     // MARK: - Views
     
-    lazy var tableHeader: PreferenceHeaderView = {
-        let v = PreferenceHeaderView()
-        v.headerLabel.text = ""
-        v.descriptionText.textColor = .label
-        v.descriptionText.text = headerText
-        v.descriptionText.font = UIFont(name: "AvenirNext-Bold", size: 16)
-        v.descriptionText.textAlignment = .center
+    private let tableHeader: SubscriptionHeaderView = {
+        let v = SubscriptionHeaderView()
+        v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
-    
-    private let newHeader = SubscriptionHeaderView()
     
     lazy var tableView: UITableView = {
         let tableV = UITableView(frame: .zero, style: .grouped)
         tableV.delegate = self
         tableV.dataSource = self
+        tableV.setTableHeaderView(headerView: tableHeader)
         return tableV
     }()
-    
     
     @objc fileprivate func handlePrivacyTap(_ sender: UIButton) {
         if let url = URL(string: Constants.Legal.privacyPolicy) {
@@ -101,18 +95,43 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - View Lifecycle Methods
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupTableView()
+    override func loadView() {
+        super.loadView()
         setupPresentation()
-        observeStateChanges()
+        setupTableView()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.setTableHeaderView(headerView: newHeader)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        observeStateChanges()
+        logicController.getProducts()
     }
-
+    
+    // MARK: - View Setup
+    
+    fileprivate func setupTableView() {
+        view.addSubview(tableView)
+        tableView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor,
+                         bottom: view.bottomAnchor, trailing: view.trailingAnchor)
+        view.backgroundColor = VersionManager.mainContainerBackground()
+        tableView.backgroundColor = VersionManager.mainContainerBackground()
+        tableView.separatorStyle = .none
+        tableView.bounces = false
+    }
+    
+    fileprivate func setupPresentation() {
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = false
+        navigationItem.title = "Premium"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
+    }
+    
+    fileprivate func setupDefaultSelection() {
+        tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .bottom)
+    }
+    
+    // MARK: - State Management
+    
     func observeStateChanges() {
         logicController.stateChanged = { [weak self] (state) in
             guard let self = self else { return }
@@ -153,35 +172,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
                 break
             }
         }
-    }
-    
-    // MARK: - View Setup
-    
-    fileprivate func setupTableView() {
-        view.addSubview(tableView)
-        tableView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor,
-                         bottom: view.bottomAnchor, trailing: view.trailingAnchor)
-        
-//        view.addSubview(footerView)
-//        footerView.anchor(top: nil, leading: view.leadingAnchor,
-//                          bottom: view.bottomAnchor, trailing: view.trailingAnchor)
-        
-        view.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.separatorStyle = .none
-        tableView.bounces = false
-        tableView.showsVerticalScrollIndicator = false
-    }
-    
-    fileprivate func setupPresentation() {
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = false
-        navigationItem.title = "Premium"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
-    }
-    
-    fileprivate func setupDefaultSelection() {
-        tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .bottom)
     }
     
     // MARK: - Actions
@@ -260,7 +250,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 60
+        return logicController.state == .loading ? 0 : 60
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -269,11 +259,11 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         footer.restoreButton.addTarget(self, action: #selector(handleRestoreTap), for: .touchUpInside)
         footer.privacyButton.addTarget(self, action: #selector(handlePrivacyTap), for: .touchUpInside)
         footer.termsOfUseButton.addTarget(self, action: #selector(handleTermsOfUseTap), for: .touchUpInside)
-        return footer
+        return logicController.state == .loading ? nil : footer
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 250 
+        return logicController.state == .loading ? 0 : 250
     }
 }
 

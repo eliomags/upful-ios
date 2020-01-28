@@ -10,7 +10,7 @@ import UIKit
 
 class SubscriptionHeaderView: UIView {
     override var intrinsicContentSize: CGSize {
-        return .init(width: 0, height: 200)
+        return .init(width: 0, height: 220)
     }
     
     // MARK: - Views
@@ -20,7 +20,7 @@ class SubscriptionHeaderView: UIView {
         v.image = UIImage(named: "revenueGraph")
         v.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            v.heightAnchor.constraint(equalToConstant: 300),
+            v.heightAnchor.constraint(equalToConstant: 285),
             v.widthAnchor.constraint(equalToConstant: 225)
         ])
         return v

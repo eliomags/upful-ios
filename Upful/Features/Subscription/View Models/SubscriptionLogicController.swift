@@ -57,6 +57,10 @@ class SubscriptionLogicController {
     
     init() {
         state = .loading
+        listenForPurchaseCompletion()
+    }
+    
+    func getProducts() {
         iAPService.retreiveProducts { [weak self] (result) in
             guard let self = self else { return }
             switch result {
@@ -66,7 +70,6 @@ class SubscriptionLogicController {
                 self.state = .error
             }
         }
-        listenForPurchaseCompletion()
     }
     
     func setSelectedProduct(_ product: SKProduct) {
