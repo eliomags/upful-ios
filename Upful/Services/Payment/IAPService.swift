@@ -10,7 +10,26 @@ import Foundation
 import SwiftyStoreKit
 import StoreKit
 
-class IAPService {
+
+/*
+ This can be broken into a dataLoader and PurchaseHandler
+    This will be injected into the IAPService
+ */
+protocol IAPServiceProtocol {
+    typealias PurchaseCompletionHandler = (_ success: Bool, _ error: SKError.Code?) -> Void
+    var purchaseCompletionHandler: PurchaseCompletionHandler? { get set }
+    
+    // DataLoader
+    func retreiveProducts(completion: @escaping (Result<[SKProduct],Error>) -> Void)
+    
+    // PurchaseHandler
+    func completeTransactions()
+    func purchaseProduct(_ product: SKProduct)
+    func restorePurchases(completion: @escaping (_ success: Bool) -> Void)
+    func verifyProductSubscription(_ product: SKProduct)
+}
+
+class IAPService: IAPServiceProtocol {
     
     private let productIdentifiers: Set<String>
     private let secret = "0f2f374e72fa4144b1842dd7158f6ebf"
@@ -24,7 +43,23 @@ class IAPService {
     init() {
         self.productIdentifiers = UpfulProducts.productIds
     }
+    
+    // MARK: - API
+    
+    // MARK:  Product DataLoader
+    
+    func retreiveProducts(completion: @escaping (Result<[SKProduct],Error>) -> Void) {
+        SwiftyStoreKit.retrieveProductsInfo(productIdentifiers) { result in
+            guard !result.retrievedProducts.isEmpty else {
+                completion(.failure(NSError()))
+                return
+            }
+            completion(.success(Array(result.retrievedProducts)))
 
+        }
+    }
+    
+    // MARK:  Product PurchaseHandler
 
     func completeTransactions() {
         SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
@@ -42,19 +77,6 @@ class IAPService {
                     break
                 }
             }
-        }
-    }
-    
-    // MARK: - Product Management
-    
-    func retreiveProducts(completion: @escaping (Result<[SKProduct],Error>) -> Void) {
-        SwiftyStoreKit.retrieveProductsInfo(productIdentifiers) { result in
-            guard !result.retrievedProducts.isEmpty else {
-                completion(.failure(NSError()))
-                return
-            }
-            completion(.success(Array(result.retrievedProducts)))
-
         }
     }
     
@@ -76,9 +98,7 @@ class IAPService {
             }
         }
     }
-    
-    // MARK: - Restoring Purchase
-    
+        
     func restorePurchases(completion: @escaping (_ success: Bool) -> Void) {
         SwiftyStoreKit.restorePurchases(atomically: true) { [weak self] results in
             guard let self = self else { return }
@@ -125,7 +145,6 @@ class IAPService {
             }
         }
     }
-    
 }
 
 

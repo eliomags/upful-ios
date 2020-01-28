@@ -13,8 +13,7 @@ class SubscriptionLogicController {
     
     // MARK - Dependencies
     
-    let suscriptionDataService = SubscriptionDataService()
-    let iAPService: IAPService = IAPService()
+    var iAPService: IAPServiceProtocol = IAPService()
     
     // MARK: - State
     

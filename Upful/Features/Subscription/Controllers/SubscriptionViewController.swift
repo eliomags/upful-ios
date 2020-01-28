@@ -65,7 +65,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         let tableV = UITableView(frame: .zero, style: .grouped)
         tableV.delegate = self
         tableV.dataSource = self
-        tableV.setTableHeaderView(headerView: newHeader)
         return tableV
     }()
     
@@ -107,6 +106,11 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         setupTableView()
         setupPresentation()
         observeStateChanges()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.setTableHeaderView(headerView: newHeader)
     }
 
     func observeStateChanges() {
