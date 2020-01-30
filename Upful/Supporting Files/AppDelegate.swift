@@ -30,6 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
+    func setupTest() -> UIViewController {
+        return UINavigationController(rootViewController: RecommendationViewController())
+    }
+    
     func initializeVC() -> UIViewController {
         let homeVC = HomeContainerViewController(collectionViewLayout: UICollectionViewFlowLayout())
         let exploreVC = ExploreViewController()

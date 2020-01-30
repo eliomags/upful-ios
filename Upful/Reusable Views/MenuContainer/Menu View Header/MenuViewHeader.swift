@@ -10,13 +10,13 @@ import UIKit
 
 protocol MenuBarViewDelegate: class {
     func selectedIndex(_ index: Int)
-    func presentMenuBar()
-    func hideMenuBar()
+//    func presentMenuBar()
+//    func hideMenuBar()
 }
 
 final class MenuBarView: UIView {
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 0, height: 60)
+        return CGSize(width: 0, height: 44)
     }
     private struct Constants {
         static let menuCellID = "menuCellID"
@@ -32,7 +32,7 @@ final class MenuBarView: UIView {
     private lazy var layout: UICollectionViewFlowLayout = {
         let l = UICollectionViewFlowLayout()
         let itemWidth = UIScreen.main.bounds.width/CGFloat(self.menuTitles.count)
-        l.itemSize = CGSize(width: itemWidth, height: 60)
+        l.itemSize = CGSize(width: itemWidth, height: 44)
         l.sectionInset = UIEdgeInsets.zero
         l.minimumLineSpacing = 0
         l.minimumInteritemSpacing = 0
@@ -84,13 +84,11 @@ final class MenuBarView: UIView {
         collectionView.fillSuperview()
         
         let itemWidth = UIScreen.main.bounds.width/CGFloat(self.menuTitles.count)-50
-        
         addSubview(placementView)
         placementView.anchor(top: nil, leading: leadingAnchor,
                              bottom: bottomAnchor, trailing: nil,
                              padding: .init(top: 0, left: 25, bottom: 0, right: 0),
                              size: .init(width: itemWidth, height: 1.5))
-        
 //        placementView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
 //        placementView.widthAnchor.constraint(equalToConstant: itemWidth-15).isActive = true
 //        placementView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -151,7 +149,7 @@ private class MenuItemCell: UICollectionViewCell {
     }
     
     func setSelected() {
-        label.textColor = .appAccent3
+        label.textColor = .label
     }
     
     func setDeSelected() {
