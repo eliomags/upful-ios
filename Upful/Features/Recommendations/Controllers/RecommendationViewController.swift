@@ -81,6 +81,18 @@ class RecommendationViewController: UIViewController {
         return button
     }()
     
+    private let restoreButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Not Right Now", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+        button.backgroundColor = .clear
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        button.setTitleColor(.label, for: .normal)
+        button.addTarget(self, action: #selector(handleCancelTap), for: .touchUpInside)
+        return button
+    }()
+    
     
     // MARK: - View Lifecycle Methods
     
@@ -121,6 +133,13 @@ class RecommendationViewController: UIViewController {
         submitButton.topAnchor.constraint(equalTo: choiceSegmentedControl.bottomAnchor, constant: 55).isActive = true
         submitButton.leadingAnchor.constraint(equalTo: choiceSegmentedControl.leadingAnchor, constant: 2).isActive = true
         submitButton.trailingAnchor.constraint(equalTo: choiceSegmentedControl.trailingAnchor, constant: -2).isActive = true
+        
+        view.addSubview(restoreButton)
+        NSLayoutConstraint.activate([
+            restoreButton.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 12),
+            restoreButton.leadingAnchor.constraint(equalTo: choiceSegmentedControl.leadingAnchor, constant: 2),
+            restoreButton.trailingAnchor.constraint(equalTo: choiceSegmentedControl.trailingAnchor, constant: -2)
+        ])
     }
     
     // MARK: - Actions
