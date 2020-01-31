@@ -80,6 +80,7 @@ struct UserFeedbackPresenter {
             requestAppStoreReview()
         } else {
             let navVC = UINavigationController(rootViewController: RecommendationViewController())
+            navVC.modalPresentationStyle = .fullScreen
             vc.present(navVC, animated: true, completion: nil)
         }
     }
