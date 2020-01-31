@@ -151,7 +151,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         case 3:
             switch row {
             case 0:
-                AppStoreReviewHelper.requestAppStoreReview()
+                UserFeedbackPresenter.requestAppStoreReview()
             default: break
             }
         default: break

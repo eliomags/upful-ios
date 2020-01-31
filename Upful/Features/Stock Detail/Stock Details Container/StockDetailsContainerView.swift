@@ -54,7 +54,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         super.viewDidLoad()
         collectionView.backgroundColor = VersionManager.mainContainerBackground()
         configureNavBar()
-        AppStoreReviewHelper.checkAndAskForReview(checkType: .importantAction)
+        UserFeedbackPresenter.checkAndAskForReview(checkType: .importantAction, in: self)
         performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
     }
     

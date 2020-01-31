@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import StoreKit
 
 class RecommendationViewController: UIViewController {
     
@@ -98,6 +99,7 @@ class RecommendationViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
+        view.backgroundColor = VersionManager.mainContainerBackground()
         setupPresentation()
     }
     
@@ -142,19 +144,37 @@ class RecommendationViewController: UIViewController {
         ])
     }
     
+    // MARK: - Private Functions
+    
+    private func requestAppStoreReview() {
+        SKStoreReviewController.requestReview()
+    }
+    
     // MARK: - Actions
     
     @objc fileprivate func handleCancelTap(_ sender: UIBarButtonItem) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {
+            self.requestAppStoreReview()
+        })
     }
     
     @objc fileprivate func handleRatingSeclection(_ sender: UISegmentedControl) {
         submitButton.isEnabled = true
-        if submitButton.isEnabled { submitButton.backgroundColor = .appAccent3 }
+        if submitButton.isEnabled {
+            submitButton.backgroundColor = .appAccent3
+        }
     }
     
     @objc fileprivate func handleSubmitTap(_ sender: UIButton) {
         // TODO: - Send selected as analytics event
         
+        UserDefaults.standard.set(true,
+                                  forKey:
+            UserFeedbackPresenter.AppStoreReviewKeys
+            .hasSubmittedReview.rawValue
+        )
+        self.dismiss(animated: true, completion: {
+            self.requestAppStoreReview()
+        })
     }
 }

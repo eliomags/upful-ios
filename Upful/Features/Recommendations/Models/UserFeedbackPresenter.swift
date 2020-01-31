@@ -9,10 +9,11 @@
 import Foundation
 import StoreKit
 
-struct AppStoreReviewHelper {
-    private enum AppStoreReviewKeys: String {
+struct UserFeedbackPresenter {
+    enum AppStoreReviewKeys: String {
         case appOpenCount
         case detailSessionCount
+        case hasSubmittedReview
     }
 
     private static func incrementUserAppSessionCount() {
@@ -38,73 +39,53 @@ struct AppStoreReviewHelper {
         case importantAction
     }
     
-    static func checkAndAskForReview(checkType: CheckType) {
+    static func checkAndAskForReview(checkType: CheckType,in vc: UIViewController) {
         switch checkType {
         case .newSession:
-            AppStoreReviewHelper.incrementUserAppSessionCount()
+            UserFeedbackPresenter.incrementUserAppSessionCount()
             
             guard let appOpenCount = UserDefaults.standard.value(forKey: AppStoreReviewKeys.appOpenCount.rawValue) as? Int else {
                 UserDefaults.standard.set(1, forKey: AppStoreReviewKeys.appOpenCount.rawValue)
                 return
             }
             switch appOpenCount {
-            case 10,50:
-                AppStoreReviewHelper.requestAppStoreReview()
+            case 10,25:
+                show(in: vc)
             case _ where appOpenCount%100 == 0:
-                AppStoreReviewHelper.requestAppStoreReview()
+                show(in: vc)
             default:
                 break
             }
         case .importantAction:
-            AppStoreReviewHelper.incrementImportantActionCount()
+            UserFeedbackPresenter.incrementImportantActionCount()
             
             guard let detailSessionCount = UserDefaults.standard.value(forKey: AppStoreReviewKeys.detailSessionCount.rawValue) as? Int else {
                 UserDefaults.standard.set(1, forKey: AppStoreReviewKeys.detailSessionCount.rawValue)
                 return
             }
             switch detailSessionCount {
-            case 4,55:
-                AppStoreReviewHelper.requestAppStoreReview()
-            case _ where detailSessionCount%300 == 0:
-                AppStoreReviewHelper.requestAppStoreReview()
+            case 4,35:
+                show(in: vc)
+            case _ where detailSessionCount%60 == 0:
+                show(in: vc)
             default:
                 break
             }
         }
     }
     
+    static func show(in vc: UIViewController) {
+        if UserDefaults.standard.bool(forKey: AppStoreReviewKeys
+            .hasSubmittedReview.rawValue) {
+            requestAppStoreReview()
+        } else {
+            let navVC = UINavigationController(rootViewController: RecommendationViewController())
+            vc.present(navVC, animated: true, completion: nil)
+        }
+    }
+
     static func requestAppStoreReview() {
         SKStoreReviewController.requestReview()
     }
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
