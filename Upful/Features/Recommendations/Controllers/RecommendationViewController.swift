@@ -157,8 +157,10 @@ class RecommendationViewController: UIViewController {
             self.requestAppStoreReview()
         })
     }
+    var selectedNPS: Int?
     
     @objc fileprivate func handleRatingSeclection(_ sender: UISegmentedControl) {
+        selectedNPS = sender.selectedSegmentIndex
         submitButton.isEnabled = true
         if submitButton.isEnabled {
             submitButton.backgroundColor = .appAccent3
@@ -166,15 +168,11 @@ class RecommendationViewController: UIViewController {
     }
     
     @objc fileprivate func handleSubmitTap(_ sender: UIButton) {
-        // TODO: - Send selected as analytics event
+        guard let selectedScore = selectedNPS else { return }
+        AnalyticsLogger.instance.reportEvents(event: .submitPromotorScore(score: selectedScore))
         
-        UserDefaults.standard.set(true,
-                                  forKey:
-            UserFeedbackPresenter.AppStoreReviewKeys
-            .hasSubmittedReview.rawValue
-        )
-        self.dismiss(animated: true, completion: {
-            self.requestAppStoreReview()
-        })
+        UserDefaults.standard.set(true, forKey: UserFeedbackPresenter.AppStoreReviewKeys
+                                                .hasSubmittedReview.rawValue)
+        self.dismiss(animated: true, completion: { self.requestAppStoreReview() })
     }
 }

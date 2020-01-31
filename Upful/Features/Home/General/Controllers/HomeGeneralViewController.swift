@@ -8,6 +8,14 @@
 
 import UIKit
 
+class InstanceCounter {
+    static var count: Int = 0 {
+        didSet {
+            print(count)
+        }
+    }
+}
+
 final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, PreferenceDelegate {
         
     weak var menuViewItemDelegate: MenuViewItemDelegate?

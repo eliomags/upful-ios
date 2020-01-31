@@ -46,6 +46,7 @@ enum AnalyticsEventName {
     case noteSaved(description: String)
     case savedScreener(description: String)
     case savedTicker(ticker: String)
+    case submitPromotorScore(score: Int)
     
     func getName() -> String {
         switch self {
@@ -81,6 +82,8 @@ enum AnalyticsEventName {
             return "sign_up_attempty"
         case .signUpForPremiumPresented(_):
             return "sign_up_presented"
+        case .submitPromotorScore(_):
+            return "net_promotor_score"
         }
     }
 }
@@ -120,6 +123,8 @@ extension AnalyticsEventName {
             return ["current_status": "\(PermissionManager.shared.isPremium)"]
         case .signUpForPremiumPresented(let trigger):
             return ["trigger_event": trigger]
+        case .submitPromotorScore(let score):
+            return ["score": "\(score)"]
         }
     }
 }
