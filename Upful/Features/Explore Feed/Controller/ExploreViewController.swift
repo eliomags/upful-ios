@@ -158,6 +158,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     }
     
     fileprivate func configureNavBar() {
+        navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.backgroundColor = VersionManager.mainContainerBackground()
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.title = "Explore"

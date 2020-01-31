@@ -26,7 +26,7 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     }()
     
     private lazy var contentStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [screenerImage, textStackView])
+        let sv = UIStackView(arrangedSubviews: [textStackView, screenerImage])
         sv.translatesAutoresizingMaskIntoConstraints = false
         sv.axis = .horizontal
         sv.spacing = 12
@@ -47,7 +47,7 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
         addSubview(contentStackView)
         NSLayoutConstraint.activate([
             contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -26),
         ])
         
         NSLayoutConstraint.activate([
