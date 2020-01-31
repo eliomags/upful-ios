@@ -40,13 +40,13 @@ class SmallNewsCell: GenericNewsCell {
         detailStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         
         addSubview(articleImageView)
-        articleImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        articleImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         articleImageView.topAnchor.constraint(equalTo: detailStackView.bottomAnchor, constant: 8).isActive = true
         articleImageView.bottomAnchor.constraint(equalTo: sentimentView.topAnchor, constant: -8).isActive = true
         
         addSubview(textContextStackView)
-        textContextStackView.leadingAnchor.constraint(equalTo: articleImageView.trailingAnchor, constant: 12).isActive = true
-        textContextStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
+        textContextStackView.trailingAnchor.constraint(equalTo: articleImageView.leadingAnchor, constant: -12).isActive = true
+        textContextStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         textContextStackView.topAnchor.constraint(equalTo: articleImageView.topAnchor).isActive = true
         textContextStackView.bottomAnchor.constraint(equalTo: sentimentView.topAnchor, constant: -6).isActive = true
     }
