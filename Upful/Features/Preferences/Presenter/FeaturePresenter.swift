@@ -9,7 +9,6 @@
 import UIKit
 
 protocol PreferenceDelegate: class {
-    func didCancelSaving()
     func didCompleteSaving()
 }
 

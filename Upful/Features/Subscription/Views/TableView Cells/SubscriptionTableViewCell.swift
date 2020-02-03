@@ -30,6 +30,7 @@ class SubscriptionTableViewCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         label.textAlignment = .center
         label.text = "Try 1 week free."
+        label.textColor = .white
         return label
     }()
     
@@ -37,6 +38,7 @@ class SubscriptionTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         label.textAlignment = .center
+        label.textColor = .white
         return label
     }()
     
@@ -51,19 +53,14 @@ class SubscriptionTableViewCell: UITableViewCell {
     
     private lazy var contentBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.appAccent3.withAlphaComponent(0.4)
-        view.layer.cornerRadius = 12
+        view.backgroundColor = UIColor.appAccent3
+        view.layer.cornerRadius = 8
         view.layer.masksToBounds = true
         
         view.addSubview(pricingStackView)
         pricingStackView.anchor(top: view.topAnchor, leading: view.leadingAnchor,
                                 bottom: view.bottomAnchor, trailing: view.trailingAnchor,
-                                padding: .init(top: 16, left: 16, bottom: 16, right: 16))
-        
-        view.addSubview(selectionStateView)
-        selectionStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        selectionStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-
+                                padding: .init(top: 10, left: 16, bottom: 10, right: 16))
         return view
     }()
     
@@ -85,26 +82,6 @@ class SubscriptionTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.selectionStateView.image = nil
-    }
-        
-    // MARK: - Actions
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        if selected {
-            UIView.animate(withDuration: 0.15) {
-                self.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-                self.monthlyPricingLabel.textColor = .label
-                self.selectionStateView.image = self.selectedStateImage
-            }
-        }
-        if !selected {
-            UIView.animate(withDuration: 0.15) {
-                self.transform = .identity
-                self.monthlyPricingLabel.textColor = .gray
-                self.selectionStateView.image = nil
-            }
-        }
     }
 
 }

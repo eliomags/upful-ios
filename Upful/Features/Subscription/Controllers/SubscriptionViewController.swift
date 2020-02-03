@@ -180,12 +180,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         self.dismiss(animated: true, completion: nil)
     }
     
-    @objc fileprivate func handleSubscribeTap(_ sender: UIButton) {
-        AnalyticsLogger.instance.reportEvents(event: .signUpAttempt)
-        Vibration.light.vibrate()
-        logicController.buySelectedProduct()
-    }
-    
     @objc fileprivate func handleRestoreTap(_ sender: UIButton) {
         Vibration.light.vibrate()
         
@@ -220,20 +214,20 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = SubscriptionTableViewCell(style: .default, reuseIdentifier: nil)
-        switch logicController.state {
-        case .loaded:
+        if logicController.state == .loading {
+            return UITableViewCell()
+        } else {
+            let cell = SubscriptionTableViewCell(style: .default, reuseIdentifier: nil)
             cell.monthlyPricingLabel.text = logicController.productViewModels[indexPath.row].monthlyPricing
             return cell
-        default:
-            break
         }
-        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        AnalyticsLogger.instance.reportEvents(event: .signUpAttempt)
+        Vibration.light.vibrate()
         let product = logicController.productViewModels[indexPath.row].product
-        logicController.setSelectedProduct(product)
+        logicController.buy(product)
     }
     
     // MARK: - TableView Delegate Methods
@@ -255,7 +249,6 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footer = SubscriptionFooterView()
-        footer.subscribeButton.addTarget(self, action: #selector(handleSubscribeTap), for: .touchUpInside)
         footer.restoreButton.addTarget(self, action: #selector(handleRestoreTap), for: .touchUpInside)
         footer.privacyButton.addTarget(self, action: #selector(handlePrivacyTap), for: .touchUpInside)
         footer.termsOfUseButton.addTarget(self, action: #selector(handleTermsOfUseTap), for: .touchUpInside)
@@ -263,7 +256,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return logicController.state == .loading ? 0 : 250
+        return logicController.state == .loading ? 0 : 150
     }
 }
 

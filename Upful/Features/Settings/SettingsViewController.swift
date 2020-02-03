@@ -76,10 +76,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: - Preference Delegate Methods
     
-    func didCancelSaving() {
-        
-    }
-    
     func didCompleteSaving() {
         
     }

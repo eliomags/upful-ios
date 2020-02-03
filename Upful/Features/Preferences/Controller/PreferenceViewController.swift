@@ -114,7 +114,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     @objc fileprivate func handleDismiss() {
         self.dismiss(animated: true, completion: {
-            self.delegate?.didCancelSaving()
+            
         })
     }
     

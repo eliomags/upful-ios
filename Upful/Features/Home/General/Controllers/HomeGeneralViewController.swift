@@ -8,14 +8,6 @@
 
 import UIKit
 
-class InstanceCounter {
-    static var count: Int = 0 {
-        didSet {
-            print(count)
-        }
-    }
-}
-
 final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, PreferenceDelegate {
         
     weak var menuViewItemDelegate: MenuViewItemDelegate?
@@ -149,9 +141,7 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     }
     
     // MARK: - Preference Delegate Methods
-    
-    func didCancelSaving() {}
-    
+        
     func didCompleteSaving() {
         logicController.startPreferenceLoad()
     }

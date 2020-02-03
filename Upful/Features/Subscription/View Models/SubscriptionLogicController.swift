@@ -13,7 +13,7 @@ class SubscriptionLogicController {
     
     // MARK - Dependencies
     
-    var iAPService: IAPServiceProtocol = IAPService()
+    private(set) var iAPService: IAPServiceProtocol
     
     // MARK: - State
     
@@ -51,14 +51,17 @@ class SubscriptionLogicController {
     }
     
     private var selectedProduct: SKProduct?
-    var productViewModels: [UpfulProductViewModel] = []
+    private(set) var productViewModels: [UpfulProductViewModel] = []
     
     // MARK: - Initializer
     
-    init() {
+    init(iAPService: IAPServiceProtocol = IAPService()) {
+        self.iAPService = iAPService
         state = .loading
         listenForPurchaseCompletion()
     }
+    
+    // MARK: - API
     
     func getProducts() {
         iAPService.retreiveProducts { [weak self] (result) in
@@ -72,20 +75,16 @@ class SubscriptionLogicController {
         }
     }
     
-    func setSelectedProduct(_ product: SKProduct) {
+    func buy(_ product: SKProduct) {
         self.selectedProduct = product
-        iAPService.verifyProductSubscription(product)
-    }
-    
-    func buySelectedProduct() {
         guard let selectedProduct = selectedProduct else { return }
+        iAPService.verifyProductSubscription(product)
         iAPService.purchaseProduct(selectedProduct)
     }
     
     func listenForPurchaseCompletion() {
         iAPService.purchaseCompletionHandler = { [weak self] (success, error) in
             guard let self = self else { return }
-            
             if let error = error {
                 self.state = .paymentError(error: error)
             }
@@ -98,5 +97,4 @@ class SubscriptionLogicController {
     func restorePurchase(completion: @escaping (Bool) -> Void) {
         iAPService.restorePurchases(completion: completion)
     }
-
 }

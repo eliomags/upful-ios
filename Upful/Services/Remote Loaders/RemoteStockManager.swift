@@ -13,17 +13,17 @@ class RemoteStockManager {
     private static let backendService = FirestoreAPI().db
 
     static func updateInterest(for ticker: String, name: String) {
-//        print("Incrementing", ticker)
-        let popularStockCollection = FirestoreAPI.Collection.popularStocks.rawValue
-        let docRef = backendService.collection(popularStockCollection).document(ticker)
-
-        docRef.updateData([
-            "ticker": ticker,
-            "name": name,
-            "vote": FieldValue.increment(Int64(1))
-        ]) { (error) in
-            if let _ = error { createDocument(withTitle: ticker, name: name) }
-        }
+        print("Incrementing", ticker, name)
+//        let popularStockCollection = FirestoreAPI.Collection.popularStocks.rawValue
+//        let docRef = backendService.collection(popularStockCollection).document(ticker)
+//
+//        docRef.updateData([
+//            "ticker": ticker,
+//            "name": name,
+//            "vote": FieldValue.increment(Int64(1))
+//        ]) { (error) in
+//            if let _ = error { createDocument(withTitle: ticker, name: name) }
+//        }
     }
     
     private static func createDocument(withTitle ticker: String, name: String) {

@@ -124,21 +124,16 @@ final class IAPService: IAPServiceProtocol {
             case .success(let receipt):
                 let productId = product.productIdentifier
                 let purchaseResult = SwiftyStoreKit.verifySubscription(
-                        ofType: .autoRenewable,
-                        productId: productId,
-                        inReceipt: receipt)
-                    
+                                        ofType: .autoRenewable,
+                                        productId: productId,
+                                        inReceipt: receipt)
                 switch purchaseResult {
-                    
                 case .purchased:
                     self.isPremium = true
-
                 case .expired:
                     self.isPremium = false
-                    
                 case .notPurchased:
                     self.isPremium = false
-                    
                 }
             case .error(let error):
                 print("Receipt verification failed: \(error)")

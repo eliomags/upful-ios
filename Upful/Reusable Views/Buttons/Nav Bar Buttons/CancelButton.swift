@@ -13,10 +13,10 @@ class CancelButton: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemGray3
-        heightAnchor.constraint(equalToConstant: 26).isActive = true
-        widthAnchor.constraint(equalToConstant: 26).isActive = true
+        heightAnchor.constraint(equalToConstant: 28).isActive = true
+        widthAnchor.constraint(equalToConstant: 28).isActive = true
         
-        let smallConfig = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold)
+        let smallConfig = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
         let xImage = UIImage(systemName: "xmark", withConfiguration: smallConfig)?
             .withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
         

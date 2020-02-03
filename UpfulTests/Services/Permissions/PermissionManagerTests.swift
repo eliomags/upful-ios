@@ -68,7 +68,7 @@ class PermissionManagerTests: XCTestCase {
     func testScreenerNavigationPermissionForFreeUser() {
         sut = makeSUTWithFreeUser()
         
-        // When saved 5 times
+        // When navigated 6 times
         sut.verifyScreenerNavigationPermission { (permissionGranted) in
             XCTAssertTrue(permissionGranted)
         }
