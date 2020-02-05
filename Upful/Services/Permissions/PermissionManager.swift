@@ -10,15 +10,16 @@ import Foundation
 import CoreData
 import UserNotifications
 
-class PermissionManager {
-    
+final class PermissionManager {
     struct Constants {
         struct UserDefaults {
             static let isPremium = "isPremium"
             static let screeningDateLookup = "selectedScreenerDictionary"
         }
     }
+    
     private let userDefaults: UserDefaults
+    var savedStockCounter: LocalStockCountLoaderProtocol? = LocalStockLoader()
     
     static let shared = PermissionManager()
     
@@ -50,19 +51,6 @@ class PermissionManager {
         }
     }()
     
-    var getSavedStockCount: Int? = {
-        let request = SavedStock.createfetchRequest()
-        do {
-            var savedStocks = try PersistenceService.shared
-                .persistentContainer
-                .viewContext.fetch(request)
-            return savedStocks.count
-        } catch let error {
-            print("Fetch failed", error.localizedDescription)
-            return nil
-        }
-    }()
-
     // MARK: - Saved Screener and Stocks
     
     typealias PermissionCompletionHandler = (_ permissionGranted: Bool) -> Void
@@ -84,7 +72,7 @@ class PermissionManager {
         if isPremium {
             completion(isPremium)
         } else {
-            if let savedStockCount = getSavedStockCount {
+            if let savedStockCount = savedStockCounter?.savedStockCount {
                 completion(savedStockCount < savedStockThreshold)
                 return
             } else {

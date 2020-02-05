@@ -48,7 +48,6 @@ final class AnalyticsLogger {
             }
         }
     }
-    
 }
 
 

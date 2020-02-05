@@ -15,9 +15,27 @@ protocol LocalStockDataLoaderProtocol {
     func removeFavoriteCompany(_ ticker: String, completion: (() -> Void)?)
 }
 
-class LocalStockLoader: LocalStockDataLoaderProtocol {
+protocol LocalStockCountLoaderProtocol {
+    var savedStockCount: Int? { get set }
+}
+
+final class LocalStockLoader: LocalStockDataLoaderProtocol, LocalStockCountLoaderProtocol {
     
     let persistenceService = PersistenceService.shared
+    
+    lazy var savedStockCount: Int? = {
+        var count: Int? = 0
+        
+        self.loadSavedStocks { (res) in
+            switch res {
+            case .success(let savedStocks):
+                count = savedStocks.count
+            case .failure(_):
+                count = nil
+            }
+        }
+        return count
+    }()
 
     func loadSavedStocks(completion: @escaping SavedStockFetchCompletion) {
         let request = SavedStock.createfetchRequest()

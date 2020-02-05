@@ -1017,7 +1017,6 @@
 			children = (
 				3D70DC9423E32E9100097323 /* Models */,
 				3D70DC9223E32E7600097323 /* Controllers */,
-				3D70DC9323E32E7F00097323 /* View Models */,
 			);
 			path = Recommendations;
 			sourceTree = "<group>";
@@ -1028,13 +1027,6 @@
 				3D70DC9023E32E5100097323 /* RecommendationViewController.swift */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		3D70DC9323E32E7F00097323 /* View Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "View Models";
 			sourceTree = "<group>";
 		};
 		3D70DC9423E32E9100097323 /* Models */ = {
@@ -2245,7 +2237,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.3.5;
+				CURRENT_PROJECT_VERSION = 4.3.6;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2253,7 +2245,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.3.5;
+				MARKETING_VERSION = 4.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2267,7 +2259,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.3.5;
+				CURRENT_PROJECT_VERSION = 4.3.6;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2275,7 +2267,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.3.5;
+				MARKETING_VERSION = 4.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

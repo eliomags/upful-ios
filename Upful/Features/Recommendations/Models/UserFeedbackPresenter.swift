@@ -51,7 +51,7 @@ struct UserFeedbackPresenter {
             switch appOpenCount {
             case 10,25:
                 show(in: vc)
-            case _ where appOpenCount%100 == 0:
+            case _ where appOpenCount%50 == 0:
                 show(in: vc)
             default:
                 break

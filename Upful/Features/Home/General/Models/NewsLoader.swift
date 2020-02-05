@@ -114,7 +114,6 @@ extension NewsLoader: NewsLoaderProtocol {
 //        task.resume()
         
         completion(.success([]))
-
     }
 }
 

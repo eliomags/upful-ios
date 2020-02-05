@@ -12,6 +12,8 @@ import XCTest
 class PermissionManagerTests: XCTestCase {
 
     var sut: PermissionManager!
+    fileprivate var savedStockCounter: MockStockCountLoader?
+    
     let userDefaultsSuiteName = "permissionManagerTestSuite"
     
     override func tearDown() {
@@ -30,17 +32,17 @@ class PermissionManagerTests: XCTestCase {
     func testPermissionToSaveStockForFreeUser() {
         sut = makeSUTWithFreeUser()
         
-        sut.getSavedStockCount = 0
+        savedStockCounter?.savedStockCount = 0
         sut.getSaveStockPermission { (permissionGranted) in
             XCTAssertTrue(permissionGranted)
         }
         
-        sut.getSavedStockCount = 3
+        savedStockCounter?.savedStockCount = 3
         sut.getSaveStockPermission { (permissionGranted) in
             XCTAssertFalse(permissionGranted)
         }
         
-        sut.getSavedStockCount = 5
+        savedStockCounter?.savedStockCount = 5
         sut.getSaveStockPermission { (permissionGranted) in
             XCTAssertFalse(permissionGranted)
         }
@@ -103,17 +105,17 @@ class PermissionManagerTests: XCTestCase {
     func testPermissionToSaveStockForPremiumUser() {
         sut = makeSUTWithPremiumUser()
         
-        sut.getSavedStockCount = 0
+        savedStockCounter?.savedStockCount = 0
         sut.getSaveStockPermission { (permissionGranted) in
             XCTAssertTrue(permissionGranted)
         }
         
-        sut.getSavedStockCount = 3
+        savedStockCounter?.savedStockCount = 3
         sut.getSaveStockPermission { (permissionGranted) in
             XCTAssertTrue(permissionGranted)
         }
         
-        sut.getSavedStockCount = 5
+        savedStockCounter?.savedStockCount = 5
         sut.getSaveStockPermission { (permissionGranted) in
             XCTAssertTrue(permissionGranted)
         }
@@ -176,6 +178,18 @@ class PermissionManagerTests: XCTestCase {
     }
     
     func makeSUTWithFreeUser() -> PermissionManager {
-        return PermissionManager(userDefaults: UserDefaults(suiteName: userDefaultsSuiteName)!)
+        UserDefaults(suiteName: userDefaultsSuiteName)?
+            .set(false, forKey: PermissionManager.Constants.UserDefaults.isPremium)
+        
+        let pm = PermissionManager(userDefaults: UserDefaults(suiteName: userDefaultsSuiteName)!)
+        savedStockCounter = MockStockCountLoader()
+        pm.savedStockCounter = savedStockCounter
+        return pm
+    }
+    
+    fileprivate class MockStockCountLoader: LocalStockCountLoaderProtocol {
+        var savedStockCount: Int? = 0
     }
 }
+
+
