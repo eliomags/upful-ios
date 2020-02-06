@@ -72,6 +72,7 @@ final class PermissionManager {
         if isPremium {
             completion(isPremium)
         } else {
+            savedStockCounter?.updateSavedStockCount()
             if let savedStockCount = savedStockCounter?.savedStockCount {
                 completion(savedStockCount < savedStockThreshold)
                 return

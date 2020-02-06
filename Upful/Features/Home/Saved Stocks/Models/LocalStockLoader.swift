@@ -17,10 +17,12 @@ protocol LocalStockDataLoaderProtocol {
 
 protocol LocalStockCountLoaderProtocol {
     var savedStockCount: Int? { get set }
+    
+    func updateSavedStockCount()
 }
 
 final class LocalStockLoader: LocalStockDataLoaderProtocol, LocalStockCountLoaderProtocol {
-    
+
     let persistenceService = PersistenceService.shared
     
     lazy var savedStockCount: Int? = {
@@ -36,7 +38,18 @@ final class LocalStockLoader: LocalStockDataLoaderProtocol, LocalStockCountLoade
         }
         return count
     }()
-
+    
+    func updateSavedStockCount() {
+        self.loadSavedStocks { (res) in
+            switch res {
+            case .success(let savedStocks):
+                self.savedStockCount = savedStocks.count
+            case .failure(_):
+                self.savedStockCount = nil
+            }
+        }
+    }
+    
     func loadSavedStocks(completion: @escaping SavedStockFetchCompletion) {
         let request = SavedStock.createfetchRequest()
         completion(Result {

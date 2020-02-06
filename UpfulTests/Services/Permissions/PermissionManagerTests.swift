@@ -189,6 +189,10 @@ class PermissionManagerTests: XCTestCase {
     
     fileprivate class MockStockCountLoader: LocalStockCountLoaderProtocol {
         var savedStockCount: Int? = 0
+
+        func updateSavedStockCount() {
+            savedStockCount! += 1
+        }
     }
 }
 
