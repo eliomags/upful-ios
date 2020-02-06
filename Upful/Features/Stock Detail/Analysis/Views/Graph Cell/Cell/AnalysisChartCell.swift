@@ -14,7 +14,7 @@ class AnalysisChartCell: UITableViewCell {
     
     lazy var containerView: UIView = {
         let v = UIView()
-        v.backgroundColor = VersionManager.collectionCellColor()
+        v.backgroundColor = .clear
         v.addSubview(chartView)
         chartView.anchor(
             top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,

@@ -14,11 +14,15 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-
+    var coordinator: MainCoordinator?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let navigationController = UINavigationController()
+        coordinator = MainCoordinator(viewController: navigationController)
+        coordinator?.start()
+        
         window = UIWindow()
-        window?.rootViewController = initializeVC()
-
+        window?.rootViewController = coordinator?.viewController
         window?.backgroundColor = VersionManager.mainContainerBackground()
 
         FirebaseApp.configure()
@@ -29,57 +33,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-    
-    func setupTest() -> UIViewController {
-        return UINavigationController(rootViewController: RecommendationViewController())
-    }
-    
-    func initializeVC() -> UIViewController {
-        let homeVC = HomeContainerViewController(collectionViewLayout: UICollectionViewFlowLayout())
-        let exploreVC = ExploreViewController()
-        let settingsVC = SettingsViewController()
-        
-        let controllers = [homeVC,exploreVC,settingsVC]
-            
-        homeVC.tabBarItem = UITabBarItem(
-            title: "Home",
-            image: UIImage(systemName: "house.fill"),
-            tag: 0)
-        exploreVC.tabBarItem = UITabBarItem(
-            title: "Explore",
-            image: UIImage(systemName: "magnifyingglass",
-                            withConfiguration: UIImage.SymbolConfiguration(weight: .bold)),
-            tag: 1)
-        settingsVC.tabBarItem = UITabBarItem(
-            title: "Settings",
-            image: UIImage(systemName: "gear",
-                           withConfiguration: UIImage.SymbolConfiguration(weight: .bold)),
-            tag: 2)
-        
-        let tabVC = UITabBarController()
-        tabVC.tabBar.tintColor = .appAccent3
-        tabVC.tabBar.isTranslucent = true
-
-        tabVC.viewControllers = controllers.map({
-            let navVC = UINavigationController(rootViewController: $0)
-            navVC.navigationBar.prefersLargeTitles = true
-            navVC.navigationBar.isTranslucent = false
-            navVC.navigationBar.tintColor = .appAccent3
-            if #available(iOS 13.0, *) {
-                navVC.navigationBar.isTranslucent = true
-                navVC.navigationBar.shadowImage = UIImage()
-
-                if navVC.traitCollection.userInterfaceStyle == .dark {
-                    navVC.navigationBar.backgroundColor = .black
-                }
-                if navVC.traitCollection.userInterfaceStyle == .light {
-                    navVC.navigationBar.backgroundColor = .white
-                }
-            }
-            return navVC
-        })
-        VersionManager.setTabBarColor(in: tabVC)
-        return tabVC
-    }
-
 }

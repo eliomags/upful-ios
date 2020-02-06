@@ -33,7 +33,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     // MARK: - Initializer Functions
     
-    override init(collectionViewLayout layout: UICollectionViewLayout) {
+    override init(collectionViewLayout layout: UICollectionViewLayout = UICollectionViewFlowLayout()) {
         super.init(collectionViewLayout: layout)
     }
     
