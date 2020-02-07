@@ -10,7 +10,6 @@ import UIKit
 
 final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, PreferenceDelegate {
         
-    weak var menuViewItemDelegate: MenuViewItemDelegate?
     var menubarTitle: String = "General"
     
     private enum Section: Int {
@@ -23,6 +22,8 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         return vm
     }()
     
+    var coordinator: Coordinator?
+
     // MARK: - Views
     
     private lazy var refreshControl: UIRefreshControl = {
@@ -106,40 +107,19 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
     fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
         switch logicController.preferenceState{
         case .new:
-            let presenter = PreferencePresenter(presentingViewController: self)
-            presenter.present()
+            let preferencePresenter = PreferencePresenter(presentingViewController: self)
+            preferencePresenter.present()
         case .loaded:
-            AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .preference))
             let ticker = logicController.stocksYouMayLike[indexPath.row].ticker
             let name = logicController.stocksYouMayLike[indexPath.row].name
-            let detailsVC = StockDetailsContainerView(ticker: ticker, companyName: name)
-            RemoteStockManager.updateInterest(for: ticker, name: name)
-            navigationController?.pushViewController(detailsVC, animated: true)
+            
+            coordinator = StockDetailsCoordinator(presenter: self, stockNameDetails: (ticker, name))
+            coordinator?.start()
         default:
             break
         }
     }
-    
-    fileprivate func handleNewsCellSelection(for indexPath: IndexPath) {
-        if !logicController.stockNews.isEmpty {
-            let newsURLString = logicController.stockNews[indexPath.row].newsUrl
-            let newsWebVC = WebViewViewController(urlString: newsURLString)
-            let navVC = UINavigationController(rootViewController: newsWebVC)
-            self.present(navVC, animated: true, completion: nil)
-        }
-    }
-    
-    fileprivate func handleSeeMoreNews() {
-        let newsVC = NewsViewController()
-        navigationController?.pushViewController(newsVC, animated: true)
-    }
-    
-    fileprivate func handleSeeMoreSuggestedStocks() {
-        let randomSavedSearchParameters = logicController.getRandomPreferenceGroup()
-        let resultsVC = ScreenResultsViewController(searchParameters: randomSavedSearchParameters)
-        navigationController?.pushViewController(resultsVC, animated: true)
-    }
-    
+
     // MARK: - Preference Delegate Methods
         
     func didCompleteSaving() {
@@ -233,12 +213,24 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.preference.rawValue:
             let preferenceHeader = TableSectionHeaderView()
             preferenceHeader.headerTextLabel.text = "Stocks You May Like"
-            preferenceHeader.buttonAction = { [weak self] in self?.handleSeeMoreSuggestedStocks() }
+            
+            preferenceHeader.buttonAction = { [weak self] in
+                guard let self = self else { return }
+                let randomSavedSearchParameters = self.logicController.getRandomPreferenceGroup()
+                self.coordinator = SearchResultsCoordinator(presenter: self,
+                                                            searchParameters: randomSavedSearchParameters)
+                self.coordinator?.start()
+            }
             return preferenceHeader
         case Section.news.rawValue:
             let newsHeader = TableSectionHeaderView()
             newsHeader.headerTextLabel.text = "Recent News"
-            newsHeader.buttonAction = { [weak self] in self?.handleSeeMoreNews() }
+            
+            newsHeader.buttonAction = { [weak self] in
+                guard let self = self else { return }
+                self.coordinator = NewsCoordinator(presenter: self)
+                self.coordinator?.start()
+            }
             return newsHeader
         default:
             return nil
@@ -290,8 +282,11 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.preference.rawValue:
             handleStockSuggestionCellSelection(for: indexPath)
         case Section.news.rawValue:
-            AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
-            handleNewsCellSelection(for: indexPath)
+            if !logicController.stockNews.isEmpty {
+                let newsURLString = logicController.stockNews[indexPath.row].newsUrl
+                coordinator = WebViewCoordinator(presenter: self, urlString: newsURLString)
+                coordinator?.start()
+            }
         default: break
         }
     }

@@ -8,23 +8,21 @@
 
 import UIKit
 
-protocol Coordinator {
-    var childCoordinators: [Coordinator] { get set }
-    var viewController: UIViewController { get set }
+protocol Coordinator: AnyObject {
+    var presenter: UIViewController { get set }
     
     func start()
 }
 
 final class MainCoordinator: Coordinator {
-    var childCoordinators = [Coordinator]()
-    var viewController: UIViewController
+    var presenter: UIViewController
     
-    init(viewController: UIViewController) {
-        self.viewController = viewController
+    init(presenter: UIViewController) {
+        self.presenter = presenter
     }
     
     func start() {
-        viewController = initializeVC()
+        presenter = initializeVC()
     }
     
     private func initializeVC() -> UIViewController {

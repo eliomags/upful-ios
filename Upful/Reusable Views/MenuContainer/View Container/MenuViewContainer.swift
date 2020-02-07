@@ -45,7 +45,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setDelegateForChildren()
         view.addSubview(menuBarView)
         menuBarView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
         setupCollectionView()
@@ -66,12 +65,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
             flowlayout.scrollDirection = .horizontal
             flowlayout.minimumLineSpacing = 0
             flowlayout.minimumInteritemSpacing = 0
-        }
-    }
-    
-    fileprivate func setDelegateForChildren() {
-        menubarControllers.forEach { [unowned self] (controller) in
-            controller.menuViewItemDelegate = self
         }
     }
     

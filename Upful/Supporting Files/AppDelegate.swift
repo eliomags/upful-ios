@@ -18,11 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let navigationController = UINavigationController()
-        coordinator = MainCoordinator(viewController: navigationController)
+        coordinator = MainCoordinator(presenter: navigationController)
         coordinator?.start()
         
         window = UIWindow()
-        window?.rootViewController = coordinator?.viewController
+        window?.rootViewController = coordinator?.presenter
         window?.backgroundColor = VersionManager.mainContainerBackground()
 
         FirebaseApp.configure()
