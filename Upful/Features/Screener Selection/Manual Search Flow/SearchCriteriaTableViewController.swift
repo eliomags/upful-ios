@@ -10,6 +10,7 @@ import UIKit
 
 class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SearchCriteriaDelegate {
     
+    // MARK: - Views
     
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)

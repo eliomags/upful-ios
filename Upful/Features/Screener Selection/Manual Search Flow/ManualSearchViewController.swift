@@ -24,7 +24,9 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
     }
+    
     weak var searchCriteriaDelegate: SearchCriteriaDelegate?
+    var coordinator: Coordinator?
 
     // MARK:- Views
     
@@ -91,19 +93,19 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     fileprivate func setupViews() {
         view.addSubview(searchButton)
         searchButton.anchor(
-            top: nil,
-            leading: view.leadingAnchor,
-            bottom: view.layoutMarginsGuide.bottomAnchor,
-            trailing: view.trailingAnchor,
-            padding: .init(top: 0, left: 16, bottom: 16, right: 16),
-            size: .init(width: 0, height: 50))
+                top: nil,
+                leading: view.leadingAnchor,
+                bottom: view.layoutMarginsGuide.bottomAnchor,
+                trailing: view.trailingAnchor,
+                padding: .init(top: 0, left: 16, bottom: 16, right: 16),
+                size: .init(width: 0, height: 44))
         
         view.addSubview(manualSearchSearchTableView)
         manualSearchSearchTableView.anchor(top: view.layoutMarginsGuide.topAnchor,
-                         leading: view.leadingAnchor,
-                         bottom: searchButton.topAnchor,
-                         trailing: view.trailingAnchor,
-                         padding: .init(top: 0, left: 0, bottom: 16, right: 0))
+                 leading: view.leadingAnchor,
+                 bottom: searchButton.topAnchor,
+                 trailing: view.trailingAnchor,
+                 padding: .init(top: 0, left: 0, bottom: 16, right: 0))
     }
     
     fileprivate func configureNavBar() {
@@ -150,9 +152,11 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
             if shouldNavigate {
                 AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .manual))
-                let searchParameters = self.configureURLComponents()
-                let searchResultsVC = ScreenResultsViewController(searchParameters: searchParameters)
-                self.navigationController?.pushViewController(searchResultsVC, animated: true)
+                coordinator = SearchResultsCoordinator(presenter: self,
+                                                       searchParameters: manualScreenItems.asURLComponents,
+                                                       title: "Custom Search",
+                                                       screenerDescription: manualScreenItems.asDescription)
+                coordinator?.start()
             } else {
                 let presenter = SubscriptionPresenter(type: .screeningLimit)
                 presenter.present(in: self)

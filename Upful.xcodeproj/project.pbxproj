@@ -94,6 +94,7 @@
 		3D7013E123ECF98F00102E9C /* StockDetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7013E023ECF98F00102E9C /* StockDetailsCoordinator.swift */; };
 		3D7013E423ECFBDD00102E9C /* SearchResultsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7013E323ECFBDD00102E9C /* SearchResultsCoordinator.swift */; };
 		3D7013E623ECFDD600102E9C /* WebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7013E523ECFDD600102E9C /* WebViewCoordinator.swift */; };
+		3D7014A123F438DC00102E9C /* ResultsDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7014A023F438DC00102E9C /* ResultsDescriptionView.swift */; };
 		3D70DC9123E32E5100097323 /* RecommendationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D70DC9023E32E5100097323 /* RecommendationViewController.swift */; };
 		3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C85462337344300A2E63E /* InformationViewPresenter.swift */; };
 		3D7C854C2337479300A2E63E /* CustomSizeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C854B2337479300A2E63E /* CustomSizeImageView.swift */; };
@@ -310,6 +311,7 @@
 		3D7013E023ECF98F00102E9C /* StockDetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsCoordinator.swift; sourceTree = "<group>"; };
 		3D7013E323ECFBDD00102E9C /* SearchResultsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsCoordinator.swift; sourceTree = "<group>"; };
 		3D7013E523ECFDD600102E9C /* WebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewCoordinator.swift; sourceTree = "<group>"; };
+		3D7014A023F438DC00102E9C /* ResultsDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsDescriptionView.swift; sourceTree = "<group>"; };
 		3D70DC9023E32E5100097323 /* RecommendationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationViewController.swift; sourceTree = "<group>"; };
 		3D7C85462337344300A2E63E /* InformationViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewPresenter.swift; sourceTree = "<group>"; };
 		3D7C854B2337479300A2E63E /* CustomSizeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSizeImageView.swift; sourceTree = "<group>"; };
@@ -874,6 +876,7 @@
 			isa = PBXGroup;
 			children = (
 				3D42BE4023098BD200806AFF /* CompanyPreviewTableViewCell.swift */,
+				3D7014A023F438DC00102E9C /* ResultsDescriptionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1972,6 +1975,7 @@
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
 				3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */,
 				3D6B01CB23D2839A007A2F19 /* SubscriptionHeaderView.swift in Sources */,
+				3D7014A123F438DC00102E9C /* ResultsDescriptionView.swift in Sources */,
 				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
 				3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */,
 				3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */,

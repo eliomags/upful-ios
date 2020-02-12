@@ -14,6 +14,7 @@ final class PrebuiltScreenerViewController: UITableViewController {
     }
     
     weak var menuViewItemDelegate: MenuViewItemDelegate?
+    var coordinator: Coordinator?
     
     lazy var logicController: PrebuiltScreenerLogicController = {
         let lc = PrebuiltScreenerLogicController()
@@ -95,15 +96,18 @@ final class PrebuiltScreenerViewController: UITableViewController {
             viewModel = logicController.popularScreenerViewModels[indexPath.row]
             cell?.titleLabel.text = viewModel.title
             cell?.descriptionLabel.text = viewModel.description
-            cell?.screenerImage.loadImage(from: viewModel.imageUrlString, resize: 120,
-                                          placeHolder: cell?.defaultImage ?? UIImage())
+            cell?.screenerImage.kf.setImage(
+                with: URL(string: viewModel.imageUrlString),
+                placeholder: UIImage(),
+                options: [
+                    .transition(.fade(0.5)),
+                    .cacheOriginalImage
+                ])
         }
         if section == Section.all.rawValue {
             viewModel = logicController.screenerViewModels[indexPath.row]
             cell?.titleLabel.text = viewModel.title
             cell?.descriptionLabel.text = viewModel.description
-            cell?.screenerImage.loadImage(from: viewModel.imageUrlString, resize: 120,
-                                          placeHolder: cell?.defaultImage ?? UIImage())
             cell?.screenerImage.kf.setImage(
                 with: URL(string: viewModel.imageUrlString),
                 placeholder: UIImage(),
@@ -141,15 +145,19 @@ final class PrebuiltScreenerViewController: UITableViewController {
         let section = indexPath.section
         switch section {
         case Section.popular.rawValue:
-            let searchParameters = logicController.popularScreenerViewModels[indexPath.row].searchParameters
-            let resultsVC = ScreenResultsViewController(searchParameters: searchParameters)
-            resultsVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
-            navigationController?.pushViewController(resultsVC, animated: true)
+            let popularScreener = logicController.popularScreenerViewModels[indexPath.row]
+            coordinator = SearchResultsCoordinator(presenter: self,
+                                                   searchParameters: popularScreener.searchParameters,
+                                                   title: popularScreener.title,
+                                                   screenerDescription: popularScreener.description)
+            coordinator?.start()
         case Section.all.rawValue:
-            let searchParameters = logicController.screenerViewModels[indexPath.row].searchParameters
-            let resultsVC = ScreenResultsViewController(searchParameters: searchParameters)
-            resultsVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
-            navigationController?.pushViewController(resultsVC, animated: true)
+            let screenerViewModel = logicController.screenerViewModels[indexPath.row]
+            coordinator = SearchResultsCoordinator(presenter: self,
+                                                   searchParameters: screenerViewModel.searchParameters,
+                                                   title: screenerViewModel.title,
+                                                   screenerDescription: screenerViewModel.description)
+            coordinator?.start()
         default: break
         }
     }

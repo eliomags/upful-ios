@@ -59,7 +59,7 @@ class CompanyPreviewTableViewCell: UITableViewCell {
             leading: leadingAnchor,
             bottom: nil,
             trailing: trailingAnchor,
-            padding: .init(top: 12, left: 16, bottom: 0, right: 16))
+            padding: .init(top: 12, left: 16, bottom: 0, right: 60))
         
         addSubview(companyFundamentalsStackView)
         companyFundamentalsStackView.anchor(
@@ -68,7 +68,7 @@ class CompanyPreviewTableViewCell: UITableViewCell {
             bottom: bottomAnchor,
             trailing: trailingAnchor,
             padding: .init(top: 4, left: 32, bottom: 12, right: 48))
-
+        
         addBottomSeparator()
     }
 

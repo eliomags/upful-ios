@@ -11,7 +11,8 @@ import UIKit
 class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     weak var menuViewItemDelegate: MenuViewItemDelegate?
-    
+    var coordinator: Coordinator?
+
     lazy var viewModel: SavedScreenersViewModel = {
         let vm = SavedScreenersViewModel()
         return vm
@@ -162,9 +163,11 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
     fileprivate func handleSearchResultNavigation(with screener: Screener) {
         PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
             if shouldNavigate {
-                let urlComponents = screener.urlComponents
-                let resultsVC = ScreenResultsViewController(searchParameters: urlComponents)
-                parent?.navigationController?.pushViewController(resultsVC, animated: true)
+                coordinator = SearchResultsCoordinator(presenter: self,
+                                                       searchParameters: screener.urlComponents,
+                                                       title: screener.title,
+                                                       screenerDescription: screener.manualScreenItems.asDescription)
+                coordinator?.start()
             }
             if !shouldNavigate {
                 let presenter = SubscriptionPresenter(type: .screeningLimit)

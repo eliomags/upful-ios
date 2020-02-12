@@ -228,7 +228,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
                 guard let self = self else { return }
                 let randomSavedSearchParameters = self.logicController.getRandomPreferenceGroup()
                 self.coordinator = SearchResultsCoordinator(presenter: self,
-                                                            searchParameters: randomSavedSearchParameters)
+                                                            searchParameters: randomSavedSearchParameters,
+                                                            title: "Stocks You May Like", screenerDescription: "")
                 self.coordinator?.start()
             }
             return preferenceHeader

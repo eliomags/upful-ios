@@ -31,6 +31,8 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         let lc = ExploreLogicController()
         return lc
     }()
+    
+    var coordinator: Coordinator?
 
     // MARK: - Views
     
@@ -187,9 +189,11 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .popular))
         RemoteScreenerLoader.incrementScreenerInterest(documentID: selectedPopularScreener.documentID ?? "")
         
-        let searchResultVC = ScreenResultsViewController(searchParameters: selectedPopularScreener.searchParameters)
-        searchResultVC.navigationItem.title = logicController.screenerViewModels[indexPath.row].title
-        self.navigationController?.pushViewController(searchResultVC, animated: true)
+        coordinator = SearchResultsCoordinator(presenter: self,
+                                               searchParameters: selectedPopularScreener.searchParameters,
+                                               title: selectedPopularScreener.title,
+                                               screenerDescription: selectedPopularScreener.description)
+        coordinator?.start()
     }
 
     fileprivate func handleNormalStateNavigation(_ indexPath: IndexPath) {

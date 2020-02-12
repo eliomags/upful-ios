@@ -11,14 +11,21 @@ import UIKit
 final class SearchResultsCoordinator: Coordinator {
     var presenter: UIViewController
     private let searchParameters: [String]
+    private let navigationTitle: String
+    private let screenerDescription: String
     
-    init(presenter: UIViewController, searchParameters: [String]) {
+    init(presenter: UIViewController, searchParameters: [String], title: String, screenerDescription: String) {
         self.presenter = presenter
         self.searchParameters = searchParameters
+        self.navigationTitle = title
+        self.screenerDescription = screenerDescription
     }
     
     func start() {
         let resultsVC = ScreenResultsViewController(searchParameters: searchParameters)
+        resultsVC.resultsDescriptionHeaderLabel.titleLabel.text = navigationTitle
+        resultsVC.resultsDescriptionHeaderLabel.descriptionLabel.text = screenerDescription
+
         presenter.navigationController?.pushViewController(resultsVC, animated: true)
     }
 }

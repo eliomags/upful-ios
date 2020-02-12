@@ -15,6 +15,10 @@ final class ScreenResultsViewController: UIViewController {
     let searchParameters: [String]
     let intrinioAPI: IntrinioAPI
     
+    // MARK: - Properties
+    
+    var headerBackground: UIColor?
+    
     // MARK:- State
     
     private(set) var isLoading: Bool = false {
@@ -39,16 +43,32 @@ final class ScreenResultsViewController: UIViewController {
         }
     }
     
-    struct ReuseId {
+    fileprivate struct ReuseId {
         static let resultsCellID = "resultsCellID"
     }
     
     // MARK: - Views
     
+    let resultsDescriptionHeaderLabel: ResultsDescriptionView = {
+        let v = ResultsDescriptionView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+    
+    private let headerView: UIView = {
+        let v = UIView()
+        v.backgroundColor = .clear
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.heightAnchor.constraint(equalToConstant: 165).isActive = true
+        return v
+    }()
+    
     lazy var feedTableView: UITableView = { [unowned self] in
         let tv = UITableView(frame: .zero, style: .plain)
         tv.dataSource = self
         tv.delegate = self
+        tv.backgroundColor = .clear
+        tv.setTableHeaderView(headerView: headerView)
         tv.register(CompanyPreviewTableViewCell.self, forCellReuseIdentifier: ReuseId.resultsCellID)
         return tv
     }()
@@ -66,19 +86,36 @@ final class ScreenResultsViewController: UIViewController {
         self.intrinioAPI = networkingAPI
         super.init(nibName: nil, bundle: nil)
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - View Life Cycle Methods
-
+    
+    override func loadView() {
+        super.loadView()
+        contentViewSetup()
+        setupNavBar()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavBar()
         fetchTableData(parameters: searchParameters, fetchType: .initial)
-        view.addSubview(feedTableView)
-        feedTableView.fillSuperview()
         isLoading = true
     }
 
     // MARK: - View Set Up
+    
+    fileprivate func contentViewSetup() {
+        view.backgroundColor = .systemBackground
+//        resultsDescriptionHeaderLabel.backgroundColor = headerBackground ?? UIColor.appAccent2
+        view.addSubview(resultsDescriptionHeaderLabel)
+        resultsDescriptionHeaderLabel.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor,
+                                      bottom: nil, trailing: view.trailingAnchor)
+        view.addSubview(feedTableView)
+        feedTableView.fillSuperview()
+    }
     
     fileprivate func setupNavBar() {
         navigationItem.title = ""
@@ -169,11 +206,6 @@ final class ScreenResultsViewController: UIViewController {
         }
         self.present(sortMenu, animated: true, completion: nil)
     }
-    
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }
 
 extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegate {
@@ -212,9 +244,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
         let selectedCompany = searchResults[indexPath.item]
         let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker, companyName: selectedCompany.name)
         
-        // TODO: - Enable before push
-//        RemoteStockManager.update(selectedCompany.ticker, name: selectedCompany.name)
-        
+        RemoteStockManager.updateInterest(for: selectedCompany.ticker, name: selectedCompany.name)
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }

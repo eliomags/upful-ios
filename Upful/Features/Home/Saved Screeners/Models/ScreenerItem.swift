@@ -20,10 +20,8 @@ struct Screener: Hashable {
     let title: String
     let description: String
     let urlComponents: [String]
-    let manualScreenItems: [ManualScreenItem]
+    let manualScreenItems: [ManualScreenItem] /// used for edit navigation & result description
     let imageUrlString: String?
-    var count: Int?
-    
     
     init(title: String, description: String, urlComponents: [String],
          imageUrlString: String?, manualScreenItems: [ManualScreenItem]) {
@@ -76,3 +74,35 @@ extension Array where Element: SavedScreenerParameter {
     }
 }
 
+
+extension Array where Element == ManualScreenItem {
+    var asURLComponents: [String] {
+        var urlComponents: [String] = []
+        self.forEach { (manualScreenItem) in
+            let criteria = manualScreenItem.criteria.rawValue
+            let parameter = manualScreenItem.parameter.rawValue
+            urlComponents.append(criteria + "\(parameter)~\(manualScreenItem.value ?? 0)")
+        }
+        return urlComponents
+    }
+
+    var asDescription: String {
+        var str = ""
+        self.forEach { (manualScreenItem) in
+            var description = ""
+            description.append(manualScreenItem.criteria.explicit + " ")
+            description.append(manualScreenItem.parameter.explicit + " ")
+            switch manualScreenItem.criteria.parameterType {
+            case .percentage:
+                description.append("\(manualScreenItem.value?.convertToPercent() ?? "")%\n")
+            case .number:
+                description.append("$\(Int(manualScreenItem.value ?? 0).formatUsingAbbreviation())\n")
+            case .ratio:
+                description.append("\(manualScreenItem.value?.twoDecimal() ?? "")\n")
+            default: break
+            }
+            str.append(description)
+        }
+        return str
+    }
+}
