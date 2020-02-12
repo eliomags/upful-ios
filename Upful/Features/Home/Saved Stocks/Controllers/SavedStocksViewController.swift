@@ -8,10 +8,9 @@
 
 import UIKit
 
-class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MenuBarDisplayable {
+class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     weak var menuViewItemDelegate: MenuViewItemDelegate?
-    var menubarTitle: String = "Stocks"
     
     lazy var viewModel: SavedStockLogicController = {
         let vm = SavedStockLogicController()
@@ -26,6 +25,17 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
         tv.delegate = self
         return tv
     }()
+    
+    // MARK: - Initializer
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        title = "Stocks"
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - View Lifecycle Methods
     

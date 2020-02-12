@@ -9,9 +9,7 @@
 import UIKit
 
 protocol MenuBarViewDelegate: class {
-    func selectedIndex(_ index: Int)
-//    func presentMenuBar()
-//    func hideMenuBar()
+    func didSelectIndex(at index: Int)
 }
 
 final class MenuBarView: UIView {
@@ -59,7 +57,7 @@ final class MenuBarView: UIView {
     
     var placementViewLeadingConstraint: CGFloat = 0 {
         didSet {
-            let translationDistance = placementViewLeadingConstraint/CGFloat(self.menuTitles.count)
+            let translationDistance = placementViewLeadingConstraint/CGFloat(menuTitles.count)
             placementView.transform = CGAffineTransform(translationX: translationDistance, y: 0)
         }
     }
@@ -89,9 +87,6 @@ final class MenuBarView: UIView {
                              bottom: bottomAnchor, trailing: nil,
                              padding: .init(top: 0, left: 25, bottom: 0, right: 0),
                              size: .init(width: itemWidth, height: 1.5))
-//        placementView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-//        placementView.widthAnchor.constraint(equalToConstant: itemWidth-15).isActive = true
-//        placementView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
     // MARK: - API
@@ -118,7 +113,7 @@ extension MenuBarView: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.selectedIndex(indexPath.row)
+        delegate?.didSelectIndex(at: indexPath.row)
     }
 }
 

@@ -8,10 +8,8 @@
 
 import UIKit
 
-final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, PreferenceDelegate {
-        
-    var menubarTitle: String = "General"
-    
+final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
+            
     private enum Section: Int {
         case preference = 0
         case news = 1
@@ -39,6 +37,18 @@ final class HomeGeneralViewController: UIViewController, MenuBarDisplayable, Pre
         tv.dataSource = self
         return tv
     }()
+    
+    
+    // MARK: - Initializer
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        title = "General"
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - View Lifecycle Methods
     

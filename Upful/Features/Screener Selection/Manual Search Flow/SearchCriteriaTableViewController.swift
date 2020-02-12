@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SearchCriteriaDelegate, MenuBarDisplayable {
+class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SearchCriteriaDelegate {
     
     
     lazy var tableView: UITableView = {
@@ -19,7 +19,6 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     }()
     
     var menuViewItemDelegate: MenuViewItemDelegate?
-    var menubarTitle: String = "Custom"
     
     private enum ReuseID {
         static let criteriaCell = "criteriaCell"
@@ -52,6 +51,17 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         b.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
         return b
     }()
+    
+    // MARK: - Initializer
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        title = "Custom"
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Initializer Methods
     

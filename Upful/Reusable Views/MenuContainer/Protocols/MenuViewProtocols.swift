@@ -14,9 +14,3 @@ protocol MenuViewItemDelegate: class {
     func hideMenuBar()
     func presentMenuBar()
 }
-
-protocol MenuBarDisplayable: UIViewController {
-    var menubarTitle: String { get set }
-}
-
-

@@ -9,12 +9,11 @@
 import UIKit
 import Charts
 
-class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarDisplayable, ChartUpdatable {
+class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpdatable {
     
     // MARK: - MenuBarDisplay Protocol
     
     weak var menuViewItemDelegate: MenuViewItemDelegate?
-    var menubarTitle: String = "Analysis"
     
     // MARK: - Dependencies
     
@@ -127,6 +126,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, MenuBarD
         self.companyName = companyName
         self.intrinioApi = networkingAPI
         super.init(nibName: nil, bundle: nil)
+        title = "Analysis"
     }
     
     required init?(coder aDecoder: NSCoder) {

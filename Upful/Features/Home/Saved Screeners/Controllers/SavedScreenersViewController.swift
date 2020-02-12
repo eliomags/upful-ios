@@ -8,10 +8,9 @@
 
 import UIKit
 
-class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITableViewDelegate, UITableViewDataSource {
+class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     weak var menuViewItemDelegate: MenuViewItemDelegate?
-    var menubarTitle: String = "Screeners"
     
     lazy var viewModel: SavedScreenersViewModel = {
         let vm = SavedScreenersViewModel()
@@ -26,6 +25,17 @@ class SavedScreenerViewController: UIViewController, MenuBarDisplayable, UITable
         tv.dataSource = self
         return tv
     }()
+    
+    // MARK: - Initializer
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        title = "Screeners"
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - View Lifecycle
     

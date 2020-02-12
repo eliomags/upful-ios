@@ -9,12 +9,11 @@
 import UIKit
 import Charts
 
-final class StockOverviewViewController: UIViewController, ChartViewDelegate, MenuBarDisplayable {
+final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - MenuBarDisplayable Protocol Properties
     
     weak var menuViewItemDelegate: MenuViewItemDelegate?
-    var menubarTitle: String = "Overview"
 
     // MARK: - Dependencies
     
@@ -108,6 +107,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
         self.companyName = companyName
         self.intrinioApi = networkingAPI
         super.init(nibName: nil, bundle: nil)
+        title = "Overview"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -115,7 +115,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate, Me
     }
     
     // MARK: - View Lifecycle Methods
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground()

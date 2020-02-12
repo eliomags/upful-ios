@@ -10,7 +10,7 @@ import UIKit
 
 class HomeContainerViewController: MenuContainerViewController {
     
-    override var menubarControllers: [MenuBarDisplayable] {
+    override var menubarControllers: [UIViewController] {
         let generalVC = HomeGeneralViewController()
         let savedStocksVC = SavedStocksViewController()
         let savedScreenerVC = SavedScreenerViewController()

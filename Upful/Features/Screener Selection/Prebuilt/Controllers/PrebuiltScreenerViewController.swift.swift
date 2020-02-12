@@ -8,13 +8,12 @@
 
 import UIKit
 
-final class PrebuiltScreenerViewController: UITableViewController, MenuBarDisplayable {
+final class PrebuiltScreenerViewController: UITableViewController {
     enum Section: Int {
         case popular, all
     }
     
     weak var menuViewItemDelegate: MenuViewItemDelegate?
-    var menubarTitle: String = "Pre-built"
     
     lazy var logicController: PrebuiltScreenerLogicController = {
         let lc = PrebuiltScreenerLogicController()
@@ -28,12 +27,18 @@ final class PrebuiltScreenerViewController: UITableViewController, MenuBarDispla
         control.addTarget(self, action: #selector(handleResfreshing), for: .valueChanged)
         return control
     }()
-        
+            
     // MARK: - Initializer
     
-    init() { super.init(style: .grouped) }
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    init() {
+        super.init(style: .grouped)
+        title = "Pre-built"
+    }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+        
     // MARK: - View Lifecycle Methods
     
     override func loadView() {

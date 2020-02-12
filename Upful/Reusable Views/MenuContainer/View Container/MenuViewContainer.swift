@@ -9,7 +9,7 @@
 import UIKit
 
 protocol MenubarContainerProtocol {
-    var menubarControllers: [MenuBarDisplayable] { get }
+    var menubarControllers: [UIViewController] { get }
 }
 
 class MenuContainerViewController: UICollectionViewController, MenuBarViewDelegate, MenuViewItemDelegate, MenubarContainerProtocol {
@@ -17,14 +17,15 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         static let cell1 = "cell1"
     }
     
-    var menubarControllers: [MenuBarDisplayable] {
+    // TODO: - Inject ViewControllers
+    var menubarControllers: [UIViewController] {
         return []
     }
     
     // MARK: - Views
     
     lazy var menuBarView: MenuBarView = {
-        let menubarTitles = menubarControllers.map({ $0.menubarTitle })
+        let menubarTitles = menubarControllers.map({ $0.title ?? "" })
         let view = MenuBarView(menuTitles: menubarTitles)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
@@ -42,17 +43,25 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     }
     
     // MARK: - View Life Cycle Functions
-
+    
+    override func loadView() {
+        super.loadView()
+        view.backgroundColor = .systemBackground
+        view.addSubview(menuBarView)
+        menuBarView.anchor(top: view.layoutMarginsGuide.topAnchor,
+                           leading: view.leadingAnchor, bottom: nil,
+                           trailing: view.trailingAnchor)
+        setupCollectionView()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(menuBarView)
-        menuBarView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
-        setupCollectionView()
     }
     
     // MARK: - View Set Up
 
     private func setupCollectionView() {
+        collectionView.backgroundColor = .systemBackground
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.topAnchor.constraint(equalTo: menuBarView.bottomAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
@@ -72,7 +81,7 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     
     /// Menubar Methods
     /// Navigates to the designated child tableView based on the selected item index of the segmented control
-    func selectedIndex(_ index: Int) {
+    func didSelectIndex(at index: Int) {
         collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
     }
     
@@ -101,8 +110,8 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
     // MARK: - ScrollView Delegate Methods
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let distance = scrollView.contentOffset.x
-        self.menuBarView.placementViewLeadingConstraint = distance
+        let scrollDistance = scrollView.contentOffset.x
+        menuBarView.placementViewLeadingConstraint = scrollDistance
         view.endEditing(true)
     }
     
@@ -110,15 +119,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         let targetInt = targetContentOffset.move().x / menuBarView.frame.width
         menuBarView.setIndex(Int(targetInt))
 //        presentMenuBar()
-    }
-    
-    // MARK: - Fileprivate Functions
-    
-    private func display(contentController content: MenuBarDisplayable, on view: UIView) {
-        self.addChild(content)
-        content.view.frame = view.bounds
-        view.addSubview(content.view)
-        content.didMove(toParent: self)
     }
 }
 
