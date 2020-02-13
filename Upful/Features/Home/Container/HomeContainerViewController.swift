@@ -52,7 +52,7 @@ class HomeContainerViewController: MenuContainerViewController {
         screenerSelectionButton.anchor(top: nil, leading: nil,
                                        bottom: view.layoutMarginsGuide.bottomAnchor,
                                        trailing: view.trailingAnchor,
-                                       padding: .init(top: 0, left: 0, bottom: 45, right: 25))
+                                       padding: .init(top: 0, left: 0, bottom: 25, right: 25))
     }
     
     func emphasizeButton() {

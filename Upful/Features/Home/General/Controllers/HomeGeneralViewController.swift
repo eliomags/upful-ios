@@ -258,7 +258,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.preference.rawValue:
             return 15
         case Section.news.rawValue:
-            return 140
+            return 100
         default: return 0
         }
     }

@@ -45,11 +45,12 @@ class ResultsDescriptionView: UIView {
         return sv
     }()
     
-    let imageView: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(systemName: "pencil")?
-            .withAlignmentRectInsets(.init(top: -6, left: -6, bottom: -6, right: -6))
-            .withTintColor(.white, renderingMode: .alwaysOriginal)
+    var imageIcon: UIImage = UIImage(systemName: "pencil")?
+        .withAlignmentRectInsets(.init(top: -7, left: -7, bottom: -7, right: -7))
+        .withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
+    
+    fileprivate lazy var imageView: UIImageView = {
+        let iv = UIImageView(image: imageIcon)
         iv.backgroundColor = .clear
         return iv
     }()

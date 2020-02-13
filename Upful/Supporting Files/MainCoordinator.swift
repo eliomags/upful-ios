@@ -50,10 +50,10 @@ final class MainCoordinator: Coordinator {
         let tabVC = UITabBarController()
         tabVC.tabBar.isTranslucent = true
         if tabVC.traitCollection.userInterfaceStyle == .dark {
-            tabVC.tabBar.tintColor = .white
+            tabVC.tabBar.tintColor = .label
         }
         if tabVC.traitCollection.userInterfaceStyle == .light {
-            tabVC.tabBar.tintColor = .black
+            tabVC.tabBar.tintColor = .label
         }
         
         tabVC.viewControllers = controllers.map({
