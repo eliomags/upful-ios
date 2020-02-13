@@ -75,6 +75,7 @@ final class ScreenResultsViewController: UIViewController {
     
     lazy var sortButton: SortButton = { [unowned self] in
         let button = SortButton()
+        button.backgroundColor = UIColor(white: 0.4, alpha: 0.35)
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSortTap)))
         return button
     }()

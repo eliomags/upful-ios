@@ -10,18 +10,22 @@ import UIKit
 
 class CompanyPreviewTableViewCell: UITableViewCell {
     
+    // MARK: - Views
+    
     let companyTickerLabel: UILabel = {
         let l = UILabel()
         l.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
         l.text = ""
         return l
     }()
+    
     let companyNameLabel: UILabel = {
         let l = UILabel()
         l.font = .details1
         l.text = ""
         return l
     }()
+    
     private lazy var companyDescriptionStackView: UIStackView = {
         let l = UIStackView(arrangedSubviews: [companyTickerLabel,companyNameLabel])
         l.axis = .vertical
@@ -83,6 +87,5 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         marketcapStackView.valueLabel.text = "$ -"
         pricetoearningsStackView.valueLabel.text = "-"
     }
-
 }
 

@@ -6,7 +6,7 @@
 //  Copyright © 2020 Yanik Simpson. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Firebase
 
 protocol RemoteScreenerLoaderProtocol {
@@ -52,6 +52,7 @@ class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
         return (try items.map { (dictionary) -> ScreenerViewModel in
             let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: [])
             let viewModel = try JSONDecoder().decode(ScreenerViewModel.self, from: jsonData)
+            print(viewModel)
             return viewModel
         })
     }
@@ -64,6 +65,18 @@ struct ScreenerViewModel {
     let searchParameters: [String]
     var interest: Int
     let documentID: String?
+    var colorMap: [String: Double]?
 }
 
 extension ScreenerViewModel: Codable {}
+
+extension ScreenerViewModel {
+    func getColor() -> UIColor {
+        guard let colorMap = colorMap else { return UIColor.appAccent2 }
+        
+        return UIColor(red: CGFloat(colorMap["red"] ?? 0)/255,
+                       green: CGFloat(colorMap["green"] ?? 0)/255,
+                       blue: CGFloat(colorMap["blue"] ?? 0)/255,
+                       alpha: CGFloat(colorMap["alpha"] ?? 1))
+    }
+}

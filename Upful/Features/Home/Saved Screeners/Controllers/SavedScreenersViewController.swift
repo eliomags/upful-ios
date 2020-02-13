@@ -166,7 +166,8 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
                 coordinator = SearchResultsCoordinator(presenter: self,
                                                        searchParameters: screener.urlComponents,
                                                        title: screener.title,
-                                                       screenerDescription: screener.manualScreenItems.asDescription)
+                                                       screenerDescription: screener.manualScreenItems.asDescription,
+                                                       headerbackgroundColor: .appAccent2)
                 coordinator?.start()
             }
             if !shouldNavigate {

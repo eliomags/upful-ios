@@ -155,7 +155,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 coordinator = SearchResultsCoordinator(presenter: self,
                                                        searchParameters: manualScreenItems.asURLComponents,
                                                        title: "Custom Search",
-                                                       screenerDescription: manualScreenItems.asDescription)
+                                                       screenerDescription: manualScreenItems.asDescription,
+                                                       headerbackgroundColor: .appAccent2)
                 coordinator?.start()
             } else {
                 let presenter = SubscriptionPresenter(type: .screeningLimit)

@@ -48,15 +48,21 @@ final class MainCoordinator: Coordinator {
             tag: 2)
         
         let tabVC = UITabBarController()
-        tabVC.tabBar.tintColor = .appAccent3
         tabVC.tabBar.isTranslucent = true
-
+        if tabVC.traitCollection.userInterfaceStyle == .dark {
+            tabVC.tabBar.tintColor = .white
+        }
+        if tabVC.traitCollection.userInterfaceStyle == .light {
+            tabVC.tabBar.tintColor = .black
+        }
+        
         tabVC.viewControllers = controllers.map({
             let navVC = UINavigationController(rootViewController: $0)
             navVC.navigationBar.prefersLargeTitles = true
             navVC.navigationBar.isTranslucent = false
-            navVC.navigationBar.tintColor = .appAccent3
             navVC.navigationBar.shadowImage = UIImage()
+            navVC.navigationBar.tintColor = .label
+
             if navVC.traitCollection.userInterfaceStyle == .dark {
                 navVC.navigationBar.backgroundColor = .black
             }

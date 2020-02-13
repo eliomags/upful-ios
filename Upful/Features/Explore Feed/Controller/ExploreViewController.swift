@@ -192,7 +192,8 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         coordinator = SearchResultsCoordinator(presenter: self,
                                                searchParameters: selectedPopularScreener.searchParameters,
                                                title: selectedPopularScreener.title,
-                                               screenerDescription: selectedPopularScreener.description)
+                                               screenerDescription: selectedPopularScreener.description,
+                                               headerbackgroundColor: selectedPopularScreener.getColor())
         coordinator?.start()
     }
 

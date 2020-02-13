@@ -149,14 +149,16 @@ final class PrebuiltScreenerViewController: UITableViewController {
             coordinator = SearchResultsCoordinator(presenter: self,
                                                    searchParameters: popularScreener.searchParameters,
                                                    title: popularScreener.title,
-                                                   screenerDescription: popularScreener.description)
+                                                   screenerDescription: popularScreener.description,
+                                                   headerbackgroundColor: popularScreener.getColor())
             coordinator?.start()
         case Section.all.rawValue:
             let screenerViewModel = logicController.screenerViewModels[indexPath.row]
             coordinator = SearchResultsCoordinator(presenter: self,
                                                    searchParameters: screenerViewModel.searchParameters,
                                                    title: screenerViewModel.title,
-                                                   screenerDescription: screenerViewModel.description)
+                                                   screenerDescription: screenerViewModel.description,
+                                                   headerbackgroundColor: screenerViewModel.getColor())
             coordinator?.start()
         default: break
         }
