@@ -14,17 +14,20 @@ final class SearchResultsCoordinator: Coordinator {
     private let navigationTitle: String
     private let screenerDescription: String
     private let headerbackgroundColor: UIColor
+    private let headerSymbol: UIImage?
     
     init(presenter: UIViewController,
          searchParameters: [String],
          title: String,
          screenerDescription: String,
-         headerbackgroundColor: UIColor) {
+         headerbackgroundColor: UIColor,
+         headerSymbol: UIImage? = nil) {
         self.presenter = presenter
         self.searchParameters = searchParameters
         self.navigationTitle = title
         self.screenerDescription = screenerDescription
         self.headerbackgroundColor = headerbackgroundColor
+        self.headerSymbol = headerSymbol
     }
     
     func start() {
@@ -32,6 +35,9 @@ final class SearchResultsCoordinator: Coordinator {
         resultsVC.resultsDescriptionHeaderLabel.titleLabel.text = navigationTitle
         resultsVC.resultsDescriptionHeaderLabel.descriptionLabel.text = screenerDescription
         resultsVC.resultsDescriptionHeaderLabel.imageViewBackground.backgroundColor = headerbackgroundColor
+        if let headerSymbol = headerSymbol {
+            resultsVC.resultsDescriptionHeaderLabel.imageView.image = headerSymbol
+        }
         presenter.navigationController?.pushViewController(resultsVC, animated: true)
     }
 }

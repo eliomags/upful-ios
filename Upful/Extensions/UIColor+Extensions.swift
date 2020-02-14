@@ -15,7 +15,6 @@ private struct Pallete {
         return #colorLiteral(red: 0.9308954832, green: 0.9308954832, blue: 0.9308954832, alpha: 1)
     }
     static var green: UIColor {
-//        return #colorLiteral(red: 0.1770295799, green: 0.6907966137, blue: 0.4686983228, alpha: 1)
         return #colorLiteral(red: 0.0116204666, green: 0.6127878428, blue: 0.6295601726, alpha: 1)
     }
     static var red: UIColor {
@@ -28,7 +27,7 @@ private struct Pallete {
         return #colorLiteral(red: 0.01176470588, green: 0.6117647059, blue: 0.631372549, alpha: 1)
     }
     static var deepBlue: UIColor {
-        return #colorLiteral(red: 0.006215432659, green: 0.001057554386, blue: 0.2019402385, alpha: 1)
+        return #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)
     }
     static var darkBlue: UIColor {
         return #colorLiteral(red: 0.1420197487, green: 0.2013853192, blue: 0.3809607923, alpha: 1)
@@ -37,12 +36,11 @@ private struct Pallete {
         return #colorLiteral(red: 0.9522877336, green: 0.6878936887, blue: 0.1339971721, alpha: 1)
     }
     static var darkGreen: UIColor {
-        return #colorLiteral(red: 0.1058823529, green: 0.2078431373, blue: 0.1529411765, alpha: 1)
+        return #colorLiteral(red: 0, green: 0.3738812208, blue: 0.8236242533, alpha: 1)
     }
 }
 
 extension UIColor {
-    
     static var backgroundColor: UIColor {
         return Pallete.gray
     }

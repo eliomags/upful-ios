@@ -49,7 +49,7 @@ class ResultsDescriptionView: UIView {
         .withAlignmentRectInsets(.init(top: -7, left: -7, bottom: -7, right: -7))
         .withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
     
-    fileprivate lazy var imageView: UIImageView = {
+    lazy var imageView: UIImageView = {
         let iv = UIImageView(image: imageIcon)
         iv.backgroundColor = .clear
         return iv

@@ -193,7 +193,8 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
                                                searchParameters: selectedPopularScreener.searchParameters,
                                                title: selectedPopularScreener.title,
                                                screenerDescription: selectedPopularScreener.description,
-                                               headerbackgroundColor: selectedPopularScreener.getColor())
+                                               headerbackgroundColor: selectedPopularScreener.getColor(),
+                                               headerSymbol: selectedPopularScreener.getSymbol())
         coordinator?.start()
     }
 
@@ -277,18 +278,12 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     fileprivate func makeScreenerCells(at indexPath: IndexPath) -> UITableViewCell {
         let screenerCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.screenerCell,
                                                          for: indexPath) as? ScreenerPreviewTableViewCell
-        
         if !logicController.screenerViewModels.isEmpty {
             let viewModel = logicController.screenerViewModels[indexPath.row]
             screenerCell?.titleLabel.text = viewModel.title
             screenerCell?.descriptionLabel.text = viewModel.description
-            screenerCell?.screenerImage.kf.setImage(
-                with: URL(string: viewModel.imageUrlString),
-                placeholder: UIImage(),
-                options: [
-                    .transition(.fade(0.5)),
-                    .cacheOriginalImage
-                ])
+            screenerCell?.iconImageView.image = viewModel.getSymbol()
+            screenerCell?.iconImageViewBackground.backgroundColor = viewModel.getColor()
             screenerCell?.showLoaded()
         }
         return screenerCell ?? UITableViewCell()
@@ -298,7 +293,6 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: ReuseID.searchCell)
         if logicController.stockSearchDisplay.isEmpty { return cell }
         let stockSearchDisplay = logicController.stockSearchDisplay
-        
         if !logicController.stockSearchDisplay.isEmpty {
             cell.textLabel?.text = stockSearchDisplay[indexPath.item].name
             cell.detailTextLabel?.text = stockSearchDisplay[indexPath.item].ticker

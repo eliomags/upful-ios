@@ -31,7 +31,7 @@ class SavedScreenerTableViewCell: UITableViewCell {
     lazy var textStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
         stackView.axis = .vertical
-        stackView.distribution = .fill
+        stackView.distribution = .fillProportionally
         stackView.alignment = .top
         stackView.spacing = 8
         stackView.isBaselineRelativeArrangement = true
@@ -54,7 +54,6 @@ class SavedScreenerTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-    
         descriptionLabel.text = "\n"
         titleLabel.text = "\n\n"
     }

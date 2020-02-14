@@ -35,7 +35,6 @@ class HomeContainerViewController: MenuContainerViewController {
         collectionView.backgroundColor = VersionManager.mainContainerBackground()
         configureNavBar()
         setUpViews()
-        
         UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
     }
     

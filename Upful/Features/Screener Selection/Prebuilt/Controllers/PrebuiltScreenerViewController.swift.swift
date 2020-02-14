@@ -96,25 +96,15 @@ final class PrebuiltScreenerViewController: UITableViewController {
             viewModel = logicController.popularScreenerViewModels[indexPath.row]
             cell?.titleLabel.text = viewModel.title
             cell?.descriptionLabel.text = viewModel.description
-            cell?.screenerImage.kf.setImage(
-                with: URL(string: viewModel.imageUrlString),
-                placeholder: UIImage(),
-                options: [
-                    .transition(.fade(0.5)),
-                    .cacheOriginalImage
-                ])
+            cell?.iconImageView.image = viewModel.getSymbol()
+            cell?.iconImageViewBackground.backgroundColor = viewModel.getColor()
         }
         if section == Section.all.rawValue {
             viewModel = logicController.screenerViewModels[indexPath.row]
             cell?.titleLabel.text = viewModel.title
             cell?.descriptionLabel.text = viewModel.description
-            cell?.screenerImage.kf.setImage(
-                with: URL(string: viewModel.imageUrlString),
-                placeholder: UIImage(),
-                options: [
-                    .transition(.fade(0.5)),
-                    .cacheOriginalImage
-                ])
+            cell?.iconImageView.image = viewModel.getSymbol()
+            cell?.iconImageViewBackground.backgroundColor = viewModel.getColor()
         }
         cell?.showLoaded()
         
@@ -150,7 +140,8 @@ final class PrebuiltScreenerViewController: UITableViewController {
                                                    searchParameters: popularScreener.searchParameters,
                                                    title: popularScreener.title,
                                                    screenerDescription: popularScreener.description,
-                                                   headerbackgroundColor: popularScreener.getColor())
+                                                   headerbackgroundColor: popularScreener.getColor(),
+                                                   headerSymbol: popularScreener.getSymbol())
             coordinator?.start()
         case Section.all.rawValue:
             let screenerViewModel = logicController.screenerViewModels[indexPath.row]
@@ -158,7 +149,8 @@ final class PrebuiltScreenerViewController: UITableViewController {
                                                    searchParameters: screenerViewModel.searchParameters,
                                                    title: screenerViewModel.title,
                                                    screenerDescription: screenerViewModel.description,
-                                                   headerbackgroundColor: screenerViewModel.getColor())
+                                                   headerbackgroundColor: screenerViewModel.getColor(),
+                                                   headerSymbol: screenerViewModel.getSymbol())
             coordinator?.start()
         default: break
         }

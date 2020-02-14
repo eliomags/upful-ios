@@ -52,7 +52,6 @@ class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
         return (try items.map { (dictionary) -> ScreenerViewModel in
             let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: [])
             let viewModel = try JSONDecoder().decode(ScreenerViewModel.self, from: jsonData)
-            print(viewModel)
             return viewModel
         })
     }
@@ -65,7 +64,8 @@ struct ScreenerViewModel {
     let searchParameters: [String]
     var interest: Int
     let documentID: String?
-    var colorMap: [String: Double]?
+    let colorMap: [String: Double]?
+    let symbol: String?
 }
 
 extension ScreenerViewModel: Codable {}
@@ -73,10 +73,16 @@ extension ScreenerViewModel: Codable {}
 extension ScreenerViewModel {
     func getColor() -> UIColor {
         guard let colorMap = colorMap else { return UIColor.appAccent2 }
-        
         return UIColor(red: CGFloat(colorMap["red"] ?? 0)/255,
                        green: CGFloat(colorMap["green"] ?? 0)/255,
                        blue: CGFloat(colorMap["blue"] ?? 0)/255,
                        alpha: CGFloat(colorMap["alpha"] ?? 1))
+    }
+    
+    func getSymbol() -> UIImage? {
+        guard let symbolName = symbol else { return nil }
+        return UIImage(systemName: symbolName)?
+            .withAlignmentRectInsets(.init(top: -7, left: -7, bottom: -7, right: -7))
+            .withTintColor(.white, renderingMode: .alwaysOriginal)
     }
 }
