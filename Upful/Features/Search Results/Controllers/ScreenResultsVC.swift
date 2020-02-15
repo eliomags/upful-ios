@@ -15,6 +15,11 @@ final class ScreenResultsViewController: UIViewController {
     let searchParameters: [String]
     let intrinioAPI: IntrinioAPI
     
+    // Load currently saved screeners to determine save state
+    var localScreenerLoader: LocalScreenerLoaderProtocol? = LocalScreenerLoader()
+    
+    // Save new screener/Override screener with same name
+    
     // MARK: - Properties
     
     var headerBackground: UIColor?
@@ -80,6 +85,11 @@ final class ScreenResultsViewController: UIViewController {
         return button
     }()
     
+    lazy var saveButton: SaveButton = {
+        let b = SaveButton()
+        return b
+    }()
+    
     // MARK: - Initializer Methods
     
     init(searchParameters: [String], networkingAPI: IntrinioAPI = .init()) {
@@ -92,7 +102,7 @@ final class ScreenResultsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - View Life Cycle Methods
+    // MARK: - View Lifecycle Methods
     
     override func loadView() {
         super.loadView()
@@ -102,6 +112,7 @@ final class ScreenResultsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkScreenerStatus()
         fetchTableData(parameters: searchParameters, fetchType: .initial)
         isLoading = true
     }
@@ -110,7 +121,6 @@ final class ScreenResultsViewController: UIViewController {
     
     fileprivate func contentViewSetup() {
         view.backgroundColor = .systemBackground
-//        resultsDescriptionHeaderLabel.backgroundColor = headerBackground ?? UIColor.appAccent2
         view.addSubview(resultsDescriptionHeaderLabel)
         resultsDescriptionHeaderLabel.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor,
                                       bottom: nil, trailing: view.trailingAnchor)
@@ -122,15 +132,27 @@ final class ScreenResultsViewController: UIViewController {
         navigationItem.title = ""
         navigationItem.largeTitleDisplayMode = .never
         let sortButton = UIBarButtonItem(customView: self.sortButton)
-        navigationItem.rightBarButtonItem = sortButton
+        let saveButton = UIBarButtonItem(customView: self.saveButton)
+        navigationItem.rightBarButtonItems = [saveButton, sortButton]
     }
 
     // MARK: - Fileprivate Functions
     
+    fileprivate func checkScreenerStatus() {
+        localScreenerLoader?.loadSavedScreeners(completion: { (res) in
+            switch res {
+            case .success(let screeners):
+                print(screeners.map { $0.title })
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        })
+    }
+    
     private enum FetchType {
         case initial, appending
     }
-    
+
     private func fetchTableData(parameters: [String], fetchType: FetchType) {
         let searchKeys = parameters.joined(separator: ",").filter({ $0 != " " })
         intrinioAPI.performStockScreening(parameters: searchKeys) { [weak self] (result) in
@@ -222,7 +244,6 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let resultsCell = tableView.dequeueReusableCell(withIdentifier: ReuseId.resultsCellID) as? CompanyPreviewTableViewCell else { return UITableViewCell() }
-
         let screenResult = searchResults[indexPath.item]
         let ticker = screenResult.ticker
         resultsCell.accessoryType = .disclosureIndicator

@@ -74,10 +74,10 @@ final class MockRemoteScreenerLoader: RemoteScreenerLoaderProtocol {
     }
     
     private func handleSuccess() -> [ScreenerViewModel] {
-        let vm1 = ScreenerViewModel(title: "Title0", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID")
-        let vm2 = ScreenerViewModel(title: "Title1", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID")
-        let vm3 = ScreenerViewModel(title: "Title2", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID")
-        let vm4 = ScreenerViewModel(title: "Title3", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID")
+        let vm1 = ScreenerViewModel(title: "Title0", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID", colorMap: nil, symbol: nil)
+         let vm2 = ScreenerViewModel(title: "Title1", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID", colorMap: nil, symbol: nil)
+         let vm3 = ScreenerViewModel(title: "Title2", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID", colorMap: nil, symbol: nil)
+         let vm4 = ScreenerViewModel(title: "Title3", description: "", imageUrlString: "", searchParameters: [], interest: 0, documentID: "testID", colorMap: nil, symbol: nil)
         return [vm1, vm2, vm3, vm4]
     }
 }
