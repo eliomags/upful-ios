@@ -82,7 +82,7 @@ extension ScreenerViewModel {
     func getSymbol() -> UIImage? {
         guard let symbolName = symbol else { return nil }
         return UIImage(systemName: symbolName)?
-            .withAlignmentRectInsets(.init(top: -7, left: -7, bottom: -7, right: -7))
+            .withAlignmentRectInsets(.init(top: -3, left: -3, bottom: -3, right: -3))
             .withTintColor(.white, renderingMode: .alwaysOriginal)
     }
 }

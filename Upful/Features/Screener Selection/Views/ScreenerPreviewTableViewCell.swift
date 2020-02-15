@@ -13,7 +13,7 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     // MARK: - Views
     
     private var imageIcon: UIImage = UIImage(systemName: "magnifyingglass.circle.fill")?
-        .withAlignmentRectInsets(.init(top: -7, left: -7, bottom: -7, right: -7))
+        .withAlignmentRectInsets(.init(top: -3, left: -3, bottom: -3, right: -3))
         .withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
     
     lazy var iconImageView: UIImageView = {
@@ -26,22 +26,13 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
         let v = UIView()
         v.backgroundColor = .appAccent3
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.heightAnchor.constraint(equalToConstant: 55).isActive = true
-        v.widthAnchor.constraint(equalToConstant: 55).isActive = true
+        v.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        v.widthAnchor.constraint(equalToConstant: 40).isActive = true
         v.addSubview(iconImageView)
         iconImageView.fillSuperview(padding: .init(top: 5, left: 5, bottom: 5, right: 5))
-        v.layer.cornerRadius = 55/2
+        v.layer.cornerRadius = 40/2
         v.layer.masksToBounds = true
         return v
-    }()
-    
-    private lazy var contentStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [textStackView, iconImageViewBackground])
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.axis = .horizontal
-        sv.spacing = 12
-        sv.distribution = .fill
-        return sv
     }()
     
     // MARK: - Initializer
@@ -64,15 +55,17 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     }
         
     override func setupViews() {
-        addSubview(contentStackView)
-        NSLayoutConstraint.activate([
-            contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -26),
-        ])
-        
-        NSLayoutConstraint.activate([
-            iconImageViewBackground.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
+        addSubview(iconImageViewBackground)
+        iconImageViewBackground
+            .setLeadingAnchor(padding: 16)
+            .setCenterYAnchor(padding: 0)
+            
+        addSubview(textStackView)
+        textStackView
+            .setTopAnchor(padding: 12)
+            .setLeadingAnchor(relativeTo: iconImageViewBackground, padding: 16)
+            .setTrailingAnchor(padding: 26)
+            .setBottomAnchor(padding: 12)
     }
 
     private func showLoading() {

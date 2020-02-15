@@ -115,8 +115,77 @@ extension UIView {
             heightAnchor.constraint(equalToConstant: size.height).isActive = true
         }
     }
-    
 }
+
+extension UIView {
+    @discardableResult
+    func setLeadingAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+        translatesAutoresizingMaskIntoConstraints = false
+        if let relativeView = relativeView {
+            leadingAnchor.constraint(equalTo: relativeView.trailingAnchor, constant: padding).isActive = true
+        } else {
+            guard let superview = superview else { return self }
+            leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: padding).isActive = true
+        }
+        return self
+    }
+    @discardableResult
+    func setTrailingAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+        translatesAutoresizingMaskIntoConstraints = false
+        if let relativeView = relativeView {
+            trailingAnchor.constraint(equalTo: relativeView.leadingAnchor, constant: -padding).isActive = true
+        } else {
+            guard let superview = superview else { return self }
+            trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -padding).isActive = true
+        }
+        return self
+    }
+    @discardableResult
+    func setTopAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+        translatesAutoresizingMaskIntoConstraints = false
+        if let relativeView = relativeView {
+            topAnchor.constraint(equalTo: relativeView.bottomAnchor, constant: padding).isActive = true
+        } else {
+            guard let superview = superview else { return self }
+            topAnchor.constraint(equalTo: superview.topAnchor, constant: padding).isActive = true
+        }
+        return self
+    }
+    @discardableResult
+    func setBottomAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+        translatesAutoresizingMaskIntoConstraints = false
+        if let relativeView = relativeView {
+            bottomAnchor.constraint(equalTo: relativeView.topAnchor, constant: -padding).isActive = true
+        } else {
+            guard let superview = superview else { return self }
+            bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -padding).isActive = true
+        }
+        return self
+    }
+    @discardableResult
+    func setCenterYAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+        translatesAutoresizingMaskIntoConstraints = false
+        if let relativeView = relativeView {
+            centerYAnchor.constraint(equalTo: relativeView.centerYAnchor, constant: -padding).isActive = true
+        } else {
+            guard let superview = superview else { return self }
+            centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: -padding).isActive = true
+        }
+        return self
+    }
+    @discardableResult
+    func setCenterXAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+        translatesAutoresizingMaskIntoConstraints = false
+        if let relativeView = relativeView {
+            centerXAnchor.constraint(equalTo: relativeView.centerXAnchor, constant: -padding).isActive = true
+        } else {
+            guard let superview = superview else { return self }
+            centerXAnchor.constraint(equalTo: superview.centerXAnchor, constant: -padding).isActive = true
+        }
+        return self
+    }
+}
+
 
 // MARK: - Rounded Corners
 

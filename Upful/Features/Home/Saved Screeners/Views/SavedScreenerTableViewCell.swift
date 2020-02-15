@@ -22,7 +22,7 @@ class SavedScreenerTableViewCell: UITableViewCell {
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 3
+        label.numberOfLines = 4
         label.text = "\n\n"
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         return label
@@ -30,8 +30,9 @@ class SavedScreenerTableViewCell: UITableViewCell {
     
     lazy var textStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .fill
         stackView.alignment = .top
         stackView.spacing = 8
         stackView.isBaselineRelativeArrangement = true

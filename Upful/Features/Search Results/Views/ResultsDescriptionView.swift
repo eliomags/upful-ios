@@ -46,7 +46,7 @@ class ResultsDescriptionView: UIView {
     }()
     
     var imageIcon: UIImage = UIImage(systemName: "pencil")?
-        .withAlignmentRectInsets(.init(top: -7, left: -7, bottom: -7, right: -7))
+        .withAlignmentRectInsets(.init(top: -3, left: -3, bottom: -3, right: -3))
         .withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
     
     lazy var imageView: UIImageView = {
@@ -59,11 +59,11 @@ class ResultsDescriptionView: UIView {
         let v = UIView()
         v.backgroundColor = .appAccent3
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.heightAnchor.constraint(equalToConstant: 55).isActive = true
-        v.widthAnchor.constraint(equalToConstant: 55).isActive = true
+        v.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        v.widthAnchor.constraint(equalToConstant: 45).isActive = true
         v.addSubview(imageView)
         imageView.fillSuperview(padding: .init(top: 5, left: 5, bottom: 5, right: 5))
-        v.layer.cornerRadius = 55/2
+        v.layer.cornerRadius = 45/2
         v.layer.masksToBounds = true
         return v
     }()
@@ -73,13 +73,15 @@ class ResultsDescriptionView: UIView {
         v.translatesAutoresizingMaskIntoConstraints = false
         v.backgroundColor = VersionManager.collectionCellColor()
         v.addSubview(imageViewBackground)
-        imageViewBackground.centerYAnchor.constraint(equalTo: v.centerYAnchor).isActive = true
-        imageViewBackground.trailingAnchor.constraint(equalTo: v.trailingAnchor, constant: -12).isActive = true
-        
+        imageViewBackground
+            .setCenterYAnchor(padding: 0)
+            .setLeadingAnchor(padding: 16)
         v.addSubview(contentStackView)
-        contentStackView.anchor(top: v.topAnchor, leading: v.leadingAnchor,
-                                bottom: v.bottomAnchor, trailing: imageView.leadingAnchor,
-                                padding: .init(top: 22, left: 22, bottom: 16, right: 12))
+        contentStackView
+            .setTopAnchor(padding: 22)
+            .setLeadingAnchor(relativeTo: imageViewBackground, padding: 16)
+            .setBottomAnchor(padding: 16)
+            .setTrailingAnchor(padding: 16)
         v.layer.masksToBounds = true
         v.layer.cornerRadius = 6
         v.setupShadow(intensity: .light, color: .label)
