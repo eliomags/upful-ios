@@ -17,7 +17,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - Dependencies
         
-    var screenerTitleText: String = "No Title"
+    var screenerTitleText: String = "Custom"
     var screenerID: String?
     var manualScreenItems: [ManualScreenItem] {
         didSet {
@@ -154,12 +154,15 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
             if shouldNavigate {
                 AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .manual))
-                coordinator = SearchResultsCoordinator(presenter: self,
-                                                       searchParameters: manualScreenItems.asURLComponents,
-                                                       title: "Custom Search",
-                                                       screenerDescription: manualScreenItems.asDescription,
-                                                       headerbackgroundColor: .appAccent3,
-                                                       id: UUID().uuidString, headerSymbol: nil)
+                coordinator = SearchResultsCoordinator(
+                    presenter: self,
+                    searchParameters: manualScreenItems.asURLComponents,
+                    title: "Custom",
+                    screenerDescription: manualScreenItems.asDescription,
+                    headerbackgroundColor: .appAccent3,
+                    id: UUID().uuidString,
+                    headerSymbol: nil
+                )
                 coordinator?.start()
             } else {
                 let presenter = SubscriptionPresenter(type: .screeningLimit)
@@ -214,7 +217,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     fileprivate func handleSaveCompletion(_ titleTextFieldText: String?) {
         self.updateScreenerParameters(completion: {
             let savedScreener = SavedScreener(context: PersistenceService.shared.persistentContainer.viewContext)
-            savedScreener.title = titleTextFieldText ?? "No Title"
+            savedScreener.title = titleTextFieldText ?? "Custom"
             savedScreener.screenDescription = manualScreenItems.asDescription
             savedScreener.id = screenerID ?? UUID().uuidString
             savedScreener.searchParameters = manualScreenItems.asURLComponents.joined(separator: ",")
@@ -240,7 +243,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
             "blue": blue,
             "alpha": 1
         ]
-        if let data = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
+        if let data = try? JSONSerialization.data(withJSONObject: jsonObject, options: []),
             let str = String(data: data, encoding: .utf8) {
             return str
         } else {
@@ -260,9 +263,9 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                 titleTextField.placeholder = "Title"
             }
             
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
+            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { [weak alert] (_) in
                 var titleTextFieldText = alert?.textFields![0].text
-                if titleTextFieldText == "" { titleTextFieldText = "No Title" }
+                if titleTextFieldText == "" { titleTextFieldText = "Custom" }
                 self.handleSaveCompletion(titleTextFieldText)
             }))
             

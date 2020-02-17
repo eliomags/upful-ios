@@ -155,6 +155,45 @@ final class ScreenResultsViewController: UIViewController {
         })
     }
     
+    func handleSaveCompletion(with title: String) {
+        PermissionManager.shared.getSaveScreenerPermission { [weak self] (isAuthorized) in
+            guard let self = self else { return }
+            if isAuthorized {
+                self.saveButton.isSelected = true
+                guard var screenerViewModel = self.screener else { return }
+                screenerViewModel.title = title
+                self.localScreenerLoader?.save(screener: screenerViewModel.toScreener())
+                InformationViewPresenter().showSaveSuccess(in: self)
+            } else {
+                let presenter = SubscriptionPresenter(type: .savedScreenerLimit)
+                presenter.present(in: self)
+            }
+        }
+    }
+    
+    fileprivate func saveScreener() {
+        if screener?.title == "Custom" {
+            let alert = UIAlertController(
+                            title: "Add to Favorites",
+                            message: "Give your screener a name.",
+                            preferredStyle: .alert
+            )
+            alert.addTextField { (titleTextField) in
+                titleTextField.text = self.screener?.title
+                titleTextField.placeholder = "Title"
+            }
+            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { [weak alert] (_) in
+                var titleTextFieldText = alert?.textFields![0].text
+                if titleTextFieldText == "" { titleTextFieldText = "No Title" }
+                self.handleSaveCompletion(with: titleTextFieldText ?? "No Title")
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            self.handleSaveCompletion(with: screener?.title ?? "No Title")
+        }
+    }
+    
     private enum FetchType {
         case initial, appending
     }
@@ -233,14 +272,14 @@ final class ScreenResultsViewController: UIViewController {
         }
         self.present(sortMenu, animated: true, completion: nil)
     }
-    
+        
     @objc private func handleSaveTap(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
         guard let screenerViewModel = screener else { return }
         guard let id = screenerViewModel.documentID else { return }
-        if sender.isSelected {
-            localScreenerLoader?.save(screener: screenerViewModel.toScreener())
+        if !sender.isSelected {
+            saveScreener()
         } else {
+            sender.isSelected = !sender.isSelected
             localScreenerLoader?.delete(with: id)
         }
     }
@@ -283,5 +322,15 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
         
         RemoteStockManager.updateInterest(for: selectedCompany.ticker, name: selectedCompany.name)
         self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+extension ScreenResultsViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {
+        
+    }
+    
+    func userDidSignUp() {
+        
     }
 }

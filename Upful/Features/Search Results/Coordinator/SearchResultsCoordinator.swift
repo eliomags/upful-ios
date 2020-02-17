@@ -20,12 +20,9 @@ final class SearchResultsCoordinator {
     let screener: ScreenerViewModel?
     
     init(presenter: UIViewController,
-         searchParameters: [String],
-         title: String,
-         screenerDescription: String,
-         headerbackgroundColor: UIColor,
-         id: String,
-         headerSymbol: UIImage? = nil) {
+         searchParameters: [String], title: String,
+         screenerDescription: String, headerbackgroundColor: UIColor,
+         id: String, headerSymbol: UIImage? = nil) {
         self.presenter = presenter
         self.searchParameters = searchParameters
         self.navigationTitle = title
@@ -33,10 +30,11 @@ final class SearchResultsCoordinator {
         self.headerbackgroundColor = headerbackgroundColor
         self.id = id
         self.headerSymbol = headerSymbol
-        self.screener = ScreenerViewModel(title: title, description: screenerDescription,
-                                          searchParameters: searchParameters,
-                                          interest: 0, documentID: id, colorMap: ["red": 3, "green": 156, "blue": 161, "alpha": 1],
-                                          symbol: "pencil")
+        self.screener = ScreenerViewModel(
+            title: title, description: screenerDescription,
+            searchParameters: searchParameters,
+            interest: 0, documentID: id, colorMap: ["red": 3, "green": 156, "blue": 161, "alpha": 1],
+            symbol: "pencil")
     }
     
     init(presenter: UIViewController, screenerViewModel: ScreenerViewModel) {
@@ -74,7 +72,7 @@ extension SearchResultsCoordinator: Coordinator {
         resultsVC.resultsDescriptionHeaderLabel.titleLabel.text = navigationTitle
         resultsVC.resultsDescriptionHeaderLabel.descriptionLabel.text = screenerDescription
         resultsVC.resultsDescriptionHeaderLabel.imageViewBackground.backgroundColor = headerbackgroundColor
-        resultsVC.screener = self.screener
+        resultsVC.screener = screener
         if let headerSymbol = headerSymbol {
             resultsVC.resultsDescriptionHeaderLabel.imageView.image = headerSymbol
         }

@@ -58,7 +58,7 @@ class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
 }
 
 struct ScreenerViewModel: Codable {
-    let title: String
+    var title: String
     let description: String
     let searchParameters: [String]
     var interest: Int
