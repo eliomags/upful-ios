@@ -87,8 +87,14 @@ class SavedScreenersViewModelTest: XCTestCase {
     func testRemoveScreener() {
         sut = makeSUTwithData()
         sut!.screeners = [
-            Screener(title: "No Title1", description: "test description1", urlComponents: [], imageUrlString: nil, manualScreenItems: []),
-            Screener(title: "No Title2", description: "test description2", urlComponents: [], imageUrlString: nil, manualScreenItems: [])
+            Screener(title: "No Title1", description: "test description1",
+                     urlComponents: [], symbol: "",
+                     colorMap: "", id: "",
+                     manualScreenItems: []),
+            Screener(title: "No Title2", description: "test description2",
+                     urlComponents: [], symbol: "",
+                     colorMap: "", id: "",
+                     manualScreenItems: [])
         ]
         
         XCTAssertEqual(sut!.screeners.count, 2)
@@ -121,7 +127,7 @@ class SavedScreenersViewModelTest: XCTestCase {
 }
 
 private class MockSavedScreenerLoaderEmpty: LocalScreenerLoaderProtocol {
-    func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion) {
+    func load(completion: @escaping SavedScreenerLoadingCompletion) {
         DispatchQueue.global().async {
             completion(Result {
                 return []
@@ -129,31 +135,37 @@ private class MockSavedScreenerLoaderEmpty: LocalScreenerLoaderProtocol {
         }
     }
     func removeScreenerParameters(with title: String) {}
-    func removeScreener(with title: String) {}
-    func saveScreener(screener: Screener) {}
+    func delete(with title: String) {}
+    func save(screener: Screener) {}
 }
 private class MockSavedScreenerLoaderLoaded: LocalScreenerLoaderProtocol {
-    func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion) {
+    func load(completion: @escaping SavedScreenerLoadingCompletion) {
         DispatchQueue.global().async {
             completion(Result {
                 return [
-                    Screener(title: "No Title1", description: "test description1", urlComponents: [], imageUrlString: nil, manualScreenItems: []),
-                    Screener(title: "No Title2", description: "test description2", urlComponents: [], imageUrlString: nil, manualScreenItems: []),
+                    Screener(title: "No Title1", description: "test description1",
+                             urlComponents: [], symbol: "",
+                             colorMap: "", id: "",
+                             manualScreenItems: []),
+                    Screener(title: "No Title2", description: "test description2",
+                             urlComponents: [], symbol: "",
+                             colorMap: "", id: "",
+                             manualScreenItems: [])
                 ]
             })
         }
     }
     func removeScreenerParameters(with title: String) {}
-    func removeScreener(with title: String) {}
-    func saveScreener(screener: Screener) {}
+    func delete(with title: String) {}
+    func save(screener: Screener) {}
 }
 private class MockSavedScreenerLoaderError: LocalScreenerLoaderProtocol {
-    func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion) {
+    func load(completion: @escaping SavedScreenerLoadingCompletion) {
         DispatchQueue.global().async {
             completion(.failure(NSError()))
         }
     }
     func removeScreenerParameters(with title: String) {}
-    func removeScreener(with title: String) {}
-    func saveScreener(screener: Screener) {}
+    func delete(with title: String) {}
+    func save(screener: Screener) {}
 }

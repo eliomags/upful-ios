@@ -12,17 +12,13 @@ final class ScreenResultsViewController: UIViewController {
     
     // MARK: - Dependencies
     
-    let searchParameters: [String]
     let intrinioAPI: IntrinioAPI
-    
-    // Load currently saved screeners to determine save state
     var localScreenerLoader: LocalScreenerLoaderProtocol? = LocalScreenerLoader()
-    
-    // Save new screener/Override screener with same name
-    
+        
     // MARK: - Properties
     
-    var headerBackground: UIColor?
+    var screener: ScreenerViewModel?
+    let searchParameters: [String]
     
     // MARK:- State
     
@@ -87,6 +83,7 @@ final class ScreenResultsViewController: UIViewController {
     
     lazy var saveButton: SaveButton = {
         let b = SaveButton()
+        b.addTarget(self, action: #selector(handleSaveTap), for: .touchUpInside)
         return b
     }()
     
@@ -112,18 +109,19 @@ final class ScreenResultsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkScreenerStatus()
+        setSavedState()
         fetchTableData(parameters: searchParameters, fetchType: .initial)
         isLoading = true
     }
 
-    // MARK: - View Set Up
+    // MARK: - View Setup
     
     fileprivate func contentViewSetup() {
         view.backgroundColor = .systemBackground
         view.addSubview(resultsDescriptionHeaderLabel)
-        resultsDescriptionHeaderLabel.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor,
-                                      bottom: nil, trailing: view.trailingAnchor)
+        resultsDescriptionHeaderLabel.anchor(
+            top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor,
+            bottom: nil, trailing: view.trailingAnchor)
         view.addSubview(feedTableView)
         feedTableView.fillSuperview()
     }
@@ -135,16 +133,24 @@ final class ScreenResultsViewController: UIViewController {
         let saveButton = UIBarButtonItem(customView: self.saveButton)
         navigationItem.rightBarButtonItems = [saveButton, sortButton]
     }
+    
+    // MARK: - View Configuration
+    
+    fileprivate func setSavedState() {
+        checkScreenerStatus { (isSaved) in
+            self.saveButton.isSelected = isSaved
+        }
+    }
 
     // MARK: - Fileprivate Functions
     
-    fileprivate func checkScreenerStatus() {
-        localScreenerLoader?.loadSavedScreeners(completion: { (res) in
+    fileprivate func checkScreenerStatus(completion: @escaping ((Bool) -> Void)) {
+        localScreenerLoader?.load(completion: { (res) in
             switch res {
             case .success(let screeners):
-                print(screeners.map { $0.title })
-            case .failure(let err):
-                print(err.localizedDescription)
+                completion(screeners.contains(where: { $0.id == self.screener?.documentID ?? UUID().uuidString }))
+            case .failure(_):
+                completion(false)
             }
         })
     }
@@ -210,7 +216,6 @@ final class ScreenResultsViewController: UIViewController {
     @objc private func handleSortTap(_ sender: UIButton) {
         intrinioAPI.screenPage = 1
         let sortMenu = UIAlertController(title: nil, message: "Choose Sort", preferredStyle: .actionSheet)
-        
         let marketCapAscAction = UIAlertAction(title: "Market Cap Ascending", style: .default, handler: { _ in
             self.intrinioAPI.sortDirection = .asc
             self.feedTableView.reloadData()
@@ -221,13 +226,23 @@ final class ScreenResultsViewController: UIViewController {
             self.feedTableView.reloadData()
             self.fetchTableData(parameters: self.searchParameters, fetchType: .initial)
         })
-
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         [marketCapAscAction, marketCapDescAction, cancelAction].forEach { (action) in
             sortMenu.addAction(action)
         }
         self.present(sortMenu, animated: true, completion: nil)
+    }
+    
+    @objc private func handleSaveTap(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        guard let screenerViewModel = screener else { return }
+        guard let id = screenerViewModel.documentID else { return }
+        if sender.isSelected {
+            localScreenerLoader?.save(screener: screenerViewModel.toScreener())
+        } else {
+            localScreenerLoader?.delete(with: id)
+        }
     }
 }
 

@@ -17,6 +17,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: - Dependencies
         
+    var screenerTitleText: String = "No Title"
+    var screenerID: String?
     var manualScreenItems: [ManualScreenItem] {
         didSet {
             if manualScreenItems.isEmpty {
@@ -156,8 +158,8 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                                                        searchParameters: manualScreenItems.asURLComponents,
                                                        title: "Custom Search",
                                                        screenerDescription: manualScreenItems.asDescription,
-                                                       headerbackgroundColor: .appAccent2,
-                                                       headerSymbol: nil)
+                                                       headerbackgroundColor: .appAccent3,
+                                                       id: UUID().uuidString, headerSymbol: nil)
                 coordinator?.start()
             } else {
                 let presenter = SubscriptionPresenter(type: .screeningLimit)
@@ -191,73 +193,63 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     
     // MARK: - Core Data Functionality
-    
-    var screenerTitleText: String = "No Title"
-    
-    private func updateScreenerParameters(title: String, completion: (()->Void)) {
         
-        /// Remove all screener Parameters with the title
-        
-        let request = SavedScreenerParameter.createfetchRequest()
+    private func updateScreenerParameters(completion: (()->Void)) {
+        if screenerID == nil { screenerID = UUID().uuidString }
         let context = PersistenceService.shared.persistentContainer.viewContext
-        request.predicate = NSPredicate(format: "savedScreener.title == %@", title)
-        do {
-            let parameters = try PersistenceService.shared.persistentContainer.viewContext.fetch(request)
-            for parameter in parameters {
-                context.delete(parameter)
-            }
-            PersistenceService.shared.saveContext()
-        } catch {
-            print(error.localizedDescription)
-            return
-        }
-        
-        /// Remove currently saved screener with the title
-        
         let savedScreenerRequest = SavedScreener.createfetchRequest()
-        savedScreenerRequest.predicate = NSPredicate(format: "title = %@", title)
+        savedScreenerRequest.predicate = NSPredicate(format: "id = %@", screenerID!)
         do {
-            let objects = try context.fetch(savedScreenerRequest)
-            for object in objects {
-                context.delete(object)
-            }
+            let savedScreeners = try context.fetch(savedScreenerRequest)
+            for savedScreener in savedScreeners { context.delete(savedScreener) }
             PersistenceService.shared.saveContext()
+            completion()
         } catch {
             print(error.localizedDescription)
+            completion()
             return
-        }
-        completion()
-    }
-    
-    private func saveParameters(with destination: SavedScreener) {
-        manualScreenItems.forEach { (screenerItem) in
-            let screenerParameter = SavedScreenerParameter(context: PersistenceService.shared.persistentContainer.viewContext)
-            screenerParameter.value = screenerItem.value ?? 0
-            screenerParameter.parameter = screenerItem.parameter.rawValue
-            screenerParameter.criteria = screenerItem.criteria.rawValue
-            screenerParameter.savedScreener = destination
-            PersistenceService.shared.saveContext()
         }
     }
     
     fileprivate func handleSaveCompletion(_ titleTextFieldText: String?) {
-        self.updateScreenerParameters(title: titleTextFieldText ?? "No Title", completion: {
+        self.updateScreenerParameters(completion: {
             let savedScreener = SavedScreener(context: PersistenceService.shared.persistentContainer.viewContext)
             savedScreener.title = titleTextFieldText ?? "No Title"
-            savedScreener.screenDescription = ""
-            
-            self.saveParameters(with: savedScreener)
+            savedScreener.screenDescription = manualScreenItems.asDescription
+            savedScreener.id = screenerID ?? UUID().uuidString
+            savedScreener.searchParameters = manualScreenItems.asURLComponents.joined(separator: ",")
+            savedScreener.colorMap = getColorMapAsString()
+            savedScreener.symbol = "pencil"
+            PersistenceService.shared.saveContext()
             
             AnalyticsLogger.instance.reportEvents(event: .savedScreener(description: configureURLComponents().joined(separator: ",")))
-            
             PersistenceService.shared.saveContextWithCompletion(completion: { [unowned self] in
                 InformationViewPresenter().showSaveSuccess(in: self)
             })
         })
     }
     
+    fileprivate func getColorMapAsString() -> String {
+        let red = 3
+        let green = 156
+        let blue = 161
+
+        let jsonObject: [String: Any] = [
+            "red": red,
+            "green": green,
+            "blue": blue,
+            "alpha": 1
+        ]
+        if let data = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
+            let str = String(data: data, encoding: .utf8) {
+            return str
+        } else {
+            return ""
+        }
+    }
+    
     fileprivate func saveScreener() {
-        self.checkCurrentParameters { [weak self] in
+        checkCurrentParameters { [weak self] in
             guard let self = self else { return }
             let alert = UIAlertController(title: "Add to Favorites",
                                           message: "Give your screener a name.",

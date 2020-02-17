@@ -57,26 +57,36 @@ class RemoteScreenerLoader: RemoteScreenerLoaderProtocol {
     }
 }
 
-struct ScreenerViewModel {
+struct ScreenerViewModel: Codable {
     let title: String
     let description: String
-    let imageUrlString: String
     let searchParameters: [String]
     var interest: Int
     let documentID: String?
     let colorMap: [String: Double]?
     let symbol: String?
+    
+    init(title: String, description: String, searchParameters: [String],
+         interest: Int, documentID: String,
+         colorMap: [String: Double]?, symbol: String) {
+        self.title = title
+        self.description = description
+        self.searchParameters = searchParameters
+        self.interest = interest
+        self.documentID = documentID
+        self.colorMap = colorMap
+        self.symbol = symbol
+    }
 }
-
-extension ScreenerViewModel: Codable {}
 
 extension ScreenerViewModel {
     func getColor() -> UIColor {
         guard let colorMap = colorMap else { return UIColor.appAccent2 }
-        return UIColor(red: CGFloat(colorMap["red"] ?? 0)/255,
-                       green: CGFloat(colorMap["green"] ?? 0)/255,
-                       blue: CGFloat(colorMap["blue"] ?? 0)/255,
-                       alpha: CGFloat(colorMap["alpha"] ?? 1))
+        return UIColor(
+            red: CGFloat(colorMap["red"] ?? 0)/255,
+            green: CGFloat(colorMap["green"] ?? 0)/255,
+            blue: CGFloat(colorMap["blue"] ?? 0)/255,
+            alpha: CGFloat(colorMap["alpha"] ?? 1))
     }
     
     func getSymbol() -> UIImage? {
@@ -84,5 +94,26 @@ extension ScreenerViewModel {
         return UIImage(systemName: symbolName)?
             .withAlignmentRectInsets(.init(top: -3, left: -3, bottom: -3, right: -3))
             .withTintColor(.white, renderingMode: .alwaysOriginal)
+    }
+    
+    func toScreener() -> Screener {
+        return Screener(
+            title: title, description: description,
+            urlComponents: searchParameters,
+            symbol: symbol ?? "pencil",
+            colorMap: colorMapToString(),
+            id: documentID ?? "")
+    }
+    
+    func colorMapToString() -> String {
+        var res = "not set"
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: self.colorMap ?? [:], options: [])
+            let str = String(data: jsonData, encoding: .utf8)
+            res = str ?? "Aint got shit"
+        } catch {
+            res = "error"
+        }
+        return res
     }
 }

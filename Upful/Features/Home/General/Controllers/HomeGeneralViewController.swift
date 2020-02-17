@@ -230,7 +230,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
                 self.coordinator = SearchResultsCoordinator(presenter: self,
                                                             searchParameters: randomSavedSearchParameters,
                                                             title: "Stocks You May Like", screenerDescription: "",
-                                                            headerbackgroundColor: .appAccent2)
+                                                            headerbackgroundColor: .appAccent3, id: "")
+            
                 self.coordinator?.start()
             }
             return preferenceHeader

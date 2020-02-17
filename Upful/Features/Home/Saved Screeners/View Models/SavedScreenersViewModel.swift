@@ -40,7 +40,7 @@ class SavedScreenersViewModel {
     
     func loadScreeners() {
         state = .loading
-        savedScreenerLoader.loadSavedScreeners { (result) in
+        savedScreenerLoader.load { (result) in
             switch result {
             case .success(let screeners):
                 self.screeners = screeners
@@ -55,19 +55,15 @@ class SavedScreenersViewModel {
         state = screeners.isEmpty ? .empty: .loaded
     }
     
-    func removeScreener(_ title: String) {
-        screeners.removeAll(where: { $0.title == title })
-        savedScreenerLoader.removeScreenerParameters(with: title)
-        savedScreenerLoader.removeScreener(with: title)
+    func removeScreener(_ id: String) {
+        screeners.removeAll(where: { $0.id == id })
+        savedScreenerLoader.delete(with: id)
     }
     
     func saveDatasourceConfiguration() {        
         screeners.forEach { (screener) in
-            savedScreenerLoader.removeScreenerParameters(with: screener.title)
-            savedScreenerLoader.removeScreener(with: screener.title)
+            savedScreenerLoader.delete(with: screener.id)
         }
-        
-        screeners.forEach({ savedScreenerLoader.saveScreener(screener: $0) })
+        screeners.forEach({ savedScreenerLoader.save(screener: $0) })
     }
-    
 }

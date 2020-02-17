@@ -19,7 +19,10 @@ extension SavedScreener {
 
     @NSManaged public var screenDescription: String?
     @NSManaged public var title: String
-    @NSManaged public var imageUrlString: String?
+    @NSManaged public var symbol: String
+    @NSManaged public var searchParameters: String
+    @NSManaged public var colorMap: String
+    @NSManaged public var id: String
     @NSManaged public var savedScreenerParameter: NSSet
 
 }
@@ -39,4 +42,19 @@ extension SavedScreener {
     @objc(removeSavedScreenerParameter:)
     @NSManaged public func removeFromSavedScreenerParameter(_ values: NSSet)
 
+}
+
+extension SavedScreener {
+    var screenerTitle: String {
+        return self.title
+    }
+    convenience init(title: String, description: String, symbol: String, searchParameters: String, colorMap: String, id: String) {
+        self.init()
+        self.title = title
+        self.screenDescription = description
+        self.symbol = symbol
+        self.searchParameters = searchParameters
+        self.colorMap = colorMap
+        self.id = id
+    }
 }

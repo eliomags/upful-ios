@@ -59,7 +59,6 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
         iconImageViewBackground
             .setLeadingAnchor(padding: 16)
             .setCenterYAnchor(padding: 0)
-            
         addSubview(textStackView)
         textStackView
             .setTopAnchor(padding: 12)

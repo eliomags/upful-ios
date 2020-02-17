@@ -6,30 +6,59 @@
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-struct Screener: Hashable {
-    static func == (lhs: Screener, rhs: Screener) -> Bool {
-        return lhs.title == rhs.title
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(title)
-    }
-    
+struct Screener {
     let title: String
     let description: String
     let urlComponents: [String]
-    let manualScreenItems: [ManualScreenItem] /// used for edit navigation & result description
-    let imageUrlString: String?
-    
+    let symbol: String?
+    let colorMap: String
+    let id: String
+
     init(title: String, description: String, urlComponents: [String],
-         imageUrlString: String?, manualScreenItems: [ManualScreenItem]) {
+         symbol: String?, colorMap: String, id: String) {
         self.title = title
         self.description = description
         self.urlComponents = urlComponents
-        self.manualScreenItems = manualScreenItems
-        self.imageUrlString = imageUrlString
+        self.symbol = symbol
+        self.colorMap = colorMap
+        self.id = id
+    }
+}
+
+extension Screener: Hashable {
+    static func == (lhs: Screener, rhs: Screener) -> Bool {
+        return lhs.id == rhs.id
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+extension Screener {
+    func getSymbol() -> UIImage? {
+        guard let symbolName = symbol else { return nil }
+        return UIImage(systemName: symbolName)?
+            .withAlignmentRectInsets(.init(top: -3, left: -3, bottom: -3, right: -3))
+            .withTintColor(.white, renderingMode: .alwaysOriginal)
+    }
+    func makeColorDictionary() -> [String: Double] {
+        if let data = colorMap.data(using: .utf8) {
+            if let colorDict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Double] {
+                return colorDict
+            } else {
+                return [:]
+            }
+        } else {
+            return [:]
+        }
+    }
+    func getColorMap() -> UIColor {
+        return UIColor(red: CGFloat((makeColorDictionary()["red"] ?? 3)/255),
+                       green: CGFloat((makeColorDictionary()["green"] ?? 156)/255),
+                       blue: CGFloat((makeColorDictionary()["blue"] ?? 161)/255),
+                       alpha: CGFloat(makeColorDictionary()["alpha"] ?? 1))
     }
 }
 

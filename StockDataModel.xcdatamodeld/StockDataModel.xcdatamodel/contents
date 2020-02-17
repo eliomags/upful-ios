@@ -10,25 +10,20 @@
         </uniquenessConstraints>
     </entity>
     <entity name="SavedScreener" representedClassName=".SavedScreener" syncable="YES">
-        <attribute name="imageUrlString" optional="YES" attributeType="String"/>
+        <attribute name="colorMap" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="screenDescription" attributeType="String"/>
+        <attribute name="searchParameters" optional="YES" attributeType="String"/>
+        <attribute name="symbol" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
-        <relationship name="savedScreenerParameter" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SavedScreenerParameter" inverseName="savedScreener" inverseEntity="SavedScreenerParameter"/>
         <fetchIndex name="byTitleIndex">
-            <fetchIndexElement property="title" type="Binary" order="ascending"/>
+            <fetchIndexElement property="id" type="Binary" order="ascending"/>
         </fetchIndex>
         <uniquenessConstraints>
             <uniquenessConstraint>
-                <constraint value="title"/>
+                <constraint value="id"/>
             </uniquenessConstraint>
         </uniquenessConstraints>
-    </entity>
-    <entity name="SavedScreenerParameter" representedClassName="SavedScreenerParameter" syncable="YES">
-        <attribute name="criteria" attributeType="String"/>
-        <attribute name="parameter" attributeType="String"/>
-        <attribute name="screener" optional="YES" attributeType="String"/>
-        <attribute name="value" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="savedScreener" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SavedScreener" inverseName="savedScreenerParameter" inverseEntity="SavedScreener"/>
     </entity>
     <entity name="SavedStock" representedClassName=".SavedStock" syncable="YES">
         <attribute name="companyName" optional="YES" attributeType="String"/>
@@ -42,8 +37,7 @@
     </entity>
     <elements>
         <element name="Notes" positionX="-54" positionY="45" width="128" height="75"/>
-        <element name="SavedScreener" positionX="-63" positionY="9" width="128" height="103"/>
-        <element name="SavedScreenerParameter" positionX="-63" positionY="9" width="128" height="120"/>
+        <element name="SavedScreener" positionX="-63" positionY="9" width="128" height="133"/>
         <element name="SavedStock" positionX="-63" positionY="-18" width="128" height="90"/>
     </elements>
 </model>

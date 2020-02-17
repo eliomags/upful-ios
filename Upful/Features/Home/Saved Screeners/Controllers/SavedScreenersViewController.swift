@@ -110,7 +110,7 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
     
     func setupTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.register(SavedScreenerTableViewCell.self, forCellReuseIdentifier: "screenerCell")
+        tableView.register(ScreenerPreviewTableViewCell.self, forCellReuseIdentifier: "screenerCell")
         view.addSubview(tableView)
         tableView.fillSuperview()
     }
@@ -123,20 +123,23 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
     
     // MARK: - Navigation
     
-    fileprivate func handleScreenerEdit(_ screener: Screener) {
-        let manualScreenItems = screener.manualScreenItems
-        let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems)
-        manualSearchVC.screenerTitleText = screener.title
-        navigationController?.pushViewController(manualSearchVC, animated: true)
-    }
+//    fileprivate func handleScreenerEdit(_ screener: Screener) {
+//        let manualScreenItems = screener.manualScreenItems
+//        let manualSearchVC = ManualSearchViewController(manualScreenItems: manualScreenItems)
+//        manualSearchVC.screenerTitleText = screener.title
+//        navigationController?.pushViewController(manualSearchVC, animated: true)
+//    }
     
     // MARK: - TableView Cells
     
     fileprivate func showLoadedCell(for indexPath: IndexPath) -> UITableViewCell {
-        guard let screenerCell = tableView.dequeueReusableCell(withIdentifier: "screenerCell", for: indexPath) as? SavedScreenerTableViewCell  else { return UITableViewCell() }
+        guard let screenerCell = tableView.dequeueReusableCell(withIdentifier: "screenerCell", for: indexPath) as? ScreenerPreviewTableViewCell  else { return UITableViewCell() }
         let screener = viewModel.screeners[indexPath.row]
         screenerCell.titleLabel.text = screener.title
         screenerCell.descriptionLabel.text = screener.description
+        screenerCell.iconImageView.image = screener.getSymbol()
+        screenerCell.iconImageViewBackground.backgroundColor = screener.getColorMap()
+        screenerCell.showLoaded()
         return screenerCell
     }
 
@@ -163,11 +166,7 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
     fileprivate func handleSearchResultNavigation(with screener: Screener) {
         PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
             if shouldNavigate {
-                coordinator = SearchResultsCoordinator(presenter: self,
-                                                       searchParameters: screener.urlComponents,
-                                                       title: screener.title,
-                                                       screenerDescription: screener.manualScreenItems.asDescription,
-                                                       headerbackgroundColor: .appAccent2)
+                coordinator = SearchResultsCoordinator(presenter: self, screener: screener)
                 coordinator?.start()
             }
             if !shouldNavigate {
@@ -211,7 +210,7 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
             let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] ( _, _, _) in
                 guard let self = self else { return }
                 let screener = self.viewModel.screeners[indexPath.row]
-                self.viewModel.removeScreener(screener.title)
+                self.viewModel.removeScreener(screener.id)
                 tableView.deleteRows(at: [indexPath], with: .automatic)
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -219,15 +218,15 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
                 }
                 Vibration.light.vibrate()
             }
-            let edit = UIContextualAction(style: .normal, title: "Edit") { [weak self] ( _, _, _) in
-                guard let self = self else { return }
-                let screener = self.viewModel.screeners[indexPath.row]
-                self.handleScreenerEdit(screener)
-            }
-            edit.backgroundColor = .appAccent2
-            edit.image = UIImage(systemName: "pencil")
+//            let edit = UIContextualAction(style: .normal, title: "Edit") { [weak self] ( _, _, _) in
+//                guard let self = self else { return }
+//                let screener = self.viewModel.screeners[indexPath.row]
+//                self.handleScreenerEdit(screener)
+//            }
+//            edit.backgroundColor = .appAccent2
+//            edit.image = UIImage(systemName: "pencil")
             delete.image = UIImage(systemName: "trash")
-            return UISwipeActionsConfiguration(actions: [delete,edit])
+            return UISwipeActionsConfiguration(actions: [delete])
         }
         return nil
     }
@@ -239,11 +238,11 @@ extension SavedScreenerViewController: UITableViewDragDelegate, UITableViewDropD
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         switch viewModel.state {
         case .loaded:
-            let screenerTitle = viewModel.screeners[indexPath.item].title
-            guard let data = screenerTitle.data(using: .utf8) else { return [] }
+            let screenerID = viewModel.screeners[indexPath.item].id
+            guard let data = screenerID.data(using: .utf8) else { return [] }
             let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: "kUTTypePlainText")
             let dragItem = UIDragItem(itemProvider: itemProvider)
-            dragItem.localObject = screenerTitle
+            dragItem.localObject = screenerID
             Vibration.light.vibrate()
             return [dragItem]
         default:

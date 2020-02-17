@@ -10,93 +10,70 @@ import Foundation
 
 protocol LocalScreenerLoaderProtocol {
     typealias SavedScreenerLoadingCompletion = (Result<[Screener],Error>) -> Void
-    func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion)
-    func removeScreenerParameters(with title: String)
-    func removeScreener(with title: String)
-    func saveScreener(screener: Screener)
+    func load(completion: @escaping SavedScreenerLoadingCompletion)
+    func delete(with id: String)
+    func save(screener: Screener)
 }
 
 class LocalScreenerLoader: LocalScreenerLoaderProtocol {
-    
     let persistenceService = PersistenceService.shared
-    
-    func loadSavedScreeners(completion: @escaping SavedScreenerLoadingCompletion) {
+         
+    func load(completion: @escaping SavedScreenerLoadingCompletion) {
         let request = SavedScreener.createfetchRequest()
         completion(Result {
             let savedScreeners = try persistenceService.persistentContainer.viewContext.fetch(request)
-            return mapToScreener(savedScreeners)
+            return mapSavedScreenerToScreener(savedScreeners)
         })
     }
-    
-    fileprivate func getParameters(for title: String) -> [SavedScreenerParameter] {
-        let savedParameters = SavedScreenerParameter.createfetchRequest()
-        savedParameters.predicate = NSPredicate(format: "savedScreener.title == %@", title)
-        let parameters = try? persistenceService.persistentContainer.viewContext.fetch(savedParameters)
-        return parameters ?? []
-    }
-    
-    // MARK: - Removing
-    
-    func removeScreenerParameters(with title: String) {
-        let context = persistenceService.persistentContainer.viewContext
-        let parameterRequest = SavedScreenerParameter.createfetchRequest()
         
-        parameterRequest.predicate = NSPredicate(format: "savedScreener.title == %@", title)
-        let searchParameters = try? context.fetch(parameterRequest)
-        searchParameters?.forEach({ context.delete($0) })
-        persistenceService.saveContext()
-    }
-    
-    func removeScreener(with title: String) {
+    func delete(with id: String) {
         let context = persistenceService.persistentContainer.viewContext
         let savedScreenerRequest = SavedScreener.createfetchRequest()
-        
-        savedScreenerRequest.predicate = NSPredicate(format: "title = %@", title)
+        savedScreenerRequest.predicate = NSPredicate(format: "id = %@", id)
         let savedScreeners = try? context.fetch(savedScreenerRequest)
         savedScreeners?.forEach({ context.delete($0) })
         persistenceService.saveContext()
     }
-    
-    // MARK: - Saving
-    
-    func saveScreener(screener: Screener) {
+        
+    func save(screener: Screener) {
         let context = persistenceService.persistentContainer.viewContext
         let savingScreener = SavedScreener(context: context)
-        
         savingScreener.title = screener.title
         savingScreener.screenDescription = screener.description
-        savingScreener.imageUrlString = screener.imageUrlString
-        
-        saveParameters(for: savingScreener, manualScreeningParameters: screener.manualScreenItems)
-
+        savingScreener.id = screener.id
+        savingScreener.searchParameters = screener.urlComponents.joined(separator: ",")
+        savingScreener.colorMap = screener.colorMap
+        savingScreener.symbol = screener.symbol ?? "pencil"
         persistenceService.saveContext()
-    }
-    
-    fileprivate func saveParameters(for screener: SavedScreener, manualScreeningParameters: [ManualScreenItem]) {
-        let context = persistenceService.persistentContainer.viewContext
-        
-        manualScreeningParameters.forEach { (screenerItem) in
-            let savingParameter = SavedScreenerParameter(context: context)
-            savingParameter.value = screenerItem.value ?? 0
-            savingParameter.parameter = screenerItem.parameter.rawValue
-            savingParameter.criteria = screenerItem.criteria.rawValue
-            savingParameter.savedScreener = screener
-            persistenceService.saveContext()
-        }
     }
     
     // MARK: - Fileprivate Functions
     
-    fileprivate func mapToScreener(_ savedScreeners: [SavedScreener]) -> [Screener] {        
-        let screeners = savedScreeners.map { (screener) -> Screener in
-            let parameters = getParameters(for: screener.title)
-            
-            return Screener(title: screener.title,
-                            description: parameters.configureDescription(),
-                            urlComponents: parameters.configureURLComponents(),
-                            imageUrlString: screener.imageUrlString,
-                            manualScreenItems: parameters.mapToManualScreenItems())
+    fileprivate func mapSavedScreenerToScreener(_ savedScreeners: [SavedScreener]) -> [Screener] {        
+        let screeners = savedScreeners.map { (savedScreener) -> Screener in
+            return Screener(
+                title: savedScreener.screenerTitle,
+                description: savedScreener.screenDescription ?? "",
+                urlComponents: mapURLComponents(from: savedScreener.searchParameters),
+                symbol: savedScreener.symbol,
+                colorMap: savedScreener.colorMap,
+                id: savedScreener.id)
         }
         return screeners
+    }
+    
+    func mapURLComponents(from components: String) -> [String] {
+        var res = [String]()
+        let arr = Array(components)
+        var foll = 0
+        for i in 0..<arr.count {
+            if arr[i] == "," {
+                res.append(String(arr[foll...i-1]))
+                foll = i + 1
+            } else if i == arr.count - 1 {
+                res.append(String(arr[foll...i]))
+            }
+        }
+        return res
     }
 }

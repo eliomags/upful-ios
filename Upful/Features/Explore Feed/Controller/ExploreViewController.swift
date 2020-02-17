@@ -188,13 +188,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         
         AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .popular))
         RemoteScreenerLoader.incrementScreenerInterest(documentID: selectedPopularScreener.documentID ?? "")
-        
-        coordinator = SearchResultsCoordinator(presenter: self,
-                                               searchParameters: selectedPopularScreener.searchParameters,
-                                               title: selectedPopularScreener.title,
-                                               screenerDescription: selectedPopularScreener.description,
-                                               headerbackgroundColor: selectedPopularScreener.getColor(),
-                                               headerSymbol: selectedPopularScreener.getSymbol())
+        coordinator = SearchResultsCoordinator(presenter: self, screenerViewModel: selectedPopularScreener)
         coordinator?.start()
     }
 
