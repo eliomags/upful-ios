@@ -160,7 +160,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
                     title: "Custom",
                     screenerDescription: manualScreenItems.asDescription,
                     headerbackgroundColor: .appAccent3,
-                    id: UUID().uuidString,
+                    id: screenerID ?? UUID().uuidString,
                     headerSymbol: nil
                 )
                 coordinator?.start()

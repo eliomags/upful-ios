@@ -2277,7 +2277,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.3.6;
+				CURRENT_PROJECT_VERSION = 4.3.7;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2285,7 +2285,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.3.6;
+				MARKETING_VERSION = 4.3.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2299,7 +2299,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.3.6;
+				CURRENT_PROJECT_VERSION = 4.3.7;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2307,7 +2307,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.3.6;
+				MARKETING_VERSION = 4.3.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

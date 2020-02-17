@@ -144,6 +144,7 @@ final class ScreenResultsViewController: UIViewController {
 
     // MARK: - Fileprivate Functions
     
+    // MARK: Screener Saving
     fileprivate func checkScreenerStatus(completion: @escaping ((Bool) -> Void)) {
         localScreenerLoader?.load(completion: { (res) in
             switch res {
@@ -163,7 +164,14 @@ final class ScreenResultsViewController: UIViewController {
                 guard var screenerViewModel = self.screener else { return }
                 screenerViewModel.title = title
                 self.localScreenerLoader?.save(screener: screenerViewModel.toScreener())
+                
                 InformationViewPresenter().showSaveSuccess(in: self)
+                AnalyticsLogger.instance.reportEvents(
+                    event: .savedScreener(
+                        description: screenerViewModel.searchParameters.joined(separator: ",")
+                    )
+                )
+                Vibration.light.vibrate()
             } else {
                 let presenter = SubscriptionPresenter(type: .savedScreenerLimit)
                 presenter.present(in: self)
@@ -194,6 +202,8 @@ final class ScreenResultsViewController: UIViewController {
         }
     }
     
+        // MARK: Data Loading
+    
     private enum FetchType {
         case initial, appending
     }
@@ -222,7 +232,7 @@ final class ScreenResultsViewController: UIViewController {
     }
     
     private func getPriceToEarningsData(_ searchResult: Stock) {
-        NetworkService.shared.intrioAPI.fetchStockSpecificFinancial(ticker: searchResult.ticker, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
+        intrinioAPI.fetchStockSpecificFinancial(ticker: searchResult.ticker, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
             guard let self = self else { return }
 
             switch result {
