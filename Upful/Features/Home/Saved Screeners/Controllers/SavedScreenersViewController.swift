@@ -253,7 +253,6 @@ extension SavedScreenerViewController: UITableViewDragDelegate, UITableViewDropD
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
         guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
         guard let sourceIndexPath = coordinator.items[0].sourceIndexPath else { return }
-        
         viewModel.screeners.moveItem(from: sourceIndexPath.row, to: destinationIndexPath.row)
         viewModel.saveDatasourceConfiguration()
         tableView.reloadData()

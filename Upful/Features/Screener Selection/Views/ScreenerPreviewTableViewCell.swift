@@ -50,8 +50,6 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        descriptionLabel.text = ""
-        titleLabel.text = ""
     }
         
     override func setupViews() {

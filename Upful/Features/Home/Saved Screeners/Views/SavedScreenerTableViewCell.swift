@@ -17,14 +17,16 @@ class SavedScreenerTableViewCell: UITableViewCell {
         label.numberOfLines = 2
         label.text = "\n"
         label.font = UIFont.systemFont(ofSize: 15, weight: .heavy)
+        label.sizeToFit()
         return label
     }()
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 4
+        label.numberOfLines = 3
         label.text = "\n\n"
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.sizeToFit()
         return label
     }()
     
