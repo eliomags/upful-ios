@@ -32,11 +32,13 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     
     // MARK: - Views
     
-    private lazy var tableHeader: TableHeaderView = {
-        let v = TableHeaderView()
-        v.detailsLabel.text = ""
-        v.headerLabel.text = "Select your search criteria."
+    private lazy var tableHeader: PreferenceHeaderView = {
+        let v = PreferenceHeaderView()
+        v.headerLabel.text = ""
+        v.descriptionText.text = "Select the search criteria for your screener."
+        v.descriptionText.textColor = .label
         v.translatesAutoresizingMaskIntoConstraints = false
+        v.heightAnchor.constraint(equalToConstant: 50).isActive = true
         v.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         return v
     }()
@@ -64,7 +66,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Initializer Methods
+    // MARK: - Lifecycle Methods
     
     override func loadView() {
         super.loadView()
@@ -99,7 +101,12 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
-        
+        view.addSubview(tableView)
+        tableView.anchor(top: view.layoutMarginsGuide.topAnchor,
+                         leading: view.leadingAnchor,
+                         bottom: view.layoutMarginsGuide.bottomAnchor,
+                         trailing: view.trailingAnchor,
+                         padding: .init(top: 0, left: 0, bottom: 16, right: 0))
         view.addSubview(searchButton)
         searchButton.anchor(top: nil,
                             leading: view.leadingAnchor,
@@ -107,13 +114,6 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
                             trailing: view.trailingAnchor,
                             padding: .init(top: 0, left: 16, bottom: 16, right: 16),
                             size: .init(width: 0, height: 50))
-        
-        view.addSubview(tableView)
-        tableView.anchor(top: view.layoutMarginsGuide.topAnchor,
-                         leading: view.leadingAnchor,
-                         bottom: searchButton.topAnchor,
-                         trailing: view.trailingAnchor,
-                         padding: .init(top: 0, left: 0, bottom: 16, right: 0))
     }
     
     // MARK: - Delegate Method

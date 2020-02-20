@@ -32,10 +32,13 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
 
     // MARK:- Views
     
-    lazy var header: TableHeaderView = {
-        let v = TableHeaderView()
-        v.headerLabel.text = "Add your parameters."
-        v.detailsLabel.text = " "
+    lazy var header: PreferenceHeaderView = {
+        let v = PreferenceHeaderView()
+        v.headerLabel.text = ""
+        v.descriptionText.text = "Add a parameter for each of your selected criteria."
+        v.descriptionText.textColor = .label
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.heightAnchor.constraint(equalToConstant: 70).isActive = true
         return v
     }()
     
@@ -73,7 +76,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
         fatalError()
     }
     
-    // MARK: - View Life Cycle Methods
+    // MARK: - View Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,7 +114,7 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     fileprivate func configureNavBar() {
-        navigationItem.title = ""
+        navigationItem.title = "Custom"
         let clearButton = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearCriteriaTapped))
         let save = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(handleSaveTap))
         navigationItem.rightBarButtonItems = [save,clearButton]
@@ -122,12 +125,6 @@ class ManualSearchViewController: UIViewController, UITableViewDelegate, UITable
     
     fileprivate func presentAlert() {
         let alert = UIAlertController(title: "Search Failed", message: "Please add a search parameter to continue.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    private func presentSuccessAlert() {
-        let alert = UIAlertController(title: "Success", message: "Saved Successfully.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
