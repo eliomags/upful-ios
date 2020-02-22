@@ -17,6 +17,10 @@ public struct Constants {
     struct Intrinio {
         static let apiKey = "&api_key=OjNiMzRkZmFlNDBkYjIzYTgyMTNhNjcyZGNlZmYzMjE1"
     }
+    struct IEXTrading {
+        static let productionKey = "?token=pk_93380460343741859a000b3c6414fedc"
+        static let sandboxKey = "?token=Tsk_67f3ff405c8446c9ade835c726935141"
+    }
     
     struct Legal {
         static let privacyPolicy = "https://app.termly.io/document/privacy-policy/75ab3001-a1a2-42a9-afce-443837abfbac"

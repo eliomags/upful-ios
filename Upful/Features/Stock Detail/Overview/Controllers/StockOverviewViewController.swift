@@ -20,7 +20,8 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     let ticker: String
     let companyName: String
     let intrinioApi: IntrinioAPI
-    private let stockNewsLoader = NewsLoader()
+    var stockNewsLoader: NewsLoaderProtocol? = NewsLoader()
+    var priceLoader: PriceLoader? = StockPriceLoader()
 
     private enum ReuseID {
         static let graphCell = "graphCell"
@@ -122,6 +123,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         setUpPremiumButton()
         setupViews()
         loadOverviewData()
+        loadPrice()
     }
     
     // MARK: - View Setup
@@ -165,6 +167,17 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     }
     
     // MARK: - Private Functions
+    
+    fileprivate func loadPrice() {
+        priceLoader?.load(for: ticker) { (res) in
+            switch res {
+            case .success(let price):
+                print("Price for \(self.ticker):", price)
+            case .failure(let err):
+                print(err)
+            }
+        }
+    }
     
     let chartDataGroup = DispatchGroup()
     
@@ -258,7 +271,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         
     func startNewsLoad() {
         secondaryGroup.enter()
-        stockNewsLoader.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
+        stockNewsLoader?.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
             switch result {
             case .success(let news):
                 let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})

@@ -111,7 +111,7 @@ final class ScreenResultsViewController: UIViewController {
         super.viewDidLoad()
         setSavedState()
         fetchTableData(parameters: searchParameters, fetchType: .initial)
-        isLoading = true
+        isLoading = true        
     }
 
     // MARK: - View Setup

@@ -180,6 +180,7 @@
 		3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC0523342BED00856205 /* PersistenceService.swift */; };
 		3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */; };
 		3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC082334360200856205 /* SavedStock+CoreDataProperties.swift */; };
+		3DF734C32400AC3600B297A4 /* PriceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF734C22400AC3600B297A4 /* PriceLoader.swift */; };
 		3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */; };
 		3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */; };
 		3DFD240023B672950027F5CF /* SentimentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FF23B672950027F5CF /* SentimentView.swift */; };
@@ -394,6 +395,7 @@
 		3DF5FC0523342BED00856205 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedStock+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3DF5FC082334360200856205 /* SavedStock+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedStock+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3DF734C22400AC3600B297A4 /* PriceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceLoader.swift; sourceTree = "<group>"; };
 		3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrebuiltScreenerViewController.swift.swift; path = "Upful/Features/Screener Selection/Prebuilt/Controllers/PrebuiltScreenerViewController.swift.swift"; sourceTree = SOURCE_ROOT; };
 		3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsHeaderTableCell.swift; sourceTree = "<group>"; };
 		3DFD23FF23B672950027F5CF /* SentimentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentimentView.swift; sourceTree = "<group>"; };
@@ -1486,6 +1488,7 @@
 		3DC4ED3022FE6EAA00232155 /* Search Results */ = {
 			isa = PBXGroup;
 			children = (
+				3DF734C12400AC2800B297A4 /* Models */,
 				3D7013E223ECFA8D00102E9C /* Coordinator */,
 				3D42BE3F23098BBB00806AFF /* Views */,
 				3D42BE3E23098BB400806AFF /* Controllers */,
@@ -1738,6 +1741,14 @@
 				3DF5FC082334360200856205 /* SavedStock+CoreDataProperties.swift */,
 			);
 			path = SavedStock;
+			sourceTree = "<group>";
+		};
+		3DF734C12400AC2800B297A4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3DF734C22400AC3600B297A4 /* PriceLoader.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		3DFAC57923B9AFDF00378AF0 /* Screener Selection */ = {
@@ -2018,6 +2029,7 @@
 				3DBEFFD223A9D5E900BA407E /* SavedStockLogicController.swift in Sources */,
 				3D0C5F6523395CD500F4A5FC /* Notes+CoreDataProperties.swift in Sources */,
 				3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */,
+				3DF734C32400AC3600B297A4 /* PriceLoader.swift in Sources */,
 				3D2F965D2318CC4E003811AB /* FinancialSectionView.swift in Sources */,
 				3DAB3ECD234F98860008CC18 /* PreferenceDataLoader.swift in Sources */,
 				3D2F964B2315CD34003811AB /* BarChartView.swift in Sources */,
