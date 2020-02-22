@@ -40,18 +40,22 @@ class StockDetailStackView: UIStackView {
 
 class SectionedDetailsStackView: StockDetailStackView {
     
-    let spacerView = SpacerView()
-
     override init(description: String) {
         super.init(description: description)
-        
-        addSubview(spacerView)
-        spacerView.anchor(top: bottomAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor,
-                          padding: .init(top: 4, left: 8, bottom: 0, right: 8))
+        addSeparator()
     }
     
     required init(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
+}
+
+extension UIView {
+    func addSeparator() {
+        let spacerView = SpacerView()
+        
+        addSubview(spacerView)
+        spacerView.anchor(top: bottomAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor,
+                          padding: .init(top: 4, left: 8, bottom: 0, right: 8))
+    }
 }

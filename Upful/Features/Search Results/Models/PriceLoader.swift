@@ -18,7 +18,7 @@ protocol PriceLoader {
     func load(for ticker: String, completion: @escaping PriceLoaderCompletion)
 }
 
-class StockPriceLoader: PriceLoader {
+final class StockPriceLoader: PriceLoader {
     fileprivate struct EndPoints {
         fileprivate static let sandbox = "https://sandbox.iexapis.com/stable/stock/"
         fileprivate static let production = "https://cloud.iexapis.com/stable/stock/"

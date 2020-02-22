@@ -27,6 +27,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         static let graphCell = "graphCell"
         static let calculationsCell = "calculationsCell"
         static let newsCell = "newsCell"
+        static let descriptionCellID = "descriptionCellID"
     }
     
     // MARK: - State
@@ -55,10 +56,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     fileprivate var calcData: [StandardizedFinancial] = []
     private(set) var stockNews: [StockNewsViewModel] = []
-
-    fileprivate var feedData: [[Any]] {
-        return [chartData, calcData, stockNews]
-    }
     
     // MARK: - Views
     
@@ -139,6 +136,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
         tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
+        tableView.register(StockDescriptionCell.self, forCellReuseIdentifier: ReuseID.descriptionCellID)
         tableView.backgroundColor = .clear
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
@@ -168,11 +166,24 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Private Functions
     
+    var stock: StockDetail?
+    
     fileprivate func loadPrice() {
         priceLoader?.load(for: ticker) { (res) in
             switch res {
             case .success(let price):
                 print("Price for \(self.ticker):", price)
+            case .failure(let err):
+                print(err)
+            }
+        }
+        StockDescriptionLoader().load(for: ticker) { (res) in
+            switch res {
+            case .success(let stockDetail):
+                self.stock = stockDetail
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
             case .failure(let err):
                 print(err)
             }
@@ -328,13 +339,13 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         } else {
             tableView.restore()
             tableView.separatorStyle = .none
-            if section == 2 { return feedData[section].count }
+            if section == 2 { return stockNews.count }
             return 1
         }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -355,9 +366,16 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         case 2:
             guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? SmallNewsCell else { return UITableViewCell() }
             newsCell.stockNews = stockNews[indexPath.row]
+        return newsCell
 
-            return newsCell
-        default: return UITableViewCell()
+        case 3:
+            guard let descriptionCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.descriptionCellID, for: indexPath) as? StockDescriptionCell else { return UITableViewCell() }
+            descriptionCell.descriptionLabel.text = stock?.description ?? ""
+            descriptionCell.employeeStackView.valueLabel.text = String(stock?.employees ?? 0)
+            return descriptionCell
+            
+        default:
+            return UITableViewCell()
         }
     }
     
@@ -377,7 +395,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         let header = LargeSectionHeaderLabel(padding: 16)
         header.backgroundColor = VersionManager.collectionCellColor2()
         if !isLoading {
-            let headerText = ["FINANCIALS", "METRICS", "NEWS"]
+            let headerText = ["FINANCIALS", "METRICS", "NEWS", "ABOUT"]
             header.text = headerText[section]
             return header
         }
@@ -403,7 +421,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == feedData.count - 1 {
+        if section == 3 {
             return 85
         } else {
             return 25

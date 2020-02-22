@@ -181,6 +181,8 @@
 		3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */; };
 		3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC082334360200856205 /* SavedStock+CoreDataProperties.swift */; };
 		3DF734C32400AC3600B297A4 /* PriceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF734C22400AC3600B297A4 /* PriceLoader.swift */; };
+		3DF734C62400E5D300B297A4 /* StockDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF734C52400E5D300B297A4 /* StockDescriptionCell.swift */; };
+		3DF734C92400E8AC00B297A4 /* StockDescriptionLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF734C82400E8AC00B297A4 /* StockDescriptionLoader.swift */; };
 		3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */; };
 		3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */; };
 		3DFD240023B672950027F5CF /* SentimentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FF23B672950027F5CF /* SentimentView.swift */; };
@@ -396,6 +398,8 @@
 		3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedStock+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3DF5FC082334360200856205 /* SavedStock+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedStock+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3DF734C22400AC3600B297A4 /* PriceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceLoader.swift; sourceTree = "<group>"; };
+		3DF734C52400E5D300B297A4 /* StockDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDescriptionCell.swift; sourceTree = "<group>"; };
+		3DF734C82400E8AC00B297A4 /* StockDescriptionLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDescriptionLoader.swift; sourceTree = "<group>"; };
 		3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrebuiltScreenerViewController.swift.swift; path = "Upful/Features/Screener Selection/Prebuilt/Controllers/PrebuiltScreenerViewController.swift.swift"; sourceTree = SOURCE_ROOT; };
 		3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsHeaderTableCell.swift; sourceTree = "<group>"; };
 		3DFD23FF23B672950027F5CF /* SentimentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentimentView.swift; sourceTree = "<group>"; };
@@ -765,6 +769,7 @@
 		3D2F96482315CD18003811AB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3DF734C42400E55000B297A4 /* Description Cell */,
 				3D2F965223169D24003811AB /* Header */,
 				3D2F964E23169CE2003811AB /* Graph Cell */,
 				3D2F964F23169CEB003811AB /* Calculations Cell */,
@@ -1608,6 +1613,7 @@
 		3DF5FBA5232BF4E700856205 /* Overview */ = {
 			isa = PBXGroup;
 			children = (
+				3DF734C72400E89E00B297A4 /* Model */,
 				3D2F96482315CD18003811AB /* Views */,
 				3DF5FBA7232BF52000856205 /* Controllers */,
 			);
@@ -1749,6 +1755,22 @@
 				3DF734C22400AC3600B297A4 /* PriceLoader.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		3DF734C42400E55000B297A4 /* Description Cell */ = {
+			isa = PBXGroup;
+			children = (
+				3DF734C52400E5D300B297A4 /* StockDescriptionCell.swift */,
+			);
+			path = "Description Cell";
+			sourceTree = "<group>";
+		};
+		3DF734C72400E89E00B297A4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3DF734C82400E8AC00B297A4 /* StockDescriptionLoader.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		3DFAC57923B9AFDF00378AF0 /* Screener Selection */ = {
@@ -1995,6 +2017,7 @@
 				3D58651A231C946600495D79 /* UserFeedbackPresenter.swift in Sources */,
 				3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */,
 				3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */,
+				3DF734C62400E5D300B297A4 /* StockDescriptionCell.swift in Sources */,
 				3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */,
 				3D7C855523380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift in Sources */,
 				3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */,
@@ -2018,6 +2041,7 @@
 				3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
 				3D55BD6423B7BEBB00B4FDF0 /* UIImage+Extensions.swift in Sources */,
+				3DF734C92400E8AC00B297A4 /* StockDescriptionLoader.swift in Sources */,
 				3D3749AC23B9B40A000D0597 /* NewsViewController.swift in Sources */,
 				3DAB3EB0234B6BAA0008CC18 /* ReportPresenter.swift in Sources */,
 				3DFD240023B672950027F5CF /* SentimentView.swift in Sources */,
