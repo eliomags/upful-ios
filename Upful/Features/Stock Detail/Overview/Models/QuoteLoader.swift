@@ -13,17 +13,22 @@ enum PriceLoaderError: Error {
     case connection
 }
 
-protocol PriceLoader {
-    typealias PriceLoaderCompletion = (Result<Double,PriceLoaderError>) -> Void
+protocol QuoteLoader {
+    typealias PriceLoaderCompletion = (Result<StockQuote,PriceLoaderError>) -> Void
     func load(for ticker: String, completion: @escaping PriceLoaderCompletion)
 }
 
-final class StockPriceLoader: PriceLoader {
+struct StockQuote: Codable {
+    let latestPrice: Double
+    let changePercent: Double
+}
+
+final class StockPriceLoader: QuoteLoader {
     fileprivate struct EndPoints {
         fileprivate static let sandbox = "https://sandbox.iexapis.com/stable/stock/"
         fileprivate static let production = "https://cloud.iexapis.com/stable/stock/"
     }
-    fileprivate let priceComponent = "/price"
+    fileprivate let priceComponent = "/quote"
     
     func load(for ticker: String, completion: @escaping PriceLoaderCompletion) {
 //        let url = URL(string: EndPoints.production + ticker + priceComponent + Constants.IEXTrading.productionKey)!
@@ -33,8 +38,8 @@ final class StockPriceLoader: PriceLoader {
             if let _ = err { completion(.failure(.connection)) }
             if let data = data {
                 do {
-                    let price = try JSONDecoder().decode(Double.self, from: data)
-                    completion(.success(price))
+                    let quote = try JSONDecoder().decode(StockQuote.self, from: data)
+                    completion(.success(quote))
                 } catch {
                     completion(.failure(.invalidData))
                 }

@@ -89,20 +89,18 @@ class SavedScreenersViewModelTest: XCTestCase {
         sut!.screeners = [
             Screener(title: "No Title1", description: "test description1",
                      urlComponents: [], symbol: "",
-                     colorMap: "", id: "",
-                     manualScreenItems: []),
+                     colorMap: "", id: "test1"),
             Screener(title: "No Title2", description: "test description2",
                      urlComponents: [], symbol: "",
-                     colorMap: "", id: "",
-                     manualScreenItems: [])
+                     colorMap: "", id: "test2")
         ]
         
         XCTAssertEqual(sut!.screeners.count, 2)
 
-        sut!.removeScreener("No Title1")
+        sut!.removeScreener("test1")
         XCTAssertEqual(sut!.screeners.count, 1)
         
-        sut!.removeScreener("No Title2")
+        sut!.removeScreener("test2")
         sut!.refreshState()
         XCTAssertEqual(sut!.screeners.count, 0)
         XCTAssertEqual(sut!.state, SavedScreenersViewModel.State.empty)
@@ -145,12 +143,10 @@ private class MockSavedScreenerLoaderLoaded: LocalScreenerLoaderProtocol {
                 return [
                     Screener(title: "No Title1", description: "test description1",
                              urlComponents: [], symbol: "",
-                             colorMap: "", id: "",
-                             manualScreenItems: []),
+                             colorMap: "", id: "test1"),
                     Screener(title: "No Title2", description: "test description2",
                              urlComponents: [], symbol: "",
-                             colorMap: "", id: "",
-                             manualScreenItems: [])
+                             colorMap: "", id: "test2")
                 ]
             })
         }

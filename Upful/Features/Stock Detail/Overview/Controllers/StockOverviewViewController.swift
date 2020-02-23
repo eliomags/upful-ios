@@ -21,7 +21,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     let companyName: String
     let intrinioApi: IntrinioAPI
     var stockNewsLoader: NewsLoaderProtocol? = NewsLoader()
-    var priceLoader: PriceLoader? = StockPriceLoader()
+    var quoteLoader: QuoteLoader? = StockPriceLoader()
+    var stock: StockDetail?
+    var descriptionLoader: StockDescriptionLoader? = StockDescriptionLoader()
 
     private enum ReuseID {
         static let graphCell = "graphCell"
@@ -50,10 +52,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     fileprivate var chartRevenueData: [CompanyHistoricalDatum] = []
     fileprivate var chartEarningsData: [CompanyHistoricalDatum] = []
-    fileprivate var chartData: [[CompanyHistoricalDatum]] {
-        return [chartRevenueData, chartEarningsData]
-    }
-    
     fileprivate var calcData: [StandardizedFinancial] = []
     private(set) var stockNews: [StockNewsViewModel] = []
     
@@ -166,18 +164,17 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Private Functions
     
-    var stock: StockDetail?
-    
     fileprivate func loadPrice() {
-        priceLoader?.load(for: ticker) { (res) in
+        quoteLoader?.load(for: ticker) { (res) in
             switch res {
-            case .success(let price):
-                print("Price for \(self.ticker):", price)
+            case .success(let quote):
+                print("Price Change for \(self.ticker):", quote.changePercent)
+                print("Price for \(self.ticker):", quote.latestPrice)
             case .failure(let err):
                 print(err)
             }
         }
-        StockDescriptionLoader().load(for: ticker) { (res) in
+        descriptionLoader?.loadDescription(for: ticker) { (res) in
             switch res {
             case .success(let stockDetail):
                 self.stock = stockDetail

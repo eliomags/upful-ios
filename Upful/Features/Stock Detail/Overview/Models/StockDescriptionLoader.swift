@@ -20,9 +20,15 @@ struct StockDetail: Codable {
     let state: String?
 }
 
-final class StockDescriptionLoader {
+protocol DescriptionLoader {
     typealias DescriptionLoaderCompletion = (Result<StockDetail,DescriptionLoaderError>) -> Void
-    func load(for ticker: String, completion: @escaping DescriptionLoaderCompletion) {
+    func loadDescription(for ticker: String, completion: @escaping DescriptionLoaderCompletion)
+}
+
+final class StockDescriptionLoader: DescriptionLoader {
+    typealias DescriptionLoaderCompletion = (Result<StockDetail,DescriptionLoaderError>) -> Void
+    
+    func loadDescription(for ticker: String, completion: @escaping DescriptionLoaderCompletion) {
         let endpoint = "https://cloud.iexapis.com/stable/stock/\(ticker)/company?token=pk_93380460343741859a000b3c6414fedc"
         let url = URL(string: endpoint)!
         let task = URLSession.shared.dataTask(with: url) { (data, resp, err) in

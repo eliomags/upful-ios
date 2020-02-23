@@ -41,6 +41,7 @@ class SmallNewsCell: GenericNewsCell {
         
         addSubview(articleImageView)
         articleImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        articleImageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         articleImageView.topAnchor.constraint(equalTo: detailStackView.bottomAnchor, constant: 8).isActive = true
         articleImageView.bottomAnchor.constraint(equalTo: sentimentView.topAnchor, constant: -8).isActive = true
         

@@ -17,7 +17,7 @@ class StockDescriptionCell: UITableViewCell {
         label.numberOfLines = 0
         label.text = "\n\n\n"
         label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         label.addSeparator()
         return label
     }()

@@ -71,23 +71,9 @@ class SavedStockLogicControllerTests: XCTestCase {
     
     func testRemoveTickerWithData() {
         sut = makeSUTwithData()
-        let loadExpectation = expectation(description: #function)
-        loadExpectation.expectedFulfillmentCount = 1
-        
-        sut!.sendStateUpdates = { newState in
-            switch newState {
-            case .loaded:
-                loadExpectation.fulfill()
-            default:
-                break
-            }
-        }
         sut!.loadSavedStocks()
-
-        wait(for: [loadExpectation], timeout: 1)
-        XCTAssertEqual(sut!.stockViewModels.count, 1)
-        
         let tickerToRemove = sut!.stockViewModels.first!.stock.ticker
+        
         sut!.removeTicker(tickerToRemove)
         sut!.refreshState()
         
@@ -127,13 +113,12 @@ class MockSavedStockDataManager: LocalStockDataLoaderProtocol {
 
 class MockSavedStockDataManagerWithData: LocalStockDataLoaderProtocol {
     func loadSavedStocks(completion: @escaping SavedStockFetchCompletion) {
-        DispatchQueue.global().async {
-            completion(Result {
-                return [
-                    Stock(name: "Apple", ticker: "AAPL")
-                ]
-            })
-        }
+        completion(Result {
+            return [
+                Stock(name: "Apple", ticker: "AAPL")
+            ]
+        })
+        
     }
     func saveCompany(ticker: String, companyName: String) {}
     func removeFavoriteCompany(_ ticker: String, completion: (() -> Void)?) {}
