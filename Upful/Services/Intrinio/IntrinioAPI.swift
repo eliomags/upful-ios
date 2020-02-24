@@ -124,7 +124,7 @@ final class IntrinioAPI {
         var asString: String {
             switch self {
             case .recent:
-                return "?frequency=yearly&start_date=2019-01-01"
+                return "?frequency=yearly&start_date=2020-01-01"
             case .historic(let isPremium):
                 if isPremium {
                     return "?frequency=yearly&start_date=2014-01-01&end_date=2021-01-01&sort_order=asc"

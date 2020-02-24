@@ -14,22 +14,25 @@ class StockOverviewViewModel {
     
     let ticker: String
     let companyName: String
-    var chartRevenueData: [CompanyHistoricalDatum]?
-    var chartEarningsData: [CompanyHistoricalDatum]?
-    var calcData: [StandardizedFinancial]?
-    var stockNews: [StockNewsViewModel]?
-    var stockDetail: StockDetail?
+    private(set) var stockQuote: StockQuote?
+    private(set) var historicalRevenue = [CompanyHistoricalDatum]()
+    private(set) var historicalEarnings = [CompanyHistoricalDatum]()
+    private(set) var calcData = [StandardizedFinancial]()
+    private(set) var stockNews = [StockNewsViewModel]()
+    private(set) var stockDetail: StockDetail?
+    private(set) var financialLookup: [SearchCriteria: Double] = [:]
 
     // MARK: - Dependencies
     
-    let priceLoader: QuoteLoader
+    let stockQuoteLoader: QuoteLoader
     let financialLoader: FinancialLoader
+    let batchFinancialLoader: BatchFinancialLoader
     let stockNewsLoader: NewsLoaderProtocol
-    let descriptionLoader: StockDescriptionLoader
+    let descriptionLoader: DescriptionLoader
     
-    // MARK: - State
+    // MARK: - Configuration
      
-    var stateHandler: (() -> Void)?
+    var loadingCompletionHandler: (() -> Void)?
     var errorHandler: (() -> Void)?
 
     // MARK: - Initializer
@@ -37,20 +40,150 @@ class StockOverviewViewModel {
     init(ticker: String, companyName: String,
          priceLoader: QuoteLoader = StockPriceLoader(),
          financialLoader: FinancialLoader = StockFinancialLoader(),
+         batchFinancialLoader: BatchFinancialLoader = StockBatchFinancialLoader(),
          stockNewsLoader: NewsLoaderProtocol = NewsLoader(),
-         descriptionLoader: StockDescriptionLoader = StockDescriptionLoader()
+         descriptionLoader: DescriptionLoader = StockDescriptionLoader()
     ) {
         self.ticker = ticker
         self.companyName = companyName
-        self.priceLoader = priceLoader
+        self.stockQuoteLoader = priceLoader
         self.financialLoader = financialLoader
+        self.batchFinancialLoader = batchFinancialLoader
         self.stockNewsLoader = stockNewsLoader
         self.descriptionLoader = descriptionLoader
     }
     
+    // MARK: - Operations
+    
+    private let loadingOperations = DispatchGroup()
+    
     // MARK: - API
     
-    func loadDescription() {
+    func loadData() {
+        loadStockPrice()
+        loadRevenueData()
+        loadEarningsData()
+        loadCalculationsData()
+        loadAdditionalCalculationsData()
+        loadNewsData()
+        loadStockDescription()
         
+        loadingOperations.notify(queue: .main) {
+            self.loadingCompletionHandler?()
+        }
+    }
+    
+    func loadStockPrice() {
+        loadingOperations.enter()
+        
+        stockQuoteLoader.load(for: ticker) { (result) in
+            switch result {
+            case .success(let stockQuote):
+                self.stockQuote = stockQuote
+                self.loadingOperations.leave()
+            case .failure(_):
+                self.errorHandler?()
+            }
+        }
+    }
+    
+    // TODO: - Handle premium vs free permissions
+    func loadRevenueData() {
+        loadingOperations.enter()
+
+        financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .threeYear,
+                                     financial: .totalrevenue) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let historicalRevenue):
+                self.historicalRevenue = historicalRevenue
+                self.loadingOperations.leave()
+            case .failure(_):
+                self.errorHandler?()
+            }
+        }
+    }
+    
+    func loadEarningsData() {
+        loadingOperations.enter()
+
+        financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .threeYear,
+                                     financial: .netincome) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let historicalEarnings):
+                self.historicalEarnings = historicalEarnings
+                self.loadingOperations.leave()
+            case .failure(_):
+                self.errorHandler?()
+            }
+        }
+    }
+    
+    func loadCalculationsData() {
+        loadingOperations.enter()
+        
+        batchFinancialLoader.fetchStockBatchFinancials(ticker: ticker) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let financialData):
+                self.calcData = financialData
+                self.loadingOperations.leave()
+            case .failure(_):
+                self.errorHandler?()
+            }
+        }
+    }
+
+    func loadAdditionalCalculationsData() {
+        [
+            SearchCriteria.marketcap, .pricetoearnings,
+             .pricetobook, .pricetorevenue,
+             .dividendyield
+            ].forEach { criteria in
+                loadingOperations.enter()
+                
+                financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .recent,
+                                             financial: criteria) { [weak self] (result) in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let recentFinancials):
+                        self.financialLookup[criteria] = recentFinancials.first?.value
+                        self.loadingOperations.leave()
+                    case .failure(_):
+                        self.errorHandler?()
+                    }
+                }
+        }
+    }
+    
+    func loadNewsData() {
+        loadingOperations.enter()
+
+        stockNewsLoader.get(router: .getTickerNews(tickers: ticker)) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let stockNews):
+                self.stockNews = stockNews.map { StockNewsViewModel(stockNews: $0) }
+                self.loadingOperations.leave()
+            case .failure(_):
+                self.errorHandler?()
+            }
+        }
+    }
+    
+    func loadStockDescription() {
+        loadingOperations.enter()
+
+        descriptionLoader.loadDescription(for: ticker) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let stockDetail):
+                self.stockDetail = stockDetail
+                self.loadingOperations.leave()
+            case .failure(_):
+                self.errorHandler?()
+            }
+        }
     }
 }

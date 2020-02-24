@@ -185,6 +185,8 @@
 		3DF734C92400E8AC00B297A4 /* StockDescriptionLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF734C82400E8AC00B297A4 /* StockDescriptionLoader.swift */; };
 		3DF734CC2402DDFD00B297A4 /* StockOverviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF734CB2402DDFD00B297A4 /* StockOverviewViewModel.swift */; };
 		3DF734D224030E2B00B297A4 /* StockFinancialLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF734D124030E2B00B297A4 /* StockFinancialLoader.swift */; };
+		3DF734D424036C1700B297A4 /* StockOverviewViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF734D324036C1700B297A4 /* StockOverviewViewModelTests.swift */; };
+		3DF734D62403770C00B297A4 /* BatchFinancialLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF734D52403770C00B297A4 /* BatchFinancialLoader.swift */; };
 		3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */; };
 		3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */; };
 		3DFD240023B672950027F5CF /* SentimentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FF23B672950027F5CF /* SentimentView.swift */; };
@@ -404,6 +406,8 @@
 		3DF734C82400E8AC00B297A4 /* StockDescriptionLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDescriptionLoader.swift; sourceTree = "<group>"; };
 		3DF734CB2402DDFD00B297A4 /* StockOverviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockOverviewViewModel.swift; sourceTree = "<group>"; };
 		3DF734D124030E2B00B297A4 /* StockFinancialLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockFinancialLoader.swift; sourceTree = "<group>"; };
+		3DF734D324036C1700B297A4 /* StockOverviewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockOverviewViewModelTests.swift; sourceTree = "<group>"; };
+		3DF734D52403770C00B297A4 /* BatchFinancialLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchFinancialLoader.swift; sourceTree = "<group>"; };
 		3DFAC57A23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PrebuiltScreenerViewController.swift.swift; path = "Upful/Features/Screener Selection/Prebuilt/Controllers/PrebuiltScreenerViewController.swift.swift"; sourceTree = SOURCE_ROOT; };
 		3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsHeaderTableCell.swift; sourceTree = "<group>"; };
 		3DFD23FF23B672950027F5CF /* SentimentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentimentView.swift; sourceTree = "<group>"; };
@@ -1768,6 +1772,7 @@
 				3DF734C22400AC3600B297A4 /* QuoteLoader.swift */,
 				3DF734C82400E8AC00B297A4 /* StockDescriptionLoader.swift */,
 				3DF734D124030E2B00B297A4 /* StockFinancialLoader.swift */,
+				3DF734D52403770C00B297A4 /* BatchFinancialLoader.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1800,6 +1805,7 @@
 		3DF734CF24030DA800B297A4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				3DF734D324036C1700B297A4 /* StockOverviewViewModelTests.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -2194,6 +2200,7 @@
 				3D7013DB23EC9B3800102E9C /* MainCoordinator.swift in Sources */,
 				3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */,
 				3D7013E123ECF98F00102E9C /* StockDetailsCoordinator.swift in Sources */,
+				3DF734D62403770C00B297A4 /* BatchFinancialLoader.swift in Sources */,
 				3D7C85522337A93500A2E63E /* Animator.swift in Sources */,
 				3DAB3EC3234D22890008CC18 /* FeaturePresenter.swift in Sources */,
 				3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */,
@@ -2208,6 +2215,7 @@
 			files = (
 				3D8D32652372FAE300123731 /* ExploreLogicControllerTests.swift in Sources */,
 				3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */,
+				3DF734D424036C1700B297A4 /* StockOverviewViewModelTests.swift in Sources */,
 				3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */,
 				3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */,
 				3DD5218C235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift in Sources */,

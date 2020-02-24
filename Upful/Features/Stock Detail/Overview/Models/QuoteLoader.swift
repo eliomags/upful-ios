@@ -8,13 +8,8 @@
 
 import Foundation
 
-enum PriceLoaderError: Error {
-    case invalidData
-    case connection
-}
-
 protocol QuoteLoader {
-    typealias PriceLoaderCompletion = (Result<StockQuote,PriceLoaderError>) -> Void
+    typealias PriceLoaderCompletion = (Result<StockQuote,NetworkError>) -> Void
     func load(for ticker: String, completion: @escaping PriceLoaderCompletion)
 }
 

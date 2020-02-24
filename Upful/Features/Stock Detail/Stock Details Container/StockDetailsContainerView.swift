@@ -20,7 +20,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     
     override var menubarControllers: [UIViewController] {
         let controllers: [UIViewController] = [
-            StockOverviewViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI()),
+            StockOverviewViewController(ticker: ticker, companyName: companyName),
             StockAnalysisViewController(ticker: ticker, companyName: companyName, networkingAPI: IntrinioAPI())
         ]
         return controllers

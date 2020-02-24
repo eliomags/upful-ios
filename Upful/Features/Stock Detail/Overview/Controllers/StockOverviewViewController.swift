@@ -19,11 +19,10 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     let ticker: String
     let companyName: String
-    let intrinioApi: IntrinioAPI
-    var stockNewsLoader: NewsLoaderProtocol? = NewsLoader()
-    var quoteLoader: QuoteLoader? = StockPriceLoader()
-    var stock: StockDetail?
-    var descriptionLoader: StockDescriptionLoader? = StockDescriptionLoader()
+    lazy var viewModel: StockOverviewViewModel = {
+        let vm = StockOverviewViewModel(ticker: ticker, companyName: companyName)
+        return vm
+    }()
 
     private enum ReuseID {
         static let graphCell = "graphCell"
@@ -31,29 +30,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         static let newsCell = "newsCell"
         static let descriptionCellID = "descriptionCellID"
     }
-    
-    // MARK: - State
-
-    fileprivate var isLoading: Bool = false {
-        didSet {
-            observeStateChanges(isLoading)
-        }
-    }
-    
-    fileprivate func observeStateChanges(_ isLoading: Bool) {
-        if isLoading {
-            LoadingViewPresenter.show(in: self)
-        } else {
-            LoadingViewPresenter.remove()
-            tableView.reloadData()
-            refreshingControl.endRefreshing()
-        }
-    }
-    
-    fileprivate var chartRevenueData: [CompanyHistoricalDatum] = []
-    fileprivate var chartEarningsData: [CompanyHistoricalDatum] = []
-    fileprivate var calcData: [StandardizedFinancial] = []
-    private(set) var stockNews: [StockNewsViewModel] = []
     
     // MARK: - Views
     
@@ -98,10 +74,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Initializer Methods
     
-    init(ticker: String, companyName: String, networkingAPI: IntrinioAPI = .init()) {
+    init(ticker: String, companyName: String) {
         self.ticker = ticker
         self.companyName = companyName
-        self.intrinioApi = networkingAPI
         super.init(nibName: nil, bundle: nil)
         title = "Overview"
     }
@@ -111,14 +86,38 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     }
     
     // MARK: - View Lifecycle Methods
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func loadView() {
+        super.loadView()
         view.backgroundColor = VersionManager.mainContainerBackground()
         setUpPremiumButton()
         setupViews()
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
         loadOverviewData()
-        loadPrice()
+        successHandler()
+        errorHandler()
+    }
+    
+    // MARK: - Observe Updates
+    
+    fileprivate func successHandler() {
+        viewModel.loadingCompletionHandler = { [weak self] in
+            LoadingViewPresenter.remove()
+            self?.tableView.reloadData()
+            self?.refreshingControl.endRefreshing()
+        }
+    }
+    
+    fileprivate func errorHandler() {
+        viewModel.errorHandler = { [weak self] in
+            DispatchQueue.main.async {
+                LoadingViewPresenter.remove()
+                self?.tableView.reloadData()
+                self?.refreshingControl.endRefreshing()
+                // TODO: Add Error Handler View 
+            }
+        }
     }
     
     // MARK: - View Setup
@@ -144,11 +143,21 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     }
     
     private func configureChart(chartView: GenericBarChartView) {
-        guard !chartRevenueData.isEmpty && !chartEarningsData.isEmpty else { return }
+        guard !viewModel.historicalRevenue.isEmpty && !viewModel.historicalEarnings.isEmpty else { return }
         chartView.setupChart(
-            dataPoints: chartRevenueData.map({ $0.date.formatDate() }),
-            values: chartRevenueData.map({ $0.value }),
-            values1: chartEarningsData.map({ $0.value }))
+            dataPoints: viewModel.historicalRevenue.map { $0.date.formatDate() },
+            values: viewModel.historicalRevenue.map { $0.value },
+            values1: viewModel.historicalEarnings.map { $0.value })
+    }
+    
+    // MARK: - Private Functions
+    
+    fileprivate func loadOverviewData() {
+        LoadingViewPresenter.show(in: self)
+        viewModel.loadData()
+        if PermissionManager.shared.isPremium {
+            get5YearDataButton.removeFromSuperview()
+        }
     }
     
     // MARK: - Actions
@@ -160,162 +169,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     @objc private func handle5YearDataInterest(_ sender: UIButton) {
         let presenter = SubscriptionPresenter(type: .fiveYearDataInterest)
         presenter.present(in: self)
-    }
-    
-    // MARK: - Private Functions
-    
-    fileprivate func loadPrice() {
-        quoteLoader?.load(for: ticker) { (res) in
-            switch res {
-            case .success(let quote):
-                print("Price Change for \(self.ticker):", quote.changePercent)
-                print("Price for \(self.ticker):", quote.latestPrice)
-            case .failure(let err):
-                print(err)
-            }
-        }
-        descriptionLoader?.loadDescription(for: ticker) { (res) in
-            switch res {
-            case .success(let stockDetail):
-                self.stock = stockDetail
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let err):
-                print(err)
-            }
-        }
-    }
-    
-    let chartDataGroup = DispatchGroup()
-    
-    fileprivate func getRevenueData() {
-        chartDataGroup.enter()
-        let isPremium = PermissionManager.shared.isPremium
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
-                                                financial: .totalrevenue,
-                                                frequency: .historic(isPremium: isPremium)) { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let downloadedData):
-                self.chartRevenueData = downloadedData
-            
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-                self.chartDataGroup.leave()
-        }
-    }
-    
-    fileprivate func getEarningsData() {
-        chartDataGroup.enter()
-        let isPremium = PermissionManager.shared.isPremium
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
-                                                financial: .netincome,
-                                                frequency: .historic(isPremium: isPremium)) { [weak self] (result) in
-            guard let self = self else { return }
-                                                    
-            switch result {
-            case .success(let downloadedData):
-                self.chartEarningsData = downloadedData
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-                self.chartDataGroup.leave()
-        }
-    }
-
-    let secondaryGroup = DispatchGroup()
-    
-    fileprivate func configureCalcData() {
-        secondaryGroup.enter()
-        intrinioApi.fetchStockBatchFinancials(ticker: ticker) { [weak self] (results) in
-            guard let self = self else { return }
-            
-            switch results {
-            case .success(let financialData):
-                self.calcData = financialData
-
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-            self.secondaryGroup.leave()
-        }
-    }
-    
-    private var financialLookup: [SearchCriteria: Double] = [:]
-    
-    fileprivate func getAllCalculatedData() {
-        [
-            SearchCriteria.marketcap, .pricetoearnings,
-             .pricetobook, .pricetorevenue,
-             .dividendyield
-        ].forEach { (criteria) in
-            getFinancialData(financial: criteria)
-        }
-    }
-    
-    fileprivate func getFinancialData(financial: SearchCriteria) {
-        secondaryGroup.enter()
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
-                                                financial: financial,
-                                                frequency: .recent, completion: { [weak self] (result) in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let downloadedData):
-                guard !downloadedData.isEmpty else {
-                    self.secondaryGroup.leave()
-                    return
-                }
-                self.financialLookup[financial] = downloadedData.first?.value
-
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-            self.secondaryGroup.leave()
-        })
-    }
-        
-    func startNewsLoad() {
-        secondaryGroup.enter()
-        stockNewsLoader?.get(router: .getTickerNews(tickers: self.ticker)) { (result) in
-            switch result {
-            case .success(let news):
-                let mappedNews = news.map({ StockNewsViewModel(stockNews: $0 )})
-                self.stockNews = mappedNews
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
-            self.secondaryGroup.leave()
-        }
-    }
-    
-    fileprivate func handleDataFetchCompletion() {
-        let secondaryWorkItem = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            self.isLoading = false
-        }
-        
-        let primaryWorkItem = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            self.isLoading = false
-        }
-        chartDataGroup.notify(queue: .main, work: primaryWorkItem)
-        secondaryGroup.notify(queue: .main, work: secondaryWorkItem)
-    }
-        
-    fileprivate func loadOverviewData() {
-        isLoading = true
-        getRevenueData()
-        getEarningsData()
-        getAllCalculatedData()
-        configureCalcData()
-        startNewsLoad()
-        handleDataFetchCompletion()
-        if PermissionManager.shared.isPremium {
-            get5YearDataButton.removeFromSuperview()
-        }
     }
     
     // MARK: - Scroll View Delegate
@@ -330,15 +183,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
 
 extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isLoading {
-            tableView.setEmptyView(state: .emptyState(title: "", message: ""))
-            return 0
-        } else {
-            tableView.restore()
-            tableView.separatorStyle = .none
-            if section == 2 { return stockNews.count }
-            return 1
-        }
+        tableView.separatorStyle = .none
+        if section == 2 { return viewModel.stockNews.count}
+        return 1
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -356,19 +203,19 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
             
         case 1:
             guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath) as? DetailsCalculationCell else { return UITableViewCell() }
-            calculationsCell.setupCell(with: calcData)
-            calculationsCell.setupWithLookUp(lookUp: financialLookup)
+            calculationsCell.setupCell(with: viewModel.calcData)
+            calculationsCell.setupWithLookUp(lookUp: viewModel.financialLookup)
             return calculationsCell
             
         case 2:
             guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? SmallNewsCell else { return UITableViewCell() }
-            newsCell.stockNews = stockNews[indexPath.row]
+            newsCell.stockNews = viewModel.stockNews[indexPath.row]
         return newsCell
 
         case 3:
             guard let descriptionCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.descriptionCellID, for: indexPath) as? StockDescriptionCell else { return UITableViewCell() }
-            descriptionCell.descriptionLabel.text = stock?.description ?? ""
-            descriptionCell.employeeStackView.valueLabel.text = String(stock?.employees ?? 0)
+            descriptionCell.descriptionLabel.text = viewModel.stockDetail?.description ?? ""
+            descriptionCell.employeeStackView.valueLabel.text = String(viewModel.stockDetail?.employees ?? 0)
             return descriptionCell
             
         default:
@@ -381,8 +228,6 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         switch section {
         case 0:
             return (UIScreen.main.bounds.height / 2) - 50
-        case 2:
-            return 140
         default:
             return UITableView.automaticDimension
         }
@@ -391,19 +236,16 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = LargeSectionHeaderLabel(padding: 16)
         header.backgroundColor = VersionManager.collectionCellColor2()
-        if !isLoading {
-            let headerText = ["FINANCIALS", "METRICS", "NEWS", "ABOUT"]
-            header.text = headerText[section]
-            return header
-        }
-        return nil
+        let headerText = ["FINANCIALS", "METRICS", "NEWS", "ABOUT"]
+        header.text = headerText[section]
+        return header
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let _ = tableView.cellForRow(at: indexPath) as? SmallNewsCell else { return }
         AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
 
-        let newsURLString = stockNews[indexPath.row].newsUrl
+        let newsURLString = viewModel.stockNews[indexPath.row].newsUrl
         let newsWebVC = WebViewViewController(urlString: newsURLString)
         let navVC = UINavigationController(rootViewController: newsWebVC)
         self.present(navVC, animated: true, completion: nil)
