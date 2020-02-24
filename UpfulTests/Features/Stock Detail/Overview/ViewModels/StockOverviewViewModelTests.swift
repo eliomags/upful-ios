@@ -41,8 +41,8 @@ class StockOverviewViewModelTests: XCTestCase {
         }
 
         sut.loadData()
-        sut.loadData()
-
+        sut.refreshStockPrice()
+        
         wait(for: [exp], timeout: 1)
         XCTAssertEqual(callCount, 2)
     }

@@ -73,6 +73,14 @@ class StockOverviewViewModel {
         }
     }
     
+    func refreshStockPrice() {
+        loadStockPrice()
+        
+        loadingOperations.notify(queue: .main) {
+            self.loadingCompletionHandler?()
+        }
+    }
+    
     func loadStockPrice() {
         loadingOperations.enter()
         
@@ -86,12 +94,12 @@ class StockOverviewViewModel {
             }
         }
     }
-    
-    // TODO: - Handle premium vs free permissions
+        
     func loadRevenueData() {
         loadingOperations.enter()
-
-        financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .threeYear,
+        let isPremium = PermissionManager.shared.isPremium
+        let financialFrequency = isPremium ? FinancialsFrequency.fiveYear : .threeYear
+        financialLoader.getStockFinancials(ticker: ticker, financialFrequency: financialFrequency,
                                      financial: .totalrevenue) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
@@ -106,8 +114,9 @@ class StockOverviewViewModel {
     
     func loadEarningsData() {
         loadingOperations.enter()
-
-        financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .threeYear,
+        let isPremium = PermissionManager.shared.isPremium
+        let financialFrequency = isPremium ? FinancialsFrequency.fiveYear : .threeYear
+        financialLoader.getStockFinancials(ticker: ticker, financialFrequency: financialFrequency,
                                      financial: .netincome) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
