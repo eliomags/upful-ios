@@ -9,7 +9,7 @@
 import Foundation
 
 protocol SearchResultsViewModelDelegate: AnyObject {
-    func didCompleteStockFetch()
+    func didCompleteStockFetch(fetchedStocks: [Stock])
     func didFailStockFetch(with error: NetworkError, for stock: Stock?)
     func didCompleteScreenerSave()
     func didFailScreenerSave()
@@ -19,10 +19,7 @@ class SearchResultsViewModel {
     
     // MARK: - Dependencies
         
-    let stockScreener: StockScreener
-    /*
-     Responsible for screening and loading associated stock data
-     */
+    var stockScreener: StockScreener
     let localScreenerLoader: LocalScreenerLoaderProtocol
     let stockFinancialLoader: FinancialLoader
     
@@ -31,8 +28,9 @@ class SearchResultsViewModel {
     weak var delegate: SearchResultsViewModelDelegate?
 
     var screener: ScreenerViewModel?
-    let searchParameters: [String] = .init()
+    var searchParameters: [String] = .init()
     var searchResults = [Stock]()
+    
     
     // Default value for saving screener
     lazy var saveScreenerPermission: (@escaping (Bool) -> Void) -> Void = {
@@ -53,7 +51,7 @@ class SearchResultsViewModel {
     // MARK: - API
     
     // MARK: Networking
-        
+    
     func screenForStocks() {
         let searchKeys = searchParameters.joined(separator: ",").filter { $0 != " " }
         stockScreener.get(router: .getScreeningResults(
@@ -67,7 +65,7 @@ class SearchResultsViewModel {
                 self.searchResults.forEach { (stock) in
                     self.getPriceToEarningsData(for: stock)
                 }
-                self.delegate?.didCompleteStockFetch()
+                self.delegate?.didCompleteStockFetch(fetchedStocks: fetchedStocks)
             case .failure(let err):
                 self.delegate?.didFailStockFetch(with: err, for: nil)
             }
@@ -75,14 +73,36 @@ class SearchResultsViewModel {
     }
     
     func getPriceToEarningsData(for stock: Stock) {
-        stockFinancialLoader.getStockFinancials(ticker: stock.ticker, financialFrequency: .recent, financial: .pricetoearnings) { (result) in
+        stockFinancialLoader.getStockFinancials(ticker: stock.ticker, financialFrequency: .recent, financial: .pricetoearnings) { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
             case .success(let historicPriceToEarnings):
                 stock.pricetoearnings = historicPriceToEarnings.first?.value
-                self.delegate?.didCompleteStockFetch()
+                self.delegate?.didCompleteStockFetch(fetchedStocks: self.searchResults)
             case .failure(let err):
                 self.delegate?.didFailStockFetch(with: err, for: stock)
             }
+        }
+    }
+    
+    func changeScreenerDirection() {
+        let searchKeys = searchParameters.joined(separator: ",").filter { $0 != " " }
+        stockScreener.changeDirection(router: .getScreeningResults(
+            parameters: searchKeys, numberOfResults: 20,
+            page: stockScreener.screenerPage,
+            order: stockScreener.screenerSortDirection)) { [weak self] (result) in
+                guard let self = self else { return }
+                switch result {
+                case .success(let fetchedStocks):
+                    self.searchResults.removeAll()
+                        self.searchResults.append(contentsOf: fetchedStocks)
+                        self.searchResults.forEach { (stock) in
+                            self.getPriceToEarningsData(for: stock)
+                        }
+                    self.delegate?.didCompleteStockFetch(fetchedStocks: fetchedStocks)
+                case .failure(let err):
+                    self.delegate?.didFailStockFetch(with: err, for: nil)
+                }
         }
     }
         

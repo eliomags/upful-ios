@@ -12,38 +12,14 @@ final class ScreenResultsViewController: UIViewController {
     
     // MARK: - Dependencies
     
-    let intrinioAPI: IntrinioAPI
-    var localScreenerLoader: LocalScreenerLoaderProtocol? = LocalScreenerLoader()
-        
+    lazy var viewModel: SearchResultsViewModel = {
+        let vm = SearchResultsViewModel()
+        vm.delegate = self
+        return vm
+    }()
+            
     // MARK: - Properties
-    
-    var screener: ScreenerViewModel?
-    let searchParameters: [String]
-    
-    // MARK:- State
-    
-    private(set) var isLoading: Bool = false {
-        didSet { observeStateChanges() }
-    }
-    
-    private func observeStateChanges() {
-        DispatchQueue.main.async {
-            if self.isLoading {
-                LoadingViewPresenter.show(in: self)
-            } else {
-                LoadingViewPresenter.remove()
-            }
-        }
-    }
-
-    // MARK: - DataSource
-    
-    private var searchResults = [Stock]() {
-        didSet {
-            feedTableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
-        }
-    }
-    
+            
     fileprivate struct ReuseId {
         static let resultsCellID = "resultsCellID"
     }
@@ -89,10 +65,9 @@ final class ScreenResultsViewController: UIViewController {
     
     // MARK: - Initializer Methods
     
-    init(searchParameters: [String], networkingAPI: IntrinioAPI = .init()) {
-        self.searchParameters = searchParameters
-        self.intrinioAPI = networkingAPI
+    init(searchParameters: [String]) {
         super.init(nibName: nil, bundle: nil)
+        self.viewModel.searchParameters = searchParameters
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -110,8 +85,7 @@ final class ScreenResultsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setSavedState()
-        fetchTableData(parameters: searchParameters, fetchType: .initial)
-        isLoading = true        
+        loadStocks()
     }
 
     // MARK: - View Setup
@@ -137,116 +111,39 @@ final class ScreenResultsViewController: UIViewController {
     // MARK: - View Configuration
     
     fileprivate func setSavedState() {
-        checkScreenerStatus { (isSaved) in
+        viewModel.checkIfScreenerCurrentlySaved { (isSaved) in
             self.saveButton.isSelected = isSaved
         }
     }
 
     // MARK: - Fileprivate Functions
     
-    // MARK: Screener Saving
-    fileprivate func checkScreenerStatus(completion: @escaping ((Bool) -> Void)) {
-        localScreenerLoader?.load(completion: { (res) in
-            switch res {
-            case .success(let screeners):
-                completion(screeners.contains(where: { $0.id == self.screener?.documentID ?? UUID().uuidString }))
-            case .failure(_):
-                completion(false)
-            }
-        })
-    }
-    
-    func handleSaveCompletion(with title: String) {
-        PermissionManager.shared.getSaveScreenerPermission { [weak self] (isAuthorized) in
-            guard let self = self else { return }
-            if isAuthorized {
-                self.saveButton.isSelected = true
-                guard var screenerViewModel = self.screener else { return }
-                screenerViewModel.title = title
-                self.localScreenerLoader?.save(screener: screenerViewModel.toScreener())
-                
-                InformationViewPresenter().showSaveSuccess(in: self)
-                AnalyticsLogger.instance.reportEvents(
-                    event: .savedScreener(
-                        description: screenerViewModel.searchParameters.joined(separator: ",")
-                    )
-                )
-                Vibration.light.vibrate()
-            } else {
-                let presenter = SubscriptionPresenter(type: .savedScreenerLimit)
-                presenter.present(in: self)
-            }
-        }
+    fileprivate func loadStocks() {
+        LoadingViewPresenter.show(in: self)
+        viewModel.screenForStocks()
     }
     
     fileprivate func saveScreener() {
-        if screener?.title == "Custom" {
+        if viewModel.screener?.title == "Custom" {
             let alert = UIAlertController(
                             title: "Add to Favorites",
                             message: "Give your screener a name.",
                             preferredStyle: .alert
             )
             alert.addTextField { (titleTextField) in
-                titleTextField.text = self.screener?.title
+                titleTextField.text = self.viewModel.screener?.title
                 titleTextField.placeholder = "Title"
             }
             alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { [weak alert] (_) in
                 var titleTextFieldText = alert?.textFields![0].text
                 if titleTextFieldText == "" { titleTextFieldText = "No Title" }
-                self.handleSaveCompletion(with: titleTextFieldText ?? "No Title")
+                self.viewModel.handleSaveCompletion(with: titleTextFieldText ?? "No Title")
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
         } else {
-            self.handleSaveCompletion(with: screener?.title ?? "No Title")
+            self.viewModel.handleSaveCompletion(with: viewModel.screener?.title ?? "No Title")
         }
-    }
-    
-        // MARK: Data Loading
-    
-    private enum FetchType {
-        case initial, appending
-    }
-
-    private func fetchTableData(parameters: [String], fetchType: FetchType) {
-        let searchKeys = parameters.joined(separator: ",").filter({ $0 != " " })
-        intrinioAPI.performStockScreening(parameters: searchKeys) { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let fetchedData):
-                switch fetchType {
-                case .initial:
-                    self.searchResults = fetchedData
-                case .appending:
-                    self.searchResults.append(contentsOf: fetchedData)
-                }
-                self.fetchCompanyFinancialData(searchResults: fetchedData)
-                self.isLoading = false
-            case .failure(_):
-                self.isLoading = false
-                DispatchQueue.main.async {
-                    self.feedTableView.setEmptyView(state: .errorState)
-                }
-            }
-        }
-    }
-    
-    private func getPriceToEarningsData(_ searchResult: Stock) {
-        intrinioAPI.fetchStockSpecificFinancial(ticker: searchResult.ticker, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
-            guard let self = self else { return }
-
-            switch result {
-            case .success(let companyHistorics):
-                guard !companyHistorics.isEmpty else { return }
-                
-                DispatchQueue.main.async {
-                    searchResult.pricetoearnings = companyHistorics.first?.value
-                    self.feedTableView.reloadData()
-                }
-            case .failure(_):
-                break
-            }
-        })
     }
     
     private func fetchCompanyFinancialData(searchResults: [Stock]) {
@@ -254,26 +151,20 @@ final class ScreenResultsViewController: UIViewController {
             DispatchQueue.main.async { self.feedTableView.setEmptyView(state: .emptyState(title: "No Data.", message: "No data to display.")) }
             return
         }
-        searchResults.forEach { (searchResult) in
-            getPriceToEarningsData(searchResult)
-        }
     }
 
     // MARK: - Actions
     
     /// Handles sorting the loaded Search Results by Market Cap through a UIAlertController
     @objc private func handleSortTap(_ sender: UIButton) {
-        intrinioAPI.screenPage = 1
         let sortMenu = UIAlertController(title: nil, message: "Choose Sort", preferredStyle: .actionSheet)
         let marketCapAscAction = UIAlertAction(title: "Market Cap Ascending", style: .default, handler: { _ in
-            self.intrinioAPI.sortDirection = .asc
+            self.viewModel.changeScreenerDirection()
             self.feedTableView.reloadData()
-            self.fetchTableData(parameters: self.searchParameters, fetchType: .initial)
         })
         let marketCapDescAction = UIAlertAction(title: "Market Cap Descending", style: .default, handler: { _ in
-            self.intrinioAPI.sortDirection = .desc
+            self.viewModel.changeScreenerDirection()
             self.feedTableView.reloadData()
-            self.fetchTableData(parameters: self.searchParameters, fetchType: .initial)
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
@@ -284,31 +175,29 @@ final class ScreenResultsViewController: UIViewController {
     }
         
     @objc private func handleSaveTap(_ sender: UIButton) {
-        guard let screenerViewModel = screener else { return }
-        guard let id = screenerViewModel.documentID else { return }
         if !sender.isSelected {
             saveScreener()
         } else {
             sender.isSelected = !sender.isSelected
-            localScreenerLoader?.delete(with: id)
+            viewModel.deleteScreener()
         }
     }
 }
 
 extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tableView.isScrollEnabled = !searchResults.isEmpty
-        if searchResults.isEmpty { tableView.separatorStyle = .none }
-        if !searchResults.isEmpty {
+        tableView.isScrollEnabled = !viewModel.searchResults.isEmpty
+        if viewModel.searchResults.isEmpty { tableView.separatorStyle = .none }
+        if !viewModel.searchResults.isEmpty {
             tableView.backgroundView = nil
             tableView.separatorStyle = .singleLine
         }
-        return searchResults.count
+        return viewModel.searchResults.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let resultsCell = tableView.dequeueReusableCell(withIdentifier: ReuseId.resultsCellID) as? CompanyPreviewTableViewCell else { return UITableViewCell() }
-        let screenResult = searchResults[indexPath.item]
+        let screenResult = viewModel.searchResults[indexPath.item]
         let ticker = screenResult.ticker
         resultsCell.accessoryType = .disclosureIndicator
         resultsCell.companyTickerLabel.text = ticker
@@ -319,19 +208,50 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastElement = searchResults.count - 1
-        if !isLoading && indexPath.row == lastElement && lastElement > 8 {
-            fetchTableData(parameters: searchParameters, fetchType: .appending)
+        let lastElement = viewModel.searchResults.count - 1
+        if indexPath.row == lastElement - 1 && lastElement > 10 {
+            viewModel.screenForStocks()
         }
+//        if !isLoading && indexPath.row == lastElement && lastElement > 8 {
+//            fetchTableData(parameters: searchParameters, fetchType: .appending)
+//        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .searchResult))
-        let selectedCompany = searchResults[indexPath.item]
+        let selectedCompany = viewModel.searchResults[indexPath.item]
         let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker, companyName: selectedCompany.name)
         
         RemoteStockManager.updateInterest(for: selectedCompany.ticker, name: selectedCompany.name)
         self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+extension ScreenResultsViewController: SearchResultsViewModelDelegate {
+    func didCompleteStockFetch(fetchedStocks: [Stock]) {
+        DispatchQueue.main.async {
+            LoadingViewPresenter.remove()
+            if !fetchedStocks.isEmpty {
+                self.feedTableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
+            } else if self.viewModel.searchResults.isEmpty {
+                self.feedTableView.setEmptyView(state: .emptyState(title: "No Data.", message: "No data to display."))
+                self.feedTableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
+            }
+        }
+    }
+    
+    func didFailStockFetch(with error: NetworkError, for stock: Stock?) {
+        print(error)
+    }
+    
+    func didCompleteScreenerSave() {
+        saveButton.isSelected = true
+        feedTableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
+    }
+    
+    func didFailScreenerSave() {
+        let presenter = SubscriptionPresenter(type: .savedStockLimit)
+        presenter.present(in: self)
     }
 }
 

@@ -72,7 +72,7 @@ extension SearchResultsCoordinator: Coordinator {
         resultsVC.resultsDescriptionHeaderLabel.titleLabel.text = navigationTitle
         resultsVC.resultsDescriptionHeaderLabel.descriptionLabel.text = screenerDescription
         resultsVC.resultsDescriptionHeaderLabel.imageViewBackground.backgroundColor = headerbackgroundColor
-        resultsVC.screener = screener
+        resultsVC.viewModel.screener = screener
         if let headerSymbol = headerSymbol {
             resultsVC.resultsDescriptionHeaderLabel.imageView.image = headerSymbol
         }
