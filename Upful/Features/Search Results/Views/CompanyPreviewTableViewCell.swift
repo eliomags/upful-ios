@@ -44,6 +44,16 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         sv.valueLabel.text = "-"
         return sv
     }()
+    
+    let quoteView: StockQuoteView = {
+        let v = StockQuoteView(priceLabelFontSize: 15, priceChangeLabelFontSize: 16, priceChangeLabelWidth: 70)
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        v.priceLabel.text = "$150.00"
+        v.priceChangeLabel.text = "-2.20%"
+        v.setNegative()
+        return v
+    }()
 
     lazy var companyFundamentalsStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [marketcapStackView, pricetoearningsStackView])
@@ -57,21 +67,25 @@ class CompanyPreviewTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: nil)
+        addSubview(quoteView)
+        quoteView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        quoteView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -8).isActive = true
+        
         addSubview(companyDescriptionStackView)
         companyDescriptionStackView.anchor(
             top: topAnchor,
             leading: leadingAnchor,
             bottom: nil,
-            trailing: trailingAnchor,
-            padding: .init(top: 12, left: 16, bottom: 0, right: 60))
+            trailing: quoteView.layoutMarginsGuide.leadingAnchor,
+            padding: .init(top: 12, left: 16, bottom: 0, right: 24))
         
         addSubview(companyFundamentalsStackView)
         companyFundamentalsStackView.anchor(
             top: companyDescriptionStackView.bottomAnchor,
             leading: leadingAnchor,
             bottom: bottomAnchor,
-            trailing: trailingAnchor,
-            padding: .init(top: 4, left: 32, bottom: 12, right: 48))
+            trailing: quoteView.layoutMarginsGuide.leadingAnchor,
+            padding: .init(top: 4, left: 32, bottom: 12, right: 16))
         
         addBottomSeparator()
     }

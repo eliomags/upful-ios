@@ -33,7 +33,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Views
     
-    let quoteView = LargeStockQuoteView()
+    let quoteView = StockQuoteView(priceLabelFontSize: 21, priceChangeLabelFontSize: 17, priceChangeLabelWidth: 70)
     
     lazy var stockHeaderView: TableHeaderView = {
         let v = TableHeaderView()
@@ -132,9 +132,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         quoteView.priceChangeLabel.text = "\(stockQuote?.changePercent.convertToPercent() ?? "-")%"
         
         if stockQuote?.changePercent ?? 0 > 0 {
-            quoteView.priceChangeLabel.backgroundColor = .systemGreen
+            quoteView.setPositive()
         } else if stockQuote?.changePercent ?? 0 < 0 {
-            quoteView.priceChangeLabel.backgroundColor = .systemRed
+            quoteView.setNegative()
         }
     }
     

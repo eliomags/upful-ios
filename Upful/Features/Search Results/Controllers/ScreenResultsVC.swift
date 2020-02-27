@@ -256,11 +256,6 @@ extension ScreenResultsViewController: SearchResultsViewModelDelegate {
 }
 
 extension ScreenResultsViewController: SubscriptionViewControllerDelegate {
-    func presentationControllerdDidDismissWithoutSignup() {
-        
-    }
-    
-    func userDidSignUp() {
-        
-    }
+    func presentationControllerdDidDismissWithoutSignup() {}
+    func userDidSignUp() {}
 }

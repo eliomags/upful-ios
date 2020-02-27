@@ -8,23 +8,29 @@
 
 import UIKit
 
-class LargeStockQuoteView: UIView {
+class StockQuoteView: UIView {
+    
+    // MARK: - Properties
+
+    private let priceLabelFontSize: CGFloat
+    private let priceChangeLabelFontSize: CGFloat
+    private let priceChangeLabelWidth: CGFloat
     
     // MARK: - Views
     
-    let priceLabel: UILabel = {
+    lazy var priceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 21, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: priceLabelFontSize, weight: .bold)
         return label
     }()
 
-    let priceChangeLabel: UILabel = {
+    lazy var priceChangeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: priceChangeLabelFontSize, weight: .semibold)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        label.widthAnchor.constraint(equalToConstant: priceChangeLabelWidth).isActive = true
         label.layer.masksToBounds = true
         label.layer.cornerRadius = 4
         return label
@@ -39,19 +45,24 @@ class LargeStockQuoteView: UIView {
         return sv
     }()
     
-    // MARK: - Initializer
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(priceLabelFontSize: CGFloat, priceChangeLabelFontSize: CGFloat, priceChangeLabelWidth: CGFloat) {
+        self.priceLabelFontSize = priceLabelFontSize
+        self.priceChangeLabelFontSize = priceChangeLabelFontSize
+        self.priceChangeLabelWidth = priceChangeLabelWidth
+        super.init(frame: .zero)
         addSubview(quoteStackView)
         quoteStackView.fillSuperview()
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError()
     }
     
-    // MARK: - View Setup
-
+    func setPositive() {
+        priceChangeLabel.backgroundColor = .systemGreen
+    }
+    
+    func setNegative() {
+        priceChangeLabel.backgroundColor = .systemRed
+    }
 }
-
