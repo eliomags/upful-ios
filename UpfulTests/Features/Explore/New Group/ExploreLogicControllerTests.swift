@@ -125,7 +125,7 @@ class MockNewsLoader: NewsLoaderProtocol {
         case .withValues:
             completion(.success(handleCompletion()))
         case .error:
-            completion(.failure(.failedNetworking))
+            completion(.failure(.connection))
         }
     }
     

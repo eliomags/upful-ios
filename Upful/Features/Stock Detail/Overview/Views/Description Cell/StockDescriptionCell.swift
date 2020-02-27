@@ -24,16 +24,31 @@ class StockDescriptionCell: UITableViewCell {
     
     lazy var employeeStackView: SectionedDetailsStackView = {
         let sv = SectionedDetailsStackView(description: "Employees")
-        sv.valueLabel.text = ""
+        sv.valueLabel.text = "-"
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        return sv
+    }()
+    
+    lazy var locationStackView: SectionedDetailsStackView = {
+        let sv = SectionedDetailsStackView(description: "Headquarters")
+        sv.valueLabel.text = "-"
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        return sv
+    }()
+    
+    fileprivate lazy var detailRowView: RowStackView = {
+        let sv = RowStackView(arrangedSubviews: [employeeStackView, locationStackView])
         return sv
     }()
     
     fileprivate lazy var contentStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [descriptionLabel, employeeStackView])
+        let sv = UIStackView(arrangedSubviews: [descriptionLabel, detailRowView])
         sv.axis = .vertical
-        sv.spacing = 16
+        sv.spacing = 18
         return sv
     }()
+    
+    // MARK: - Initializer
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

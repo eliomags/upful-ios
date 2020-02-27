@@ -9,7 +9,7 @@
 import UIKit
 
 class StockDetailStackView: UIStackView {
-    private let descriptionLabel: UILabel = {
+    let descriptionLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .details1

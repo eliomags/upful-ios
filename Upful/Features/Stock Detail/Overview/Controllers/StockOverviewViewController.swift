@@ -33,24 +33,13 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Views
     
-    lazy var get5YearDataButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.setTitle("Unlock 5 Year Data", for: .normal)
-        b.backgroundColor = UIColor.appAccent3.withAlphaComponent(0.9)
-        b.setTitleColor(.white, for: .normal)
-        b.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-        b.layer.masksToBounds = true
-        b.layer.cornerRadius = 15
-        b.translatesAutoresizingMaskIntoConstraints = false
-        b.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        b.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        return b
-    }()
+    let quoteView = LargeStockQuoteView()
     
-    private lazy var stockHeaderView: TableHeaderView = {
+    lazy var stockHeaderView: TableHeaderView = {
         let v = TableHeaderView()
-        v.detailsLabel.text = companyName
-        v.headerLabel.text = ticker
+        v.detailsLabel.text = ""
+        v.headerLabel.text = ""
+        v.accessoryStackView.addArrangedSubview(quoteView)
         return v
     }()
     
@@ -66,9 +55,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         return tv
     }()
     
-    private lazy var refreshingControl: UIRefreshControl = { [unowned self] in
+    lazy var refreshingControl: UIRefreshControl = {
         let rc = UIRefreshControl()
-        rc.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+//        rc.addTarget(self, action: #selector(loadOverviewData), for: .valueChanged)
         return rc
     }()
     
@@ -86,17 +75,16 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     }
     
     // MARK: - View Lifecycle Methods
+    
     override func loadView() {
         super.loadView()
         view.backgroundColor = VersionManager.mainContainerBackground()
-        setUpPremiumButton()
         setupViews()
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadOverviewData()
-        successHandler()
-        errorHandler()
     }
     
     // MARK: - Observe Updates
@@ -104,8 +92,9 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     fileprivate func successHandler() {
         viewModel.loadingCompletionHandler = { [weak self] in
             LoadingViewPresenter.remove()
-            self?.tableView.reloadData()
             self?.refreshingControl.endRefreshing()
+            self?.setupStockHeaderView()
+            self?.tableView.reloadData()
         }
     }
     
@@ -113,21 +102,14 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         viewModel.errorHandler = { [weak self] in
             DispatchQueue.main.async {
                 LoadingViewPresenter.remove()
-                self?.tableView.reloadData()
                 self?.refreshingControl.endRefreshing()
-                // TODO: Add Error Handler View 
+                self?.tableView.reloadData()
+                self?.showErrorAlert()
             }
         }
     }
     
     // MARK: - View Setup
-    
-    private func setUpPremiumButton() {
-        if !PermissionManager.shared.isPremium {
-            stockHeaderView.accessoryStackView.addArrangedSubview(get5YearDataButton)
-            get5YearDataButton.addTarget(self, action: #selector(handle5YearDataInterest), for: .touchUpInside)
-        }
-    }
     
     private func setupViews() {
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
@@ -142,6 +124,33 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
     }
     
+    func setupStockHeaderView() {
+        stockHeaderView.detailsLabel.text = companyName
+        stockHeaderView.headerLabel.text = ticker
+        let stockQuote = viewModel.stockQuote
+        quoteView.priceLabel.text = "$\(stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
+        quoteView.priceChangeLabel.text = "\(stockQuote?.changePercent.convertToPercent() ?? "-")%"
+        
+        if stockQuote?.changePercent ?? 0 > 0 {
+            quoteView.priceChangeLabel.backgroundColor = .systemGreen
+        } else if stockQuote?.changePercent ?? 0 < 0 {
+            quoteView.priceChangeLabel.backgroundColor = .systemRed
+        }
+    }
+    
+    func showErrorAlert() {
+        let errorAlert = UIAlertController(title: "Network Error",
+                                           message: "Experienced an error connecting to the network.",
+                                           preferredStyle: .alert)
+        errorAlert.addAction(UIAlertAction(title: "Go Back", style: .default, handler: { (_) in
+            self.navigationController?.popViewController(animated: true)
+        }))
+        errorAlert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { (_) in
+            self.loadOverviewData()
+        }))
+        present(errorAlert, animated: true, completion: nil)
+    }
+    
     private func configureChart(chartView: GenericBarChartView) {
         guard !viewModel.historicalRevenue.isEmpty && !viewModel.historicalEarnings.isEmpty else { return }
         chartView.setupChart(
@@ -152,23 +161,11 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     // MARK: - Private Functions
     
-    fileprivate func loadOverviewData() {
+    @objc fileprivate func loadOverviewData() {
         LoadingViewPresenter.show(in: self)
         viewModel.loadData()
-        if PermissionManager.shared.isPremium {
-            get5YearDataButton.removeFromSuperview()
-        }
-    }
-    
-    // MARK: - Actions
-    
-    @objc private func refreshData(_ sender: Any) {
-        loadOverviewData()
-    }
-    
-    @objc private func handle5YearDataInterest(_ sender: UIButton) {
-        let presenter = SubscriptionPresenter(type: .fiveYearDataInterest)
-        presenter.present(in: self)
+        successHandler()
+        errorHandler()
     }
     
     // MARK: - Scroll View Delegate
@@ -216,6 +213,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
             guard let descriptionCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.descriptionCellID, for: indexPath) as? StockDescriptionCell else { return UITableViewCell() }
             descriptionCell.descriptionLabel.text = viewModel.stockDetail?.description ?? ""
             descriptionCell.employeeStackView.valueLabel.text = String(viewModel.stockDetail?.employees ?? 0)
+            descriptionCell.locationStackView.valueLabel.text = "\(viewModel.stockDetail?.city ?? ""),\(viewModel.stockDetail?.state ?? "")"
             return descriptionCell
             
         default:
@@ -241,6 +239,10 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         return header
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let _ = tableView.cellForRow(at: indexPath) as? SmallNewsCell else { return }
         AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
@@ -255,28 +257,11 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         return UIView()
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
-    }
-    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 3 {
             return 85
         } else {
             return 25
-        }
-    }
-}
-
-// MARK: - SubscriptionViewControllerDelegate Methods
-
-extension StockOverviewViewController: SubscriptionViewControllerDelegate {
-    func presentationControllerdDidDismissWithoutSignup() {}
-    
-    func userDidSignUp() {
-        if PermissionManager.shared.isPremium {
-            get5YearDataButton.removeFromSuperview()
-            loadOverviewData()
         }
     }
 }

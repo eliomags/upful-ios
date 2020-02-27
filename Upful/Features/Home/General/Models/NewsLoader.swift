@@ -83,7 +83,7 @@ class NewsLoader {
 }
 
 protocol NewsLoaderProtocol {
-    typealias StockNewsCompletion = (Result<[StockNews],NetworkingError>) -> Void
+    typealias StockNewsCompletion = (Result<[StockNews],NetworkError>) -> Void
     func get(router: NewsLoader.Router, completion: @escaping StockNewsCompletion)
 }
 
@@ -99,15 +99,15 @@ extension NewsLoader: NewsLoaderProtocol {
 
         let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
             DispatchQueue.main.async {
-                if let _ = err { completion(.failure(.urlError)) }
+                if let _ = err { completion(.failure(.connection)) }
                 guard let data = data else {
-                    completion(.failure(.noData))
+                    completion(.failure(.invalidData))
                     return
                 }
                 if let stockNews = try? JSONDecoder().decode(StockNewsData.self, from: data) {
                     completion(.success(stockNews.data))
                 } else {
-                    completion(.failure(.parsingError))
+                    completion(.failure(.invalidData))
                 }
             }
         }
