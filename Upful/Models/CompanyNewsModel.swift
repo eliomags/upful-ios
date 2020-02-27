@@ -39,6 +39,7 @@ final class Stock {
     var divyield: Double?
     var pricetoearnings: Double?
     var ebitgrowth: Double?
+    var stockQuote: StockQuote?
     
     init(name: String,ticker: String) {
         self.name = name

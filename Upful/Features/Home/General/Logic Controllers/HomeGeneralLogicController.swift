@@ -13,8 +13,8 @@ class HomeGeneralLogicController {
     // MARK: - Dependencies
     
     private let preferenceDataManager: PreferenceDataManager
-    private let stockScreeningService = StockScreeningService()
-    
+    private let stockScreeningService: StockScreener
+    private let stockQuoteLoader: QuoteLoader
     private let savedStockDataManager: LocalStockDataLoaderProtocol
     private let stockNewsLoader: NewsLoaderProtocol
     
@@ -33,7 +33,6 @@ class HomeGeneralLogicController {
             sendPreferenceStateUpdates?(preferenceState)
         }
     }
-    
     private(set) var stockNews: [StockNewsViewModel] = []
 
     var sendPreferenceStateUpdates: ((PreferenceState) -> Void)?
@@ -43,10 +42,14 @@ class HomeGeneralLogicController {
     
     init(savedStockDataManager: LocalStockDataLoaderProtocol = LocalStockLoader(),
          preferenceDataManager: PreferenceDataManager = .init(),
+         stockScreeningService: StockScreener = StockScreeningService(),
+         stockQuoteLoader: QuoteLoader = StockPriceLoader(),
          stockNewsLoader: NewsLoaderProtocol = NewsLoader()) {
         self.preferenceDataManager = preferenceDataManager
         self.savedStockDataManager = savedStockDataManager
+        self.stockScreeningService = stockScreeningService
         self.stockNewsLoader = stockNewsLoader
+        self.stockQuoteLoader = stockQuoteLoader
     }
     
     // MARK: - Handle State Changes
@@ -93,15 +96,33 @@ class HomeGeneralLogicController {
             let preferenceParameters = preferenceArray.joined(separator: ",")
             fetchSuggestedStocks(parameters: preferenceParameters)
         }
+        
         preferenceFetchGroup.notify(queue: .main) {
             self.preferenceState = .loaded
+            
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+                self.stocksYouMayLike.forEach { self.loadStockQuote(for: $0) }
+            }
+        }
+    }
+    
+    fileprivate func loadStockQuote(for stock: Stock) {
+        stockQuoteLoader.load(for: stock.ticker) { (result) in
+            switch result {
+            case .success(let quote):
+                stock.stockQuote = quote
+                DispatchQueue.main.async { self.preferenceState = .loaded }
+            case .failure(_):
+                break
+            }
         }
     }
     
     fileprivate func fetchSuggestedStocks(parameters: String) {
         preferenceFetchGroup.enter()
         
-        stockScreeningService.get(router: .getScreeningResults(parameters: parameters, numberOfResults: 8), completion: {
+        stockScreeningService.get(router: .getScreeningResults(parameters: parameters,
+                                                               numberOfResults: 8), completion: {
             (result) in
             switch result {
             case .success(let fetchedStocks):
@@ -115,7 +136,6 @@ class HomeGeneralLogicController {
     
     fileprivate func randomizeSuggestedStocks(stocks: [Stock]) -> [Stock] {
         var duplicateStocks = stocks
-        
         duplicateStocks.removeDuplicates()
         if duplicateStocks.count > 3 { duplicateStocks = Array(duplicateStocks[0...2]) }
         return duplicateStocks
@@ -126,6 +146,7 @@ class HomeGeneralLogicController {
         if fetchedStocks.isEmpty {
             self.fetchSuggestedStocks(parameters: "")
         } else {
+            fetchedStocks.forEach { loadStockQuote(for: $0) }
             stocksYouMayLike = randomizeSuggestedStocks(stocks: fetchedStocks)
         }
     }

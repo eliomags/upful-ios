@@ -100,6 +100,8 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         companyNameLabel.text = ""
         marketcapStackView.valueLabel.text = "$ -"
         pricetoearningsStackView.valueLabel.text = "-"
+        
+        // TODO: - Add Reuse for stock quote data
     }
 }
 

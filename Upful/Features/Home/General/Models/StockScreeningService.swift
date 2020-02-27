@@ -91,7 +91,10 @@ class StockScreeningService: StockScreener {
             return
         }
         let task = URLSession.shared.dataTask(with: url) { (data, _, err) in
-            if let _ = err { completion(.failure(.connection)) }
+            if let _ = err {
+                completion(.failure(.connection))
+                return
+            }
             if let data = data {
                     do {
                         let screeningResponse = try JSONDecoder().decode(ScreeningResponse.self, from: data)

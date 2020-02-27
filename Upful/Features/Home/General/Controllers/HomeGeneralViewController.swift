@@ -156,6 +156,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             loadedCell.companyNameLabel.text = stock.name
             loadedCell.marketcapStackView.valueLabel.text = "$\(stock.marketcap?.formatUsingAbbreviation() ?? " -")"
             loadedCell.pricetoearningsStackView.valueLabel.text = "\(stock.pricetoearnings?.twoDecimal() ?? "-")"
+            loadedCell.quoteView.priceLabel.text = "$\(stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
+            loadedCell.quoteView.priceChangeLabel.text = "\(stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
+            
+            if stock.stockQuote?.changePercent ?? 0 > 0 {
+                loadedCell.quoteView.setPositive()
+            } else if stock.stockQuote?.changePercent ?? 0 < 0 {
+                loadedCell.quoteView.setNegative()
+            }
         }
         return loadedCell
     }
