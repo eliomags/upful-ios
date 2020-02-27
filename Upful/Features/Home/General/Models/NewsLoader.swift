@@ -99,7 +99,10 @@ extension NewsLoader: NewsLoaderProtocol {
 
         let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
             DispatchQueue.main.async {
-                if let _ = err { completion(.failure(.connection)) }
+                if let _ = err {
+                    completion(.failure(.connection))
+                    return
+                }
                 guard let data = data else {
                     completion(.failure(.invalidData))
                     return

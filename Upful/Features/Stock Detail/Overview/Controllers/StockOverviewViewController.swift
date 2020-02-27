@@ -57,7 +57,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     
     lazy var refreshingControl: UIRefreshControl = {
         let rc = UIRefreshControl()
-//        rc.addTarget(self, action: #selector(loadOverviewData), for: .valueChanged)
+        rc.addTarget(self, action: #selector(loadOverviewData), for: .valueChanged)
         return rc
     }()
     
@@ -93,8 +93,8 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         viewModel.loadingCompletionHandler = { [weak self] in
             LoadingViewPresenter.remove()
             self?.refreshingControl.endRefreshing()
-            self?.setupStockHeaderView()
             self?.tableView.reloadData()
+            self?.setupStockHeaderView()
         }
     }
     
@@ -215,7 +215,6 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
             descriptionCell.employeeStackView.valueLabel.text = String(viewModel.stockDetail?.employees ?? 0)
             descriptionCell.locationStackView.valueLabel.text = "\(viewModel.stockDetail?.city ?? ""),\(viewModel.stockDetail?.state ?? "")"
             return descriptionCell
-            
         default:
             return UITableViewCell()
         }

@@ -32,7 +32,10 @@ final class StockDescriptionLoader: DescriptionLoader {
         let endpoint = "https://cloud.iexapis.com/stable/stock/\(ticker)/company?token=pk_93380460343741859a000b3c6414fedc"
         let url = URL(string: endpoint)!
         let task = URLSession.shared.dataTask(with: url) { (data, resp, err) in
-            if let _ = err { completion(.failure(.invalidData)) }
+            if let _ = err {
+                completion(.failure(.invalidData))
+                return
+            }
             if let data = data {
                 do {
                     let stock = try JSONDecoder().decode(StockDetail.self, from: data)

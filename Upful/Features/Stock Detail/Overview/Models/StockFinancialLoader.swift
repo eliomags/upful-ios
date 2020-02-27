@@ -55,7 +55,10 @@ final class StockFinancialLoader: FinancialLoader {
         let decoder = JSONDecoder()
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, response, error) in
-            if let _ = error { completion(.failure(.connection)) }
+            if let _ = error {
+                completion(.failure(.connection))
+                return
+            }
             guard let data = data else {
                 completion(.failure(.connection))
                 return

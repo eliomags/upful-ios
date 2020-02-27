@@ -75,62 +75,61 @@ class StockOverviewViewModel {
     
     fileprivate func loadStockPrice() {
         loadingOperations.enter()
-        
         stockQuoteLoader.load(for: ticker) { (result) in
             switch result {
             case .success(let stockQuote):
                 self.stockQuote = stockQuote
-                self.loadingOperations.leave()
             case .failure(let err):
                 if err == .connection { self.errorHandler?() }
             }
+            self.loadingOperations.leave()
         }
     }
         
     fileprivate func loadRevenueData() {
         loadingOperations.enter()
-        
+
         financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .fiveYear,
                                      financial: .totalrevenue) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let historicalRevenue):
                 self.historicalRevenue = historicalRevenue
-                self.loadingOperations.leave()
             case .failure(let err):
                 if err == .connection { self.errorHandler?() }
             }
+            self.loadingOperations.leave()
         }
     }
     
     fileprivate func loadEarningsData() {
         loadingOperations.enter()
-        
+
         financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .fiveYear,
                                      financial: .netincome) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let historicalEarnings):
                 self.historicalEarnings = historicalEarnings
-                self.loadingOperations.leave()
             case .failure(let err):
                 if err == .connection { self.errorHandler?() }
             }
+            self.loadingOperations.leave()
         }
     }
     
     fileprivate func loadCalculationsData() {
         loadingOperations.enter()
-        
+
         batchFinancialLoader.fetchStockBatchFinancials(ticker: ticker) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let financialData):
                 self.calcData = financialData
-                self.loadingOperations.leave()
             case .failure(let err):
                 if err == .connection { self.errorHandler?() }
             }
+            self.loadingOperations.leave()
         }
     }
 
@@ -142,17 +141,17 @@ class StockOverviewViewModel {
         ]
         .forEach { criteria in
             loadingOperations.enter()
-            
+
             financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .recent,
                                          financial: criteria) { [weak self] (result) in
                 guard let self = self else { return }
                 switch result {
                 case .success(let recentFinancials):
                     self.financialLookup[criteria] = recentFinancials.first?.value
-                    self.loadingOperations.leave()
                 case .failure(let err):
                     if err == .connection { self.errorHandler?() }
                 }
+                self.loadingOperations.leave()
             }
         }
     }
@@ -165,10 +164,10 @@ class StockOverviewViewModel {
             switch result {
             case .success(let stockNews):
                 self.stockNews = stockNews.map { StockNewsViewModel(stockNews: $0) }
-                self.loadingOperations.leave()
             case .failure(let err):
                 if err == .connection { self.errorHandler?() }
             }
+            self.loadingOperations.leave()
         }
     }
     
@@ -180,10 +179,10 @@ class StockOverviewViewModel {
             switch result {
             case .success(let stockDetail):
                 self.stockDetail = stockDetail
-                self.loadingOperations.leave()
             case .failure(let err):
                 if err == .connection { self.errorHandler?() }
             }
+            self.loadingOperations.leave()
         }
     }
 }

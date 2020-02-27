@@ -23,7 +23,10 @@ class StockBatchFinancialLoader: BatchFinancialLoader {
                                    completion: @escaping BatchFinancialLoaderCompletion) {
         guard let url = URL(string: lookupEndpoint + ticker + documentType + apiKey) else { return }
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let _ = error { completion(.failure(.connection)) }
+            if let _ = error {
+                completion(.failure(.connection))
+                return
+            }
             guard let data = data else {
                 completion(.failure(.invalidData))
                 return
