@@ -99,6 +99,11 @@ class SearchResultsViewModel {
         })
     }
     
+    func deleteScreener() {
+        guard let id = screener?.documentID else { return }
+        localScreenerLoader.delete(with: id)
+    }
+    
     func handleSaveCompletion(with title: String) {
         saveScreenerPermission { [weak self] (isAuthorized) in
             guard let self = self else { return }
