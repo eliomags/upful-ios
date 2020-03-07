@@ -85,6 +85,7 @@ final class ScreenResultsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setSavedState()
+        observeStateUpdates()
         loadStocks()
     }
 
@@ -113,6 +114,14 @@ final class ScreenResultsViewController: UIViewController {
     fileprivate func setSavedState() {
         viewModel.checkIfScreenerCurrentlySaved { (isSaved) in
             self.saveButton.isSelected = isSaved
+        }
+    }
+    
+    // MARK: - Observe State
+    
+    fileprivate func observeStateUpdates() {
+        viewModel.updateHandler = { [weak self] in
+            self?.feedTableView.reloadData()
         }
     }
 
@@ -186,29 +195,37 @@ final class ScreenResultsViewController: UIViewController {
 
 extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tableView.isScrollEnabled = !viewModel.searchResults.isEmpty
-        if viewModel.searchResults.isEmpty { tableView.separatorStyle = .none }
-        if !viewModel.searchResults.isEmpty {
+        tableView.isScrollEnabled = !viewModel.stockViewModels.isEmpty
+        if viewModel.stockViewModels.isEmpty { tableView.separatorStyle = .none }
+        if !viewModel.stockViewModels.isEmpty {
             tableView.backgroundView = nil
             tableView.separatorStyle = .singleLine
         }
-        return viewModel.searchResults.count
+        return viewModel.stockViewModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let resultsCell = tableView.dequeueReusableCell(withIdentifier: ReuseId.resultsCellID) as? CompanyPreviewTableViewCell else { return UITableViewCell() }
-        let screenResult = viewModel.searchResults[indexPath.item]
-        let ticker = screenResult.ticker
+        let screenResult = viewModel.stockViewModels[indexPath.item]
+        let ticker = screenResult.stock.ticker
         resultsCell.accessoryType = .disclosureIndicator
         resultsCell.companyTickerLabel.text = ticker
-        resultsCell.companyNameLabel.text = screenResult.name
-        resultsCell.marketcapStackView.valueLabel.text = "$\(screenResult.marketcap?.formatUsingAbbreviation() ?? " -")"
-        resultsCell.pricetoearningsStackView.valueLabel.text = "\(screenResult.pricetoearnings?.twoDecimal() ?? "-")"
+        resultsCell.companyNameLabel.text = screenResult.stock.name
+        resultsCell.marketcapStackView.valueLabel.text = "$\(screenResult.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
+        resultsCell.pricetoearningsStackView.valueLabel.text = "\(screenResult.stock.pricetoearnings?.twoDecimal() ?? "-")"
+        resultsCell.quoteView.priceLabel.text = "$\(screenResult.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
+        resultsCell.quoteView.priceChangeLabel.text = "\(screenResult.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
+        
+        if screenResult.stock.stockQuote?.changePercent ?? 0 > 0 {
+            resultsCell.quoteView.setPositive()
+        } else if screenResult.stock.stockQuote?.changePercent ?? 0 < 0 {
+            resultsCell.quoteView.setNegative()
+        }
         return resultsCell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastElement = viewModel.searchResults.count - 1
+        let lastElement = viewModel.stockViewModels.count - 1
         if indexPath.row == lastElement - 1 && lastElement > 10 {
             viewModel.screenForStocks()
         }
@@ -219,10 +236,10 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .searchResult))
-        let selectedCompany = viewModel.searchResults[indexPath.item]
-        let detailVC = StockDetailsContainerView(ticker: selectedCompany.ticker, companyName: selectedCompany.name)
+        let selectedCompany = viewModel.stockViewModels[indexPath.item]
+        let detailVC = StockDetailsContainerView(ticker: selectedCompany.stock.ticker, companyName: selectedCompany.stock.name)
         
-        RemoteStockManager.updateInterest(for: selectedCompany.ticker, name: selectedCompany.name)
+        RemoteStockManager.updateInterest(for: selectedCompany.stock.ticker, name: selectedCompany.stock.name)
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
@@ -233,7 +250,7 @@ extension ScreenResultsViewController: SearchResultsViewModelDelegate {
             LoadingViewPresenter.remove()
             if !fetchedStocks.isEmpty {
                 self.feedTableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
-            } else if self.viewModel.searchResults.isEmpty {
+            } else if self.viewModel.stockViewModels.isEmpty {
                 self.feedTableView.setEmptyView(state: .emptyState(title: "No Data.", message: "No data to display."))
                 self.feedTableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
             }
