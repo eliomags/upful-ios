@@ -22,8 +22,11 @@ protocol LocalStockCountLoaderProtocol {
 }
 
 final class LocalStockLoader: LocalStockDataLoaderProtocol, LocalStockCountLoaderProtocol {
-
-    let persistenceService = PersistenceService.shared
+    // MARK: - Dependencies
+    
+    private let persistenceService = PersistenceService.shared
+    
+    // MARK: - Properties
     
     lazy var savedStockCount: Int? = {
         var count: Int? = 0
@@ -38,6 +41,8 @@ final class LocalStockLoader: LocalStockDataLoaderProtocol, LocalStockCountLoade
         }
         return count
     }()
+    
+    // MARK: - Methods
     
     func updateSavedStockCount() {
         self.loadSavedStocks { (res) in
@@ -76,9 +81,7 @@ final class LocalStockLoader: LocalStockDataLoaderProtocol, LocalStockCountLoade
         fetchRequest.predicate = NSPredicate(format: "ticker = %@", ticker)
         do {
             let objects = try context.fetch(fetchRequest)
-            for object in objects {
-                context.delete(object)
-            }
+            for object in objects { context.delete(object) }
             persistenceService.saveContext()
             completion?()
         } catch {
@@ -86,7 +89,3 @@ final class LocalStockLoader: LocalStockDataLoaderProtocol, LocalStockCountLoade
         }
     }
 }
-
-
-
-

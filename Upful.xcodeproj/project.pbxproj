@@ -148,7 +148,7 @@
 		3DBEFFDE23B018CC00BA407E /* SavedScreenersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFDD23B018CC00BA407E /* SavedScreenersViewModel.swift */; };
 		3DBEFFE023B01F0A00BA407E /* SavedScreenerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFDF23B01F0A00BA407E /* SavedScreenerTableViewCell.swift */; };
 		3DBEFFE223B0280300BA407E /* LocalScreenerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFE123B0280300BA407E /* LocalScreenerLoader.swift */; };
-		3DBF0C5523D61E45003023D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 3DBF0C5423D61E45003023D7 /* Kingfisher */; };
+		3DBF0C5523D61E45003023D7 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 3DBF0C5423D61E45003023D7 /* SwiftPackageProductDependency */; };
 		3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */; };
 		3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */; };
 		3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710892335D70000A2A0DA /* CustomRoundButton.swift */; };
@@ -431,7 +431,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DBF0C5523D61E45003023D7 /* Kingfisher in Frameworks */,
+				3DBF0C5523D61E45003023D7 /* BuildFile in Frameworks */,
 				DBF9A52BC5915E42042B6760 /* Pods_Upful.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -674,6 +674,8 @@
 		3D20FB4D22FB258A007836DD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3D583BB92413209E0001EEA5 /* Quote Loader */,
+				3D583BB82413207D0001EEA5 /* Stock Financial Loader */,
 				3DBF0C5623D94690003023D7 /* Remote Loaders */,
 				3D42BE462309A56F00806AFF /* Intrinio */,
 				3D2F963F2312B025003811AB /* Analytics */,
@@ -947,6 +949,24 @@
 				3D55BD6D23B805F400B4FDF0 /* StockNewsViewModelTest.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3D583BB82413207D0001EEA5 /* Stock Financial Loader */ = {
+			isa = PBXGroup;
+			children = (
+				3DF734C82400E8AC00B297A4 /* StockDescriptionLoader.swift */,
+				3DF734D124030E2B00B297A4 /* StockFinancialLoader.swift */,
+				3DF734D52403770C00B297A4 /* BatchFinancialLoader.swift */,
+			);
+			path = "Stock Financial Loader";
+			sourceTree = "<group>";
+		};
+		3D583BB92413209E0001EEA5 /* Quote Loader */ = {
+			isa = PBXGroup;
+			children = (
+				3DF734C22400AC3600B297A4 /* QuoteLoader.swift */,
+			);
+			path = "Quote Loader";
 			sourceTree = "<group>";
 		};
 		3D6BD0BC23B506F400FBC1ED /* Saved Screeners */ = {
@@ -1630,7 +1650,6 @@
 		3DF5FBA5232BF4E700856205 /* Overview */ = {
 			isa = PBXGroup;
 			children = (
-				3DF734C72400E89E00B297A4 /* Models */,
 				3D2F96482315CD18003811AB /* Views */,
 				3DF5FBA7232BF52000856205 /* Controllers */,
 				3DF734CA2402DDEE00B297A4 /* ViewModel */,
@@ -1775,17 +1794,6 @@
 			path = "Description Cell";
 			sourceTree = "<group>";
 		};
-		3DF734C72400E89E00B297A4 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				3DF734C22400AC3600B297A4 /* QuoteLoader.swift */,
-				3DF734C82400E8AC00B297A4 /* StockDescriptionLoader.swift */,
-				3DF734D124030E2B00B297A4 /* StockFinancialLoader.swift */,
-				3DF734D52403770C00B297A4 /* BatchFinancialLoader.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		3DF734CA2402DDEE00B297A4 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -1924,7 +1932,7 @@
 				3D20FB2222FB1F08007836DD /* Frameworks */,
 				3D20FB2322FB1F08007836DD /* Resources */,
 				3DA37C3223453049008832AB /* Embed Frameworks */,
-				B757B96E2C34F9D22B06CA05 /* [CP] Embed Pods Frameworks */,
+				CB29E882443815123C077D80 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1932,7 +1940,7 @@
 			);
 			name = Upful;
 			packageProductDependencies = (
-				3DBF0C5423D61E45003023D7 /* Kingfisher */,
+				3DBF0C5423D61E45003023D7 /* SwiftPackageProductDependency */,
 			);
 			productName = Upful;
 			productReference = 3D20FB2522FB1F08007836DD /* Upful.app */;
@@ -1986,7 +1994,7 @@
 			);
 			mainGroup = 3D20FB1C22FB1F08007836DD;
 			packageReferences = (
-				3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				3DBF0C5323D61E45003023D7 /* RemoteSwiftPackageReference */,
 			);
 			productRefGroup = 3D20FB2622FB1F08007836DD /* Products */;
 			projectDirPath = "";
@@ -2036,23 +2044,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B757B96E2C34F9D22B06CA05 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		BA8A5399EEDABAAEA09927E9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2069,6 +2060,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CB29E882443815123C077D80 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2520,7 +2528,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		3DBF0C5323D61E45003023D7 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -2531,9 +2539,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3DBF0C5423D61E45003023D7 /* Kingfisher */ = {
+		3DBF0C5423D61E45003023D7 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			package = 3DBF0C5323D61E45003023D7 /* RemoteSwiftPackageReference */;
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */

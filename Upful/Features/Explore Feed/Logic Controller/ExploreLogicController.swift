@@ -85,15 +85,14 @@ class ExploreLogicController {
     }
     
     fileprivate func loadStockViewModels(from stocks: [Stock]) {
-        let mappedLoadedStocks = stocks.map { StockViewModel(stock: $0,
-                                                             stockPreviewLoader: StockPreviewLoader(ticker: $0.ticker, name: $0.name)) }
+        let mappedLoadedStocks = stocks.map { StockViewModel(stock: $0) }
         stockViewModels = mappedLoadedStocks
         handleCompletion?()
     }
     
     fileprivate func loadStockPreviewData() {
         stockViewModels.forEach { (viewModel) in
-            viewModel.previewFetchCompletion = handleCompletion
+            viewModel.updateHandler = { [weak self] in self?.handleCompletion?() }
             viewModel.loadPreviewData()
         }
     }

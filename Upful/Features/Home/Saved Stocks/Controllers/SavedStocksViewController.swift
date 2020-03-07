@@ -151,6 +151,15 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
         loadedCell.companyNameLabel.text = stockViewModels.stock.name
         loadedCell.marketcapStackView.valueLabel.text = "$\(stockViewModels.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
         loadedCell.pricetoearningsStackView.valueLabel.text = "\(stockViewModels.stock.pricetoearnings?.twoDecimal() ?? "-")"
+        loadedCell.quoteView.priceLabel.text = "$\(stockViewModels.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
+        loadedCell.quoteView.priceChangeLabel.text = "\(stockViewModels.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
+        
+        if stockViewModels.stock.stockQuote?.changePercent ?? 0 > 0 {
+            loadedCell.quoteView.setPositive()
+        } else if stockViewModels.stock.stockQuote?.changePercent ?? 0 < 0 {
+            loadedCell.quoteView.setNegative()
+        }
+        
         return loadedCell
     }
     
@@ -253,8 +262,7 @@ extension SavedStocksViewController: UITableViewDragDelegate, UITableViewDropDel
         guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
         guard let sourceIndexPath = coordinator.items[0].sourceIndexPath else { return }
 
-        viewModel.stockViewModels.moveItem(from: sourceIndexPath.row, to: destinationIndexPath.row)
-        viewModel.saveDatasourceConfiguration()
+        viewModel.saveDatasourceConfiguration(from: sourceIndexPath.row, to: destinationIndexPath.row)
         tableView.reloadData()
         coordinator.drop(coordinator.items[0].dragItem, toRowAt: destinationIndexPath)
         Vibration.light.vibrate()

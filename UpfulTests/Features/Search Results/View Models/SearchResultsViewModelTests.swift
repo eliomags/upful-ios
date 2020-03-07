@@ -10,12 +10,12 @@ import XCTest
 @testable import Upful
 
 fileprivate final class MockViewModelDelegate: SearchResultsViewModelDelegate {
-    func didCompleteStockFetch() {
-        
+    func didCompleteStockFetch(fetchedStocks: [Stock]) {
+
     }
     
-    func didFailStockFetch(with error: NetworkError) {
-        
+    func didFailStockFetch(with error: NetworkError, for stock: Stock?) {
+
     }
     
     var calledFailScreenerSave = false

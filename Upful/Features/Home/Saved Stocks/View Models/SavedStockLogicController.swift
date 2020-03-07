@@ -31,7 +31,7 @@ class SavedStockLogicController {
             sendStateUpdates?(state)
         }
     }
-    var stockViewModels: [StockViewModel] = []
+    private(set) var stockViewModels: [StockViewModel] = []
     
     // MARK: - Initializer
     
@@ -46,8 +46,7 @@ class SavedStockLogicController {
         localStockDataLoader.loadSavedStocks { (result) in
             switch result {
             case .success(let savedStocks):
-                let mappedViewModels = savedStocks.map { StockViewModel(stock: $0,
-                                                                       stockPreviewLoader: StockPreviewLoader(ticker: $0.ticker, name: $0.name))}
+                let mappedViewModels = savedStocks.map { StockViewModel(stock: $0) }
                 self.stockViewModels = mappedViewModels
                 self.getPreviewData()
                 self.refreshState()
@@ -68,7 +67,7 @@ class SavedStockLogicController {
     
     fileprivate func getPreviewData() {
         stockViewModels.forEach {
-            $0.previewFetchCompletion = { [weak self] in
+            $0.updateHandler = { [weak self] in
                 guard let self = self else { return }
                 self.state = .loaded
             }
@@ -76,7 +75,9 @@ class SavedStockLogicController {
         }
     }
         
-    func saveDatasourceConfiguration() {
+    func saveDatasourceConfiguration(from sourceIndexPath: Int, to destinationIndexPath: Int) {
+        stockViewModels.moveItem(from: sourceIndexPath, to: destinationIndexPath)
+        
         stockViewModels.forEach { (vm) in
             localStockDataLoader.removeFavoriteCompany(vm.stock.ticker) {}
             localStockDataLoader.saveCompany(ticker: vm.stock.ticker, companyName: vm.stock.name)

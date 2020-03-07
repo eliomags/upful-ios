@@ -9,37 +9,66 @@
 import Foundation
 
 final class StockViewModel {
-    var previewFetchCompletion: (() -> Void)?
-    
+    // MARK: - Properties
     let stock: Stock
-    var stockPreviewLoader: StockPreviewLoaderProtocol?
+    let quoteLoader: QuoteLoader
+    let stockFinancialLoader: FinancialLoader
     
-    init(stock: Stock, stockPreviewLoader: StockPreviewLoaderProtocol) {
+    // MARK: - Configuration
+    
+    var updateHandler: (() -> Void)?
+
+    // MARK: - Initializer
+    init(stock: Stock,
+         quoteLoader: QuoteLoader = StockPriceLoader(),
+         stockFinancialLoader: FinancialLoader = StockFinancialLoader()
+         ) {
         self.stock = stock
-        self.stockPreviewLoader = stockPreviewLoader
-        self.stockPreviewLoader?.delegate = self
+        self.quoteLoader = quoteLoader
+        self.stockFinancialLoader = stockFinancialLoader
     }
     
     func loadPreviewData() {
-        stockPreviewLoader?.start()
+        loadPriceToEarningsData()
+        loadMarketCapData()
+        loadQuoteData()
     }
     
-}
-
-// MARK: - StockPreviewLoaderDelegate Methods
-
-extension StockViewModel: StockPreviewLoaderDelegate {
-    func didLoadMarketcap(with value: Int) {
-        DispatchQueue.main.async {
-            self.stock.marketcap = value
-            self.previewFetchCompletion?()
+    func loadQuoteData() {
+        quoteLoader.load(for: stock.ticker) { (result) in
+            switch result {
+            case .success(let quote):
+                self.stock.stockQuote = quote
+            case .failure(_):
+                break
+            }
+            DispatchQueue.main.async { self.updateHandler?() }
         }
     }
     
-    func didLoadPriceToEarnings(with value: Double) {
-        DispatchQueue.main.async {
-            self.stock.pricetoearnings = value
-            self.previewFetchCompletion?()
+    fileprivate func loadMarketCapData() {
+        stockFinancialLoader.getStockFinancials(ticker: stock.ticker, financialFrequency: .recent, financial: .marketcap) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let companyHistorics):
+                self.stock.marketcap = Int(companyHistorics.first?.value ?? 0)
+            case .failure(_):
+                break
+            }
+            DispatchQueue.main.async { self.updateHandler?() }
+        }
+    }
+    
+    fileprivate func loadPriceToEarningsData() {
+        stockFinancialLoader.getStockFinancials(ticker: stock.ticker, financialFrequency: .recent, financial: .pricetoearnings) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let companyHistorics):
+                self.stock.pricetoearnings = companyHistorics.first?.value ?? 0
+            case .failure(_):
+                break
+            }
+            DispatchQueue.main.async { self.updateHandler?() }
         }
     }
 }
@@ -50,90 +79,5 @@ extension StockViewModel: Hashable {
     }
     func hash(into hasher: inout Hasher) {
         hasher.combine(stock.ticker)
-    }
-}
-
-protocol StockPreviewLoaderDelegate: class {
-    func didLoadMarketcap(with value: Int)
-    func didLoadPriceToEarnings(with value: Double)
-}
-
-protocol StockPreviewLoaderProtocol: class {
-    var delegate: StockPreviewLoaderDelegate? { get set }
-    
-    func start()
-    func getPriceToEarningsPreviewData()
-    func getMarketCapPreviewData()
-}
-
-final class StockPreviewLoader: StockPreviewLoaderProtocol {
-    let intrinioAPI = IntrinioAPI()
-    
-    let name: String
-    let ticker: String
-    weak var delegate: StockPreviewLoaderDelegate?
-
-    init(ticker: String, name: String) {
-        self.name = name
-        self.ticker = ticker
-    }
-    
-    func start() {
-        checkCache { (shouldMakeHTTPRequest) in
-            if shouldMakeHTTPRequest {
-                /// instantiated only for the first time this function is called, subsequent calls to this function will pull data from cache
-                stockToCache = Stock(name: name, ticker: ticker)
-                getPriceToEarningsPreviewData()
-                getMarketCapPreviewData()
-            }
-        }
-    }
-    
-    // MARK: - Caching
-    
-    private var stockToCache: Stock? {
-        didSet {
-            /// stores cache for first checkCache function call
-            Stock.cache.setObject(stockToCache!, forKey: ticker as NSString)
-        }
-    }
-    
-    private func checkCache(shouldMakeHTTPRequest: ((Bool) -> Void)) {
-        if let cachedStock = Stock.cache.object(forKey: ticker as NSString) {
-            delegate?.didLoadMarketcap(with: cachedStock.marketcap ?? 0 )
-            delegate?.didLoadPriceToEarnings(with: cachedStock.pricetoearnings ?? 0)
-        } else {
-            shouldMakeHTTPRequest(true)
-        }
-    }
-    
-    // MARK: - Data Fetching
-    
-    func getPriceToEarningsPreviewData() {
-        intrinioAPI.fetchStockSpecificFinancial(ticker: ticker, financial: .pricetoearnings, frequency: .recent, completion: { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let companyHistorics):
-                guard !companyHistorics.isEmpty else { return }
-                self.stockToCache?.pricetoearnings = companyHistorics.first?.value
-                self.delegate?.didLoadPriceToEarnings(with: companyHistorics.first?.value ?? 0)
-            case .failure(_):
-                break
-            }
-        })
-    }
-        
-    func getMarketCapPreviewData() {
-        intrinioAPI.fetchStockSpecificFinancial(ticker: ticker, financial: .marketcap, frequency: .recent, completion: { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let companyHistorics):
-                guard !companyHistorics.isEmpty else { return }
-                self.stockToCache?.marketcap = Int(companyHistorics.first?.value ?? 0)
-                self.delegate?.didLoadMarketcap(with: Int(companyHistorics.first?.value ?? 0))
-            case .failure(_):
-                break
-            }
-        })
     }
 }

@@ -23,7 +23,7 @@ class StockViewModelTests: XCTestCase {
         let textExpectation = expectation(description: #function)
         textExpectation.expectedFulfillmentCount = 2
         
-        sut.previewFetchCompletion = { textExpectation.fulfill() }
+        sut.updateHandler = { textExpectation.fulfill() }
         sut.loadPreviewData()
         
         wait(for: [textExpectation], timeout: 1)
