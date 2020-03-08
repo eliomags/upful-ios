@@ -35,7 +35,8 @@ final class StockViewModel {
     }
     
     func loadQuoteData() {
-        quoteLoader.load(for: stock.ticker) { (result) in
+        quoteLoader.load(for: stock.ticker) { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
             case .success(let quote):
                 self.stock.stockQuote = quote
@@ -47,7 +48,9 @@ final class StockViewModel {
     }
     
     fileprivate func loadMarketCapData() {
-        stockFinancialLoader.getStockFinancials(ticker: stock.ticker, financialFrequency: .recent, financial: .marketcap) { [weak self] (result) in
+        stockFinancialLoader.getStockFinancials(ticker: stock.ticker,
+                                                financialFrequency: .recent,
+                                                financial: .marketcap) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let companyHistorics):
@@ -60,7 +63,9 @@ final class StockViewModel {
     }
     
     fileprivate func loadPriceToEarningsData() {
-        stockFinancialLoader.getStockFinancials(ticker: stock.ticker, financialFrequency: .recent, financial: .pricetoearnings) { [weak self] (result) in
+        stockFinancialLoader.getStockFinancials(ticker: stock.ticker,
+                                                financialFrequency: .recent,
+                                                financial: .pricetoearnings) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let companyHistorics):

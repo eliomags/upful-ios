@@ -66,12 +66,9 @@ class SavedStockLogicController {
     }
     
     fileprivate func getPreviewData() {
-        stockViewModels.forEach {
-            $0.updateHandler = { [weak self] in
-                guard let self = self else { return }
-                self.state = .loaded
-            }
-            $0.loadPreviewData()
+        stockViewModels.forEach { stockViewModel in
+            stockViewModel.updateHandler = { [weak self] in self?.state = .loaded }
+            stockViewModel.loadPreviewData()
         }
     }
         
