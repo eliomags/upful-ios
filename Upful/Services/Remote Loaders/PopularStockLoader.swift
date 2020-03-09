@@ -13,7 +13,6 @@ protocol RemoteStockLoaderProtocol {
 }
 
 class RemoteStockLoader: RemoteStockLoaderProtocol {
-    
     private let backendService = FirestoreAPI()
     
     func load(completion: @escaping (Result<[Stock],Error>) -> Void) {

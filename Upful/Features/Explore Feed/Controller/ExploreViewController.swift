@@ -265,6 +265,14 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
             loadedCell?.companyNameLabel.text = savedStock.stock.name
             loadedCell?.marketcapStackView.valueLabel.text = "$\(savedStock.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
             loadedCell?.pricetoearningsStackView.valueLabel.text = "\(savedStock.stock.pricetoearnings?.twoDecimal() ?? "-")"
+            loadedCell?.quoteView.priceLabel.text = "$\(savedStock.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
+            loadedCell?.quoteView.priceChangeLabel.text = "\(savedStock.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
+            
+            if savedStock.stock.stockQuote?.changePercent ?? 0 > 0 {
+                loadedCell?.quoteView.setPositive()
+            } else if savedStock.stock.stockQuote?.changePercent ?? 0 < 0 {
+                loadedCell?.quoteView.setNegative()
+            }
         }
         return loadedCell ?? UITableViewCell()
     }
