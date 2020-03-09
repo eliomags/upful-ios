@@ -163,7 +163,7 @@ class ChartViewModel: NSObject, IAxisValueFormatter, IValueFormatter {
         let formattedValue = Int(value).formatUsingAbbreviation()
         return formattedValue
     }
-    
+
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         let formattedValue = "$"+Int(value).formatUsingAbbreviation()
         return formattedValue
