@@ -21,37 +21,36 @@ class StockViewModelTests: XCTestCase {
     func testPreviewLoad() {
         sut = makeSUT()
         let textExpectation = expectation(description: #function)
-        textExpectation.expectedFulfillmentCount = 2
+        textExpectation.expectedFulfillmentCount = 3
         
         sut.updateHandler = { textExpectation.fulfill() }
         sut.loadPreviewData()
         
         wait(for: [textExpectation], timeout: 1)
-        XCTAssertEqual(sut.stock.pricetoearnings, 14)
         XCTAssertEqual(sut.stock.marketcap, 50)
+        XCTAssertEqual(sut.stock.pricetoearnings, 50)
+
+        XCTAssertEqual(sut.stock.stockQuote?.latestPrice, 20)
+        XCTAssertEqual(sut.stock.stockQuote?.changePercent, 0.02)
     }
     
     func makeSUT() -> StockViewModel {
         let stock = Stock(name: "Facebook", ticker: "FB")
-        let previewLoader = MockStockPreviewLoader()
-        let vm = StockViewModel(stock: stock, stockPreviewLoader: previewLoader)
-        return vm
+        let stockVM = StockViewModel(stock: stock, quoteLoader: MockQuoteLoader(), stockFinancialLoader: MockFinancialLoader())
+        return stockVM
     }
 }
 
-class MockStockPreviewLoader: StockPreviewLoaderProtocol {
-    weak var delegate: StockPreviewLoaderDelegate?
-    
-    func start() {
-        getPriceToEarningsPreviewData()
-        getMarketCapPreviewData()
+fileprivate class MockQuoteLoader: QuoteLoader {
+    func load(for ticker: String, completion: @escaping PriceLoaderCompletion) {
+        completion(.success(StockQuote(latestPrice: 20, changePercent: 0.02)))
     }
-    
-    func getPriceToEarningsPreviewData() {
-        delegate?.didLoadPriceToEarnings(with: 14)
-    }
-    
-    func getMarketCapPreviewData() {
-        delegate?.didLoadMarketcap(with: 50)
+}
+
+fileprivate class MockFinancialLoader: FinancialLoader {
+    func getStockFinancials(ticker: String, financialFrequency: FinancialsFrequency,
+                            financial: SearchCriteria,
+                            completion: @escaping (Result<[CompanyHistoricalDatum], NetworkError>) -> Void) {
+        completion(.success([CompanyHistoricalDatum(date: "", value: 50)]))
     }
 }

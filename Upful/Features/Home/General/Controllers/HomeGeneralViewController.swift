@@ -29,6 +29,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         view.preferenceButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleEditPreferenceTap)))
         view.suggestionButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSendSuggestionsTap)))
         view.premiumButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleUpgradeToPremiumTap)))
+        if PermissionManager.shared.isPremium { view.premiumButton.removeFromSuperview() }
         return view
     }()
     
@@ -364,12 +365,10 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
 }
 
 extension HomeGeneralViewController: SubscriptionViewControllerDelegate {
-    func presentationControllerdDidDismissWithoutSignup() {
-        
-    }
+    func presentationControllerdDidDismissWithoutSignup() {}
     
     func userDidSignUp() {
-        
+        if PermissionManager.shared.isPremium { headerView.premiumButton.removeFromSuperview() }
     }
 }
 

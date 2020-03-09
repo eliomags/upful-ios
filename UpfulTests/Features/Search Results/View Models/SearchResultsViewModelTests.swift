@@ -10,11 +10,11 @@ import XCTest
 @testable import Upful
 
 fileprivate final class MockViewModelDelegate: SearchResultsViewModelDelegate {
-    func didCompleteStockFetch(fetchedStocks: [Stock]) {
-
+    func didFailStockFetch(with error: Error, for stock: Stock?) {
+        
     }
     
-    func didFailStockFetch(with error: NetworkError, for stock: Stock?) {
+    func didCompleteStockFetch(fetchedStocks: [Stock]) {
 
     }
     
@@ -69,8 +69,8 @@ class SearchResultsViewModelTests: XCTestCase {
     
     func testScreenForStocks() {
         sut.screenForStocks()
-        
-        XCTAssertEqual(sut.searchResults.map { $0.ticker },
+
+        XCTAssertEqual(sut.stockViewModels.map { $0.stock.ticker },
                        ["FB", "AAPL"])
     }
     

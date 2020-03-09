@@ -17,7 +17,7 @@ class StockBatchFinancialLoader: BatchFinancialLoader {
     private let apiKey = Constants.Intrinio.apiKey
     private let lookupEndpoint = "https://api-v2.intrinio.com/fundamentals/"
     // Q1TTM, Q2TTM, Q3TTM, FY, Q1, Q2, Q3, Q4, Q2YTD, Q3YTD
-    private let documentType = "-calculations-2019-Q3TTM/standardized_financials?"
+    private let documentType = "-calculations-2019-Q4/standardized_financials?"
     
     func fetchStockBatchFinancials(ticker: String,
                                    completion: @escaping BatchFinancialLoaderCompletion) {
