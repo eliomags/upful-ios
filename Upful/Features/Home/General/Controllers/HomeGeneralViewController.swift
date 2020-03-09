@@ -24,6 +24,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
 
     // MARK: - Views
     
+    lazy var headerView: HomeFeedAuxiliaryActionView = {
+        let view = HomeFeedAuxiliaryActionView()
+        view.preferenceButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleEditPreferenceTap)))
+        view.suggestionButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSendSuggestionsTap)))
+        view.premiumButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleUpgradeToPremiumTap)))
+        return view
+    }()
+    
     private lazy var refreshControl: UIRefreshControl = {
         let control = UIRefreshControl()
         control.addTarget(self, action: #selector(handleResfreshing), for: .valueChanged)
@@ -37,7 +45,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         tv.dataSource = self
         return tv
     }()
-    
     
     // MARK: - Initializer
     
@@ -63,6 +70,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         observeViewModelNewsUpdates()
         observeViewModelPreferenceUpdates()
         logicController.fetchTableData()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if self.tableView.shouldUpdateHeaderViewFrame() {
+            self.tableView.beginUpdates()
+            self.tableView.endUpdates()
+        }
     }
     
     // MARK: - View Model Binding
@@ -95,7 +110,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func setupTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.separatorStyle = .none
-        tableView.tableHeaderView = UIView()
+        tableView.setTableHeaderView(headerView: headerView)
+
         view.addSubview(tableView)
         tableView.fillSuperview()
     }
@@ -128,6 +144,21 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         default:
             break
         }
+    }
+    
+    @objc fileprivate func handleEditPreferenceTap(_ gester: UITapGestureRecognizer) {
+        let preferencePresenter = PreferencePresenter(presentingViewController: self)
+        preferencePresenter.present()
+    }
+    
+    @objc fileprivate func handleSendSuggestionsTap(_ gester: UITapGestureRecognizer) {
+        let suggestionVC = SuggestionFeedViewController()
+        navigationController?.pushViewController(suggestionVC, animated: true)
+    }
+    
+    @objc fileprivate func handleUpgradeToPremiumTap(_ gester: UITapGestureRecognizer) {
+        let presenter = SubscriptionPresenter(type: .settings)
+        presenter.present(in: self)
     }
 
     // MARK: - Preference Delegate Methods
@@ -326,6 +357,16 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         }) { (_) in
             cell?.isSelected = false
         }
+    }
+}
+
+extension HomeGeneralViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {
+        
+    }
+    
+    func userDidSignUp() {
+        
     }
 }
 

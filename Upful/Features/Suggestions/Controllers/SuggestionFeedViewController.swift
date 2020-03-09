@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewSuggestionsVC: UIViewController {
+class SuggestionFeedViewController: UIViewController {
     
     // MARK: - Dependencies
     
@@ -145,7 +145,7 @@ class ViewSuggestionsVC: UIViewController {
     }
 }
 
-extension ViewSuggestionsVC: UITableViewDataSource {
+extension SuggestionFeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let loaded = state == .loaded
         if state == .error {
@@ -171,7 +171,7 @@ extension ViewSuggestionsVC: UITableViewDataSource {
     }
 }
 
-extension ViewSuggestionsVC: UITableViewDelegate {
+extension SuggestionFeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return tableView.estimatedRowHeight
     }

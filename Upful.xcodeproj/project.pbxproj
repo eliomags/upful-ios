@@ -30,7 +30,7 @@
 		3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4B22FB2129007836DD /* UIView+Extensions.swift */; };
 		3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB4E22FB259D007836DD /* NetworkingService.swift */; };
 		3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB6122FBC03F007836DD /* CustomHeaderLabel.swift */; };
-		3D297A072390226A001D02C3 /* ViewSuggestionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A062390226A001D02C3 /* ViewSuggestionsVC.swift */; };
+		3D297A072390226A001D02C3 /* SuggestionFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A062390226A001D02C3 /* SuggestionFeedViewController.swift */; };
 		3D297A0923902D70001D02C3 /* Suggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0823902D70001D02C3 /* Suggestions.swift */; };
 		3D297A0B23902DD6001D02C3 /* SuggestionLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0A23902DD6001D02C3 /* SuggestionLoader.swift */; };
 		3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0D23902EDA001D02C3 /* ViewSuggestionsVCTest.swift */; };
@@ -85,6 +85,8 @@
 		3D58651F231DE67B00495D79 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651E231DE67B00495D79 /* Constants.swift */; };
 		3D5865262323024A00495D79 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5865252323024A00495D79 /* PieChartView.swift */; };
 		3D6B01CB23D2839A007A2F19 /* SubscriptionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6B01CA23D2839A007A2F19 /* SubscriptionHeaderView.swift */; };
+		3D6B071E2415C97300C55021 /* MultilineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6B071D2415C97300C55021 /* MultilineButton.swift */; };
+		3D6B07202415C99400C55021 /* AuxiliaryActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6B071F2415C99400C55021 /* AuxiliaryActionView.swift */; };
 		3D6BD0BB23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */; };
 		3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6BD0C423B507DE00FBC1ED /* EmptyScreenerCell.swift */; };
 		3D7013DB23EC9B3800102E9C /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7013DA23EC9B3800102E9C /* MainCoordinator.swift */; };
@@ -136,6 +138,7 @@
 		3DB345F423C8A64D00EADFFD /* ExploreLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F323C8A64D00EADFFD /* ExploreLogicController.swift */; };
 		3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F523CAD74400EADFFD /* StockSearchService.swift */; };
 		3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */; };
+		3DB891DD24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */; };
 		3DBEFFC223A9BD7C00BA407E /* HomeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */; };
 		3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */; };
 		3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */; };
@@ -148,7 +151,7 @@
 		3DBEFFDE23B018CC00BA407E /* SavedScreenersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFDD23B018CC00BA407E /* SavedScreenersViewModel.swift */; };
 		3DBEFFE023B01F0A00BA407E /* SavedScreenerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFDF23B01F0A00BA407E /* SavedScreenerTableViewCell.swift */; };
 		3DBEFFE223B0280300BA407E /* LocalScreenerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFE123B0280300BA407E /* LocalScreenerLoader.swift */; };
-		3DBF0C5523D61E45003023D7 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 3DBF0C5423D61E45003023D7 /* SwiftPackageProductDependency */; };
+		3DBF0C5523D61E45003023D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 3DBF0C5423D61E45003023D7 /* Kingfisher */; };
 		3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */; };
 		3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */; };
 		3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710892335D70000A2A0DA /* CustomRoundButton.swift */; };
@@ -251,7 +254,7 @@
 		3D20FB4B22FB2129007836DD /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		3D20FB4E22FB259D007836DD /* NetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingService.swift; sourceTree = "<group>"; };
 		3D20FB6122FBC03F007836DD /* CustomHeaderLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeaderLabel.swift; sourceTree = "<group>"; };
-		3D297A062390226A001D02C3 /* ViewSuggestionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSuggestionsVC.swift; sourceTree = "<group>"; };
+		3D297A062390226A001D02C3 /* SuggestionFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionFeedViewController.swift; sourceTree = "<group>"; };
 		3D297A0823902D70001D02C3 /* Suggestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestions.swift; sourceTree = "<group>"; };
 		3D297A0A23902DD6001D02C3 /* SuggestionLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionLoader.swift; sourceTree = "<group>"; };
 		3D297A0D23902EDA001D02C3 /* ViewSuggestionsVCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSuggestionsVCTest.swift; sourceTree = "<group>"; };
@@ -310,6 +313,8 @@
 		3D58651E231DE67B00495D79 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3D5865252323024A00495D79 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		3D6B01CA23D2839A007A2F19 /* SubscriptionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionHeaderView.swift; sourceTree = "<group>"; };
+		3D6B071D2415C97300C55021 /* MultilineButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineButton.swift; sourceTree = "<group>"; };
+		3D6B071F2415C99400C55021 /* AuxiliaryActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuxiliaryActionView.swift; sourceTree = "<group>"; };
 		3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersViewModelTest.swift; sourceTree = "<group>"; };
 		3D6BD0C423B507DE00FBC1ED /* EmptyScreenerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenerCell.swift; sourceTree = "<group>"; };
 		3D7013DA23EC9B3800102E9C /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
@@ -361,6 +366,7 @@
 		3DB345F323C8A64D00EADFFD /* ExploreLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreLogicController.swift; sourceTree = "<group>"; };
 		3DB345F523CAD74400EADFFD /* StockSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchService.swift; sourceTree = "<group>"; };
 		3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockViewModelTests.swift; sourceTree = "<group>"; };
+		3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedAuxiliaryActionView.swift; sourceTree = "<group>"; };
 		3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContainerViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStocksViewController.swift; sourceTree = "<group>"; };
@@ -431,7 +437,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DBF0C5523D61E45003023D7 /* BuildFile in Frameworks */,
+				3DBF0C5523D61E45003023D7 /* Kingfisher in Frameworks */,
 				DBF9A52BC5915E42042B6760 /* Pods_Upful.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -747,7 +753,7 @@
 		3D297A052390222E001D02C3 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				3D297A062390226A001D02C3 /* ViewSuggestionsVC.swift */,
+				3D297A062390226A001D02C3 /* SuggestionFeedViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1131,6 +1137,7 @@
 				3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */,
 				3D2F966023196881003811AB /* SpacerView.swift */,
 				3D7C854B2337479300A2E63E /* CustomSizeImageView.swift */,
+				3D6B071F2415C99400C55021 /* AuxiliaryActionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1141,6 +1148,7 @@
 				3DD429212349624D0079DA18 /* Nav Bar Buttons */,
 				3D2F96462315C072003811AB /* CustomLargeButton.swift */,
 				3DC710892335D70000A2A0DA /* CustomRoundButton.swift */,
+				3D6B071D2415C97300C55021 /* MultilineButton.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -1485,6 +1493,7 @@
 			children = (
 				3DFD23FF23B672950027F5CF /* SentimentView.swift */,
 				3D3749B323BBAD8A000D0597 /* TableViewCells */,
+				3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1940,7 +1949,7 @@
 			);
 			name = Upful;
 			packageProductDependencies = (
-				3DBF0C5423D61E45003023D7 /* SwiftPackageProductDependency */,
+				3DBF0C5423D61E45003023D7 /* Kingfisher */,
 			);
 			productName = Upful;
 			productReference = 3D20FB2522FB1F08007836DD /* Upful.app */;
@@ -1994,7 +2003,7 @@
 			);
 			mainGroup = 3D20FB1C22FB1F08007836DD;
 			packageReferences = (
-				3DBF0C5323D61E45003023D7 /* RemoteSwiftPackageReference */,
+				3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 3D20FB2622FB1F08007836DD /* Products */;
 			projectDirPath = "";
@@ -2093,6 +2102,7 @@
 				3D8D3268237320A600123731 /* PopularStockLoader.swift in Sources */,
 				3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */,
 				3D3749B523BBADB1000D0597 /* NoPreferenceTableViewCell.swift in Sources */,
+				3D6B07202415C99400C55021 /* AuxiliaryActionView.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
 				3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */,
 				3DF734CC2402DDFD00B297A4 /* StockOverviewViewModel.swift in Sources */,
@@ -2133,7 +2143,7 @@
 				3D0C5F85234199BD00F4A5FC /* SubcriptionFooterView.swift in Sources */,
 				3D297A0B23902DD6001D02C3 /* SuggestionLoader.swift in Sources */,
 				3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */,
-				3D297A072390226A001D02C3 /* ViewSuggestionsVC.swift in Sources */,
+				3D297A072390226A001D02C3 /* SuggestionFeedViewController.swift in Sources */,
 				3DF734DD2406B47500B297A4 /* ScreenResultsViewModel.swift in Sources */,
 				3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
@@ -2182,6 +2192,7 @@
 				3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */,
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
 				3DF5FBB92330FF6D00856205 /* CompanyFillings.swift in Sources */,
+				3D6B071E2415C97300C55021 /* MultilineButton.swift in Sources */,
 				3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */,
 				3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */,
 				3D20FB2B22FB1F08007836DD /* ExploreViewController.swift in Sources */,
@@ -2195,6 +2206,7 @@
 				3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */,
 				3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */,
 				3DA54089232B364000EE477C /* MenuViewContainer.swift in Sources */,
+				3DB891DD24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift in Sources */,
 				3D0C5F78233FA42300F4A5FC /* WebViewViewController.swift in Sources */,
 				3D0C5F6F233A49A800F4A5FC /* EmptyStockCell.swift in Sources */,
 				3D3749BA23BE66B4000D0597 /* ScreenerPreviewTableViewCell.swift in Sources */,
@@ -2528,7 +2540,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3DBF0C5323D61E45003023D7 /* RemoteSwiftPackageReference */ = {
+		3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -2539,9 +2551,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3DBF0C5423D61E45003023D7 /* SwiftPackageProductDependency */ = {
+		3DBF0C5423D61E45003023D7 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3DBF0C5323D61E45003023D7 /* RemoteSwiftPackageReference */;
+			package = 3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -11,11 +11,11 @@ import XCTest
 
 class ViewSuggestionsVCTest: XCTestCase {
 
-    var sut: ViewSuggestionsVC!
+    var sut: SuggestionFeedViewController!
     
     override func setUp() {
         super.setUp()
-        sut = ViewSuggestionsVC()
+        sut = SuggestionFeedViewController()
         sut.suggestionDataLoader = MockSuggestionLoader()
     }
 
@@ -27,7 +27,7 @@ class ViewSuggestionsVCTest: XCTestCase {
     // MARK: - Test State
     
     func test_initialState() {
-        XCTAssertEqual(sut.state, ViewSuggestionsVC.State.pending)
+        XCTAssertEqual(sut.state, SuggestionFeedViewController.State.pending)
     }
     
 //    func test_loadingState() {

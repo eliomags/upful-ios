@@ -12,14 +12,6 @@ final class SentimentView: UIView {
     
     // MARK: - Initializer
 
-    private let sentimentImageView: UIImageView = {
-         let v = UIImageView()
-         v.translatesAutoresizingMaskIntoConstraints = false
-         v.heightAnchor.constraint(equalToConstant: 20).isActive = true
-         v.widthAnchor.constraint(equalToConstant: 20).isActive = true
-         return v
-     }()
-    
     let sentimentLabel: UILabel = {
          let l = UILabel()
          l.font = UIFont.preferredFont(forTextStyle: .footnote)
