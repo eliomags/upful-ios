@@ -10,7 +10,7 @@ import Foundation
 
 protocol SearchResultsViewModelDelegate: AnyObject {
     func didCompleteStockFetch(fetchedStocks: [Stock])
-    func didFailStockFetch(with error: NetworkError, for stock: Stock?)
+    func didFailStockFetch(with error: Error, for stock: Stock?)
     func didCompleteScreenerSave()
     func didFailScreenerSave()
 }
@@ -52,45 +52,42 @@ class SearchResultsViewModel {
         
     func screenForStocks() {
         let searchKeys = searchParameters.joined(separator: ",").filter { $0 != " " }
+        
         stockScreener.get(router: .getScreeningResults(
             parameters: searchKeys, numberOfResults: 15,
             page: stockScreener.screenerPage,
             order: stockScreener.screenerSortDirection)) { [weak self] (result) in
             guard let self = self else { return }
-            switch result {
-            case .success(let fetchedStocks):
-                let vms = fetchedStocks.map { StockViewModel(stock: $0) }
-                vms.forEach { (vm) in
-                    vm.updateHandler = { [weak self] in self?.updateHandler?() }
-                    vm.loadPreviewData()
-                }
-                self.stockViewModels.append(contentsOf: vms)
-                self.delegate?.didCompleteStockFetch(fetchedStocks: fetchedStocks)
-            case .failure(let err):
-                self.delegate?.didFailStockFetch(with: err, for: nil)
-            }
+            self.handleStockScreenFetchResult(result)
         }
     }
 
     func changeScreenerDirection() {
-//        let searchKeys = searchParameters.joined(separator: ",").filter { $0 != " " }
-//        stockScreener.changeDirection(router: .getScreeningResults(
-//            parameters: searchKeys, numberOfResults: 20,
-//            page: stockScreener.screenerPage,
-//            order: stockScreener.screenerSortDirection)) { [weak self] (result) in
-//                guard let self = self else { return }
-//                switch result {
-//                case .success(let fetchedStocks):
-//                    self.searchResults.removeAll()
-//                        self.searchResults.append(contentsOf: fetchedStocks)
-//                        self.searchResults.forEach { (stock) in
-//                            self.getPriceToEarningsData(for: stock)
-//                        }
-//                    self.delegate?.didCompleteStockFetch(fetchedStocks: fetchedStocks)
-//                case .failure(let err):
-//                    self.delegate?.didFailStockFetch(with: err, for: nil)
-//                }
-//        }
+        stockViewModels.removeAll()
+        let searchKeys = searchParameters.joined(separator: ",").filter { $0 != " " }
+        
+        stockScreener.changeDirection(router: .getScreeningResults(
+            parameters: searchKeys, numberOfResults: 15,
+            page: stockScreener.screenerPage,
+            order: stockScreener.screenerSortDirection)) { [weak self] (result) in
+            guard let self = self else { return }
+                self.handleStockScreenFetchResult(result)
+        }
+    }
+    
+    func handleStockScreenFetchResult(_ result: Result<[Stock],Error>) {
+        switch result {
+        case .success(let fetchedStocks):
+            let vms = fetchedStocks.map { StockViewModel(stock: $0) }
+            vms.forEach { (vm) in
+                vm.updateHandler = { [weak self] in self?.updateHandler?() }
+                vm.loadPreviewData()
+            }
+            self.stockViewModels.append(contentsOf: vms)
+            self.delegate?.didCompleteStockFetch(fetchedStocks: fetchedStocks)
+        case .failure(let err):
+            self.delegate?.didFailStockFetch(with: err, for: nil)
+        }
     }
         
     // MARK: Persistence

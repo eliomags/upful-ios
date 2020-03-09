@@ -147,16 +147,19 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     @objc fileprivate func handleEditPreferenceTap(_ gester: UITapGestureRecognizer) {
+        Vibration.light.vibrate()
         let preferencePresenter = PreferencePresenter(presentingViewController: self)
         preferencePresenter.present()
     }
     
     @objc fileprivate func handleSendSuggestionsTap(_ gester: UITapGestureRecognizer) {
+        Vibration.light.vibrate()
         let suggestionVC = SuggestionFeedViewController()
         navigationController?.pushViewController(suggestionVC, animated: true)
     }
     
     @objc fileprivate func handleUpgradeToPremiumTap(_ gester: UITapGestureRecognizer) {
+        Vibration.light.vibrate()
         let presenter = SubscriptionPresenter(type: .settings)
         presenter.present(in: self)
     }

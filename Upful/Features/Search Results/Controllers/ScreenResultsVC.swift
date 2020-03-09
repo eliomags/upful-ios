@@ -257,7 +257,7 @@ extension ScreenResultsViewController: SearchResultsViewModelDelegate {
         }
     }
     
-    func didFailStockFetch(with error: NetworkError, for stock: Stock?) {
+    func didFailStockFetch(with error: Error, for stock: Stock?) {
         print(error)
     }
     

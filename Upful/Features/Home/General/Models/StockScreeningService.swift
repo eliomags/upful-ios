@@ -9,7 +9,7 @@
 import Foundation
 
 protocol StockScreener {
-    typealias StockScreenerRequestCompletion = (Result<[Stock], NetworkError>) -> Void
+    typealias StockScreenerRequestCompletion = (Result<[Stock], Error>) -> Void
     func get(router: ScreenerRouter, completion: @escaping StockScreenerRequestCompletion)
     var screenerPage: Int { get set }
     var screenerSortDirection: ScreenerRouter.SortDirection { get set }
@@ -87,12 +87,12 @@ class StockScreeningService: StockScreener {
         components.queryItems = router.parameters
         
         guard let url = components.url else {
-            completion(.failure(.invalidData))
+            completion(.failure(NetworkError.invalidData))
             return
         }
         let task = URLSession.shared.dataTask(with: url) { (data, _, err) in
             if let _ = err {
-                completion(.failure(.connection))
+                completion(.failure(NetworkError.connection))
                 return
             }
             if let data = data {
@@ -101,10 +101,10 @@ class StockScreeningService: StockScreener {
                         self.screenerPage += 1
                         completion(.success(screeningResponse.data))
                     } catch {
-                        completion(.failure(.invalidData))
+                        completion(.failure(NetworkError.invalidData))
                     }
             } else {
-                completion(.failure(.invalidData))
+                completion(.failure(NetworkError.invalidData))
             }
         }
         task.resume()
