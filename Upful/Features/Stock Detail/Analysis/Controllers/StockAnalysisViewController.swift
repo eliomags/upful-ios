@@ -11,67 +11,22 @@ import Charts
 
 class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpdatable {
     
-    // MARK: - MenuBarDisplay Protocol
-    
-    weak var menuViewItemDelegate: MenuViewItemDelegate?
-    
     // MARK: - Dependencies
     
     let ticker: String
     let companyName: String
-    let intrinioApi: IntrinioAPI
     
-    // MARK: - State
+    private(set) lazy var viewModel: StockAnalysisViewModel = {
+        let vm = StockAnalysisViewModel(ticker: ticker)
+        return vm
+    }()
+    
+    // MARK: - Constants
 
     private enum ReuseID {
         static let graphCell = "graphCell"
         static let graphConfigurationCell = "graphConfigurationCell"
         static let reportsCell = "reportsCell"
-    }
-    
-    /// Charting Related Data
-    private var lineCriteria: SearchCriteria = .revenuegrowth {
-        didSet {
-            fetchLineData(criteria: lineCriteria)
-            listenForDataCompletion()
-        }
-    }
-    
-    private var barCriteria: SearchCriteria = .netincome {
-        didSet {
-            fetchBarData(criteria: barCriteria)
-            listenForDataCompletion()
-        }
-    }
-    
-    private var chartData: [[CompanyHistoricalDatum]] {
-        return []
-    }
-    
-    private var barChartData: [CompanyHistoricalDatum] = []
-    private var lineChartData: [CompanyHistoricalDatum] = []
-    private var feedData: [[Any]] {
-        return [
-            [chartData, lineCriteria,barCriteria]
-        ]
-    }
-    
-    private var isLoading: Bool = false {
-        didSet {
-            observeStateChanges(isLoading)
-        }
-    }
-    
-    private func observeStateChanges(_ isLoading: Bool) {
-        if isLoading {
-            LoadingViewPresenter.show(in: self)
-        } else {
-            LoadingViewPresenter.remove()
-            DispatchQueue.main.async { [weak self] in
-                self?.tableView.reloadData()
-                self?.refreshingControl.endRefreshing()
-            }
-        }
     }
     
     // MARK: - Views
@@ -117,10 +72,9 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
     
     // MARK: - Initializer Methods
     
-    init(ticker: String, companyName: String, networkingAPI: IntrinioAPI) {
+    init(ticker: String, companyName: String) {
         self.ticker = ticker
         self.companyName = companyName
-        self.intrinioApi = networkingAPI
         super.init(nibName: nil, bundle: nil)
         title = "Analysis"
     }
@@ -129,22 +83,34 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - View Life Cycle Methods
+    // MARK: - View Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = VersionManager.mainContainerBackground()
         setUpPremiumButton()
         setupViews()
-        loadChart()
-        listenForDataCompletion()
+    
+        handleStateUpdate()
+    }
+    
+    // MARK: - State Updates
+    
+    fileprivate func handleStateUpdate() {
+        LoadingViewPresenter.show(in: self)
+        viewModel.configureAnalysisItems()
+
+        viewModel.updateHandler = { [weak self] in
+            self?.tableView.reloadData()
+            self?.refreshingControl.endRefreshing()
+            LoadingViewPresenter.remove()
+        }
     }
     
     // MARK: - Actions
     
     @objc private func refreshData(_ sender: Any) {
-        loadChart()
-        listenForDataCompletion()
+        handleStateUpdate()
     }
     
     @objc private func handle5YearDataInterest(_ sender: UIButton) {
@@ -170,95 +136,31 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
         tableView.fillSuperview()
     }
     
-    fileprivate func configureLineData(chartView: CombinedLineChartView, criteria: SearchCriteria) {
-        if lineChartData.isEmpty { return }
-        chartView.generateLineData(dataPoints: lineChartData.map({ $0.date.formatDate()}),
-                                   values: lineChartData.map({$0.value}),
-                                   criteria: criteria)
+    // MARK: - Chart Cell Update
+    
+    fileprivate func configureLineData(chartView: CombinedLineChartView) {
+        chartView.generateLineData(dataPoints: viewModel.lineAnalysisItem?.data.map { $0.date.formatDate() } ?? [],
+                                   values: viewModel.lineAnalysisItem?.data.map { $0.value } ?? [],
+                                   criteria: viewModel.lineAnalysisItem?.searchCriteria ?? .revenuegrowth)
     }
     
-    fileprivate func configureBarData(chartView: CombinedLineChartView, criteria: SearchCriteria) {
-        if barChartData.isEmpty { return }
-        chartView.generateBarData(dataPoints: barChartData.map({ $0.date.formatDate()}),
-                                  values: barChartData.map({$0.value}),
-                                  criteria: criteria)
+    fileprivate func configureBarData(chartView: CombinedLineChartView) {
+        chartView.generateBarData(dataPoints: viewModel.barAnalysisItem?.data.map { $0.date.formatDate() } ?? [],
+                                  values: viewModel.barAnalysisItem?.data.map { $0.value } ?? [],
+                                  criteria: viewModel.barAnalysisItem?.searchCriteria ?? .revenuegrowth)
     }
     
     // MARK: - Delegate Methods
     
     /// ChartUpdatable protocol which updates the chart from the selected search criteria in SearchSelectionViewController
     func updateChartData(chartType: ChartType, criteria: SearchCriteria) {
+        print(criteria.explicit)
         switch chartType {
         case .bar:
-            barCriteria = criteria
+            viewModel.updateBarData(with: criteria)
         case .line:
-            lineCriteria = criteria
+            viewModel.updateLineData(with: criteria)
         }
-    }
-    
-    // MARK: - Private Functions
-    
-    let analysisDataGroup = DispatchGroup()
-
-    fileprivate func fetchBarData(criteria: SearchCriteria) {
-        isLoading = true
-        analysisDataGroup.enter()
-        let isPremium = PermissionManager.shared.isPremium
-
-        if criteria == .none {
-            barChartData.removeAll()
-            self.analysisDataGroup.leave()
-            return
-        }
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
-                                                financial: criteria,
-                                                frequency: .historic(isPremium: isPremium)) { [weak self] (results) in
-            guard let self = self else { return }
-            switch results {
-            case .success(let downloadedData):
-                self.barChartData = downloadedData
-                self.analysisDataGroup.leave()
-            case .failure(let error):
-                print(error.localizedDescription)
-                self.analysisDataGroup.leave()
-            }
-        }
-    }
-    
-    fileprivate func fetchLineData(criteria: SearchCriteria) {
-        isLoading = true
-        analysisDataGroup.enter()
-        let isPremium = PermissionManager.shared.isPremium
-
-        if criteria == .none {
-            lineChartData.removeAll()
-            self.analysisDataGroup.leave()
-            return
-        }
-        intrinioApi.fetchStockSpecificFinancial(ticker: ticker,
-                                                financial: criteria,
-                                                frequency: .historic(isPremium: isPremium)) { [weak self] (results) in
-            guard let self = self else { return }
-
-            switch results {
-            case .success(let downloadedData):
-                self.lineChartData = downloadedData
-                self.analysisDataGroup.leave()
-                
-            case .failure(let error):
-                self.analysisDataGroup.leave()
-                print(error)
-            }
-        }
-    }
-    
-    fileprivate func listenForDataCompletion() {
-        analysisDataGroup.notify(queue: .main) { [weak self] in self?.isLoading = false }
-    }
-    
-    fileprivate func loadChart() {
-        fetchLineData(criteria: lineCriteria)
-        fetchBarData(criteria: barCriteria)
     }
         
     // MARK: - Scroll View Delegate
@@ -272,10 +174,10 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
 }
 
 extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int { return feedData.count }
+    func numberOfSections(in tableView: UITableView) -> Int { return 1 }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 { return feedData[section].count }
+        if section == 0 { return 3 }
         return 1
     }
     
@@ -285,23 +187,35 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
             switch indexPath.row {
             case 0:
                 // MARK: - Graph Cell
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? AnalysisChartCell else { return UITableViewCell() }
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell,
+                                                               for: indexPath) as? AnalysisChartCell else { return UITableViewCell() }
                 cell.chartView.delegate = self
-                if !isLoading {
-                    configureBarData(chartView: cell.chartView, criteria: barCriteria)
-                    configureLineData(chartView: cell.chartView, criteria: lineCriteria)
-                }
+                guard viewModel.barAnalysisItem?.data.isEmpty == false else { return cell }
+                guard viewModel.lineAnalysisItem?.data.isEmpty == false else { return cell }
+                
+                configureBarData(chartView: cell.chartView)
+                configureLineData(chartView: cell.chartView)
                 
                 return cell
-            case 1,2:
-                // MARK: - Cells For Graph Data
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphConfigurationCell, for: indexPath) as? GenericTableViewCell else { return UITableViewCell() }
-                guard let criteria = feedData[indexPath.section][indexPath.row] as? SearchCriteria else { return cell }
+            case 1:
+                // MARK: - Cells For Line Data
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphConfigurationCell,
+                                                               for: indexPath) as? GenericTableViewCell else { return UITableViewCell() }
+                guard let criteria = viewModel.lineAnalysisItem?.searchCriteria else { return cell }
                 cell.titleLabel.text = "\(criteria.explicit)"
-                if indexPath.row == 1 { cell.iconView.backgroundColor = .appAccent }
-                if indexPath.row == 2 { cell.iconView.backgroundColor =  .appAccent3 }
+                cell.iconView.backgroundColor = .appAccent
                 cell.selectionStyle = .gray
                 return cell
+            case 2:
+                // MARK: - Cells For Bar Data
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphConfigurationCell,
+                                                               for: indexPath) as? GenericTableViewCell else { return UITableViewCell() }
+                guard let criteria = viewModel.barAnalysisItem?.searchCriteria else { return cell }
+                cell.titleLabel.text = "\(criteria.explicit)"
+                cell.iconView.backgroundColor =  .appAccent3
+                cell.selectionStyle = .gray
+                return cell
+                
             default: break
             }
         default: break
@@ -328,12 +242,9 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = LargeSectionHeaderLabel(padding: 16)
         header.backgroundColor = .clear
-        if !isLoading {
             let headerText = ["COMPARISON"]
             header.text = headerText[section].uppercased()
             return header
-        }
-        return nil
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -353,11 +264,7 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == feedData.count - 1 {
-            return 70
-        } else {
-            return 25
-        }
+        return 70
     }
 }
 
@@ -390,8 +297,8 @@ extension StockAnalysisViewController: SubscriptionViewControllerDelegate {
     func userDidSignUp() {
         if PermissionManager.shared.isPremium {
             get5YearDataButton.removeFromSuperview()
-            loadChart()
-            listenForDataCompletion()
+//            loadChart()
+//            listenForDataCompletion()
         }
     }
 }

@@ -9,18 +9,22 @@
 import UIKit
 
 class AnalysisItemViewModel {
+    
     // MARK: - Dependencies
     
-    let financialLoader: FinancialLoader
+    private let financialLoader: FinancialLoader
     
     // MARK: - Properties
     
-    var searchCriteria: SearchCriteria
+    var searchCriteria: SearchCriteria {
+        didSet {
+            loadFinancialData()
+        }
+    }
     let color: UIColor
     private let ticker: String
     private(set) var data: [CompanyHistoricalDatum] = []
 
-    
     // MARK: - Configuration
     
     var updateHandler: (() -> Void) = {}
@@ -29,14 +33,13 @@ class AnalysisItemViewModel {
     
     init(ticker: String,
         searchCriteria: SearchCriteria,
-         financialLoader: FinancialLoader,
+         financialLoader: FinancialLoader = StockFinancialLoader(),
          color: UIColor) {
         self.ticker = ticker
         self.searchCriteria = searchCriteria
         self.financialLoader = financialLoader
         self.color = color
     }
-    
     
     // MARK: - Methods
     
@@ -47,7 +50,9 @@ class AnalysisItemViewModel {
         }
     }
     
-    fileprivate func handleFinancialLoadCompletion(_ result: Result<[CompanyHistoricalDatum], NetworkError>) {
+    // MARK: - Fileprivate Methods
+    
+    func handleFinancialLoadCompletion(_ result: Result<[CompanyHistoricalDatum], NetworkError>) {
         switch result {
         case .success(let historicData):
             self.data = historicData
