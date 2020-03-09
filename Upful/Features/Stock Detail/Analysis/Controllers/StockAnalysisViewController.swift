@@ -50,13 +50,9 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
     
     private var barChartData: [CompanyHistoricalDatum] = []
     private var lineChartData: [CompanyHistoricalDatum] = []
-    
-    private var companyFilings: [Filings] = []
-    
     private var feedData: [[Any]] {
         return [
-            [chartData, lineCriteria,barCriteria],
-            companyFilings
+            [chartData, lineCriteria,barCriteria]
         ]
     }
     
@@ -141,7 +137,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
         setUpPremiumButton()
         setupViews()
         loadChart()
-        fetchCompanyFilingsData()
         listenForDataCompletion()
     }
     
@@ -149,7 +144,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
     
     @objc private func refreshData(_ sender: Any) {
         loadChart()
-        fetchCompanyFilingsData()
         listenForDataCompletion()
     }
     
@@ -206,24 +200,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
     
     let analysisDataGroup = DispatchGroup()
 
-    fileprivate func fetchCompanyFilingsData() {
-        isLoading = true
-        analysisDataGroup.enter()
-
-        intrinioApi.getCompanyFilings(ticker: ticker) { [weak self] (results) in
-            guard let self = self else { return }
-
-            switch results {
-            case .success(let fetchedFilings):
-                self.companyFilings = fetchedFilings
-                self.analysisDataGroup.leave()
-            case . failure(let error):
-                print(error.localizedDescription)
-                self.analysisDataGroup.leave()
-            }
-        }
-    }
-    
     fileprivate func fetchBarData(criteria: SearchCriteria) {
         isLoading = true
         analysisDataGroup.enter()
@@ -271,16 +247,13 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
                 
             case .failure(let error):
                 self.analysisDataGroup.leave()
-                print(error.localizedDescription)
+                print(error)
             }
         }
     }
     
     fileprivate func listenForDataCompletion() {
-        analysisDataGroup.notify(queue: .main) { [weak self] in
-            guard let self = self else { return }
-            self.isLoading = false
-        }
+        analysisDataGroup.notify(queue: .main) { [weak self] in self?.isLoading = false }
     }
     
     fileprivate func loadChart() {
@@ -303,7 +276,6 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 { return feedData[section].count }
-        if section == 1 { return companyFilings.count }
         return 1
     }
     
@@ -332,13 +304,6 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
                 return cell
             default: break
             }
-        case 1:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.reportsCell, for: indexPath) as? NewsCell else { return UITableViewCell() }
-            cell.backgroundColor = .clear
-            let filingsData = feedData[indexPath.section] as? [Filings]
-            cell.headerLabel.text = filingsData?[indexPath.row].reportType ?? ""
-            cell.detailLabel.text = filingsData?[indexPath.row].periodEndDate ?? ""
-            return cell
         default: break
         }
         return UITableViewCell()
@@ -356,12 +321,6 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
                 let navVC = UINavigationController(rootViewController: criteriaVC)
                 self.parent?.present(navVC, animated: true, completion: nil)
             }
-        case 1:
-            let filing = feedData[indexPath.section][indexPath.row] as? Filings
-            let selectedFiling = filing!.reportUrl!
-            let webViewController = UINavigationController(rootViewController:
-                FilingsWebViewController(urlString: selectedFiling))
-            present(webViewController, animated: true, completion: nil)
         default: break
         }
     }
@@ -370,7 +329,7 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
         let header = LargeSectionHeaderLabel(padding: 16)
         header.backgroundColor = .clear
         if !isLoading {
-            let headerText = ["COMPARISON", "filings"]
+            let headerText = ["COMPARISON"]
             header.text = headerText[section].uppercased()
             return header
         }
@@ -421,7 +380,6 @@ class GenericCellImageView: UIImageView {
         super.layoutSubviews()
         layer.cornerRadius = 4
     }
-    
 }
 
 // MARK: - SubscriptionViewControllerDelegate Methods
@@ -433,7 +391,6 @@ extension StockAnalysisViewController: SubscriptionViewControllerDelegate {
         if PermissionManager.shared.isPremium {
             get5YearDataButton.removeFromSuperview()
             loadChart()
-            fetchCompanyFilingsData()
             listenForDataCompletion()
         }
     }

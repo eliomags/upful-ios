@@ -14,7 +14,6 @@
 		3D0C5F6D233A451600F4A5FC /* GenericHomeEmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F6C233A451600F4A5FC /* GenericHomeEmptyCell.swift */; };
 		3D0C5F6F233A49A800F4A5FC /* EmptyStockCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F6E233A49A800F4A5FC /* EmptyStockCell.swift */; };
 		3D0C5F78233FA42300F4A5FC /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F77233FA42300F4A5FC /* WebViewViewController.swift */; };
-		3D0C5F7B233FB61A00F4A5FC /* FilingsWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F7A233FB61A00F4A5FC /* FilingsWebView.swift */; };
 		3D0C5F7E233FC1BC00F4A5FC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F7D233FC1BC00F4A5FC /* SettingsViewController.swift */; };
 		3D0C5F81234170D900F4A5FC /* SubscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F80234170D900F4A5FC /* SubscriptionViewController.swift */; };
 		3D0C5F85234199BD00F4A5FC /* SubcriptionFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F84234199BD00F4A5FC /* SubcriptionFooterView.swift */; };
@@ -234,7 +233,6 @@
 		3D0C5F6C233A451600F4A5FC /* GenericHomeEmptyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericHomeEmptyCell.swift; sourceTree = "<group>"; };
 		3D0C5F6E233A49A800F4A5FC /* EmptyStockCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStockCell.swift; sourceTree = "<group>"; };
 		3D0C5F77233FA42300F4A5FC /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
-		3D0C5F7A233FB61A00F4A5FC /* FilingsWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilingsWebView.swift; sourceTree = "<group>"; };
 		3D0C5F7D233FC1BC00F4A5FC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		3D0C5F80234170D900F4A5FC /* SubscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionViewController.swift; sourceTree = "<group>"; };
 		3D0C5F84234199BD00F4A5FC /* SubcriptionFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SubcriptionFooterView.swift; path = "Table Footer/SubcriptionFooterView.swift"; sourceTree = "<group>"; };
@@ -493,14 +491,6 @@
 				3D7013E523ECFDD600102E9C /* WebViewCoordinator.swift */,
 			);
 			path = WebNavigation;
-			sourceTree = "<group>";
-		};
-		3D0C5F79233FB60900F4A5FC /* Filings View */ = {
-			isa = PBXGroup;
-			children = (
-				3D0C5F7A233FB61A00F4A5FC /* FilingsWebView.swift */,
-			);
-			path = "Filings View";
 			sourceTree = "<group>";
 		};
 		3D0C5F7C233FC1A700F4A5FC /* Settings */ = {
@@ -807,6 +797,7 @@
 				3DF5FBBC2333A47500856205 /* Protocols */,
 				3DF5FBA8232BF54700856205 /* Views */,
 				3DF5FBA9232BF54F00856205 /* Controllers */,
+				3D6B07212416969700C55021 /* View Models */,
 			);
 			path = Analysis;
 			sourceTree = "<group>";
@@ -973,6 +964,13 @@
 				3DF734C22400AC3600B297A4 /* QuoteLoader.swift */,
 			);
 			path = "Quote Loader";
+			sourceTree = "<group>";
+		};
+		3D6B07212416969700C55021 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "View Models";
 			sourceTree = "<group>";
 		};
 		3D6BD0BC23B506F400FBC1ED /* Saved Screeners */ = {
@@ -1686,7 +1684,6 @@
 		3DF5FBA9232BF54F00856205 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				3D0C5F79233FB60900F4A5FC /* Filings View */,
 				3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */,
 				3DF5FBB1232F16F300856205 /* SearchSelectionVIewController.swift */,
 			);
@@ -2197,7 +2194,6 @@
 				3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */,
 				3D20FB2B22FB1F08007836DD /* ExploreViewController.swift in Sources */,
 				3D5865262323024A00495D79 /* PieChartView.swift in Sources */,
-				3D0C5F7B233FB61A00F4A5FC /* FilingsWebView.swift in Sources */,
 				3D7013E423ECFBDD00102E9C /* SearchResultsCoordinator.swift in Sources */,
 				3D0C5F8823419F1600F4A5FC /* SubscriptionTableViewCell.swift in Sources */,
 				3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */,
