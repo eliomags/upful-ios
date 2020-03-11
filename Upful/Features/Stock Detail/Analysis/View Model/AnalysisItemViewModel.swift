@@ -6,7 +6,7 @@
 //  Copyright © 2020 Yanik Simpson. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 class AnalysisItemViewModel {
     
@@ -21,7 +21,6 @@ class AnalysisItemViewModel {
             loadFinancialData()
         }
     }
-    let color: UIColor
     private let ticker: String
     private(set) var data: [CompanyHistoricalDatum] = []
 
@@ -33,12 +32,10 @@ class AnalysisItemViewModel {
     
     init(ticker: String,
         searchCriteria: SearchCriteria,
-         financialLoader: FinancialLoader = StockFinancialLoader(),
-         color: UIColor) {
+        financialLoader: FinancialLoader = StockFinancialLoader()) {
         self.ticker = ticker
         self.searchCriteria = searchCriteria
         self.financialLoader = financialLoader
-        self.color = color
     }
     
     // MARK: - Methods

@@ -215,7 +215,6 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.iconView.backgroundColor =  .appAccent3
                 cell.selectionStyle = .gray
                 return cell
-                
             default: break
             }
         default: break
