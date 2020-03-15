@@ -185,8 +185,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
 
-        if logicController.preferenceState == .loaded {
-            let stock = logicController.stocksYouMayLike[indexPath.item]
+        if logicController.preferenceState == .loaded  && !logicController.stocksYouMayLike.isEmpty {
+            let stock = logicController.stocksYouMayLike[indexPath.row]
             loadedCell.companyTickerLabel.text = stock.ticker
             loadedCell.companyNameLabel.text = stock.name
             loadedCell.marketcapStackView.valueLabel.text = "$\(stock.marketcap?.formatUsingAbbreviation() ?? " -")"

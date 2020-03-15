@@ -21,6 +21,12 @@
 		3D0C5F8C23423B7100F4A5FC /* SubscriptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */; };
 		3D0C5F942342C88300F4A5FC /* UpfulProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F932342C88300F4A5FC /* UpfulProductViewModel.swift */; };
 		3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */; };
+		3D206A06241E8F3E00F7E44C /* LedgerLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A05241E8F3E00F7E44C /* LedgerLogic.swift */; };
+		3D206A08241E903A00F7E44C /* LedgerLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */; };
+		3D206A0B241E90A300F7E44C /* TransactionLedgerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A09241E90A300F7E44C /* TransactionLedgerDataModel.xcdatamodeld */; };
+		3D206A0E241E925100F7E44C /* Transaction+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */; };
+		3D206A12241EA67900F7E44C /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A11241EA67900F7E44C /* Transaction.swift */; };
+		3D206A14241EA69400F7E44C /* TransactionDataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A13241EA69400F7E44C /* TransactionDataType.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -242,6 +248,12 @@
 		3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionItem.swift; sourceTree = "<group>"; };
 		3D0C5F932342C88300F4A5FC /* UpfulProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpfulProductViewModel.swift; sourceTree = "<group>"; };
 		3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGradientButton.swift; sourceTree = "<group>"; };
+		3D206A05241E8F3E00F7E44C /* LedgerLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerLogic.swift; sourceTree = "<group>"; };
+		3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerLogicTests.swift; sourceTree = "<group>"; };
+		3D206A0A241E90A300F7E44C /* TransactionLedgerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TransactionLedgerDataModel.xcdatamodel; sourceTree = "<group>"; };
+		3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Transaction+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3D206A11241EA67900F7E44C /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
+		3D206A13241EA69400F7E44C /* TransactionDataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDataType.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -569,6 +581,58 @@
 			path = "Custom Views";
 			sourceTree = "<group>";
 		};
+		3D206A01241E8EFA00F7E44C /* Trading Engine */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A0F241EA66A00F7E44C /* Protocols */,
+				3D206A0C241E924300F7E44C /* Model */,
+				3D206A02241E8F0400F7E44C /* Ledger Service */,
+			);
+			path = "Trading Engine";
+			sourceTree = "<group>";
+		};
+		3D206A02241E8F0400F7E44C /* Ledger Service */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A05241E8F3E00F7E44C /* LedgerLogic.swift */,
+			);
+			path = "Ledger Service";
+			sourceTree = "<group>";
+		};
+		3D206A03241E8F1000F7E44C /* Trading Engine */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A04241E8F1400F7E44C /* Ledger Service */,
+			);
+			path = "Trading Engine";
+			sourceTree = "<group>";
+		};
+		3D206A04241E8F1400F7E44C /* Ledger Service */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */,
+			);
+			name = "Ledger Service";
+			path = "../New Group/Ledger Service";
+			sourceTree = "<group>";
+		};
+		3D206A0C241E924300F7E44C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */,
+				3D206A11241EA67900F7E44C /* Transaction.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		3D206A0F241EA66A00F7E44C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A13241EA69400F7E44C /* TransactionDataType.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		3D20EB7C2357963C00D1093A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -588,6 +652,7 @@
 		3D20FB1C22FB1F08007836DD = {
 			isa = PBXGroup;
 			children = (
+				3D206A09241E90A300F7E44C /* TransactionLedgerDataModel.xcdatamodeld */,
 				3DF5FBC4233429B600856205 /* StockDataModel.xcdatamodeld */,
 				3D20FB2722FB1F08007836DD /* Upful */,
 				3D20FB3C22FB1F0A007836DD /* UpfulTests */,
@@ -674,6 +739,7 @@
 		3D20FB4D22FB258A007836DD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3D206A01241E8EFA00F7E44C /* Trading Engine */,
 				3D583BB92413209E0001EEA5 /* Quote Loader */,
 				3D583BB82413207D0001EEA5 /* Stock Financial Loader */,
 				3DBF0C5623D94690003023D7 /* Remote Loaders */,
@@ -1516,6 +1582,7 @@
 		3DBF0C5723D94A24003023D7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3D206A03241E8F1000F7E44C /* Trading Engine */,
 				3DBF0C5823D94A2C003023D7 /* Permissions */,
 			);
 			path = Services;
@@ -2145,6 +2212,7 @@
 				3DB345E323C3AA9500EADFFD /* PrebuiltScreenerLogicController.swift in Sources */,
 				3D0C5F85234199BD00F4A5FC /* SubcriptionFooterView.swift in Sources */,
 				3D297A0B23902DD6001D02C3 /* SuggestionLoader.swift in Sources */,
+				3D206A0E241E925100F7E44C /* Transaction+CoreDataProperties.swift in Sources */,
 				3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */,
 				3D297A072390226A001D02C3 /* SuggestionFeedViewController.swift in Sources */,
 				3DF734DD2406B47500B297A4 /* ScreenResultsViewModel.swift in Sources */,
@@ -2191,6 +2259,7 @@
 				3D42BE492309A59800806AFF /* SearchCriteria.swift in Sources */,
 				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
 				3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */,
+				3D206A06241E8F3E00F7E44C /* LedgerLogic.swift in Sources */,
 				3DF5FBB2232F16F300856205 /* SearchSelectionVIewController.swift in Sources */,
 				3D7C855623380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift in Sources */,
 				3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */,
@@ -2212,6 +2281,7 @@
 				3DA54089232B364000EE477C /* MenuViewContainer.swift in Sources */,
 				3DB891DD24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift in Sources */,
 				3D0C5F78233FA42300F4A5FC /* WebViewViewController.swift in Sources */,
+				3D206A12241EA67900F7E44C /* Transaction.swift in Sources */,
 				3D0C5F6F233A49A800F4A5FC /* EmptyStockCell.swift in Sources */,
 				3D3749BA23BE66B4000D0597 /* ScreenerPreviewTableViewCell.swift in Sources */,
 				3D7013E623ECFDD600102E9C /* WebViewCoordinator.swift in Sources */,
@@ -2235,6 +2305,7 @@
 				3DAB3EC0234CA4490008CC18 /* PreferenceCollectionView.swift in Sources */,
 				3DB345F423C8A64D00EADFFD /* ExploreLogicController.swift in Sources */,
 				3D42BE58230E26A900806AFF /* UITableView+Extensions.swift in Sources */,
+				3D206A14241EA69400F7E44C /* TransactionDataType.swift in Sources */,
 				3D42BE50230C421D00806AFF /* StockDetailsStackView.swift in Sources */,
 				3DC710952336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift in Sources */,
 				3DF5FBC6233429B600856205 /* StockDataModel.xcdatamodeld in Sources */,
@@ -2281,6 +2352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D8D32652372FAE300123731 /* ExploreLogicControllerTests.swift in Sources */,
+				3D206A0B241E90A300F7E44C /* TransactionLedgerDataModel.xcdatamodeld in Sources */,
 				3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */,
 				3DF734D424036C1700B297A4 /* StockOverviewViewModelTests.swift in Sources */,
 				3DF734E12407144800B297A4 /* SearchResultsViewModelTests.swift in Sources */,
@@ -2293,6 +2365,7 @@
 				3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */,
 				3DD52185235276580090CDE6 /* PreferenceDataManagerTest.swift in Sources */,
 				3D6BD0BB23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift in Sources */,
+				3D206A08241E903A00F7E44C /* LedgerLogicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2563,6 +2636,16 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
+		3D206A09241E90A300F7E44C /* TransactionLedgerDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3D206A0A241E90A300F7E44C /* TransactionLedgerDataModel.xcdatamodel */,
+			);
+			currentVersion = 3D206A0A241E90A300F7E44C /* TransactionLedgerDataModel.xcdatamodel */;
+			path = TransactionLedgerDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		3DF5FBC4233429B600856205 /* StockDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

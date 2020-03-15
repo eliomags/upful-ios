@@ -1,0 +1,27 @@
+//
+//  Transaction+CoreDataProperties.swift
+//  
+//
+//  Created by Yanik Simpson on 3/15/20.
+//
+//
+
+import Foundation
+import CoreData
+
+
+class PersistedTransaction: NSManagedObject {
+
+    @nonobjc public class func createFetchRequest() -> NSFetchRequest<PersistedTransaction> {
+        return NSFetchRequest<PersistedTransaction>(entityName: "PersistedTransaction")
+    }
+
+    @NSManaged public var ticker: String
+    @NSManaged public var numberOfShares: Int32
+    @NSManaged public var averagePrice: Double
+    @NSManaged public var currentPrice: Double
+    @NSManaged public var type: String?
+    @NSManaged public var transactionDate: String?
+}
+
+extension PersistedTransaction: TransactionDataType {}
