@@ -32,6 +32,8 @@
 		3D206A1B241F18A900F7E44C /* CoreDataModelContainerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A1A241F18A900F7E44C /* CoreDataModelContainerManager.swift */; };
 		3D206A1D241F193F00F7E44C /* LocalTransactionLedgerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A1C241F193F00F7E44C /* LocalTransactionLedgerLoader.swift */; };
 		3D206A1F241F198D00F7E44C /* TransactionLedgerContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A1E241F198D00F7E44C /* TransactionLedgerContextManager.swift */; };
+		3D206A21241FB9BB00F7E44C /* LedgerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A20241FB9BB00F7E44C /* LedgerService.swift */; };
+		3D206A23241FBC9B00F7E44C /* LedgerServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A22241FBC9B00F7E44C /* LedgerServiceTests.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -264,6 +266,8 @@
 		3D206A1A241F18A900F7E44C /* CoreDataModelContainerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModelContainerManager.swift; sourceTree = "<group>"; };
 		3D206A1C241F193F00F7E44C /* LocalTransactionLedgerLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTransactionLedgerLoader.swift; sourceTree = "<group>"; };
 		3D206A1E241F198D00F7E44C /* TransactionLedgerContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLedgerContextManager.swift; sourceTree = "<group>"; };
+		3D206A20241FB9BB00F7E44C /* LedgerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerService.swift; sourceTree = "<group>"; };
+		3D206A22241FBC9B00F7E44C /* LedgerServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerServiceTests.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -604,6 +608,7 @@
 		3D206A02241E8F0400F7E44C /* Ledger Service */ = {
 			isa = PBXGroup;
 			children = (
+				3D206A20241FB9BB00F7E44C /* LedgerService.swift */,
 				3D206A05241E8F3E00F7E44C /* LedgerLogic.swift */,
 				3D206A1E241F198D00F7E44C /* TransactionLedgerContextManager.swift */,
 				3D206A15241EFCDE00F7E44C /* TransactionLedgerPersistence.swift */,
@@ -623,6 +628,7 @@
 		3D206A04241E8F1400F7E44C /* Ledger Service */ = {
 			isa = PBXGroup;
 			children = (
+				3D206A22241FBC9B00F7E44C /* LedgerServiceTests.swift */,
 				3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */,
 				3D206A17241F047F00F7E44C /* TransactionLedgerPersistence.swift */,
 			);
@@ -2364,6 +2370,7 @@
 				3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */,
 				3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
+				3D206A21241FB9BB00F7E44C /* LedgerService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2373,6 +2380,7 @@
 			files = (
 				3D8D32652372FAE300123731 /* ExploreLogicControllerTests.swift in Sources */,
 				3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */,
+				3D206A23241FBC9B00F7E44C /* LedgerServiceTests.swift in Sources */,
 				3DF734D424036C1700B297A4 /* StockOverviewViewModelTests.swift in Sources */,
 				3DF734E12407144800B297A4 /* SearchResultsViewModelTests.swift in Sources */,
 				3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */,

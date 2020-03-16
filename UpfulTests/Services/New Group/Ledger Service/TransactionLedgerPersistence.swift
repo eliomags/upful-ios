@@ -89,13 +89,14 @@ class TransactionLedgerPersistenceTests: XCTestCase {
         ledgerPersistence.save(transaction1)
         ledgerPersistence.save(transaction2)
 
-        let transaction3 = Transaction(ticker: "AAPL", shares: 1, averagePrice: 1, currentPrice: 1)
-        ledgerLoader.loadPrevious(transaction: transaction3) { (result) in
+        let transaction3 = Transaction(ticker: "AAPL", shares: 1, averagePrice: 2, currentPrice: 2)
+        ledgerLoader.loadPrevious(transaction3) { (result) in
             switch result {
             case .success(let savedTransaction):
                 XCTAssertEqual(savedTransaction!.ticker , "AAPL")
+                XCTAssertEqual(savedTransaction?.averagePrice, 1)
             case .failure(let err):
-                assertionFailure("Failed loading saved transactions\(#line), \(err.localizedDescription)")
+                assertionFailure("Failed loading saved transaction\(#line), \(err.localizedDescription)")
             }
             loadExpectation.fulfill()
         }

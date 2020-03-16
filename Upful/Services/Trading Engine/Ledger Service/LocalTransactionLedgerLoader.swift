@@ -12,7 +12,7 @@ protocol TransactionLedgerLoader {
     func load(completion: @escaping (Result<[TransactionDataType], Error>)-> Void)
 }
 
-class LocalTransactionLedgerLoader: TransactionLedgerLoader {
+final class LocalTransactionLedgerLoader: TransactionLedgerLoader {
     
     // MARK: - Dependencies
 
@@ -36,7 +36,7 @@ class LocalTransactionLedgerLoader: TransactionLedgerLoader {
         }
     }
         
-    func loadPrevious(transaction: TransactionDataType, completion: @escaping (Result<TransactionDataType?, Error>)-> Void) {
+    func loadPrevious(_ transaction: TransactionDataType, completion: @escaping (Result<TransactionDataType?, Error>)-> Void) {
         load { (result) in
             switch result {
             case .success(let storedTransactions):

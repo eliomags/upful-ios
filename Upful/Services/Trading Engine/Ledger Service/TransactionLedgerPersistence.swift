@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TransactionLedgerPersistence {
+final class TransactionLedgerPersistence {
     
     // MARK: - Dependencies
     
