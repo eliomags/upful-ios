@@ -79,6 +79,29 @@ class TransactionLedgerPersistenceTests: XCTestCase {
         wait(for: [loadExpectation], timeout: 1)
     }
     
+    func testLoadPrevious() {
+        let transaction1 = Transaction(ticker: "FB", shares: 1, averagePrice: 1, currentPrice: 1)
+        let transaction2 = Transaction(ticker: "AAPL", shares: 1, averagePrice: 1, currentPrice: 1)
+
+        let loadExpectation = expectation(description: #function)
+        
+        ledgerPersistence.save(transaction1)
+        ledgerPersistence.save(transaction2)
+
+        let transaction3 = Transaction(ticker: "AAPL", shares: 1, averagePrice: 1, currentPrice: 1)
+        ledgerLoader.loadPrevious(transaction: transaction3) { (result) in
+            switch result {
+            case .success(let savedTransaction):
+                XCTAssertEqual(savedTransaction!.ticker , "AAPL")
+            case .failure(let err):
+                assertionFailure("Failed loading saved transactions\(#line), \(err.localizedDescription)")
+            }
+            loadExpectation.fulfill()
+        }
+        
+        wait(for: [loadExpectation], timeout: 1)
+    }
+    
     // MARK: - Fileprivate Methods
     
     fileprivate func makeSUT() {
