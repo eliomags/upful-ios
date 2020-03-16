@@ -37,6 +37,7 @@ class TransactionLedgerPersistenceTests: XCTestCase {
             }
             loadExpectation.fulfill()
         }
+        
         wait(for: [loadExpectation], timeout: 1)
     }
     

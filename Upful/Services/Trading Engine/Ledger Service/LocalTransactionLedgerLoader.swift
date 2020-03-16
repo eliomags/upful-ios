@@ -1,0 +1,50 @@
+//
+//  LocalTransactionLedgerLoader.swift
+//  Upful
+//
+//  Created by Yanik Simpson on 3/15/20.
+//  Copyright © 2020 Yanik Simpson. All rights reserved.
+//
+
+import Foundation
+
+protocol TransactionLedgerLoader {
+    func load(completion: @escaping (Result<[TransactionDataType], Error>)-> Void)
+}
+
+class LocalTransactionLedgerLoader: TransactionLedgerLoader {
+    
+    // MARK: - Dependencies
+
+    private let container: CoreDataModelContainerManager
+
+    // MARK: - Initializer
+
+    init(container: CoreDataModelContainerManager = TransactionLedgerContextManager.shared) {
+        self.container = container
+    }
+    
+    // MARK: - Methods
+    
+    func load(completion: @escaping (Result<[TransactionDataType], Error>)-> Void) {
+        DispatchQueue.global().async {
+            let request = PersistedTransaction.createFetchRequest()
+            completion(Result {
+                let persistedTransactions = try self.container.persistentContainer.viewContext.fetch(request)
+                return persistedTransactions
+            })
+        }
+    }
+        
+    func loadPrevious(transaction: TransactionDataType, completion: @escaping (Result<TransactionDataType?, Error>)-> Void) {
+        load { (result) in
+            switch result {
+            case .success(let storedTransactions):
+                let previousTransaction = storedTransactions.first(where: { $0.ticker == transaction.ticker })
+                completion(.success(previousTransaction))
+            case .failure(let err):
+                completion(.failure(err))
+            }
+        }
+    }
+}
