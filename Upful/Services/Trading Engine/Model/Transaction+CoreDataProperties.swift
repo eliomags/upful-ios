@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-
+@objc(PersistedTransaction)
 class PersistedTransaction: NSManagedObject {
 
     @nonobjc public class func createFetchRequest() -> NSFetchRequest<PersistedTransaction> {
