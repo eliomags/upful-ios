@@ -12,6 +12,7 @@ import CoreData
 protocol CoreDataModelContainerManager {
     var persistentContainer: NSPersistentContainer { get set }
 }
+
 extension CoreDataModelContainerManager {
     func saveContext(completion: (() -> Void)?) {
         let context = persistentContainer.viewContext
