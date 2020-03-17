@@ -25,24 +25,44 @@ struct LedgerService {
     
     // MARK: - Methods
     
+    func loadSavedTransactions(completion: @escaping (Result<[TransactionDataType], Error>) -> Void) {
+        ledgerLoader.load(completion: completion)
+    }
+    
     func handleBuy(_ transaction: TransactionDataType, completion: (() -> Void)?) {
         ledgerLoader.loadPrevious(transaction) { (result) in
             switch result {
             case .success(let storedTransaction):
                 if let storedTransaction = storedTransaction {
                     self.ledgerLogic.handleBuyWithUpdate(transaction, storedTransaction: storedTransaction)
-                    self.ledgerPersistence.save(storedTransaction)
+                    self.ledgerPersistence.save(storedTransaction, completion: completion)
                 } else {
-                    self.ledgerPersistence.save(transaction)
+                    self.ledgerPersistence.save(transaction, completion: completion)
                 }
             case .failure(let err):
                 fatalError("Could not load previous transaction, \(err.localizedDescription)")
             }
-            completion?()
         }
     }
     
-    func loadSavedTransactions(completion: @escaping (Result<[TransactionDataType], Error>) -> Void) {
-        ledgerLoader.load(completion: completion)
+    func handleSell(_ transaction: TransactionDataType, completion: (() -> Void)?) throws {
+        ledgerLoader.loadPrevious(transaction) { (result) in
+            switch result {
+            case .success(let storedTransaction):
+                if let storedTransaction = storedTransaction {
+                    try? self.ledgerLogic.handleSell(transaction, storedTransaction: storedTransaction)
+                    
+                    if storedTransaction.numberOfShares == 0 {
+                        self.ledgerPersistence.delete(storedTransaction, completion: completion)
+                        return
+                    }
+                    self.ledgerPersistence.save(storedTransaction, completion: completion)
+                } else {
+                    fatalError("Did not find previous saved transaction.")
+                }
+            case .failure(let err):
+                fatalError("Could not load previous transaction, \(err.localizedDescription)")
+            }
+        }
     }
 }

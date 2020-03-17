@@ -21,6 +21,7 @@ struct LedgerLogic {
     
     func handleSell(_ newTransaction: TransactionDataType, storedTransaction: TransactionDataType) throws {
         guard newTransaction.numberOfShares <= storedTransaction.numberOfShares else { throw LedgerError.badShareCount }
+        storedTransaction.currentPrice = newTransaction.currentPrice
         storedTransaction.numberOfShares -= newTransaction.numberOfShares
     }
     

@@ -13,11 +13,12 @@ protocol CoreDataModelContainerManager {
     var persistentContainer: NSPersistentContainer { get set }
 }
 extension CoreDataModelContainerManager {
-    func saveContext() {
+    func saveContext(completion: (() -> Void)?) {
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {
                 try context.save()
+                completion?()
             } catch {
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")

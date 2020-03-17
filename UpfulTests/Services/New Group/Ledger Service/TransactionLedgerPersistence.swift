@@ -20,13 +20,19 @@ class TransactionLedgerPersistenceTests: XCTestCase {
         makeSUT()
     }
     
+    override func tearDown() {
+        ledgerPersistence = nil
+        ledgerLoader = nil
+        super.tearDown()
+    }
+    
     func testSaveAndFetchAllTransactions() {
         let transaction1 = Transaction(ticker: "FB", shares: 1, averagePrice: 1, currentPrice: 1)
         let transaction2 = Transaction(ticker: "AAPL", shares: 1, averagePrice: 1, currentPrice: 1)
         let loadExpectation = expectation(description: #function)
         
-        ledgerPersistence.save(transaction1)
-        ledgerPersistence.save(transaction2)
+        ledgerPersistence.save(transaction1, completion: nil)
+        ledgerPersistence.save(transaction2, completion: nil)
         
         ledgerLoader.load { (result) in
             switch result {
@@ -48,35 +54,37 @@ class TransactionLedgerPersistenceTests: XCTestCase {
         let loadExpectation = expectation(description: #function)
         loadExpectation.expectedFulfillmentCount = 2
         
-        ledgerPersistence.save(transaction1)
-        ledgerPersistence.save(transaction2)
-            
-        ledgerLoader.load { (result) in
-            switch result {
-            case .success(let savedTransactions):
-                XCTAssertEqual(savedTransactions.count, 2)
-                XCTAssertEqual(savedTransactions.map { $0.ticker }.sorted(), ["AAPL", "FB"])
-            case .failure(let err):
-                assertionFailure("Failed loading saved transactions\(#line), \(err.localizedDescription)")
-            }
-            loadExpectation.fulfill()
-        }
-    
-        // Delete
-        let transaction3 = Transaction(ticker: "AAPL", shares: 1, averagePrice: 1, currentPrice: 1)
+        ledgerPersistence.save(transaction1, completion: { [unowned self] in
+            self.ledgerPersistence.save(transaction2, completion: { [unowned self] in
+                self.ledgerLoader.load { (result) in
+                    switch result {
+                    case .success(let savedTransactions):
+                        XCTAssertEqual(savedTransactions.count, 2)
+                        XCTAssertEqual(savedTransactions.map { $0.ticker }.sorted(), ["AAPL", "FB"])
+                    case .failure(let err):
+                        assertionFailure("Failed loading saved transactions\(#line), \(err.localizedDescription)")
+                    }
+                    loadExpectation.fulfill()
+                    
+                    // Delete
+                    let transaction3 = Transaction(ticker: "AAPL", shares: 1, averagePrice: 1, currentPrice: 1)
 
-        ledgerPersistence.delete(transaction3)
-        ledgerLoader.load { (result) in
-            switch result {
-            case .success(let savedTransactions):
-                XCTAssertEqual(savedTransactions.count, 1)
-                XCTAssertEqual(savedTransactions.map { $0.ticker }, ["FB"])
-            case .failure(let err):
-                assertionFailure("Failed loading saved transactions\(#line), \(err.localizedDescription)")
-            }
-            loadExpectation.fulfill()
-        }
-
+                    self.ledgerPersistence.delete(transaction3, completion: { [unowned self] in
+                        self.ledgerLoader.load { (result) in
+                            switch result {
+                            case .success(let savedTransactions):
+                                XCTAssertEqual(savedTransactions.count, 1)
+                                XCTAssertEqual(savedTransactions.map { $0.ticker }, ["FB"])
+                            case .failure(let err):
+                                assertionFailure("Failed loading saved transactions\(#line), \(err.localizedDescription)")
+                            }
+                            loadExpectation.fulfill()
+                        }
+                    })
+                }
+            })
+        })
+        
         wait(for: [loadExpectation], timeout: 1)
     }
     
@@ -86,20 +94,21 @@ class TransactionLedgerPersistenceTests: XCTestCase {
 
         let loadExpectation = expectation(description: #function)
         
-        ledgerPersistence.save(transaction1)
-        ledgerPersistence.save(transaction2)
-
-        let transaction3 = Transaction(ticker: "AAPL", shares: 1, averagePrice: 2, currentPrice: 2)
-        ledgerLoader.loadPrevious(transaction3) { (result) in
-            switch result {
-            case .success(let savedTransaction):
-                XCTAssertEqual(savedTransaction!.ticker , "AAPL")
-                XCTAssertEqual(savedTransaction?.averagePrice, 1)
-            case .failure(let err):
-                assertionFailure("Failed loading saved transaction\(#line), \(err.localizedDescription)")
-            }
-            loadExpectation.fulfill()
-        }
+        ledgerPersistence.save(transaction1, completion: { [unowned self] in
+            self.ledgerPersistence.save(transaction2, completion: { [unowned self] in
+                let transaction3 = Transaction(ticker: "AAPL", shares: 1, averagePrice: 2, currentPrice: 2)
+                self.ledgerLoader.loadPrevious(transaction3) { (result) in
+                    switch result {
+                    case .success(let savedTransaction):
+                        XCTAssertEqual(savedTransaction!.ticker , "AAPL")
+                        XCTAssertEqual(savedTransaction?.averagePrice, 1)
+                    case .failure(let err):
+                        assertionFailure("Failed loading saved transaction\(#line), \(err.localizedDescription)")
+                    }
+                    loadExpectation.fulfill()
+                }
+            })
+        })
         
         wait(for: [loadExpectation], timeout: 1)
     }
