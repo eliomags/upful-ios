@@ -71,9 +71,6 @@ class LedgerLogicTests: XCTestCase {
         
         XCTAssertEqual(storedTransaction1.currentPrice, updatedTransaction1.currentPrice)
         XCTAssertEqual(storedTransaction2.currentPrice, updatedTransaction2.currentPrice)
-        
-        XCTAssertEqual(storedTransaction2.averagePrice, 50)
-        XCTAssertEqual(storedTransaction2.averagePrice, 50)
     }
     
     func testGetTotalPriceChange() {

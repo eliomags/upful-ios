@@ -29,7 +29,6 @@ struct LedgerLogic {
         updatedTransactions.forEach { (updatedTransaction) in
             if let curr = currentTransactions.first(where: { $0.ticker == updatedTransaction.ticker}) {
                 curr.currentPrice = updatedTransaction.currentPrice
-                updateAveragePrice(for: curr, from: updatedTransaction)
             } else {
                 return
             }
@@ -37,7 +36,7 @@ struct LedgerLogic {
     }
     
     // based on new current price, calculate total price change from average price
-    func getTotalPriceChange(from storedTransactions: [Transaction]) -> Double {
+    func getTotalPriceChange(from storedTransactions: [TransactionDataType]) -> Double {
         let totalPriceChange = storedTransactions.reduce(0) { (result, currentTransaction) -> Double in
             return (currentTransaction.currentPrice - currentTransaction.averagePrice) *
                 Double(currentTransaction.numberOfShares) + result

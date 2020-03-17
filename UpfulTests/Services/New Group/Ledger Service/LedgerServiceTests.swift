@@ -130,6 +130,39 @@ class LedgerServiceTests: XCTestCase {
         wait(for: [sellExpectation], timeout: 1)
     }
     
+    // MARK: - Price Updates
+    
+    func testPriceUpdateAndTransactionLoadForPersistenceProof() {
+        let updateExpectation = expectation(description: #function)
+
+        // Buy and Update
+        let updatedTransactions = [
+            Transaction(ticker: "AAPL", shares: 1, averagePrice: 160, currentPrice: 160),
+            Transaction(ticker: "FB", shares: 1, averagePrice: 150, currentPrice: 150)
+        ]
+        
+        makeManyBuys { [unowned self] in
+            self.sut.handlePriceUpdates(updatedTransactions) { (totalPriceChange) in
+                XCTAssertEqual(Int(totalPriceChange), 140)
+                updateExpectation.fulfill()
+            }
+        }
+        wait(for: [updateExpectation], timeout: 1)
+        
+        // Check for updates
+        let loadExpectation = expectation(description: #function)
+        sut.loadSavedTransactions { (result) in
+            switch result {
+            case .success(let savedTransactions):
+                XCTAssertEqual(savedTransactions.map { $0.currentPrice }.sorted(), [150,160])
+                
+            case .failure(let err):
+                self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)", inFile: #file, atLine: #line, expected: true)
+            }
+            loadExpectation.fulfill()
+        }
+        wait(for: [loadExpectation], timeout: 1)
+    }
     
     // MARK: - Fileprivate Methods
     

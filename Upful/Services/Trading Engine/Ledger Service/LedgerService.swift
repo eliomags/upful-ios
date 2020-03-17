@@ -39,6 +39,7 @@ struct LedgerService {
                 } else {
                     self.ledgerPersistence.save(transaction, completion: completion)
                 }
+                
             case .failure(let err):
                 fatalError("Could not load previous transaction, \(err.localizedDescription)")
             }
@@ -60,8 +61,26 @@ struct LedgerService {
                 } else {
                     fatalError("Did not find previous saved transaction.")
                 }
+                
             case .failure(let err):
                 fatalError("Could not load previous transaction, \(err.localizedDescription)")
+            }
+        }
+    }
+    
+    func handlePriceUpdates(_ transactions: [Transaction], completion: ((Double) -> Void)?) {
+        loadSavedTransactions { (result) in
+            switch result {
+            case .success(let savedTransactions):
+                self.ledgerLogic.handlePriceUpdates(currentTransactions: savedTransactions, updatedTransactions: transactions)
+                
+                // TODO: - May need to add saving
+                
+                let totalPriceChange = self.ledgerLogic.getTotalPriceChange(from: savedTransactions)
+                completion?(totalPriceChange)
+                
+            case .failure(let err):
+                fatalError("Could not load previous transactions, \(err.localizedDescription)")
             }
         }
     }
