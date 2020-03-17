@@ -43,6 +43,8 @@
 		3D206A3524210A4500F7E44C /* TransactionLogLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A3424210A4500F7E44C /* TransactionLogLoader.swift */; };
 		3D206A3824210EFC00F7E44C /* TransactionLoggingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A3724210EFC00F7E44C /* TransactionLoggingManager.swift */; };
 		3D206A3A2421105000F7E44C /* TransactionLoggingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A392421105000F7E44C /* TransactionLoggingManagerTests.swift */; };
+		3D206A3F242158E700F7E44C /* BalanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A3E242158E700F7E44C /* BalanceManager.swift */; };
+		3D206A4224215C5000F7E44C /* BalanceManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A4124215C5000F7E44C /* BalanceManagerTests.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -286,6 +288,8 @@
 		3D206A3424210A4500F7E44C /* TransactionLogLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLogLoader.swift; sourceTree = "<group>"; };
 		3D206A3724210EFC00F7E44C /* TransactionLoggingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLoggingManager.swift; sourceTree = "<group>"; };
 		3D206A392421105000F7E44C /* TransactionLoggingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLoggingManagerTests.swift; sourceTree = "<group>"; };
+		3D206A3E242158E700F7E44C /* BalanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceManager.swift; sourceTree = "<group>"; };
+		3D206A4124215C5000F7E44C /* BalanceManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceManagerTests.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -618,8 +622,7 @@
 			children = (
 				3D206A0F241EA66A00F7E44C /* Protocols */,
 				3D206A0C241E924300F7E44C /* Models */,
-				3D206A242421042100F7E44C /* Logging */,
-				3D206A02241E8F0400F7E44C /* Ledger */,
+				3D206A3B2421589400F7E44C /* Features */,
 			);
 			path = "Trading Engine";
 			sourceTree = "<group>";
@@ -639,8 +642,7 @@
 		3D206A03241E8F1000F7E44C /* Trading Engine */ = {
 			isa = PBXGroup;
 			children = (
-				3D206A3624210CE400F7E44C /* Logging */,
-				3D206A04241E8F1400F7E44C /* Ledger */,
+				3D206A3C242158AB00F7E44C /* Features */,
 			);
 			path = "Trading Engine";
 			sourceTree = "<group>";
@@ -652,8 +654,7 @@
 				3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */,
 				3D206A17241F047F00F7E44C /* TransactionLedgerPersistence.swift */,
 			);
-			name = Ledger;
-			path = "../New Group/Ledger";
+			path = Ledger;
 			sourceTree = "<group>";
 		};
 		3D206A0C241E924300F7E44C /* Models */ = {
@@ -702,6 +703,42 @@
 				3D206A392421105000F7E44C /* TransactionLoggingManagerTests.swift */,
 			);
 			path = Logging;
+			sourceTree = "<group>";
+		};
+		3D206A3B2421589400F7E44C /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A3D242158D200F7E44C /* Balance Manager */,
+				3D206A242421042100F7E44C /* Logging */,
+				3D206A02241E8F0400F7E44C /* Ledger */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		3D206A3C242158AB00F7E44C /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A4024215C3600F7E44C /* Balance */,
+				3D206A3624210CE400F7E44C /* Logging */,
+				3D206A04241E8F1400F7E44C /* Ledger */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		3D206A3D242158D200F7E44C /* Balance Manager */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A3E242158E700F7E44C /* BalanceManager.swift */,
+			);
+			path = "Balance Manager";
+			sourceTree = "<group>";
+		};
+		3D206A4024215C3600F7E44C /* Balance */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A4124215C5000F7E44C /* BalanceManagerTests.swift */,
+			);
+			path = Balance;
 			sourceTree = "<group>";
 		};
 		3D20EB7C2357963C00D1093A /* Controller */ = {
@@ -2427,6 +2464,7 @@
 				3D7C85522337A93500A2E63E /* Animator.swift in Sources */,
 				3DAB3EC3234D22890008CC18 /* FeaturePresenter.swift in Sources */,
 				3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */,
+				3D206A3F242158E700F7E44C /* BalanceManager.swift in Sources */,
 				3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
 				3D206A21241FB9BB00F7E44C /* LedgerManager.swift in Sources */,
@@ -2453,6 +2491,7 @@
 				3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */,
 				3DD52185235276580090CDE6 /* PreferenceDataManagerTest.swift in Sources */,
 				3D6BD0BB23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift in Sources */,
+				3D206A4224215C5000F7E44C /* BalanceManagerTests.swift in Sources */,
 				3D206A08241E903A00F7E44C /* LedgerLogicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

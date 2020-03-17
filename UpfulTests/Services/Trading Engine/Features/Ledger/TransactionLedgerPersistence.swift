@@ -6,7 +6,6 @@
 //  Copyright © 2020 Yanik Simpson. All rights reserved.
 //
 
-import Foundation
 import XCTest
 @testable import Upful
 
