@@ -56,6 +56,36 @@ class LedgerServiceTests: XCTestCase {
     }
     
     func testHandleBuyWithPreviousTransaction() {
+        let buyExpectation = expectation(description: #function)
+
+        sut.handleBuy(Transaction(ticker: "AAPL", shares: 1, averagePrice: 100, currentPrice: 100), completion: { [unowned self] in
+            
+            self.sut.handleBuy(Transaction(ticker: "FB", shares: 1, averagePrice: 100, currentPrice: 100), completion: { [unowned self] in
+                
+                self.sut.handleBuy(Transaction(ticker: "FB", shares: 1, averagePrice: 120, currentPrice: 120), completion: { [unowned self] in
+                    
+                    self.sut.handleBuy(Transaction(ticker: "FB", shares: 1, averagePrice: 150, currentPrice: 150), completion: { [unowned self] in
+                        
+                        self.sut.loadSavedTransactions { (result) in
+                            switch result {
+                            case .success(let storedTransactions):
+                                if let fb = storedTransactions.first(where: { $0.ticker == "FB"}) {
+                                    XCTAssertEqual(Int(fb.averagePrice), 123)
+                                    XCTAssertEqual(fb.currentPrice, 150)
+                                    XCTAssertEqual(fb.numberOfShares, 3)
+                                } else {
+                                    self.recordFailure(withDescription: "No stored transaction found with ticker", inFile: #file, atLine: #line, expected: true)
+                                }
+                            case .failure(let err):
+                                self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)", inFile: #file, atLine: #line, expected: true)
+                            }
+                            buyExpectation.fulfill()
+                        }
+                    })
+                })
+            })
+        })
         
+        wait(for: [buyExpectation], timeout: 1)
     }
 }
