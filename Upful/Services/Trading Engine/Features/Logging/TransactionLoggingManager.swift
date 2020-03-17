@@ -10,13 +10,15 @@ import Foundation
 
 struct TransactionLoggingManager {
     private let transactionLogLoader: TransactionLogLoader
-    private let transactionLogger: TransactionLogger // TODO: Replace with local with remote logger
+    private let localTransactionLogger: TransactionLogger 
+    private let remoteTransactionLogger: TransactionLogger
     
     // MARK: - Initializer
     
     init(container: CoreDataModelContainerManager = TransactionLoggerContextManager.shared) {
         self.transactionLogLoader = TransactionLogLoader(container: container)
-        self.transactionLogger = LocalTransactionLogger(container: container)
+        self.localTransactionLogger = LocalTransactionLogger(container: container)
+        self.remoteTransactionLogger = RemoteTransactionLogger()
     }
     
     func load(completion: @escaping (Result<[TransactionDataType], Error>) -> Void) {
@@ -24,6 +26,7 @@ struct TransactionLoggingManager {
     }
     
     func log(_ transaction: TransactionDataType, of type: TransactionType, completion: (() -> Void)?) {
-        transactionLogger.log(transaction, of: type, completion: completion)
+        remoteTransactionLogger.log(transaction, of: type, completion: nil)
+        localTransactionLogger.log(transaction, of: type, completion: completion)
     }
 }

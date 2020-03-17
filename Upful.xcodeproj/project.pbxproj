@@ -45,6 +45,7 @@
 		3D206A3A2421105000F7E44C /* TransactionLoggingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A392421105000F7E44C /* TransactionLoggingManagerTests.swift */; };
 		3D206A3F242158E700F7E44C /* BalanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A3E242158E700F7E44C /* BalanceManager.swift */; };
 		3D206A4224215C5000F7E44C /* BalanceManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A4124215C5000F7E44C /* BalanceManagerTests.swift */; };
+		3D206A4624217F7400F7E44C /* RemoteTransactionLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A4524217F7400F7E44C /* RemoteTransactionLogger.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -290,6 +291,7 @@
 		3D206A392421105000F7E44C /* TransactionLoggingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLoggingManagerTests.swift; sourceTree = "<group>"; };
 		3D206A3E242158E700F7E44C /* BalanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceManager.swift; sourceTree = "<group>"; };
 		3D206A4124215C5000F7E44C /* BalanceManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceManagerTests.swift; sourceTree = "<group>"; };
+		3D206A4524217F7400F7E44C /* RemoteTransactionLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTransactionLogger.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -682,9 +684,10 @@
 			children = (
 				3D206A252421043B00F7E44C /* Protocols */,
 				3D206A3724210EFC00F7E44C /* TransactionLoggingManager.swift */,
-				3D206A2E2421056600F7E44C /* TransactionLoggerContextManager.swift */,
-				3D206A302421060900F7E44C /* LocalTransactionLogger.swift */,
 				3D206A3424210A4500F7E44C /* TransactionLogLoader.swift */,
+				3D206A2E2421056600F7E44C /* TransactionLoggerContextManager.swift */,
+				3D206A4424217EC400F7E44C /* Remote */,
+				3D206A4324217EBF00F7E44C /* Local */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
@@ -739,6 +742,22 @@
 				3D206A4124215C5000F7E44C /* BalanceManagerTests.swift */,
 			);
 			path = Balance;
+			sourceTree = "<group>";
+		};
+		3D206A4324217EBF00F7E44C /* Local */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A302421060900F7E44C /* LocalTransactionLogger.swift */,
+			);
+			path = Local;
+			sourceTree = "<group>";
+		};
+		3D206A4424217EC400F7E44C /* Remote */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A4524217F7400F7E44C /* RemoteTransactionLogger.swift */,
+			);
+			path = Remote;
 			sourceTree = "<group>";
 		};
 		3D20EB7C2357963C00D1093A /* Controller */ = {
@@ -2373,6 +2392,7 @@
 				3D4FB99E238444B200B9BFE1 /* NavigationHeaderView.swift in Sources */,
 				3D7C854E233747A800A2E63E /* InformationView.swift in Sources */,
 				3D42BE492309A59800806AFF /* SearchCriteria.swift in Sources */,
+				3D206A4624217F7400F7E44C /* RemoteTransactionLogger.swift in Sources */,
 				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
 				3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */,
 				3D206A06241E8F3E00F7E44C /* LedgerLogic.swift in Sources */,
