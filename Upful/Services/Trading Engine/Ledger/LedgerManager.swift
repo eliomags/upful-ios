@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct LedgerService {
+struct LedgerManager {
     
     // MARK: - Dependencies
     

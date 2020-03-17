@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class TransactionLoggerContextManager: CoreDataModelContainerManager {
+final class TransactionLoggerContextManager: CoreDataModelContainerManager {
     static let shared = TransactionLoggerContextManager()
     
     private init() {}

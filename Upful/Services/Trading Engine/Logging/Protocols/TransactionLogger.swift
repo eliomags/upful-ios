@@ -9,5 +9,5 @@
 import Foundation
 
 protocol TransactionLogger {
-    func log(_ transaction: TransactionDataType, of type: TransactionType)
+    func log(_ transaction: TransactionDataType, of type: TransactionType, completion: (() -> Void)?)
 }

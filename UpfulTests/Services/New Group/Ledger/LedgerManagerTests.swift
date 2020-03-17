@@ -11,11 +11,11 @@ import XCTest
 
 class LedgerServiceTests: XCTestCase {
     
-    var sut: LedgerService!
+    var sut: LedgerManager!
     
     override func setUp() {
         let mockContainer = MockTransactionLedgerContextManager.shared
-        sut = LedgerService(container: mockContainer)
+        sut = LedgerManager(container: mockContainer)
     }
 
     // MARK: - Loading

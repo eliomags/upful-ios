@@ -32,12 +32,17 @@
 		3D206A1B241F18A900F7E44C /* CoreDataModelContainerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A1A241F18A900F7E44C /* CoreDataModelContainerManager.swift */; };
 		3D206A1D241F193F00F7E44C /* LocalTransactionLedgerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A1C241F193F00F7E44C /* LocalTransactionLedgerLoader.swift */; };
 		3D206A1F241F198D00F7E44C /* TransactionLedgerContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A1E241F198D00F7E44C /* TransactionLedgerContextManager.swift */; };
-		3D206A21241FB9BB00F7E44C /* LedgerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A20241FB9BB00F7E44C /* LedgerService.swift */; };
-		3D206A23241FBC9B00F7E44C /* LedgerServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A22241FBC9B00F7E44C /* LedgerServiceTests.swift */; };
+		3D206A21241FB9BB00F7E44C /* LedgerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A20241FB9BB00F7E44C /* LedgerManager.swift */; };
+		3D206A23241FBC9B00F7E44C /* LedgerManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A22241FBC9B00F7E44C /* LedgerManagerTests.swift */; };
 		3D206A272421046600F7E44C /* TransactionLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A262421046600F7E44C /* TransactionLogger.swift */; };
 		3D206A2A242104BE00F7E44C /* TransactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A29242104BE00F7E44C /* TransactionType.swift */; };
 		3D206A2D2421051900F7E44C /* TransactionLog.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A2B2421051900F7E44C /* TransactionLog.xcdatamodeld */; };
 		3D206A2F2421056600F7E44C /* TransactionLoggerContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A2E2421056600F7E44C /* TransactionLoggerContextManager.swift */; };
+		3D206A312421060900F7E44C /* LocalTransactionLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A302421060900F7E44C /* LocalTransactionLogger.swift */; };
+		3D206A3324210A0500F7E44C /* TransactionLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A3224210A0500F7E44C /* TransactionLoader.swift */; };
+		3D206A3524210A4500F7E44C /* TransactionLogLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A3424210A4500F7E44C /* TransactionLogLoader.swift */; };
+		3D206A3824210EFC00F7E44C /* TransactionLoggingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A3724210EFC00F7E44C /* TransactionLoggingManager.swift */; };
+		3D206A3A2421105000F7E44C /* TransactionLoggingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A392421105000F7E44C /* TransactionLoggingManagerTests.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -270,12 +275,17 @@
 		3D206A1A241F18A900F7E44C /* CoreDataModelContainerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModelContainerManager.swift; sourceTree = "<group>"; };
 		3D206A1C241F193F00F7E44C /* LocalTransactionLedgerLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTransactionLedgerLoader.swift; sourceTree = "<group>"; };
 		3D206A1E241F198D00F7E44C /* TransactionLedgerContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLedgerContextManager.swift; sourceTree = "<group>"; };
-		3D206A20241FB9BB00F7E44C /* LedgerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerService.swift; sourceTree = "<group>"; };
-		3D206A22241FBC9B00F7E44C /* LedgerServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerServiceTests.swift; sourceTree = "<group>"; };
+		3D206A20241FB9BB00F7E44C /* LedgerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerManager.swift; sourceTree = "<group>"; };
+		3D206A22241FBC9B00F7E44C /* LedgerManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerManagerTests.swift; sourceTree = "<group>"; };
 		3D206A262421046600F7E44C /* TransactionLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLogger.swift; sourceTree = "<group>"; };
 		3D206A29242104BE00F7E44C /* TransactionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionType.swift; sourceTree = "<group>"; };
 		3D206A2C2421051900F7E44C /* TransactionLog.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TransactionLog.xcdatamodel; sourceTree = "<group>"; };
 		3D206A2E2421056600F7E44C /* TransactionLoggerContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLoggerContextManager.swift; sourceTree = "<group>"; };
+		3D206A302421060900F7E44C /* LocalTransactionLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTransactionLogger.swift; sourceTree = "<group>"; };
+		3D206A3224210A0500F7E44C /* TransactionLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLoader.swift; sourceTree = "<group>"; };
+		3D206A3424210A4500F7E44C /* TransactionLogLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLogLoader.swift; sourceTree = "<group>"; };
+		3D206A3724210EFC00F7E44C /* TransactionLoggingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLoggingManager.swift; sourceTree = "<group>"; };
+		3D206A392421105000F7E44C /* TransactionLoggingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLoggingManagerTests.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -609,40 +619,41 @@
 				3D206A0F241EA66A00F7E44C /* Protocols */,
 				3D206A0C241E924300F7E44C /* Models */,
 				3D206A242421042100F7E44C /* Logging */,
-				3D206A02241E8F0400F7E44C /* Ledger Service */,
+				3D206A02241E8F0400F7E44C /* Ledger */,
 			);
 			path = "Trading Engine";
 			sourceTree = "<group>";
 		};
-		3D206A02241E8F0400F7E44C /* Ledger Service */ = {
+		3D206A02241E8F0400F7E44C /* Ledger */ = {
 			isa = PBXGroup;
 			children = (
-				3D206A20241FB9BB00F7E44C /* LedgerService.swift */,
+				3D206A20241FB9BB00F7E44C /* LedgerManager.swift */,
 				3D206A05241E8F3E00F7E44C /* LedgerLogic.swift */,
 				3D206A1E241F198D00F7E44C /* TransactionLedgerContextManager.swift */,
 				3D206A15241EFCDE00F7E44C /* TransactionLedgerPersistence.swift */,
 				3D206A1C241F193F00F7E44C /* LocalTransactionLedgerLoader.swift */,
 			);
-			path = "Ledger Service";
+			path = Ledger;
 			sourceTree = "<group>";
 		};
 		3D206A03241E8F1000F7E44C /* Trading Engine */ = {
 			isa = PBXGroup;
 			children = (
-				3D206A04241E8F1400F7E44C /* Ledger Service */,
+				3D206A3624210CE400F7E44C /* Logging */,
+				3D206A04241E8F1400F7E44C /* Ledger */,
 			);
 			path = "Trading Engine";
 			sourceTree = "<group>";
 		};
-		3D206A04241E8F1400F7E44C /* Ledger Service */ = {
+		3D206A04241E8F1400F7E44C /* Ledger */ = {
 			isa = PBXGroup;
 			children = (
-				3D206A22241FBC9B00F7E44C /* LedgerServiceTests.swift */,
+				3D206A22241FBC9B00F7E44C /* LedgerManagerTests.swift */,
 				3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */,
 				3D206A17241F047F00F7E44C /* TransactionLedgerPersistence.swift */,
 			);
-			name = "Ledger Service";
-			path = "../New Group/Ledger Service";
+			name = Ledger;
+			path = "../New Group/Ledger";
 			sourceTree = "<group>";
 		};
 		3D206A0C241E924300F7E44C /* Models */ = {
@@ -660,6 +671,7 @@
 			children = (
 				3D206A13241EA69400F7E44C /* TransactionDataType.swift */,
 				3D206A1A241F18A900F7E44C /* CoreDataModelContainerManager.swift */,
+				3D206A3224210A0500F7E44C /* TransactionLoader.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -668,7 +680,10 @@
 			isa = PBXGroup;
 			children = (
 				3D206A252421043B00F7E44C /* Protocols */,
+				3D206A3724210EFC00F7E44C /* TransactionLoggingManager.swift */,
 				3D206A2E2421056600F7E44C /* TransactionLoggerContextManager.swift */,
+				3D206A302421060900F7E44C /* LocalTransactionLogger.swift */,
+				3D206A3424210A4500F7E44C /* TransactionLogLoader.swift */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
@@ -679,6 +694,14 @@
 				3D206A262421046600F7E44C /* TransactionLogger.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		3D206A3624210CE400F7E44C /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A392421105000F7E44C /* TransactionLoggingManagerTests.swift */,
+			);
+			path = Logging;
 			sourceTree = "<group>";
 		};
 		3D20EB7C2357963C00D1093A /* Controller */ = {
@@ -2218,6 +2241,7 @@
 				3DBEFFE023B01F0A00BA407E /* SavedScreenerTableViewCell.swift in Sources */,
 				3D206A19241F0DC200F7E44C /* TransactionLedgerDataModel.xcdatamodeld in Sources */,
 				3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */,
+				3D206A312421060900F7E44C /* LocalTransactionLogger.swift in Sources */,
 				3DBEFFDE23B018CC00BA407E /* SavedScreenersViewModel.swift in Sources */,
 				3D206A2F2421056600F7E44C /* TransactionLoggerContextManager.swift in Sources */,
 				3D8D3268237320A600123731 /* PopularStockLoader.swift in Sources */,
@@ -2329,6 +2353,7 @@
 				3D7013E423ECFBDD00102E9C /* SearchResultsCoordinator.swift in Sources */,
 				3D0C5F8823419F1600F4A5FC /* SubscriptionTableViewCell.swift in Sources */,
 				3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */,
+				3D206A3524210A4500F7E44C /* TransactionLogLoader.swift in Sources */,
 				3D6B072E2416E35800C55021 /* StockAnalysisViewModel.swift in Sources */,
 				3D562C8B235F17EA00837B2F /* UpfulProducts.swift in Sources */,
 				3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */,
@@ -2352,6 +2377,7 @@
 				3DF5FBB0232BFCF100856205 /* AnalysisChartCell.swift in Sources */,
 				3DAB3ED1234F9F590008CC18 /* PrefrenceHeaderView.swift in Sources */,
 				3DBEFFCB23A9CCA000BA407E /* SavedScreenersViewController.swift in Sources */,
+				3D206A3324210A0500F7E44C /* TransactionLoader.swift in Sources */,
 				3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */,
 				3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */,
 				3D3749B823BE60F4000D0597 /* ScreenerSelectionContainerView.swift in Sources */,
@@ -2366,6 +2392,7 @@
 				3D206A14241EA69400F7E44C /* TransactionDataType.swift in Sources */,
 				3D42BE50230C421D00806AFF /* StockDetailsStackView.swift in Sources */,
 				3DC710952336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift in Sources */,
+				3D206A3824210EFC00F7E44C /* TransactionLoggingManager.swift in Sources */,
 				3DF5FBC6233429B600856205 /* StockDataModel.xcdatamodeld in Sources */,
 				3D917B5222FE0542001D5E39 /* ManualSearchViewController.swift in Sources */,
 				3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */,
@@ -2402,7 +2429,7 @@
 				3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */,
 				3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
-				3D206A21241FB9BB00F7E44C /* LedgerService.swift in Sources */,
+				3D206A21241FB9BB00F7E44C /* LedgerManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2411,8 +2438,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D8D32652372FAE300123731 /* ExploreLogicControllerTests.swift in Sources */,
+				3D206A3A2421105000F7E44C /* TransactionLoggingManagerTests.swift in Sources */,
 				3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */,
-				3D206A23241FBC9B00F7E44C /* LedgerServiceTests.swift in Sources */,
+				3D206A23241FBC9B00F7E44C /* LedgerManagerTests.swift in Sources */,
 				3DF734D424036C1700B297A4 /* StockOverviewViewModelTests.swift in Sources */,
 				3DF734E12407144800B297A4 /* SearchResultsViewModelTests.swift in Sources */,
 				3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */,

@@ -8,11 +8,7 @@
 
 import Foundation
 
-protocol TransactionLedgerLoader {
-    func load(completion: @escaping (Result<[TransactionDataType], Error>)-> Void)
-}
-
-final class LocalTransactionLedgerLoader: TransactionLedgerLoader {
+final class LocalTransactionLedgerLoader: TransactionLoader {
     
     // MARK: - Dependencies
 
