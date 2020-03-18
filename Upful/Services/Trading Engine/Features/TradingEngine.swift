@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct TradingEngine {
+class TradingEngine {
     
     // MARK: - Dependencies
     
@@ -36,21 +36,25 @@ struct TradingEngine {
     // MARK: - Methods
     
     func buy(transaction: TransactionDataType) {
-        ledgerManager.handleBuy(transaction, completion: {
-            self.balanceManager.handleBuy(for: transaction)
-            
-            self.loggerManager.log(transaction, of: .buy, completion: {
-                self.handleBuyCompletion?(self.balanceManager.totalEquityBalance,
-                                          self.balanceManager.currentCashBalance)
-            })
-        })
+        validatePurchaseAttempt(transaction) { (isValid) in
+            if isValid {
+                ledgerManager.handleBuy(transaction, completion: { [unowned self] in
+                    self.balanceManager.handleBuy(for: transaction)
+                    
+                    self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
+                        self.handleBuyCompletion?(self.balanceManager.totalEquityBalance,
+                                                  self.balanceManager.currentCashBalance)
+                    })
+                })
+            }
+        }
     }
     
     func sell(transaction: TransactionDataType) {
         do {
-            try ledgerManager.handleSell(transaction, completion: {
+            try ledgerManager.handleSell(transaction, completion: { [unowned self] in
                 self.balanceManager.handleSell(for: transaction)
-                self.loggerManager.log(transaction, of: .sell, completion: {
+                self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
                     self.handleSellCompletion?(self.balanceManager.totalEquityBalance,
                                                self.balanceManager.currentCashBalance)
                 })
@@ -76,5 +80,18 @@ struct TradingEngine {
     
     func loadLedgerTransactions(completion: @escaping (Result<[TransactionDataType],Error>) -> Void) {
         ledgerManager.loadSavedTransactions(completion: completion)
+    }
+    
+    // MARK: - Validation
+    
+    func validatePurchaseAttempt(_ transaction: TransactionDataType, completion: ((Bool) -> Void)) {
+        let attemptedPurchase = transaction.currentPrice * Double(transaction.numberOfShares)
+        let isLessThanCashHolding = attemptedPurchase < balanceManager.currentCashBalance
+        
+        completion(isLessThanCashHolding)
+    }
+    
+    func validateSaleAttempt(_ transaction: TransactionDataType, completion: ((Bool) -> Void)) {
+        
     }
 }

@@ -148,10 +148,25 @@ class TradingEngineTests: XCTestCase {
         
         wait(for: [loadExpectation], timeout: 1.5)
     }
+        
+    // MARK: - Validation
     
-    // make buy and sell validator
+    func test_validatePurchaseAttempt_withValidPurchase() {
+        let purchase = Transaction(ticker: "FB", shares: 10, averagePrice: 200, currentPrice: 200)
+        
+        sut.validatePurchaseAttempt(purchase) { (isValid) in
+            XCTAssertTrue(isValid)
+        }
+    }
     
-    // MARK: - Fileprivate Methods
+    func test_validatePurchaseAttempt_withInvalidPurchase() {
+        let purchase = Transaction(ticker: "FB", shares: 1000, averagePrice: 200, currentPrice: 200)
+        
+        sut.validatePurchaseAttempt(purchase) { (isValid) in
+            XCTAssertFalse(isValid)
+        }
+    }
+    
     
     
 }
