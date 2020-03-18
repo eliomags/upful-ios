@@ -28,18 +28,12 @@ extension LocalTransactionLogger: TransactionLogger {
         savingTransaction.currentPrice = transaction.currentPrice
         savingTransaction.ticker = transaction.ticker
         savingTransaction.numberOfShares = transaction.numberOfShares
+        
         savingTransaction.transactionDate = transaction.transactionDate
-        savingTransaction.transactionDate = Date().asString
-        savingTransaction.type = type.rawValue
+        savingTransaction.type = transaction.type
+//        savingTransaction.transactionDate = Date().asString
+//        savingTransaction.type = type.rawValue
         
         container.saveContext(completion: completion)
-    }
-}
-
-private extension Date {
-    var asString: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"
-        return formatter.string(from: self)
     }
 }

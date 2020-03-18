@@ -10,17 +10,16 @@ import Foundation
 import Firebase
 
 final class RemoteTransactionLogger {
-    private let db = Firestore.firestore()
+    private static let db = Firestore.firestore()
 }
 
 extension RemoteTransactionLogger: TransactionLogger {
     func log(_ transaction: TransactionDataType, of type: TransactionType, completion: (() -> Void)?) {
-        print("REMOTE LOGGING")
-        db.collection("transactions").document(UUID().uuidString).setData([
+        RemoteTransactionLogger.db.collection("transactions").document(UUID().uuidString).setData([
             "ticker": transaction.ticker,
             "currentPrice": transaction.currentPrice,
             "shares": transaction.numberOfShares,
-            "date": Date().asString,
+            "date": transaction.transactionDate ?? "undetermined",
             "type": transaction.type ?? "undetermined"
         ]) { err in
             if let err = err {
@@ -28,14 +27,7 @@ extension RemoteTransactionLogger: TransactionLogger {
             } else {
                 print("Document successfully written!")
             }
+            completion?()
         }
-    }
-}
-
-private extension Date {
-    var asString: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"
-        return formatter.string(from: self)
     }
 }

@@ -26,7 +26,18 @@ struct TransactionLoggingManager {
     }
     
     func log(_ transaction: TransactionDataType, of type: TransactionType, completion: (() -> Void)?) {
-        remoteTransactionLogger.log(transaction, of: type, completion: nil)
+        transaction.type = type.rawValue
+        transaction.transactionDate = Date().asString
+        
+//        remoteTransactionLogger.log(transaction, of: type, completion: nil)
         localTransactionLogger.log(transaction, of: type, completion: completion)
+    }
+}
+
+private extension Date {
+    var asString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"
+        return formatter.string(from: self)
     }
 }

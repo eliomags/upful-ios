@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct LedgerManager {
+final class LedgerManager {
     
     // MARK: - Dependencies
     
@@ -68,7 +68,7 @@ struct LedgerManager {
         }
     }
     
-    func handlePriceUpdates(_ transactions: [Transaction], completion: ((Double) -> Void)?) {
+    func handlePriceUpdates(_ transactions: [TransactionDataType], completion: ((Double) -> Void)?) {
         loadSavedTransactions { (result) in
             switch result {
             case .success(let savedTransactions):
