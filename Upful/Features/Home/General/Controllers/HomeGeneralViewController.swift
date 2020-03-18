@@ -11,8 +11,8 @@ import UIKit
 final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             
     private enum Section: Int {
-        case preference = 0
-        case news = 1
+        case preference = 1
+        case news = 0
     }
     
     lazy var logicController: HomeGeneralLogicController = {
@@ -32,6 +32,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         if PermissionManager.shared.isPremium { view.premiumButton.removeFromSuperview() }
         return view
     }()
+    
+    let tradingBalanceView = TradingBalanceView()
     
     private lazy var refreshControl: UIRefreshControl = {
         let control = UIRefreshControl()
@@ -111,7 +113,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func setupTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
         tableView.separatorStyle = .none
-        tableView.setTableHeaderView(headerView: headerView)
+        tableView.setTableHeaderView(headerView: tradingBalanceView)
 
         view.addSubview(tableView)
         tableView.fillSuperview()
@@ -299,9 +301,9 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         switch section {
-        case Section.preference.rawValue:
-            return 15
         case Section.news.rawValue:
+            return 15
+        case Section.preference.rawValue:
             return 100
         default: return 0
         }

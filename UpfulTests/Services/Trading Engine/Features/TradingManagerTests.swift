@@ -166,7 +166,4 @@ class TradingEngineTests: XCTestCase {
             XCTAssertFalse(isValid)
         }
     }
-    
-    
-    
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TradingEngine {
+final class TradingEngine {
     
     // MARK: - Dependencies
     
@@ -74,6 +74,8 @@ class TradingEngine {
         })
     }
     
+    // MARK: - Loading
+    
     func loadLoggedTransactions(completion: @escaping (Result<[TransactionDataType],Error>) -> Void) {
         loggerManager.load(completion: completion)
     }
@@ -91,7 +93,5 @@ class TradingEngine {
         completion(isLessThanCashHolding)
     }
     
-    func validateSaleAttempt(_ transaction: TransactionDataType, completion: ((Bool) -> Void)) {
-        
-    }
+    // MARK: - TODO: Validate Sale Attempt
 }

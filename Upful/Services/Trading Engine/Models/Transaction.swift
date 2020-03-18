@@ -34,6 +34,13 @@ class Transaction {
         self.currentPrice = transaction.currentPrice
         self.type = transaction.type
     }
+    
+    init(stock: Stock, numberOfShares: Int32) {
+       self.ticker = stock.ticker
+       self.numberOfShares = numberOfShares
+       self.averagePrice = stock.stockQuote?.latestPrice ?? 0
+       self.currentPrice = stock.stockQuote?.latestPrice ?? 0
+   }
 }
 
 extension Transaction: TransactionDataType {}
