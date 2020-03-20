@@ -10,6 +10,7 @@ import Foundation
 
 final class StockViewModel {
     // MARK: - Properties
+    
     let stock: Stock
     let quoteLoader: QuoteLoader
     let stockFinancialLoader: FinancialLoader

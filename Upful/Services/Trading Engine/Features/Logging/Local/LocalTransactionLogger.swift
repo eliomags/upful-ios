@@ -16,23 +16,20 @@ final class LocalTransactionLogger {
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionLoggerContextManager.shared) {
+    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
         self.container = container
     }
 }
 
 extension LocalTransactionLogger: TransactionLogger {
     func log(_ transaction: TransactionDataType, of type: TransactionType, completion: (() -> Void)?) {
-        let savingTransaction = PersistedTransaction(context: container.persistentContainer.viewContext)
+        let savingTransaction = LoggedTransaction(context: container.persistentContainer.viewContext)
+        savingTransaction.ticker = transaction.ticker
         savingTransaction.averagePrice = transaction.averagePrice
         savingTransaction.currentPrice = transaction.currentPrice
-        savingTransaction.ticker = transaction.ticker
         savingTransaction.numberOfShares = transaction.numberOfShares
-        
         savingTransaction.transactionDate = transaction.transactionDate
         savingTransaction.type = transaction.type
-//        savingTransaction.transactionDate = Date().asString
-//        savingTransaction.type = type.rawValue
         
         container.saveContext(completion: completion)
     }

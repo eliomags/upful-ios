@@ -16,7 +16,7 @@ final class TransactionLedgerPersistence {
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionLedgerContextManager.shared) {
+    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
         self.container = container
     }
     

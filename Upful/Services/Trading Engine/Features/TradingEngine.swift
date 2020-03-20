@@ -25,8 +25,8 @@ final class TradingEngine {
     // MARK: - Initializer
 
     init(balanceDefaults: UserDefaults = UserDefaults.standard,
-        loggerContainer: CoreDataModelContainerManager = TransactionLoggerContextManager.shared,
-        ledgerContainer: CoreDataModelContainerManager = TransactionLedgerContextManager.shared
+        loggerContainer: CoreDataModelContainerManager = TransactionContainerManager.shared,
+        ledgerContainer: CoreDataModelContainerManager = TransactionContainerManager.shared
     ) {
         self.balanceManager = BalanceManager(userDefaults: balanceDefaults)
         self.loggerManager = TransactionLoggingManager(container: loggerContainer)
@@ -38,29 +38,34 @@ final class TradingEngine {
     func buy(transaction: TransactionDataType) {
         validatePurchaseAttempt(transaction) { (isValid) in
             if isValid {
-                ledgerManager.handleBuy(transaction, completion: { [unowned self] in
-                    self.balanceManager.handleBuy(for: transaction)
-                    
-                    self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
-                        self.handleBuyCompletion?(self.balanceManager.totalEquityBalance,
-                                                  self.balanceManager.currentCashBalance)
+                DispatchQueue.global().async {
+                    self.ledgerManager.handleBuy(transaction, completion: { [unowned self] in
+                        self.balanceManager.handleBuy(for: transaction)
+                        
+                        self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
+                            self.handleBuyCompletion?(self.balanceManager.totalEquityBalance,
+                                                      self.balanceManager.currentCashBalance)
+                        })
                     })
-                })
+                }
             }
         }
     }
     
     func sell(transaction: TransactionDataType) {
-        do {
-            try ledgerManager.handleSell(transaction, completion: { [unowned self] in
-                self.balanceManager.handleSell(for: transaction)
-                self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
-                    self.handleSellCompletion?(self.balanceManager.totalEquityBalance,
-                                               self.balanceManager.currentCashBalance)
+        DispatchQueue.global().async {
+            do {
+                try self.ledgerManager.handleSell(transaction, completion: { [unowned self] in
+                    self.balanceManager.handleSell(for: transaction)
+                    
+                    self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
+                        self.handleSellCompletion?(self.balanceManager.totalEquityBalance,
+                                                   self.balanceManager.currentCashBalance)
+                    })
                 })
-            })
-        } catch {
-            fatalError("Failed to sell.")
+            } catch {
+                fatalError("Failed to sell.")
+            }
         }
     }
     

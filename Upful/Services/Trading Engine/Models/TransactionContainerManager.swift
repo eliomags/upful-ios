@@ -9,15 +9,16 @@
 import Foundation
 import CoreData
 
-final class TransactionLedgerContextManager: CoreDataModelContainerManager {
-    static let shared = TransactionLedgerContextManager()
+final class TransactionContainerManager: CoreDataModelContainerManager {
+    static let shared = TransactionContainerManager()
     
     private init() {}
     
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "TransactionLedgerDataModel")
+        let container = NSPersistentContainer(name: "TransactionDataModel")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            
             if let error = error as NSError? {
                 assertionFailure("Failed to load persistent store: \(error.localizedDescription)")
             }

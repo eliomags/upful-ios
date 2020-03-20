@@ -20,7 +20,7 @@ class HomeContainerViewController: MenuContainerViewController {
     // MARK: - Views
     
     private lazy var screenerSelectionButton: CustomRoundButton = {
-        let b = CustomRoundButton()
+        let b = CustomRoundButton(imageName: "plus")
         b.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleScreenerSelectionTap)))
         return b
     }()
@@ -48,10 +48,11 @@ class HomeContainerViewController: MenuContainerViewController {
     
     fileprivate func setUpViews() {
         view.addSubview(screenerSelectionButton)
-        screenerSelectionButton.anchor(top: nil, leading: nil,
+        screenerSelectionButton.anchor(top: nil,
+                                       leading: nil,
                                        bottom: view.layoutMarginsGuide.bottomAnchor,
-                                       trailing: view.trailingAnchor,
-                                       padding: .init(top: 0, left: 0, bottom: 25, right: 25))
+                                       trailing: view.layoutMarginsGuide.trailingAnchor,
+                                       padding: .init(top: 0, left: 0, bottom: 16, right: 4))
     }
     
     func emphasizeButton() {

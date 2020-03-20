@@ -12,11 +12,12 @@ import XCTest
 class LoggingManagerTests: XCTestCase {
         
     var sut: TransactionLoggingManager!
-    
+    let mockContainerManager = MockTransactionContainerManager()
+
     // MARK: - Lifecycle
     
     override func setUp() {
-        sut = TransactionLoggingManager(container: MockTransactionLogContextManager.shared)
+        sut = TransactionLoggingManager(container: mockContainerManager)
     }
     
     // MARK: - Methods
@@ -61,7 +62,6 @@ class LoggingManagerTests: XCTestCase {
                     case .success(let storedLogs):
                         XCTAssertEqual(storedLogs.map { $0.currentPrice}, [200, 100])
                         XCTAssertEqual(storedLogs.map { $0.type! }, ["sell", "buy"])
-                        
                     case .failure(_):
                         break
                     }
@@ -76,7 +76,6 @@ class LoggingManagerTests: XCTestCase {
                                 print(storedLogs.map { $0.transactionDate! })
                                 XCTAssertEqual(storedLogs.map { $0.currentPrice}, [150, 200, 100])
                                 XCTAssertEqual(storedLogs.map { $0.type! }, ["buy", "sell", "buy"])
-                                
                             case .failure(_):
                                 break
                             }
@@ -87,31 +86,6 @@ class LoggingManagerTests: XCTestCase {
             }
         }
         
-        wait(for: [loadExpectation], timeout: 1)
+        wait(for: [loadExpectation], timeout: 1.5)
     }
-}
-
-import CoreData
-
-class MockTransactionLogContextManager: CoreDataModelContainerManager {
-    static let shared = MockTransactionLogContextManager()
-    
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "TransactionLog")
-        let description = NSPersistentStoreDescription()
-        
-        description.type = NSInMemoryStoreType
-        description.shouldAddStoreAsynchronously = false
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        container.persistentStoreDescriptions = [description]
-
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                assertionFailure("Failed to load persistent store: \(error.localizedDescription)")
-            }
-        })
-        return container
-    }()
-    
-    private init() {}
 }

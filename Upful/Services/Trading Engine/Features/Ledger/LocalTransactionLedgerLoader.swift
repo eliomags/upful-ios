@@ -16,20 +16,18 @@ final class LocalTransactionLedgerLoader: TransactionLoader {
 
     // MARK: - Initializer
 
-    init(container: CoreDataModelContainerManager = TransactionLedgerContextManager.shared) {
+    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
         self.container = container
     }
     
     // MARK: - Methods
     
     func load(completion: @escaping (Result<[TransactionDataType], Error>)-> Void) {
-        DispatchQueue.global().async {
-            let request = PersistedTransaction.createFetchRequest()
-            completion(Result {
-                let persistedTransactions = try self.container.persistentContainer.viewContext.fetch(request)
-                return persistedTransactions
-            })
-        }
+        let request = PersistedTransaction.createFetchRequest()
+        completion(Result {
+            let persistedTransactions = try self.container.persistentContainer.viewContext.fetch(request)
+            return persistedTransactions
+        })
     }
         
     func loadPrevious(_ transaction: TransactionDataType, completion: @escaping (Result<TransactionDataType?, Error>)-> Void) {

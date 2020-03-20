@@ -136,10 +136,10 @@ final class StockSearchViewController: UITableViewController, UISearchController
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .nameSearch))
-        let selectedCompany = displayData[indexPath.item]
-        let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
-        navigationController?.pushViewController(detailsVC, animated: true)
+//        AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .nameSearch))
+//        let selectedCompany = displayData[indexPath.item]
+//        let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
+//        navigationController?.pushViewController(detailsVC, animated: true)
     }
 }
 

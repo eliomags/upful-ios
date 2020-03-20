@@ -23,5 +23,21 @@ class PersistedTransaction: NSManagedObject {
     @NSManaged public var type: String?
     @NSManaged public var transactionDate: String?
 }
-
 extension PersistedTransaction: TransactionDataType {}
+
+
+@objc(LoggedTransaction)
+class LoggedTransaction: NSManagedObject {
+
+    @nonobjc public class func createFetchRequest() -> NSFetchRequest<LoggedTransaction> {
+        return NSFetchRequest<LoggedTransaction>(entityName: "LoggedTransaction")
+    }
+
+    @NSManaged public var ticker: String
+    @NSManaged public var numberOfShares: Int32
+    @NSManaged public var averagePrice: Double
+    @NSManaged public var currentPrice: Double
+    @NSManaged public var type: String?
+    @NSManaged public var transactionDate: String?
+}
+extension LoggedTransaction: TransactionDataType {}

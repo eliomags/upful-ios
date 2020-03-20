@@ -12,14 +12,14 @@ import XCTest
 class TradingEngineTests: XCTestCase {
 
     var sut: TradingEngine!
+    let mockContainerManager = MockTransactionContainerManager()
     
     // MARK: - Lifecycle
-    
     override func setUp() {
         sut = TradingEngine(
             balanceDefaults: UserDefaults(suiteName: "TestSuite")!,
-            loggerContainer: MockTransactionLogContextManager.shared,
-            ledgerContainer: MockTransactionLedgerContextManager.shared
+            loggerContainer: mockContainerManager,
+            ledgerContainer: mockContainerManager
         )
     }
     
@@ -94,8 +94,7 @@ class TradingEngineTests: XCTestCase {
             self.sut.loadLedgerTransactions { (result) in
                 switch result {
                 case .success(let ledgerTransactions):
-                    XCTAssertEqual(ledgerTransactions
-                        .map { $0.ticker }, ["FB"])
+                    XCTAssertEqual(ledgerTransactions.map { $0.ticker }, ["FB"])
                 case .failure(_):
                     break
                 }
@@ -105,6 +104,7 @@ class TradingEngineTests: XCTestCase {
             self.sut.loadLoggedTransactions { (result) in
                 switch result {
                 case .success(let loggedTransactions):
+                    XCTAssertEqual(loggedTransactions.map { $0.ticker }, ["FB"])
                     XCTAssertEqual(loggedTransactions.map { $0.type! }, ["buy"])
                 case .failure(_):
                     break

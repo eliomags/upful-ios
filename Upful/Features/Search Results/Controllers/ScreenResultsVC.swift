@@ -237,7 +237,7 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .searchResult))
         let selectedCompany = viewModel.stockViewModels[indexPath.item]
-        let detailVC = StockDetailsContainerView(ticker: selectedCompany.stock.ticker, companyName: selectedCompany.stock.name)
+        let detailVC = StockDetailsContainerView(stockViewModel: selectedCompany)
         
         RemoteStockManager.updateInterest(for: selectedCompany.stock.ticker, name: selectedCompany.stock.name)
         self.navigationController?.pushViewController(detailVC, animated: true)

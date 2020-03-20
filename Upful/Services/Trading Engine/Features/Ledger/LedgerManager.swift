@@ -18,7 +18,7 @@ final class LedgerManager {
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionLedgerContextManager.shared) {
+    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
         self.ledgerPersistence = TransactionLedgerPersistence(container: container)
         self.ledgerLoader = LocalTransactionLedgerLoader(container: container)
     }
@@ -39,7 +39,6 @@ final class LedgerManager {
                 } else {
                     self.ledgerPersistence.save(transaction, completion: completion)
                 }
-                
             case .failure(let err):
                 fatalError("Could not load previous transaction, \(err.localizedDescription)")
             }

@@ -12,10 +12,10 @@ import XCTest
 class LedgerServiceTests: XCTestCase {
     
     var sut: LedgerManager!
-    
+    let mockContainerManager = MockTransactionContainerManager()
+
     override func setUp() {
-        let mockContainer = MockTransactionLedgerContextManager.shared
-        sut = LedgerManager(container: mockContainer)
+        sut = LedgerManager(container: mockContainerManager)
     }
 
     // MARK: - Loading
@@ -48,7 +48,6 @@ class LedgerServiceTests: XCTestCase {
                 case .success(let storedTransactions):
                     XCTAssertFalse(storedTransactions.isEmpty)
                     XCTAssertEqual(storedTransactions.map { $0.ticker }, ["FB"])
-                    
                 case .failure(let err):
                     self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)", inFile: #file, atLine: #line, expected: true)
                 }
@@ -175,4 +174,28 @@ class LedgerServiceTests: XCTestCase {
             })
         })
     }
+}
+
+
+import CoreData
+
+class MockTransactionContainerManager: CoreDataModelContainerManager {
+    static let shared = MockTransactionContainerManager()
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "TransactionDataModel")
+        let description = NSPersistentStoreDescription()
+        
+        description.type = NSInMemoryStoreType
+        description.shouldAddStoreAsynchronously = false
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        container.persistentStoreDescriptions = [description]
+
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                assertionFailure("Failed to load persistent store: \(error.localizedDescription)")
+            }
+        })
+        return container
+    }()
 }

@@ -209,10 +209,8 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
                 for: selectedPopularStock.stock.ticker,
                 name: selectedPopularStock.stock.name
             )
-            let stockDetailsVC = StockDetailsContainerView(
-                ticker: selectedPopularStock.stock.ticker,
-                companyName: selectedPopularStock.stock.name
-            )
+            let stockDetailsVC = StockDetailsContainerView(stockViewModel: logicController.stockViewModels[indexPath.row])
+             
             self.navigationController?.pushViewController(stockDetailsVC, animated: true)
             
         case Section.screeners.rawValue:
@@ -364,7 +362,10 @@ extension ExploreViewController {
             handleNormalStateNavigation(indexPath)
         case .searching:
             let selectedCompany = logicController.stockSearchDisplay[indexPath.row]
-            let detailsVC = StockDetailsContainerView(ticker: selectedCompany.ticker ?? "", companyName: selectedCompany.name ?? "")
+            let stockVM = StockViewModel(stock: Stock(name: selectedCompany.ticker ?? "",
+                                                      ticker: selectedCompany.name ?? ""))
+            let detailsVC = StockDetailsContainerView(stockViewModel: stockVM)
+            
             AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .nameSearch))
             navigationController?.pushViewController(detailsVC, animated: true)
         }

@@ -12,16 +12,15 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     
     // MARK: - Dependencies
     
-    let ticker: String
-    let companyName: String
-    var savedStocks: [SavedStock] = []
+    let savedStockDataManager = LocalStockLoader()
+    let stockViewModel: StockViewModel
     
     // MARK: - Views
     
     override var menubarControllers: [UIViewController] {
         let controllers: [UIViewController] = [
-            StockOverviewViewController(ticker: ticker, companyName: companyName),
-            StockAnalysisViewController(ticker: ticker, companyName: companyName)
+            StockOverviewViewController(ticker: stockViewModel.stock.ticker, companyName: stockViewModel.stock.name),
+            StockAnalysisViewController(ticker: stockViewModel.stock.ticker, companyName: stockViewModel.stock.name)
         ]
         return controllers
     }
@@ -38,24 +37,58 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         return button
     }()
     
+    lazy var tradeButton: CustomRoundButton = {
+        let button = CustomRoundButton(imageName: "arrow.up.arrow.down")
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                           action: #selector(handleTradeTap)))
+        return button
+    }()
+    
+    let tradingEngine = TradingEngine()
+    
+    @objc fileprivate func handleTradeTap() {
+        tradingEngine.buy(transaction: Transaction(stock: stockViewModel.stock, numberOfShares: 5))
+//        tradingEngine.sell(transaction: Transaction(stock: stockViewModel.stock, numberOfShares: 5))
+    }
+    
     // MARK: - Initializer Methods
     
-    init(ticker: String, companyName: String) {
-        self.ticker = ticker
-        self.companyName = companyName
+    init(stockViewModel: StockViewModel) {
+        self.stockViewModel = stockViewModel
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.backgroundColor = VersionManager.mainContainerBackground()
         configureNavBar()
         UserFeedbackPresenter.checkAndAskForReview(checkType: .importantAction, in: self)
         performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
+        
+        tradingEngine.loadLedgerTransactions { (result) in
+            switch result {
+            case .success(let ledgerTrans):
+                print("Ledger Transactions")
+                print(ledgerTrans.map { $0.ticker })
+                print(ledgerTrans.map { $0.numberOfShares })
+            case .failure(_):
+                print("Failed to load")
+            }
+        }
+        tradingEngine.loadLoggedTransactions { (result) in
+            switch result {
+            case .success(let ledgerTrans):
+                print("Ledger Transactions")
+                print(ledgerTrans.map { $0.ticker })
+                print(ledgerTrans.map { $0.numberOfShares })
+            case .failure(_):
+                print("Failed to load")
+            }
+        }
     }
     
     // MARK: - View Setup
@@ -67,19 +100,24 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         navigationItem.rightBarButtonItems = [save]
         VersionManager.navigationBarColor(in: navigationController)
         VersionManager.setNavigationBar(in: navigationController)
+        
+        view.addSubview(tradeButton)
+        tradeButton.anchor(top: nil,
+                           leading: nil,
+                           bottom: view.layoutMarginsGuide.bottomAnchor,
+                           trailing: view.layoutMarginsGuide.trailingAnchor,
+                           padding: .init(top: 0, left: 0, bottom: 16, right: 4))
     }
     
     // MARK: - Core Data
     
-    let savedStockDataManager = LocalStockLoader()
-
     @objc private func checkIfCurrentlySaved() {
         savedStockDataManager.loadSavedStocks { (result) in
             switch result {
             case .success(let savedStocks):
                 let stockTickers = savedStocks.map({ $0.ticker })
                 DispatchQueue.main.async {
-                    self.saveButton.isSelected = stockTickers.contains(self.ticker)
+                    self.saveButton.isSelected = stockTickers.contains(self.stockViewModel.stock.ticker)
                 }
             case .failure(let err):
                 print(err.localizedDescription)
@@ -89,16 +127,16 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
 
     private func removeFavorite(button: UIButton) {
         button.isSelected = !button.isSelected
-        savedStockDataManager.removeFavoriteCompany(ticker, completion: nil)
+        savedStockDataManager.removeFavoriteCompany(stockViewModel.stock.ticker, completion: nil)
     }
          
     private func saveCompany(button: UIButton) {
         button.isSelected = !button.isSelected
-        savedStockDataManager.saveCompany(ticker: ticker, companyName: companyName)
+        savedStockDataManager.saveCompany(ticker: stockViewModel.stock.ticker, companyName: stockViewModel.stock.name)
         
         if button.isSelected {
             Vibration.light.vibrate()
-            AnalyticsLogger.instance.reportEvents(event: .savedTicker(ticker: self.ticker))
+            AnalyticsLogger.instance.reportEvents(event: .savedTicker(ticker: self.stockViewModel.stock.ticker))
         }
     }
     
@@ -146,7 +184,6 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         notesVC.popoverPresentationController?.delegate = self
         present(navVC, animated: true, completion: nil)
     }
-
 }
 
 extension StockDetailsContainerView: SubscriptionViewControllerDelegate {
@@ -154,15 +191,3 @@ extension StockDetailsContainerView: SubscriptionViewControllerDelegate {
     
     func userDidSignUp() {}    
 }
-
-
-
-
-
-
-
-
-
-
-
-

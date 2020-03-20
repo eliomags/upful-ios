@@ -8,14 +8,14 @@
 
 import Foundation
 
-struct TransactionLoggingManager {
+class TransactionLoggingManager {
     private let transactionLogLoader: TransactionLogLoader
     private let localTransactionLogger: TransactionLogger 
     private let remoteTransactionLogger: TransactionLogger
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionLoggerContextManager.shared) {
+    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
         self.transactionLogLoader = TransactionLogLoader(container: container)
         self.localTransactionLogger = LocalTransactionLogger(container: container)
         self.remoteTransactionLogger = RemoteTransactionLogger()
@@ -29,8 +29,9 @@ struct TransactionLoggingManager {
         transaction.type = type.rawValue
         transaction.transactionDate = Date().asString
         
-//        remoteTransactionLogger.log(transaction, of: type, completion: nil)
-        localTransactionLogger.log(transaction, of: type, completion: completion)
+        remoteTransactionLogger.log(transaction, of: type, completion: { [unowned self] in
+            self.localTransactionLogger.log(transaction, of: type, completion: completion)
+        })
     }
 }
 

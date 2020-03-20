@@ -16,7 +16,7 @@ class MultilineButton: UIView {
     let title: String
     var buttonBackgroundColor = UIColor.clear
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 200, height: 55)
+        return CGSize(width: 55, height: 55)
     }
     
     // MARK: - Views
@@ -30,11 +30,11 @@ class MultilineButton: UIView {
         let v = UIView()
         v.backgroundColor = buttonBackgroundColor
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        v.widthAnchor.constraint(equalToConstant: 45).isActive = true
+        v.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        v.widthAnchor.constraint(equalToConstant: 35).isActive = true
         v.addSubview(buttonImageView)
         buttonImageView.fillSuperview(padding: .init(top: 5, left: 5, bottom: 5, right: 5))
-        v.layer.cornerRadius = 45/2
+        v.layer.cornerRadius = 35/2
         v.layer.masksToBounds = true
         return v
     }()
@@ -53,7 +53,7 @@ class MultilineButton: UIView {
         sv.axis = .vertical
         sv.distribution = .fillProportionally
         sv.alignment = .center
-        sv.spacing = 8
+        sv.spacing = 4
         return sv
     }()
     

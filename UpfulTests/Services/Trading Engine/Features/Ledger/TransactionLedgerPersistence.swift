@@ -115,32 +115,9 @@ class TransactionLedgerPersistenceTests: XCTestCase {
     // MARK: - Fileprivate Methods
     
     fileprivate func makeSUT() {
-        ledgerPersistence = TransactionLedgerPersistence(container: MockTransactionLedgerContextManager.shared)
-        ledgerLoader = LocalTransactionLedgerLoader(container: MockTransactionLedgerContextManager.shared)
+        let mockContainerManager = MockTransactionContainerManager()
+
+        ledgerPersistence = TransactionLedgerPersistence(container: mockContainerManager)
+        ledgerLoader = LocalTransactionLedgerLoader(container: mockContainerManager)
     }
-}
-
-import CoreData
-
-class MockTransactionLedgerContextManager: CoreDataModelContainerManager {
-    static let shared = MockTransactionLedgerContextManager()
-    
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "TransactionLedgerDataModel")
-        let description = NSPersistentStoreDescription()
-        
-        description.type = NSInMemoryStoreType
-        description.shouldAddStoreAsynchronously = false
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        container.persistentStoreDescriptions = [description]
-
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                assertionFailure("Failed to load persistent store: \(error.localizedDescription)")
-            }
-        })
-        return container
-    }()
-    
-    private init() {}
 }

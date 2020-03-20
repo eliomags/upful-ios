@@ -9,6 +9,8 @@
 import UIKit
 
 class CustomRoundButton: UIView {
+    private let imageName: String
+    
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 50, height: 50)
     }
@@ -17,7 +19,7 @@ class CustomRoundButton: UIView {
     }
     
     var buttonImage: UIImage {
-        let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let plusImage = UIImage(systemName: imageName)?.withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
         return plusImage?.resizeImage(20, opaque: false) ?? UIImage()
     }
     
@@ -28,14 +30,15 @@ class CustomRoundButton: UIView {
     
     // MARK: - Initializer Methods
     
-    init() {
+    init(imageName: String) {
+        self.imageName = imageName
         super.init(frame: .zero)
         setupView()
         setupButtonImage()
     }
 
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError()
     }
     
     override func layoutSubviews() {
@@ -47,10 +50,11 @@ class CustomRoundButton: UIView {
     
     private func setupView() {
         layer.masksToBounds = true
-        backgroundColor = buttonColor
+        backgroundColor = VersionManager.collectionCellColor()
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: 50).isActive = true
         widthAnchor.constraint(equalToConstant: 50).isActive = true
+        setupShadow(intensity: .medium, color: .darkGray)
     }
     
     private func setupButtonImage() {

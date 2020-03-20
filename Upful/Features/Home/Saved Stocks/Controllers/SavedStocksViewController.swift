@@ -231,9 +231,7 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if viewModel.state == .loaded {
-            let detailsVC = StockDetailsContainerView(
-                ticker: viewModel.stockViewModels[indexPath.item].stock.ticker,
-                companyName: viewModel.stockViewModels[indexPath.item].stock.name)
+            let detailsVC = StockDetailsContainerView(stockViewModel: viewModel.stockViewModels[indexPath.item])            
             AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .savedStock))
             self.navigationController?.pushViewController(detailsVC, animated: true)
         }

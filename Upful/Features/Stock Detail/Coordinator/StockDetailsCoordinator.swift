@@ -11,18 +11,17 @@ import UIKit
 final class StockDetailsCoordinator: Coordinator {
     typealias StockNameDetails = (ticker: String, companyName: String)
     var presenter: UIViewController
-    private let stockNameDetails: StockNameDetails
+    private let stockViewModel: StockViewModel
     
-    init(presenter: UIViewController, stockNameDetails: StockNameDetails) {
+    init(presenter: UIViewController, stockViewModel: StockViewModel) {
         self.presenter = presenter
-        self.stockNameDetails = stockNameDetails
+        self.stockViewModel = stockViewModel
     }
     
     func start() {
-        AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .preference))
-        RemoteStockManager.updateInterest(for: stockNameDetails.ticker, name: stockNameDetails.companyName)
+        RemoteStockManager.updateInterest(for: stockViewModel.stock.ticker, name: stockViewModel.stock.name)
         
-        let detailsVC = StockDetailsContainerView(ticker: stockNameDetails.ticker, companyName: stockNameDetails.companyName)
+        let detailsVC = StockDetailsContainerView(stockViewModel: stockViewModel)
         presenter.navigationController?.pushViewController(detailsVC, animated: true)
     }
 }

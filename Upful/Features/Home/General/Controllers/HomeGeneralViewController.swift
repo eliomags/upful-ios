@@ -11,8 +11,9 @@ import UIKit
 final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             
     private enum Section: Int {
-        case preference = 1
-        case news = 0
+        case holdings = 0
+        case news = 1
+        case preference = 2
     }
     
     lazy var logicController: HomeGeneralLogicController = {
@@ -120,7 +121,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func setupTableViewCells() {
-        tableView.register(NewsHeaderTableCell.self, forCellReuseIdentifier: "newsHeaderCell")
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: "newsCell")
         tableView.register(CompanyPreviewTableViewCell.self, forCellReuseIdentifier: "resultsCellID")
         tableView.register(NoPreferenceTableViewCell.self, forCellReuseIdentifier: "noPreferenceCellID")
@@ -139,10 +139,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             let preferencePresenter = PreferencePresenter(presentingViewController: self)
             preferencePresenter.present()
         case .loaded:
-            let ticker = logicController.stocksYouMayLike[indexPath.row].ticker
-            let name = logicController.stocksYouMayLike[indexPath.row].name
-            
-            coordinator = StockDetailsCoordinator(presenter: self, stockNameDetails: (ticker, name))
+            coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: StockViewModel(stock: logicController.stocksYouMayLike[indexPath.row]))
             coordinator?.start()
         default:
             break
@@ -208,13 +205,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func makeNewsCells(_ indexPath: IndexPath) -> UITableViewCell {
         let row = indexPath.row
         switch row {
-        case 0:
-            let newsHeaderCell = tableView.dequeueReusableCell(withIdentifier: "newsHeaderCell", for: indexPath) as! NewsHeaderTableCell
-            if !logicController.stockNews.isEmpty {
-                newsHeaderCell.stockNews = logicController.stockNews[indexPath.row]
-            }
-            return newsHeaderCell
-        case 1,2:
+        case 0,1,2:
             let newsCell = tableView.dequeueReusableCell(withIdentifier: "newsCell", for: indexPath) as! SmallNewsCell
             if !logicController.stockNews.isEmpty {
                 newsCell.stockNews = logicController.stockNews[indexPath.row]
@@ -229,7 +220,9 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
 // MARK: - TableView Delegate/Datasource Methods
 
 extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int { return 2 }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
@@ -265,6 +258,12 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch section {
+        case Section.holdings.rawValue:
+            let header = HeaderLabel()
+            let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
+            header.font = UIFont.systemFont(ofSize: size, weight: .black)
+            header.text = "MY HOLDINGS"
+            return header
         case Section.preference.rawValue:
             let preferenceHeader = TableSectionHeaderView()
             preferenceHeader.headerTextLabel.text = "Stocks You May Like"
