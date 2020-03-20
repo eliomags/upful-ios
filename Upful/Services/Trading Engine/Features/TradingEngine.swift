@@ -9,7 +9,6 @@
 import Foundation
 
 final class TradingEngine {
-    
     // MARK: - Dependencies
     
     private let balanceManager: BalanceManager
@@ -99,4 +98,8 @@ final class TradingEngine {
     }
     
     // MARK: - TODO: Validate Sale Attempt
+    
+    func validateSaleAttempt() {
+        
+    }
 }
