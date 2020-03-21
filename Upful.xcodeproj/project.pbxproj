@@ -46,10 +46,11 @@
 		3D206A4624217F7400F7E44C /* RemoteTransactionLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A4524217F7400F7E44C /* RemoteTransactionLogger.swift */; };
 		3D206A48242184BA00F7E44C /* TradingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A47242184BA00F7E44C /* TradingEngine.swift */; };
 		3D206A4A2421898300F7E44C /* TradingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A492421898300F7E44C /* TradingManagerTests.swift */; };
-		3D206A4C242290D600F7E44C /* TradingBalanceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A4B242290D600F7E44C /* TradingBalanceTableViewCell.swift */; };
+		3D206A4C242290D600F7E44C /* TradingBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A4B242290D600F7E44C /* TradingBalanceView.swift */; };
 		3D206A502422998700F7E44C /* CashBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A4F2422998700F7E44C /* CashBalanceView.swift */; };
 		3D206A5224229A9B00F7E44C /* TotalEquityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5124229A9B00F7E44C /* TotalEquityView.swift */; };
 		3D206A5A2423B05500F7E44C /* StockTradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A592423B05500F7E44C /* StockTradeViewController.swift */; };
+		3D206A5C242559AF00F7E44C /* StockHoldingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5B242559AF00F7E44C /* StockHoldingTableViewCell.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -296,10 +297,11 @@
 		3D206A4524217F7400F7E44C /* RemoteTransactionLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTransactionLogger.swift; sourceTree = "<group>"; };
 		3D206A47242184BA00F7E44C /* TradingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradingEngine.swift; sourceTree = "<group>"; };
 		3D206A492421898300F7E44C /* TradingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradingManagerTests.swift; sourceTree = "<group>"; };
-		3D206A4B242290D600F7E44C /* TradingBalanceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradingBalanceTableViewCell.swift; sourceTree = "<group>"; };
+		3D206A4B242290D600F7E44C /* TradingBalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradingBalanceView.swift; sourceTree = "<group>"; };
 		3D206A4F2422998700F7E44C /* CashBalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashBalanceView.swift; sourceTree = "<group>"; };
 		3D206A5124229A9B00F7E44C /* TotalEquityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalEquityView.swift; sourceTree = "<group>"; };
 		3D206A592423B05500F7E44C /* StockTradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTradeViewController.swift; sourceTree = "<group>"; };
+		3D206A5B242559AF00F7E44C /* StockHoldingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockHoldingTableViewCell.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -769,14 +771,14 @@
 			path = Remote;
 			sourceTree = "<group>";
 		};
-		3D206A4D2422952000F7E44C /* Trading */ = {
+		3D206A4D2422952000F7E44C /* Trading Header */ = {
 			isa = PBXGroup;
 			children = (
-				3D206A4B242290D600F7E44C /* TradingBalanceTableViewCell.swift */,
+				3D206A4B242290D600F7E44C /* TradingBalanceView.swift */,
 				3D206A4F2422998700F7E44C /* CashBalanceView.swift */,
 				3D206A5124229A9B00F7E44C /* TotalEquityView.swift */,
 			);
-			path = Trading;
+			path = "Trading Header";
 			sourceTree = "<group>";
 		};
 		3D206A4E2422954000F7E44C /* News */ = {
@@ -813,6 +815,14 @@
 			children = (
 			);
 			path = "View Models";
+			sourceTree = "<group>";
+		};
+		3D206A5D24264F2C00F7E44C /* Holdings */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A5B242559AF00F7E44C /* StockHoldingTableViewCell.swift */,
+			);
+			path = Holdings;
 			sourceTree = "<group>";
 		};
 		3D20EB7C2357963C00D1093A /* Controller */ = {
@@ -1740,7 +1750,8 @@
 		3DBEFFD323AACE6A00BA407E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3D206A4D2422952000F7E44C /* Trading */,
+				3D206A4D2422952000F7E44C /* Trading Header */,
+				3D206A5D24264F2C00F7E44C /* Holdings */,
 				3D206A4E2422954000F7E44C /* News */,
 				3D3749B323BBAD8A000D0597 /* Preference */,
 				3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */,
@@ -2357,6 +2368,7 @@
 				3D3749B523BBADB1000D0597 /* NoPreferenceTableViewCell.swift in Sources */,
 				3D6B07202415C99400C55021 /* AuxiliaryActionView.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
+				3D206A5C242559AF00F7E44C /* StockHoldingTableViewCell.swift in Sources */,
 				3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift.swift in Sources */,
 				3DF734CC2402DDFD00B297A4 /* StockOverviewViewModel.swift in Sources */,
 				3D6B01CB23D2839A007A2F19 /* SubscriptionHeaderView.swift in Sources */,
@@ -2379,7 +2391,7 @@
 				3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */,
 				3DF734C62400E5D300B297A4 /* StockDescriptionCell.swift in Sources */,
 				3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */,
-				3D206A4C242290D600F7E44C /* TradingBalanceTableViewCell.swift in Sources */,
+				3D206A4C242290D600F7E44C /* TradingBalanceView.swift in Sources */,
 				3D7C855523380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift in Sources */,
 				3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */,
 				3D562C8D235F248E00837B2F /* SubscriptionLogicController.swift in Sources */,

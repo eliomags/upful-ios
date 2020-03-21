@@ -14,7 +14,6 @@ class HomeGeneralLogicController {
     
     private let preferenceDataManager: PreferenceDataManager
     private let stockScreeningService: StockScreener
-    private let stockQuoteLoader: QuoteLoader
     private let savedStockDataManager: LocalStockDataLoaderProtocol
     private let stockNewsLoader: NewsLoaderProtocol
     
@@ -27,49 +26,112 @@ class HomeGeneralLogicController {
         case error
     }
     
-    private(set) var stocksYouMayLike: [Stock] = []
+    private(set) var stocksYouMayLike: [StockViewModel] = []
     private(set) var preferenceState: PreferenceState = .loading {
         didSet {
             sendPreferenceStateUpdates?(preferenceState)
         }
     }
     private(set) var stockNews: [StockNewsViewModel] = []
+    
+    // MARK: - Configuration
 
     var sendPreferenceStateUpdates: ((PreferenceState) -> Void)?
-    var sendNewsStateUpdates: (() -> Void)?
+    var completionHandler: (() -> Void)?
     
     // MARK: - Initializer
     
     init(savedStockDataManager: LocalStockDataLoaderProtocol = LocalStockLoader(),
          preferenceDataManager: PreferenceDataManager = .init(),
          stockScreeningService: StockScreener = StockScreeningService(),
-         stockQuoteLoader: QuoteLoader = StockPriceLoader(),
-         stockNewsLoader: NewsLoaderProtocol = NewsLoader()) {
+         stockNewsLoader: NewsLoaderProtocol = NewsLoader()
+    ) {
         self.preferenceDataManager = preferenceDataManager
         self.savedStockDataManager = savedStockDataManager
         self.stockScreeningService = stockScreeningService
         self.stockNewsLoader = stockNewsLoader
-        self.stockQuoteLoader = stockQuoteLoader
-    }
-    
-    // MARK: - Handle State Changes
-    
-    fileprivate func handlePreferenceStateChange() {
-        switch preferenceState {
-        case .loaded:
-            sendPreferenceStateUpdates?(preferenceState)
-        default:
-            sendPreferenceStateUpdates?(preferenceState)
-        }
     }
     
     // MARK: - API Methods
     
+    let preferenceFetchGroup = DispatchGroup()
+
     func fetchTableData() {
-        startPreferenceLoad()
+        loadHoldings()
         startNewsLoad()
+        startPreferenceLoad()
     }
     
+    // MARK: - Holdings Loading
+    
+    private let tradingEngine = TradingEngine()
+    private(set) var holdings = [TransactionDataType]()
+    
+    func loadHoldings() {
+        tradingEngine.loadLedgerTransactions { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let currentHoldings):
+                self.holdings = currentHoldings
+            case .failure(_):
+                assertionFailure("Error loading ledger transactions.")
+            }
+            self.completionHandler?()
+        }
+    }
+    
+    // MARK: - News Loading
+        
+    func startNewsLoad() {
+        savedStockDataManager.loadSavedStocks { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let savedStocks):
+                self.loadNews(savedStocks)
+            case .failure(_):
+                self.getGeneralMarketNews()
+            }
+        }
+    }
+        
+    fileprivate func loadNews(_ savedStocks: [Stock]) {
+        if !savedStocks.isEmpty { getNewsForTickers(savedStocks)  }
+        if savedStocks.isEmpty { getGeneralMarketNews() }
+    }
+    
+    fileprivate func getGeneralMarketNews() {
+        stockNewsLoader.get(router: .getMarketNews) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case.success(let news):
+                self.handleNewsFetchCompletion(news: news)
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
+    
+    fileprivate func getNewsForTickers(_ savedStocks: [Stock])  {
+        let stocks = savedStocks.map({ $0.ticker }).joined(separator: ",")
+        stockNewsLoader.get(router: .getTickerNews(tickers: stocks)) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let news):
+                self.handleNewsFetchCompletion(news: news)
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
+    
+    fileprivate func handleNewsFetchCompletion(news: [StockNews]) {
+        let mappedNews = news.map { StockNewsViewModel(stockNews: $0) }
+        self.stockNews = mappedNews
+        completionHandler?()
+    }
+    
+    // MARK: - Stock Preference Loading
+
     /*
      Gets a random combination of search parameters to perform search for Show More
      */
@@ -80,11 +142,7 @@ class HomeGeneralLogicController {
         let randomElement = Int.random(in: 0...(groupedPreferences.count-1))
         return groupedPreferences[randomElement]
     }
-    
-    // MARK: - Stock Preference Loading
-        
-    let preferenceFetchGroup = DispatchGroup()
-    
+            
     func startPreferenceLoad() {
         preferenceState = .loading
         let groupedPreferences = preferenceDataManager.getGroupedPreferences()
@@ -101,19 +159,12 @@ class HomeGeneralLogicController {
             self.preferenceState = .loaded
             
             DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
-                self.stocksYouMayLike.forEach { self.loadStockQuote(for: $0) }
-            }
-        }
-    }
-    
-    fileprivate func loadStockQuote(for stock: Stock) {
-        stockQuoteLoader.load(for: stock.ticker) { (result) in
-            switch result {
-            case .success(let quote):
-                stock.stockQuote = quote
-                DispatchQueue.main.async { self.preferenceState = .loaded }
-            case .failure(_):
-                break
+                self.stocksYouMayLike.forEach {
+                    $0.updateHandler = { [weak self] in
+                        DispatchQueue.main.async { self?.preferenceState = .loaded }
+                    }
+                    $0.loadQuoteData()
+                }
             }
         }
     }
@@ -126,7 +177,8 @@ class HomeGeneralLogicController {
             (result) in
             switch result {
             case .success(let fetchedStocks):
-                self.handlePreferenceFetchSuccess(with: fetchedStocks)
+                let stockViewModels = fetchedStocks.map({ StockViewModel(stock: $0)})
+                self.handlePreferenceFetchSuccess(with: stockViewModels)
             case .failure(_):
                 self.preferenceState = .error
             }
@@ -134,67 +186,25 @@ class HomeGeneralLogicController {
         })
     }
     
-    fileprivate func randomizeSuggestedStocks(stocks: [Stock]) -> [Stock] {
+    fileprivate func randomizeSuggestedStocks(stocks: [StockViewModel]) -> [StockViewModel] {
         var duplicateStocks = stocks
         duplicateStocks.removeDuplicates()
         if duplicateStocks.count > 3 { duplicateStocks = Array(duplicateStocks[0...2]) }
         return duplicateStocks
     }
     
-    fileprivate func handlePreferenceFetchSuccess(with fetchedStocks: [Stock]) {
+    fileprivate func handlePreferenceFetchSuccess(with fetchedStocks: [StockViewModel]) {
         if self.preferenceState == .error { return }
         if fetchedStocks.isEmpty {
             self.fetchSuggestedStocks(parameters: "")
         } else {
-            fetchedStocks.forEach { loadStockQuote(for: $0) }
+            fetchedStocks.forEach {
+                $0.updateHandler = { [weak self] in
+                    DispatchQueue.main.async { self?.preferenceState = .loaded }
+                }
+                $0.loadQuoteData()
+            }
             stocksYouMayLike = randomizeSuggestedStocks(stocks: fetchedStocks)
         }
-    }
-    
-    // MARK: - News Loading
-        
-    func startNewsLoad() {
-        savedStockDataManager.loadSavedStocks { (result) in
-            switch result {
-            case .success(let savedStocks):
-                self.loadNews(savedStocks)
-            case .failure(_):
-                self.getGeneralMarketNews()
-            }
-        }
-    }
-        
-    fileprivate func loadNews(_ savedStocks: [Stock]) {
-        if !savedStocks.isEmpty { getNewsForTickers(savedStocks)  }
-        if savedStocks.isEmpty { getGeneralMarketNews() }
-    }
-    
-    fileprivate func getGeneralMarketNews() {
-        stockNewsLoader.get(router: .getMarketNews) { (result) in
-            switch result {
-            case.success(let news):
-                self.handleNewsFetchCompletion(news: news)
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
-        }
-    }
-    
-    fileprivate func getNewsForTickers(_ savedStocks: [Stock])  {
-        let stocks = savedStocks.map({ $0.ticker }).joined(separator: ",")
-        stockNewsLoader.get(router: .getTickerNews(tickers: stocks)) { (result) in
-            switch result {
-            case .success(let news):
-                self.handleNewsFetchCompletion(news: news)
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
-        }
-    }
-    
-    fileprivate func handleNewsFetchCompletion(news: [StockNews]) {
-        let mappedNews = news.map { StockNewsViewModel(stockNews: $0) }
-        self.stockNews = mappedNews
-        sendNewsStateUpdates?()
     }
 }

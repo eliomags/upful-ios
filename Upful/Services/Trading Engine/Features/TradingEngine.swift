@@ -9,6 +9,7 @@
 import Foundation
 
 final class TradingEngine {
+    
     // MARK: - Dependencies
     
     private let balanceManager: BalanceManager

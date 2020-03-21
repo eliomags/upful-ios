@@ -16,6 +16,13 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         case preference = 2
     }
     
+    private enum Constants {
+        static let newsCellID = "newsCellID"
+        static let resultsCellID = "resultsCellID"
+        static let noPreferenceCellID = "noPreferenceCellID"
+        static let stockHoldingCellID = "stockHoldingCellID"
+    }
+    
     lazy var logicController: HomeGeneralLogicController = {
         let vm = HomeGeneralLogicController()
         return vm
@@ -102,7 +109,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func observeViewModelNewsUpdates() {
-        logicController.sendNewsStateUpdates = { [weak self] in
+        logicController.completionHandler = { [weak self] in
             guard let self = self else { return }
             self.tableView.reloadSections([Section.news.rawValue], with: .automatic)
             self.refreshControl.endRefreshing()
@@ -121,9 +128,10 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func setupTableViewCells() {
-        tableView.register(SmallNewsCell.self, forCellReuseIdentifier: "newsCell")
-        tableView.register(CompanyPreviewTableViewCell.self, forCellReuseIdentifier: "resultsCellID")
-        tableView.register(NoPreferenceTableViewCell.self, forCellReuseIdentifier: "noPreferenceCellID")
+        tableView.register(SmallNewsCell.self, forCellReuseIdentifier: Constants.newsCellID)
+        tableView.register(CompanyPreviewTableViewCell.self, forCellReuseIdentifier: Constants.resultsCellID)
+        tableView.register(NoPreferenceTableViewCell.self, forCellReuseIdentifier: Constants.noPreferenceCellID)
+        tableView.register(StockHoldingTableViewCell.self, forCellReuseIdentifier: Constants.stockHoldingCellID)
     }
     
     // MARK: - Actions
@@ -139,7 +147,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             let preferencePresenter = PreferencePresenter(presentingViewController: self)
             preferencePresenter.present()
         case .loaded:
-            coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: StockViewModel(stock: logicController.stocksYouMayLike[indexPath.row]))
+            coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: logicController.stocksYouMayLike[indexPath.row])
             coordinator?.start()
         default:
             break
@@ -172,41 +180,50 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     // MARK: - TableView Cells
     
+    fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
+        guard let stockHoldingsCell = tableView.dequeueReusableCell(withIdentifier: Constants.stockHoldingCellID, for: indexPath)
+            as? StockHoldingTableViewCell else { return UITableViewCell() }
+        
+        return stockHoldingsCell
+    }
+    
     fileprivate func makeNoPreferenceSetCell(_ indexPath: IndexPath) -> UITableViewCell {
-        guard let noPreferenceSetCell = tableView.dequeueReusableCell(withIdentifier: "noPreferenceCellID") as? NoPreferenceTableViewCell else { return UITableViewCell() }
+        guard let noPreferenceSetCell = tableView.dequeueReusableCell(withIdentifier: Constants.noPreferenceCellID)
+            as? NoPreferenceTableViewCell else { return UITableViewCell() }
         noPreferenceSetCell.selectionStyle = .none
         noPreferenceSetCell.backgroundColor = .clear
         return noPreferenceSetCell
     }
     
     fileprivate func makeStockCells(_ indexPath: IndexPath) -> UITableViewCell {
-        guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: "resultsCellID") as? CompanyPreviewTableViewCell else { return UITableViewCell() }
+        guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: Constants.resultsCellID) as? CompanyPreviewTableViewCell else { return UITableViewCell() }
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
 
         if logicController.preferenceState == .loaded  && !logicController.stocksYouMayLike.isEmpty {
-            let stock = logicController.stocksYouMayLike[indexPath.row]
-            loadedCell.companyTickerLabel.text = stock.ticker
-            loadedCell.companyNameLabel.text = stock.name
-            loadedCell.marketcapStackView.valueLabel.text = "$\(stock.marketcap?.formatUsingAbbreviation() ?? " -")"
-            loadedCell.pricetoearningsStackView.valueLabel.text = "\(stock.pricetoearnings?.twoDecimal() ?? "-")"
-            loadedCell.quoteView.priceLabel.text = "$\(stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
-            loadedCell.quoteView.priceChangeLabel.text = "\(stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
+            let stockViewModel = logicController.stocksYouMayLike[indexPath.row]
+            loadedCell.companyTickerLabel.text = stockViewModel.stock.ticker
+            loadedCell.companyNameLabel.text = stockViewModel.stock.name
+            loadedCell.marketcapStackView.valueLabel.text = "$\(stockViewModel.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
+            loadedCell.pricetoearningsStackView.valueLabel.text = "\(stockViewModel.stock.pricetoearnings?.twoDecimal() ?? "-")"
+            loadedCell.quoteView.priceLabel.text = "$\(stockViewModel.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
+            loadedCell.quoteView.priceChangeLabel.text = "\(stockViewModel.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
             
-            if stock.stockQuote?.changePercent ?? 0 > 0 {
+            if stockViewModel.stock.stockQuote?.changePercent ?? 0 > 0 {
                 loadedCell.quoteView.setPositive()
-            } else if stock.stockQuote?.changePercent ?? 0 < 0 {
+            } else if stockViewModel.stock.stockQuote?.changePercent ?? 0 < 0 {
                 loadedCell.quoteView.setNegative()
             }
         }
+        
         return loadedCell
     }
     
-    fileprivate func makeNewsCells(_ indexPath: IndexPath) -> UITableViewCell {
+    fileprivate func makeNewsCells(at indexPath: IndexPath) -> UITableViewCell {
         let row = indexPath.row
         switch row {
         case 0,1,2:
-            let newsCell = tableView.dequeueReusableCell(withIdentifier: "newsCell", for: indexPath) as! SmallNewsCell
+            let newsCell = tableView.dequeueReusableCell(withIdentifier: Constants.newsCellID, for: indexPath) as! SmallNewsCell
             if !logicController.stockNews.isEmpty {
                 newsCell.stockNews = logicController.stockNews[indexPath.row]
             }
@@ -226,14 +243,21 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case Section.preference.rawValue:
-            let isLoadedState = logicController.preferenceState == .loaded
-            let isNewState = logicController.preferenceState == .new
-            if isNewState { return 1 }
-            if isLoadedState { return logicController.stocksYouMayLike.count }
-            else { return 0 }
+        case Section.holdings.rawValue:
+            return logicController.holdings.count
+            
         case Section.news.rawValue:
             return 3
+            
+        case Section.preference.rawValue:
+            let isLoadedState = logicController.preferenceState == .loaded
+            let isNew = logicController.preferenceState == .new
+            if isNew { return 1 }
+            if isLoadedState {
+                return logicController.stocksYouMayLike.count
+            } else {
+                return 0
+            }
         default:
             return 1
         }
@@ -242,12 +266,18 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         switch section {
+        case Section.holdings.rawValue:
+            return makeHoldingsCell(at: indexPath)
+            
         case Section.news.rawValue:
-            return makeNewsCells(indexPath)
+            return makeNewsCells(at: indexPath)
+            
         case Section.preference.rawValue:
             if logicController.preferenceState == .loaded { return makeStockCells(indexPath) }
             if logicController.preferenceState == .new { return makeNoPreferenceSetCell(indexPath) }
-        default: return UITableViewCell()
+            
+        default:
+            return UITableViewCell()
         }
         return UITableViewCell()
     }
@@ -264,6 +294,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             header.font = UIFont.systemFont(ofSize: size, weight: .black)
             header.text = "MY HOLDINGS"
             return header
+            
         case Section.preference.rawValue:
             let preferenceHeader = TableSectionHeaderView()
             preferenceHeader.headerTextLabel.text = "Stocks You May Like"
@@ -279,6 +310,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
                 self.coordinator?.start()
             }
             return preferenceHeader
+            
         case Section.news.rawValue:
             let newsHeader = TableSectionHeaderView()
             newsHeader.headerTextLabel.text = "Recent News"
@@ -300,11 +332,9 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         switch section {
-        case Section.news.rawValue:
-            return 15
         case Section.preference.rawValue:
             return 100
-        default: return 0
+        default: return 15
         }
     }
     
@@ -336,6 +366,9 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = indexPath.section
         switch section {
+        case Section.holdings.rawValue:
+            // TODO: - Navigate to stock details
+            break
         case Section.preference.rawValue:
             handleStockSuggestionCellSelection(for: indexPath)
         case Section.news.rawValue:
