@@ -32,7 +32,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
 
     // MARK: - Views
     
-    lazy var headerView: HomeFeedAuxiliaryActionView = {
+    private lazy var headerView: HomeFeedAuxiliaryActionView = {
         let view = HomeFeedAuxiliaryActionView()
         view.preferenceButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleEditPreferenceTap)))
         view.suggestionButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSendSuggestionsTap)))
@@ -41,7 +41,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         return view
     }()
     
-    let tradingBalanceView = TradingBalanceView()
+    private let tradingBalanceView = TradingBalanceView()
     
     private lazy var refreshControl: UIRefreshControl = {
         let control = UIRefreshControl()
@@ -80,6 +80,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         super.viewDidLoad()
         observeViewModelNewsUpdates()
         observeViewModelPreferenceUpdates()
+        observeViewModelHoldingsUpdates()
         logicController.fetchTableData()
     }
     
@@ -93,6 +94,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     // MARK: - View Model Binding
 
+    fileprivate func observeViewModelHoldingsUpdates() {
+        logicController.holdingsLoadCompletion = { [weak self] in
+            guard let self = self else { return }
+            self.tableView.reloadSections([Section.holdings.rawValue], with: .automatic)
+            self.refreshControl.endRefreshing()
+        }
+    }
+    
     fileprivate func observeViewModelPreferenceUpdates() {
         logicController.sendPreferenceStateUpdates = { [weak self] (state) in
             guard let self = self else { return }
@@ -109,7 +118,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func observeViewModelNewsUpdates() {
-        logicController.completionHandler = { [weak self] in
+        logicController.newsLoadCompletion = { [weak self] in
             guard let self = self else { return }
             self.tableView.reloadSections([Section.news.rawValue], with: .automatic)
             self.refreshControl.endRefreshing()
@@ -183,6 +192,11 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
         guard let stockHoldingsCell = tableView.dequeueReusableCell(withIdentifier: Constants.stockHoldingCellID, for: indexPath)
             as? StockHoldingTableViewCell else { return UITableViewCell() }
+        let holding = logicController.holdings[indexPath.row]
+        stockHoldingsCell.tickerLabel.text = holding.ticker
+        stockHoldingsCell.numberOfSharesLabel.text = "\(holding.numberOfShares) shares"
+        stockHoldingsCell.currentPriceLabel.text = "$\(holding.currentPrice)"
+        stockHoldingsCell.averagePriceLabel.text = "$\(holding.averagePrice)"
         
         return stockHoldingsCell
     }

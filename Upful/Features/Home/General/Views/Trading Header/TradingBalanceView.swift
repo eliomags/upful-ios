@@ -41,7 +41,11 @@ final class TradingBalanceView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(contentStackView)
-        contentStackView.fillSuperview(padding: .init(top: 16, left: 16, bottom: 16, right: 16))
+        contentStackView.anchor(top: layoutMarginsGuide.topAnchor,
+                                leading: layoutMarginsGuide.leadingAnchor,
+                                bottom: layoutMarginsGuide.bottomAnchor,
+                                trailing: layoutMarginsGuide.trailingAnchor,
+                                padding: .init(top: 16, left: 8, bottom: 16, right: 8))
     }
     
     required init?(coder: NSCoder) {

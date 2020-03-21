@@ -35,9 +35,10 @@ class HomeGeneralLogicController {
     private(set) var stockNews: [StockNewsViewModel] = []
     
     // MARK: - Configuration
-
+    
+    var holdingsLoadCompletion: (() -> Void)?
     var sendPreferenceStateUpdates: ((PreferenceState) -> Void)?
-    var completionHandler: (() -> Void)?
+    var newsLoadCompletion: (() -> Void)?
     
     // MARK: - Initializer
     
@@ -54,8 +55,6 @@ class HomeGeneralLogicController {
     
     // MARK: - API Methods
     
-    let preferenceFetchGroup = DispatchGroup()
-
     func fetchTableData() {
         loadHoldings()
         startNewsLoad()
@@ -76,7 +75,7 @@ class HomeGeneralLogicController {
             case .failure(_):
                 assertionFailure("Error loading ledger transactions.")
             }
-            self.completionHandler?()
+            self.holdingsLoadCompletion?()
         }
     }
     
@@ -127,7 +126,7 @@ class HomeGeneralLogicController {
     fileprivate func handleNewsFetchCompletion(news: [StockNews]) {
         let mappedNews = news.map { StockNewsViewModel(stockNews: $0) }
         self.stockNews = mappedNews
-        completionHandler?()
+        newsLoadCompletion?()
     }
     
     // MARK: - Stock Preference Loading
@@ -142,7 +141,9 @@ class HomeGeneralLogicController {
         let randomElement = Int.random(in: 0...(groupedPreferences.count-1))
         return groupedPreferences[randomElement]
     }
-            
+        
+    let preferenceFetchGroup = DispatchGroup()
+    
     func startPreferenceLoad() {
         preferenceState = .loading
         let groupedPreferences = preferenceDataManager.getGroupedPreferences()

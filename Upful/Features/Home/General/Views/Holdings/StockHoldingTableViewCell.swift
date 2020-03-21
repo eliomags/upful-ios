@@ -9,10 +9,104 @@
 import UIKit
 
 class StockHoldingTableViewCell: UITableViewCell {
+
+    // MARK: - Intiailizer
+
+    let tickerLabel: UILabel = {
+        let label = UILabel()
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        label.text = "FB"
+        label.textAlignment = .center
+        return label
+    }()
     
+    let numberOfSharesLabel: UILabel = {
+        let label = UILabel()
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        label.text = "5 shares"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private lazy var descriptionStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [tickerLabel, numberOfSharesLabel])
+        sv.axis = .vertical
+        sv.spacing = 6
+        return sv
+    }()
+    
+    
+    
+    let currentPriceLabel: UILabel = {
+       let label = UILabel()
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        label.text = "$150.92"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let averagePriceLabel: UILabel = {
+       let label = UILabel()
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        label.text = "$135.92"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private lazy var priceDescriptionLabel: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [currentPriceLabel, averagePriceLabel])
+        sv.axis = .vertical
+        sv.spacing = 6
+        return sv
+    }()
+    
+    
+    let dollarChangeLabel: UILabel = {
+       let label = UILabel()
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        label.text = "$65.92"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let percentChangeLabel: UILabel = {
+        let label = UILabel()
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        label.text = "2.32%"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private lazy var priceChangeStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [dollarChangeLabel, percentChangeLabel])
+        sv.axis = .vertical
+        sv.spacing = 6
+        return sv
+    }()
+    
+    private lazy var contentStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [descriptionStackView, priceDescriptionLabel, priceChangeStackView])
+        sv.axis = .horizontal
+        sv.distribution = .equalCentering
+        sv.spacing = 6
+        return sv
+    }()
+    
+    // MARK: - Intiailizer
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        addSubview(contentStackView)
+        contentStackView.anchor(top: layoutMarginsGuide.topAnchor,
+                                    leading: layoutMarginsGuide.leadingAnchor,
+                                    bottom: layoutMarginsGuide.bottomAnchor,
+                                    trailing: layoutMarginsGuide.trailingAnchor)
     }
     
     required init?(coder: NSCoder) {
