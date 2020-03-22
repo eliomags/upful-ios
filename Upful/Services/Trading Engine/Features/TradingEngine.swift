@@ -73,6 +73,7 @@ final class TradingEngine {
     
     func update(with transactions: [Transaction], completion: (() -> Void)? = nil) {
         ledgerManager.handlePriceUpdates(transactions, completion: { totalDollarMovement in
+            print(totalDollarMovement)
             self.balanceManager.handleEquityUpdate(with: totalDollarMovement)
             
             self.handleEquityUpdate?(self.balanceManager.totalEquityBalance,

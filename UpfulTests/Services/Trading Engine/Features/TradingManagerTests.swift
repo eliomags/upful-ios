@@ -128,7 +128,7 @@ class TradingEngineTests: XCTestCase {
         /*
          After the buy transaction, to simulate the price of the stock being updated,
         */
-        sut.handleBuyCompletion = { (equity, cash) in
+        sut.handleBuyCompletion = { [unowned self] (equity, cash) in
             XCTAssertEqual(equity, 25_000)
             XCTAssertEqual(cash, 24_000)
             

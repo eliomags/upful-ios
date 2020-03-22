@@ -46,47 +46,6 @@ class TransactionLedgerPersistenceTests: XCTestCase {
         wait(for: [loadExpectation], timeout: 1)
     }
     
-    func testSaveAndDeleteWithFetch() {
-        // Save
-        let transaction1 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 1)
-        let transaction2 = TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 1, currentPrice: 1)
-        let loadExpectation = expectation(description: #function)
-        loadExpectation.expectedFulfillmentCount = 2
-        
-        ledgerPersistence.save(transaction1, completion: { [unowned self] in
-            self.ledgerPersistence.save(transaction2, completion: { [unowned self] in
-                self.ledgerLoader.load { (result) in
-                    switch result {
-                    case .success(let savedTransactions):
-                        XCTAssertEqual(savedTransactions.count, 2)
-                        XCTAssertEqual(savedTransactions.map { $0.ticker }.sorted(), ["AAPL", "FB"])
-                    case .failure(let err):
-                        assertionFailure("Failed loading saved transactions\(#line), \(err.localizedDescription)")
-                    }
-                    loadExpectation.fulfill()
-                    
-                    // Delete
-                    let transaction3 = TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 1, currentPrice: 1)
-
-                    self.ledgerPersistence.delete(transaction3, completion: { [unowned self] in
-                        self.ledgerLoader.load { (result) in
-                            switch result {
-                            case .success(let savedTransactions):
-                                XCTAssertEqual(savedTransactions.count, 1)
-                                XCTAssertEqual(savedTransactions.map { $0.ticker }, ["FB"])
-                            case .failure(let err):
-                                assertionFailure("Failed loading saved transactions\(#line), \(err.localizedDescription)")
-                            }
-                            loadExpectation.fulfill()
-                        }
-                    })
-                }
-            })
-        })
-        
-        wait(for: [loadExpectation], timeout: 1)
-    }
-    
     func testLoadPrevious() {
         let transaction1 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 1)
         let transaction2 = TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 1, currentPrice: 1)

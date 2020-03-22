@@ -59,7 +59,7 @@ class BalanceManager {
     }
     
     func handleEquityUpdate(with value: Double) {
-        totalEquityBalance = currentCashBalance + value
+        totalEquityBalance += value
 
         saveBalance()
     }
