@@ -376,7 +376,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         switch section {
         case Section.preference.rawValue:
             return 100
-        default: return 15
+        default: return 30
         }
     }
     

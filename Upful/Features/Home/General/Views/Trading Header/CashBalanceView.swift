@@ -42,7 +42,7 @@ final class CashBalanceView: UIView {
     private lazy var contentBackgroundView: UIView = {
         let view = UIView()
         view.addSubview(cashStackView)
-        cashStackView.fillSuperview(padding: .init(top: 8, left: 8, bottom: 8, right: 8))
+        cashStackView.fillSuperview(padding: .init(top: 8, left: 12, bottom: 8, right: 12))
         view.backgroundColor = .appAccent2
         view.layer.cornerRadius = 8
         view.layer.masksToBounds = true

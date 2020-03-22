@@ -45,7 +45,7 @@ final class TradingBalanceView: UIView {
                                 leading: layoutMarginsGuide.leadingAnchor,
                                 bottom: layoutMarginsGuide.bottomAnchor,
                                 trailing: layoutMarginsGuide.trailingAnchor,
-                                padding: .init(top: 16, left: 8, bottom: 16, right: 8))
+                                padding: .init(top: 16, left: 8, bottom: 24, right: 8))
     }
     
     required init?(coder: NSCoder) {
