@@ -18,12 +18,12 @@ class PersistedTransaction: NSManagedObject {
 
     @NSManaged public var ticker: String
     @NSManaged public var numberOfShares: Int32
-    @NSManaged public var averagePrice: Double
+    @NSManaged public var tradePrice: Double
     @NSManaged public var currentPrice: Double
     @NSManaged public var type: String?
     @NSManaged public var transactionDate: String?
 }
-extension PersistedTransaction: TransactionDataType {}
+extension PersistedTransaction: Transaction {}
 
 
 @objc(LoggedTransaction)
@@ -35,9 +35,9 @@ class LoggedTransaction: NSManagedObject {
 
     @NSManaged public var ticker: String
     @NSManaged public var numberOfShares: Int32
-    @NSManaged public var averagePrice: Double
+    @NSManaged public var tradePrice: Double
     @NSManaged public var currentPrice: Double
     @NSManaged public var type: String?
     @NSManaged public var transactionDate: String?
 }
-extension LoggedTransaction: TransactionDataType {}
+extension LoggedTransaction: Transaction {}

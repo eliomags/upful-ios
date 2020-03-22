@@ -44,10 +44,10 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         return button
     }()
     
-    let tradingEngine = TradingEngine()
+    let tradingEngine = TradingEngine.shared
     
     @objc fileprivate func handleTradeTap() {
-        tradingEngine.buy(transaction: Transaction(stock: stockViewModel.stock, numberOfShares: 5))
+        tradingEngine.buy(transaction: TransactionViewModel(stock: stockViewModel.stock, numberOfShares: 5))
 //        tradingEngine.sell(transaction: Transaction(stock: stockViewModel.stock, numberOfShares: 5))
     }
     

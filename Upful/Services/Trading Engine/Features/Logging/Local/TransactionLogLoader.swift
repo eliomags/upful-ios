@@ -22,7 +22,7 @@ final class TransactionLogLoader {
 }
 
 extension TransactionLogLoader: TransactionLoader {    
-    func load(completion: @escaping (Result<[TransactionDataType], Error>) -> Void) {
+    func load(completion: @escaping (Result<[Transaction], Error>) -> Void) {
         let request = LoggedTransaction.createFetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "transactionDate", ascending: false)
         request.sortDescriptors = [sortDescriptor]

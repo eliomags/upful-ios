@@ -9,5 +9,5 @@
 import Foundation
 
 protocol TransactionLoader {
-    func load(completion: @escaping (Result<[TransactionDataType], Error>)-> Void)
+    func load(completion: @escaping (Result<[Transaction], Error>)-> Void)
 }

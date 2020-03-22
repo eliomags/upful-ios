@@ -8,29 +8,32 @@
 
 import Foundation
 
-class Transaction {
+class TransactionViewModel {
     var ticker: String
     var numberOfShares: Int32
-    var averagePrice: Double
+    var tradePrice: Double
     var currentPrice: Double
     var type: String?
     var transactionDate: String?
 
-    var change: Double {
-        return ((currentPrice / averagePrice) - 1) * 100
+    var valueChange: String {
+        return "$" + ((currentPrice - tradePrice) * Double(numberOfShares)).roundToTwoDecimal()
+    }
+    var percentChange: String {
+        return (((currentPrice / tradePrice) - 1) * 100).roundToTwoDecimal() + "%"
     }
 
-    init(ticker: String, shares: Int32, averagePrice: Double, currentPrice: Double) {
+    init(ticker: String, shares: Int32, tradePrice: Double, currentPrice: Double) {
         self.ticker = ticker
         self.numberOfShares = shares
-        self.averagePrice = averagePrice
+        self.tradePrice = tradePrice
         self.currentPrice = currentPrice
     }
     
-    init(transaction: TransactionDataType) {
+    init(transaction: Transaction) {
         self.ticker = transaction.ticker
         self.numberOfShares = transaction.numberOfShares
-        self.averagePrice = transaction.averagePrice
+        self.tradePrice = transaction.tradePrice
         self.currentPrice = transaction.currentPrice
         self.type = transaction.type
     }
@@ -38,9 +41,9 @@ class Transaction {
     init(stock: Stock, numberOfShares: Int32) {
        self.ticker = stock.ticker
        self.numberOfShares = numberOfShares
-       self.averagePrice = stock.stockQuote?.latestPrice ?? 0
+       self.tradePrice = stock.stockQuote?.latestPrice ?? 0
        self.currentPrice = stock.stockQuote?.latestPrice ?? 0
    }
 }
 
-extension Transaction: TransactionDataType {}
+extension TransactionViewModel: Transaction {}

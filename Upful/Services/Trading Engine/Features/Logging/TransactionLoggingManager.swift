@@ -21,11 +21,11 @@ class TransactionLoggingManager {
         self.remoteTransactionLogger = RemoteTransactionLogger()
     }
     
-    func load(completion: @escaping (Result<[TransactionDataType], Error>) -> Void) {
+    func load(completion: @escaping (Result<[Transaction], Error>) -> Void) {
         transactionLogLoader.load(completion: completion)
     }
     
-    func log(_ transaction: TransactionDataType, of type: TransactionType, completion: (() -> Void)?) {
+    func log(_ transaction: Transaction, of type: TransactionType, completion: (() -> Void)?) {
         transaction.type = type.rawValue
         transaction.transactionDate = Date().asString
         

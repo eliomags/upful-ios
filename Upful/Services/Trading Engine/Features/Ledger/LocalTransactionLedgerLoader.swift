@@ -22,7 +22,7 @@ final class LocalTransactionLedgerLoader: TransactionLoader {
     
     // MARK: - Methods
     
-    func load(completion: @escaping (Result<[TransactionDataType], Error>)-> Void) {
+    func load(completion: @escaping (Result<[Transaction], Error>)-> Void) {
         let request = PersistedTransaction.createFetchRequest()
         completion(Result {
             let persistedTransactions = try self.container.persistentContainer.viewContext.fetch(request)
@@ -30,7 +30,7 @@ final class LocalTransactionLedgerLoader: TransactionLoader {
         })
     }
         
-    func loadPrevious(_ transaction: TransactionDataType, completion: @escaping (Result<TransactionDataType?, Error>)-> Void) {
+    func loadPrevious(_ transaction: Transaction, completion: @escaping (Result<Transaction?, Error>)-> Void) {
         load { (result) in
             switch result {
             case .success(let storedTransactions):

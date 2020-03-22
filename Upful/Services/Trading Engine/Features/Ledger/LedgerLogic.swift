@@ -13,19 +13,17 @@ public enum LedgerError: Error {
 }
 
 struct LedgerLogic {
-    func handleBuyWithUpdate(_ newTransaction: TransactionDataType, storedTransaction: TransactionDataType) {
+    func handleBuyWithUpdate(_ newTransaction: Transaction, storedTransaction: Transaction) {
         updateAveragePrice(for: storedTransaction, from: newTransaction)
         storedTransaction.currentPrice = newTransaction.currentPrice
-        storedTransaction.numberOfShares += newTransaction.numberOfShares
     }
     
-    func handleSell(_ newTransaction: TransactionDataType, storedTransaction: TransactionDataType) throws {
+    func handleSell(_ newTransaction: Transaction, storedTransaction: Transaction) throws {
         guard newTransaction.numberOfShares <= storedTransaction.numberOfShares else { throw LedgerError.badShareCount }
         storedTransaction.currentPrice = newTransaction.currentPrice
-        storedTransaction.numberOfShares -= newTransaction.numberOfShares
     }
     
-    func handlePriceUpdates(currentTransactions: [TransactionDataType], updatedTransactions: [TransactionDataType]) {
+    func handlePriceUpdates(currentTransactions: [Transaction], updatedTransactions: [Transaction]) {
         updatedTransactions.forEach { (updatedTransaction) in
             if let curr = currentTransactions.first(where: { $0.ticker == updatedTransaction.ticker}) {
                 curr.currentPrice = updatedTransaction.currentPrice
@@ -36,21 +34,21 @@ struct LedgerLogic {
     }
     
     // based on new current price, calculate total price change from average price
-    func getTotalPriceChange(from storedTransactions: [TransactionDataType]) -> Double {
+    func getTotalPriceChange(from storedTransactions: [Transaction]) -> Double {
         let totalPriceChange = storedTransactions.reduce(0) { (result, currentTransaction) -> Double in
-            return (currentTransaction.currentPrice - currentTransaction.averagePrice) *
+            return (currentTransaction.currentPrice - currentTransaction.tradePrice) *
                 Double(currentTransaction.numberOfShares) + result
         }
         return totalPriceChange
     }
  
-    private func updateAveragePrice(for storedTransaction: TransactionDataType,from newTransaction: TransactionDataType) {
-        let total = Double(newTransaction.numberOfShares + storedTransaction.numberOfShares)
-        let weightNew = Double(newTransaction.numberOfShares) / total
-        let weightOld = Double(storedTransaction.numberOfShares) / total
+    private func updateAveragePrice(for storedTransaction: Transaction,from newTransaction: Transaction) {
+//        let total = Double(newTransaction.numberOfShares + storedTransaction.numberOfShares)
+//        let weightNew = Double(newTransaction.numberOfShares) / total
+//        let weightOld = Double(storedTransaction.numberOfShares) / total
         
-        storedTransaction.averagePrice =
-            (weightNew * newTransaction.averagePrice) +
-            (weightOld * storedTransaction.averagePrice)
+//        storedTransaction.tradePrice =
+//            (weightNew * newTransaction.tradePrice) +
+//            (weightOld * storedTransaction.tradePrice)
     }
 }

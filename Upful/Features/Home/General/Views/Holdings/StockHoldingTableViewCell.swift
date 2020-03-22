@@ -15,8 +15,7 @@ class StockHoldingTableViewCell: UITableViewCell {
     let tickerLabel: UILabel = {
         let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
-        label.text = "FB"
+        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
         label.textAlignment = .center
         return label
     }()
@@ -25,7 +24,7 @@ class StockHoldingTableViewCell: UITableViewCell {
         let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        label.text = "5 shares"
+        label.textColor = .gray
         label.textAlignment = .center
         return label
     }()
@@ -43,7 +42,6 @@ class StockHoldingTableViewCell: UITableViewCell {
        let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
-        label.text = "$150.92"
         label.textAlignment = .center
         return label
     }()
@@ -52,7 +50,7 @@ class StockHoldingTableViewCell: UITableViewCell {
        let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        label.text = "$135.92"
+        label.textColor = .gray
         label.textAlignment = .center
         return label
     }()
@@ -69,7 +67,6 @@ class StockHoldingTableViewCell: UITableViewCell {
        let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
-        label.text = "$65.92"
         label.textAlignment = .center
         return label
     }()
@@ -78,7 +75,6 @@ class StockHoldingTableViewCell: UITableViewCell {
         let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
-        label.text = "2.32%"
         label.textAlignment = .center
         return label
     }()
@@ -102,11 +98,13 @@ class StockHoldingTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
         addSubview(contentStackView)
         contentStackView.anchor(top: layoutMarginsGuide.topAnchor,
-                                    leading: layoutMarginsGuide.leadingAnchor,
-                                    bottom: layoutMarginsGuide.bottomAnchor,
-                                    trailing: layoutMarginsGuide.trailingAnchor)
+                                leading: layoutMarginsGuide.leadingAnchor,
+                                bottom: layoutMarginsGuide.bottomAnchor,
+                                trailing: layoutMarginsGuide.trailingAnchor)
+        addBottomSeparator()
     }
     
     required init?(coder: NSCoder) {

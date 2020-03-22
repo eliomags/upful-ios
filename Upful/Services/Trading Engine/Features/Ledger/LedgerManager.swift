@@ -25,11 +25,11 @@ final class LedgerManager {
     
     // MARK: - Methods
     
-    func loadSavedTransactions(completion: @escaping (Result<[TransactionDataType], Error>) -> Void) {
+    func loadSavedTransactions(completion: @escaping (Result<[Transaction], Error>) -> Void) {
         ledgerLoader.load(completion: completion)
     }
     
-    func handleBuy(_ transaction: TransactionDataType, completion: (() -> Void)?) {
+    func handleBuy(_ transaction: Transaction, completion: (() -> Void)?) {
         ledgerLoader.loadPrevious(transaction) { (result) in
             switch result {
             case .success(let storedTransaction):
@@ -45,7 +45,7 @@ final class LedgerManager {
         }
     }
     
-    func handleSell(_ transaction: TransactionDataType, completion: (() -> Void)?) throws {
+    func handleSell(_ transaction: Transaction, completion: (() -> Void)?) throws {
         ledgerLoader.loadPrevious(transaction) { (result) in
             switch result {
             case .success(let storedTransaction):
@@ -67,7 +67,7 @@ final class LedgerManager {
         }
     }
     
-    func handlePriceUpdates(_ transactions: [TransactionDataType], completion: ((Double) -> Void)?) {
+    func handlePriceUpdates(_ transactions: [Transaction], completion: ((Double) -> Void)?) {
         loadSavedTransactions { (result) in
             switch result {
             case .success(let savedTransactions):
@@ -77,7 +77,6 @@ final class LedgerManager {
                 
                 let totalPriceChange = self.ledgerLogic.getTotalPriceChange(from: savedTransactions)
                 completion?(totalPriceChange)
-                
             case .failure(let err):
                 fatalError("Could not load previous transactions, \(err.localizedDescription)")
             }

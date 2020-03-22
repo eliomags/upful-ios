@@ -22,9 +22,9 @@ final class TransactionLedgerPersistence {
     
     // MARK: - Methods
     
-    func save(_ transaction: TransactionDataType, completion: (() -> Void)?) {
+    func save(_ transaction: Transaction, completion: (() -> Void)?) {
         let savingTransaction = PersistedTransaction(context: container.persistentContainer.viewContext)
-        savingTransaction.averagePrice = transaction.averagePrice
+        savingTransaction.tradePrice = transaction.tradePrice
         savingTransaction.currentPrice = transaction.currentPrice
         savingTransaction.ticker = transaction.ticker
         savingTransaction.numberOfShares = transaction.numberOfShares
@@ -32,11 +32,10 @@ final class TransactionLedgerPersistence {
         container.saveContext(completion: completion)
     }
     
-    func delete(_ transaction: TransactionDataType, completion: (() -> Void)?) {
+    func delete(_ transaction: Transaction, completion: (() -> Void)?) {
         let fetchRequest = PersistedTransaction.createFetchRequest()
         let context = container.persistentContainer.viewContext
         
-        fetchRequest.predicate = NSPredicate(format: "ticker = %@", transaction.ticker)
         let persistedTransactions = (try? context.fetch(fetchRequest)) ?? []
         for persistedTransaction in persistedTransactions {
             context.delete(persistedTransaction)

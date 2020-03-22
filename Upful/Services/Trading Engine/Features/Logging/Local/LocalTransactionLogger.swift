@@ -22,10 +22,10 @@ final class LocalTransactionLogger {
 }
 
 extension LocalTransactionLogger: TransactionLogger {
-    func log(_ transaction: TransactionDataType, of type: TransactionType, completion: (() -> Void)?) {
+    func log(_ transaction: Transaction, of type: TransactionType, completion: (() -> Void)?) {
         let savingTransaction = LoggedTransaction(context: container.persistentContainer.viewContext)
         savingTransaction.ticker = transaction.ticker
-        savingTransaction.averagePrice = transaction.averagePrice
+        savingTransaction.tradePrice = transaction.tradePrice
         savingTransaction.currentPrice = transaction.currentPrice
         savingTransaction.numberOfShares = transaction.numberOfShares
         savingTransaction.transactionDate = transaction.transactionDate

@@ -82,6 +82,13 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         observeViewModelPreferenceUpdates()
         observeViewModelHoldingsUpdates()
         logicController.fetchTableData()
+        configureTransactionHeader()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        logicController.loadHoldings()
+        configureTransactionHeader()
     }
     
     override func viewDidLayoutSubviews() {
@@ -143,6 +150,18 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         tableView.register(StockHoldingTableViewCell.self, forCellReuseIdentifier: Constants.stockHoldingCellID)
     }
     
+    fileprivate func configureTransactionHeader() {
+        tradingBalanceView.cashBalanceView.cashValueLabel.text =
+            "$\(logicController.tradingEngine.balanceManager.currentCashBalance.roundToTwoDecimal())"
+        tradingBalanceView.totalEquityView.equityValueLabel.text =
+            "$\(logicController.tradingEngine.balanceManager.totalEquityBalance.roundToTwoDecimal())"
+        
+        let df = DateFormatter()
+        df.dateFormat = "MMM d, h:mm a"
+        df.timeZone = TimeZone(abbreviation: "EST")
+        tradingBalanceView.lastUpdatedLabel.text = "Last Updated, \(df.string(from: Date())) EST"
+    }
+    
     // MARK: - Actions
     
     @objc fileprivate func handleResfreshing(_ sender: Any) {
@@ -195,9 +214,10 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         let holding = logicController.holdings[indexPath.row]
         stockHoldingsCell.tickerLabel.text = holding.ticker
         stockHoldingsCell.numberOfSharesLabel.text = "\(holding.numberOfShares) shares"
-        stockHoldingsCell.currentPriceLabel.text = "$\(holding.currentPrice)"
-        stockHoldingsCell.averagePriceLabel.text = "$\(holding.averagePrice)"
-        
+        stockHoldingsCell.currentPriceLabel.text = "$\(holding.currentPrice.roundToTwoDecimal())"
+        stockHoldingsCell.averagePriceLabel.text = "$\(holding.tradePrice.roundToTwoDecimal())"
+        stockHoldingsCell.percentChangeLabel.text = holding.percentChange
+        stockHoldingsCell.dollarChangeLabel.text = holding.valueChange
         return stockHoldingsCell
     }
     
