@@ -9,7 +9,7 @@
 import XCTest
 @testable import Upful
 
-class LedgerServiceTests: XCTestCase {
+class LedgerManagerTests: XCTestCase {
     
     var sut: LedgerManager!
     let mockContainerManager = MockTransactionContainerManager()
@@ -61,19 +61,14 @@ class LedgerServiceTests: XCTestCase {
     func testHandleBuyWithPreviousTransaction() {
         let buyExpectation = expectation(description: #function)
              
-        makeManyBuys { [unowned self] in
+        makeFourBuys { [unowned self] in
             self.sut.loadSavedTransactions { (result) in
                 switch result {
                 case .success(let storedTransactions):
-                    if let fb = storedTransactions.first(where: { $0.ticker == "FB"}) {
-                        XCTAssertEqual(Int(fb.tradePrice), 123)
-                        XCTAssertEqual(fb.currentPrice, 150)
-                        XCTAssertEqual(fb.numberOfShares, 3)
-                    } else {
-                        self.recordFailure(withDescription: "No stored transaction found with ticker", inFile: #file, atLine: #line, expected: true)
-                    }
+                    XCTAssertEqual(storedTransactions.count, 4)
                 case .failure(let err):
-                    self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)", inFile: #file, atLine: #line, expected: true)
+                    self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)",
+                        inFile: #file, atLine: #line, expected: true)
                 }
                 buyExpectation.fulfill()
             }
@@ -88,16 +83,16 @@ class LedgerServiceTests: XCTestCase {
         let sellExpectation = expectation(description: #function)
         let fbTransaction = TransactionViewModel(ticker: "FB", shares: 3, tradePrice: 200, currentPrice: 200)
         
-        makeManyBuys(completion: { [unowned self] in
+        makeFourBuys(completion: { [unowned self] in
             try! self.sut.handleSell(fbTransaction, completion: { [unowned self] in
                 self.sut.loadSavedTransactions { (result) in
                     switch result {
                     case .success(let storedTransactions):
-                        XCTAssertEqual(storedTransactions.map { $0.ticker }, ["AAPL"])
-                        XCTAssertEqual(storedTransactions.map { $0.tradePrice }, [100])
-                        XCTAssertEqual(storedTransactions.map { $0.numberOfShares }, [1])
+                        XCTAssertEqual(storedTransactions.count, 5)
+
                     case .failure(let err):
-                        self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)", inFile: #file, atLine: #line, expected: true)
+                        self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)",
+                            inFile: #file, atLine: #line, expected: true)
                     }
                     sellExpectation.fulfill()
                 }
@@ -106,66 +101,13 @@ class LedgerServiceTests: XCTestCase {
         
         wait(for: [sellExpectation], timeout: 1)
     }
-    
-    func testHandleSellWhenNumberOfSharesNotZero() {
-        let sellExpectation = expectation(description: #function)
-        let fbTransaction = TransactionViewModel(ticker: "FB", shares: 2, tradePrice: 200, currentPrice: 200)
-        
-        makeManyBuys(completion: { [unowned self] in
-            try! self.sut.handleSell(fbTransaction, completion: { [unowned self] in
-                self.sut.loadSavedTransactions { (result) in
-                    switch result {
-                    case .success(let storedTransactions):
-                        XCTAssertEqual(storedTransactions.map { $0.currentPrice }.sorted(), [100, 200])
-                        XCTAssertEqual(storedTransactions.map { $0.numberOfShares }, [1,1])
-                    case .failure(let err):
-                        self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)", inFile: #file, atLine: #line, expected: true)
-                    }
-                    sellExpectation.fulfill()
-                }
-            })
-        })
-        
-        wait(for: [sellExpectation], timeout: 1)
-    }
-    
     // MARK: - Price Updates
     
-    func testPriceUpdateAndTransactionLoadForPersistenceProof() {
-        let updateExpectation = expectation(description: #function)
-
-        // Buy and Update
-        let updatedTransactions = [
-            TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 160, currentPrice: 160),
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 150, currentPrice: 150)
-        ]
-        
-        makeManyBuys { [unowned self] in
-            self.sut.handlePriceUpdates(updatedTransactions) { (totalPriceChange) in
-                XCTAssertEqual(Int(totalPriceChange), 140)
-                updateExpectation.fulfill()
-            }
-        }
-        wait(for: [updateExpectation], timeout: 1)
-        
-        // Check for updates
-        let loadExpectation = expectation(description: #function)
-        sut.loadSavedTransactions { (result) in
-            switch result {
-            case .success(let savedTransactions):
-                XCTAssertEqual(savedTransactions.map { $0.currentPrice }.sorted(), [150,160])
-                
-            case .failure(let err):
-                self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)", inFile: #file, atLine: #line, expected: true)
-            }
-            loadExpectation.fulfill()
-        }
-        wait(for: [loadExpectation], timeout: 1)
-    }
+    
     
     // MARK: - Fileprivate Methods
     
-    fileprivate func makeManyBuys(completion: @escaping (() -> Void)) {
+    fileprivate func makeFourBuys(completion: @escaping (() -> Void)) {
         sut.handleBuy(TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 100, currentPrice: 100), completion: { [unowned self] in
         self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100), completion: { [unowned self] in
             self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 120, currentPrice: 120), completion: { [unowned self] in
