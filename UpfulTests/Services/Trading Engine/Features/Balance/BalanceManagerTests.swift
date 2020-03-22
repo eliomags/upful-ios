@@ -62,9 +62,9 @@ class BalanceManagerTests: XCTestCase {
         XCTAssertEqual(sut.currentCashBalance, 25_000)
         XCTAssertEqual(sut.totalEquityBalance, 5_000)
         
-        sut.handleEquityUpdate(with: 20_000)
+        sut.handleEquityUpdate(with: 5000)
         
         XCTAssertEqual(sut.currentCashBalance, 25_000)
-        XCTAssertEqual(sut.totalEquityBalance, 25_000)
+        XCTAssertEqual(sut.totalEquityBalance, 30_000)
     }
 }

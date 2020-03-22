@@ -20,25 +20,25 @@ class LedgerLogicTests: XCTestCase {
     // MARK: - Buying
     
     func testHandleBuy_withSimpleUpdate() {
-        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 1)
+        let previousTransaction = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 1)
         
         let newTransaction = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2)
-        sut.handleBuyWithUpdate(newTransaction, storedTransaction: storedTransaction)
+        sut.handleBuyWithUpdate(newTransaction, storedTransaction: previousTransaction)
         
-        XCTAssertEqual(storedTransaction.numberOfShares, 2)
-        XCTAssertEqual(storedTransaction.tradePrice, 1.5)
-        XCTAssertEqual(storedTransaction.currentPrice, 2)
+        XCTAssertEqual(previousTransaction.numberOfShares, 1)
+        XCTAssertEqual(previousTransaction.tradePrice, 1)
+        XCTAssertEqual(previousTransaction.currentPrice, 2)
     }
     
     func testHandleBuy_withComplexUpdate() {
-        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
+        let previousTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
         
         let newTransaction = TransactionViewModel(ticker: "FB", shares: 80, tradePrice: 120, currentPrice: 120)
-        sut.handleBuyWithUpdate(newTransaction, storedTransaction: storedTransaction)
+        sut.handleBuyWithUpdate(newTransaction, storedTransaction: previousTransaction)
         
-        XCTAssertEqual(storedTransaction.numberOfShares, 100)
-        XCTAssertEqual(storedTransaction.tradePrice, 100)
-        XCTAssertEqual(storedTransaction.currentPrice, 120)
+        XCTAssertEqual(previousTransaction.numberOfShares, 20)
+        XCTAssertEqual(previousTransaction.tradePrice, 20)
+        XCTAssertEqual(previousTransaction.currentPrice, 120)
     }
 
     // MARK: - Selling
@@ -52,12 +52,15 @@ class LedgerLogicTests: XCTestCase {
     }
     
     func testHandleSell_withSuccess() {
-        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
+        let previousTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
         
         let newTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 120, currentPrice: 120)
-        try! sut.handleSell(newTransaction, storedTransaction: storedTransaction)
+        try! sut.handleSell(newTransaction, storedTransaction: previousTransaction)
         
-        XCTAssertEqual(storedTransaction.numberOfShares, 0)
+        
+        XCTAssertEqual(previousTransaction.numberOfShares, 20)
+        XCTAssertEqual(previousTransaction.tradePrice, 20)
+        XCTAssertEqual(previousTransaction.currentPrice, 120)
     }
     
     func testPriceUpdates() {
