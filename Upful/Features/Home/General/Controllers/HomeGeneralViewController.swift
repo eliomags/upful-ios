@@ -209,16 +209,20 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     // MARK: - TableView Cells
     
     fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
-        guard let stockHoldingsCell = tableView.dequeueReusableCell(withIdentifier: Constants.stockHoldingCellID, for: indexPath)
-            as? StockHoldingTableViewCell else { return UITableViewCell() }
-        let holding = logicController.holdings[indexPath.row]
-        stockHoldingsCell.tickerLabel.text = holding.ticker
-        stockHoldingsCell.numberOfSharesLabel.text = "\(holding.numberOfShares) shares"
-        stockHoldingsCell.currentPriceLabel.text = "$\(holding.currentPrice.roundToTwoDecimal())"
-        stockHoldingsCell.averagePriceLabel.text = "$\(holding.tradePrice.roundToTwoDecimal())"
-        stockHoldingsCell.percentChangeLabel.text = holding.percentChange
-        stockHoldingsCell.dollarChangeLabel.text = holding.valueChange
-        return stockHoldingsCell
+        if logicController.holdings.isEmpty {
+            return EmptyStockHoldingCell()
+        } else {
+            let stockHoldingsCell = tableView.dequeueReusableCell(withIdentifier: Constants.stockHoldingCellID,
+                                                                  for: indexPath) as? StockHoldingTableViewCell
+            let holding = logicController.holdings[indexPath.row]
+            stockHoldingsCell?.tickerLabel.text = holding.ticker
+            stockHoldingsCell?.numberOfSharesLabel.text = "\(holding.numberOfShares) shares"
+            stockHoldingsCell?.currentPriceLabel.text = "$\(holding.currentPrice.roundToTwoDecimal())"
+            stockHoldingsCell?.averagePriceLabel.text = "$\(holding.tradePrice.roundToTwoDecimal())"
+            stockHoldingsCell?.percentChangeLabel.text = holding.percentChange
+            stockHoldingsCell?.dollarChangeLabel.text = holding.valueChange
+            return stockHoldingsCell ?? UITableViewCell()
+        }
     }
     
     fileprivate func makeNoPreferenceSetCell(_ indexPath: IndexPath) -> UITableViewCell {
@@ -278,7 +282,11 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case Section.holdings.rawValue:
-            return logicController.holdings.count
+            if logicController.holdings.isEmpty {
+                return 1
+            } else {
+                return logicController.holdings.count
+            }
             
         case Section.news.rawValue:
             return 3

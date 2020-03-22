@@ -20,52 +20,52 @@ class LedgerLogicTests: XCTestCase {
     // MARK: - Buying
     
     func testHandleBuy_withSimpleUpdate() {
-        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 1, currentPrice: 1)
+        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 1)
         
-        let newTransaction = TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 2, currentPrice: 2)
+        let newTransaction = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2)
         sut.handleBuyWithUpdate(newTransaction, storedTransaction: storedTransaction)
         
         XCTAssertEqual(storedTransaction.numberOfShares, 2)
-        XCTAssertEqual(storedTransaction.averagePrice, 1.5)
+        XCTAssertEqual(storedTransaction.tradePrice, 1.5)
         XCTAssertEqual(storedTransaction.currentPrice, 2)
     }
     
     func testHandleBuy_withComplexUpdate() {
-        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 20, averagePrice: 20, currentPrice: 20)
+        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
         
-        let newTransaction = TransactionViewModel(ticker: "FB", shares: 80, averagePrice: 120, currentPrice: 120)
+        let newTransaction = TransactionViewModel(ticker: "FB", shares: 80, tradePrice: 120, currentPrice: 120)
         sut.handleBuyWithUpdate(newTransaction, storedTransaction: storedTransaction)
         
         XCTAssertEqual(storedTransaction.numberOfShares, 100)
-        XCTAssertEqual(storedTransaction.averagePrice, 100)
+        XCTAssertEqual(storedTransaction.tradePrice, 100)
         XCTAssertEqual(storedTransaction.currentPrice, 120)
     }
 
     // MARK: - Selling
     
     func testHandleSell_withMoreSharesThanHaveError() {
-        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 20, averagePrice: 20, currentPrice: 20)
+        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
         
-        let newTransaction = TransactionViewModel(ticker: "FB", shares: 21, averagePrice: 120, currentPrice: 120)
+        let newTransaction = TransactionViewModel(ticker: "FB", shares: 21, tradePrice: 120, currentPrice: 120)
         
         XCTAssertThrowsError(try sut.handleSell(newTransaction, storedTransaction: storedTransaction))
     }
     
     func testHandleSell_withSuccess() {
-        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 20, averagePrice: 20, currentPrice: 20)
+        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
         
-        let newTransaction = TransactionViewModel(ticker: "FB", shares: 20, averagePrice: 120, currentPrice: 120)
+        let newTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 120, currentPrice: 120)
         try! sut.handleSell(newTransaction, storedTransaction: storedTransaction)
         
         XCTAssertEqual(storedTransaction.numberOfShares, 0)
     }
     
     func testPriceUpdates() {
-        let storedTransaction1 = TransactionViewModel(ticker: "FB", shares: 20, averagePrice: 20, currentPrice: 20)
-        let storedTransaction2 = TransactionViewModel(ticker: "AAPL", shares: 20, averagePrice: 20, currentPrice: 20)
+        let storedTransaction1 = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
+        let storedTransaction2 = TransactionViewModel(ticker: "AAPL", shares: 20, tradePrice: 20, currentPrice: 20)
         
-        let updatedTransaction1 = TransactionViewModel(ticker: "FB", shares: 20, averagePrice: 80, currentPrice: 80)
-        let updatedTransaction2 = TransactionViewModel(ticker: "AAPL", shares: 20, averagePrice: 80, currentPrice: 80)
+        let updatedTransaction1 = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 80, currentPrice: 80)
+        let updatedTransaction2 = TransactionViewModel(ticker: "AAPL", shares: 20, tradePrice: 80, currentPrice: 80)
         sut.handlePriceUpdates(currentTransactions: [storedTransaction1, storedTransaction2],
                                updatedTransactions: [updatedTransaction1, updatedTransaction2])
         
@@ -74,9 +74,9 @@ class LedgerLogicTests: XCTestCase {
     }
     
     func testGetTotalPriceChange() {
-        let storedTransaction1 = TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 1, currentPrice: 21)
+        let storedTransaction1 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 21)
         // 20
-        let storedTransaction2 = TransactionViewModel(ticker: "AAPL", shares: 2, averagePrice: 20, currentPrice: 10)
+        let storedTransaction2 = TransactionViewModel(ticker: "AAPL", shares: 2, tradePrice: 20, currentPrice: 10)
         // -20
         
         let total = sut.getTotalPriceChange(from: [storedTransaction1, storedTransaction2])

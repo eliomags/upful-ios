@@ -28,14 +28,14 @@ class BalanceManagerTests: XCTestCase {
     }
     
     func test_handleBuy_balanceUpdates() {
-        let transaction1 = TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 100, currentPrice: 100)
+        let transaction1 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
         
         sut.handleBuy(for: transaction1)
         
         XCTAssertEqual(sut.currentCashBalance, 24_900)
         XCTAssertEqual(sut.totalEquityBalance, 25_000)
         
-        let transaction2 = TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 900, currentPrice: 900)
+        let transaction2 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 900, currentPrice: 900)
         sut.handleBuy(for: transaction2)
 
         XCTAssertEqual(sut.currentCashBalance, 24_000)
@@ -43,13 +43,13 @@ class BalanceManagerTests: XCTestCase {
     }
     
     func test_handleSell_withBalanceUpdates() {
-        let transaction1 = TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 100, currentPrice: 100)
+        let transaction1 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
         sut.handleSell(for: transaction1)
         
         XCTAssertEqual(sut.currentCashBalance, 25_100)
         XCTAssertEqual(sut.totalEquityBalance, 25_000)
         
-        let transaction2 = TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 900, currentPrice: 900)
+        let transaction2 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 900, currentPrice: 900)
         sut.handleSell(for: transaction2)
 
         XCTAssertEqual(sut.currentCashBalance, 26_000)

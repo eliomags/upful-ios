@@ -51,6 +51,7 @@
 		3D206A5224229A9B00F7E44C /* TotalEquityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5124229A9B00F7E44C /* TotalEquityView.swift */; };
 		3D206A5A2423B05500F7E44C /* StockTradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A592423B05500F7E44C /* StockTradeViewController.swift */; };
 		3D206A5C242559AF00F7E44C /* StockHoldingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5B242559AF00F7E44C /* StockHoldingTableViewCell.swift */; };
+		3D206A5F242702BB00F7E44C /* EmptyStockHoldingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5E242702BB00F7E44C /* EmptyStockHoldingCell.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -302,6 +303,7 @@
 		3D206A5124229A9B00F7E44C /* TotalEquityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalEquityView.swift; sourceTree = "<group>"; };
 		3D206A592423B05500F7E44C /* StockTradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTradeViewController.swift; sourceTree = "<group>"; };
 		3D206A5B242559AF00F7E44C /* StockHoldingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockHoldingTableViewCell.swift; sourceTree = "<group>"; };
+		3D206A5E242702BB00F7E44C /* EmptyStockHoldingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStockHoldingCell.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -821,6 +823,7 @@
 			isa = PBXGroup;
 			children = (
 				3D206A5B242559AF00F7E44C /* StockHoldingTableViewCell.swift */,
+				3D206A5E242702BB00F7E44C /* EmptyStockHoldingCell.swift */,
 			);
 			path = Holdings;
 			sourceTree = "<group>";
@@ -2443,6 +2446,7 @@
 				3D2F965823171F52003811AB /* CompanyNewsCell.swift in Sources */,
 				3D55BD6023B69EAD00B4FDF0 /* NewsLoader.swift in Sources */,
 				3D206A1B241F18A900F7E44C /* CoreDataModelContainerManager.swift in Sources */,
+				3D206A5F242702BB00F7E44C /* EmptyStockHoldingCell.swift in Sources */,
 				3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */,
 				3D55BD7023B847EC00B4FDF0 /* TableSectionHeaderView.swift in Sources */,
 				3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */,

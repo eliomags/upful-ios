@@ -39,7 +39,7 @@ class LedgerServiceTests: XCTestCase {
     // MARK: - Buying
     
     func testHandleBuyWithNewTransaction() {
-        let transaction = TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 100, currentPrice: 100)
+        let transaction = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
         let buyExpectation = expectation(description: #function)
 
         sut.handleBuy(transaction, completion: { [unowned self] in
@@ -66,7 +66,7 @@ class LedgerServiceTests: XCTestCase {
                 switch result {
                 case .success(let storedTransactions):
                     if let fb = storedTransactions.first(where: { $0.ticker == "FB"}) {
-                        XCTAssertEqual(Int(fb.averagePrice), 123)
+                        XCTAssertEqual(Int(fb.tradePrice), 123)
                         XCTAssertEqual(fb.currentPrice, 150)
                         XCTAssertEqual(fb.numberOfShares, 3)
                     } else {
@@ -86,7 +86,7 @@ class LedgerServiceTests: XCTestCase {
     
     func testHandleSellWhenNumberOfSharesEqualZero() {
         let sellExpectation = expectation(description: #function)
-        let fbTransaction = TransactionViewModel(ticker: "FB", shares: 3, averagePrice: 200, currentPrice: 200)
+        let fbTransaction = TransactionViewModel(ticker: "FB", shares: 3, tradePrice: 200, currentPrice: 200)
         
         makeManyBuys(completion: { [unowned self] in
             try! self.sut.handleSell(fbTransaction, completion: { [unowned self] in
@@ -94,7 +94,7 @@ class LedgerServiceTests: XCTestCase {
                     switch result {
                     case .success(let storedTransactions):
                         XCTAssertEqual(storedTransactions.map { $0.ticker }, ["AAPL"])
-                        XCTAssertEqual(storedTransactions.map { $0.averagePrice }, [100])
+                        XCTAssertEqual(storedTransactions.map { $0.tradePrice }, [100])
                         XCTAssertEqual(storedTransactions.map { $0.numberOfShares }, [1])
                     case .failure(let err):
                         self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)", inFile: #file, atLine: #line, expected: true)
@@ -109,7 +109,7 @@ class LedgerServiceTests: XCTestCase {
     
     func testHandleSellWhenNumberOfSharesNotZero() {
         let sellExpectation = expectation(description: #function)
-        let fbTransaction = TransactionViewModel(ticker: "FB", shares: 2, averagePrice: 200, currentPrice: 200)
+        let fbTransaction = TransactionViewModel(ticker: "FB", shares: 2, tradePrice: 200, currentPrice: 200)
         
         makeManyBuys(completion: { [unowned self] in
             try! self.sut.handleSell(fbTransaction, completion: { [unowned self] in
@@ -136,8 +136,8 @@ class LedgerServiceTests: XCTestCase {
 
         // Buy and Update
         let updatedTransactions = [
-            TransactionViewModel(ticker: "AAPL", shares: 1, averagePrice: 160, currentPrice: 160),
-            TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 150, currentPrice: 150)
+            TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 160, currentPrice: 160),
+            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 150, currentPrice: 150)
         ]
         
         makeManyBuys { [unowned self] in
@@ -166,10 +166,10 @@ class LedgerServiceTests: XCTestCase {
     // MARK: - Fileprivate Methods
     
     fileprivate func makeManyBuys(completion: @escaping (() -> Void)) {
-        sut.handleBuy(TransactionViewModel(ticker: "AAPL", shares: 1, averagePrice: 100, currentPrice: 100), completion: { [unowned self] in
-        self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 100, currentPrice: 100), completion: { [unowned self] in
-            self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 120, currentPrice: 120), completion: { [unowned self] in
-                self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, averagePrice: 150, currentPrice: 150), completion: completion)
+        sut.handleBuy(TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 100, currentPrice: 100), completion: { [unowned self] in
+        self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100), completion: { [unowned self] in
+            self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 120, currentPrice: 120), completion: { [unowned self] in
+                self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 150, currentPrice: 150), completion: completion)
                 })
             })
         })
