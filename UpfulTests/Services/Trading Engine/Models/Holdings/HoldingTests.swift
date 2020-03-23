@@ -13,18 +13,27 @@ class HoldingTests: XCTestCase {
 
     var sut: Holding!
 
+    // MARK: - Total Share Count
+    
     func test_getTotalShareCount() {
         sut = makeSUTWithTwoBuys()
         
         XCTAssertEqual(sut.totalShareCount, 2)
     }
     
+    func test_totalShareCount_withBuysAndASell() {
+        sut = makeSUTWithTwoBuysAndSell()
+        
+        XCTAssertEqual(sut.totalShareCount, 1)
+    }
+    
+    // MARK: - Average Price
+    
     func test_calculateAveragePrice_withTwoBuys() {
         sut = makeSUTWithTwoBuys()
         
         XCTAssertEqual(sut.averagePrice, 1.5)
     }
-    
     
     func test_calculateAveragePrice_withTwoBuysAndASell() {
         sut = makeSUTWithTwoBuysAndSell()

@@ -18,19 +18,28 @@ struct Holding {
     private var buys: [Transaction] {
         return transactions.filter { $0.type == TransactionType.buy.rawValue }
     }
+    private var sells: [Transaction] {
+        return transactions.filter { $0.type == TransactionType.sell.rawValue }
+    }
     
     // MARK: - Properties
     
+    var currentPrice: Double?
     var totalShareCount: Int {
-        return buys.reduce(0) { (res, transaction) -> Int in
+        let buyCount = buys.reduce(0) { (res, transaction) -> Int in
             return res + Int(transaction.numberOfShares)
         }
+        let sellCount = sells.reduce(0) { (res, transaction) -> Int in
+            return res + Int(transaction.numberOfShares)
+        }
+        return buyCount - sellCount
     }
     var averagePrice: Double {
-        let totalShares = totalShareCount
-        
+        let totalBuyShares = buys.reduce(0) { (res, transaction) -> Int in
+            return res + Int(transaction.numberOfShares)
+        }
         return buys.reduce(0) { (res, transaction) -> Double in
-            let weight = Double(transaction.numberOfShares) / Double(totalShares)
+            let weight = Double(transaction.numberOfShares) / Double(totalBuyShares)
             return res + (transaction.tradePrice * weight)
         }
     }
