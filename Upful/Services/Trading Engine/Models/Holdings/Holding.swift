@@ -56,9 +56,8 @@ struct Holding {
         return buyMovement - sellMovement
     }
     
-    var totalPriceMovementPercent: Double {
-        
-        return totalPriceMovementDollar / averagePrice
+    var totalPriceMovementPercent: String {
+        return (Double(totalPriceMovementDollar / averagePrice) * 100).roundToTwoDecimal() + "%"
     }
     
     // MARK: - Properties
