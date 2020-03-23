@@ -41,16 +41,24 @@ class HoldingTests: XCTestCase {
         XCTAssertEqual(sut.averagePrice, 1.5)
     }
     
+    // MARK: - Price Movement
+    
     func test_totalPriceMovementDollar() {
         sut = makeSUTWithTwoBuys()
         
         XCTAssertEqual(sut.totalPriceMovementDollar, 7)
     }
     
-    func test_totalPriceMovementWithBuyUpdate() {
+    func test_totalPriceMovement_withBuyUpdate() {
         sut = makeSUTWithTwoBuysAndUpdatedBuy()
         
         XCTAssertEqual(sut.totalPriceMovementDollar, 7)
+    }
+    
+    func test_totalPriceMovement_withTwoBuysAndASell() {
+        sut = makeSUTWithTwoBuysAndSell()
+        
+        XCTAssertEqual(sut.totalPriceMovementDollar, 3.5)
     }
     
     // MARK: - Fileprivate Helper Methods
@@ -92,7 +100,7 @@ class HoldingTests: XCTestCase {
         for transaction in transactions {
             transaction.type = TransactionType.buy.rawValue
         }
-        let transaction3 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 3, currentPrice: 3)
+        let transaction3 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 5, currentPrice: 5)
         transaction3.type = TransactionType.sell.rawValue
         transactions.append(transaction3)
         

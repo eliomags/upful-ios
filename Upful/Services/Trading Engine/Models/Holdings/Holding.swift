@@ -45,7 +45,7 @@ struct Holding {
     }
     var totalPriceMovementDollar: Double {
         let sellMovement = sells.reduce(0) { (res, transaction) -> Double in
-            return ((currentPrice ?? transaction.tradePrice) - transaction.tradePrice) *
+            return ((currentPrice ?? transaction.tradePrice) - averagePrice) *
                 Double(transaction.numberOfShares) + res
         }
         
