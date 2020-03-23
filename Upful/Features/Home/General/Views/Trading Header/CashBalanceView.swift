@@ -17,7 +17,7 @@ final class CashBalanceView: UIView {
         label.text = "CASH BALANCE:"
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        label.textColor = .white
+        label.textColor = .label
         return label
     }()
     
@@ -26,7 +26,7 @@ final class CashBalanceView: UIView {
         label.text = "$25,000"
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .left
         return label
     }()
@@ -43,7 +43,7 @@ final class CashBalanceView: UIView {
         let view = UIView()
         view.addSubview(cashStackView)
         cashStackView.fillSuperview(padding: .init(top: 8, left: 12, bottom: 8, right: 12))
-        view.backgroundColor = .appAccent2
+        view.backgroundColor = UIColor.appAccent2.withAlphaComponent(0.5)
         view.layer.cornerRadius = 8
         view.layer.masksToBounds = true
         return view

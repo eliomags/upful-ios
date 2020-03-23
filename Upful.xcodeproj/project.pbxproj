@@ -55,6 +55,7 @@
 		3D206A6124284E8000F7E44C /* Holding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A6024284E8000F7E44C /* Holding.swift */; };
 		3D206A642428545B00F7E44C /* HoldingMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A632428545B00F7E44C /* HoldingMapperTests.swift */; };
 		3D206A68242858B200F7E44C /* HoldingMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A67242858B200F7E44C /* HoldingMapper.swift */; };
+		3D206A6B2428EA5100F7E44C /* HoldingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A6A2428EA5100F7E44C /* HoldingTests.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -310,6 +311,7 @@
 		3D206A6024284E8000F7E44C /* Holding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Holding.swift; sourceTree = "<group>"; };
 		3D206A632428545B00F7E44C /* HoldingMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingMapperTests.swift; sourceTree = "<group>"; };
 		3D206A67242858B200F7E44C /* HoldingMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingMapper.swift; sourceTree = "<group>"; };
+		3D206A6A2428EA5100F7E44C /* HoldingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingTests.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -782,8 +784,8 @@
 			isa = PBXGroup;
 			children = (
 				3D206A4B242290D600F7E44C /* TradingBalanceView.swift */,
-				3D206A4F2422998700F7E44C /* CashBalanceView.swift */,
 				3D206A5124229A9B00F7E44C /* TotalEquityView.swift */,
+				3D206A4F2422998700F7E44C /* CashBalanceView.swift */,
 			);
 			path = "Trading Header";
 			sourceTree = "<group>";
@@ -836,7 +838,7 @@
 		3D206A622428544100F7E44C /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				3D206A632428545B00F7E44C /* HoldingMapperTests.swift */,
+				3D206A692428E71000F7E44C /* Holdings */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -857,6 +859,15 @@
 			children = (
 				3D206A6024284E8000F7E44C /* Holding.swift */,
 				3D206A67242858B200F7E44C /* HoldingMapper.swift */,
+			);
+			path = Holdings;
+			sourceTree = "<group>";
+		};
+		3D206A692428E71000F7E44C /* Holdings */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A632428545B00F7E44C /* HoldingMapperTests.swift */,
+				3D206A6A2428EA5100F7E44C /* HoldingTests.swift */,
 			);
 			path = Holdings;
 			sourceTree = "<group>";
@@ -2615,6 +2626,7 @@
 				3D206A18241F047F00F7E44C /* TransactionLedgerPersistence.swift in Sources */,
 				3DD5218C235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift in Sources */,
 				3D55BD6E23B805F400B4FDF0 /* StockNewsViewModelTest.swift in Sources */,
+				3D206A6B2428EA5100F7E44C /* HoldingTests.swift in Sources */,
 				3D0643CC23D94AE1002AAF28 /* PermissionManagerTests.swift in Sources */,
 				3DB345E923C3EBE500EADFFD /* PrebuiltScreenerLogicControllerTests.swift in Sources */,
 				3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */,

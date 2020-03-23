@@ -9,15 +9,12 @@
 import Foundation
 
 struct Holding {
+    let ticker: String
     private(set) var transactions: [Transaction]
     
-    var ticker: [String] {
-        let copy = transactions.map { $0.ticker }
-        
-        return copy
-    }
     
-    init(transactions: [Transaction]) {
+    init(ticker: String, transactions: [Transaction]) {
+        self.ticker = ticker
         self.transactions = transactions
     }
 }

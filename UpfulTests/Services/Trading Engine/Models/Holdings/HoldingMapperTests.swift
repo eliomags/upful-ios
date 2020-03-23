@@ -34,6 +34,15 @@ class HoldingMapperTests: XCTestCase {
         XCTAssertEqual(sut.map().count, 4)
     }
     
+    func test_map_eachHoldingCorrectlyConfigured() {
+        sut = makeSUTWithFourDifferentTickers()
+        
+        sut.map().forEach { (holding) in
+            let areAllTransactionTickersEqual = holding.transactions.allSatisfy { $0.ticker == holding.ticker }
+            XCTAssertTrue(areAllTransactionTickersEqual)
+        }
+    }
+    
     // MARK: - Fileprivate Helper Methods
     
     fileprivate func makeSUTWithSameTickers() -> HoldingMapper {

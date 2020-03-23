@@ -23,7 +23,8 @@ struct HoldingMapper {
         
         while !copy.isEmpty {
             let first = copy.first!
-            let holding = Holding(transactions: allTransactionsSatifying(first, from: &copy))
+            let holding = Holding(ticker: first.ticker,
+                                  transactions: allTransactionsSatifying(first, from: &copy))
             holdings.append(holding)
             
             removeAllTransactionsSatisfying(first, from: &copy)
