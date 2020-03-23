@@ -54,6 +54,7 @@
 		3D206A5F242702BB00F7E44C /* EmptyStockHoldingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5E242702BB00F7E44C /* EmptyStockHoldingCell.swift */; };
 		3D206A6124284E8000F7E44C /* Holding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A6024284E8000F7E44C /* Holding.swift */; };
 		3D206A642428545B00F7E44C /* HoldingMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A632428545B00F7E44C /* HoldingMapperTests.swift */; };
+		3D206A68242858B200F7E44C /* HoldingMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A67242858B200F7E44C /* HoldingMapper.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -308,6 +309,7 @@
 		3D206A5E242702BB00F7E44C /* EmptyStockHoldingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStockHoldingCell.swift; sourceTree = "<group>"; };
 		3D206A6024284E8000F7E44C /* Holding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Holding.swift; sourceTree = "<group>"; };
 		3D206A632428545B00F7E44C /* HoldingMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingMapperTests.swift; sourceTree = "<group>"; };
+		3D206A67242858B200F7E44C /* HoldingMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingMapper.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -678,11 +680,8 @@
 		3D206A0C241E924300F7E44C /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */,
-				3D206A11241EA67900F7E44C /* TransactionViewModel.swift */,
-				3D206A29242104BE00F7E44C /* TransactionType.swift */,
-				3D206A1E241F198D00F7E44C /* TransactionContainerManager.swift */,
-				3D206A6024284E8000F7E44C /* Holding.swift */,
+				3D206A662428589F00F7E44C /* Holdings */,
+				3D206A652428588E00F7E44C /* Transactions */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -840,6 +839,26 @@
 				3D206A632428545B00F7E44C /* HoldingMapperTests.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		3D206A652428588E00F7E44C /* Transactions */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */,
+				3D206A11241EA67900F7E44C /* TransactionViewModel.swift */,
+				3D206A29242104BE00F7E44C /* TransactionType.swift */,
+				3D206A1E241F198D00F7E44C /* TransactionContainerManager.swift */,
+			);
+			path = Transactions;
+			sourceTree = "<group>";
+		};
+		3D206A662428589F00F7E44C /* Holdings */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A6024284E8000F7E44C /* Holding.swift */,
+				3D206A67242858B200F7E44C /* HoldingMapper.swift */,
+			);
+			path = Holdings;
 			sourceTree = "<group>";
 		};
 		3D20EB7C2357963C00D1093A /* Controller */ = {
@@ -2572,6 +2591,7 @@
 				3DAB3EC3234D22890008CC18 /* FeaturePresenter.swift in Sources */,
 				3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */,
 				3D206A3F242158E700F7E44C /* BalanceManager.swift in Sources */,
+				3D206A68242858B200F7E44C /* HoldingMapper.swift in Sources */,
 				3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */,
 				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
 				3D206A21241FB9BB00F7E44C /* LedgerManager.swift in Sources */,
