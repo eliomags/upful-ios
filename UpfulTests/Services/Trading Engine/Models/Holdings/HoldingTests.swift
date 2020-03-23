@@ -41,7 +41,34 @@ class HoldingTests: XCTestCase {
         XCTAssertEqual(sut.averagePrice, 1.5)
     }
     
+    func test_totalPriceMovementDollar() {
+        sut = makeSUTWithTwoBuys()
+        
+        XCTAssertEqual(sut.totalPriceMovementDollar, 7)
+    }
+    
+    func test_totalPriceMovementWithBuyUpdate() {
+        sut = makeSUTWithTwoBuysAndUpdatedBuy()
+        
+        XCTAssertEqual(sut.totalPriceMovementDollar, 7)
+    }
+    
     // MARK: - Fileprivate Helper Methods
+    
+    fileprivate func makeSUTWithTwoBuysAndUpdatedBuy() -> Holding {
+        let transactions = [
+            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
+            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
+            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 5, currentPrice: 5)
+        ]
+        for transaction in transactions {
+            transaction.type = TransactionType.buy.rawValue
+        }
+        var holding = Holding(ticker: "FB", transactions: transactions)
+        holding.currentPrice = 5
+        
+        return holding
+    }
     
     fileprivate func makeSUTWithTwoBuys() -> Holding {
         let transactions = [
@@ -51,8 +78,10 @@ class HoldingTests: XCTestCase {
         for transaction in transactions {
             transaction.type = TransactionType.buy.rawValue
         }
-
-        return Holding(ticker: "FB", transactions: transactions)
+        var holding = Holding(ticker: "FB", transactions: transactions)
+        holding.currentPrice = 5
+        
+        return holding
     }
     
     fileprivate func makeSUTWithTwoBuysAndSell() -> Holding {
@@ -66,7 +95,10 @@ class HoldingTests: XCTestCase {
         let transaction3 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 3, currentPrice: 3)
         transaction3.type = TransactionType.sell.rawValue
         transactions.append(transaction3)
-
-        return Holding(ticker: "FB", transactions: transactions)
+        
+        var holding = Holding(ticker: "FB", transactions: transactions)
+        holding.currentPrice = 5
+        
+        return holding
     }
 }

@@ -43,6 +43,23 @@ struct Holding {
             return res + (transaction.tradePrice * weight)
         }
     }
+    var totalPriceMovementDollar: Double {
+        let sellMovement = sells.reduce(0) { (res, transaction) -> Double in
+            return ((currentPrice ?? transaction.tradePrice) - transaction.tradePrice) *
+                Double(transaction.numberOfShares) + res
+        }
+        
+        let buyMovement =  buys.reduce(0) { (res, transaction) -> Double in
+            return ((currentPrice ?? transaction.tradePrice) - transaction.tradePrice) *
+                Double(transaction.numberOfShares) + res
+        }
+        return buyMovement - sellMovement
+    }
+    
+    var totalPriceMovementPercent: Double {
+        
+        return totalPriceMovementDollar / averagePrice
+    }
     
     // MARK: - Properties
 
