@@ -90,9 +90,7 @@ class HomeGeneralLogicController {
             case .failure(_):
                 break
             }
-            DispatchQueue.main.async {
-                self.holdingsLoadCompletion?()
-            }
+            DispatchQueue.main.async { self.holdingsLoadCompletion?() }
         }
     }
     

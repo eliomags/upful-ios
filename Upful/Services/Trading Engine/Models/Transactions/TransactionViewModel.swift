@@ -14,11 +14,13 @@ class TransactionViewModel {
     var tradePrice: Double
     var type: String?
     var transactionDate: String?
+    var id: String
     
     init(ticker: String, shares: Int32, tradePrice: Double, currentPrice: Double) {
         self.ticker = ticker
         self.numberOfShares = shares
         self.tradePrice = tradePrice
+        self.id = UUID().uuidString
     }
     
     init(transaction: Transaction) {
@@ -26,12 +28,15 @@ class TransactionViewModel {
         self.numberOfShares = transaction.numberOfShares
         self.tradePrice = transaction.tradePrice
         self.type = transaction.type
+        self.transactionDate = transaction.transactionDate
+        self.id = transaction.id
     }
     
     init(stock: Stock, numberOfShares: Int32) {
-       self.ticker = stock.ticker
-       self.numberOfShares = numberOfShares
-       self.tradePrice = stock.stockQuote?.latestPrice ?? 0
+        self.ticker = stock.ticker
+        self.numberOfShares = numberOfShares
+        self.tradePrice = stock.stockQuote?.latestPrice ?? 0
+        self.id = UUID().uuidString
    }
 }
 

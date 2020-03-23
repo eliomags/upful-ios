@@ -90,6 +90,7 @@ final class TradingEngine {
             switch result {
             case .success(let ledgerTransactions):
                 let holdings = HoldingMapper(transactions: ledgerTransactions).map()
+                
                 completion?(holdings, nil)
                 
             case .failure(let err):
@@ -115,9 +116,8 @@ final class TradingEngine {
         completion(isLessThanCashHolding)
     }
     
-    // MARK: - TODO: Validate Sale Attempt
-    
-    func validateSaleAttempt() {
-        
+    func validateSaleAttempt(transaction: Transaction, holding: Holding, completion: ((Bool) -> Void)) {
+        let isLessThanCurrentShares = transaction.numberOfShares < holding.totalShareCount
+        completion(isLessThanCurrentShares)
     }
 }

@@ -22,6 +22,8 @@ class PersistedTransaction: NSManagedObject {
     @NSManaged public var currentPrice: Double
     @NSManaged public var type: String?
     @NSManaged public var transactionDate: String?
+    @NSManaged public var id: String
+
 }
 extension PersistedTransaction: Transaction {}
 
@@ -39,5 +41,7 @@ class LoggedTransaction: NSManagedObject {
     @NSManaged public var currentPrice: Double
     @NSManaged public var type: String?
     @NSManaged public var transactionDate: String?
+    @NSManaged public var id: String
+
 }
 extension LoggedTransaction: Transaction {}

@@ -31,4 +31,8 @@ final class LedgerManager {
     func save(_ transaction: Transaction, completion: (() -> Void)?) {
         ledgerPersistence.save(transaction, completion: completion)
     }
+    
+    func delete(_ transactions: [Transaction], completion: (() -> Void)?) {
+        
+    }
 }

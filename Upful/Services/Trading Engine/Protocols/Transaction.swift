@@ -14,4 +14,5 @@ protocol Transaction: class {
     var tradePrice: Double { get set }
     var type: String? { get set }
     var transactionDate: String? { get set }
+    var id: String { get set }
 }

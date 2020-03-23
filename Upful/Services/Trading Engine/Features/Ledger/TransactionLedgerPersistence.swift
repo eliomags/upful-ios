@@ -37,6 +37,7 @@ final class TransactionLedgerPersistence {
         let fetchRequest = PersistedTransaction.createFetchRequest()
         let context = container.persistentContainer.viewContext
         
+        
         let persistedTransactions = (try? context.fetch(fetchRequest)) ?? []
         for persistedTransaction in persistedTransactions {
             context.delete(persistedTransaction)
