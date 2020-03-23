@@ -65,30 +65,28 @@ class HomeGeneralLogicController {
     
     let tradingEngine = TradingEngine.shared
     
-    private(set) var holdings = [TransactionViewModel]()
+    private(set) var holdings = [Holding]()
     
     func loadHoldings() {
-        tradingEngine.loadLedgerTransactions { [weak self] (result) in
+        tradingEngine.loadHoldings { [weak self] (holdings, err) in
             guard let self = self else { return }
-            switch result {
-            case .success(let currentHoldings):
-                self.holdings = currentHoldings.map { TransactionViewModel(transaction: $0) }
-                self.holdings.forEach { self.loadQuotes(for: $0) }
-                self.tradingEngine.update(with: self.holdings)
-            case .failure(_):
-                assertionFailure("Error loading ledger transactions.")
+            if let err = err {
+                print(err.localizedDescription)
+                return
             }
+            self.holdings = holdings
+            self.holdings.forEach { self.loadQuotes(for: $0) }
             self.holdingsLoadCompletion?()
         }
     }
     
     private let quoteLoader = StockPriceLoader()
     
-    fileprivate func loadQuotes(for transaction: TransactionViewModel) {
-        quoteLoader.load(for: transaction.ticker) { (result) in
+    fileprivate func loadQuotes(for holding: Holding) {
+        quoteLoader.load(for: holding.ticker) { (result) in
             switch result {
             case .success(let quote):
-                transaction.currentPrice = quote.latestPrice
+                holding.currentPrice = quote.latestPrice
             case .failure(_):
                 break
             }

@@ -362,8 +362,8 @@ extension ExploreViewController {
             handleNormalStateNavigation(indexPath)
         case .searching:
             let selectedCompany = logicController.stockSearchDisplay[indexPath.row]
-            let stockVM = StockViewModel(stock: Stock(name: selectedCompany.ticker ?? "",
-                                                      ticker: selectedCompany.name ?? ""))
+            let stockVM = StockViewModel(stock: Stock(name: selectedCompany.name ?? "",
+                                                      ticker: selectedCompany.ticker ?? ""))
             let detailsVC = StockDetailsContainerView(stockViewModel: stockVM)
             
             AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .nameSearch))

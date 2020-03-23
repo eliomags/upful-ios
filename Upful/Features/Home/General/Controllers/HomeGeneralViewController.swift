@@ -216,11 +216,11 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
                                                                   for: indexPath) as? StockHoldingTableViewCell
             let holding = logicController.holdings[indexPath.row]
             stockHoldingsCell?.tickerLabel.text = holding.ticker
-            stockHoldingsCell?.numberOfSharesLabel.text = "\(holding.numberOfShares) shares"
-            stockHoldingsCell?.currentPriceLabel.text = "$\(holding.currentPrice.roundToTwoDecimal())"
-            stockHoldingsCell?.averagePriceLabel.text = "$\(holding.tradePrice.roundToTwoDecimal())"
-            stockHoldingsCell?.percentChangeLabel.text = holding.percentChange
-            stockHoldingsCell?.dollarChangeLabel.text = holding.valueChange
+            stockHoldingsCell?.numberOfSharesLabel.text = "\(holding.totalShareCount) shares"
+            stockHoldingsCell?.currentPriceLabel.text = "$\(holding.currentPrice?.roundToTwoDecimal() ?? "")"
+            stockHoldingsCell?.averagePriceLabel.text = "$\(holding.averagePrice.roundToTwoDecimal())"
+            stockHoldingsCell?.dollarChangeLabel.text = "$" + holding.totalPriceMovementDollar.roundToTwoDecimal()
+            stockHoldingsCell?.percentChangeLabel.text = holding.totalPriceMovementPercent
             return stockHoldingsCell ?? UITableViewCell()
         }
     }

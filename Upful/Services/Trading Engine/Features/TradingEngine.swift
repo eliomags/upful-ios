@@ -39,11 +39,13 @@ final class TradingEngine {
     
     func buy(transaction: Transaction) {
         validatePurchaseAttempt(transaction) { (isValid) in
-            if isValid {
+            if isValid { 
                 DispatchQueue.global().async {
                     self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
-                        self.ledgerManager.handleBuy(transaction, completion: { [unowned self] in
-                        self.balanceManager.handleBuy(for: transaction)
+                        self.ledgerManager.save(transaction, completion: { [unowned self] in
+                            
+                            self.balanceManager.handleBuy(for: transaction.tradePrice,
+                                                          shares: Int(transaction.numberOfShares))
                                                 
                             self.handleBuyCompletion?(self.balanceManager.totalEquityBalance,
                                                       self.balanceManager.currentCashBalance)
@@ -57,9 +59,10 @@ final class TradingEngine {
     func sell(transaction: Transaction) {
         DispatchQueue.global().async {
             self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
-
-                self.ledgerManager.handleSell(transaction, completion: { [unowned self] in
-                    self.balanceManager.handleSell(for: transaction)
+                self.ledgerManager.save(transaction, completion: { [unowned self] in
+                    
+                    self.balanceManager.handleSell(for: transaction.tradePrice,
+                                                   shares: Int(transaction.numberOfShares))
 
                     self.handleSellCompletion?(self.balanceManager.totalEquityBalance,
                                                self.balanceManager.currentCashBalance)
@@ -68,17 +71,32 @@ final class TradingEngine {
         }
     }
     
-    func update(with transactions: [Transaction], completion: (() -> Void)? = nil) {
-        ledgerManager.handlePriceUpdates(transactions, completion: { totalDollarMovement in
-            self.balanceManager.handleEquityUpdate(with: totalDollarMovement)
-            
-            self.handleEquityUpdate?(self.balanceManager.totalEquityBalance,
-                                     self.balanceManager.currentCashBalance)
-            completion?()
-        })
-    }
+    // TODO: - Load current price after holdings load
+    
+//    func update(with transactions: [Transaction], completion: (() -> Void)? = nil) {
+//        ledgerManager.handlePriceUpdates(transactions, completion: { totalDollarMovement in
+//            self.balanceManager.handleEquityUpdate(with: totalDollarMovement)
+//
+//            self.handleEquityUpdate?(self.balanceManager.totalEquityBalance,
+//                                     self.balanceManager.currentCashBalance)
+//            completion?()
+//        })
+//    }
     
     // MARK: - Loading
+    
+    func loadHoldings(completion: (([Holding], Error?) -> Void)?) {
+        ledgerManager.loadSavedTransactions { (result) in
+            switch result {
+            case .success(let ledgerTransactions):
+                let holdings = HoldingMapper(transactions: ledgerTransactions).map()
+                completion?(holdings, nil)
+                
+            case .failure(let err):
+                completion?([], err)
+            }
+        }
+    }
     
     func loadLoggedTransactions(completion: @escaping (Result<[Transaction],Error>) -> Void) {
         loggerManager.load(completion: completion)
@@ -91,8 +109,8 @@ final class TradingEngine {
     // MARK: - Validation
     
     func validatePurchaseAttempt(_ transaction: Transaction, completion: ((Bool) -> Void)) {
-        let attemptedPurchase = transaction.currentPrice * Double(transaction.numberOfShares)
-        let isLessThanCashHolding = attemptedPurchase < balanceManager.currentCashBalance
+        let attemptedPurchase = transaction.tradePrice * Double(transaction.numberOfShares)
+        let isLessThanCashHolding = attemptedPurchase <= balanceManager.currentCashBalance
         
         completion(isLessThanCashHolding)
     }

@@ -17,7 +17,7 @@ extension RemoteTransactionLogger: TransactionLogger {
     func log(_ transaction: Transaction, of type: TransactionType, completion: (() -> Void)?) {
         RemoteTransactionLogger.db.collection("transactions").document(UUID().uuidString).setData([
             "ticker": transaction.ticker,
-            "currentPrice": transaction.currentPrice,
+            "price": transaction.tradePrice,
             "shares": transaction.numberOfShares,
             "date": transaction.transactionDate ?? "undetermined",
             "type": transaction.type ?? "undetermined"

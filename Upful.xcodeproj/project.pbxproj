@@ -21,7 +21,6 @@
 		3D0C5F8C23423B7100F4A5FC /* SubscriptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */; };
 		3D0C5F942342C88300F4A5FC /* UpfulProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F932342C88300F4A5FC /* UpfulProductViewModel.swift */; };
 		3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */; };
-		3D206A06241E8F3E00F7E44C /* LedgerLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A05241E8F3E00F7E44C /* LedgerLogic.swift */; };
 		3D206A08241E903A00F7E44C /* LedgerLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */; };
 		3D206A0E241E925100F7E44C /* Transaction+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */; };
 		3D206A12241EA67900F7E44C /* TransactionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A11241EA67900F7E44C /* TransactionViewModel.swift */; };
@@ -277,7 +276,6 @@
 		3D0C5F8B23423B7100F4A5FC /* SubscriptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionItem.swift; sourceTree = "<group>"; };
 		3D0C5F932342C88300F4A5FC /* UpfulProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpfulProductViewModel.swift; sourceTree = "<group>"; };
 		3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeGradientButton.swift; sourceTree = "<group>"; };
-		3D206A05241E8F3E00F7E44C /* LedgerLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerLogic.swift; sourceTree = "<group>"; };
 		3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerLogicTests.swift; sourceTree = "<group>"; };
 		3D206A0A241E90A300F7E44C /* TransactionDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TransactionDataModel.xcdatamodel; sourceTree = "<group>"; };
 		3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Transaction+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -653,7 +651,6 @@
 			isa = PBXGroup;
 			children = (
 				3D206A20241FB9BB00F7E44C /* LedgerManager.swift */,
-				3D206A05241E8F3E00F7E44C /* LedgerLogic.swift */,
 				3D206A15241EFCDE00F7E44C /* TransactionLedgerPersistence.swift */,
 				3D206A1C241F193F00F7E44C /* LocalTransactionLedgerLoader.swift */,
 			);
@@ -2509,7 +2506,6 @@
 				3D206A4624217F7400F7E44C /* RemoteTransactionLogger.swift in Sources */,
 				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
 				3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */,
-				3D206A06241E8F3E00F7E44C /* LedgerLogic.swift in Sources */,
 				3DF5FBB2232F16F300856205 /* SearchSelectionVIewController.swift in Sources */,
 				3D7C855623380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift in Sources */,
 				3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */,

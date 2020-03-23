@@ -46,14 +46,14 @@ class BalanceManager {
     
     // MARK: - Methods
     
-    func handleBuy(for transaction: Transaction) {
-        currentCashBalance -= Double(transaction.numberOfShares) * transaction.currentPrice
+    func handleBuy(for price: Double, shares: Int) {
+        currentCashBalance -= Double(shares) * price
         
         saveBalance()
     }
     
-    func handleSell(for transaction: Transaction) {
-        currentCashBalance += Double(transaction.numberOfShares) * transaction.currentPrice
+    func handleSell(for price: Double, shares: Int) {
+        currentCashBalance += Double(shares) * price
         
         saveBalance()
     }

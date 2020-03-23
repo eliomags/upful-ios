@@ -82,7 +82,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         tradingEngine.loadLoggedTransactions { (result) in
             switch result {
             case .success(let ledgerTrans):
-                print("Ledger Transactions")
+                print("Logged Transactions")
                 print(ledgerTrans.map { $0.ticker })
                 print(ledgerTrans.map { $0.numberOfShares })
             case .failure(_):

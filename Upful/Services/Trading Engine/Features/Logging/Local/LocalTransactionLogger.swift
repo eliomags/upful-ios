@@ -26,7 +26,6 @@ extension LocalTransactionLogger: TransactionLogger {
         let savingTransaction = LoggedTransaction(context: container.persistentContainer.viewContext)
         savingTransaction.ticker = transaction.ticker
         savingTransaction.tradePrice = transaction.tradePrice
-        savingTransaction.currentPrice = transaction.currentPrice
         savingTransaction.numberOfShares = transaction.numberOfShares
         savingTransaction.transactionDate = transaction.transactionDate
         savingTransaction.type = transaction.type

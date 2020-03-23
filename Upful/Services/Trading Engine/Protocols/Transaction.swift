@@ -12,7 +12,6 @@ protocol Transaction: class {
     var ticker: String { get set }
     var numberOfShares: Int32 { get set }
     var tradePrice: Double { get set }
-    var currentPrice: Double { get set }
     var type: String? { get set }
     var transactionDate: String? { get set }
 }
