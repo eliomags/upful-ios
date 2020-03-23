@@ -8,6 +8,6 @@
 
 import Foundation
 
-enum TransactionType: String {
+enum TransactionType: String, Equatable {
     case buy, sell
 }
