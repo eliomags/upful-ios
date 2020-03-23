@@ -72,7 +72,7 @@ class TradingEngineTests: XCTestCase {
         sut.handleBuyCompletion = { (equity, cash) in
             XCTAssertEqual(equity, 25_000)
             XCTAssertEqual(cash, 24_000)
-            
+            XCTAssertEqual(transaction.type, "buy")
             loadExpectation.fulfill()
         }
         sut.buy(transaction: transaction)
@@ -80,73 +80,64 @@ class TradingEngineTests: XCTestCase {
         wait(for: [loadExpectation], timeout: 1)
     }
     
-    func test_buy_withBuyWithLedgerAndLogTransactionLoad() {
-        let loadExpectation = expectation(description: #function)
-        let buyTransaction = TransactionViewModel(ticker: "FB", shares: 10, tradePrice: 100, currentPrice: 100)
-        loadExpectation.expectedFulfillmentCount = 3
-        
-        sut.handleBuyCompletion = { (equity, cash) in
-            XCTAssertEqual(equity, 25_000)
-            XCTAssertEqual(cash, 24_000)
-            
-            loadExpectation.fulfill()
-            
-            self.sut.loadLedgerTransactions { (result) in
-                switch result {
-                case .success(let ledgerTransactions):
-                    XCTAssertEqual(ledgerTransactions.map { $0.ticker }, ["FB"])
-                case .failure(_):
-                    break
-                }
-                loadExpectation.fulfill()
-            }
-            
-            self.sut.loadLoggedTransactions { (result) in
-                switch result {
-                case .success(let loggedTransactions):
-                    XCTAssertEqual(loggedTransactions.map { $0.ticker }, ["FB"])
-                    XCTAssertEqual(loggedTransactions.map { $0.type! }, ["buy"])
-                case .failure(_):
-                    break
-                }
-                loadExpectation.fulfill()
-            }
-        }
-        sut.buy(transaction: buyTransaction)
-        
-        wait(for: [loadExpectation], timeout: 1.5)
-    }
+    // MARK: - Buy and Sell
     
     func test_buy_sell_transactionLoadersResults() {
+         makeBuyAndSell(completion: nil)
+    }
+    
+    func test_buy_sell_currentPriceOfFirstPurchaseUpdated() {
         let loadExpectation = expectation(description: #function)
-        loadExpectation.expectedFulfillmentCount = 2
         
-        // given a buy then a sell transaction
-        let buyTransaction = TransactionViewModel(ticker: "FB", shares: 10, tradePrice: 100, currentPrice: 100)
-        let sellTransaction = TransactionViewModel(ticker: "FB", shares: 10, tradePrice: 200, currentPrice: 200)
+        makeBuyAndSell(completion: { [unowned self] in
+            self.sut.loadLedgerTransactions { (result) in
+                switch result {
+                case .success(let storedTransactions):
+                    XCTAssertEqual(storedTransactions.map { $0.currentPrice }, [200, 200])
+                    loadExpectation.fulfill()
+                case .failure(let err):
+                    assertionFailure("Failed to load with on \(#line), \(#file), \(err.localizedDescription)")
+                }
+            }
+        })
         
-        /*
-         After the buy transaction, to simulate the price of the stock being updated,
-        */
-        sut.handleBuyCompletion = { [unowned self] (equity, cash) in
-            XCTAssertEqual(equity, 25_000)
-            XCTAssertEqual(cash, 24_000)
-            
+        wait(for: [loadExpectation], timeout: 1)
+    }
+    
+    func test_buy_sell_withBuyWithLedgerTransaction() {
+        let loadExpectation = expectation(description: #function)
+
+        makeBuyAndSell(completion: { [unowned self] in
+            self.sut.loadLedgerTransactions { (result) in
+                switch result {
+                case .success(let storedTransactions):
+                    XCTAssertEqual(storedTransactions.map { TransactionType(rawValue: $0.type!)!.rawValue }.sorted(), [TransactionType.buy.rawValue, "sell"])
+                case .failure(let err):
+                    assertionFailure("Failed to load with on \(#line), \(#file), \(err.localizedDescription)")
+                }
+            }
             loadExpectation.fulfill()
-            
-            self.sut.update(with: [sellTransaction], completion: {
-                self.sut.sell(transaction: sellTransaction)
-            })
-        }
-        sut.handleSellCompletion = { (equity, cash) in
-            XCTAssertEqual(equity, 26_000)
-            XCTAssertEqual(cash, 26_000)
-            
-            loadExpectation.fulfill()
-        }
-        sut.buy(transaction: buyTransaction)
+        })
         
-        wait(for: [loadExpectation], timeout: 1.5)
+        wait(for: [loadExpectation], timeout: 1)
+    }
+    
+    func test_buy_sell_withBuyWithLoggerTransaction() {
+        let loadExpectation = expectation(description: #function)
+
+        makeBuyAndSell(completion: { [unowned self] in
+            self.sut.loadLoggedTransactions { (result) in
+                switch result {
+                case .success(let storedTransactions):
+                    XCTAssertEqual(storedTransactions.map { TransactionType(rawValue: $0.type!) }, [TransactionType.buy, .buy])
+                    loadExpectation.fulfill()
+                case .failure(let err):
+                    assertionFailure("Failed to load with on \(#line), \(#file), \(err.localizedDescription)")
+                }
+            }
+        })
+        
+        wait(for: [loadExpectation], timeout: 1)
     }
         
     // MARK: - Validation
@@ -165,5 +156,41 @@ class TradingEngineTests: XCTestCase {
         sut.validatePurchaseAttempt(purchase) { (isValid) in
             XCTAssertFalse(isValid)
         }
+    }
+    
+    // MARK: - Fileprivate Helper Methods
+    
+    fileprivate func makeBuyAndSell(completion: (() -> Void)?) {
+        let loadExpectation = expectation(description: #function)
+        loadExpectation.expectedFulfillmentCount = 2
+        
+        // given a buy then a sell transaction
+        let buyTransaction = TransactionViewModel(ticker: "FB", shares: 10, tradePrice: 100, currentPrice: 100)
+        let sellTransaction = TransactionViewModel(ticker: "FB", shares: 10, tradePrice: 200, currentPrice: 200)
+        
+        sut.handleBuyCompletion = { [unowned self] (equity, cash) in
+            XCTAssertEqual(equity, 25_000)
+            XCTAssertEqual(cash, 24_000)
+            
+            self.sut.update(with: [sellTransaction], completion: {
+                self.sut.sell(transaction: sellTransaction)
+            })
+            
+            loadExpectation.fulfill()
+        }
+        sut.handleSellCompletion = { (equity, cash) in
+            XCTAssertEqual(TransactionType(rawValue: buyTransaction.type!) , TransactionType.buy)
+            XCTAssertEqual(TransactionType(rawValue: sellTransaction.type!) , TransactionType.sell)
+            
+            XCTAssertEqual(equity, 26_000)
+            XCTAssertEqual(cash, 26_000)
+            
+            loadExpectation.fulfill()
+            
+            completion?()
+        }
+        sut.buy(transaction: buyTransaction)
+        
+        wait(for: [loadExpectation], timeout: 1.5)
     }
 }

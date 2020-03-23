@@ -29,6 +29,7 @@ final class TransactionLedgerPersistence {
         savingTransaction.ticker = transaction.ticker
         savingTransaction.numberOfShares = transaction.numberOfShares
         savingTransaction.transactionDate = transaction.transactionDate
+        savingTransaction.type = transaction.type
         container.saveContext(completion: completion)
     }
     

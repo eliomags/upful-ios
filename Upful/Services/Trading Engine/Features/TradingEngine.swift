@@ -41,10 +41,10 @@ final class TradingEngine {
         validatePurchaseAttempt(transaction) { (isValid) in
             if isValid {
                 DispatchQueue.global().async {
-                    self.ledgerManager.handleBuy(transaction, completion: { [unowned self] in
+                    self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
+                        self.ledgerManager.handleBuy(transaction, completion: { [unowned self] in
                         self.balanceManager.handleBuy(for: transaction)
                                                 
-                        self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
                             self.handleBuyCompletion?(self.balanceManager.totalEquityBalance,
                                                       self.balanceManager.currentCashBalance)
                         })
@@ -56,24 +56,20 @@ final class TradingEngine {
     
     func sell(transaction: Transaction) {
         DispatchQueue.global().async {
-            do {
-                try self.ledgerManager.handleSell(transaction, completion: { [unowned self] in
+            self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
+
+                self.ledgerManager.handleSell(transaction, completion: { [unowned self] in
                     self.balanceManager.handleSell(for: transaction)
-                    
-                    self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
-                        self.handleSellCompletion?(self.balanceManager.totalEquityBalance,
-                                                   self.balanceManager.currentCashBalance)
-                    })
+
+                    self.handleSellCompletion?(self.balanceManager.totalEquityBalance,
+                                               self.balanceManager.currentCashBalance)
                 })
-            } catch {
-                fatalError("Failed to sell.")
-            }
+            })
         }
     }
     
     func update(with transactions: [Transaction], completion: (() -> Void)? = nil) {
         ledgerManager.handlePriceUpdates(transactions, completion: { totalDollarMovement in
-            print(totalDollarMovement)
             self.balanceManager.handleEquityUpdate(with: totalDollarMovement)
             
             self.handleEquityUpdate?(self.balanceManager.totalEquityBalance,

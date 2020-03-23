@@ -30,39 +30,25 @@ final class LedgerManager {
     }
     
     func handleBuy(_ transaction: Transaction, completion: (() -> Void)?) {
-        ledgerLoader.loadPrevious(transaction) { (result) in
+        ledgerLoader.load() { (result) in
             switch result {
-            case .success(let storedTransaction):
-                if let storedTransaction = storedTransaction {
-                    self.ledgerLogic.handleBuyWithUpdate(transaction, storedTransaction: storedTransaction)
-                    self.ledgerPersistence.save(storedTransaction, completion: completion)
-                } else {
-                    self.ledgerPersistence.save(transaction, completion: completion)
-                }
+            case .success(let storedTransactions):
+                self.save(transaction,updating: storedTransactions, completion: completion)
+                
             case .failure(let err):
-                fatalError("Could not load previous transaction, \(err.localizedDescription)")
+                fatalError("Could not load previous transactions, \(err.localizedDescription)")
             }
         }
     }
     
-    func handleSell(_ transaction: Transaction, completion: (() -> Void)?) throws {
-        ledgerLoader.loadPrevious(transaction) { (result) in
+    func handleSell(_ transaction: Transaction, completion: (() -> Void)?) {
+        ledgerLoader.load() { (result) in
             switch result {
-            case .success(let storedTransaction):
-                if let storedTransaction = storedTransaction {
-                    try? self.ledgerLogic.handleSell(transaction, storedTransaction: storedTransaction)
-                    
-                    if storedTransaction.numberOfShares == 0 {
-                        self.ledgerPersistence.delete(storedTransaction, completion: completion)
-                        return
-                    }
-                    self.ledgerPersistence.save(storedTransaction, completion: completion)
-                } else {
-                    fatalError("Did not find previous saved transaction.")
-                }
-                
+            case .success(let storedTransactions):
+                self.save(transaction,updating: storedTransactions, completion: completion)
+
             case .failure(let err):
-                fatalError("Could not load previous transaction, \(err.localizedDescription)")
+                fatalError("Could not load previous transactions, \(err.localizedDescription)")
             }
         }
     }
@@ -71,6 +57,7 @@ final class LedgerManager {
         loadSavedTransactions { (result) in
             switch result {
             case .success(let savedTransactions):
+                
                 self.ledgerLogic.handlePriceUpdates(currentTransactions: savedTransactions, updatedTransactions: transactions)
                 
                 // TODO: - May need to add saving
@@ -80,6 +67,22 @@ final class LedgerManager {
             case .failure(let err):
                 fatalError("Could not load previous transactions, \(err.localizedDescription)")
             }
+        }
+    }
+    
+    // MARK: - Helper
+    
+    fileprivate func save(_ transaction: Transaction, updating storedTransactions: [Transaction], completion: (() -> Void)?) {
+        if storedTransactions.contains(where: { $0.ticker == transaction.ticker }) {
+            storedTransactions.forEach { storedTransaction in
+                if storedTransaction.ticker == transaction.ticker {
+                    storedTransaction.currentPrice = transaction.currentPrice
+
+                    self.ledgerPersistence.save(transaction, completion: completion)
+                }
+            }
+        } else {
+            self.ledgerPersistence.save(transaction, completion: completion)
         }
     }
 }

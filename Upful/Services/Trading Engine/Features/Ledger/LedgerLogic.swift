@@ -14,21 +14,19 @@ public enum LedgerError: Error {
 
 struct LedgerLogic {
     func handleBuyWithUpdate(_ newTransaction: Transaction, storedTransaction: Transaction) {
-        updateAveragePrice(for: storedTransaction, from: newTransaction)
         storedTransaction.currentPrice = newTransaction.currentPrice
     }
     
-    func handleSell(_ newTransaction: Transaction, storedTransaction: Transaction) throws {
-        guard newTransaction.numberOfShares <= storedTransaction.numberOfShares else { throw LedgerError.badShareCount }
+    func handleSell(_ newTransaction: Transaction, storedTransaction: Transaction) {
         storedTransaction.currentPrice = newTransaction.currentPrice
     }
     
     func handlePriceUpdates(currentTransactions: [Transaction], updatedTransactions: [Transaction]) {
         updatedTransactions.forEach { (updatedTransaction) in
-            if let curr = currentTransactions.first(where: { $0.ticker == updatedTransaction.ticker}) {
-                curr.currentPrice = updatedTransaction.currentPrice
-            } else {
-                return
+            currentTransactions.forEach { (currentTransaction) in
+                if currentTransaction.ticker == updatedTransaction.ticker {
+                    currentTransaction.currentPrice = updatedTransaction.currentPrice
+                }
             }
         }
     }

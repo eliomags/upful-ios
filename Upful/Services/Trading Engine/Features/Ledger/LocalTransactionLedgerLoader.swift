@@ -29,16 +29,4 @@ final class LocalTransactionLedgerLoader: TransactionLoader {
             return persistedTransactions
         })
     }
-        
-    func loadPrevious(_ transaction: Transaction, completion: @escaping (Result<Transaction?, Error>)-> Void) {
-        load { (result) in
-            switch result {
-            case .success(let storedTransactions):
-                let previousTransaction = storedTransactions.first(where: { $0.ticker == transaction.ticker })
-                completion(.success(previousTransaction))
-            case .failure(let err):
-                completion(.failure(err))
-            }
-        }
-    }
 }

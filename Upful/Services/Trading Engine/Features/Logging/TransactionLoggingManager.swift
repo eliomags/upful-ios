@@ -29,9 +29,9 @@ class TransactionLoggingManager {
         transaction.type = type.rawValue
         transaction.transactionDate = Date().asString
         
-        remoteTransactionLogger.log(transaction, of: type, completion: { [unowned self] in
+//        remoteTransactionLogger.log(transaction, of: type, completion: { [unowned self] in
             self.localTransactionLogger.log(transaction, of: type, completion: completion)
-        })
+//        })
     }
 }
 

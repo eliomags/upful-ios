@@ -58,49 +58,55 @@ class LedgerManagerTests: XCTestCase {
         wait(for: [buyExpectation], timeout: 1)
     }
     
-    func testHandleBuyWithPreviousTransaction() {
-        let buyExpectation = expectation(description: #function)
-             
-        makeFourBuys { [unowned self] in
-            self.sut.loadSavedTransactions { (result) in
-                switch result {
-                case .success(let storedTransactions):
-                    XCTAssertEqual(storedTransactions.count, 4)
-                case .failure(let err):
-                    self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)",
-                        inFile: #file, atLine: #line, expected: true)
-                }
-                buyExpectation.fulfill()
-            }
-        }
-        
-        wait(for: [buyExpectation], timeout: 1)
-    }
-    
-    // MARK: - Selling
-    
-    func testHandleSellWhenNumberOfSharesEqualZero() {
-        let sellExpectation = expectation(description: #function)
-        let fbTransaction = TransactionViewModel(ticker: "FB", shares: 3, tradePrice: 200, currentPrice: 200)
-        
-        makeFourBuys(completion: { [unowned self] in
-            try! self.sut.handleSell(fbTransaction, completion: { [unowned self] in
-                self.sut.loadSavedTransactions { (result) in
-                    switch result {
-                    case .success(let storedTransactions):
-                        XCTAssertEqual(storedTransactions.count, 5)
-
-                    case .failure(let err):
-                        self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)",
-                            inFile: #file, atLine: #line, expected: true)
-                    }
-                    sellExpectation.fulfill()
-                }
-            })
-        })
-        
-        wait(for: [sellExpectation], timeout: 1)
-    }
+//    func testHandleBuyWithPreviousTransaction() {
+//        let buyExpectation = expectation(description: #function)
+//
+//        makeFourBuys { [unowned self] in
+//            self.sut.loadSavedTransactions { (result) in
+//                switch result {
+//                case .success(let storedTransactions):
+//                    XCTAssertEqual(storedTransactions.count, 4)
+//                    storedTransactions.forEach { (storedTransaction) in
+//                        if storedTransaction.ticker == "FB" {
+//                            XCTAssertEqual(storedTransaction.currentPrice, 150)
+//                        }
+//                    }
+//
+//                case .failure(let err):
+//                    self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)",
+//                        inFile: #file, atLine: #line, expected: true)
+//                }
+//                buyExpectation.fulfill()
+//            }
+//        }
+//
+//        wait(for: [buyExpectation], timeout: 1)
+//    }
+//
+//    // MARK: - Selling
+//
+//    func testHandleSellWhenNumberOfSharesEqualZero() {
+//        let sellExpectation = expectation(description: #function)
+//        let fbTransaction = TransactionViewModel(ticker: "FB", shares: 3, tradePrice: 200, currentPrice: 200)
+//
+//        makeFourBuys(completion: { [unowned self] in
+//            try! self.sut.handleSell(fbTransaction, completion: { [unowned self] in
+//                self.sut.loadSavedTransactions { (result) in
+//                    switch result {
+//                    case .success(let storedTransactions):
+//                        XCTAssertEqual(storedTransactions.count, 5)
+//
+//                    case .failure(let err):
+//                        self.recordFailure(withDescription: "Failed loading saved transactions \(err.localizedDescription)",
+//                            inFile: #file, atLine: #line, expected: true)
+//                    }
+//                    sellExpectation.fulfill()
+//                }
+//            })
+//        })
+//
+//        wait(for: [sellExpectation], timeout: 1)
+//    }
     // MARK: - Price Updates
     
     

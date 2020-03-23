@@ -43,19 +43,11 @@ class LedgerLogicTests: XCTestCase {
 
     // MARK: - Selling
     
-    func testHandleSell_withMoreSharesThanHaveError() {
-        let storedTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
-        
-        let newTransaction = TransactionViewModel(ticker: "FB", shares: 21, tradePrice: 120, currentPrice: 120)
-        
-        XCTAssertThrowsError(try sut.handleSell(newTransaction, storedTransaction: storedTransaction))
-    }
-    
     func testHandleSell_withSuccess() {
         let previousTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
         
         let newTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 120, currentPrice: 120)
-        try! sut.handleSell(newTransaction, storedTransaction: previousTransaction)
+        sut.handleSell(newTransaction, storedTransaction: previousTransaction)
         
         
         XCTAssertEqual(previousTransaction.numberOfShares, 20)
