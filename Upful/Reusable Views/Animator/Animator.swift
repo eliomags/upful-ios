@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Animator {
+struct Animator {
     func displayAnimation(view: UIView, completion: (() -> Void)? = nil) {
         UIView.animate(withDuration: 0.2, animations: {
             view.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
