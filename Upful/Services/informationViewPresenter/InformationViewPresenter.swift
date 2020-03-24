@@ -13,15 +13,17 @@ enum InformationViewType {
 }
 
 struct InformationViewPresenter {
-    let actionView = InformationView()
+    private let animation = Animator()
+    private let actionView = InformationView()
     
-    func genericViewDisplay(in viewController: UIViewController) {
+    func genericViewDisplay(in viewController: UIViewController, completion: (() -> Void)? = nil) {
         viewController.view.addSubview(actionView)
         actionView.translatesAutoresizingMaskIntoConstraints = false
-        actionView.centerYAnchor.constraint(equalTo: viewController.view.centerYAnchor).isActive = true
+        actionView.centerYAnchor.constraint(equalTo: viewController.view.centerYAnchor, constant: -50).isActive = true
         actionView.centerXAnchor.constraint(equalTo: viewController.view.centerXAnchor).isActive = true
         actionView.heightAnchor.constraint(equalToConstant: 230).isActive = true
         actionView.widthAnchor.constraint(equalToConstant: 230).isActive = true
+        animation.displayAnimation(view: actionView, completion: completion)
     }
 
     func showSaveSuccess(in viewController: UIViewController) {
@@ -29,6 +31,13 @@ struct InformationViewPresenter {
         actionView.actionImageView.image = UIImage(systemName: "checkmark")?
             .withTintColor(.lightGray, renderingMode: .alwaysOriginal) ?? UIImage()
         genericViewDisplay(in: viewController)
+    }
+    
+    func showGenericSuccess(in viewController: UIViewController, description: String, completion: (() -> Void)?) {
+        actionView.descriptionLabel.text = description
+        actionView.actionImageView.image = UIImage(systemName: "checkmark")?
+            .withTintColor(.lightGray, renderingMode: .alwaysOriginal) ?? UIImage()
+        genericViewDisplay(in: viewController, completion: completion)
     }
     
     func showReportSuccess(in viewController: UIViewController) {

@@ -37,7 +37,7 @@ final class TradingEngine {
     
     // MARK: - Methods
     
-    func buy(transaction: Transaction) {
+    func buy(transaction: Transaction, completion: ((Bool) -> Void)? = nil) {
         validatePurchaseAttempt(transaction) { (isValid) in
             if isValid { 
                 DispatchQueue.global().async {
@@ -46,24 +46,27 @@ final class TradingEngine {
                             
                             self.balanceManager.handleBuy(for: transaction.tradePrice,
                                                           shares: Int(transaction.numberOfShares))
-                                                
+                            
+                            completion?(isValid)
                             self.handleBuyCompletion?(self.balanceManager.totalEquityBalance,
                                                       self.balanceManager.currentCashBalance)
                         })
                     })
                 }
+            } else {
+                completion?(isValid)
             }
         }
     }
     
-    func sell(transaction: Transaction) {
+    func sell(transaction: Transaction, completion: (() -> Void)? = nil) {
         DispatchQueue.global().async {
             self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
                 self.ledgerManager.save(transaction, completion: { [unowned self] in
                     
                     self.balanceManager.handleSell(for: transaction.tradePrice,
                                                    shares: Int(transaction.numberOfShares))
-
+                    completion?()
                     self.handleSellCompletion?(self.balanceManager.totalEquityBalance,
                                                self.balanceManager.currentCashBalance)
                 })

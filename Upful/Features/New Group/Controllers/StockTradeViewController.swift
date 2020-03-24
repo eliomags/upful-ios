@@ -39,6 +39,45 @@ final class StockTradeViewController: UITableViewController {
         return header
     }()
     
+    private lazy var buyButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("BUY", for: .normal)
+        let size = UIFont.preferredFont(forTextStyle: .body).pointSize
+        button.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        button.setTitleColor(.appAccent3, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
+        button.layer.cornerRadius = 12
+        button.layer.masksToBounds = true
+        button.addTarget(self, action: #selector(handleBuyTap), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var sellButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("SELL", for: .normal)
+        let size = UIFont.preferredFont(forTextStyle: .body).pointSize
+        button.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        button.setTitleColor(UIColor.systemRed, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
+        button.layer.cornerRadius = 12
+        button.layer.masksToBounds = true
+        button.layer.borderWidth = 0
+        button.addTarget(self, action: #selector(handleSellTap), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var tradeButtonStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [buyButton, sellButton])
+        sv.axis = .horizontal
+        sv.spacing = 16
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    
     // MARK: Share Count View
 
     private let numberOfSharesLabel: UILabel = {
@@ -102,7 +141,7 @@ final class StockTradeViewController: UITableViewController {
     private let estimateLabel: UILabel = {
         let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: .body).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
         label.text = "Trade Estimate:"
         return label
     }()
@@ -111,7 +150,7 @@ final class StockTradeViewController: UITableViewController {
         let label = UILabel()
         label.textAlignment = .right
         let size = UIFont.preferredFont(forTextStyle: .body).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
         label.text = "$ -"
         return label
     }()
@@ -143,6 +182,8 @@ final class StockTradeViewController: UITableViewController {
         super.loadView()
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
         tableView.isScrollEnabled = false
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
     override func viewDidLoad() {
@@ -151,6 +192,32 @@ final class StockTradeViewController: UITableViewController {
         loadRecentPrice()
         
         numberOfSharesTextField.becomeFirstResponder()
+        
+//        tradingEngine.loadLedgerTransactions { (result) in
+//            switch result {
+//            case .success(let ledgerTrans):
+//                print("Ledger Transactions")
+//                print(ledgerTrans.map { $0.ticker })
+//                print(ledgerTrans.map { $0.numberOfShares })
+//            case .failure(_):
+//                print("Failed to load")
+//            }
+//        }
+//        tradingEngine.loadLoggedTransactions { (result) in
+//            switch result {
+//            case .success(let ledgerTrans):
+//                print("Logged Transactions")
+//                print(ledgerTrans.map { $0.ticker })
+//                print(ledgerTrans.map { $0.numberOfShares })
+//            case .failure(_):
+//                print("Failed to load")
+//            }
+//        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Actions
@@ -173,6 +240,73 @@ final class StockTradeViewController: UITableViewController {
              if fail, present alert saying failed to make purchase
              if success, construct a TransactionAdapter to pass through TradingEngine
      */
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            
+            view.addSubview(tradeButtonStackView)
+            tradeButtonStackView.anchor(top: nil, leading: view.layoutMarginsGuide.leadingAnchor,
+                                        bottom: view.layoutMarginsGuide.bottomAnchor,
+                                        trailing: view.layoutMarginsGuide.trailingAnchor,
+                                        padding: .init(top: 0, left: 16, bottom: keyboardHeight + 4, right: 16))
+        }
+    }
+    
+    @objc fileprivate func handleSellTap() {
+        guard let transaction = transaction,
+            let numberOfShares = numberOfShares else {
+            return
+        }
+        buyButton.isEnabled = false
+        sellButton.isEnabled = false
+        
+        tradingEngine.loadHoldings { [weak self] (holdings, err) in
+            guard let self = self else { return }
+            if let _ = err {
+                self.presentAlert("Error", "Failed to load your holdings.") {
+                    self.dismiss(animated: true, completion: nil)
+                }
+                return
+            }
+            if let currentHolding = holdings.first(where: { $0.ticker == self.ticker }) {
+                if numberOfShares <= currentHolding.totalShareCount {
+                    self.tradingEngine.sell(transaction: transaction, completion: {
+                        DispatchQueue.main.async {
+                            InformationViewPresenter().showGenericSuccess(in: self, description: "Sale Successful.", completion: {
+                                self.dismiss(animated: true, completion: nil)
+                            })
+                        }
+                    })
+                } else {
+                    self.presentAlert("Error", "You can't sell what you don't have.", OKhandler: {
+                        self.buyButton.isEnabled = true
+                        self.sellButton.isEnabled = true
+                    })
+                }
+            } else {
+                self.presentAlert("Error", "You can't sell what you don't have.", OKhandler: {
+                    self.buyButton.isEnabled = true
+                    self.sellButton.isEnabled = true
+                })
+            }
+        }
+    }
+    
+    @objc fileprivate func handleBuyTap() {
+        guard let transaction = transaction,
+            let numberOfShares = numberOfShares else {
+            return
+        }
+        buyButton.isEnabled = false
+        sellButton.isEnabled = false
+        
+        transaction.numberOfShares = Int32(numberOfShares)
+        tradingEngine.buy(transaction: transaction, completion: { didComplete in
+            didComplete ? self.handleBuySuccess() : self.handleBuyFailure()
+        })
+    }
     
     // MARK: - Methods
     
@@ -207,15 +341,15 @@ final class StockTradeViewController: UITableViewController {
         }
     }
     
-    fileprivate func presentAlert(_ title: String, _ description: String, handler: (() -> Void)?) {
+    // MARK: - Helper Methods
+    
+    fileprivate func presentAlert(_ title: String, _ description: String, OKhandler: (() -> Void)?) {
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (_) in
-            handler?()
+            OKhandler?()
         }))
         present(alert, animated: true, completion: nil)
     }
-    
-    // MARK: - Helper Methods
     
     fileprivate func handlePriceLoadCompletion(_ quote: StockQuote) {
         marketPrice = quote.latestPrice
@@ -223,6 +357,23 @@ final class StockTradeViewController: UITableViewController {
                                         tradePrice: quote.latestPrice)
         DispatchQueue.main.async {
             self.quoteValueLabel.text = "$\(self.marketPrice?.withCommas() ?? " -")"
+        }
+    }
+    
+    fileprivate func handleBuyFailure() {
+        presentAlert("Error", "You don't have enough cash to purchase \(self.numberOfShares!) shares of \(self.ticker).",
+            OKhandler: {
+                self.buyButton.isEnabled = true
+                self.sellButton.isEnabled = true
+        })
+    }
+    
+    fileprivate func handleBuySuccess() {
+        DispatchQueue.main.async {
+            InformationViewPresenter().showGenericSuccess(in: self, description: "Purchased Succesfully",
+                                                          completion: { [unowned self] in
+                self.dismiss(animated: true, completion: nil)
+            })
         }
     }
 }

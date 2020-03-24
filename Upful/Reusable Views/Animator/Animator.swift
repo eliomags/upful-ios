@@ -9,24 +9,25 @@
 import UIKit
 
 class Animator {
-    func displayAnimation(view: UIView) {
+    func displayAnimation(view: UIView, completion: (() -> Void)? = nil) {
         UIView.animate(withDuration: 0.2, animations: {
             view.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
         }) { (_) in
             UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
                 view.transform = .identity
             }, completion: { (_) in
-                self.removeView(view)
+                self.removeView(view, completion: completion)
             })
         }
     }
     
-    fileprivate func removeView(_ view: UIView) {
+    fileprivate func removeView(_ view: UIView, completion: (() -> Void)? = nil) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
             UIView.animate(withDuration: 0.2, animations: {
                 view.alpha = 0
             }, completion: { (_) in
                 view.removeFromSuperview()
+                completion?()
             })
         }
     }

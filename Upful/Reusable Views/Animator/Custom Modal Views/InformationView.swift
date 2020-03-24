@@ -12,9 +12,7 @@ class InformationView: UIView {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 230, height: 230)
     }
-    
-    fileprivate let animation = Animator()
-        
+            
     let descriptionLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
@@ -72,7 +70,6 @@ class InformationView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         blurredEffectView.frame = bounds
-        animation.displayAnimation(view: self)
     }
     
 }

@@ -48,8 +48,6 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     var coordinator: Coordinator?
     
     @objc fileprivate func handleTradeTap() {
-//        tradingEngine.buy(transaction: TransactionAdapter(stock: stockViewModel.stock, numberOfShares: 5))
-//        tradingEngine.sell(transaction: TransactionAdapter(stock: stockViewModel.stock, numberOfShares: 5))
         coordinator = StockTradeCoordinator(self, ticker: stockViewModel.stock.ticker)
         coordinator?.start()
     }
@@ -74,26 +72,26 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         UserFeedbackPresenter.checkAndAskForReview(checkType: .importantAction, in: self)
         performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
         
-        tradingEngine.loadLedgerTransactions { (result) in
-            switch result {
-            case .success(let ledgerTrans):
-                print("Ledger Transactions")
-                print(ledgerTrans.map { $0.ticker })
-                print(ledgerTrans.map { $0.numberOfShares })
-            case .failure(_):
-                print("Failed to load")
-            }
-        }
-        tradingEngine.loadLoggedTransactions { (result) in
-            switch result {
-            case .success(let ledgerTrans):
-                print("Logged Transactions")
-                print(ledgerTrans.map { $0.ticker })
-                print(ledgerTrans.map { $0.numberOfShares })
-            case .failure(_):
-                print("Failed to load")
-            }
-        }
+//        tradingEngine.loadLedgerTransactions { (result) in
+//            switch result {
+//            case .success(let ledgerTrans):
+//                print("Ledger Transactions")
+//                print(ledgerTrans.map { $0.ticker })
+//                print(ledgerTrans.map { $0.numberOfShares })
+//            case .failure(_):
+//                print("Failed to load")
+//            }
+//        }
+//        tradingEngine.loadLoggedTransactions { (result) in
+//            switch result {
+//            case .success(let ledgerTrans):
+//                print("Logged Transactions")
+//                print(ledgerTrans.map { $0.ticker })
+//                print(ledgerTrans.map { $0.numberOfShares })
+//            case .failure(_):
+//                print("Failed to load")
+//            }
+//        }
     }
     
     // MARK: - View Setup
