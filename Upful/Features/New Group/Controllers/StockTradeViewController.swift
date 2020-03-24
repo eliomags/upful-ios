@@ -179,9 +179,10 @@ final class StockTradeViewController: UITableViewController {
     fileprivate func checkIfCurrentlyOwned() {
         tradingEngine.loadHoldings { [weak self] (holdings, err) in
             guard let self = self else { return }
-            if let err = err {
-                // TODO: - Show alert and dismiss
-                print(err.localizedDescription)
+            if let _ = err {
+                self.presentAlert("Error", "Failed to load your holdings.") {
+                    self.dismiss(animated: true, completion: nil)
+                }
                 return
             }
             if let currentHolding = holdings.first(where: { $0.ticker == self.ticker }) {
@@ -198,11 +199,20 @@ final class StockTradeViewController: UITableViewController {
             switch result {
             case .success(let quote):
                 self.handlePriceLoadCompletion(quote)
-            case .failure(let err):
-                print(err.localizedDescription)
-                // TODO: - Show alert and dismiss
+            case .failure(_):
+                self.presentAlert("Error Loading Quote.", "") {
+                    self.dismiss(animated: true, completion: nil)
+                }
             }
         }
+    }
+    
+    fileprivate func presentAlert(_ title: String, _ description: String, handler: (() -> Void)?) {
+        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (_) in
+            handler?()
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
     // MARK: - Helper Methods

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StockTradeCoordinator: Coordinator {
+final class StockTradeCoordinator: Coordinator {
     private let ticker: String
     var presenter: UIViewController
     
