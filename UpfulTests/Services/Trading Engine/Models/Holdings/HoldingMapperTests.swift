@@ -47,8 +47,8 @@ class HoldingMapperTests: XCTestCase {
     
     fileprivate func makeSUTWithSameTickers() -> HoldingMapper {
         let transactions = [
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
         ]
         
         return HoldingMapper(transactions: transactions)
@@ -56,9 +56,9 @@ class HoldingMapperTests: XCTestCase {
     
     fileprivate func makeSUTWithTwoDifferentTickers() -> HoldingMapper {
         let transactions = [
-            TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 1, currentPrice: 1),
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
+            TransactionAdapter(ticker: "AAPL", shares: 1, tradePrice: 1, currentPrice: 1),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
         ]
         
         return HoldingMapper(transactions: transactions)
@@ -66,11 +66,11 @@ class HoldingMapperTests: XCTestCase {
     
     fileprivate func makeSUTWithFourDifferentTickers() -> HoldingMapper {
         let transactions = [
-            TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 1, currentPrice: 1),
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
-            TransactionViewModel(ticker: "ZM", shares: 1, tradePrice: 2, currentPrice: 2),
-            TransactionViewModel(ticker: "GE", shares: 1, tradePrice: 2, currentPrice: 2),
-            TransactionViewModel(ticker: "GE", shares: 1, tradePrice: 2, currentPrice: 2),
+            TransactionAdapter(ticker: "AAPL", shares: 1, tradePrice: 1, currentPrice: 1),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
+            TransactionAdapter(ticker: "ZM", shares: 1, tradePrice: 2, currentPrice: 2),
+            TransactionAdapter(ticker: "GE", shares: 1, tradePrice: 2, currentPrice: 2),
+            TransactionAdapter(ticker: "GE", shares: 1, tradePrice: 2, currentPrice: 2),
         ]
         
         return HoldingMapper(transactions: transactions)

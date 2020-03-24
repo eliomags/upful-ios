@@ -14,14 +14,16 @@ class PreferenceHeaderView: UIView {
     }
     var headerLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title3).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
         label.text = "Add Preferences"
         return label
     }()
     
     var descriptionText: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .regular)
         label.numberOfLines = 0
         label.textColor = .gray
         label.text = "Have stock preferences? Set your preferences from the list below to see stocks you may like."

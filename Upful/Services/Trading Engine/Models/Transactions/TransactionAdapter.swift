@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TransactionViewModel {
+class TransactionAdapter {
     var ticker: String
     var numberOfShares: Int32
     var tradePrice: Double
@@ -16,7 +16,7 @@ class TransactionViewModel {
     var transactionDate: String?
     var id: String
     
-    init(ticker: String, shares: Int32, tradePrice: Double, currentPrice: Double) {
+    init(ticker: String, shares: Int32, tradePrice: Double) {
         self.ticker = ticker
         self.numberOfShares = shares
         self.tradePrice = tradePrice
@@ -40,4 +40,4 @@ class TransactionViewModel {
    }
 }
 
-extension TransactionViewModel: Transaction {}
+extension TransactionAdapter: Transaction {}

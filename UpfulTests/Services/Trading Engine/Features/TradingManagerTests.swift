@@ -66,7 +66,7 @@ class TradingEngineTests: XCTestCase {
     // MARK: - Buy
     
     func test_buy_withInitialBuy() {
-        let transaction = TransactionViewModel(ticker: "FB", shares: 10, tradePrice: 100, currentPrice: 100)
+        let transaction = TransactionAdapter(ticker: "FB", shares: 10, tradePrice: 100, currentPrice: 100)
         let loadExpectation = expectation(description: #function)
         
         sut.handleBuyCompletion = { (equity, cash) in
@@ -143,7 +143,7 @@ class TradingEngineTests: XCTestCase {
     // MARK: - Validation
     
     func test_validatePurchaseAttempt_withValidPurchase() {
-        let purchase = TransactionViewModel(ticker: "FB", shares: 10, tradePrice: 200, currentPrice: 200)
+        let purchase = TransactionAdapter(ticker: "FB", shares: 10, tradePrice: 200, currentPrice: 200)
         
         sut.validatePurchaseAttempt(purchase) { (isValid) in
             XCTAssertTrue(isValid)
@@ -151,7 +151,7 @@ class TradingEngineTests: XCTestCase {
     }
     
     func test_validatePurchaseAttempt_withInvalidPurchase() {
-        let purchase = TransactionViewModel(ticker: "FB", shares: 1000, tradePrice: 200, currentPrice: 200)
+        let purchase = TransactionAdapter(ticker: "FB", shares: 1000, tradePrice: 200, currentPrice: 200)
         
         sut.validatePurchaseAttempt(purchase) { (isValid) in
             XCTAssertFalse(isValid)
@@ -165,8 +165,8 @@ class TradingEngineTests: XCTestCase {
         loadExpectation.expectedFulfillmentCount = 2
         
         // given a buy then a sell transaction
-        let buyTransaction = TransactionViewModel(ticker: "FB", shares: 10, tradePrice: 100, currentPrice: 100)
-        let sellTransaction = TransactionViewModel(ticker: "FB", shares: 10, tradePrice: 200, currentPrice: 200)
+        let buyTransaction = TransactionAdapter(ticker: "FB", shares: 10, tradePrice: 100, currentPrice: 100)
+        let sellTransaction = TransactionAdapter(ticker: "FB", shares: 10, tradePrice: 200, currentPrice: 200)
         
         sut.handleBuyCompletion = { [unowned self] (equity, cash) in
             XCTAssertEqual(equity, 25_000)

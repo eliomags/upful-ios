@@ -20,9 +20,9 @@ class LedgerLogicTests: XCTestCase {
     // MARK: - Buying
     
     func testHandleBuy_withSimpleUpdate() {
-        let previousTransaction = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 1)
+        let previousTransaction = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 1)
         
-        let newTransaction = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2)
+        let newTransaction = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2)
         sut.handleBuyWithUpdate(newTransaction, storedTransaction: previousTransaction)
         
         XCTAssertEqual(previousTransaction.numberOfShares, 1)
@@ -31,9 +31,9 @@ class LedgerLogicTests: XCTestCase {
     }
     
     func testHandleBuy_withComplexUpdate() {
-        let previousTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
+        let previousTransaction = TransactionAdapter(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
         
-        let newTransaction = TransactionViewModel(ticker: "FB", shares: 80, tradePrice: 120, currentPrice: 120)
+        let newTransaction = TransactionAdapter(ticker: "FB", shares: 80, tradePrice: 120, currentPrice: 120)
         sut.handleBuyWithUpdate(newTransaction, storedTransaction: previousTransaction)
         
         XCTAssertEqual(previousTransaction.numberOfShares, 20)
@@ -44,9 +44,9 @@ class LedgerLogicTests: XCTestCase {
     // MARK: - Selling
     
     func testHandleSell_withSuccess() {
-        let previousTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
+        let previousTransaction = TransactionAdapter(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
         
-        let newTransaction = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 120, currentPrice: 120)
+        let newTransaction = TransactionAdapter(ticker: "FB", shares: 20, tradePrice: 120, currentPrice: 120)
         sut.handleSell(newTransaction, storedTransaction: previousTransaction)
         
         
@@ -56,11 +56,11 @@ class LedgerLogicTests: XCTestCase {
     }
     
     func testPriceUpdates() {
-        let storedTransaction1 = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
-        let storedTransaction2 = TransactionViewModel(ticker: "AAPL", shares: 20, tradePrice: 20, currentPrice: 20)
+        let storedTransaction1 = TransactionAdapter(ticker: "FB", shares: 20, tradePrice: 20, currentPrice: 20)
+        let storedTransaction2 = TransactionAdapter(ticker: "AAPL", shares: 20, tradePrice: 20, currentPrice: 20)
         
-        let updatedTransaction1 = TransactionViewModel(ticker: "FB", shares: 20, tradePrice: 80, currentPrice: 80)
-        let updatedTransaction2 = TransactionViewModel(ticker: "AAPL", shares: 20, tradePrice: 80, currentPrice: 80)
+        let updatedTransaction1 = TransactionAdapter(ticker: "FB", shares: 20, tradePrice: 80, currentPrice: 80)
+        let updatedTransaction2 = TransactionAdapter(ticker: "AAPL", shares: 20, tradePrice: 80, currentPrice: 80)
         sut.handlePriceUpdates(currentTransactions: [storedTransaction1, storedTransaction2],
                                updatedTransactions: [updatedTransaction1, updatedTransaction2])
         
@@ -69,9 +69,9 @@ class LedgerLogicTests: XCTestCase {
     }
     
     func testGetTotalPriceChange() {
-        let storedTransaction1 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 21)
+        let storedTransaction1 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 21)
         // 20
-        let storedTransaction2 = TransactionViewModel(ticker: "AAPL", shares: 2, tradePrice: 20, currentPrice: 10)
+        let storedTransaction2 = TransactionAdapter(ticker: "AAPL", shares: 2, tradePrice: 20, currentPrice: 10)
         // -20
         
         let total = sut.getTotalPriceChange(from: [storedTransaction1, storedTransaction2])

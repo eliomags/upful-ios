@@ -71,9 +71,9 @@ class HoldingTests: XCTestCase {
     
     fileprivate func makeSUTWithTwoBuysAndUpdatedBuy() -> Holding {
         let transactions = [
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 5, currentPrice: 5)
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 5, currentPrice: 5)
         ]
         for transaction in transactions {
             transaction.type = TransactionType.buy.rawValue
@@ -86,8 +86,8 @@ class HoldingTests: XCTestCase {
     
     fileprivate func makeSUTWithTwoBuys() -> Holding {
         let transactions = [
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
         ]
         for transaction in transactions {
             transaction.type = TransactionType.buy.rawValue
@@ -100,13 +100,13 @@ class HoldingTests: XCTestCase {
     
     fileprivate func makeSUTWithTwoBuysAndSell() -> Holding {
         var transactions = [
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
-            TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 2),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 2, currentPrice: 2),
         ]
         for transaction in transactions {
             transaction.type = TransactionType.buy.rawValue
         }
-        let transaction3 = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 5, currentPrice: 5)
+        let transaction3 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 5, currentPrice: 5)
         transaction3.type = TransactionType.sell.rawValue
         transactions.append(transaction3)
         

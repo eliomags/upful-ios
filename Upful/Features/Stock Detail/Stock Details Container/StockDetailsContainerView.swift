@@ -45,10 +45,13 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     }()
     
     let tradingEngine = TradingEngine.shared
+    var coordinator: Coordinator?
     
     @objc fileprivate func handleTradeTap() {
-//        tradingEngine.buy(transaction: TransactionViewModel(stock: stockViewModel.stock, numberOfShares: 5))
-        tradingEngine.sell(transaction: TransactionViewModel(stock: stockViewModel.stock, numberOfShares: 5))
+//        tradingEngine.buy(transaction: TransactionAdapter(stock: stockViewModel.stock, numberOfShares: 5))
+//        tradingEngine.sell(transaction: TransactionAdapter(stock: stockViewModel.stock, numberOfShares: 5))
+        coordinator = StockTradeCoordinator(self, ticker: stockViewModel.stock.ticker)
+        coordinator?.start()
     }
     
     // MARK: - Initializer Methods
@@ -61,6 +64,8 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - View Lifecycle Methods
         
     override func viewDidLoad() {
         super.viewDidLoad()

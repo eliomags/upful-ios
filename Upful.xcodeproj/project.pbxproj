@@ -23,7 +23,7 @@
 		3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F9E2343EA7900F4A5FC /* LargeGradientButton.swift */; };
 		3D206A08241E903A00F7E44C /* LedgerLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */; };
 		3D206A0E241E925100F7E44C /* Transaction+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */; };
-		3D206A12241EA67900F7E44C /* TransactionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A11241EA67900F7E44C /* TransactionViewModel.swift */; };
+		3D206A12241EA67900F7E44C /* TransactionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A11241EA67900F7E44C /* TransactionAdapter.swift */; };
 		3D206A14241EA69400F7E44C /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A13241EA69400F7E44C /* Transaction.swift */; };
 		3D206A16241EFCDE00F7E44C /* TransactionLedgerPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A15241EFCDE00F7E44C /* TransactionLedgerPersistence.swift */; };
 		3D206A18241F047F00F7E44C /* TransactionLedgerPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A17241F047F00F7E44C /* TransactionLedgerPersistence.swift */; };
@@ -55,6 +55,7 @@
 		3D206A642428545B00F7E44C /* HoldingMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A632428545B00F7E44C /* HoldingMapperTests.swift */; };
 		3D206A68242858B200F7E44C /* HoldingMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A67242858B200F7E44C /* HoldingMapper.swift */; };
 		3D206A6B2428EA5100F7E44C /* HoldingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A6A2428EA5100F7E44C /* HoldingTests.swift */; };
+		3D206A6E24297F5700F7E44C /* StockTradeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A6D24297F5700F7E44C /* StockTradeCoordinator.swift */; };
 		3D20EB7F2357965700D1093A /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB7E2357965700D1093A /* NotesViewModel.swift */; };
 		3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20EB8423581FE900D1093A /* CancelButton.swift */; };
 		3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20FB2822FB1F08007836DD /* AppDelegate.swift */; };
@@ -279,7 +280,7 @@
 		3D206A07241E903A00F7E44C /* LedgerLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerLogicTests.swift; sourceTree = "<group>"; };
 		3D206A0A241E90A300F7E44C /* TransactionDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TransactionDataModel.xcdatamodel; sourceTree = "<group>"; };
 		3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Transaction+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		3D206A11241EA67900F7E44C /* TransactionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewModel.swift; sourceTree = "<group>"; };
+		3D206A11241EA67900F7E44C /* TransactionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionAdapter.swift; sourceTree = "<group>"; };
 		3D206A13241EA69400F7E44C /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		3D206A15241EFCDE00F7E44C /* TransactionLedgerPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLedgerPersistence.swift; sourceTree = "<group>"; };
 		3D206A17241F047F00F7E44C /* TransactionLedgerPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionLedgerPersistence.swift; sourceTree = "<group>"; };
@@ -310,6 +311,7 @@
 		3D206A632428545B00F7E44C /* HoldingMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingMapperTests.swift; sourceTree = "<group>"; };
 		3D206A67242858B200F7E44C /* HoldingMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingMapper.swift; sourceTree = "<group>"; };
 		3D206A6A2428EA5100F7E44C /* HoldingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingTests.swift; sourceTree = "<group>"; };
+		3D206A6D24297F5700F7E44C /* StockTradeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTradeCoordinator.swift; sourceTree = "<group>"; };
 		3D20EB7E2357965700D1093A /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		3D20EB8423581FE900D1093A /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
 		3D20FB2522FB1F08007836DD /* Upful.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Upful.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -801,6 +803,8 @@
 		3D206A562423B01100F7E44C /* StockTrade */ = {
 			isa = PBXGroup;
 			children = (
+				3D206A6F24299B7B00F7E44C /* VIews */,
+				3D206A6C24297F4900F7E44C /* Coordinator */,
 				3D206A572423B01C00F7E44C /* Controllers */,
 				3D206A582423B02600F7E44C /* View Models */,
 			);
@@ -844,7 +848,7 @@
 			isa = PBXGroup;
 			children = (
 				3D206A0D241E925100F7E44C /* Transaction+CoreDataProperties.swift */,
-				3D206A11241EA67900F7E44C /* TransactionViewModel.swift */,
+				3D206A11241EA67900F7E44C /* TransactionAdapter.swift */,
 				3D206A29242104BE00F7E44C /* TransactionType.swift */,
 				3D206A1E241F198D00F7E44C /* TransactionContainerManager.swift */,
 			);
@@ -867,6 +871,21 @@
 				3D206A6A2428EA5100F7E44C /* HoldingTests.swift */,
 			);
 			path = Holdings;
+			sourceTree = "<group>";
+		};
+		3D206A6C24297F4900F7E44C /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				3D206A6D24297F5700F7E44C /* StockTradeCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		3D206A6F24299B7B00F7E44C /* VIews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = VIews;
 			sourceTree = "<group>";
 		};
 		3D20EB7C2357963C00D1093A /* Controller */ = {
@@ -2530,7 +2549,7 @@
 				3DB891DD24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift in Sources */,
 				3D206A502422998700F7E44C /* CashBalanceView.swift in Sources */,
 				3D0C5F78233FA42300F4A5FC /* WebViewViewController.swift in Sources */,
-				3D206A12241EA67900F7E44C /* TransactionViewModel.swift in Sources */,
+				3D206A12241EA67900F7E44C /* TransactionAdapter.swift in Sources */,
 				3D0C5F6F233A49A800F4A5FC /* EmptyStockCell.swift in Sources */,
 				3D3749BA23BE66B4000D0597 /* ScreenerPreviewTableViewCell.swift in Sources */,
 				3D7013E623ECFDD600102E9C /* WebViewCoordinator.swift in Sources */,
@@ -2589,6 +2608,7 @@
 				3DBEFFD723ABCCF400BA407E /* StockPreviewDataLoader.swift in Sources */,
 				3D0C5F942342C88300F4A5FC /* UpfulProductViewModel.swift in Sources */,
 				3D206A48242184BA00F7E44C /* TradingEngine.swift in Sources */,
+				3D206A6E24297F5700F7E44C /* StockTradeCoordinator.swift in Sources */,
 				3D58651F231DE67B00495D79 /* Constants.swift in Sources */,
 				3D7013DB23EC9B3800102E9C /* MainCoordinator.swift in Sources */,
 				3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */,

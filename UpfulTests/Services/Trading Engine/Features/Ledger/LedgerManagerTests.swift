@@ -39,7 +39,7 @@ class LedgerManagerTests: XCTestCase {
     // MARK: - Buying
     
     func testHandleBuyWithNewTransaction() {
-        let transaction = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
+        let transaction = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
         let buyExpectation = expectation(description: #function)
 
         sut.handleBuy(transaction, completion: { [unowned self] in
@@ -114,10 +114,10 @@ class LedgerManagerTests: XCTestCase {
     // MARK: - Fileprivate Methods
     
     fileprivate func makeFourBuys(completion: @escaping (() -> Void)) {
-        sut.handleBuy(TransactionViewModel(ticker: "AAPL", shares: 1, tradePrice: 100, currentPrice: 100), completion: { [unowned self] in
-        self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100), completion: { [unowned self] in
-            self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 120, currentPrice: 120), completion: { [unowned self] in
-                self.sut.handleBuy(TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 150, currentPrice: 150), completion: completion)
+        sut.handleBuy(TransactionAdapter(ticker: "AAPL", shares: 1, tradePrice: 100, currentPrice: 100), completion: { [unowned self] in
+        self.sut.handleBuy(TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100), completion: { [unowned self] in
+            self.sut.handleBuy(TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 120, currentPrice: 120), completion: { [unowned self] in
+                self.sut.handleBuy(TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 150, currentPrice: 150), completion: completion)
                 })
             })
         })

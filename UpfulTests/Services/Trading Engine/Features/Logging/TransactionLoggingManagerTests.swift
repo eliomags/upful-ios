@@ -51,8 +51,8 @@ class LoggingManagerTests: XCTestCase {
         let loadExpectation = expectation(description: #function)
         loadExpectation.expectedFulfillmentCount = 2
         
-        let fbBuy = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
-        let fbSell = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 200, currentPrice: 200)
+        let fbBuy = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
+        let fbSell = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 200, currentPrice: 200)
         
         // Initial buys
         sut.log(fbBuy, of: .buy) { [unowned self] in
@@ -68,7 +68,7 @@ class LoggingManagerTests: XCTestCase {
                     loadExpectation.fulfill()
                     
         // Check if order is correct after another buy
-                    let anotherFBbuy = TransactionViewModel(ticker: "FB", shares: 1, tradePrice: 150, currentPrice: 150)
+                    let anotherFBbuy = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 150, currentPrice: 150)
                     self.sut.log(anotherFBbuy, of: .buy) { [unowned self] in
                         self.sut.load { (result) in
                             switch result {
