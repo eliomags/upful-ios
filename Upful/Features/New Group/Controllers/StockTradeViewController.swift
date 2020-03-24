@@ -41,14 +41,15 @@ final class StockTradeViewController: UITableViewController {
     
     private lazy var buyButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("BUY", for: .normal)
+        button.setTitle("Buy", for: .normal)
         let size = UIFont.preferredFont(forTextStyle: .body).pointSize
         button.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        button.setTitleColor(.appAccent3, for: .normal)
+        button.backgroundColor = .appAccent3
+        button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        button.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
-        button.layer.cornerRadius = 12
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        button.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
+        button.layer.cornerRadius = 20
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(handleBuyTap), for: .touchUpInside)
         return button
@@ -56,16 +57,17 @@ final class StockTradeViewController: UITableViewController {
     
     private lazy var sellButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("SELL", for: .normal)
+        button.setTitle("Sell", for: .normal)
         let size = UIFont.preferredFont(forTextStyle: .body).pointSize
         button.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: .bold)
         button.setTitleColor(UIColor.systemRed, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        button.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
-        button.layer.cornerRadius = 12
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        button.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
+        button.layer.cornerRadius = 20
         button.layer.masksToBounds = true
-        button.layer.borderWidth = 0
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.systemRed.cgColor
         button.addTarget(self, action: #selector(handleSellTap), for: .touchUpInside)
         return button
     }()
@@ -259,6 +261,7 @@ final class StockTradeViewController: UITableViewController {
             let numberOfShares = numberOfShares else {
             return
         }
+        if numberOfShares == 0 { return }
         buyButton.isEnabled = false
         sellButton.isEnabled = false
         
@@ -299,6 +302,7 @@ final class StockTradeViewController: UITableViewController {
             let numberOfShares = numberOfShares else {
             return
         }
+        if numberOfShares == 0 { return }
         buyButton.isEnabled = false
         sellButton.isEnabled = false
         
