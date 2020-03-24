@@ -57,7 +57,7 @@ class Holding {
     }
     
     var totalPriceMovementPercent: String {
-        return (Double(totalPriceMovementDollar / averagePrice) * 100).roundToTwoDecimal() + "%"
+        return (Double(((totalPriceMovementDollar / Double(totalShareCount)) / averagePrice))).roundToTwoDecimal() + "%"
     }
     
     // MARK: - Properties

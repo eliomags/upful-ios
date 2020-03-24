@@ -44,7 +44,7 @@ final class StockTradeViewController: UITableViewController {
         button.setTitle("Buy", for: .normal)
         let size = UIFont.preferredFont(forTextStyle: .body).pointSize
         button.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        button.backgroundColor = .appAccent3
+        button.backgroundColor = .systemGreen
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -236,13 +236,6 @@ final class StockTradeViewController: UITableViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    /*
-     when trade tapped,
-         fetch most current price,
-             if fail, present alert saying failed to make purchase
-             if success, construct a TransactionAdapter to pass through TradingEngine
-     */
-    
     @objc func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
@@ -261,9 +254,17 @@ final class StockTradeViewController: UITableViewController {
             let numberOfShares = numberOfShares else {
             return
         }
-        if numberOfShares == 0 { return }
+        
+        transaction.numberOfShares = Int32(numberOfShares)
+
         buyButton.isEnabled = false
         sellButton.isEnabled = false
+        
+        if transaction.numberOfShares == 0 {
+            buyButton.isEnabled = true
+            sellButton.isEnabled = true
+            return
+        }
         
         tradingEngine.loadHoldings { [weak self] (holdings, err) in
             guard let self = self else { return }
@@ -275,10 +276,11 @@ final class StockTradeViewController: UITableViewController {
             }
             if let currentHolding = holdings.first(where: { $0.ticker == self.ticker }) {
                 if numberOfShares <= currentHolding.totalShareCount {
-                    self.tradingEngine.sell(transaction: transaction, completion: {
+                    self.tradingEngine.sell(transaction: transaction, completion: { [weak self] in
                         DispatchQueue.main.async {
-                            InformationViewPresenter().showGenericSuccess(in: self, description: "Sale Successful.", completion: {
-                                self.dismiss(animated: true, completion: nil)
+                            guard let self = self else { return }
+                            InformationViewPresenter().showGenericSuccess(in: self, description: "Sale Successful.", completion: { [weak self] in
+                                self?.dismiss(animated: true, completion: nil)
                             })
                         }
                     })
@@ -302,13 +304,20 @@ final class StockTradeViewController: UITableViewController {
             let numberOfShares = numberOfShares else {
             return
         }
-        if numberOfShares == 0 { return }
+        transaction.numberOfShares = Int32(numberOfShares)
+
         buyButton.isEnabled = false
         sellButton.isEnabled = false
+
+        if transaction.numberOfShares == 0 {
+            buyButton.isEnabled = true
+            sellButton.isEnabled = true
+            return
+        }
         
         transaction.numberOfShares = Int32(numberOfShares)
-        tradingEngine.buy(transaction: transaction, completion: { didComplete in
-            didComplete ? self.handleBuySuccess() : self.handleBuyFailure()
+        tradingEngine.buy(transaction: transaction, completion: { [weak self] didComplete in
+            didComplete ? self?.handleBuySuccess() : self?.handleBuyFailure()
         })
     }
     
@@ -375,8 +384,8 @@ final class StockTradeViewController: UITableViewController {
     fileprivate func handleBuySuccess() {
         DispatchQueue.main.async {
             InformationViewPresenter().showGenericSuccess(in: self, description: "Purchased Succesfully",
-                                                          completion: { [unowned self] in
-                self.dismiss(animated: true, completion: nil)
+                                                          completion: { [weak self] in
+                self?.dismiss(animated: true, completion: nil)
             })
         }
     }
