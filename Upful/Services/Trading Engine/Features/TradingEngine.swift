@@ -73,28 +73,30 @@ final class TradingEngine {
             })
         }
     }
-    
-    // TODO: - Load current price after holdings load
-    
-//    func update(with transactions: [Transaction], completion: (() -> Void)? = nil) {
-//        ledgerManager.handlePriceUpdates(transactions, completion: { totalDollarMovement in
-//            self.balanceManager.handleEquityUpdate(with: totalDollarMovement)
-//
-//            self.handleEquityUpdate?(self.balanceManager.totalEquityBalance,
-//                                     self.balanceManager.currentCashBalance)
-//            completion?()
-//        })
-//    }
+        
+    func updateEquityBalance(with holdings: [Holding]) {
+        // cash + total movement + total value of shares
+        let totalMovement = holdings
+            .filter { $0.totalShareCount != 0 }
+            .map { $0.totalPriceMovementDollar }
+            .reduce(0) { (res, val) -> Double in return res + val }
+        
+        let totalValue = holdings
+            .reduce(0) { (res, holding) -> Double in return res + holding.currentTotalValue }
+        
+        balanceManager.handleEquityUpdate(with: totalMovement + totalValue)
+    }
     
     // MARK: - Loading
     
     func loadHoldings(completion: (([Holding], Error?) -> Void)?) {
-        ledgerManager.loadSavedTransactions { (result) in
+        ledgerManager.loadSavedTransactions { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let ledgerTransactions):
                 let holdings = HoldingMapper(transactions: ledgerTransactions).map()
-                
-                completion?(holdings, nil)
+                self.updateEquityBalance(with: holdings)
+                completion?(holdings.filter { $0.totalShareCount != 0 }, nil)
                 
             case .failure(let err):
                 completion?([], err)

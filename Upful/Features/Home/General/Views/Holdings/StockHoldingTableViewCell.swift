@@ -37,7 +37,6 @@ class StockHoldingTableViewCell: UITableViewCell {
     }()
     
     
-    
     let currentPriceLabel: UILabel = {
        let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
@@ -64,9 +63,10 @@ class StockHoldingTableViewCell: UITableViewCell {
     
     
     let dollarChangeLabel: UILabel = {
-       let label = UILabel()
-        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        let label = UILabel()
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        label.textColor = .gray
         label.textAlignment = .center
         return label
     }()
@@ -80,11 +80,12 @@ class StockHoldingTableViewCell: UITableViewCell {
     }()
     
     private lazy var priceChangeStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [dollarChangeLabel, percentChangeLabel])
+        let sv = UIStackView(arrangedSubviews: [percentChangeLabel, dollarChangeLabel])
         sv.axis = .vertical
         sv.spacing = 6
         return sv
     }()
+    
     
     private lazy var contentStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [descriptionStackView, priceDescriptionLabel, priceChangeStackView])

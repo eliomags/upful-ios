@@ -15,16 +15,25 @@ class Holding {
     let ticker: String
     private(set) var transactions: [Transaction]
     
+    // MARK: - Properties
+    
+    var currentPrice: Double?
+
+    // MARK: - Intiializer
+
+    init(ticker: String, transactions: [Transaction]) {
+        self.ticker = ticker
+        self.transactions = transactions
+    }
+}
+
+extension Holding {
     private var buys: [Transaction] {
         return transactions.filter { $0.type == TransactionType.buy.rawValue }
     }
     private var sells: [Transaction] {
         return transactions.filter { $0.type == TransactionType.sell.rawValue }
     }
-    
-    // MARK: - Properties
-    
-    var currentPrice: Double?
     var totalShareCount: Int {
         let buyCount = buys.reduce(0) { (res, transaction) -> Int in
             return res + Int(transaction.numberOfShares)
@@ -33,6 +42,9 @@ class Holding {
             return res + Int(transaction.numberOfShares)
         }
         return buyCount - sellCount
+    }
+    var currentTotalValue: Double {
+        return (currentPrice ?? 0) * Double(totalShareCount)
     }
     var averagePrice: Double {
         let totalBuyShares = buys.reduce(0) { (res, transaction) -> Int in
@@ -58,12 +70,5 @@ class Holding {
     
     var totalPriceMovementPercent: String {
         return (Double(((totalPriceMovementDollar / Double(totalShareCount)) / averagePrice))).roundToTwoDecimal() + "%"
-    }
-    
-    // MARK: - Properties
-
-    init(ticker: String, transactions: [Transaction]) {
-        self.ticker = ticker
-        self.transactions = transactions
     }
 }

@@ -105,6 +105,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         logicController.holdingsLoadCompletion = { [weak self] in
             guard let self = self else { return }
             self.tableView.reloadSections([Section.holdings.rawValue], with: .automatic)
+            self.configureTransactionHeader()
             self.refreshControl.endRefreshing()
         }
     }
@@ -152,9 +153,9 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     fileprivate func configureTransactionHeader() {
         tradingBalanceView.cashBalanceView.cashValueLabel.text =
-            "$\(logicController.tradingEngine.balanceManager.currentCashBalance.roundToTwoDecimal())"
+            "$\(logicController.tradingEngine.balanceManager.currentCashBalance.withCommas())"
         tradingBalanceView.totalEquityView.equityValueLabel.text =
-            "$\(logicController.tradingEngine.balanceManager.totalEquityBalance.roundToTwoDecimal())"
+            "$\(logicController.tradingEngine.balanceManager.totalEquityBalance.withCommas())"
         
         let df = DateFormatter()
         df.dateFormat = "MMM d, h:mm a"

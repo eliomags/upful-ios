@@ -87,6 +87,7 @@ class HomeGeneralLogicController {
             switch result {
             case .success(let quote):
                 holding.currentPrice = quote.latestPrice
+                self.tradingEngine.updateEquityBalance(with: self.holdings)
             case .failure(_):
                 break
             }

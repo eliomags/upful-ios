@@ -24,7 +24,7 @@ struct HoldingMapper {
         while !copy.isEmpty {
             let first = copy.first!
             let holding = Holding(ticker: first.ticker,
-                                  transactions: allTransactionsSatifying(first, from: &copy))
+                                  transactions: allTransactionsSatisfying(first, from: &copy))
             holdings.append(holding)
             
             removeAllTransactionsSatisfying(first, from: &copy)
@@ -35,7 +35,7 @@ struct HoldingMapper {
     
     // MARK: - Helper Methods
     
-    private func allTransactionsSatifying(_ transaction: Transaction, from transactions: inout [Transaction]) -> [Transaction] {
+    private func allTransactionsSatisfying(_ transaction: Transaction, from transactions: inout [Transaction]) -> [Transaction] {
         return transactions.filter({ $0.ticker == transaction.ticker })
     }
     
