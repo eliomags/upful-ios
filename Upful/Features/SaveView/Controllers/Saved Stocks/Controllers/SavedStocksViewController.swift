@@ -191,14 +191,14 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let isLoaded = viewModel.state == .loaded
         let stockHeader = TableSectionHeaderView()
-        stockHeader.headerTextLabel.text = "Saved Stocks"
+        stockHeader.headerTextLabel.text = ""
         stockHeader.addButton.setTitle("", for: .normal)
         return isLoaded ? stockHeader: nil
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let isLoaded = viewModel.state == .loaded
-        return isLoaded ? 75 : 0
+        return isLoaded ? 35 : 0
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

@@ -26,23 +26,30 @@ final class MainCoordinator: Coordinator {
     }
     
     private func initializeVC() -> UIViewController {
-        let homeVC = HomeContainerViewController()
+        let homeVC = HomeGeneralViewController()
         let exploreVC = ExploreViewController()
+        let saveVC = SavedViewController()
         let settingsVC = SettingsViewController()
         
-        let controllers = [homeVC,exploreVC,settingsVC]
+        let controllers = [homeVC,exploreVC,saveVC,settingsVC]
             
         homeVC.tabBarItem = UITabBarItem(
-            title: "Home",
+            title: "",
             image: UIImage(systemName: "house.fill"),
             tag: 0)
+        
         exploreVC.tabBarItem = UITabBarItem(
-            title: "Explore",
+            title: "",
             image: UIImage(systemName: "magnifyingglass",
                             withConfiguration: UIImage.SymbolConfiguration(weight: .bold)),
             tag: 1)
+        
+        saveVC.tabBarItem = UITabBarItem(title: "",
+            image: UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)),
+            selectedImage: UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)))
+        
         settingsVC.tabBarItem = UITabBarItem(
-            title: "Settings",
+            title: "",
             image: UIImage(systemName: "gear",
                            withConfiguration: UIImage.SymbolConfiguration(weight: .bold)),
             tag: 2)

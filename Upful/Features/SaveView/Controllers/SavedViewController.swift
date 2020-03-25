@@ -1,19 +1,19 @@
 //
-//  HomeContainer.swift
+//  SavedViewController.swift
 //  Upful
 //
-//  Created by Yanik Simpson on 12/17/19.
-//  Copyright © 2019 Yanik Simpson. All rights reserved.
+//  Created by Yanik Simpson on 3/25/20.
+//  Copyright © 2020 Yanik Simpson. All rights reserved.
 //
 
 import UIKit
 
-class HomeContainerViewController: MenuContainerViewController {
+class SavedViewController: MenuContainerViewController {
     
     override var menubarControllers: [UIViewController] {
-        let generalVC = HomeGeneralViewController()
-
-        return [generalVC]
+        let savedStocksVC = SavedStocksViewController()
+        let savedScreenerVC = SavedScreenerViewController()
+        return [savedStocksVC, savedScreenerVC]
     }
     
     // MARK: - Views
@@ -34,14 +34,13 @@ class HomeContainerViewController: MenuContainerViewController {
         collectionView.backgroundColor = VersionManager.mainContainerBackground()
         configureNavBar()
         setUpViews()
-        UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
     }
     
     // MARK: - View Setup
      
     fileprivate func configureNavBar() {
         navigationItem.largeTitleDisplayMode = .never
-        navigationItem.title = "Home"
+        navigationItem.title = "Bookmarks"
         navigationController?.navigationBar.isTranslucent = false
     }
     
@@ -79,3 +78,4 @@ class HomeContainerViewController: MenuContainerViewController {
         navigationController?.pushViewController(screenerSelectionVC, animated: true)
     }
 }
+

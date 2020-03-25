@@ -195,14 +195,14 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let isLoaded = viewModel.state == .loaded
         let screenerHeader = TableSectionHeaderView()
-        screenerHeader.headerTextLabel.text = "Saved Screeners"
+        screenerHeader.headerTextLabel.text = ""
         screenerHeader.addButton.setTitle("", for: .normal)
         return isLoaded ? screenerHeader : nil
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let isLoaded = viewModel.state == .loaded
-        return isLoaded ? 75 : 0
+        return isLoaded ? 35 : 0
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

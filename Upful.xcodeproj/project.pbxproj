@@ -99,6 +99,7 @@
 		3D42BE52230C672C00806AFF /* CompanyFundamentals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE51230C672C00806AFF /* CompanyFundamentals.swift */; };
 		3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE54230C86B600806AFF /* Int+Extensions.swift */; };
 		3D42BE58230E26A900806AFF /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE57230E26A900806AFF /* UITableView+Extensions.swift */; };
+		3D4B1EBF242BC6410021A00D /* SavedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4B1EBE242BC6410021A00D /* SavedViewController.swift */; };
 		3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */; };
 		3D4FB99C2384403C00B9BFE1 /* Screener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FB99B2384403C00B9BFE1 /* Screener.swift */; };
 		3D4FB99E238444B200B9BFE1 /* NavigationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */; };
@@ -363,6 +364,7 @@
 		3D42BE51230C672C00806AFF /* CompanyFundamentals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyFundamentals.swift; sourceTree = "<group>"; };
 		3D42BE54230C86B600806AFF /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 		3D42BE57230E26A900806AFF /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
+		3D4B1EBE242BC6410021A00D /* SavedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedViewController.swift; sourceTree = "<group>"; };
 		3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchViewController.swift; sourceTree = "<group>"; };
 		3D4FB99B2384403C00B9BFE1 /* Screener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screener.swift; sourceTree = "<group>"; };
 		3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationHeaderView.swift; sourceTree = "<group>"; };
@@ -1228,6 +1230,24 @@
 			path = Intrinio;
 			sourceTree = "<group>";
 		};
+		3D4B1EBC242BC60A0021A00D /* SaveView */ = {
+			isa = PBXGroup;
+			children = (
+				3D4B1EBD242BC6310021A00D /* Controllers */,
+			);
+			path = SaveView;
+			sourceTree = "<group>";
+		};
+		3D4B1EBD242BC6310021A00D /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3D4B1EBE242BC6410021A00D /* SavedViewController.swift */,
+				3D6BD0C223B5077700FBC1ED /* Saved Stocks */,
+				3D6BD0BC23B506F400FBC1ED /* Saved Screeners */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		3D4D8606231C5B2F0065CF9F /* Stock Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -2072,8 +2092,6 @@
 				3D6BD0C323B5079900FBC1ED /* Reusabile Views */,
 				3DBEFFC023A9BD6D00BA407E /* Container */,
 				3DBEFFBF23A9BD6900BA407E /* General */,
-				3D6BD0C223B5077700FBC1ED /* Saved Stocks */,
-				3D6BD0BC23B506F400FBC1ED /* Saved Screeners */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2081,6 +2099,7 @@
 		3DF5FBC023341ED600856205 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				3D4B1EBC242BC60A0021A00D /* SaveView */,
 				3D206A562423B01100F7E44C /* StockTrade */,
 				3D70DC8F23E32E3800097323 /* Recommendations */,
 				3DFAC57923B9AFDF00378AF0 /* Screener Selection */,
@@ -2450,6 +2469,7 @@
 				3D206A1F241F198D00F7E44C /* TransactionContainerManager.swift in Sources */,
 				3D7C854C2337479300A2E63E /* CustomSizeImageView.swift in Sources */,
 				3D58651A231C946600495D79 /* UserFeedbackPresenter.swift in Sources */,
+				3D4B1EBF242BC6410021A00D /* SavedViewController.swift in Sources */,
 				3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */,
 				3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */,
 				3D206A71242AFC5F00F7E44C /* PercentChangeView.swift in Sources */,

@@ -32,6 +32,12 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
 
     // MARK: - Views
     
+    private lazy var screenerSelectionButton: CustomRoundButton = {
+        let b = CustomRoundButton(imageName: "plus")
+        b.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleScreenerSelectionTap)))
+        return b
+    }()
+    
     private lazy var headerView: HomeFeedAuxiliaryActionView = {
         let view = HomeFeedAuxiliaryActionView()
         view.preferenceButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleEditPreferenceTap)))
@@ -61,7 +67,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        title = "General"
     }
     
     required init?(coder: NSCoder) {
@@ -72,8 +77,10 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func loadView() {
         super.loadView()
+        setupNavBar()
         setupTableView()
         setupTableViewCells()
+        addScreenerNavButton()
     }
     
     override func viewDidLoad() {
@@ -83,6 +90,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         observeViewModelHoldingsUpdates()
         logicController.fetchTableData()
         configureTransactionHeader()
+        UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -134,6 +142,20 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     // MARK: - View Setup
+    
+    fileprivate func setupNavBar() {
+        navigationItem.title = ""
+        navigationItem.largeTitleDisplayMode = .never
+    }
+    
+    fileprivate func addScreenerNavButton() {
+        view.addSubview(screenerSelectionButton)
+        screenerSelectionButton.anchor(top: nil,
+                                       leading: nil,
+                                       bottom: view.layoutMarginsGuide.bottomAnchor,
+                                       trailing: view.layoutMarginsGuide.trailingAnchor,
+                                       padding: .init(top: 0, left: 0, bottom: 16, right: 4))
+    }
     
     fileprivate func setupTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
@@ -194,6 +216,11 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         default:
             break
         }
+    }
+    
+    @objc fileprivate func handleScreenerSelectionTap(sender: UIButton) {
+        let screenerSelectionVC = ScreenerSelectionContainerView(collectionViewLayout: UICollectionViewFlowLayout())
+        navigationController?.pushViewController(screenerSelectionVC, animated: true)
     }
     
     @objc fileprivate func handleEditPreferenceTap(_ gester: UITapGestureRecognizer) {
