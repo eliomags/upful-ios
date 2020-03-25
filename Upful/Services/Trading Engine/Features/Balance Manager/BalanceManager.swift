@@ -66,7 +66,7 @@ class BalanceManager {
     
     private func saveBalance() {
         userDefaults.set(currentCashBalance, forKey: BalanceType.cash.rawValue)
-//        userDefaults.set(totalEquityBalance, forKey: BalanceType.equity.rawValue)
+        userDefaults.set(totalEquityBalance, forKey: BalanceType.equity.rawValue)
     }
 }
 

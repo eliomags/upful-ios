@@ -71,16 +71,13 @@ class StockHoldingTableViewCell: UITableViewCell {
         return label
     }()
     
-    let percentChangeLabel: UILabel = {
-        let label = UILabel()
-        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
-        label.textAlignment = .center
-        return label
+    let percentChangeView: PercentChangeView = {
+        let view = PercentChangeView()
+        return view
     }()
     
     private lazy var priceChangeStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [percentChangeLabel, dollarChangeLabel])
+        let sv = UIStackView(arrangedSubviews: [percentChangeView, dollarChangeLabel])
         sv.axis = .vertical
         sv.spacing = 6
         return sv
@@ -111,5 +108,4 @@ class StockHoldingTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }

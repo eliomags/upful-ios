@@ -76,15 +76,23 @@ final class TradingEngine {
         
     func updateEquityBalance(with holdings: [Holding]) {
         // cash + total movement + total value of shares
-        let totalMovement = holdings
-            .filter { $0.totalShareCount != 0 }
-            .map { $0.totalPriceMovementDollar }
-            .reduce(0) { (res, val) -> Double in return res + val }
+        let total = holdings.filter { $0.totalShareCount != 0 }
+            .reduce(0) { (res, holding) -> Double in
+                let totalHoldingValue = holding.currentTotalValue
+                let totalPriceMovement = holding.totalPriceMovementDollar
+                
+                return totalHoldingValue + totalPriceMovement + res
+        }
         
-        let totalValue = holdings
-            .reduce(0) { (res, holding) -> Double in return res + holding.currentTotalValue }
+//        let totalMovement = holdings
+//            .filter { $0.totalShareCount != 0 }
+//            .map { $0.totalPriceMovementDollar }
+//            .reduce(0) { (res, val) -> Double in return res + val }
+//
+//        let totalValue = holdings
+//            .reduce(0) { (res, holding) -> Double in return res + holding.currentTotalValue }
         
-        balanceManager.handleEquityUpdate(with: totalMovement + totalValue)
+        balanceManager.handleEquityUpdate(with: total)
     }
     
     // MARK: - Loading

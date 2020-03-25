@@ -279,7 +279,7 @@ final class StockTradeViewController: UITableViewController {
                     self.tradingEngine.sell(transaction: transaction, completion: { [weak self] in
                         DispatchQueue.main.async {
                             guard let self = self else { return }
-                            InformationViewPresenter().showGenericSuccess(in: self, description: "Sale Successful.", completion: { [weak self] in
+                            InformationViewPresenter().showGenericSuccess(in: self, description: "Sold Successfully", completion: { [weak self] in
                                 self?.dismiss(animated: true, completion: nil)
                             })
                         }

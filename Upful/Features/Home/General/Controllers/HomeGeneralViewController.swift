@@ -161,6 +161,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         df.dateFormat = "MMM d, h:mm a"
         df.timeZone = TimeZone(abbreviation: "EST")
         tradingBalanceView.lastUpdatedLabel.text = "Last Updated, \(df.string(from: Date())) EST"
+        
+        let equity = logicController.tradingEngine.balanceManager.totalEquityBalance
+        equity-25000 > 0 ? tradingBalanceView.setPositive() : tradingBalanceView.setNegative()
+        let dollarDiff = (equity - 25_000).withCommas()
+        let percentDiff = (((equity / 25_000) - 1) * 100).withCommas()
+        tradingBalanceView.totalEquityView.totalReturnLabel.text =
+            "$\(dollarDiff) • \(percentDiff)%"
+        
     }
     
     // MARK: - Actions
@@ -221,7 +229,16 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             stockHoldingsCell?.currentPriceLabel.text = "$\(holding.currentPrice?.roundToTwoDecimal() ?? "")"
             stockHoldingsCell?.averagePriceLabel.text = "$\(holding.averagePrice.roundToTwoDecimal())"
             stockHoldingsCell?.dollarChangeLabel.text = "$" + holding.totalPriceMovementDollar.roundToTwoDecimal()
-            stockHoldingsCell?.percentChangeLabel.text = holding.totalPriceMovementPercent
+            stockHoldingsCell?.percentChangeView.percentChangeLabel.text = holding.totalPriceMovementPercent
+            
+            if holding.totalPriceMovementDollar > 0 {
+                stockHoldingsCell?.percentChangeView.showPositive()
+            } else if holding.totalPriceMovementDollar > 0 {
+                stockHoldingsCell?.percentChangeView.showNegative()
+            } else {
+                stockHoldingsCell?.percentChangeView.showNeutral()
+            }
+            
             return stockHoldingsCell ?? UITableViewCell()
         }
     }

@@ -51,4 +51,13 @@ final class TradingBalanceView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Update
+    
+    func setPositive() {
+        totalEquityView.totalReturnLabel.textColor = UIColor.systemGreen
+    }
+    func setNegative() {
+        totalEquityView.totalReturnLabel.textColor = UIColor.systemRed
+    }
 }
