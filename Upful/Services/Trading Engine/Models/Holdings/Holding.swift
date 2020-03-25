@@ -69,6 +69,6 @@ extension Holding {
     }
     
     var totalPriceMovementPercent: String {
-        return (Double(((totalPriceMovementDollar / Double(totalShareCount)) / averagePrice))).roundToTwoDecimal() + "%"
+        return (Double(((totalPriceMovementDollar / Double(totalShareCount)) / averagePrice)) * 100).roundToTwoDecimal() + "%"
     }
 }

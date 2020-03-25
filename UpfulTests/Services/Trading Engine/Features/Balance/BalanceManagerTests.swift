@@ -28,29 +28,29 @@ class BalanceManagerTests: XCTestCase {
     }
     
     func test_handleBuy_balanceUpdates() {
-        let transaction1 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
+        let transaction1 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100)
         
-        sut.handleBuy(for: transaction1)
+        sut.handleBuy(for: transaction1.tradePrice, shares: Int(transaction1.numberOfShares))
         
         XCTAssertEqual(sut.currentCashBalance, 24_900)
         XCTAssertEqual(sut.totalEquityBalance, 25_000)
         
-        let transaction2 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 900, currentPrice: 900)
-        sut.handleBuy(for: transaction2)
+        let transaction2 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 900)
+        sut.handleBuy(for: transaction2.tradePrice, shares: Int(transaction2.numberOfShares))
 
         XCTAssertEqual(sut.currentCashBalance, 24_000)
         XCTAssertEqual(sut.totalEquityBalance, 25_000)
     }
     
     func test_handleSell_withBalanceUpdates() {
-        let transaction1 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
-        sut.handleSell(for: transaction1)
-        
+        let transaction1 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100)
+        sut.handleSell(for: transaction1.tradePrice, shares: Int(transaction1.numberOfShares))
+
         XCTAssertEqual(sut.currentCashBalance, 25_100)
         XCTAssertEqual(sut.totalEquityBalance, 25_000)
         
-        let transaction2 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 900, currentPrice: 900)
-        sut.handleSell(for: transaction2)
+        let transaction2 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 900)
+        sut.handleSell(for: transaction2.tradePrice, shares: Int(transaction2.numberOfShares))
 
         XCTAssertEqual(sut.currentCashBalance, 26_000)
         XCTAssertEqual(sut.totalEquityBalance, 25_000)

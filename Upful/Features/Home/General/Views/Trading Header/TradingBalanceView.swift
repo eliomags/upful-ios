@@ -60,4 +60,7 @@ final class TradingBalanceView: UIView {
     func setNegative() {
         totalEquityView.totalReturnLabel.textColor = UIColor.systemRed
     }
+    func setNeutral() {
+        totalEquityView.totalReturnLabel.textColor = UIColor.label
+    }
 }

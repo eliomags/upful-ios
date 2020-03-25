@@ -17,13 +17,7 @@ final class TradingEngine {
     let balanceManager: BalanceManager
     private let loggerManager: TransactionLoggingManager
     private let ledgerManager: LedgerManager
-    
-    // MARK: - Configuration
-    
-    var handleEquityUpdate: ((_ equity: Double,_ cash: Double) -> Void)?
-    var handleBuyCompletion: ((_ equity: Double,_ cash: Double) -> Void)?
-    var handleSellCompletion: ((_ equity: Double,_ cash: Double) -> Void)?
-
+        
     // MARK: - Initializer
 
     init(balanceDefaults: UserDefaults = UserDefaults.standard,
@@ -48,8 +42,6 @@ final class TradingEngine {
                             self.balanceManager.handleBuy(for: transaction.tradePrice,
                                                           shares: Int(transaction.numberOfShares))
                             completion?(isValid)
-                            self.handleBuyCompletion?(self.balanceManager.totalEquityBalance,
-                                                      self.balanceManager.currentCashBalance)
                         })
                     })
                 }
@@ -61,6 +53,7 @@ final class TradingEngine {
     
     func sell(transaction: Transaction, completion: (() -> Void)? = nil) {
         DispatchQueue.global().async {
+            
             self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
                 self.ledgerManager.save(transaction, completion: { [unowned self] in
                     AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .sell))
@@ -68,31 +61,19 @@ final class TradingEngine {
                     self.balanceManager.handleSell(for: transaction.tradePrice,
                                                    shares: Int(transaction.numberOfShares))
                     completion?()
-                    self.handleSellCompletion?(self.balanceManager.totalEquityBalance,
-                                               self.balanceManager.currentCashBalance)
                 })
             })
         }
     }
         
     func updateEquityBalance(with holdings: [Holding]) {
-        // cash + total movement + total value of shares
+        // total movement + total value of shares
         let total = holdings.filter { $0.totalShareCount != 0 }
             .reduce(0) { (res, holding) -> Double in
                 let totalHoldingValue = holding.currentTotalValue
-                let totalPriceMovement = holding.totalPriceMovementDollar
-                
-                return totalHoldingValue + totalPriceMovement + res
+                return totalHoldingValue + res
         }
-        
-//        let totalMovement = holdings
-//            .filter { $0.totalShareCount != 0 }
-//            .map { $0.totalPriceMovementDollar }
-//            .reduce(0) { (res, val) -> Double in return res + val }
-//
-//        let totalValue = holdings
-//            .reduce(0) { (res, holding) -> Double in return res + holding.currentTotalValue }
-        
+    
         balanceManager.handleEquityUpdate(with: total)
     }
     
