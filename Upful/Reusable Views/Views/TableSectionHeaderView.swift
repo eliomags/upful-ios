@@ -12,9 +12,10 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
 
     // MARK: - Views
     
-    let headerTextLabel: LargeSectionHeaderLabel = {
-        let label = LargeSectionHeaderLabel(padding: 0)
-        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+    let headerTextLabel: UILabel = {
+        let label = UILabel()
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption2).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
         return label
     }()
     
@@ -41,7 +42,7 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
         button.setTitleColor(.appAccent3, for: .normal)
         button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
+//        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
         button.widthAnchor.constraint(equalToConstant: 100).isActive = true
         return button
     }()
@@ -59,12 +60,12 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
         addSubview(addButton)
         
         addButton.anchor(
-            top: nil, leading: nil, bottom: bottomAnchor, trailing: trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 0, right: 12))
+            top: topAnchor, leading: nil, bottom: bottomAnchor, trailing: trailingAnchor,
+            padding: .init(top: 8, left: 0, bottom: 16, right: 12))
         
         textStackView.anchor(
-            top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: addButton.leadingAnchor,
-            padding: .init(top: 0, left: 16, bottom: 0, right: 8))
+            top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: addButton.leadingAnchor,
+            padding: .init(top: 8, left: 16, bottom: 16, right: 8))
     }
     
     required init?(coder aDecoder: NSCoder) {

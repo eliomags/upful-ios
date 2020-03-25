@@ -350,14 +350,14 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         switch section {
         case Section.holdings.rawValue:
             let header = HeaderLabel()
-            let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
-            header.font = UIFont.systemFont(ofSize: size, weight: .black)
+            let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption2).pointSize
+            header.font = UIFont.systemFont(ofSize: size, weight: .bold)
             header.text = "MY HOLDINGS"
             return header
             
         case Section.preference.rawValue:
             let preferenceHeader = TableSectionHeaderView()
-            preferenceHeader.headerTextLabel.text = "Stocks You May Like"
+            preferenceHeader.headerTextLabel.text = "STOCKS YOU MAY LIKE"
             
             preferenceHeader.buttonAction = { [weak self] in
                 guard let self = self else { return }
@@ -373,7 +373,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             
         case Section.news.rawValue:
             let newsHeader = TableSectionHeaderView()
-            newsHeader.headerTextLabel.text = "Recent News"
+            newsHeader.headerTextLabel.text = "RECENT NEWS"
             
             newsHeader.buttonAction = { [weak self] in
                 guard let self = self else { return }

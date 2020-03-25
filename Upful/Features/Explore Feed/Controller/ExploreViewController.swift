@@ -393,11 +393,11 @@ extension ExploreViewController {
             sectionHeader.addButton.setTitle("", for: .normal)
             switch section {
             case Section.news.rawValue:
-                sectionHeader.headerTextLabel.text = "Market News"
+                sectionHeader.headerTextLabel.text = "MARKET NEWS"
             case Section.stocks.rawValue:
-                sectionHeader.headerTextLabel.text = "Popular Stocks"
+                sectionHeader.headerTextLabel.text = "POPULAR STOCKS"
             case Section.screeners.rawValue:
-                sectionHeader.headerTextLabel.text = "Popular Screeners"
+                sectionHeader.headerTextLabel.text = "POPULAR SCREENERS"
             default:
                 return nil
             }
