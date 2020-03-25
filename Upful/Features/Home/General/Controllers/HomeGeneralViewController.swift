@@ -405,6 +405,9 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         let section = indexPath.section
         switch section {
+        case Section.holdings.rawValue:
+            return !logicController.holdings.isEmpty
+            
         case Section.preference.rawValue:
             switch logicController.preferenceState {
             case .new:
@@ -427,10 +430,16 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         let section = indexPath.section
         switch section {
         case Section.holdings.rawValue:
-            // TODO: - Navigate to stock details
-            break
+            if !logicController.holdings.isEmpty {
+                let holding = logicController.holdings[indexPath.row]
+                let stock = Stock(name: "", ticker: holding.ticker)
+                coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: StockViewModel(stock: stock))
+                coordinator?.start()
+            }
+            
         case Section.preference.rawValue:
             handleStockSuggestionCellSelection(for: indexPath)
+            
         case Section.news.rawValue:
             if !logicController.stockNews.isEmpty {
                 let newsURLString = logicController.stockNews[indexPath.row].newsUrl
