@@ -325,17 +325,7 @@ final class StockTradeViewController: UITableViewController {
     fileprivate func checkIfCurrentlyOwned() {
         tradingEngine.loadHoldings { [weak self] (holdings, err) in
             guard let self = self else { return }
-            if let _ = err {
-                self.presentAlert("Error", "Failed to load your holdings.") {
-                    self.dismiss(animated: true, completion: nil)
-                }
-                return
-            }
-            if let currentHolding = holdings.first(where: { $0.ticker == self.ticker }) {
-                self.header.descriptionText.text = "You currently own \(currentHolding.totalShareCount.withCommas()) shares of \(self.ticker).\nYour cash balance is $\(self.tradingEngine.balanceManager.currentCashBalance.withCommas())"
-            } else {
-                self.header.descriptionText.text = "You do not own any shares of \(self.ticker).\nYour cash balance is $\(self.tradingEngine.balanceManager.currentCashBalance.withCommas())"
-            }
+            DispatchQueue.main.async { self.handleHoldingsLoadCompletion(err, holdings) }
         }
     }
     
@@ -344,7 +334,6 @@ final class StockTradeViewController: UITableViewController {
             guard let self = self else { return }
             switch result {
             case .success(let quote):
-                // TODO: - Hop back on main thread
                 self.handlePriceLoadCompletion(quote)
             case .failure(_):
                 self.presentAlert("Error Loading Quote.", "") {
@@ -362,6 +351,20 @@ final class StockTradeViewController: UITableViewController {
             OKhandler?()
         }))
         present(alert, animated: true, completion: nil)
+    }
+    
+    fileprivate func handleHoldingsLoadCompletion(_ err: Error?, _ holdings: [Holding]) {
+        if let _ = err {
+            self.presentAlert("Error", "Failed to load your holdings.") {
+                self.dismiss(animated: true, completion: nil)
+            }
+            return
+        }
+        if let currentHolding = holdings.first(where: { $0.ticker == self.ticker }) {
+            self.header.descriptionText.text = "You currently own \(currentHolding.totalShareCount.withCommas()) shares of \(self.ticker).\nYour cash balance is $\(self.tradingEngine.balanceManager.currentCashBalance.withCommas())"
+        } else {
+            self.header.descriptionText.text = "You do not own any shares of \(self.ticker).\nYour cash balance is $\(self.tradingEngine.balanceManager.currentCashBalance.withCommas())"
+        }
     }
     
     fileprivate func handlePriceLoadCompletion(_ quote: StockQuote) {
