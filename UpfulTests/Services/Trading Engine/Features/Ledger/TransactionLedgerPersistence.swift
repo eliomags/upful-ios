@@ -26,8 +26,8 @@ class TransactionLedgerPersistenceTests: XCTestCase {
     }
     
     func testSaveAndFetchAllTransactions() {
-        let transaction1 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 1)
-        let transaction2 = TransactionAdapter(ticker: "AAPL", shares: 1, tradePrice: 1, currentPrice: 1)
+        let transaction1 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1)
+        let transaction2 = TransactionAdapter(ticker: "AAPL", shares: 1, tradePrice: 1)
         let loadExpectation = expectation(description: #function)
         
         ledgerPersistence.save(transaction1, completion: nil)
@@ -47,8 +47,8 @@ class TransactionLedgerPersistenceTests: XCTestCase {
     }
     
     func testLoadPrevious() {
-        let transaction1 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1, currentPrice: 1)
-        let transaction2 = TransactionAdapter(ticker: "AAPL", shares: 1, tradePrice: 1, currentPrice: 1)
+        let transaction1 = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 1)
+        let transaction2 = TransactionAdapter(ticker: "AAPL", shares: 1, tradePrice: 1)
 
         let loadExpectation = expectation(description: #function)
         

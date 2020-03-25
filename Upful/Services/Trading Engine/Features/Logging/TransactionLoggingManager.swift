@@ -35,7 +35,7 @@ class TransactionLoggingManager {
     }
 }
 
-private extension Date {
+extension Date {
     var asString: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"

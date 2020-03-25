@@ -51,8 +51,8 @@ class LoggingManagerTests: XCTestCase {
         let loadExpectation = expectation(description: #function)
         loadExpectation.expectedFulfillmentCount = 2
         
-        let fbBuy = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100, currentPrice: 100)
-        let fbSell = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 200, currentPrice: 200)
+        let fbBuy = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100)
+        let fbSell = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 200)
         
         // Initial buys
         sut.log(fbBuy, of: .buy) { [unowned self] in
@@ -60,7 +60,6 @@ class LoggingManagerTests: XCTestCase {
                 self.sut.load { (result) in
                     switch result {
                     case .success(let storedLogs):
-                        XCTAssertEqual(storedLogs.map { $0.currentPrice}, [200, 100])
                         XCTAssertEqual(storedLogs.map { $0.type! }, ["sell", "buy"])
                     case .failure(_):
                         break
@@ -68,13 +67,11 @@ class LoggingManagerTests: XCTestCase {
                     loadExpectation.fulfill()
                     
         // Check if order is correct after another buy
-                    let anotherFBbuy = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 150, currentPrice: 150)
+                    let anotherFBbuy = TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 150)
                     self.sut.log(anotherFBbuy, of: .buy) { [unowned self] in
                         self.sut.load { (result) in
                             switch result {
                             case .success(let storedLogs):
-                                print(storedLogs.map { $0.transactionDate! })
-                                XCTAssertEqual(storedLogs.map { $0.currentPrice}, [150, 200, 100])
                                 XCTAssertEqual(storedLogs.map { $0.type! }, ["buy", "sell", "buy"])
                             case .failure(_):
                                 break
