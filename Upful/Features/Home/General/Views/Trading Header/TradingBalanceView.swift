@@ -26,7 +26,7 @@ final class TradingBalanceView: UIView {
     private lazy var contentStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [totalEquityView, lastUpdatedLabel, cashBalanceView])
         sv.axis = .vertical
-        sv.spacing = 8
+        sv.spacing = 16
         return sv
     }()
     

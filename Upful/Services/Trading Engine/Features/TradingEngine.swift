@@ -43,10 +43,10 @@ final class TradingEngine {
                 DispatchQueue.global().async {
                     self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
                         self.ledgerManager.save(transaction, completion: { [unowned self] in
+                            AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .buy))
                             
                             self.balanceManager.handleBuy(for: transaction.tradePrice,
                                                           shares: Int(transaction.numberOfShares))
-                            
                             completion?(isValid)
                             self.handleBuyCompletion?(self.balanceManager.totalEquityBalance,
                                                       self.balanceManager.currentCashBalance)
@@ -63,6 +63,7 @@ final class TradingEngine {
         DispatchQueue.global().async {
             self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
                 self.ledgerManager.save(transaction, completion: { [unowned self] in
+                    AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .sell))
                     
                     self.balanceManager.handleSell(for: transaction.tradePrice,
                                                    shares: Int(transaction.numberOfShares))

@@ -47,6 +47,7 @@ enum AnalyticsEventName {
     case savedScreener(description: String)
     case savedTicker(ticker: String)
     case submitPromotorScore(score: Int)
+    case performedTransaction(type: TransactionType)
     
     func getName() -> String {
         switch self {
@@ -84,6 +85,8 @@ enum AnalyticsEventName {
             return "sign_up_presented"
         case .submitPromotorScore(_):
             return "net_promotor_score"
+        case .performedTransaction(_):
+            return "trade"
         }
     }
 }
@@ -125,6 +128,8 @@ extension AnalyticsEventName {
             return ["trigger_event": trigger]
         case .submitPromotorScore(let score):
             return ["score": "\(score)"]
+        case .performedTransaction(let type):
+            return ["type": "\(type.rawValue)"]
         }
     }
 }
