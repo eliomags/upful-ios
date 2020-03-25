@@ -80,16 +80,18 @@ final class TradingEngine {
     // MARK: - Loading
     
     func loadHoldings(completion: (([Holding], Error?) -> Void)?) {
-        ledgerManager.loadSavedTransactions { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let ledgerTransactions):
-                let holdings = HoldingMapper(transactions: ledgerTransactions).map()
-                self.updateEquityBalance(with: holdings)
-                completion?(holdings.filter { $0.totalShareCount != 0 }, nil)
-                
-            case .failure(let err):
-                completion?([], err)
+        DispatchQueue.global().async {
+            self.ledgerManager.loadSavedTransactions { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let ledgerTransactions):
+                    let holdings = HoldingMapper(transactions: ledgerTransactions).map()
+                    self.updateEquityBalance(with: holdings)
+                    completion?(holdings.filter { $0.totalShareCount != 0 }, nil)
+                    
+                case .failure(let err):
+                    completion?([], err)
+                }
             }
         }
     }

@@ -36,7 +36,7 @@ class HomeGeneralLogicController {
     
     // MARK: - Configuration
     
-    var holdingsLoadCompletion: (() -> Void)?
+    var holdingsLoadCompletion: ((Error?) -> Void)?
     var sendPreferenceStateUpdates: ((PreferenceState) -> Void)?
     var newsLoadCompletion: (() -> Void)?
     
@@ -64,19 +64,32 @@ class HomeGeneralLogicController {
     // MARK: - Holdings Loading
     
     let tradingEngine = TradingEngine.shared
-    
     private(set) var holdings = [Holding]()
+    private var holdingsLoader: Timer?
     
     func loadHoldings() {
+        startHoldingsLoad()
+        holdingsLoader?.invalidate()
+        holdingsLoader = Timer.scheduledTimer(withTimeInterval: 7, repeats: true, block: {  (_) in
+            self.startHoldingsLoad()
+        })
+        holdingsLoader?.fire()
+    }
+    
+    func cancelHoldingsLoad() {
+        holdingsLoader?.invalidate()
+    }
+    
+    fileprivate func startHoldingsLoad() {
         tradingEngine.loadHoldings { [weak self] (holdings, err) in
             guard let self = self else { return }
-            if let err = err {
-                print(err.localizedDescription)
+            if let _ = err {
+                DispatchQueue.main.async { self.holdingsLoadCompletion?(NSError()) }
                 return
             }
             self.holdings = holdings
             self.holdings.forEach { self.loadQuotes(for: $0) }
-            self.holdingsLoadCompletion?()
+            DispatchQueue.main.async { self.holdingsLoadCompletion?(nil) }
         }
     }
     
@@ -88,10 +101,11 @@ class HomeGeneralLogicController {
             case .success(let quote):
                 holding.currentPrice = quote.latestPrice
                 self.tradingEngine.updateEquityBalance(with: self.holdings)
+                DispatchQueue.main.async { self.holdingsLoadCompletion?(nil) }
+                
             case .failure(_):
-                break
+                DispatchQueue.main.async { self.holdingsLoadCompletion?(NSError()) }
             }
-            DispatchQueue.main.async { self.holdingsLoadCompletion?() }
         }
     }
     

@@ -37,24 +37,12 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         b.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleScreenerSelectionTap)))
         return b
     }()
-    
-    private lazy var headerView: HomeFeedAuxiliaryActionView = {
-        let view = HomeFeedAuxiliaryActionView()
-        view.preferenceButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleEditPreferenceTap)))
-        view.suggestionButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSendSuggestionsTap)))
-        view.premiumButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleUpgradeToPremiumTap)))
-        if PermissionManager.shared.isPremium { view.premiumButton.removeFromSuperview() }
-        return view
-    }()
-    
     private let tradingBalanceView = TradingBalanceView()
-    
     private lazy var refreshControl: UIRefreshControl = {
         let control = UIRefreshControl()
         control.addTarget(self, action: #selector(handleResfreshing), for: .valueChanged)
         return control
     }()
-    
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.refreshControl = refreshControl
@@ -89,14 +77,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         observeViewModelPreferenceUpdates()
         observeViewModelHoldingsUpdates()
         logicController.fetchTableData()
-        configureTransactionHeader()
+        configureTransactionHeaderSuccess()
         UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         logicController.loadHoldings()
-        configureTransactionHeader()
+        configureTransactionHeaderSuccess()
     }
     
     override func viewDidLayoutSubviews() {
@@ -107,13 +95,24 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        logicController.cancelHoldingsLoad()
+    }
+    
     // MARK: - View Model Binding
 
     fileprivate func observeViewModelHoldingsUpdates() {
-        logicController.holdingsLoadCompletion = { [weak self] in
+        logicController.holdingsLoadCompletion = { [weak self] error in
             guard let self = self else { return }
+            if let _ = error {
+                self.configureTransactionHeaderError()
+                self.tableView.reloadSections([Section.holdings.rawValue], with: .automatic)
+                self.refreshControl.endRefreshing()
+                return
+            }
+            self.configureTransactionHeaderSuccess()
             self.tableView.reloadSections([Section.holdings.rawValue], with: .automatic)
-            self.configureTransactionHeader()
             self.refreshControl.endRefreshing()
         }
     }
@@ -173,11 +172,9 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         tableView.register(StockHoldingTableViewCell.self, forCellReuseIdentifier: Constants.stockHoldingCellID)
     }
     
-    fileprivate func configureTransactionHeader() {
+    fileprivate func configureTransactionHeaderSuccess() {
         tradingBalanceView.cashBalanceView.cashValueLabel.text =
             "$\(logicController.tradingEngine.balanceManager.currentCashBalance.withCommas())"
-        tradingBalanceView.totalEquityView.equityValueLabel.text =
-            "$\(logicController.tradingEngine.balanceManager.totalEquityBalance.withCommas())"
         
         let df = DateFormatter()
         df.dateFormat = "MMM d, h:mm a"
@@ -195,7 +192,25 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         
         let dollarDiff = (equity - 25_000).withCommas()
         let percentDiff = (((equity / 25_000) - 1) * 100).withCommas()
-        tradingBalanceView.totalEquityView.totalReturnLabel.text = "$\(dollarDiff) • \(percentDiff)%"
+        UIView.transition(with: tradingBalanceView.totalEquityView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.tradingBalanceView.totalEquityView.equityValueLabel.text =
+                "$\(self.logicController.tradingEngine.balanceManager.totalEquityBalance.withCommas())"
+            self.tradingBalanceView.totalEquityView.totalReturnLabel.text = "$\(dollarDiff)  •  \(percentDiff)%"
+        }, completion: nil)
+    }
+    
+    fileprivate func configureTransactionHeaderError() {
+        tradingBalanceView.cashBalanceView.cashValueLabel.text =
+            "$\(logicController.tradingEngine.balanceManager.currentCashBalance.withCommas())"
+        tradingBalanceView.totalEquityView.equityValueLabel.text = "Error"
+        
+        let df = DateFormatter()
+        df.dateFormat = "MMM d, h:mm a"
+        df.timeZone = TimeZone(abbreviation: "EST")
+        tradingBalanceView.lastUpdatedLabel.text = "Last Updated, \(df.string(from: Date())) EST"
+        tradingBalanceView.setNegative()
+        
+        tradingBalanceView.totalEquityView.totalReturnLabel.text = "Error"
     }
     
     // MARK: - Actions
@@ -221,24 +236,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     @objc fileprivate func handleScreenerSelectionTap(sender: UIButton) {
         let screenerSelectionVC = ScreenerSelectionContainerView(collectionViewLayout: UICollectionViewFlowLayout())
         navigationController?.pushViewController(screenerSelectionVC, animated: true)
-    }
-    
-    @objc fileprivate func handleEditPreferenceTap(_ gester: UITapGestureRecognizer) {
-        Vibration.light.vibrate()
-        let preferencePresenter = PreferencePresenter(presentingViewController: self)
-        preferencePresenter.present()
-    }
-    
-    @objc fileprivate func handleSendSuggestionsTap(_ gester: UITapGestureRecognizer) {
-        Vibration.light.vibrate()
-        let suggestionVC = SuggestionFeedViewController()
-        navigationController?.pushViewController(suggestionVC, animated: true)
-    }
-    
-    @objc fileprivate func handleUpgradeToPremiumTap(_ gester: UITapGestureRecognizer) {
-        Vibration.light.vibrate()
-        let presenter = SubscriptionPresenter(type: .settings)
-        presenter.present(in: self)
     }
 
     // MARK: - Preference Delegate Methods
@@ -498,12 +495,3 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         }
     }
 }
-
-extension HomeGeneralViewController: SubscriptionViewControllerDelegate {
-    func presentationControllerdDidDismissWithoutSignup() {}
-    
-    func userDidSignUp() {
-        if PermissionManager.shared.isPremium { headerView.premiumButton.removeFromSuperview() }
-    }
-}
-

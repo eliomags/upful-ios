@@ -44,7 +44,7 @@ final class StockTradeViewController: UITableViewController {
         button.setTitle("Buy", for: .normal)
         let size = UIFont.preferredFont(forTextStyle: .body).pointSize
         button.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        button.backgroundColor = .systemGreen
+        button.backgroundColor = .appAccent3
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -60,14 +60,13 @@ final class StockTradeViewController: UITableViewController {
         button.setTitle("Sell", for: .normal)
         let size = UIFont.preferredFont(forTextStyle: .body).pointSize
         button.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        button.setTitleColor(UIColor.systemRed, for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = .appAccent3
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
         button.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
         button.layer.cornerRadius = 20
         button.layer.masksToBounds = true
-        button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.systemRed.cgColor
         button.addTarget(self, action: #selector(handleSellTap), for: .touchUpInside)
         return button
     }()
@@ -106,7 +105,7 @@ final class StockTradeViewController: UITableViewController {
         sv.distribution = .fillEqually
         sv.axis = .horizontal
         sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.heightAnchor.constraint(equalToConstant: 44).isActive = true
+//        sv.heightAnchor.constraint(equalToConstant: 44).isActive = true
         return sv
     }()
     
@@ -134,7 +133,7 @@ final class StockTradeViewController: UITableViewController {
         sv.distribution = .fillEqually
         sv.axis = .horizontal
         sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.heightAnchor.constraint(equalToConstant: 44).isActive = true
+//        sv.heightAnchor.constraint(equalToConstant: 44).isActive = true
         return sv
     }()
     
@@ -162,7 +161,7 @@ final class StockTradeViewController: UITableViewController {
         sv.distribution = .fillEqually
         sv.axis = .horizontal
         sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.heightAnchor.constraint(equalToConstant: 44).isActive = true
+//        sv.heightAnchor.constraint(equalToConstant: 44).isActive = true
         return sv
     }()
     
@@ -345,6 +344,7 @@ final class StockTradeViewController: UITableViewController {
             guard let self = self else { return }
             switch result {
             case .success(let quote):
+                // TODO: - Hop back on main thread
                 self.handlePriceLoadCompletion(quote)
             case .failure(_):
                 self.presentAlert("Error Loading Quote.", "") {
@@ -399,15 +399,15 @@ extension StockTradeViewController {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
         if indexPath.row == 0 {
             cell.addSubview(shareCountStackView)
-            shareCountStackView.fillSuperview(padding: .init(top: 8, left: 32, bottom: 8, right: 32))
+            shareCountStackView.fillSuperview(padding: .init(top: 16, left: 32, bottom: 16, right: 32))
         }
         if indexPath.row == 1 {
             cell.addSubview(quoteStackView)
-            quoteStackView.fillSuperview(padding: .init(top: 8, left: 32, bottom: 8, right: 32))
+            quoteStackView.fillSuperview(padding: .init(top: 16, left: 32, bottom: 16, right: 32))
         }
         if indexPath.row == 2 {
             cell.addSubview(estimateStackView)
-            estimateStackView.fillSuperview(padding: .init(top: 8, left: 32, bottom: 8, right: 32))
+            estimateStackView.fillSuperview(padding: .init(top: 16, left: 32, bottom: 16, right: 32))
             
             estimateValueLabel.text = "$\(estimate?.withCommas() ?? " -")"
         }

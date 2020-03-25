@@ -11,7 +11,7 @@ import UIKit
 final class TotalEquityView: UIView {
     private let equityLabel: UILabel = {
         let label = UILabel()
-        label.text = "TOTAL EQUITY"
+        label.text = "TOTAL BALANCE"
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .bold)
         return label
