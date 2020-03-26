@@ -111,6 +111,12 @@ class StockHoldingTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+        tickerLabel.text = ""
+        numberOfSharesLabel.text = ""
+        currentPriceLabel.text = ""
+        averagePriceLabel.text = ""
+        dollarChangeLabel.text = ""
+        percentChangeView.percentChangeLabel.text = ""
+        percentChangeView.showNeutral()
     }
 }
