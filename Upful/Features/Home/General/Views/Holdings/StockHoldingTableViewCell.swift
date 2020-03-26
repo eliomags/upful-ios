@@ -46,7 +46,7 @@ class StockHoldingTableViewCell: UITableViewCell {
     }()
     
     let averagePriceLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .bold)
         label.textColor = .gray

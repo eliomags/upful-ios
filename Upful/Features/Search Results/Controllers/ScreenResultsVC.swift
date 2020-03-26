@@ -214,7 +214,8 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
         resultsCell.marketcapStackView.valueLabel.text = "$\(screenResult.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
         resultsCell.pricetoearningsStackView.valueLabel.text = "\(screenResult.stock.pricetoearnings?.twoDecimal() ?? "-")"
         resultsCell.quoteView.priceLabel.text = "$\(screenResult.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
-        resultsCell.quoteView.priceChangeLabel.text = "\(screenResult.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
+        resultsCell.quoteView.percentChangeView.percentChangeLabel.text =
+            "\(screenResult.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
         
         if screenResult.stock.stockQuote?.changePercent ?? 0 > 0 {
             resultsCell.quoteView.setPositive()

@@ -89,9 +89,9 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if self.tableView.shouldUpdateHeaderViewFrame() {
-            self.tableView.beginUpdates()
-            self.tableView.endUpdates()
+        if tableView.shouldUpdateHeaderViewFrame() {
+            tableView.beginUpdates()
+            tableView.endUpdates()
         }
     }
     
@@ -221,7 +221,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
-        switch logicController.preferenceState{
+        switch logicController.preferenceState {
         case .new:
             let preferencePresenter = PreferencePresenter(presentingViewController: self)
             preferencePresenter.present()
@@ -281,7 +281,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func makeStockCells(_ indexPath: IndexPath) -> UITableViewCell {
-        guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: Constants.resultsCellID) as? CompanyPreviewTableViewCell else { return UITableViewCell() }
+        guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: Constants.resultsCellID)
+            as? CompanyPreviewTableViewCell else { return UITableViewCell() }
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
 
@@ -292,7 +293,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             loadedCell.marketcapStackView.valueLabel.text = "$\(stockViewModel.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
             loadedCell.pricetoearningsStackView.valueLabel.text = "\(stockViewModel.stock.pricetoearnings?.twoDecimal() ?? "-")"
             loadedCell.quoteView.priceLabel.text = "$\(stockViewModel.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
-            loadedCell.quoteView.priceChangeLabel.text = "\(stockViewModel.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
+            loadedCell.quoteView.percentChangeView.percentChangeLabel.text =
+                "\(stockViewModel.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
             
             if stockViewModel.stock.stockQuote?.changePercent ?? 0 > 0 {
                 loadedCell.quoteView.setPositive()
@@ -379,14 +381,14 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         switch section {
         case Section.holdings.rawValue:
             let header = HeaderLabel()
-            let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption2).pointSize
+            let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
             header.font = UIFont.systemFont(ofSize: size, weight: .bold)
-            header.text = "MY HOLDINGS"
+            header.text = "My Holdings"
             return header
             
         case Section.preference.rawValue:
             let preferenceHeader = TableSectionHeaderView()
-            preferenceHeader.headerTextLabel.text = "STOCKS YOU MAY LIKE"
+            preferenceHeader.headerTextLabel.text = "Stocks You May Like"
             
             preferenceHeader.buttonAction = { [weak self] in
                 guard let self = self else { return }
@@ -402,7 +404,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             
         case Section.news.rawValue:
             let newsHeader = TableSectionHeaderView()
-            newsHeader.headerTextLabel.text = "RECENT NEWS"
+            newsHeader.headerTextLabel.text = "Recent News"
             
             newsHeader.buttonAction = { [weak self] in
                 guard let self = self else { return }

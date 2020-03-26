@@ -49,8 +49,8 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         let v = StockQuoteView(priceLabelFontSize: 15, priceChangeLabelFontSize: 16, priceChangeLabelWidth: 70)
         v.translatesAutoresizingMaskIntoConstraints = false
         v.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        v.priceLabel.text = "$150.00"
-        v.priceChangeLabel.text = "-2.20%"
+        v.priceLabel.text = "$ -"
+        v.percentChangeView.percentChangeLabel.text = "- %"
         v.setNegative()
         return v
     }()

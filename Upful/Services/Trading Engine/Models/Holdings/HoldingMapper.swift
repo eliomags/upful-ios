@@ -8,16 +8,11 @@
 
 import Foundation
 
-class HoldingMapper {
-    private var transactions: [Transaction]
-    
-    init(transactions: [Transaction]) {
-        self.transactions = transactions
-    }
+struct HoldingMapper {
     
     // MARK: - Methods
     
-    func map() -> [Holding] {
+    static func map(_ transactions: [Transaction]) -> [Holding] {
         var holdings: [Holding] = []
         var copy = transactions
         
@@ -35,11 +30,11 @@ class HoldingMapper {
     
     // MARK: - Helper Methods
     
-    private func allTransactionsSatisfying(_ transaction: Transaction, from transactions: inout [Transaction]) -> [Transaction] {
+    private static func allTransactionsSatisfying(_ transaction: Transaction, from transactions: inout [Transaction]) -> [Transaction] {
         return transactions.filter({ $0.ticker == transaction.ticker })
     }
     
-    private func removeAllTransactionsSatisfying(_ transaction: Transaction, from transactions: inout [Transaction]) {
+    private static func removeAllTransactionsSatisfying(_ transaction: Transaction, from transactions: inout [Transaction]) {
         transactions.removeAll(where: { $0.ticker == transaction.ticker})
     }
 }

@@ -23,6 +23,13 @@ class StockQuoteView: UIView {
         label.font = UIFont.systemFont(ofSize: priceLabelFontSize, weight: .bold)
         return label
     }()
+    
+    lazy var percentChangeView: PercentChangeView = {
+        let view = PercentChangeView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.percentChangeLabel.font = UIFont.systemFont(ofSize: priceChangeLabelFontSize, weight: .semibold)
+        return view
+    }()
 
     lazy var priceChangeLabel: UILabel = {
         let label = UILabel()
@@ -37,13 +44,15 @@ class StockQuoteView: UIView {
     }()
     
     lazy var quoteStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [priceLabel, priceChangeLabel])
+        let sv = UIStackView(arrangedSubviews: [percentChangeView, priceLabel])
         sv.axis = .vertical
         sv.distribution = .fill
         sv.alignment = .center
         sv.spacing = 12
         return sv
     }()
+    
+    // MARK: - Initializer
     
     init(priceLabelFontSize: CGFloat, priceChangeLabelFontSize: CGFloat, priceChangeLabelWidth: CGFloat) {
         self.priceLabelFontSize = priceLabelFontSize
@@ -53,16 +62,19 @@ class StockQuoteView: UIView {
         addSubview(quoteStackView)
         quoteStackView.fillSuperview()
     }
-    
     required init?(coder: NSCoder) {
         fatalError()
     }
     
-    func setPositive() {
-        priceChangeLabel.backgroundColor = .systemGreen
-    }
+    // MARK: - Setup View
     
+    func setPositive() {
+        percentChangeView.showPositive()
+    }
     func setNegative() {
-        priceChangeLabel.backgroundColor = .systemRed
+        percentChangeView.showNegative()
+    }
+    func setNeutral() {
+        percentChangeView.showNeutral()
     }
 }

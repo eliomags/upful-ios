@@ -264,7 +264,8 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
             loadedCell?.marketcapStackView.valueLabel.text = "$\(savedStock.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
             loadedCell?.pricetoearningsStackView.valueLabel.text = "\(savedStock.stock.pricetoearnings?.twoDecimal() ?? "-")"
             loadedCell?.quoteView.priceLabel.text = "$\(savedStock.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
-            loadedCell?.quoteView.priceChangeLabel.text = "\(savedStock.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
+            loadedCell?.quoteView.percentChangeView.percentChangeLabel.text =
+                "\(savedStock.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
             
             if savedStock.stock.stockQuote?.changePercent ?? 0 > 0 {
                 loadedCell?.quoteView.setPositive()
@@ -393,11 +394,11 @@ extension ExploreViewController {
             sectionHeader.addButton.setTitle("", for: .normal)
             switch section {
             case Section.news.rawValue:
-                sectionHeader.headerTextLabel.text = "MARKET NEWS"
+                sectionHeader.headerTextLabel.text = "Market News"
             case Section.stocks.rawValue:
-                sectionHeader.headerTextLabel.text = "POPULAR STOCKS"
+                sectionHeader.headerTextLabel.text = "Popular Stocks"
             case Section.screeners.rawValue:
-                sectionHeader.headerTextLabel.text = "POPULAR SCREENERS"
+                sectionHeader.headerTextLabel.text = "Popular Screeners"
             default:
                 return nil
             }

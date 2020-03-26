@@ -143,20 +143,21 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     fileprivate func showLoadedCell(for indexPath: IndexPath) -> UITableViewCell {
-        let stockViewModels = viewModel.stockViewModels[indexPath.item]
+        let stockViewModel = viewModel.stockViewModels[indexPath.item]
         guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: "resultsCellID") as? CompanyPreviewTableViewCell else { return UITableViewCell() }
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
-        loadedCell.companyTickerLabel.text = stockViewModels.stock.ticker
-        loadedCell.companyNameLabel.text = stockViewModels.stock.name
-        loadedCell.marketcapStackView.valueLabel.text = "$\(stockViewModels.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
-        loadedCell.pricetoearningsStackView.valueLabel.text = "\(stockViewModels.stock.pricetoearnings?.twoDecimal() ?? "-")"
-        loadedCell.quoteView.priceLabel.text = "$\(stockViewModels.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
-        loadedCell.quoteView.priceChangeLabel.text = "\(stockViewModels.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
+        loadedCell.companyTickerLabel.text = stockViewModel.stock.ticker
+        loadedCell.companyNameLabel.text = stockViewModel.stock.name
+        loadedCell.marketcapStackView.valueLabel.text = "$\(stockViewModel.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
+        loadedCell.pricetoearningsStackView.valueLabel.text = "\(stockViewModel.stock.pricetoearnings?.twoDecimal() ?? "-")"
+        loadedCell.quoteView.priceLabel.text = "$\(stockViewModel.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
+        loadedCell.quoteView.percentChangeView.percentChangeLabel.text =
+            "\(stockViewModel.stock.stockQuote?.changePercent.convertToPercent() ?? "-")%"
         
-        if stockViewModels.stock.stockQuote?.changePercent ?? 0 > 0 {
+        if stockViewModel.stock.stockQuote?.changePercent ?? 0 > 0 {
             loadedCell.quoteView.setPositive()
-        } else if stockViewModels.stock.stockQuote?.changePercent ?? 0 < 0 {
+        } else if stockViewModel.stock.stockQuote?.changePercent ?? 0 < 0 {
             loadedCell.quoteView.setNegative()
         }
         

@@ -129,7 +129,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         stockHeaderView.headerLabel.text = ticker
         let stockQuote = viewModel.stockQuote
         quoteView.priceLabel.text = "$\(stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
-        quoteView.priceChangeLabel.text = "\(stockQuote?.changePercent.convertToPercent() ?? "-")%"
+        quoteView.percentChangeView.percentChangeLabel.text = "\(stockQuote?.changePercent.convertToPercent() ?? "-")%"
         
         if stockQuote?.changePercent ?? 0 > 0 {
             quoteView.setPositive()
@@ -233,7 +233,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = TableSectionHeaderView()
 //        header.backgroundColor = VersionManager.collectionCellColor2()
-        let headerText = ["FINANCIALS", "METRICS", "NEWS", "ABOUT"]
+        let headerText = ["Financials", "Metrics", "News", "About"]
         header.headerTextLabel.text = headerText[section]
         header.addButton.setTitle("", for: .normal)
         return header
