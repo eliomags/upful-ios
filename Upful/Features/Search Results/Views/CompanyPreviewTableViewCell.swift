@@ -14,14 +14,17 @@ class CompanyPreviewTableViewCell: UITableViewCell {
     
     let companyTickerLabel: UILabel = {
         let l = UILabel()
-        l.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
+        l.font = UIFont.systemFont(ofSize: size, weight: .semibold)
         l.text = ""
         return l
     }()
     
     let companyNameLabel: UILabel = {
         let l = UILabel()
-        l.font = .details1
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
+        l.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        l.textColor = .gray
         l.text = ""
         return l
     }()

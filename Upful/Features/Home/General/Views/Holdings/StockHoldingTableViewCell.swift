@@ -14,8 +14,8 @@ class StockHoldingTableViewCell: UITableViewCell {
 
     let tickerLabel: UILabel = {
         let label = UILabel()
-        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .regular)
         label.textAlignment = .center
         return label
     }()
@@ -39,8 +39,8 @@ class StockHoldingTableViewCell: UITableViewCell {
     
     let currentPriceLabel: UILabel = {
        let label = UILabel()
-        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .regular)
         label.textAlignment = .center
         return label
     }()
@@ -64,8 +64,8 @@ class StockHoldingTableViewCell: UITableViewCell {
     
     let dollarChangeLabel: UILabel = {
         let label = UILabel()
-        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .regular)
         label.textColor = .gray
         label.textAlignment = .center
         return label
