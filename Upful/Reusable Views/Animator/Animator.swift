@@ -22,7 +22,7 @@ struct Animator {
     }
     
     fileprivate func removeView(_ view: UIView, completion: (() -> Void)? = nil) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.85) {
             UIView.animate(withDuration: 0.2, animations: {
                 view.alpha = 0
             }, completion: { (_) in

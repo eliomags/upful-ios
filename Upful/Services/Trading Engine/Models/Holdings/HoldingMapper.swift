@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct HoldingMapper {
+class HoldingMapper {
     private var transactions: [Transaction]
     
     init(transactions: [Transaction]) {

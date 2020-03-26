@@ -90,22 +90,29 @@ class HomeGeneralLogicController {
             self.holdings = holdings
             self.holdings.forEach { self.loadQuotes(for: $0) }
             DispatchQueue.main.async { self.holdingsLoadCompletion?(nil) }
+            
+            self.holdingsLoadGroup?.notify(queue: .main, execute: {
+                self.holdingsLoadCompletion?(nil)
+            })
         }
     }
     
     private let quoteLoader = StockPriceLoader()
-    
+    private var holdingsLoadGroup: DispatchGroup? = DispatchGroup()
+
     fileprivate func loadQuotes(for holding: Holding) {
+        holdingsLoadGroup?.enter()
+        
         quoteLoader.load(for: holding.ticker) { (result) in
             switch result {
             case .success(let quote):
                 holding.currentPrice = quote.latestPrice
                 self.tradingEngine.updateEquityBalance(with: self.holdings)
-                DispatchQueue.main.async { self.holdingsLoadCompletion?(nil) }
                 
             case .failure(_):
                 DispatchQueue.main.async { self.holdingsLoadCompletion?(NSError()) }
             }
+            self.holdingsLoadGroup?.leave()
         }
     }
     
