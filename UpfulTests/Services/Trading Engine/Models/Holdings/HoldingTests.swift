@@ -64,7 +64,7 @@ class HoldingTests: XCTestCase {
     func test_totalPriceMovementPercent() {
         sut = makeSUTWithTwoBuys()
         
-        XCTAssertEqual(sut.totalPriceMovementPercent, "466.67%")
+        XCTAssertEqual(sut.totalPriceMovementPercent, "233.33%")
     }
     
     // MARK: - Fileprivate Helper Methods

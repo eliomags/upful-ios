@@ -379,17 +379,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.preference.rawValue:
             let preferenceHeader = TableSectionHeaderView()
             preferenceHeader.headerTextLabel.text = "Stocks You May Like"
-            
-            preferenceHeader.buttonAction = { [weak self] in
-                guard let self = self else { return }
-                let randomSavedSearchParameters = self.logicController.getRandomPreferenceGroup()
-                self.coordinator = SearchResultsCoordinator(presenter: self,
-                                                            searchParameters: randomSavedSearchParameters,
-                                                            title: "Stocks You May Like", screenerDescription: "",
-                                                            headerbackgroundColor: .appAccent3, id: "")
-            
-                self.coordinator?.start()
-            }
+            preferenceHeader.addButton.setTitle("", for: .normal)
             return preferenceHeader
             
         case Section.news.rawValue:

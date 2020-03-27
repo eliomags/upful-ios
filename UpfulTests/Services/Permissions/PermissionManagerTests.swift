@@ -70,7 +70,7 @@ class PermissionManagerTests: XCTestCase {
     func testScreenerNavigationPermissionForFreeUser() {
         sut = makeSUTWithFreeUser()
         
-        // When navigated 6 times
+        // When navigated 5 times
         sut.verifyScreenerNavigationPermission { (permissionGranted) in
             XCTAssertTrue(permissionGranted)
         }
@@ -86,10 +86,7 @@ class PermissionManagerTests: XCTestCase {
         sut.verifyScreenerNavigationPermission { (permissionGranted) in
             XCTAssertTrue(permissionGranted)
         }
-        sut.verifyScreenerNavigationPermission { (permissionGranted) in
-            XCTAssertTrue(permissionGranted)
-        }
-        
+
         sut.verifyScreenerNavigationPermission { (permissionGranted) in
             XCTAssertFalse(permissionGranted, "Should be false at  navigation limit")
         }

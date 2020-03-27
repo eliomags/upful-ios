@@ -188,7 +188,7 @@
 		3DBEFFDE23B018CC00BA407E /* SavedScreenersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFDD23B018CC00BA407E /* SavedScreenersViewModel.swift */; };
 		3DBEFFE023B01F0A00BA407E /* SavedScreenerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFDF23B01F0A00BA407E /* SavedScreenerTableViewCell.swift */; };
 		3DBEFFE223B0280300BA407E /* LocalScreenerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFE123B0280300BA407E /* LocalScreenerLoader.swift */; };
-		3DBF0C5523D61E45003023D7 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 3DBF0C5423D61E45003023D7 /* SwiftPackageProductDependency */; };
+		3DBF0C5523D61E45003023D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 3DBF0C5423D61E45003023D7 /* Kingfisher */; };
 		3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3122FE6EF700232155 /* ScreenResultsVC.swift */; };
 		3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC4ED3422FF02A000232155 /* IntrinioAPI.swift */; };
 		3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710892335D70000A2A0DA /* CustomRoundButton.swift */; };
@@ -511,7 +511,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DBF0C5523D61E45003023D7 /* BuildFile in Frameworks */,
+				3DBF0C5523D61E45003023D7 /* Kingfisher in Frameworks */,
 				DBF9A52BC5915E42042B6760 /* Pods_Upful.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2293,7 +2293,7 @@
 			);
 			name = Upful;
 			packageProductDependencies = (
-				3DBF0C5423D61E45003023D7 /* SwiftPackageProductDependency */,
+				3DBF0C5423D61E45003023D7 /* Kingfisher */,
 			);
 			productName = Upful;
 			productReference = 3D20FB2522FB1F08007836DD /* Upful.app */;
@@ -2347,7 +2347,7 @@
 			);
 			mainGroup = 3D20FB1C22FB1F08007836DD;
 			packageReferences = (
-				3DBF0C5323D61E45003023D7 /* RemoteSwiftPackageReference */,
+				3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 3D20FB2622FB1F08007836DD /* Products */;
 			projectDirPath = "";
@@ -2806,7 +2806,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.4;
+				CURRENT_PROJECT_VERSION = 4.4.1;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2814,7 +2814,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.4;
+				MARKETING_VERSION = 4.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2828,7 +2828,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.4;
+				CURRENT_PROJECT_VERSION = 4.4.1;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2836,7 +2836,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.4;
+				MARKETING_VERSION = 4.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2921,7 +2921,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3DBF0C5323D61E45003023D7 /* RemoteSwiftPackageReference */ = {
+		3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -2932,9 +2932,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3DBF0C5423D61E45003023D7 /* SwiftPackageProductDependency */ = {
+		3DBF0C5423D61E45003023D7 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3DBF0C5323D61E45003023D7 /* RemoteSwiftPackageReference */;
+			package = 3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
