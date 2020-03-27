@@ -223,7 +223,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         }
     }
     
-    @objc fileprivate func handleScreenerSelectionTap(sender: UIButton) {
+    @objc fileprivate func handleScreenerSelectionTap() {
         let screenerSelectionVC = ScreenerSelectionContainerView(collectionViewLayout: UICollectionViewFlowLayout())
         navigationController?.pushViewController(screenerSelectionVC, animated: true)
     }
@@ -417,7 +417,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         let section = indexPath.section
         switch section {
         case Section.holdings.rawValue:
-            return !logicController.holdings.isEmpty
+            return true
             
         case Section.preference.rawValue:
             switch logicController.preferenceState {
@@ -446,6 +446,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
                 let stock = Stock(name: "", ticker: holding.ticker)
                 coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: StockViewModel(stock: stock))
                 coordinator?.start()
+            } else {
+                handleScreenerSelectionTap()
             }
             
         case Section.preference.rawValue:

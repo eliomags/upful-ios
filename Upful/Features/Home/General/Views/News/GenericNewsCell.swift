@@ -53,7 +53,8 @@ class GenericNewsCell: UITableViewCell {
     
     let titleLabel: UILabel = {
         let l = UILabel()
-        l.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
+        l.font = UIFont.systemFont(ofSize: size, weight: .semibold)
         l.text = "\n"
         l.numberOfLines = 0
         return l

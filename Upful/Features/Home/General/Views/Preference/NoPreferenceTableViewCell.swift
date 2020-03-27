@@ -16,7 +16,8 @@ class NoPreferenceTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = .white
         label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
         label.text = "Set up your preferences to start getting recommendations."
         label.textAlignment = .center
         return label

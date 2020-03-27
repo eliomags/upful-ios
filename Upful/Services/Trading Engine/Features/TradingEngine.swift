@@ -22,8 +22,7 @@ final class TradingEngine {
 
     init(balanceDefaults: UserDefaults = UserDefaults.standard,
         loggerContainer: CoreDataModelContainerManager = TransactionContainerManager.shared,
-        ledgerContainer: CoreDataModelContainerManager = TransactionContainerManager.shared
-    ) {
+        ledgerContainer: CoreDataModelContainerManager = TransactionContainerManager.shared) {
         self.balanceManager = BalanceManager(userDefaults: balanceDefaults)
         self.loggerManager = TransactionLoggingManager(container: loggerContainer)
         self.ledgerManager = LedgerManager(container: ledgerContainer)
