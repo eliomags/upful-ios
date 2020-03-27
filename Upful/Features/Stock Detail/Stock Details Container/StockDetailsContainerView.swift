@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentationControllerDelegate, NoteVCDelegate {
+class StockDetailsContainerView: MenuContainerViewController, NoteVCDelegate {
     
     // MARK: - Dependencies
     
@@ -71,27 +71,7 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         configureNavBar()
         UserFeedbackPresenter.checkAndAskForReview(checkType: .importantAction, in: self)
         performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
-        
-//        tradingEngine.loadLedgerTransactions { (result) in
-//            switch result {
-//            case .success(let ledgerTrans):
-//                print("Ledger Transactions")
-//                print(ledgerTrans.map { $0.ticker })
-//                print(ledgerTrans.map { $0.numberOfShares })
-//            case .failure(_):
-//                print("Failed to load")
-//            }
-//        }
-//        tradingEngine.loadLoggedTransactions { (result) in
-//            switch result {
-//            case .success(let ledgerTrans):
-//                print("Logged Transactions")
-//                print(ledgerTrans.map { $0.ticker })
-//                print(ledgerTrans.map { $0.numberOfShares })
-//            case .failure(_):
-//                print("Failed to load")
-//            }
-//        }
+        showTradeButtonDetail()
     }
     
     // MARK: - View Setup
@@ -110,6 +90,11 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
                            bottom: view.layoutMarginsGuide.bottomAnchor,
                            trailing: view.layoutMarginsGuide.trailingAnchor,
                            padding: .init(top: 0, left: 0, bottom: 16, right: 4))
+    }
+    
+    fileprivate func showTradeButtonDetail() {
+        let presenter = TradeButtonDetailPresenter(sourceView: tradeButton, presentingViewController: self)
+        presenter.present()
     }
     
     // MARK: - Core Data
@@ -159,12 +144,6 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         }
     }
     
-    // MARK: - UIPopOverPresentationDelegate Methods
-    
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .overCurrentContext
-    }
-    
     // MARK: - Delegate Methods
     
     func displaySuccessNote() {
@@ -186,6 +165,24 @@ class StockDetailsContainerView: MenuContainerViewController, UIPopoverPresentat
         notesVC.modalPresentationStyle = .popover
         notesVC.popoverPresentationController?.delegate = self
         present(navVC, animated: true, completion: nil)
+    }
+}
+
+// MARK: - UIPopOverPresentationDelegate
+
+extension StockDetailsContainerView: UIPopoverPresentationControllerDelegate {
+    //UIPopoverPresentationControllerDelegate inherits from UIAdaptivePresentationControllerDelegate, we will use this method to define the presentation style for popover presentation controller
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+
+    //UIPopoverPresentationControllerDelegate
+    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
+
+    }
+
+    func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+        return true
     }
 }
 
