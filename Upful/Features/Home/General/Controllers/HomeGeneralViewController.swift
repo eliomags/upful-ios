@@ -279,7 +279,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         if logicController.preferenceState == .loaded  && !logicController.stocksYouMayLike.isEmpty {
             let stockViewModel = logicController.stocksYouMayLike[indexPath.row]
             loadedCell.companyTickerLabel.text = stockViewModel.stock.ticker
-            loadedCell.companyNameLabel.text = stockViewModel.stock.name
             loadedCell.marketcapStackView.valueLabel.text = "$\(stockViewModel.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
             loadedCell.pricetoearningsStackView.valueLabel.text = "\(stockViewModel.stock.pricetoearnings?.twoDecimal() ?? "-")"
             loadedCell.quoteView.priceLabel.text = "$\(stockViewModel.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"

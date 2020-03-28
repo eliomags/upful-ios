@@ -210,7 +210,6 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
         let ticker = screenResult.stock.ticker
         resultsCell.accessoryType = .disclosureIndicator
         resultsCell.companyTickerLabel.text = ticker
-        resultsCell.companyNameLabel.text = screenResult.stock.name
         resultsCell.marketcapStackView.valueLabel.text = "$\(screenResult.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
         resultsCell.pricetoearningsStackView.valueLabel.text = "\(screenResult.stock.pricetoearnings?.twoDecimal() ?? "-")"
         resultsCell.quoteView.priceLabel.text = "$\(screenResult.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"

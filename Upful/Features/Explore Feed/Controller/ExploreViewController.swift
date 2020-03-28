@@ -260,7 +260,6 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         if !logicController.stockViewModels.isEmpty {
             let savedStock = logicController.stockViewModels[indexPath.item]
             loadedCell?.companyTickerLabel.text = savedStock.stock.ticker
-            loadedCell?.companyNameLabel.text = savedStock.stock.name
             loadedCell?.marketcapStackView.valueLabel.text = "$\(savedStock.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
             loadedCell?.pricetoearningsStackView.valueLabel.text = "\(savedStock.stock.pricetoearnings?.twoDecimal() ?? "-")"
             loadedCell?.quoteView.priceLabel.text = "$\(savedStock.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"

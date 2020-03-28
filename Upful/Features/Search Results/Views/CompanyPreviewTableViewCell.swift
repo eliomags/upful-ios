@@ -20,17 +20,8 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         return l
     }()
     
-    let companyNameLabel: UILabel = {
-        let l = UILabel()
-        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
-        l.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        l.textColor = .gray
-        l.text = ""
-        return l
-    }()
-    
     private lazy var companyDescriptionStackView: UIStackView = {
-        let l = UIStackView(arrangedSubviews: [companyTickerLabel,companyNameLabel])
+        let l = UIStackView(arrangedSubviews: [companyTickerLabel])
         l.axis = .vertical
         l.spacing = 1
         return l
@@ -100,7 +91,6 @@ class CompanyPreviewTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         companyTickerLabel.text = ""
-        companyNameLabel.text = ""
         marketcapStackView.valueLabel.text = "$ -"
         pricetoearningsStackView.valueLabel.text = "-"
         

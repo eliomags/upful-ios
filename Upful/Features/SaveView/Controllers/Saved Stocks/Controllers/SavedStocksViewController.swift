@@ -148,7 +148,6 @@ class SavedStocksViewController: UIViewController, UITableViewDelegate, UITableV
         loadedCell.accessoryType = .disclosureIndicator
         loadedCell.backgroundColor = VersionManager.mainContainerBackground()
         loadedCell.companyTickerLabel.text = stockViewModel.stock.ticker
-        loadedCell.companyNameLabel.text = stockViewModel.stock.name
         loadedCell.marketcapStackView.valueLabel.text = "$\(stockViewModel.stock.marketcap?.formatUsingAbbreviation() ?? " -")"
         loadedCell.pricetoearningsStackView.valueLabel.text = "\(stockViewModel.stock.pricetoearnings?.twoDecimal() ?? "-")"
         loadedCell.quoteView.priceLabel.text = "$\(stockViewModel.stock.stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
