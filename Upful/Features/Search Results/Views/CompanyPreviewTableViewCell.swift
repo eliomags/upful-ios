@@ -20,13 +20,6 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         return l
     }()
     
-    private lazy var companyDescriptionStackView: UIStackView = {
-        let l = UIStackView(arrangedSubviews: [companyTickerLabel])
-        l.axis = .vertical
-        l.spacing = 1
-        return l
-    }()
-    
     let marketcapStackView: StockDetailStackView = {
         let sv = StockDetailStackView(description: SearchCriteria.marketcap.explicit)
         sv.valueLabel.text = "$ -"
@@ -63,23 +56,23 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         super.init(style: .default, reuseIdentifier: nil)
         addSubview(quoteView)
         quoteView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        quoteView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -8).isActive = true
+        quoteView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -16).isActive = true
         
-        addSubview(companyDescriptionStackView)
-        companyDescriptionStackView.anchor(
+        addSubview(companyTickerLabel)
+        companyTickerLabel.anchor(
             top: topAnchor,
-            leading: leadingAnchor,
+            leading: layoutMarginsGuide.leadingAnchor,
             bottom: nil,
             trailing: quoteView.layoutMarginsGuide.leadingAnchor,
-            padding: .init(top: 12, left: 16, bottom: 0, right: 24))
+            padding: .init(top: 12, left: 0, bottom: 0, right: 24))
         
         addSubview(companyFundamentalsStackView)
         companyFundamentalsStackView.anchor(
-            top: companyDescriptionStackView.bottomAnchor,
-            leading: leadingAnchor,
+            top: companyTickerLabel.bottomAnchor,
+            leading: layoutMarginsGuide.leadingAnchor,
             bottom: bottomAnchor,
-            trailing: quoteView.layoutMarginsGuide.leadingAnchor,
-            padding: .init(top: 4, left: 32, bottom: 12, right: 16))
+            trailing: quoteView.leadingAnchor,
+            padding: .init(top: 8, left: 0, bottom: 12, right: 65))
         
         addBottomSeparator()
     }
