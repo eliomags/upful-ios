@@ -13,7 +13,7 @@ class StockOverviewViewModel {
     // MARK: - Properties
     
     let ticker: String
-    let companyName: String
+    var companyName: String
     private(set) var stockQuote: StockQuote?
     private(set) var historicalRevenue = [CompanyHistoricalDatum]()
     private(set) var historicalEarnings = [CompanyHistoricalDatum]()
@@ -42,8 +42,7 @@ class StockOverviewViewModel {
          financialLoader: FinancialLoader = StockFinancialLoader(),
          batchFinancialLoader: BatchFinancialLoader = StockBatchFinancialLoader(),
          stockNewsLoader: NewsLoaderProtocol = NewsLoader(),
-         descriptionLoader: DescriptionLoader = StockDescriptionLoader()
-    ) {
+         descriptionLoader: DescriptionLoader = StockDescriptionLoader()) {
         self.ticker = ticker
         self.companyName = companyName
         self.stockQuoteLoader = priceLoader
@@ -60,13 +59,13 @@ class StockOverviewViewModel {
     // MARK: - API
     
     func loadData() {
+        loadNewsData()
         loadStockPrice()
         loadRevenueData()
         loadEarningsData()
         loadCalculationsData()
-        loadAdditionalCalculationsData()
-        loadNewsData()
         loadStockDescription()
+        loadAdditionalCalculationsData()
         
         loadingOperations.notify(queue: .main) {
             self.loadingCompletionHandler?()
@@ -75,7 +74,9 @@ class StockOverviewViewModel {
     
     fileprivate func loadStockPrice() {
         loadingOperations.enter()
-        stockQuoteLoader.load(for: ticker) { (result) in
+        stockQuoteLoader.load(for: ticker) { [weak self] (result) in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let stockQuote):
                 self.stockQuote = stockQuote
@@ -92,6 +93,7 @@ class StockOverviewViewModel {
         financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .fiveYear,
                                      financial: .totalrevenue) { [weak self] (result) in
             guard let self = self else { return }
+                                        
             switch result {
             case .success(let historicalRevenue):
                 self.historicalRevenue = historicalRevenue
@@ -108,6 +110,7 @@ class StockOverviewViewModel {
         financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .fiveYear,
                                      financial: .netincome) { [weak self] (result) in
             guard let self = self else { return }
+                                        
             switch result {
             case .success(let historicalEarnings):
                 self.historicalEarnings = historicalEarnings
@@ -123,6 +126,7 @@ class StockOverviewViewModel {
 
         batchFinancialLoader.fetchStockBatchFinancials(ticker: ticker) { [weak self] (result) in
             guard let self = self else { return }
+            
             switch result {
             case .success(let financialData):
                 self.calcData = financialData

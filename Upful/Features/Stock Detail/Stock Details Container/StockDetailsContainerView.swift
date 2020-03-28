@@ -72,6 +72,11 @@ class StockDetailsContainerView: MenuContainerViewController, NoteVCDelegate {
         UserFeedbackPresenter.checkAndAskForReview(checkType: .importantAction, in: self)
         performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
         showTradeButtonDetail()
+        
+        stockViewModel.loadName()
+        stockViewModel.updateHandler = { [weak self] in
+            self?.collectionView.reloadData()
+        }
     }
     
     // MARK: - View Setup

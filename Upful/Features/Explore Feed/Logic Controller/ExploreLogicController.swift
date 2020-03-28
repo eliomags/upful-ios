@@ -41,8 +41,7 @@ class ExploreLogicController {
     init(newsLoader: NewsLoaderProtocol = NewsLoader(),
          remoteStockLoader: RemoteStockLoaderProtocol = RemoteStockLoader(),
          remoteScreenerLoader: RemoteScreenerLoaderProtocol = RemoteScreenerLoader(),
-         stockSearcher: StockSearcherProtocol = StockSearchService()
-         ) {
+         stockSearcher: StockSearcherProtocol = StockSearchService()) {
         self.newsLoader = newsLoader
         self.remoteStockLoader = remoteStockLoader
         self.remoteScreenerLoader = remoteScreenerLoader
@@ -68,7 +67,7 @@ class ExploreLogicController {
             case .failure(let err):
                 print(err)
             }
-            self?.handleCompletion?()
+            DispatchQueue.main.async { self?.handleCompletion?() }
         }
     }
 
@@ -87,12 +86,15 @@ class ExploreLogicController {
     fileprivate func loadStockViewModels(from stocks: [Stock]) {
         let mappedLoadedStocks = stocks.map { StockViewModel(stock: $0) }
         stockViewModels = mappedLoadedStocks
-        handleCompletion?()
+        DispatchQueue.main.async { self.handleCompletion?() }
     }
     
     fileprivate func loadStockPreviewData() {
         stockViewModels.forEach { (viewModel) in
-            viewModel.updateHandler = { [weak self] in self?.handleCompletion?() }
+            viewModel.updateHandler = { [weak self] in
+                DispatchQueue.main.async { self?.handleCompletion?() }
+                
+            }
             viewModel.loadPreviewData()
         }
     }
@@ -112,7 +114,7 @@ class ExploreLogicController {
         guard screenerViewModels.count > 0 else { return }
         let sortedVMs = screenerViewModels.sorted(by: { $0.interest > $1.interest })
         self.screenerViewModels = Array(sortedVMs[0...3])
-        handleCompletion?()
+        DispatchQueue.main.async { self.handleCompletion?() }
     }
     
     // MARK: Search State
@@ -146,13 +148,11 @@ class ExploreLogicController {
 
     fileprivate func handleSuccessfulSearch(updatingWith fetchedCompanies: [Company]) {
         self.stockSearchDisplay = fetchedCompanies
-        DispatchQueue.main.async {
-            self.handleCompletion?()
-        }
+        DispatchQueue.main.async { self.handleCompletion?() }
     }
     
     fileprivate func handleStockSearchFailure() {
         stockSearchDisplay.removeAll()
-        handleCompletion?()
+        DispatchQueue.main.async { self.handleCompletion?() }
     }
 }

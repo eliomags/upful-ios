@@ -9,6 +9,7 @@
 import Foundation
 
 final class StockViewModel {
+    
     // MARK: - Properties
     
     let stock: Stock
@@ -22,8 +23,7 @@ final class StockViewModel {
     // MARK: - Initializer
     init(stock: Stock,
          quoteLoader: QuoteLoader = StockPriceLoader(),
-         stockFinancialLoader: FinancialLoader = StockFinancialLoader()
-         ) {
+         stockFinancialLoader: FinancialLoader = StockFinancialLoader()) {
         self.stock = stock
         self.quoteLoader = quoteLoader
         self.stockFinancialLoader = stockFinancialLoader
@@ -33,6 +33,20 @@ final class StockViewModel {
         loadPriceToEarningsData()
         loadMarketCapData()
         loadQuoteData()
+    }
+    
+    func loadName() {
+        if stock.name.isEmpty {
+            CompanyNameLoader().loadName(for: stock.ticker) { [weak self] (res) in
+                switch res {
+                case .success(let companyName):
+                    self?.stock.name = companyName
+                    DispatchQueue.main.async { self?.updateHandler?() }
+                case .failure(_):
+                    print("Failed to load name")
+                }
+            }
+        }
     }
     
     func loadQuoteData() {

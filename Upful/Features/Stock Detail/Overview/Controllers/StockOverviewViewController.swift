@@ -17,12 +17,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
 
     // MARK: - Dependencies
     
-    let ticker: String
-    let companyName: String
-    lazy var viewModel: StockOverviewViewModel = {
-        let vm = StockOverviewViewModel(ticker: ticker, companyName: companyName)
-        return vm
-    }()
+    let viewModel: StockOverviewViewModel
 
     private enum ReuseID {
         static let graphCell = "graphCell"
@@ -64,8 +59,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     // MARK: - Initializer Methods
     
     init(ticker: String, companyName: String) {
-        self.ticker = ticker
-        self.companyName = companyName
+        self.viewModel = StockOverviewViewModel(ticker: ticker, companyName: companyName)
         super.init(nibName: nil, bundle: nil)
         title = "Overview"
     }
@@ -125,8 +119,8 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     }
     
     func setupStockHeaderView() {
-        stockHeaderView.detailsLabel.text = companyName
-        stockHeaderView.headerLabel.text = ticker
+        stockHeaderView.detailsLabel.text = viewModel.companyName
+        stockHeaderView.headerLabel.text = viewModel.ticker
         let stockQuote = viewModel.stockQuote
         quoteView.priceLabel.text = "$\(stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
         quoteView.percentChangeView.percentChangeLabel.text = "\(stockQuote?.changePercent.convertToPercent() ?? "-")%"
@@ -174,7 +168,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         let bufferHeight: CGFloat = 15
         let heightThreshold: CGFloat = stockHeaderView.intrinsicContentSize.height - bufferHeight
         let didReachThreshold = scrollView.contentOffset.y >= heightThreshold
-        parent?.navigationItem.title = didReachThreshold ? ticker : ""
+        parent?.navigationItem.title = didReachThreshold ? viewModel.ticker : ""
     }
 }
 

@@ -33,7 +33,7 @@ struct ScreeningResponse: Decodable {
 }
 
 final class Stock {
-    let name: String
+    var name: String
     let ticker: String
     var marketcap: Int?
     var divyield: Double?
