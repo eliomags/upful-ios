@@ -21,6 +21,7 @@ class StockQuoteView: UIView {
     lazy var priceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: priceLabelFontSize, weight: .bold)
+        label.textAlignment = .center
         return label
     }()
     
@@ -31,23 +32,11 @@ class StockQuoteView: UIView {
         return view
     }()
 
-    lazy var priceChangeLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: priceChangeLabelFontSize, weight: .semibold)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.widthAnchor.constraint(equalToConstant: priceChangeLabelWidth).isActive = true
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = 4
-        return label
-    }()
-    
     lazy var quoteStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [percentChangeView, priceLabel])
+        let sv = UIStackView(arrangedSubviews: [priceLabel, percentChangeView])
         sv.axis = .vertical
         sv.distribution = .fill
-        sv.alignment = .center
+        sv.alignment = .trailing
         sv.spacing = 12
         return sv
     }()

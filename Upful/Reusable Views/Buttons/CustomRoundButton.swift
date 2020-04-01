@@ -9,24 +9,34 @@
 import UIKit
 
 class CustomRoundButton: UIView {
+    
+    // MARK: - Dependencies
+    
     private let imageName: String
     
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: 50, height: 50)
-    }
+
     var buttonColor: UIColor {
         return .appAccent3
     }
     
     var buttonImage: UIImage {
-        let plusImage = UIImage(systemName: imageName)?.withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
+        let plusImage = UIImage(systemName: imageName)?
+            .withTintColor(.white, renderingMode: .alwaysOriginal)
         return plusImage?.resizeImage(20, opaque: false) ?? UIImage()
     }
     
     lazy var buttonImageView: UIImageView = {
-        let view = UIImageView(image: self.buttonImage.withAlignmentRectInsets(UIEdgeInsets(top: -3.5, left: -3.5, bottom: -3.5, right: -3.5)))
+        let view = UIImageView(image: self.buttonImage
+            .withAlignmentRectInsets(UIEdgeInsets(top: -3.5, left: -3.5, bottom: -3.5, right: -3.5))
+        )
         return view
     }()
+    
+    // MARK: - Properties
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: 50, height: 50)
+    }
     
     // MARK: - Initializer Methods
     
@@ -41,6 +51,8 @@ class CustomRoundButton: UIView {
         fatalError()
     }
     
+    // MARK: - Lifecycle Methods
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = 50/2
@@ -50,7 +62,7 @@ class CustomRoundButton: UIView {
     
     private func setupView() {
         layer.masksToBounds = true
-        backgroundColor = VersionManager.collectionCellColor()
+        backgroundColor = .appAccent3
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: 50).isActive = true
         widthAnchor.constraint(equalToConstant: 50).isActive = true

@@ -56,7 +56,7 @@ class CompanyPreviewTableViewCell: UITableViewCell {
         super.init(style: .default, reuseIdentifier: nil)
         addSubview(quoteView)
         quoteView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        quoteView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -16).isActive = true
+        quoteView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -24).isActive = true
         
         addSubview(companyTickerLabel)
         companyTickerLabel.anchor(
