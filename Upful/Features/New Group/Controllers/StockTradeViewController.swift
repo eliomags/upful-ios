@@ -346,11 +346,13 @@ final class StockTradeViewController: UITableViewController {
     // MARK: - Helper Methods
     
     fileprivate func presentAlert(_ title: String, _ description: String, OKhandler: (() -> Void)?) {
-        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (_) in
-            OKhandler?()
-        }))
-        present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (_) in
+                OKhandler?()
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     fileprivate func handleHoldingsLoadCompletion(_ err: Error?, _ holdings: [Holding]) {

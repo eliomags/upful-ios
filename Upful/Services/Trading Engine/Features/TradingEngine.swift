@@ -59,7 +59,7 @@ final class TradingEngine {
                     
                     self.balanceManager.handleSell(for: transaction.tradePrice,
                                                    shares: Int(transaction.numberOfShares))
-                    completion?()
+                    DispatchQueue.main.async { completion?() }
                 })
             })
         }
