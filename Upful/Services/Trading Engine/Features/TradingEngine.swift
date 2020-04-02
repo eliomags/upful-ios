@@ -67,7 +67,7 @@ final class TradingEngine {
         
     func updateEquityBalance(with holdings: [Holding]) {
         // total movement + total value of shares
-        let total = holdings.filter { $0.totalShareCount != 0 }
+        let total = holdings.filter { $0.totalShareCount > 0 }
             .reduce(0) { (res, holding) -> Double in
                 let totalHoldingValue = holding.currentTotalValue
                 return totalHoldingValue + res
@@ -86,7 +86,7 @@ final class TradingEngine {
                 case .success(let ledgerTransactions):
                     let holdings = HoldingMapper.map(ledgerTransactions)
                     self.updateEquityBalance(with: holdings)
-                    completion?(holdings.filter { $0.totalShareCount != 0 }, nil)
+                    completion?(holdings.filter { $0.totalShareCount > 0 }, nil)
                     
                 case .failure(let err):
                     completion?([], err)

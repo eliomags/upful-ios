@@ -31,9 +31,11 @@ extension Holding {
     private var buys: [Transaction] {
         return transactions.filter { $0.type == TransactionType.buy.rawValue }
     }
+    
     private var sells: [Transaction] {
         return transactions.filter { $0.type == TransactionType.sell.rawValue }
     }
+    
     var totalShareCount: Int {
         let buyCount = buys.reduce(0) { (res, transaction) -> Int in
             return res + Int(transaction.numberOfShares)
@@ -43,9 +45,11 @@ extension Holding {
         }
         return buyCount - sellCount
     }
+    
     var currentTotalValue: Double {
         return (currentPrice ?? 0) * Double(totalShareCount)
     }
+    
     var averagePrice: Double {
         let totalBuyShares = buys.reduce(0) { (res, transaction) -> Int in
             return res + Int(transaction.numberOfShares)
@@ -55,6 +59,7 @@ extension Holding {
             return res + (transaction.tradePrice * weight)
         }
     }
+    
     var totalPriceMovementDollar: Double {
         let sellMovement = sells.reduce(0) { (res, transaction) -> Double in
             return ((currentPrice ?? transaction.tradePrice) - averagePrice) *

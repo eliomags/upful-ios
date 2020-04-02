@@ -97,12 +97,12 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             guard let self = self else { return }
             if let _ = error {
                 self.configureTransactionHeaderError()
-                self.tableView.reloadSections([Section.holdings.rawValue], with: .automatic)
+                self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
                 self.refreshControl.endRefreshing()
                 return
             }
             self.configureTransactionHeaderSuccess()
-            self.tableView.reloadSections([Section.holdings.rawValue], with: .automatic)
+            self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
             self.refreshControl.endRefreshing()
         }
     }
@@ -171,7 +171,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         df.timeZone = TimeZone(abbreviation: "EST")
         tradingBalanceView.lastUpdatedLabel.text = "Last Updated, \(df.string(from: Date())) EST"
         
-        let equity = logicController.tradingEngine.balanceManager.totalEquityBalance
+        let equity = logicController.totalEquity ?? 0
         if equity-25000 > 0 {
             tradingBalanceView.setPositive()
         } else if equity-25000 < 0 {
@@ -184,7 +184,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         let percentDiff = (((equity / 25_000) - 1) * 100).withCommas()
         UIView.transition(with: tradingBalanceView.totalEquityView, duration: 0.5, options: .transitionCrossDissolve, animations: {
             self.tradingBalanceView.totalEquityView.equityValueLabel.text =
-                "$\(self.logicController.tradingEngine.balanceManager.totalEquityBalance.withCommas())"
+            "$\(self.logicController.totalEquity?.withCommas() ?? " -")"
             self.tradingBalanceView.totalEquityView.totalReturnLabel.text = "$\(dollarDiff)  •  \(percentDiff)%"
         }, completion: nil)
     }

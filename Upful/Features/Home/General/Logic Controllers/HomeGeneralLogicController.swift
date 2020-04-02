@@ -66,11 +66,12 @@ class HomeGeneralLogicController {
     let tradingEngine = TradingEngine.shared
     private(set) var holdings = [Holding]()
     private var holdingsLoader: Timer?
+    private(set) var totalEquity: Double?
     
     func loadHoldings() {
         startHoldingsLoad()
         holdingsLoader?.invalidate()
-        holdingsLoader = Timer.scheduledTimer(withTimeInterval: 7, repeats: true, block: {  (_) in
+        holdingsLoader = Timer.scheduledTimer(withTimeInterval: 9, repeats: true, block: {  (_) in
             self.startHoldingsLoad()
         })
         holdingsLoader?.fire()
@@ -91,17 +92,18 @@ class HomeGeneralLogicController {
             self.holdings.forEach { self.loadQuotes(for: $0) }
             DispatchQueue.main.async { self.holdingsLoadCompletion?(nil) }
             
-            self.holdingsLoadGroup?.notify(queue: .main, execute: {
+            self.holdingsLoadGroup.notify(queue: .main, execute: {
+                self.totalEquity = self.tradingEngine.balanceManager.totalEquityBalance
                 self.holdingsLoadCompletion?(nil)
             })
         }
     }
     
     private let quoteLoader = StockPriceLoader()
-    private var holdingsLoadGroup: DispatchGroup? = DispatchGroup()
+    private let holdingsLoadGroup = DispatchGroup()
 
     fileprivate func loadQuotes(for holding: Holding) {
-        holdingsLoadGroup?.enter()
+        holdingsLoadGroup.enter()
         
         quoteLoader.load(for: holding.ticker) { (result) in
             switch result {
@@ -112,7 +114,7 @@ class HomeGeneralLogicController {
             case .failure(_):
                 DispatchQueue.main.async { self.holdingsLoadCompletion?(NSError()) }
             }
-            self.holdingsLoadGroup?.leave()
+            self.holdingsLoadGroup.leave()
         }
     }
     
@@ -124,6 +126,7 @@ class HomeGeneralLogicController {
             switch result {
             case .success(let savedStocks):
                 self.loadNews(savedStocks)
+                
             case .failure(_):
                 self.getGeneralMarketNews()
             }
@@ -141,6 +144,7 @@ class HomeGeneralLogicController {
             switch result {
             case.success(let news):
                 self.handleNewsFetchCompletion(news: news)
+                
             case .failure(let err):
                 print(err.localizedDescription)
             }
@@ -154,6 +158,7 @@ class HomeGeneralLogicController {
             switch result {
             case .success(let news):
                 self.handleNewsFetchCompletion(news: news)
+                
             case .failure(let err):
                 print(err.localizedDescription)
             }
