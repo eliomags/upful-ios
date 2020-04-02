@@ -226,7 +226,6 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = TableSectionHeaderView()
-//        header.backgroundColor = VersionManager.collectionCellColor2()
         let headerText = ["Financials", "Metrics", "News", "About"]
         header.headerTextLabel.text = headerText[section]
         header.addButton.setTitle("", for: .normal)

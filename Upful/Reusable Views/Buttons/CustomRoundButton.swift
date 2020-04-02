@@ -27,7 +27,7 @@ class CustomRoundButton: UIView {
     
     lazy var buttonImageView: UIImageView = {
         let view = UIImageView(image: self.buttonImage
-            .withAlignmentRectInsets(UIEdgeInsets(top: -3.5, left: -3.5, bottom: -3.5, right: -3.5))
+            .withAlignmentRectInsets(UIEdgeInsets(top: -6, left: -6, bottom: -6, right: -6))
         )
         return view
     }()

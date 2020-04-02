@@ -54,10 +54,6 @@ class MenuContainerViewController: UICollectionViewController, MenuBarViewDelega
         setupCollectionView()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     // MARK: - View Set Up
 
     private func setupCollectionView() {

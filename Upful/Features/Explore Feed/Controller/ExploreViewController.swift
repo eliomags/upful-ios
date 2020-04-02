@@ -9,7 +9,7 @@
 import UIKit
 import Kingfisher
 
-class ExploreViewController: UIViewController, UISearchControllerDelegate, UISearchBarDelegate {
+final class ExploreViewController: UIViewController, UISearchControllerDelegate, UISearchBarDelegate {
     
     private enum ReuseID {
         static let largeNewsCell = "largeNewsCellID"
@@ -51,7 +51,7 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
         sc.searchBar.tintColor = .appAccent3
         sc.searchBar.searchBarStyle = .minimal
         sc.obscuresBackgroundDuringPresentation = false
-        sc.hidesNavigationBarDuringPresentation = false
+//        sc.hidesNavigationBarDuringPresentation = false
         return sc
     }()
     
@@ -160,11 +160,11 @@ class ExploreViewController: UIViewController, UISearchControllerDelegate, UISea
     }
     
     fileprivate func configureNavBar() {
+        navigationItem.title = "Explore"
+        navigationItem.largeTitleDisplayMode = .never
+        navigationItem.searchController = self.searchController
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.backgroundColor = VersionManager.mainContainerBackground()
-        navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = "Explore"
-        navigationItem.searchController = self.searchController
     }
     
     // MARK: - Delegate Methods

@@ -162,6 +162,39 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         tableView.register(StockHoldingTableViewCell.self, forCellReuseIdentifier: Constants.stockHoldingCellID)
     }
     
+    // MARK: - Actions
+    
+    @objc fileprivate func handleResfreshing(_ sender: Any) {
+        refreshControl.endRefreshing()
+        logicController.fetchTableData()
+    }
+    
+    fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
+        switch logicController.preferenceState {
+        case .new:
+            let preferencePresenter = PreferencePresenter(presentingViewController: self)
+            preferencePresenter.present()
+        case .loaded:
+            coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: logicController.stocksYouMayLike[indexPath.row])
+            coordinator?.start()
+        default:
+            break
+        }
+    }
+    
+    @objc fileprivate func handleScreenerSelectionTap() {
+        let screenerSelectionVC = ScreenerSelectionContainerView(collectionViewLayout: UICollectionViewFlowLayout())
+        navigationController?.pushViewController(screenerSelectionVC, animated: true)
+    }
+
+    // MARK: - Preference Delegate Methods
+        
+    func didCompleteSaving() {
+        logicController.startPreferenceLoad()
+    }
+    
+    // MARK: - View Configuration
+    
     fileprivate func configureTransactionHeaderSuccess() {
         tradingBalanceView.cashBalanceView.cashValueLabel.text =
             "$\(logicController.tradingEngine.balanceManager.currentCashBalance.withCommas())"
@@ -203,39 +236,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         tradingBalanceView.totalEquityView.totalReturnLabel.text = "Error"
     }
     
-    // MARK: - Actions
-    
-    @objc fileprivate func handleResfreshing(_ sender: Any) {
-        refreshControl.endRefreshing()
-        logicController.fetchTableData()
-    }
-    
-    fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
-        switch logicController.preferenceState {
-        case .new:
-            let preferencePresenter = PreferencePresenter(presentingViewController: self)
-            preferencePresenter.present()
-        case .loaded:
-            coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: logicController.stocksYouMayLike[indexPath.row])
-            coordinator?.start()
-        default:
-            break
-        }
-    }
-    
-    @objc fileprivate func handleScreenerSelectionTap() {
-        let screenerSelectionVC = ScreenerSelectionContainerView(collectionViewLayout: UICollectionViewFlowLayout())
-        navigationController?.pushViewController(screenerSelectionVC, animated: true)
-    }
-
-    // MARK: - Preference Delegate Methods
-        
-    func didCompleteSaving() {
-        logicController.startPreferenceLoad()
-    }
-    
-    // MARK: - TableView Cells
-    
     fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
         if logicController.holdings.isEmpty {
             return EmptyStockHoldingCell()
@@ -245,7 +245,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             let holding = logicController.holdings[indexPath.row]
             stockHoldingsCell?.tickerLabel.text = holding.ticker
             stockHoldingsCell?.numberOfSharesLabel.text = "\(holding.totalShareCount) shares"
-            stockHoldingsCell?.currentPriceLabel.text = "$\(holding.currentPrice?.roundToTwoDecimal() ?? "")"
+            stockHoldingsCell?.currentPriceLabel.text = "$\(holding.currentPrice?.roundToTwoDecimal() ?? " -")"
             stockHoldingsCell?.averagePriceLabel.text = "$\(holding.averagePrice.roundToTwoDecimal())"
             stockHoldingsCell?.dollarChangeLabel.text = "$" + holding.totalPriceMovementDollar.roundToTwoDecimal()
             stockHoldingsCell?.percentChangeView.percentChangeLabel.text = holding.totalPriceMovementPercent

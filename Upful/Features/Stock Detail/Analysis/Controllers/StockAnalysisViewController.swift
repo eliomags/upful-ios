@@ -154,7 +154,6 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
     
     /// ChartUpdatable protocol which updates the chart from the selected search criteria in SearchSelectionViewController
     func updateChartData(chartType: ChartType, criteria: SearchCriteria) {
-        print(criteria.explicit)
         switch chartType {
         case .bar:
             viewModel.updateBarData(with: criteria)
@@ -239,11 +238,12 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = LargeSectionHeaderLabel(padding: 16)
+        let header = TableSectionHeaderView()
         header.backgroundColor = .clear
-            let headerText = ["COMPARISON"]
-            header.text = headerText[section].uppercased()
-            return header
+        let headerText = ["Comparison"]
+        header.headerTextLabel.text = headerText[section]
+        header.addButton.setTitle("", for: .normal)
+        return header
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

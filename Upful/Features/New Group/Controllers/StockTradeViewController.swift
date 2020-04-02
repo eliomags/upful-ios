@@ -85,7 +85,7 @@ final class StockTradeViewController: UITableViewController {
         let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: .body).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
-        label.text = "Number of Shares:"
+        label.text = "Shares:"
         return label
     }()
     

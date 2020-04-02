@@ -8,26 +8,40 @@
 
 import UIKit
 
-extension UIViewController {
-    func showNotificationSetupView() {
-        UNUserNotificationCenter.current().getNotificationSettings { [weak self] (notificationSettings) in
-            guard let self = self else { return }
-            if notificationSettings.authorizationStatus == .notDetermined {
-                DispatchQueue.main.async {
-                    let notificationSetupVC = NotificationSetupViewController()
-                    
-                    guard var parentVC = self.parent else {
-                        self.display(contentController: notificationSetupVC, on: self.view)
-                        return
+struct NotificationSetupPresenter {
+
+    private static var didPresentNotificationSetup = false
+    
+    static func present(in vc: UIViewController) {
+        if !didPresentNotificationSetup {
+            UNUserNotificationCenter.current().getNotificationSettings {(notificationSettings) in
+                if notificationSettings.authorizationStatus == .notDetermined {
+                    didPresentNotificationSetup = true
+
+                    DispatchQueue.main.async {
+                        let notificationSetupVC = NotificationSetupViewController()
+                        
+                        guard var parentVC = vc.parent else {
+                            vc.display(contentController: notificationSetupVC, on: vc.view)
+                            return
+                        }
+                        
+                        while let next = parentVC.parent { parentVC = next }
+                        parentVC.display(contentController: notificationSetupVC, on: parentVC.view)
                     }
-                    while let next = parentVC.parent { parentVC = next }
-                    parentVC.display(contentController: notificationSetupVC, on: parentVC.view)
+                }
+                
+                if notificationSettings.authorizationStatus == .authorized {
+                    PermissionManager.shared.setupScreeningNotification()
                 }
             }
-            if notificationSettings.authorizationStatus == .authorized {
-                PermissionManager.shared.setupScreeningNotification()
-            }
         }
+    }
+}
+
+extension UIViewController {
+    func showNotificationSetupView() {
+        NotificationSetupPresenter.present(in: self)
     }
 }
 
@@ -38,7 +52,7 @@ class NotificationSetupViewController: UIViewController {
     private let containerView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .secondarySystemGroupedBackground
+        v.backgroundColor = VersionManager.collectionCellColor()
         v.layer.masksToBounds = false
         v.layer.cornerRadius = 16
         v.heightAnchor.constraint(equalToConstant: 175).isActive = true
@@ -105,10 +119,9 @@ class NotificationSetupViewController: UIViewController {
     
     fileprivate func setupContents() {
         view.backgroundColor =
-            UIColor.init() { [unowned self] (trait) -> UIColor in
+            UIColor.init() { (trait) -> UIColor in
                if trait.userInterfaceStyle == .dark {
-                   self.containerView.setupShadow(intensity: .light, color: .systemGray)
-
+                    self.containerView.setupShadow(intensity: .light, color: VersionManager.collectionCellColor())
                }
                if trait.userInterfaceStyle == .light {
                    self.containerView.setupShadow(intensity: .light, color: .label)
