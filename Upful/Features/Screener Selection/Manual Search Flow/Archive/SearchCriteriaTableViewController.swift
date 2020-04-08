@@ -163,11 +163,11 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
             default:
                 switch criteria.classification {
                 case .valuation:
-                    valuation.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                    valuation.append(ManualScreenItem(criteria: criteria))
                 case .financial:
-                    financial.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                    financial.append(ManualScreenItem(criteria: criteria))
                 case .performance:
-                    performance.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                    performance.append(ManualScreenItem(criteria: criteria))
                 case .other:
                     break
                 }

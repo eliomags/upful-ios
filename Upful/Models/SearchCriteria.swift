@@ -44,7 +44,7 @@ enum SearchCriteria: String, CaseIterable {
     case revenueqoqgrowth
 }
 
-enum SearchParameter: String, CaseIterable {
+enum SearchParameter: String, Equatable, CaseIterable {
     case lt = "~lt"
     case gt = "~gt"
     case none

@@ -110,16 +110,16 @@ class SearchSelectionViewController: UIViewController {
                 case .evtoebit, .evtofcff:
                     break
                 default:
-                    valuation.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                    valuation.append(ManualScreenItem(criteria: criteria))
                 }
             case .financial:
-                financial.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                financial.append(ManualScreenItem(criteria: criteria))
             case .performance:
-                performance.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                performance.append(ManualScreenItem(criteria: criteria))
             case .other:
                 switch criteria {
                 case .name, .industrycategory, .none: break
-                default: values.append(ManualScreenItem(criteria: criteria, parameter: .none, value: nil))
+                default: values.append(ManualScreenItem(criteria: criteria))
                 }
             }
         }

@@ -197,6 +197,9 @@
 		3DC7108D2335D9BE00A2A0DA /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */; };
 		3DC710952336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710932336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift */; };
 		3DC710962336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC710942336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift */; };
+		3DCE8DB2243D844D0007F9EB /* ManualScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DB1243D844D0007F9EB /* ManualScreenViewController.swift */; };
+		3DCE8DB4243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DB3243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift */; };
+		3DCE8DB7243E11EE0007F9EB /* ManualScreenItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DB6243E11EE0007F9EB /* ManualScreenItemViewModel.swift */; };
 		3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291C2347EC530079DA18 /* Vibration.swift */; };
 		3DD42920234959FD0079DA18 /* NotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291F234959FD0079DA18 /* NotesButton.swift */; };
 		3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD429222349633E0079DA18 /* GenericNavBarButton.swift */; };
@@ -463,6 +466,9 @@
 		3DC7108C2335D9BE00A2A0DA /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		3DC710932336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreener+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3DC710942336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedScreener+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3DCE8DB1243D844D0007F9EB /* ManualScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScreenViewController.swift; sourceTree = "<group>"; };
+		3DCE8DB3243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScreenItemCollectionViewCell.swift; sourceTree = "<group>"; };
+		3DCE8DB6243E11EE0007F9EB /* ManualScreenItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScreenItemViewModel.swift; sourceTree = "<group>"; };
 		3DD4291C2347EC530079DA18 /* Vibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibration.swift; sourceTree = "<group>"; };
 		3DD4291F234959FD0079DA18 /* NotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesButton.swift; sourceTree = "<group>"; };
 		3DD429222349633E0079DA18 /* GenericNavBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericNavBarButton.swift; sourceTree = "<group>"; };
@@ -1562,6 +1568,7 @@
 			isa = PBXGroup;
 			children = (
 				3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */,
+				3DCE8DB3243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1879,9 +1886,9 @@
 			isa = PBXGroup;
 			children = (
 				3D90ADB62301994900C52455 /* Views */,
-				3D917B5922FE24C4001D5E39 /* SearchCriteriaTableViewController.swift */,
-				3D917B5122FE0542001D5E39 /* ManualSearchViewController.swift */,
-				3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */,
+				3DCE8DB0243D842D0007F9EB /* Archive */,
+				3DCE8DAF243D84230007F9EB /* Controllers */,
+				3DCE8DB5243E00540007F9EB /* ViewModels */,
 			);
 			path = "Manual Search Flow";
 			sourceTree = "<group>";
@@ -1916,6 +1923,32 @@
 				3DC710942336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift */,
 			);
 			path = SavedScreener;
+			sourceTree = "<group>";
+		};
+		3DCE8DAF243D84230007F9EB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3DCE8DB1243D844D0007F9EB /* ManualScreenViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		3DCE8DB0243D842D0007F9EB /* Archive */ = {
+			isa = PBXGroup;
+			children = (
+				3D917B5922FE24C4001D5E39 /* SearchCriteriaTableViewController.swift */,
+				3D917B5122FE0542001D5E39 /* ManualSearchViewController.swift */,
+				3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */,
+			);
+			path = Archive;
+			sourceTree = "<group>";
+		};
+		3DCE8DB5243E00540007F9EB /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3DCE8DB6243E11EE0007F9EB /* ManualScreenItemViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		3DD4291E2348F7D20079DA18 /* Controller */ = {
@@ -2484,6 +2517,7 @@
 				3D206A4C242290D600F7E44C /* TradingBalanceView.swift in Sources */,
 				3D7C855523380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift in Sources */,
 				3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */,
+				3DCE8DB4243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift in Sources */,
 				3D562C8D235F248E00837B2F /* SubscriptionLogicController.swift in Sources */,
 				3D206A6124284E8000F7E44C /* Holding.swift in Sources */,
 				3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */,
@@ -2562,6 +2596,7 @@
 				3D206A272421046600F7E44C /* TransactionLogger.swift in Sources */,
 				3D6B071E2415C97300C55021 /* MultilineButton.swift in Sources */,
 				3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */,
+				3DCE8DB7243E11EE0007F9EB /* ManualScreenItemViewModel.swift in Sources */,
 				3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */,
 				3D20FB2B22FB1F08007836DD /* ExploreViewController.swift in Sources */,
 				3D5865262323024A00495D79 /* PieChartView.swift in Sources */,
@@ -2644,6 +2679,7 @@
 				3D7013E123ECF98F00102E9C /* StockDetailsCoordinator.swift in Sources */,
 				3DF734D62403770C00B297A4 /* BatchFinancialLoader.swift in Sources */,
 				3D7C85522337A93500A2E63E /* Animator.swift in Sources */,
+				3DCE8DB2243D844D0007F9EB /* ManualScreenViewController.swift in Sources */,
 				3DAB3EC3234D22890008CC18 /* FeaturePresenter.swift in Sources */,
 				3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */,
 				3D206A3F242158E700F7E44C /* BalanceManager.swift in Sources */,

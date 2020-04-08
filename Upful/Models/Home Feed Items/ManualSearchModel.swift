@@ -17,6 +17,17 @@ struct ManualScreenItem {
     let criteria: SearchCriteria
     var parameter: SearchParameter
     var value: Double?
+    
+    init(criteria: SearchCriteria) {
+        self.criteria = criteria
+        self.parameter = .none
+    }
+    
+    init(criteria: SearchCriteria, parameter: SearchParameter, value: Double) {
+        self.criteria = criteria
+        self.parameter = parameter
+        self.value = value
+    }
 }
 
 enum ScreenerParameterType {
