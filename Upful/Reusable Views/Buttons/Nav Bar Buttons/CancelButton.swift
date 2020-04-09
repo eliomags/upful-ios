@@ -16,7 +16,7 @@ class CancelButton: UIView {
         heightAnchor.constraint(equalToConstant: 28).isActive = true
         widthAnchor.constraint(equalToConstant: 28).isActive = true
         
-        let smallConfig = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
+        let smallConfig = UIImage.SymbolConfiguration(pointSize: 5, weight: .bold)
         let xImage = UIImage(systemName: "xmark", withConfiguration: smallConfig)?
             .withTintColor(.white, renderingMode: .alwaysOriginal) ?? UIImage()
         

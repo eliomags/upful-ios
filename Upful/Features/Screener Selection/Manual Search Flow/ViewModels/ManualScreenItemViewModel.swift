@@ -8,25 +8,39 @@
 
 import Foundation
 
-struct ManualScreenItemViewModel {
+class ManualScreenItemViewModel {
     
     var manualScreenItem: ManualScreenItem
+
     var isSelected: Bool {
-        return !(manualScreenItem.parameter == .none)
+        return !(descriptionText.isEmpty)
     }
     var titleText: String {
         return manualScreenItem.criteria.explicit
     }
-    var descritionText: String {
-        if manualScreenItem.parameter == .none {
-            return ""
+    var descriptionText: String {
+        if manualScreenItem.parameter != .none {
+            if manualScreenItem.criteria.parameterType == .percentage {
+                return manualScreenItem.parameter.explicit + " " + "\(manualScreenItem.value!.convertToPercent())%"
+            }
+            if manualScreenItem.criteria.parameterType == .ratio {
+                return manualScreenItem.parameter.explicit + " " + String(Int(manualScreenItem.value!))
+            }
+            if manualScreenItem.criteria.parameterType == .number {
+                return manualScreenItem.parameter.explicit + " $" + Int(manualScreenItem.value!).formatUsingAbbreviation()
+            }
         } else {
-            return manualScreenItem.parameter.explicit
+            return ""
         }
+        return ""
     }
-    var value: Float?
     
     init(manualScreenItem: ManualScreenItem) {
         self.manualScreenItem = manualScreenItem
+    }
+    
+    func resetParameter() {
+        manualScreenItem.parameter = .none
+        manualScreenItem.value = nil
     }
 }

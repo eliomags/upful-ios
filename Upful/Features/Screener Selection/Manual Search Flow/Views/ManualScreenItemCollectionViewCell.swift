@@ -14,7 +14,8 @@ class ManualScreenItemCollectionViewCell: UICollectionViewCell {
         didSet {
             guard let viewModel = viewModel else { return }
             titleLabel.text = viewModel.titleText
-            detailLabel.text = viewModel.descritionText
+            detailLabel.text = viewModel.descriptionText
+            viewModel.isSelected ? handleSelectedState() : handleDeSelectedState()
         }
     }
     
@@ -32,11 +33,11 @@ class ManualScreenItemCollectionViewCell: UICollectionViewCell {
     
     let detailLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemGray
+        label.textColor = .appAccent3
         label.textAlignment = .center
         let size = UIFont.preferredFont(
-            forTextStyle: UIFont.TextStyle.subheadline).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
+            forTextStyle: UIFont.TextStyle.body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .heavy)
         return label
     }()
     
@@ -49,7 +50,19 @@ class ManualScreenItemCollectionViewCell: UICollectionViewCell {
         return sv
     }()
     
+    lazy var removeButton: CancelButton = {
+        let button = CancelButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let size: CGFloat = 20
+        button.heightAnchor.constraint(equalToConstant: size).isActive = true
+        button.widthAnchor.constraint(equalToConstant: size).isActive = true
+        button.layer.cornerRadius = size/2
+        button.layer.masksToBounds = true
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(cancelTap)))
+        return button
+    }()
     
+            
     // MARK: - Initializer
     
     override init(frame: CGRect) {
@@ -66,10 +79,26 @@ class ManualScreenItemCollectionViewCell: UICollectionViewCell {
         layer.masksToBounds = true
         addSubview(contentStackView)
         contentStackView
-            .setCenterYAnchor(relativeTo: self, padding: 16)
+            .setTopAnchor(padding: 16)
             .setLeadingAnchor(padding: 16)
             .setTrailingAnchor(padding: 16)
-            .setBottomAnchor(padding: 0)
+            .setBottomAnchor(padding: 16)
         backgroundColor = VersionManager.collectionCellColor()
+    }
+
+    var handleCancelTap: (() -> Void)?
+    
+    fileprivate func handleSelectedState() {
+        addSubview(removeButton)
+        removeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 1).isActive = true
+        removeButton.topAnchor.constraint(equalTo: topAnchor, constant: 1).isActive = true
+    }
+    
+    fileprivate func handleDeSelectedState() {
+        removeButton.removeFromSuperview()
+    }
+    
+    @objc fileprivate func cancelTap() {
+        handleCancelTap?()
     }
 }
