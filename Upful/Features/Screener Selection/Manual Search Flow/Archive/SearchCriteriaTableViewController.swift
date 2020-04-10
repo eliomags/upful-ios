@@ -159,7 +159,6 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
         
         SearchCriteria.allCases.forEach { (criteria) in
             switch criteria {
-            case .bookvaluepershare: break
             default:
                 switch criteria.classification {
                 case .valuation:

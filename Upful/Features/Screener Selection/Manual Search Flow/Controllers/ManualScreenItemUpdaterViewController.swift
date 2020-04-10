@@ -12,6 +12,178 @@ protocol ManualScreenItemUpdaterDelegate: class {
     func didUpdate(manualScreenItemViewModel: ManualScreenItemViewModel, at indexPath: IndexPath)
 }
 
+final class NewManualScreenerItemUpdateViewController: UIViewController {
+    
+    // MARK: - Properties
+    
+    private var screenerItem: ManualScreenItem
+    private let selectedIndexPath: IndexPath
+
+    weak var delegate: ManualScreenItemUpdaterDelegate?
+     
+    // MARK: - Views
+    
+    private lazy var descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "\(screenerItem.criteria.explicit) > $500M"
+        label.textAlignment = .center
+        let size = UIFont.preferredFont(
+            forTextStyle: UIFont.TextStyle.body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .heavy)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var parameterControl: UISegmentedControl = {
+        let control = UISegmentedControl(items: [SearchParameter.lt.explicit, SearchParameter.gt.explicit])
+        control.selectedSegmentIndex = 0
+        control.translatesAutoresizingMaskIntoConstraints = false
+        control.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        return control
+    }()
+    
+    private lazy var valueSlider: UISlider = {
+        let slider = UISlider()
+        slider.minimumValue = 5
+        slider.maximumValue = 15
+        return slider
+    }()
+    
+    private lazy var dismissButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.setTitle("Cancel", for: .normal)
+        b.setTitleColor(.label, for: .normal)
+        b.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        return b
+    }()
+    
+    private lazy var acceptButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.layer.cornerRadius = 8
+        b.layer.masksToBounds = false
+        b.setTitle("Set", for: .normal)
+        b.backgroundColor = .appAccent3
+        b.setTitleColor(.white, for: .normal)
+        b.addTarget(self, action: #selector(handleSet), for: .touchUpInside)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        return b
+    }()
+    
+    private lazy var dismissView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleCancel)))
+        return view
+    }()
+    
+    // MARK: StackViews
+    
+    private lazy var controlStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [parameterControl, valueSlider])
+        sv.spacing = 24
+        sv.axis = .horizontal
+        sv.distribution = .fillProportionally
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        return sv
+    }()
+    
+    private lazy var buttonStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [dismissButton, acceptButton])
+        sv.axis = .horizontal
+        sv.distribution = .fillEqually
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        return sv
+    }()
+    
+    lazy var contentStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [descriptionLabel, controlStackView, buttonStackView])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.spacing = 32
+        return sv
+    }()
+    
+    private let contentView: UIView = {
+        let view = UIView()
+        view.layer.masksToBounds = true
+        view.backgroundColor = .systemBackground
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    // MARK: - Initializer
+    
+    init(selectedIndexPath: IndexPath, screenerItem: ManualScreenItem) {
+        self.screenerItem = screenerItem
+        self.selectedIndexPath = selectedIndexPath
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Lifecycle
+    
+    override func loadView() {
+        super.loadView()
+        setupContentView()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    // MARK: - View Setup
+    
+    fileprivate func setupContentView() {
+        view.addSubview(contentView)
+        NSLayoutConstraint.activate([
+            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        contentView.addSubview(contentStackView)
+        NSLayoutConstraint.activate([
+            contentStackView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor, constant: 24),
+            contentStackView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor, constant: 16),
+            contentStackView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor, constant: -16),
+            contentStackView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor, constant: -24),
+        ])
+        
+        view.addSubview(dismissView)
+        NSLayoutConstraint.activate([
+            dismissView.topAnchor.constraint(equalTo: view.topAnchor),
+            dismissView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dismissView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            dismissView.bottomAnchor.constraint(equalTo: contentView.topAnchor),
+        ])
+    }
+    
+    // MARK: - Actions
+    
+    @objc fileprivate func handleCancel() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc fileprivate func handleSet() {
+//        screenerItem.value = selectedParameterItem.value
+//        screenerItem.parameter = selectedParameterItem.parameter
+        
+        let viewModel = ManualScreenItemViewModel(manualScreenItem: screenerItem)
+        delegate?.didUpdate(manualScreenItemViewModel: viewModel, at: selectedIndexPath)
+        
+        self.dismiss(animated: true, completion: nil)
+    }
+}
+
+
 class ManualScreenItemUpdaterViewController: UITableViewController {
     
     // MARK:- Dependencies
@@ -79,7 +251,6 @@ class ManualScreenItemUpdaterViewController: UITableViewController {
     }
     
     fileprivate func initializeData() {
-//        manualSearchParameterItems.append(ParameterItem(parameter: .none, value: 0))
         switch screenerItem.criteria.parameterType {
         case .ratio:
             configureRatioData()

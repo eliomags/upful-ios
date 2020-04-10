@@ -62,7 +62,6 @@ extension SearchCriteria {
         case .epsgrowth: return "EPS Growth"
         case .pricetorevenue: return "Price to Sales"
         case .revenueqoqgrowth: return "Sales Q/Q Growth"
-        case .bookvaluepershare: return "Book Value/Share"
         case .evtofcff: return "EV/FCF"
         case .debttoequity: return "Debt/Equity"
         case .totalrevenue: return "Revenue"
@@ -94,7 +93,6 @@ extension SearchCriteria {
         case .epsgrowth: return .percentage
         case .pricetorevenue: return .ratio
         case .revenueqoqgrowth: return .percentage
-        case .bookvaluepershare: return .number
         case .evtofcff: return .ratio
         case .debttoequity: return .ratio
         case .totalrevenue: return .number
@@ -125,7 +123,6 @@ extension SearchCriteria {
         case .epsgrowth: return .performance
         case .pricetorevenue: return .valuation
         case .revenueqoqgrowth: return .performance
-        case .bookvaluepershare: return .valuation
         case .evtofcff: return .valuation
         case .debttoequity: return .financial
         case .totalrevenue: return .other

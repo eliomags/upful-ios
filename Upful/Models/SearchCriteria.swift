@@ -23,7 +23,6 @@ enum SearchCriteria: String, CaseIterable {
     case pricetoearnings
     case evtoebit
     case pricetobook
-    case bookvaluepershare
     case evtofcff
     case debttoequity
     case ebitdagrowth

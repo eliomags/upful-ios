@@ -54,6 +54,16 @@ class ManualScreenViewController: UICollectionViewController {
             .map { ManualScreenItem(criteria: $0) }
             .map { ManualScreenItemViewModel(manualScreenItem: $0) }
     }
+    
+    // MARK: - Navigation
+    
+    func presentManualSearchItemUpdaterVC(for screenerItem: ManualScreenItem,at selectedIndexPath: IndexPath) {
+        let updaterVC = NewManualScreenerItemUpdateViewController(selectedIndexPath: selectedIndexPath, screenerItem: screenerItem)
+        updaterVC.delegate = self
+        updaterVC.modalPresentationStyle = .overCurrentContext
+        
+        self.tabBarController?.present(updaterVC, animated: true, completion: nil)
+    }
 }
 
 extension ManualScreenViewController {
@@ -101,10 +111,7 @@ extension ManualScreenViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let manualScreenItem = viewModels[indexPath.section][indexPath.row].manualScreenItem
-        let updaterVC = ManualScreenItemUpdaterViewController(selectedIndexPath: indexPath,
-                                                              screenerItem: manualScreenItem)
-        updaterVC.delegate = self
-        present(updaterVC, animated: true, completion: nil)
+        presentManualSearchItemUpdaterVC(for: manualScreenItem, at: indexPath)
     }
 }
 

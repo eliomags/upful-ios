@@ -202,6 +202,7 @@
 		3DCE8DB7243E11EE0007F9EB /* ManualScreenItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DB6243E11EE0007F9EB /* ManualScreenItemViewModel.swift */; };
 		3DCE8DB9243EB1D50007F9EB /* ManualScreenSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DB8243EB1D50007F9EB /* ManualScreenSectionHeaderView.swift */; };
 		3DCE8DBB243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DBA243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift */; };
+		3DCE8DBE2440A1820007F9EB /* NotificationSetupPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DBD2440A1820007F9EB /* NotificationSetupPresenter.swift */; };
 		3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291C2347EC530079DA18 /* Vibration.swift */; };
 		3DD42920234959FD0079DA18 /* NotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291F234959FD0079DA18 /* NotesButton.swift */; };
 		3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD429222349633E0079DA18 /* GenericNavBarButton.swift */; };
@@ -473,6 +474,7 @@
 		3DCE8DB6243E11EE0007F9EB /* ManualScreenItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScreenItemViewModel.swift; sourceTree = "<group>"; };
 		3DCE8DB8243EB1D50007F9EB /* ManualScreenSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScreenSectionHeaderView.swift; sourceTree = "<group>"; };
 		3DCE8DBA243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScreenItemUpdaterViewController.swift; sourceTree = "<group>"; };
+		3DCE8DBD2440A1820007F9EB /* NotificationSetupPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupPresenter.swift; sourceTree = "<group>"; };
 		3DD4291C2347EC530079DA18 /* Vibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibration.swift; sourceTree = "<group>"; };
 		3DD4291F234959FD0079DA18 /* NotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesButton.swift; sourceTree = "<group>"; };
 		3DD429222349633E0079DA18 /* GenericNavBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericNavBarButton.swift; sourceTree = "<group>"; };
@@ -1001,6 +1003,7 @@
 		3D20FB4D22FB258A007836DD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3DCE8DBC2440A1580007F9EB /* NotificationSetupPresenter */,
 				3D206A01241E8EFA00F7E44C /* Trading Engine */,
 				3D31AA84242FCB2000326D7E /* CompanyNameLoader */,
 				3D583BB92413209E0001EEA5 /* Quote Loader */,
@@ -1957,6 +1960,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		3DCE8DBC2440A1580007F9EB /* NotificationSetupPresenter */ = {
+			isa = PBXGroup;
+			children = (
+				3DCE8DBD2440A1820007F9EB /* NotificationSetupPresenter.swift */,
+			);
+			path = NotificationSetupPresenter;
+			sourceTree = "<group>";
+		};
 		3DD4291E2348F7D20079DA18 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -2594,6 +2605,7 @@
 				3D42BE492309A59800806AFF /* SearchCriteria.swift in Sources */,
 				3D206A4624217F7400F7E44C /* RemoteTransactionLogger.swift in Sources */,
 				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
+				3DCE8DBE2440A1820007F9EB /* NotificationSetupPresenter.swift in Sources */,
 				3D31AA83242E779E00326D7E /* TradeButtonDetailDisplayViewController.swift in Sources */,
 				3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */,
 				3DF5FBB2232F16F300856205 /* SearchSelectionVIewController.swift in Sources */,

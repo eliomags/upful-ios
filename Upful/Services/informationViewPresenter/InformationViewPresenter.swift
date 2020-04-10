@@ -8,10 +8,6 @@
 
 import UIKit
 
-enum InformationViewType {
-    case error
-}
-
 struct InformationViewPresenter {
     private let animation = Animator()
     private let actionView = InformationView()

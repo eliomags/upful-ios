@@ -175,21 +175,7 @@ class StockDetailsContainerView: MenuContainerViewController, NoteVCDelegate {
 
 // MARK: - UIPopOverPresentationDelegate
 
-extension StockDetailsContainerView: UIPopoverPresentationControllerDelegate {
-    //UIPopoverPresentationControllerDelegate inherits from UIAdaptivePresentationControllerDelegate, we will use this method to define the presentation style for popover presentation controller
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .none
-    }
-
-    //UIPopoverPresentationControllerDelegate
-    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
-
-    }
-
-    func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
-        return true
-    }
-}
+extension StockDetailsContainerView: UIPopoverPresentationControllerDelegate {}
 
 extension StockDetailsContainerView: SubscriptionViewControllerDelegate {
     func presentationControllerdDidDismissWithoutSignup() {}
