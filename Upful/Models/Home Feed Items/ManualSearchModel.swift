@@ -72,7 +72,7 @@ extension SearchCriteria {
         case .industrycategory: return "Industry Category"
         }
     }
-    
+        
     var parameterType: ScreenerParameterType {
         switch self {
         case .none: return .other
@@ -134,7 +134,26 @@ extension SearchCriteria {
         case .industrycategory: return .other
         }
     }
-
+    
+    var valueBounds: (min: Double, max: Double) {
+        switch parameterType {
+        case .number:
+            return (100_000_000, 100_000_000_000.0)
+            
+        case .ratio:
+            return (5, 100)
+            
+        case .percentage:
+            if self == .dividendyield {
+                return (0.01, 0.05)
+            } else {
+                return (0.05, 0.8)
+            }
+            
+        default:
+            return (0,0)
+        }
+    }
 }
 
 

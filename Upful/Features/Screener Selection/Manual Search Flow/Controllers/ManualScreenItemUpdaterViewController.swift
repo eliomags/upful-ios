@@ -18,14 +18,16 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
     
     private var screenerItem: ManualScreenItem
     private let selectedIndexPath: IndexPath
+    private var selectedParameter: SearchParameter = .gt
+    private lazy var selectedValue: Float = Float(screenerItem.criteria.valueBounds.max / 2)
 
     weak var delegate: ManualScreenItemUpdaterDelegate?
-     
+    
     // MARK: - Views
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(screenerItem.criteria.explicit) > $500M"
+        label.text = "\(screenerItem.criteria.explicit) \(selectedParameter.explicit) $500M"
         label.textAlignment = .center
         let size = UIFont.preferredFont(
             forTextStyle: UIFont.TextStyle.body).pointSize
@@ -44,8 +46,9 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
     
     private lazy var valueSlider: UISlider = {
         let slider = UISlider()
-        slider.minimumValue = 5
-        slider.maximumValue = 15
+        slider.minimumValue = Float(screenerItem.criteria.valueBounds.min)
+        slider.maximumValue = Float(screenerItem.criteria.valueBounds.max)
+        slider.addTarget(self, action: #selector(handleValueChange), for: .valueChanged)
         return slider
     }()
     
@@ -137,6 +140,7 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initializeValues()
     }
     
     // MARK: - View Setup
@@ -166,15 +170,65 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
         ])
     }
     
+    fileprivate func updateDescriptionLabel() {
+        var configuredSelectedValue = ""
+        switch self.screenerItem.criteria.parameterType {
+        case .number:
+            configuredSelectedValue = "$" + Int(selectedValue).formatUsingAbbreviation()
+        case .percentage:
+            configuredSelectedValue = "$" + Double(selectedValue).convertToPercent() + "%"
+        case .ratio:
+            configuredSelectedValue = String(Int(selectedValue))
+
+        default:
+            assert(false, "Only  Number, Ratio and Percentage options allowed")
+        }
+        descriptionLabel.text = "\(screenerItem.criteria.explicit) \(selectedParameter.explicit) \(configuredSelectedValue)"
+    }
+    
+    fileprivate func initializeValues() {
+        let initialValue = Float((screenerItem.criteria.valueBounds.max) / 2)
+        valueSlider.value = initialValue
+        selectedValue = initialValue
+        
+        updateDescriptionLabel()
+    }
+    
     // MARK: - Actions
+    
+    @objc fileprivate func handleValueChange(slider: UISlider) {
+        let step: Float
+
+        switch screenerItem.criteria.parameterType {
+        case .number:
+            step = 100_000_000
+            let roundedValue = round(slider.value / step) * step
+            slider.value = roundedValue
+
+        case .ratio:
+            step = 5
+            let roundedValue = round(slider.value / step) * step
+            slider.value = roundedValue
+
+        case .percentage:
+            step = (screenerItem.criteria == .dividendyield) ? 0.01 : 0.05
+            let roundedValue = round(slider.value / step) * step
+            slider.value = roundedValue
+
+        default:
+            assert(false, "Only  Number, Ratio and Percentage options allowed")
+        }
+        selectedValue = slider.value
+        updateDescriptionLabel() // Must be called after selectedValue has been updated
+    }
     
     @objc fileprivate func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
     
     @objc fileprivate func handleSet() {
-//        screenerItem.value = selectedParameterItem.value
-//        screenerItem.parameter = selectedParameterItem.parameter
+        screenerItem.value = Double(selectedValue)
+        screenerItem.parameter = selectedParameter
         
         let viewModel = ManualScreenItemViewModel(manualScreenItem: screenerItem)
         delegate?.didUpdate(manualScreenItemViewModel: viewModel, at: selectedIndexPath)
@@ -183,6 +237,7 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
     }
 }
 
+// MARK: - ARCHIVE
 
 class ManualScreenItemUpdaterViewController: UITableViewController {
     
@@ -320,10 +375,3 @@ class ManualScreenItemUpdaterViewController: UITableViewController {
         return 0
     }
 }
-
-
-
-
-
-
-
