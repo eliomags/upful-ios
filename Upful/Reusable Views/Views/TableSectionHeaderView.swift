@@ -64,8 +64,8 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
             padding: .init(top: 8, left: 0, bottom: 16, right: 12))
         
         textStackView.anchor(
-            top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: addButton.leadingAnchor,
-            padding: .init(top: 8, left: 16, bottom: 16, right: 8))
+            top: topAnchor, leading: layoutMarginsGuide.leadingAnchor, bottom: bottomAnchor, trailing: addButton.leadingAnchor,
+            padding: .init(top: 8, left: 0, bottom: 16, right: 8))
     }
     
     required init?(coder aDecoder: NSCoder) {

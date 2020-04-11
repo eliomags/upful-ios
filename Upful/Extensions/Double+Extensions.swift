@@ -28,7 +28,6 @@ extension Double {
         
         return numFormatter.string(from: NSNumber(value: startValue))!
     }
-    
 }
 
 extension Double {

@@ -58,6 +58,14 @@ extension UIViewController {
         self.addChild(content)
         content.view.frame = view.bounds
         view.addSubview(content.view)
+        
+        NSLayoutConstraint.activate([
+            content.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            content.view.topAnchor.constraint(equalTo: view.topAnchor),
+            content.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            content.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
         content.didMove(toParent: self)
     }
 }

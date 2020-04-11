@@ -203,6 +203,8 @@
 		3DCE8DB9243EB1D50007F9EB /* ManualScreenSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DB8243EB1D50007F9EB /* ManualScreenSectionHeaderView.swift */; };
 		3DCE8DBB243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DBA243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift */; };
 		3DCE8DBE2440A1820007F9EB /* NotificationSetupPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DBD2440A1820007F9EB /* NotificationSetupPresenter.swift */; };
+		3DCE8DC024422CB70007F9EB /* ManualScreenContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DBF24422CB70007F9EB /* ManualScreenContainerViewController.swift */; };
+		3DCE8DC324423DD30007F9EB /* ManualSearchFlow+Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DC224423DD30007F9EB /* ManualSearchFlow+Protocols.swift */; };
 		3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291C2347EC530079DA18 /* Vibration.swift */; };
 		3DD42920234959FD0079DA18 /* NotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291F234959FD0079DA18 /* NotesButton.swift */; };
 		3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD429222349633E0079DA18 /* GenericNavBarButton.swift */; };
@@ -475,6 +477,8 @@
 		3DCE8DB8243EB1D50007F9EB /* ManualScreenSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScreenSectionHeaderView.swift; sourceTree = "<group>"; };
 		3DCE8DBA243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScreenItemUpdaterViewController.swift; sourceTree = "<group>"; };
 		3DCE8DBD2440A1820007F9EB /* NotificationSetupPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupPresenter.swift; sourceTree = "<group>"; };
+		3DCE8DBF24422CB70007F9EB /* ManualScreenContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScreenContainerViewController.swift; sourceTree = "<group>"; };
+		3DCE8DC224423DD30007F9EB /* ManualSearchFlow+Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManualSearchFlow+Protocols.swift"; sourceTree = "<group>"; };
 		3DD4291C2347EC530079DA18 /* Vibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibration.swift; sourceTree = "<group>"; };
 		3DD4291F234959FD0079DA18 /* NotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesButton.swift; sourceTree = "<group>"; };
 		3DD429222349633E0079DA18 /* GenericNavBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericNavBarButton.swift; sourceTree = "<group>"; };
@@ -1893,6 +1897,7 @@
 		3DC4ED2F22FE671100232155 /* Manual Search Flow */ = {
 			isa = PBXGroup;
 			children = (
+				3DCE8DC124423DCA0007F9EB /* Protocols */,
 				3D90ADB62301994900C52455 /* Views */,
 				3DCE8DB0243D842D0007F9EB /* Archive */,
 				3DCE8DAF243D84230007F9EB /* Controllers */,
@@ -1936,6 +1941,7 @@
 		3DCE8DAF243D84230007F9EB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3DCE8DBF24422CB70007F9EB /* ManualScreenContainerViewController.swift */,
 				3DCE8DB1243D844D0007F9EB /* ManualScreenViewController.swift */,
 				3DCE8DBA243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift */,
 			);
@@ -1966,6 +1972,14 @@
 				3DCE8DBD2440A1820007F9EB /* NotificationSetupPresenter.swift */,
 			);
 			path = NotificationSetupPresenter;
+			sourceTree = "<group>";
+		};
+		3DCE8DC124423DCA0007F9EB /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				3DCE8DC224423DD30007F9EB /* ManualSearchFlow+Protocols.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		3DD4291E2348F7D20079DA18 /* Controller */ = {
@@ -2516,6 +2530,7 @@
 				3DF734D224030E2B00B297A4 /* StockFinancialLoader.swift in Sources */,
 				3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */,
 				3D55BD6623B7C76200B4FDF0 /* GenericNewsCell.swift in Sources */,
+				3DCE8DC024422CB70007F9EB /* ManualScreenContainerViewController.swift in Sources */,
 				3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */,
 				3DB345EC23C4C6D800EADFFD /* LoadingViewController.swift in Sources */,
 				3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */,
@@ -2696,6 +2711,7 @@
 				3D58651F231DE67B00495D79 /* Constants.swift in Sources */,
 				3D7013DB23EC9B3800102E9C /* MainCoordinator.swift in Sources */,
 				3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */,
+				3DCE8DC324423DD30007F9EB /* ManualSearchFlow+Protocols.swift in Sources */,
 				3D7013E123ECF98F00102E9C /* StockDetailsCoordinator.swift in Sources */,
 				3DF734D62403770C00B297A4 /* BatchFinancialLoader.swift in Sources */,
 				3D7C85522337A93500A2E63E /* Animator.swift in Sources */,
