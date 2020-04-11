@@ -133,7 +133,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     // MARK: - View Setup
     
     fileprivate func setupNavBar() {
-        navigationItem.title = "Paper Trading"
+        navigationItem.title = ""
         navigationItem.largeTitleDisplayMode = .never
     }
     

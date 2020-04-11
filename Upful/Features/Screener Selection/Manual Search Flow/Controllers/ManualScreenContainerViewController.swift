@@ -8,23 +8,101 @@
 
 import UIKit
 
-class ManualScreenContainerViewController: UITableViewController {
+final class ManualScreenContainerHeaderView: UIView {
+    // MARK: - Views
+
+    private let headerLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.text = "Tap a cell to build your screener."
+        let size = UIFont.preferredFont(
+            forTextStyle: UIFont.TextStyle.title2).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        return label
+    }()
+    
+    let clearButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.layer.cornerRadius = 35/2
+        button.layer.masksToBounds = true
+        button.setTitle("Clear", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: 75).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        button.backgroundColor = UIColor.systemGray.withAlphaComponent(0.3)
+        return button
+    }()
+    
+    private lazy var contentStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [headerLabel])
+        sv.spacing = 16
+        sv.axis = .horizontal
+        sv.distribution = .fill
+        return sv
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(clearButton)
+        NSLayoutConstraint.activate([
+            clearButton.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -16),
+            clearButton.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, constant: -16)
+        ])
+        
+        addSubview(headerLabel)
+        headerLabel.anchor(top: layoutMarginsGuide.topAnchor,
+                           leading: layoutMarginsGuide.leadingAnchor,
+                           bottom: clearButton.layoutMarginsGuide.topAnchor,
+                           trailing: layoutMarginsGuide.trailingAnchor,
+                           padding: .init(top: 16, left: 16, bottom: 24, right: 16))
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+final class ManualScreenContainerViewController: UIViewController {
     
     private var viewModels: [[ManualScreenItemViewModel]] = []
 
     // MARK: - Views
     
+    private lazy var headerView: ManualScreenContainerHeaderView = {
+        let view = ManualScreenContainerHeaderView()
+        view.clearButton.addTarget(self, action: #selector(handleClear), for: .touchUpInside)
+        view.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        return view
+    }()
+    
+    private lazy var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .grouped)
+        tv.delegate = self
+        tv.dataSource = self
+        tv.allowsSelection = false
+        tv.separatorStyle = .none
+        tv.backgroundColor = .systemBackground
+        tv.showsVerticalScrollIndicator = false
+        tv.setTableHeaderView(headerView: headerView)
+        return tv
+    }()
+    
     private lazy var collectionViews: [ManualScreenViewController] = {
-        let views = viewModels.map { ManualScreenViewController(manualScreenItemViewModels: $0) }
+        let views = viewModels.map{ ManualScreenViewController(manualScreenItemViewModels: $0) }
         views.forEach{ $0.delegate = self }
+        
         return views
     }()
     
     // MARK: - Initializer
     
-    override init(style: UITableView.Style = .grouped) {
-        super.init(style: style)
+    init() {
+        super.init(nibName: nil, bundle: nil)
         title = "Custom"
+        configureViewModels()
     }
     
     required init?(coder: NSCoder) {
@@ -35,14 +113,16 @@ class ManualScreenContainerViewController: UITableViewController {
     
     override func loadView() {
         super.loadView()
-        tableView.allowsSelection = false
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .systemBackground
+        view.addSubview(tableView)
+        tableView.fillSuperview()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configureViewModels()
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if tableView.shouldUpdateHeaderViewFrame() {
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        }
     }
     
     // MARK: - View Configuration
@@ -62,17 +142,26 @@ class ManualScreenContainerViewController: UITableViewController {
             .map { ManualScreenItemViewModel(manualScreenItem: $0) }
     }
     
-    // MARK: - TableView Delegate Methods
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    @objc fileprivate func handleClear() {
+        viewModels.forEach { section in
+            section.forEach({ $0.resetParameter() })
+        }
+        collectionViews.forEach({ $0.collectionView.reloadData() })
+    }
+}
+
+// MARK: - TableView Delegate Methods
+
+extension ManualScreenContainerViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return collectionViews.count
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         let collectionView = collectionViews[indexPath.section]
         
@@ -81,11 +170,11 @@ class ManualScreenContainerViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return (100 * 2) + (16 * 3)
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
         let label = UILabel()
         view.addSubview(label)
