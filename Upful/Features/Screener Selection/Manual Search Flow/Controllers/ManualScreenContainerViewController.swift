@@ -8,72 +8,25 @@
 
 import UIKit
 
-final class ManualScreenContainerHeaderView: UIView {
-    // MARK: - Views
-
-    private let headerLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.text = "Tap a cell to build your screener."
-        let size = UIFont.preferredFont(
-            forTextStyle: UIFont.TextStyle.title2).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
-        return label
-    }()
-    
-    let clearButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.layer.cornerRadius = 35/2
-        button.layer.masksToBounds = true
-        button.setTitle("Clear", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.widthAnchor.constraint(equalToConstant: 75).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        button.backgroundColor = UIColor.systemGray.withAlphaComponent(0.3)
-        return button
-    }()
-    
-    private lazy var contentStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [headerLabel])
-        sv.spacing = 16
-        sv.axis = .horizontal
-        sv.distribution = .fill
-        return sv
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        translatesAutoresizingMaskIntoConstraints = false
-        
-        addSubview(clearButton)
-        NSLayoutConstraint.activate([
-            clearButton.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -16),
-            clearButton.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, constant: -16)
-        ])
-        
-        addSubview(headerLabel)
-        headerLabel.anchor(top: layoutMarginsGuide.topAnchor,
-                           leading: layoutMarginsGuide.leadingAnchor,
-                           bottom: clearButton.layoutMarginsGuide.topAnchor,
-                           trailing: layoutMarginsGuide.trailingAnchor,
-                           padding: .init(top: 16, left: 16, bottom: 24, right: 16))
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
 final class ManualScreenContainerViewController: UIViewController {
     
-    private var viewModels: [[ManualScreenItemViewModel]] = []
+    private var viewModels: [[ManualScreenItemViewModel]] = [] {
+        didSet {
+            viewModels.forEach { section in
+                section.forEach {
+                    if $0.isSelected {
+                        print($0.titleText)
+                    }
+                }
+            }
+        }
+    }
 
     // MARK: - Views
     
     private lazy var headerView: ManualScreenContainerHeaderView = {
         let view = ManualScreenContainerHeaderView()
-        view.clearButton.addTarget(self, action: #selector(handleClear), for: .touchUpInside)
+        view.clearButton.addTarget(self, action: #selector(handleClearTap), for: .touchUpInside)
         view.heightAnchor.constraint(equalToConstant: 120).isActive = true
         return view
     }()
@@ -142,11 +95,15 @@ final class ManualScreenContainerViewController: UIViewController {
             .map { ManualScreenItemViewModel(manualScreenItem: $0) }
     }
     
-    @objc fileprivate func handleClear() {
+    @objc fileprivate func handleClearTap() {
         viewModels.forEach { section in
             section.forEach({ $0.resetParameter() })
         }
-        collectionViews.forEach({ $0.collectionView.reloadData() })
+        
+        collectionViews.forEach({
+            $0.viewModels.forEach({ $0.resetParameter()})
+            $0.collectionView.reloadData()
+        })
     }
 }
 
@@ -196,6 +153,16 @@ extension ManualScreenContainerViewController: UITableViewDelegate, UITableViewD
             assertionFailure("Only Performance, Valuation and Financial options (3) allowed to be displayed.")
         }
         return view
+    }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == viewModels.count-1 {
+            return 100
+        } else {
+            return 0
+        }
     }
 }
 

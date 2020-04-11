@@ -10,7 +10,7 @@ import UIKit
 
 class ManualScreenViewController: UICollectionViewController {
     
-    private var viewModels: [ManualScreenItemViewModel]
+    private(set) var viewModels: [ManualScreenItemViewModel]
     weak var delegate: ManualScreenerItemUpdatable?
     
     // MARK: - Initializer
