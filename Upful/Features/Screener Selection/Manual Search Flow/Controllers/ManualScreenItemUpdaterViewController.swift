@@ -37,10 +37,11 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
     }()
     
     private lazy var parameterControl: UISegmentedControl = {
-        let control = UISegmentedControl(items: [SearchParameter.lt.explicit, SearchParameter.gt.explicit])
+        let control = UISegmentedControl(items: [SearchParameter.gt.explicit, SearchParameter.lt.explicit])
         control.selectedSegmentIndex = 0
         control.translatesAutoresizingMaskIntoConstraints = false
         control.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        control.addTarget(self, action: #selector(handleParameterChange), for: .valueChanged)
         return control
     }()
     
@@ -169,14 +170,17 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
             dismissView.bottomAnchor.constraint(equalTo: contentView.topAnchor),
         ])
     }
-    
+
     fileprivate func updateDescriptionLabel() {
         var configuredSelectedValue = ""
+
         switch self.screenerItem.criteria.parameterType {
         case .number:
             configuredSelectedValue = "$" + Int(selectedValue).formatUsingAbbreviation()
+            
         case .percentage:
             configuredSelectedValue = "$" + Double(selectedValue).convertToPercent() + "%"
+            
         case .ratio:
             configuredSelectedValue = String(Int(selectedValue))
 
@@ -195,6 +199,13 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
     }
     
     // MARK: - Actions
+    
+    @objc fileprivate func handleParameterChange(segmentControl: UISegmentedControl) {
+        let searchParameter = [SearchParameter.gt, SearchParameter.lt][segmentControl.selectedSegmentIndex]
+        selectedParameter = searchParameter
+        
+        updateDescriptionLabel()
+    }
     
     @objc fileprivate func handleValueChange(slider: UISlider) {
         let step: Float
@@ -219,7 +230,8 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
             assert(false, "Only  Number, Ratio and Percentage options allowed")
         }
         selectedValue = slider.value
-        updateDescriptionLabel() // Must be called after selectedValue has been updated
+        
+        updateDescriptionLabel()
     }
     
     @objc fileprivate func handleCancel() {
