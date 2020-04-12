@@ -56,8 +56,10 @@ extension ManualScreenViewController {
         return viewModels.count
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "screenerOption", for: indexPath) as? ManualScreenItemCollectionViewCell
+    override func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "screenerOption",
+                                                      for: indexPath) as? ManualScreenItemCollectionViewCell
         let viewModel: ManualScreenItemViewModel = viewModels[indexPath.row]
         cell?.viewModel = viewModel
         
