@@ -13,6 +13,8 @@ class ManualScreenViewController: UICollectionViewController {
     private(set) var viewModels: [ManualScreenItemViewModel]
     weak var delegate: ManualScreenerItemUpdatable?
     
+    var section: Int?
+    
     // MARK: - Initializer
     
     init(manualScreenItemViewModels: [ManualScreenItemViewModel]) {
@@ -64,8 +66,10 @@ extension ManualScreenViewController {
         cell?.viewModel = viewModel
         
         cell?.handleCancelTap = { [unowned self] in
+            guard let section = self.section else { return }
             viewModel.resetParameter()
-            self.delegate?.didDelete(at: indexPath)
+
+            self.delegate?.didDelete(at: IndexPath(row: indexPath.row, section: section))
             
             collectionView.reloadItems(at: [indexPath])
         }
@@ -95,9 +99,11 @@ extension ManualScreenViewController: UICollectionViewDelegateFlowLayout {
 
 extension ManualScreenViewController: ManualScreenItemUpdaterDelegate {
     func didUpdate(manualScreenItemViewModel: ManualScreenItemViewModel, at indexPath: IndexPath) {
+        guard let section = section else { return }
+
         viewModels[indexPath.row] = manualScreenItemViewModel
         delegate?.didUpdate(manualScreenItemViewModel: manualScreenItemViewModel,
-                            at: indexPath)
+                            at: IndexPath(row: indexPath.row, section: section))
     
         collectionView.reloadItems(at: [indexPath])
     }

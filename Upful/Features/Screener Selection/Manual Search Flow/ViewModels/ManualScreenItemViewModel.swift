@@ -29,9 +29,7 @@ class ManualScreenItemViewModel {
             if manualScreenItem.criteria.parameterType == .number {
                 return manualScreenItem.parameter.explicit + " $" + Int(manualScreenItem.value!).formatUsingAbbreviation()
             }
-        } else {
-            return ""
-        }
+        } 
         return ""
     }
     

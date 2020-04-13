@@ -10,7 +10,7 @@ import UIKit
 
 final class ManualScreenContainerViewController: UIViewController {
     
-    private var viewModels: [[ManualScreenItemViewModel]] = [] 
+    private var viewModels: [[ManualScreenItemViewModel]] = []
 
     // MARK: - Views
     
@@ -136,10 +136,13 @@ final class ManualScreenContainerViewController: UIViewController {
     private var coordinator: Coordinator?
 
     @objc fileprivate func handleBuildTap() {
-        var selectedManualScreenItems: [ManualScreenItem] = []
-        viewModels.forEach { (section) in
-            selectedManualScreenItems += section.filter({ $0.isSelected == true }).map({ $0.manualScreenItem })
+        let selectedManualScreenItems: [ManualScreenItem] =
+            viewModels.reduce([]) { (res, section) -> [ManualScreenItem] in
+                
+                return section.filter({ $0.isSelected == true })
+                        .map({ $0.manualScreenItem}) + res
         }
+        
         print(selectedManualScreenItems.asURLComponents)
         print(selectedManualScreenItems.asDescription)
         
@@ -153,6 +156,7 @@ final class ManualScreenContainerViewController: UIViewController {
             id: UUID().uuidString,
             headerSymbol: nil
         )
+        
         coordinator?.start()
     }
     
@@ -184,6 +188,7 @@ extension ManualScreenContainerViewController: UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         let collectionView = collectionViews[indexPath.section]
+        collectionView.section = indexPath.section
         
         display(contentController: collectionView, on: cell)
         
@@ -217,9 +222,11 @@ extension ManualScreenContainerViewController: UITableViewDelegate, UITableViewD
         }
         return view
     }
+    
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
+    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == viewModels.count-1 {
             return 100
