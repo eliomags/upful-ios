@@ -75,7 +75,7 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
     
     private lazy var dismissView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleCancel)))
         return view
@@ -218,7 +218,7 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
             slider.value = roundedValue
 
         case .percentage:
-            step = (screenerItem.criteria == .dividendyield) ? 0.01 : 0.05
+            step = (screenerItem.criteria == .dividendyield) ? 0.005 : 0.05
             let roundedValue = round(slider.value / step) * step
             slider.value = roundedValue
 
@@ -237,6 +237,8 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
     @objc fileprivate func handleSet() {
         screenerItem.value = Double(selectedValue)
         screenerItem.parameter = selectedParameter
+        
+        Vibration.medium.vibrate()
         
         let viewModel = ManualScreenItemViewModel(manualScreenItem: screenerItem)
         delegate?.didUpdate(manualScreenItemViewModel: viewModel, at: selectedIndexPath)

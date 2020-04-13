@@ -10,8 +10,15 @@ import UIKit
 
 final class ManualScreenContainerViewController: UIViewController {
     
+    // MARK: - Properties
+    
     private var viewModels: [[ManualScreenItemViewModel]] = []
-
+    
+    private var selectedScreenItems: [ManualScreenItemViewModel] {
+        return collectionViews.reduce([]) { (res, vc) -> [ManualScreenItemViewModel] in
+            return vc.viewModels.filter({ $0.isSelected }) + res
+        }
+    }
     // MARK: - Views
     
     private lazy var headerView: ManualScreenContainerHeaderView = {
@@ -59,7 +66,7 @@ final class ManualScreenContainerViewController: UIViewController {
         view.addSubview(runScreenButton)
         runScreenButton.fillSuperview(padding: .init(top: 16, left: 32, bottom: 8, right: 32))
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.35)
+        view.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.8)
         return view
     }()
     
@@ -94,25 +101,14 @@ final class ManualScreenContainerViewController: UIViewController {
     
     // MARK: - View Configuration
     
-    fileprivate var shouldRemoveBuildButton: Bool {
-        var selectedScreenItems: [ManualScreenItemViewModel] = []
-        
-        viewModels.forEach { (section) in
-            selectedScreenItems += section.filter { $0.isSelected == true }
-        }
-        
-        return selectedScreenItems.isEmpty
-    }
-    
-    fileprivate func showBuildButton() {
-        viewModels.forEach { (section) in
-            if let _ = section.first(where: { $0.isSelected == true }) {
-                view.addSubview(buttonBackgroundView)
-                buttonBackgroundView.anchor(top: nil, leading: view.leadingAnchor,
-                                            bottom: view.layoutMarginsGuide.bottomAnchor,
-                                            trailing: view.trailingAnchor)
-                return
-            }
+    fileprivate func toggleBuildButtonDisplay() {
+        if selectedScreenItems.isEmpty {
+             buttonBackgroundView.removeFromSuperview()
+        } else {
+            view.addSubview(buttonBackgroundView)
+            buttonBackgroundView.anchor(top: nil, leading: view.leadingAnchor,
+                                        bottom: view.layoutMarginsGuide.bottomAnchor,
+                                        trailing: view.trailingAnchor)
         }
     }
     
@@ -133,20 +129,38 @@ final class ManualScreenContainerViewController: UIViewController {
     
     // MARK: - Actions
     
-    private var coordinator: Coordinator?
-
     @objc fileprivate func handleBuildTap() {
-        let selectedManualScreenItems: [ManualScreenItem] =
-            viewModels.reduce([]) { (res, section) -> [ManualScreenItem] in
+        PermissionManager.shared.verifyScreenerNavigationPermission { (shouldNavigate) in
+            if shouldNavigate {
+                handleScreenResultNavigation()
                 
-                return section.filter({ $0.isSelected == true })
-                        .map({ $0.manualScreenItem}) + res
+            } else {
+                let presenter = SubscriptionPresenter(type: .screeningLimit)
+                presenter.present(in: self)
+            }
         }
+    }
+    
+    @objc fileprivate func handleClearTap() {
+        collectionViews.forEach({
+            $0.viewModels.forEach({ $0.resetParameter()})
+            $0.collectionView.reloadData()
+        })
         
-        print(selectedManualScreenItems.asURLComponents)
-        print(selectedManualScreenItems.asDescription)
+        buttonBackgroundView.removeFromSuperview()
         
+        Vibration.success.vibrate()
+    }
+    
+    // MARK: - Helpers
+    
+    private var coordinator: Coordinator?
+    
+    fileprivate func handleScreenResultNavigation() {
         AnalyticsLogger.instance.reportEvents(event: .screenForStocks(screenType: .manual))
+
+        let selectedManualScreenItems = selectedScreenItems.map { $0.manualScreenItem }
+                
         coordinator = SearchResultsCoordinator(
             presenter: self,
             searchParameters: selectedManualScreenItems.asURLComponents,
@@ -158,19 +172,6 @@ final class ManualScreenContainerViewController: UIViewController {
         )
         
         coordinator?.start()
-    }
-    
-    @objc fileprivate func handleClearTap() {
-        viewModels.forEach { section in
-            section.forEach({ $0.resetParameter() })
-        }
-        
-        collectionViews.forEach({
-            $0.viewModels.forEach({ $0.resetParameter()})
-            $0.collectionView.reloadData()
-        })
-        
-        buttonBackgroundView.removeFromSuperview()
     }
 }
 
@@ -238,14 +239,18 @@ extension ManualScreenContainerViewController: UITableViewDelegate, UITableViewD
 
 extension ManualScreenContainerViewController: ManualScreenerItemUpdatable {
     func didDelete(at indexPath: IndexPath) {
-        viewModels[indexPath.section][indexPath.row].resetParameter()
-        
-        if shouldRemoveBuildButton { buttonBackgroundView.removeFromSuperview() }
+        Vibration.light.vibrate()
+        toggleBuildButtonDisplay()
     }
     
     func didUpdate(manualScreenItemViewModel: ManualScreenItemViewModel, at indexPath: IndexPath) {
-        viewModels[indexPath.section][indexPath.row] = manualScreenItemViewModel
-
-        showBuildButton()
+        Vibration.selection.vibrate()
+        toggleBuildButtonDisplay()
     }
+}
+
+extension ManualScreenContainerViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {}
+    
+    func userDidSignUp() {}
 }

@@ -54,8 +54,6 @@ class ManualScreenItemCollectionViewCell: UICollectionViewCell {
         let button = CancelButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         let size: CGFloat = 20
-        button.heightAnchor.constraint(equalToConstant: size).isActive = true
-        button.widthAnchor.constraint(equalToConstant: size).isActive = true
         button.layer.cornerRadius = size/2
         button.layer.masksToBounds = true
         button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(cancelTap)))
@@ -89,9 +87,15 @@ class ManualScreenItemCollectionViewCell: UICollectionViewCell {
     var handleCancelTap: (() -> Void)?
     
     fileprivate func handleSelectedState() {
+        let size: CGFloat = 20
+        
         addSubview(removeButton)
-        removeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 1).isActive = true
-        removeButton.topAnchor.constraint(equalTo: topAnchor, constant: 1).isActive = true
+        NSLayoutConstraint.activate([
+            removeButton.heightAnchor.constraint(equalToConstant: size),
+            removeButton.widthAnchor.constraint(equalToConstant: size),
+            removeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+            removeButton.topAnchor.constraint(equalTo: topAnchor, constant: 1)
+        ])
     }
     
     fileprivate func handleDeSelectedState() {

@@ -25,9 +25,9 @@ final class PermissionManager {
     
     // MARK: - Parameters
     
-    private let savedScreenerThreshold = 1
+    private let savedScreenerThreshold = 2
     private let savedStockThreshold = 3
-    private let screeningThreshold = 5
+    private let screeningThreshold = 6
     
     var isPremium: Bool {
 //        return true
