@@ -193,6 +193,21 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         logicController.startPreferenceLoad()
     }
     
+    // MARK: - ScrollView Delegate Methods
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let height: CGFloat = tradingBalanceView.frame.height -
+            tradingBalanceView.cashBalanceView.frame.height -
+            tradingBalanceView.lastUpdatedLabel.frame.height -
+            70
+        
+        if scrollView.contentOffset.y >= height {
+            navigationItem.title = "$\(logicController.totalEquity?.withCommas() ?? " -")"
+        } else {
+            navigationItem.title = ""
+        }
+    }
+    
     // MARK: - View Configuration
     
     fileprivate func configureTransactionHeaderSuccess() {
