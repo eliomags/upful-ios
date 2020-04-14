@@ -204,33 +204,28 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
     }
     
     @objc fileprivate func handleValueChange(slider: UISlider) {
-        let step: Float
+        var step: Float = 0
 
         switch screenerItem.criteria.parameterType {
         case .number:
             step = 100_000_000
-            let roundedValue = round(slider.value / step) * step
-            slider.value = roundedValue
-
         case .ratio:
             step = 5
-            let roundedValue = round(slider.value / step) * step
-            slider.value = roundedValue
-
         case .percentage:
             step = (screenerItem.criteria == .dividendyield) ? 0.005 : 0.05
-            let roundedValue = round(slider.value / step) * step
-            slider.value = roundedValue
-
         default:
             assert(false, "Only  Number, Ratio and Percentage options allowed")
         }
+        let roundedValue = round(slider.value / step) * step
+        slider.value = roundedValue
         selectedValue = slider.value
         
         updateDescriptionLabel()
     }
     
     @objc fileprivate func handleCancel() {
+        dismissView.backgroundColor = .clear
+        
         dismiss(animated: true, completion: nil)
     }
     

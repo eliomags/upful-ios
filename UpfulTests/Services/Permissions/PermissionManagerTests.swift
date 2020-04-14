@@ -58,7 +58,7 @@ class PermissionManagerTests: XCTestCase {
         
         sut.getSavedScreenerCount = 1
         sut.getSaveScreenerPermission { (permissionGranted) in
-            XCTAssertFalse(permissionGranted)
+            XCTAssertTrue(permissionGranted)
         }
         
         sut.getSavedScreenerCount = 3
@@ -70,21 +70,10 @@ class PermissionManagerTests: XCTestCase {
     func testScreenerNavigationPermissionForFreeUser() {
         sut = makeSUTWithFreeUser()
         
-        // When navigated 5 times
-        sut.verifyScreenerNavigationPermission { (permissionGranted) in
-            XCTAssertTrue(permissionGranted)
-        }
-        sut.verifyScreenerNavigationPermission { (permissionGranted) in
-            XCTAssertTrue(permissionGranted)
-        }
-        sut.verifyScreenerNavigationPermission { (permissionGranted) in
-            XCTAssertTrue(permissionGranted)
-        }
-        sut.verifyScreenerNavigationPermission { (permissionGranted) in
-            XCTAssertTrue(permissionGranted)
-        }
-        sut.verifyScreenerNavigationPermission { (permissionGranted) in
-            XCTAssertTrue(permissionGranted)
+        (1...6).forEach { (_) in
+            sut.verifyScreenerNavigationPermission { (permissionGranted) in
+                XCTAssertTrue(permissionGranted)
+            }
         }
 
         sut.verifyScreenerNavigationPermission { (permissionGranted) in
