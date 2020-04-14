@@ -19,6 +19,7 @@ final class ManualScreenContainerViewController: UIViewController {
             return vc.viewModels.filter({ $0.isSelected }) + res
         }
     }
+    
     // MARK: - Views
     
     private lazy var headerView: ManualScreenContainerHeaderView = {
