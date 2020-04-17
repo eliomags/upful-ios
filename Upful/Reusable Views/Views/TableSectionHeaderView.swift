@@ -35,7 +35,7 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
     }()
     
     lazy var addButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = UIButton(type: .custom)
         button.setTitle("See More", for: .normal)
         let font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
         button.titleLabel?.font = UIFont.systemFont(ofSize: font.pointSize, weight: .regular)
@@ -60,8 +60,8 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
         addSubview(addButton)
         
         addButton.anchor(
-            top: topAnchor, leading: nil, bottom: bottomAnchor, trailing: trailingAnchor,
-            padding: .init(top: 8, left: 0, bottom: 16, right: 12))
+            top: topAnchor, leading: nil, bottom: nil, trailing: layoutMarginsGuide.trailingAnchor,
+            padding: .init(top: 8, left: 0, bottom: 16, right: 0))
         
         textStackView.anchor(
             top: topAnchor, leading: layoutMarginsGuide.leadingAnchor, bottom: bottomAnchor, trailing: addButton.leadingAnchor,
@@ -73,7 +73,7 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
     }
     
     
-    @objc fileprivate func handleTap(_ sender: UIView) {
+    @objc func handleTap(_ sender: UIButton) {
         buttonAction?()
     }
     

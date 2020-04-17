@@ -167,6 +167,7 @@
 		3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ECE234F98A40008CC18 /* Protocols.swift */; };
 		3DAB3ED1234F9F590008CC18 /* PrefrenceHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED0234F9F590008CC18 /* PrefrenceHeaderView.swift */; };
 		3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */; };
+		3DAF279D2449F98300CD001B /* HoldingBreakdownHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAF279C2449F98300CD001B /* HoldingBreakdownHeaderView.swift */; };
 		3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB004FC2360F5D1002F704D /* PermissionManager.swift */; };
 		3DB345E123C39D5F00EADFFD /* RemoteScreenerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345E023C39D5F00EADFFD /* RemoteScreenerLoader.swift */; };
 		3DB345E323C3AA9500EADFFD /* PrebuiltScreenerLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345E223C3AA9500EADFFD /* PrebuiltScreenerLogicController.swift */; };
@@ -178,7 +179,6 @@
 		3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F523CAD74400EADFFD /* StockSearchService.swift */; };
 		3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */; };
 		3DB891DD24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */; };
-		3DBEFFC223A9BD7C00BA407E /* HomeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */; };
 		3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */; };
 		3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */; };
 		3DBEFFCB23A9CCA000BA407E /* SavedScreenersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */; };
@@ -443,6 +443,7 @@
 		3DAB3ECE234F98A40008CC18 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		3DAB3ED0234F9F590008CC18 /* PrefrenceHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefrenceHeaderView.swift; sourceTree = "<group>"; };
 		3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceViewModel.swift; sourceTree = "<group>"; };
+		3DAF279C2449F98300CD001B /* HoldingBreakdownHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingBreakdownHeaderView.swift; sourceTree = "<group>"; };
 		3DB004FC2360F5D1002F704D /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		3DB345E023C39D5F00EADFFD /* RemoteScreenerLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenerLoader.swift; sourceTree = "<group>"; };
 		3DB345E223C3AA9500EADFFD /* PrebuiltScreenerLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltScreenerLogicController.swift; sourceTree = "<group>"; };
@@ -454,7 +455,6 @@
 		3DB345F523CAD74400EADFFD /* StockSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchService.swift; sourceTree = "<group>"; };
 		3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockViewModelTests.swift; sourceTree = "<group>"; };
 		3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedAuxiliaryActionView.swift; sourceTree = "<group>"; };
-		3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContainerViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStocksViewController.swift; sourceTree = "<group>"; };
 		3DBEFFCA23A9CCA000BA407E /* SavedScreenersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersViewController.swift; sourceTree = "<group>"; };
@@ -1724,6 +1724,14 @@
 			path = Preferences;
 			sourceTree = "<group>";
 		};
+		3DAF279B2449F94E00CD001B /* Breakdown Pie */ = {
+			isa = PBXGroup;
+			children = (
+				3DAF279C2449F98300CD001B /* HoldingBreakdownHeaderView.swift */,
+			);
+			path = "Breakdown Pie";
+			sourceTree = "<group>";
+		};
 		3DB004FB2360F5C0002F704D /* Permissions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1820,14 +1828,6 @@
 			path = General;
 			sourceTree = "<group>";
 		};
-		3DBEFFC023A9BD6D00BA407E /* Container */ = {
-			isa = PBXGroup;
-			children = (
-				3DBEFFC123A9BD7C00BA407E /* HomeContainerViewController.swift */,
-			);
-			path = Container;
-			sourceTree = "<group>";
-		};
 		3DBEFFCC23A9CD4000BA407E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1860,6 +1860,7 @@
 		3DBEFFD323AACE6A00BA407E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3DAF279B2449F94E00CD001B /* Breakdown Pie */,
 				3D206A4D2422952000F7E44C /* Trading Header */,
 				3D206A5D24264F2C00F7E44C /* Holdings */,
 				3D206A4E2422954000F7E44C /* News */,
@@ -2163,7 +2164,6 @@
 			isa = PBXGroup;
 			children = (
 				3D6BD0C323B5079900FBC1ED /* Reusabile Views */,
-				3DBEFFC023A9BD6D00BA407E /* Container */,
 				3DBEFFBF23A9BD6900BA407E /* General */,
 			);
 			path = Home;
@@ -2358,7 +2358,7 @@
 				3D20FB2222FB1F08007836DD /* Frameworks */,
 				3D20FB2322FB1F08007836DD /* Resources */,
 				3DA37C3223453049008832AB /* Embed Frameworks */,
-				DFDCF1B2C52AFA69C3624514 /* [CP] Embed Pods Frameworks */,
+				2DCDDA364DD9EEBD0769589F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2452,6 +2452,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2DCDDA364DD9EEBD0769589F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		6DA628A217B730F9C49336BC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2486,23 +2503,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DFDCF1B2C52AFA69C3624514 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2576,6 +2576,7 @@
 				3D6B07302416E36800C55021 /* AnalysisItemViewModel.swift in Sources */,
 				3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
+				3DAF279D2449F98300CD001B /* HoldingBreakdownHeaderView.swift in Sources */,
 				3D206A16241EFCDE00F7E44C /* TransactionLedgerPersistence.swift in Sources */,
 				3D55BD6423B7BEBB00B4FDF0 /* UIImage+Extensions.swift in Sources */,
 				3DCE8DB9243EB1D50007F9EB /* ManualScreenSectionHeaderView.swift in Sources */,
@@ -2706,7 +2707,6 @@
 				3DD42929234A92CD0079DA18 /* ReportViewController.swift in Sources */,
 				3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */,
 				3D2F96452312D4AF003811AB /* AnalyticsMapper.swift in Sources */,
-				3DBEFFC223A9BD7C00BA407E /* HomeContainerViewController.swift in Sources */,
 				3D2F965623169E9C003811AB /* DetailsCalculationsCell.swift in Sources */,
 				3DBEFFD723ABCCF400BA407E /* StockPreviewDataLoader.swift in Sources */,
 				3D0C5F942342C88300F4A5FC /* UpfulProductViewModel.swift in Sources */,
@@ -2890,7 +2890,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.4.5.1;
+				CURRENT_PROJECT_VERSION = 4.4.6;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2898,7 +2898,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.4.5.1;
+				MARKETING_VERSION = 4.4.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2912,7 +2912,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4.4.5.1;
+				CURRENT_PROJECT_VERSION = 4.4.6;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2920,7 +2920,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.4.5.1;
+				MARKETING_VERSION = 4.4.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

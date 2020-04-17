@@ -101,9 +101,9 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
         self.tableView.isScrollEnabled = false
         self.tableView.showsVerticalScrollIndicator = false
         self.tableView.reloadData()
-        if let container = parent as? HomeContainerViewController {
-            container.emphasizeButton()
-        }
+//        if let container = parent as? HomeContainerViewController {
+//            container.emphasizeButton()
+//        }
     }
     
     // MARK: - View Setup

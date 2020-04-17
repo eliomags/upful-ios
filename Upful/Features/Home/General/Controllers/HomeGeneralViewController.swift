@@ -10,15 +10,17 @@ import UIKit
 
 final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             
-    private enum Section: Int {
-        case holdings = 0
-        case news = 1
-        case preference = 2
+    private enum Section: Int, CaseIterable {
+        case breakdown = 0
+        case holdings = 1
+        case news = 2
+        case preference = 3
     }
     
     private enum Constants {
         static let newsCellID = "newsCellID"
         static let resultsCellID = "resultsCellID"
+        static let breakdownHeaderID = "breakdownHeaderID"
         static let noPreferenceCellID = "noPreferenceCellID"
         static let stockHoldingCellID = "stockHoldingCellID"
     }
@@ -44,12 +46,21 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         return control
     }()
     lazy var tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .grouped)
-        tv.refreshControl = refreshControl
+        let tv = UITableView(frame: .zero, style: UITableView.Style.grouped)
         tv.delegate = self
         tv.dataSource = self
+        tv.refreshControl = refreshControl
+        tv.showsVerticalScrollIndicator = false
         return tv
     }()
+    
+    // MARK: - Properties
+    
+    fileprivate var shouldDisplayBreakDownCell = true {
+        didSet {
+            reloadBreakdownSectionHeader()
+        }
+    }
     
     // MARK: - View Lifecycle Methods
     
@@ -156,10 +167,17 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func setupTableViewCells() {
-        tableView.register(SmallNewsCell.self, forCellReuseIdentifier: Constants.newsCellID)
-        tableView.register(CompanyPreviewTableViewCell.self, forCellReuseIdentifier: Constants.resultsCellID)
-        tableView.register(NoPreferenceTableViewCell.self, forCellReuseIdentifier: Constants.noPreferenceCellID)
-        tableView.register(StockHoldingTableViewCell.self, forCellReuseIdentifier: Constants.stockHoldingCellID)
+        tableView.register(SmallNewsCell.self,
+                           forCellReuseIdentifier: Constants.newsCellID)
+        tableView.register(CompanyPreviewTableViewCell.self,
+                           forCellReuseIdentifier: Constants.resultsCellID)
+        tableView.register(NoPreferenceTableViewCell.self,
+                           forCellReuseIdentifier: Constants.noPreferenceCellID)
+        tableView.register(StockHoldingTableViewCell.self,
+                           forCellReuseIdentifier: Constants.stockHoldingCellID)
+        
+        tableView.register(HoldingBreakdownHeaderView.self,
+                           forHeaderFooterViewReuseIdentifier: Constants.breakdownHeaderID)
     }
     
     // MARK: - Actions
@@ -230,7 +248,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         
         let dollarDiff = (equity - 25_000).withCommas()
         let percentDiff = (((equity / 25_000) - 1) * 100).withCommas()
-        UIView.transition(with: tradingBalanceView.totalEquityView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+        UIView.transition(with: tradingBalanceView.totalEquityView, duration: 0.5,
+                          options: .transitionCrossDissolve, animations: {
             self.tradingBalanceView.totalEquityView.equityValueLabel.text =
             "$\(self.logicController.totalEquity?.withCommas() ?? " -")"
             self.tradingBalanceView.totalEquityView.totalReturnLabel.text = "$\(dollarDiff)  •  \(percentDiff)%"
@@ -251,6 +270,19 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         tradingBalanceView.totalEquityView.totalReturnLabel.text = "Error"
     }
     
+    // MARK: Breakdown Section
+    fileprivate func reloadBreakdownSectionHeader() {
+        if !shouldDisplayBreakDownCell {
+            tableView.deleteRows(at: [[0,0]], with: .fade)
+        }
+        let breakdownSection = Section.breakdown.rawValue
+        tableView.reloadSections([breakdownSection], with: .fade)
+        
+        let headerView = tableView.headerView(forSection: breakdownSection) as? HoldingBreakdownHeaderView
+        headerView?.toggleButtonState()
+    }
+
+    // MARK: Holdings Section
     fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
         if logicController.holdings.isEmpty {
             return EmptyStockHoldingCell()
@@ -329,11 +361,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
 
 extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return Section.allCases.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
+        case Section.breakdown.rawValue:
+            return shouldDisplayBreakDownCell ? 1 : 0
+            
         case Section.holdings.rawValue:
             if logicController.holdings.isEmpty {
                 return 1
@@ -377,18 +412,23 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         return UITableViewCell()
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension 
-    }
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch section {
-        case Section.holdings.rawValue:
-            let header = HeaderLabel()
-            let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
-            header.font = UIFont.systemFont(ofSize: size, weight: .bold)
-            header.text = "My Holdings"
+        case Section.breakdown.rawValue:
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.breakdownHeaderID) as? HoldingBreakdownHeaderView
+            header?.addButton.isSelected = !shouldDisplayBreakDownCell
+            
+            header?.buttonAction = { [weak self] in
+                guard let self = self else { return }
+                self.shouldDisplayBreakDownCell = !self.shouldDisplayBreakDownCell
+            }
             return header
+            
+        case Section.holdings.rawValue:
+            let holdingsHeader = TableSectionHeaderView()
+            holdingsHeader.headerTextLabel.text = "My Holdings"
+            holdingsHeader.addButton.setTitle("", for: .normal)
+            return holdingsHeader
             
         case Section.preference.rawValue:
             let preferenceHeader = TableSectionHeaderView()

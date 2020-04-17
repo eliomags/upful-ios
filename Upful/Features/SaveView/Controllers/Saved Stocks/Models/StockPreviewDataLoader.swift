@@ -28,7 +28,10 @@ final class StockViewModel {
         self.quoteLoader = quoteLoader
         self.stockFinancialLoader = stockFinancialLoader
     }
-    
+}
+
+// MARK: - Data Loading
+extension StockViewModel {
     func loadPreviewData() {
         loadPriceToEarningsData()
         loadMarketCapData()
