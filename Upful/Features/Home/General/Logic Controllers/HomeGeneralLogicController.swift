@@ -69,8 +69,9 @@ class HomeGeneralLogicController {
     private(set) var totalEquity: Double?
     
     func loadHoldings() {
-        startHoldingsLoad()
         holdingsLoader?.invalidate()
+        startHoldingsLoad()
+        
         holdingsLoader = Timer.scheduledTimer(withTimeInterval: 9, repeats: true, block: {  (_) in
             self.startHoldingsLoad()
         })
@@ -90,6 +91,7 @@ class HomeGeneralLogicController {
             }
             self.holdings = holdings
             self.holdings.forEach { self.loadQuotes(for: $0) }
+            
             DispatchQueue.main.async { self.holdingsLoadCompletion?(nil) }
             
             self.holdingsLoadGroup.notify(queue: .main, execute: {
