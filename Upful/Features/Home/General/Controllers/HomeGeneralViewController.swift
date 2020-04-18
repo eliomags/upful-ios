@@ -110,11 +110,13 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             if let _ = error {
                 self.configureTransactionHeaderError()
                 self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
+                self.tableView.reloadSections([Section.breakdown.rawValue], with: .none)
                 self.refreshControl.endRefreshing()
                 return
             }
+            self.loadPieChartViewModels()
             self.configureTransactionHeaderSuccess()
-            self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
+            self.tableView.reloadSections([Section.holdings.rawValue, Section.breakdown.rawValue], with: .fade)
             self.refreshControl.endRefreshing()
         }
     }
@@ -126,6 +128,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             case .loaded, .new:
                 self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
                 self.refreshControl.endRefreshing()
+                
             case .loading:
                 self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
             default:
@@ -151,8 +154,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     fileprivate func addScreenerNavButton() {
         view.addSubview(screenerSelectionButton)
-        screenerSelectionButton.anchor(top: nil,
-                                       leading: nil,
+        screenerSelectionButton.anchor(top: nil, leading: nil,
                                        bottom: view.layoutMarginsGuide.bottomAnchor,
                                        trailing: view.layoutMarginsGuide.trailingAnchor,
                                        padding: .init(top: 0, left: 0, bottom: 16, right: 4))
@@ -276,6 +278,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     // MARK: Breakdown Section
+    
     fileprivate func reloadBreakdownSectionHeader() {
         if !shouldDisplayBreakDownCell {
             tableView.deleteRows(at: [[0,0]], with: .fade)
@@ -287,7 +290,18 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         headerView?.toggleButtonState()
     }
     
+    var pieChartViewModels: [PieChartConfigurable] = []
+    
+    fileprivate func loadPieChartViewModels() {
+        let vmLoader = PieChartViewModelLoader()
+        let holdings = logicController.holdings
+        let cash = logicController.tradingEngine.balanceManager.currentCashBalance
+        
+        pieChartViewModels = vmLoader.makeViewModels(from: holdings, cash: cash)
+    }
+    
     // MARK: Holdings Section
+    
     fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
         if logicController.holdings.isEmpty {
             return EmptyStockHoldingCell()
@@ -404,6 +418,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.breakdown.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: Constants.breakdownCellID, for: indexPath)
                 as? HoldingsBreakdownTableViewCell
+            cell?.chartView.setupPieChart(chartConfigurables: pieChartViewModels)
+            cell?.chartView.setNeedsDisplay()
             
             return cell ?? UITableViewCell()
             

@@ -86,6 +86,7 @@ final class TradingEngine {
                 case .success(let ledgerTransactions):
                     let holdings = HoldingMapper.map(ledgerTransactions)
                     self.updateEquityBalance(with: holdings)
+                    
                     completion?(holdings.filter { $0.totalShareCount > 0 }, nil)
                     
                 case .failure(let err):

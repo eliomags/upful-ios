@@ -24,7 +24,8 @@ struct PieChartViewModel: PieChartConfigurable {
 struct PieChartViewModelLoader {
     func makeViewModels(from holdings: [Holding], cash: Double) -> [PieChartConfigurable] {
         var result: [PieChartConfigurable] = []
-        let cashItem = PieChartViewModel(title: "Cash", value: cash, color: UIColor.systemGreen)
+        let cashItem = PieChartViewModel(title: "Cash", value: cash,
+                                         color: UIColor.systemGreen)
         result.append(cashItem)
         
         let colorOptions = [UIColor.appAccent3, .appAccent4, .appAccent5]
@@ -91,11 +92,11 @@ class GenericPieChartView: PieChartView {
         entryLabelFont = .systemFont(ofSize: 14, weight: .bold)
     }
     
-    func setupPieChart(values: [PieChartConfigurable]) {
-        let dataPoints = values.map{ $0.title }
-        let values = values.map{ $0.value}
+    func setupPieChart(chartConfigurables: [PieChartConfigurable]) {
+        let dataPoints = chartConfigurables.map{ $0.title }
+        let values = chartConfigurables.map{ $0.value }
         
-        let dataEntries = (0..<values.count).map { (i) -> PieChartDataEntry in
+        let dataEntries = (0..<chartConfigurables.count).map { (i) -> PieChartDataEntry in
             return PieChartDataEntry(value: values[i], label: dataPoints[i])
         }
         let set = PieChartDataSet(entries: dataEntries, label: "")
@@ -106,11 +107,7 @@ class GenericPieChartView: PieChartView {
         set.xValuePosition = .outsideSlice
         set.yValuePosition = .outsideSlice
         
-        set.colors = [
-             NSUIColor.positive,
-             NSUIColor.systemGreen,
-             NSUIColor.appAccent3
-        ]
+        set.colors = chartConfigurables.map({ $0.color })
         
         holeRadiusPercent = 0.62
         transparentCircleRadiusPercent = 0.65
