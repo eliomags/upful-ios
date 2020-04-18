@@ -20,6 +20,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     private enum Constants {
         static let newsCellID = "newsCellID"
         static let resultsCellID = "resultsCellID"
+        static let breakdownCellID = "breakdownCellID"
         static let breakdownHeaderID = "breakdownHeaderID"
         static let noPreferenceCellID = "noPreferenceCellID"
         static let stockHoldingCellID = "stockHoldingCellID"
@@ -167,6 +168,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func setupTableViewCells() {
+        tableView.register(HoldingsBreakdownTableViewCell.self,
+                           forCellReuseIdentifier: Constants.breakdownCellID)
         tableView.register(SmallNewsCell.self,
                            forCellReuseIdentifier: Constants.newsCellID)
         tableView.register(CompanyPreviewTableViewCell.self,
@@ -192,9 +195,11 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         case .new:
             let preferencePresenter = PreferencePresenter(presentingViewController: self)
             preferencePresenter.present()
+            
         case .loaded:
             coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: logicController.stocksYouMayLike[indexPath.row])
             coordinator?.start()
+            
         default:
             break
         }
@@ -281,7 +286,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         let headerView = tableView.headerView(forSection: breakdownSection) as? HoldingBreakdownHeaderView
         headerView?.toggleButtonState()
     }
-
+    
     // MARK: Holdings Section
     fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
         if logicController.holdings.isEmpty {
@@ -396,6 +401,12 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         switch section {
+        case Section.breakdown.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.breakdownCellID, for: indexPath)
+                as? HoldingsBreakdownTableViewCell
+            
+            return cell ?? UITableViewCell()
+            
         case Section.holdings.rawValue:
             return makeHoldingsCell(at: indexPath)
             
@@ -410,6 +421,16 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             return UITableViewCell()
         }
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case Section.breakdown.rawValue:
+            return (UIScreen.main.bounds.height / 2) - 130
+            
+        default:
+            return UITableView.automaticDimension
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

@@ -1,0 +1,35 @@
+//
+//  HoldingsBreakdownTableViewCell.swift
+//  Upful
+//
+//  Created by Yanik Simpson on 4/17/20.
+//  Copyright © 2020 Yanik Simpson. All rights reserved.
+//
+
+import UIKit
+
+class HoldingsBreakdownTableViewCell: UITableViewCell {
+    
+    let chartView = GenericPieChartView()
+    
+    lazy var containerView: UIView = {
+        let v = UIView()
+        v.backgroundColor = .clear
+        v.addSubview(chartView)
+        chartView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
+                         padding: .init(top: 15, left: 15, bottom: 15, right: 15))
+        return v
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
+        backgroundColor = .clear
+        addSubview(containerView)
+        containerView.fillSuperview()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}

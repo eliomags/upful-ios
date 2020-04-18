@@ -168,6 +168,7 @@
 		3DAB3ED1234F9F590008CC18 /* PrefrenceHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED0234F9F590008CC18 /* PrefrenceHeaderView.swift */; };
 		3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */; };
 		3DAF279D2449F98300CD001B /* HoldingBreakdownHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAF279C2449F98300CD001B /* HoldingBreakdownHeaderView.swift */; };
+		3DAF279F244A665300CD001B /* HoldingsBreakdownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAF279E244A665300CD001B /* HoldingsBreakdownTableViewCell.swift */; };
 		3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB004FC2360F5D1002F704D /* PermissionManager.swift */; };
 		3DB345E123C39D5F00EADFFD /* RemoteScreenerLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345E023C39D5F00EADFFD /* RemoteScreenerLoader.swift */; };
 		3DB345E323C3AA9500EADFFD /* PrebuiltScreenerLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345E223C3AA9500EADFFD /* PrebuiltScreenerLogicController.swift */; };
@@ -219,6 +220,7 @@
 		3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */; };
 		3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */; };
 		3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */; };
+		3DF4D8CB244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF4D8CA244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
 		3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */; };
@@ -444,6 +446,7 @@
 		3DAB3ED0234F9F590008CC18 /* PrefrenceHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefrenceHeaderView.swift; sourceTree = "<group>"; };
 		3DAB3ED22350D5190008CC18 /* PreferenceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceViewModel.swift; sourceTree = "<group>"; };
 		3DAF279C2449F98300CD001B /* HoldingBreakdownHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingBreakdownHeaderView.swift; sourceTree = "<group>"; };
+		3DAF279E244A665300CD001B /* HoldingsBreakdownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingsBreakdownTableViewCell.swift; sourceTree = "<group>"; };
 		3DB004FC2360F5D1002F704D /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		3DB345E023C39D5F00EADFFD /* RemoteScreenerLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteScreenerLoader.swift; sourceTree = "<group>"; };
 		3DB345E223C3AA9500EADFFD /* PrebuiltScreenerLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltScreenerLogicController.swift; sourceTree = "<group>"; };
@@ -494,6 +497,7 @@
 		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupVC.swift; sourceTree = "<group>"; };
 		3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePersistenceManagerTest.swift; sourceTree = "<group>"; };
+		3DF4D8CA244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartViewModelLoaderTest.swift; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
 		3DF5FBAB232BFAC800856205 /* AnalysisGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisGraphView.swift; sourceTree = "<group>"; };
@@ -1556,7 +1560,6 @@
 			isa = PBXGroup;
 			children = (
 				3D2F964A2315CD34003811AB /* BarChartView.swift */,
-				3D5865252323024A00495D79 /* PieChartView.swift */,
 			);
 			path = Graphs;
 			sourceTree = "<group>";
@@ -1728,6 +1731,8 @@
 			isa = PBXGroup;
 			children = (
 				3DAF279C2449F98300CD001B /* HoldingBreakdownHeaderView.swift */,
+				3D5865252323024A00495D79 /* PieChartView.swift */,
+				3DAF279E244A665300CD001B /* HoldingsBreakdownTableViewCell.swift */,
 			);
 			path = "Breakdown Pie";
 			sourceTree = "<group>";
@@ -1884,6 +1889,7 @@
 		3DBF0C5723D94A24003023D7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3DF4D8CA244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift */,
 				3D206A03241E8F1000F7E44C /* Trading Engine */,
 				3DBF0C5823D94A2C003023D7 /* Permissions */,
 			);
@@ -2623,6 +2629,7 @@
 				3D7C854E233747A800A2E63E /* InformationView.swift in Sources */,
 				3D42BE492309A59800806AFF /* SearchCriteria.swift in Sources */,
 				3D206A4624217F7400F7E44C /* RemoteTransactionLogger.swift in Sources */,
+				3DAF279F244A665300CD001B /* HoldingsBreakdownTableViewCell.swift in Sources */,
 				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
 				3DCE8DBE2440A1820007F9EB /* NotificationSetupPresenter.swift in Sources */,
 				3D31AA83242E779E00326D7E /* TradeButtonDetailDisplayViewController.swift in Sources */,
@@ -2737,6 +2744,7 @@
 				3D206A642428545B00F7E44C /* HoldingMapperTests.swift in Sources */,
 				3D8D32652372FAE300123731 /* ExploreLogicControllerTests.swift in Sources */,
 				3D206A3A2421105000F7E44C /* TransactionLoggingManagerTests.swift in Sources */,
+				3DF4D8CB244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift in Sources */,
 				3D206A4A2421898300F7E44C /* TradingManagerTests.swift in Sources */,
 				3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */,
 				3D206A23241FBC9B00F7E44C /* LedgerManagerTests.swift in Sources */,
