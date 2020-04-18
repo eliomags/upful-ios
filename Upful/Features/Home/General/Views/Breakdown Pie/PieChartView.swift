@@ -54,25 +54,21 @@ struct PieChartViewModelLoader {
 }
 
 class GenericPieChartView: PieChartView {
-    let chartViewModel = ChartViewModel()
+    let chartViewModel = PieChartFormatter()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-        animate()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
     
     private func setupViews() {
         chartDescription?.text = ""
         setupLegend()
-        drawEntryLabelsEnabled = true
-//        setupPieChart(values: [4000,3000,3000,100])
-        
+        drawEntryLabelsEnabled = true        
         noDataText = "You have no holdings\nStart screening for stocks to get started!"
         noDataTextColor = .label
         noDataTextAlignment = .center
@@ -90,6 +86,10 @@ class GenericPieChartView: PieChartView {
         legend.yEntrySpace = 0
         legend.yOffset = 0
         entryLabelFont = .systemFont(ofSize: 14, weight: .bold)
+    }
+    
+    func togglePercentDisplay() {
+        usePercentValuesEnabled = !usePercentValuesEnabled
     }
     
     func setupPieChart(chartConfigurables: [PieChartConfigurable]) {
@@ -128,5 +128,14 @@ class GenericPieChartView: PieChartView {
     
     func animate() {
         self.animate(xAxisDuration: 0.75, easingOption: .linear)
+    }
+}
+
+class PieChartFormatter: NSObject, IValueFormatter {
+    func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int,
+                        viewPortHandler: ViewPortHandler?) -> String {
+        let formattedValue = "$"+Int(value).formatUsingAbbreviation()
+        
+        return formattedValue
     }
 }

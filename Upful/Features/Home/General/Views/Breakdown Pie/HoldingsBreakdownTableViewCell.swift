@@ -12,11 +12,12 @@ class HoldingsBreakdownTableViewCell: UITableViewCell {
     
     let chartView = GenericPieChartView()
     
-    lazy var containerView: UIView = {
+    private lazy var containerView: UIView = {
         let v = UIView()
         v.backgroundColor = .clear
         v.addSubview(chartView)
-        chartView.anchor(top: v.topAnchor, leading: v.leadingAnchor, bottom: v.bottomAnchor, trailing: v.trailingAnchor,
+        chartView.anchor(top: v.topAnchor, leading: v.leadingAnchor,
+                         bottom: v.bottomAnchor, trailing: v.trailingAnchor,
                          padding: .init(top: 15, left: 15, bottom: 15, right: 15))
         return v
     }()
