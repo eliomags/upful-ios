@@ -79,7 +79,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         observeViewModelPreferenceUpdates()
         observeViewModelHoldingsUpdates()
         logicController.fetchTableData()
-        configureTransactionHeaderSuccess()
+        
         UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
     }
     
@@ -191,6 +191,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     @objc fileprivate func handleResfreshing(_ sender: Any) {
         refreshControl.endRefreshing()
         logicController.fetchTableData()
+        logicController.loadHoldings()
     }
     
     fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
@@ -502,7 +503,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 75
+        return 50
     }
     
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {

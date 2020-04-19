@@ -189,7 +189,7 @@ final class StockTradeViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkIfCurrentlyOwned()
+        tradingEngine.loadHoldings()
         loadRecentPrice()
         
         tradingEngine.completionHandler = { [weak self] (holdings) in
@@ -300,15 +300,6 @@ final class StockTradeViewController: UITableViewController {
     }
     
     // MARK: - Methods
-    
-    fileprivate func checkIfCurrentlyOwned() {
-        tradingEngine.loadHoldings()
-        
-//        tradingEngine.loadHoldings { [weak self] (holdings, err) in
-//            guard let self = self else { return }
-//            DispatchQueue.main.async { self.handleHoldingsLoadCompletion(err, holdings) }
-//        }
-    }
     
     fileprivate func loadRecentPrice() {
         quoteLoader.load(for: ticker) { [weak self] (result) in

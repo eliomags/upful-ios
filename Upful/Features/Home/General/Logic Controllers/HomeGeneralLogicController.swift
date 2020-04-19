@@ -56,7 +56,6 @@ class HomeGeneralLogicController {
     // MARK: - API Methods
     
     func fetchTableData() {
-        loadHoldings()
         startNewsLoad()
         startPreferenceLoad()
     }
@@ -70,7 +69,6 @@ class HomeGeneralLogicController {
     
     func loadHoldings() {
         holdingsLoader?.invalidate()
-        startHoldingsLoad()
         
         holdingsLoader = Timer.scheduledTimer(withTimeInterval: 9, repeats: true, block: {  (_) in
             self.startHoldingsLoad()

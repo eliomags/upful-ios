@@ -25,8 +25,8 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpd
 
     private enum ReuseID {
         static let graphCell = "graphCell"
-        static let graphConfigurationCell = "graphConfigurationCell"
         static let reportsCell = "reportsCell"
+        static let graphConfigurationCell = "graphConfigurationCell"
     }
     
     // MARK: - Views

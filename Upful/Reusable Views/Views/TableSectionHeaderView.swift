@@ -42,8 +42,7 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
         button.setTitleColor(.appAccent3, for: .normal)
         button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        button.widthAnchor.constraint(lessThanOrEqualToConstant: 100).isActive = true
         return button
     }()
 
@@ -60,12 +59,14 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
         addSubview(addButton)
         
         addButton.anchor(
-            top: topAnchor, leading: nil, bottom: nil, trailing: layoutMarginsGuide.trailingAnchor,
+            top: topAnchor, leading: nil, bottom: nil,
+            trailing: layoutMarginsGuide.trailingAnchor,
             padding: .init(top: 8, left: 0, bottom: 16, right: 0))
         
-        textStackView.anchor(
-            top: topAnchor, leading: layoutMarginsGuide.leadingAnchor, bottom: bottomAnchor, trailing: addButton.leadingAnchor,
-            padding: .init(top: 8, left: 0, bottom: 16, right: 8))
+        textStackView.translatesAutoresizingMaskIntoConstraints = false
+        textStackView.centerYAnchor.constraint(equalTo: addButton.centerYAnchor).isActive = true
+        textStackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor).isActive = true
+        textStackView.trailingAnchor.constraint(equalTo: addButton.trailingAnchor, constant: -24).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -76,6 +77,5 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
     @objc func handleTap(_ sender: UIButton) {
         buttonAction?()
     }
-    
 }
 
