@@ -77,20 +77,26 @@ final class TradingEngine {
     }
     
     // MARK: - Loading
-    
-    func loadHoldings(completion: (([Holding], Error?) -> Void)?) {
+    private let holdingMapper = HoldingMapper()
+    var completionHandler: (([Holding]) -> Void)?
+
+    func loadHoldings() {
+        
         DispatchQueue.global().async {
             self.ledgerManager.loadSavedTransactions { [weak self] result in
                 guard let self = self else { return }
+                
                 switch result {
                 case .success(let ledgerTransactions):
-                    let holdings = HoldingMapper.map(ledgerTransactions)
-                    self.updateEquityBalance(with: holdings)
+                    self.holdingMapper.loadingHoldings(from: ledgerTransactions)
                     
-                    completion?(holdings.filter { $0.totalShareCount > 0 }, nil)
+                    self.holdingMapper.completionHandler = { [unowned self] holdings in
+                        self.updateEquityBalance(with: holdings)
+                        self.completionHandler?(holdings)
+                    }
                     
-                case .failure(let err):
-                    completion?([], err)
+                case .failure(_):
+                    assertionFailure("Failed to load transactions from Core Data")
                 }
             }
         }

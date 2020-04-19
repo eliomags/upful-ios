@@ -8,9 +8,25 @@
 
 import Foundation
 
-struct HoldingMapper {
+class HoldingMapper {
+    
+    private let quoteLoader = StockPriceLoader()
+    private let holdingsLoadGroup = DispatchGroup()
+    
+    var completionHandler: (([Holding]) -> Void)?
     
     // MARK: - Methods
+    
+    func loadingHoldings(from transactions: [Transaction]) {
+        let holdings = HoldingMapper.map(transactions).filter { $0.totalShareCount > 0 }
+        
+        holdings.forEach({loadQuotes(for: $0)})
+
+        holdingsLoadGroup.notify(queue: .main) {
+            print("Loaded all quotes")
+            self.completionHandler?(holdings)
+        }
+    }
     
     static func map(_ transactions: [Transaction]) -> [Holding] {
         var holdings: [Holding] = []
@@ -26,6 +42,22 @@ struct HoldingMapper {
         }
         
         return holdings
+    }
+    
+    
+    fileprivate func loadQuotes(for holding: Holding) {
+        holdingsLoadGroup.enter()
+        
+        quoteLoader.load(for: holding.ticker) { (result) in
+            switch result {
+            case .success(let quote):
+                holding.currentPrice = quote.latestPrice
+
+            case .failure(_):
+                print("Error Loading quotes for:", holding.ticker)
+            }
+            self.holdingsLoadGroup.leave()
+        }
     }
     
     // MARK: - Helper Methods

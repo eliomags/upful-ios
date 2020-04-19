@@ -91,6 +91,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
         if tableView.shouldUpdateHeaderViewFrame() {
             tableView.beginUpdates()
             tableView.endUpdates()

@@ -192,28 +192,12 @@ final class StockTradeViewController: UITableViewController {
         checkIfCurrentlyOwned()
         loadRecentPrice()
         
+        tradingEngine.completionHandler = { [weak self] (holdings) in
+            guard let self = self else { return }
+            self.handleHoldingsLoadCompletion(holdings)
+            self.currentHoldings = holdings
+        }
         numberOfSharesTextField.becomeFirstResponder()
-        
-//        tradingEngine.loadLedgerTransactions { (result) in
-//            switch result {
-//            case .success(let ledgerTrans):
-//                print("Ledger Transactions")
-//                print(ledgerTrans.map { $0.ticker })
-//                print(ledgerTrans.map { $0.numberOfShares })
-//            case .failure(_):
-//                print("Failed to load")
-//            }
-//        }
-//        tradingEngine.loadLoggedTransactions { (result) in
-//            switch result {
-//            case .success(let ledgerTrans):
-//                print("Logged Transactions")
-//                print(ledgerTrans.map { $0.ticker })
-//                print(ledgerTrans.map { $0.numberOfShares })
-//            case .failure(_):
-//                print("Failed to load")
-//            }
-//        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -248,6 +232,8 @@ final class StockTradeViewController: UITableViewController {
         }
     }
     
+    var currentHoldings: [Holding] = []
+    
     @objc fileprivate func handleSellTap() {
         guard let transaction = transaction,
             let numberOfShares = numberOfShares else {
@@ -264,37 +250,30 @@ final class StockTradeViewController: UITableViewController {
             sellButton.isEnabled = true
             return
         }
-        
-        tradingEngine.loadHoldings { [weak self] (holdings, err) in
-            guard let self = self else { return }
-            if let _ = err {
-                self.presentAlert("Error", "Failed to load your holdings.") {
-                    self.dismiss(animated: true, completion: nil)
-                }
-                return
-            }
-            if let currentHolding = holdings.first(where: { $0.ticker == self.ticker }) {
-                if numberOfShares <= currentHolding.totalShareCount {
-                    self.tradingEngine.sell(transaction: transaction, completion: { [weak self] in
-                        DispatchQueue.main.async {
-                            guard let self = self else { return }
-                            InformationViewPresenter().showGenericSuccess(in: self, description: "Sold Successfully", completion: { [weak self] in
-                                self?.dismiss(animated: true, completion: nil)
-                            })
-                        }
-                    })
-                } else {
-                    self.presentAlert("Error", "You can't sell what you don't have.", OKhandler: {
-                        self.buyButton.isEnabled = true
-                        self.sellButton.isEnabled = true
-                    })
-                }
+            
+        if let currentHolding = self.currentHoldings.first(where: { $0.ticker == self.ticker }) {
+            
+            if numberOfShares <= currentHolding.totalShareCount {
+                self.tradingEngine.sell(transaction: transaction, completion: { [weak self] in
+                    
+                    DispatchQueue.main.async {
+                        guard let self = self else { return }
+                        InformationViewPresenter().showGenericSuccess(in: self, description: "Sold Successfully", completion: { [weak self] in
+                            self?.dismiss(animated: true, completion: nil)
+                        })
+                    }
+                })
             } else {
                 self.presentAlert("Error", "You can't sell what you don't have.", OKhandler: {
                     self.buyButton.isEnabled = true
                     self.sellButton.isEnabled = true
                 })
             }
+        } else {
+            self.presentAlert("Error", "You can't sell what you don't have.", OKhandler: {
+                self.buyButton.isEnabled = true
+                self.sellButton.isEnabled = true
+            })
         }
     }
     
@@ -323,10 +302,12 @@ final class StockTradeViewController: UITableViewController {
     // MARK: - Methods
     
     fileprivate func checkIfCurrentlyOwned() {
-        tradingEngine.loadHoldings { [weak self] (holdings, err) in
-            guard let self = self else { return }
-            DispatchQueue.main.async { self.handleHoldingsLoadCompletion(err, holdings) }
-        }
+        tradingEngine.loadHoldings()
+        
+//        tradingEngine.loadHoldings { [weak self] (holdings, err) in
+//            guard let self = self else { return }
+//            DispatchQueue.main.async { self.handleHoldingsLoadCompletion(err, holdings) }
+//        }
     }
     
     fileprivate func loadRecentPrice() {
@@ -355,14 +336,9 @@ final class StockTradeViewController: UITableViewController {
         }
     }
     
-    fileprivate func handleHoldingsLoadCompletion(_ err: Error?, _ holdings: [Holding]) {
-        if let _ = err {
-            self.presentAlert("Error", "Failed to load your holdings.") {
-                self.dismiss(animated: true, completion: nil)
-            }
-            return
-        }
+    fileprivate func handleHoldingsLoadCompletion(_ holdings: [Holding]) {
         if let currentHolding = holdings.first(where: { $0.ticker == self.ticker }) {
+            
             self.header.descriptionText.text = "You currently own \(currentHolding.totalShareCount.withCommas()) shares of \(self.ticker).\nYour cash balance is $\(self.tradingEngine.balanceManager.currentCashBalance.withCommas())"
         } else {
             self.header.descriptionText.text = "You do not own any shares of \(self.ticker).\nYour cash balance is $\(self.tradingEngine.balanceManager.currentCashBalance.withCommas())"

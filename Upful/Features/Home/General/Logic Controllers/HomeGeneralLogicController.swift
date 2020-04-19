@@ -83,43 +83,16 @@ class HomeGeneralLogicController {
     }
     
     fileprivate func startHoldingsLoad() {
-        tradingEngine.loadHoldings { [weak self] (holdings, err) in
+        self.tradingEngine.completionHandler = { [weak self] holdings in
             guard let self = self else { return }
-            if let _ = err {
-                DispatchQueue.main.async { self.holdingsLoadCompletion?(NSError()) }
-                return
-            }
             self.holdings = holdings
-            self.holdings.forEach { self.loadQuotes(for: $0) }
-            
-            DispatchQueue.main.async { self.holdingsLoadCompletion?(nil) }
-            
-            self.holdingsLoadGroup.notify(queue: .main, execute: {
-                self.totalEquity = self.tradingEngine.balanceManager.totalEquityBalance
-                self.holdingsLoadCompletion?(nil)
-            })
+            self.totalEquity = self.tradingEngine.balanceManager.totalEquityBalance
+            self.holdingsLoadCompletion?(nil)
         }
-    }
-    
-    private let quoteLoader = StockPriceLoader()
-    private let holdingsLoadGroup = DispatchGroup()
-
-    fileprivate func loadQuotes(for holding: Holding) {
-        holdingsLoadGroup.enter()
         
-        quoteLoader.load(for: holding.ticker) { (result) in
-            switch result {
-            case .success(let quote):
-                holding.currentPrice = quote.latestPrice
-                self.tradingEngine.updateEquityBalance(with: self.holdings)
-                
-            case .failure(_):
-                DispatchQueue.main.async { self.holdingsLoadCompletion?(NSError()) }
-            }
-            self.holdingsLoadGroup.leave()
-        }
+        tradingEngine.loadHoldings()
     }
-    
+        
     // MARK: - News Loading
         
     func startNewsLoad() {
