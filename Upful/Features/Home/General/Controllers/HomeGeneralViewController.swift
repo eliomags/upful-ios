@@ -489,6 +489,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             
             header?.buttonAction = { [weak self] in
                 guard let self = self else { return }
+                Vibration.light.vibrate()
+                
                 self.shouldDisplayBreakDownCell = !self.shouldDisplayBreakDownCell
             }
             return header
