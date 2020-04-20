@@ -295,10 +295,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             tableView.deleteRows(at: [[0,0]], with: .fade)
         }
         let breakdownSection = Section.breakdown.rawValue
+        let holdingsSection = Section.holdings.rawValue
+
         tableView.reloadSections([breakdownSection], with: .automatic)
         
         if shouldDisplayBreakDownCell {
-            tableView.scrollToRow(at: [0,0], at: .bottom, animated: true)
+            tableView.scrollToRow(at: [breakdownSection,0], at: .top, animated: true)
+        } else {
+            tableView.scrollToRow(at: [holdingsSection,0], at: .bottom, animated: true)
         }
         
         let headerView = tableView.headerView(forSection: breakdownSection) as? HoldingBreakdownHeaderView
@@ -474,7 +478,9 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         switch indexPath.section {
         case Section.breakdown.rawValue:
             return (logicController.holdingsState == .loading) ?
-                UITableView.automaticDimension : (UIScreen.main.bounds.height / 2) - 130
+//                UITableView.automaticDimension : (UIScreen.main.bounds.height / 2) - 130
+                UITableView.automaticDimension : 280
+
             
         default:
             return UITableView.automaticDimension

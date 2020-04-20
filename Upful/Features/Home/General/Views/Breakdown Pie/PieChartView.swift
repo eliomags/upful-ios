@@ -85,7 +85,6 @@ class GenericPieChartView: PieChartView {
         legend.xEntrySpace = 7
         legend.yEntrySpace = 0
         legend.yOffset = 0
-        entryLabelFont = .systemFont(ofSize: 14, weight: .bold)
     }
     
     func togglePercentDisplay() {
@@ -99,17 +98,10 @@ class GenericPieChartView: PieChartView {
         let dataEntries = (0..<chartConfigurables.count).map { (i) -> PieChartDataEntry in
             return PieChartDataEntry(value: values[i], label: dataPoints[i])
         }
+        
         let set = PieChartDataSet(entries: dataEntries, label: "")
-        set.sliceSpace = 1
-        set.valueTextColor = .label
-        set.valueLineColor = .label
-        set.entryLabelColor = .label
-        set.xValuePosition = .outsideSlice
-        set.yValuePosition = .outsideSlice
-        
-        set.valueFormatter = chartViewModel
-        
         set.colors = chartConfigurables.map({ $0.color })
+        setupValueLabels(set: set, chartConfigurables: chartConfigurables)
         
         holeRadiusPercent = 0.62
         transparentCircleRadiusPercent = 0.65
@@ -123,13 +115,32 @@ class GenericPieChartView: PieChartView {
 
         let dataSets = [set]
         let chartData = PieChartData(dataSets: dataSets)
-        chartData.setValueFont(.systemFont(ofSize: 11, weight: .bold))
+        chartData.setValueFont(.systemFont(ofSize: 11, weight: .black))
+        entryLabelFont = .systemFont(ofSize: 11, weight: .bold)
         data = chartData
+        
         highlightValues(nil)
     }
     
     func animate() {
         self.animate(xAxisDuration: 0.75, easingOption: .linear)
+    }
+    
+    fileprivate func setupValueLabels(set: PieChartDataSet, chartConfigurables: [PieChartConfigurable]) {
+        set.sliceSpace = 1
+        set.valueTextColor = .label
+        set.valueLineColor = .label
+        set.entryLabelColor = .label
+        set.valueFormatter = chartViewModel
+
+        if chartConfigurables.count >= 7 {
+            set.entryLabelColor = .lightText
+            set.xValuePosition = .insideSlice
+            set.yValuePosition = .outsideSlice
+        } else {
+            set.xValuePosition = .outsideSlice
+            set.yValuePosition = .outsideSlice
+        }
     }
 }
 
