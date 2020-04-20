@@ -19,25 +19,26 @@ class HomeGeneralLogicController {
     
     // MARK: - State
     
-    enum PreferenceState {
+    enum SectionState {
         case new
+        case empty
         case loading
         case loaded
         case error
     }
     
-    private(set) var stocksYouMayLike: [StockViewModel] = []
-    private(set) var preferenceState: PreferenceState = .loading {
+    private(set) var preferenceState: SectionState = .loading {
         didSet {
             sendPreferenceStateUpdates?(preferenceState)
         }
     }
     private(set) var stockNews: [StockNewsViewModel] = []
-    
+    private(set) var stocksYouMayLike: [StockViewModel] = []
+
     // MARK: - Configuration
     
     var holdingsLoadCompletion: ((Error?) -> Void)?
-    var sendPreferenceStateUpdates: ((PreferenceState) -> Void)?
+    var sendPreferenceStateUpdates: ((SectionState) -> Void)?
     var newsLoadCompletion: (() -> Void)?
     
     // MARK: - Initializer
@@ -56,17 +57,24 @@ class HomeGeneralLogicController {
     // MARK: - API Methods
     
     func fetchTableData() {
+        holdingsState = .loading
         startNewsLoad()
         startPreferenceLoad()
     }
     
     // MARK: - Holdings Loading
     
-    let tradingEngine = TradingEngine.shared
-    private(set) var holdings = [Holding]()
     private var holdingsLoader: Timer?
     private(set) var totalEquity: Double?
+    private(set) var holdings = [Holding]()
+    let tradingEngine = TradingEngine.shared
     
+    private(set) var holdingsState: SectionState = .loading {
+        didSet {
+            holdingsLoadCompletion?(nil)
+        }
+    }
+
     func loadHoldings() {
         holdingsLoader?.invalidate()
         
@@ -85,7 +93,7 @@ class HomeGeneralLogicController {
             guard let self = self else { return }
             self.holdings = holdings
             self.totalEquity = self.tradingEngine.balanceManager.totalEquityBalance
-            self.holdingsLoadCompletion?(nil)
+            self.holdingsState = holdings.isEmpty ? .empty : .loaded
         }
         
         tradingEngine.loadHoldings()

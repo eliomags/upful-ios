@@ -100,12 +100,14 @@ class GenericPieChartView: PieChartView {
             return PieChartDataEntry(value: values[i], label: dataPoints[i])
         }
         let set = PieChartDataSet(entries: dataEntries, label: "")
-        set.valueFormatter = chartViewModel
         set.sliceSpace = 1
         set.valueTextColor = .label
         set.valueLineColor = .label
+        set.entryLabelColor = .label
         set.xValuePosition = .outsideSlice
         set.yValuePosition = .outsideSlice
+        
+        set.valueFormatter = chartViewModel
         
         set.colors = chartConfigurables.map({ $0.color })
         

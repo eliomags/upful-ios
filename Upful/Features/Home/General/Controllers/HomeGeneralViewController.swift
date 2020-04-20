@@ -20,6 +20,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     private enum Constants {
         static let newsCellID = "newsCellID"
         static let resultsCellID = "resultsCellID"
+        static let loadingCellID = "loadingCellID"
         static let breakdownCellID = "breakdownCellID"
         static let breakdownHeaderID = "breakdownHeaderID"
         static let noPreferenceCellID = "noPreferenceCellID"
@@ -67,6 +68,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func loadView() {
         super.loadView()
+        
         setupNavBar()
         setupTableView()
         setupTableViewCells()
@@ -75,9 +77,10 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         observeViewModelNewsUpdates()
-        observeViewModelPreferenceUpdates()
         observeViewModelHoldingsUpdates()
+        observeViewModelPreferenceUpdates()
         logicController.fetchTableData()
         
         UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
@@ -85,6 +88,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         logicController.loadHoldings()
         configureTransactionHeaderSuccess()
     }
@@ -100,6 +104,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
         logicController.cancelHoldingsLoad()
     }
     
@@ -117,6 +122,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             }
             self.loadPieChartViewModels()
             self.configureTransactionHeaderSuccess()
+            
             self.tableView.reloadSections([Section.holdings.rawValue, Section.breakdown.rawValue], with: .fade)
             self.refreshControl.endRefreshing()
         }
@@ -182,6 +188,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         tableView.register(StockHoldingTableViewCell.self,
                            forCellReuseIdentifier: Constants.stockHoldingCellID)
         
+        tableView.register(UITableViewCell.self,
+                           forCellReuseIdentifier: Constants.loadingCellID)
         tableView.register(HoldingBreakdownHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: Constants.breakdownHeaderID)
     }
@@ -257,6 +265,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         
         let dollarDiff = (equity - 25_000).withCommas()
         let percentDiff = (((equity / 25_000) - 1) * 100).withCommas()
+        
         UIView.transition(with: tradingBalanceView.totalEquityView, duration: 0.5,
                           options: .transitionCrossDissolve, animations: {
             self.tradingBalanceView.totalEquityView.equityValueLabel.text =
@@ -286,12 +295,17 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             tableView.deleteRows(at: [[0,0]], with: .fade)
         }
         let breakdownSection = Section.breakdown.rawValue
-        tableView.reloadSections([breakdownSection], with: .fade)
+        tableView.reloadSections([breakdownSection], with: .automatic)
+        
+        if shouldDisplayBreakDownCell {
+            tableView.scrollToRow(at: [0,0], at: .bottom, animated: true)
+        }
         
         let headerView = tableView.headerView(forSection: breakdownSection) as? HoldingBreakdownHeaderView
         headerView?.toggleButtonState()
     }
     
+    // TODO: - Move to LogicController
     var pieChartViewModels: [PieChartConfigurable] = []
     
     fileprivate func loadPieChartViewModels() {
@@ -302,7 +316,15 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         pieChartViewModels = vmLoader.makeViewModels(from: holdings, cash: cash)
     }
     
-    // MARK: Holdings Section
+    // MARK: - TableViewCell Configuration
+    
+    fileprivate func makeBreakdownCell(at indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.breakdownCellID,
+                                                 for: indexPath) as? HoldingsBreakdownTableViewCell
+        cell?.chartView.setupPieChart(chartConfigurables: pieChartViewModels)
+        
+        return cell ?? UITableViewCell()
+    }
     
     fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
         if logicController.holdings.isEmpty {
@@ -376,6 +398,20 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             return UITableViewCell()
         }
     }
+    
+    fileprivate func makeLoadingCell(at indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.loadingCellID, for: indexPath)
+        let activityView = UIActivityIndicatorView(style: .medium)
+        
+        cell.addSubview(activityView)
+        activityView.translatesAutoresizingMaskIntoConstraints = false
+        activityView.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
+        activityView.centerXAnchor.constraint(equalTo: cell.centerXAnchor).isActive = true
+        
+        activityView.startAnimating()
+        
+        return cell
+    }
 }
 
 // MARK: - TableView Delegate/Datasource Methods
@@ -391,11 +427,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             return shouldDisplayBreakDownCell ? 1 : 0
             
         case Section.holdings.rawValue:
-            if logicController.holdings.isEmpty {
-                return 1
-            } else {
-                return logicController.holdings.count
-            }
+            return logicController.holdings.isEmpty ? 1 : logicController.holdings.count
             
         case Section.news.rawValue:
             return 3
@@ -418,16 +450,13 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         let section = indexPath.section
         switch section {
         case Section.breakdown.rawValue:
-            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.breakdownCellID, for: indexPath)
-                as? HoldingsBreakdownTableViewCell
-            cell?.chartView.setupPieChart(chartConfigurables: pieChartViewModels)
-            cell?.chartView.setNeedsDisplay()
-            
-            return cell ?? UITableViewCell()
+            return (logicController.holdingsState == .loading) ?
+                makeLoadingCell(at: indexPath) : makeBreakdownCell(at: indexPath)
             
         case Section.holdings.rawValue:
-            return makeHoldingsCell(at: indexPath)
-            
+            return (logicController.holdingsState == .loading) ?
+                makeLoadingCell(at: indexPath) : makeHoldingsCell(at: indexPath)
+
         case Section.news.rawValue:
             return makeNewsCells(at: indexPath)
             
@@ -444,7 +473,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case Section.breakdown.rawValue:
-            return (UIScreen.main.bounds.height / 2) - 130
+            return (logicController.holdingsState == .loading) ?
+                UITableView.automaticDimension : (UIScreen.main.bounds.height / 2) - 130
             
         default:
             return UITableView.automaticDimension
@@ -521,6 +551,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             case .loaded:
                 return true
             case .error:
+                return false
+            case .empty:
                 return false
             }
         case Section.news.rawValue:
