@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MessageUI
 
 class SuggestionFeedViewController: UIViewController {
     
@@ -69,6 +70,10 @@ class SuggestionFeedViewController: UIViewController {
         button.layer.masksToBounds = true
         return button
     }()
+    
+    deinit {
+        suggestionDataLoader?.commitVotes()
+    }
     
     // MARK: - View Life Cycle Methods
     
@@ -136,12 +141,29 @@ class SuggestionFeedViewController: UIViewController {
     }
     
     @objc fileprivate func navigateToAddPreference() {
-        let presenter = ReportPresenter(reportType: .suggestion)
-        presenter.present(in: self)
+        sendEmail()
+    }
+    
+    func sendEmail() {
+        if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            mail.setToRecipients(["simpsony94@gmail.com"])
+            mail.setSubject("Suggestion - ")
+
+            present(mail, animated: true)
+        } else {
+            // show failure alert
+        }
     }
 
-    deinit {
-        suggestionDataLoader?.commitVotes()
+}
+
+extension SuggestionFeedViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        InformationViewPresenter().showGenericSuccess(in: controller, description: "Sent Successfully") {
+            controller.dismiss(animated: true)
+        }
     }
 }
 
