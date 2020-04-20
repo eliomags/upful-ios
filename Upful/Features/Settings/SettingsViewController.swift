@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MessageUI
 
 class SettingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PreferenceDelegate {
     
@@ -15,7 +16,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         ["Upgrade to Premium"],
         
-        ["Leave a Suggestion",
+        ["See Suggestions",
         "Report an Issue",
         "Allow Tracking"],
         
@@ -103,6 +104,36 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: - TableView Delegate Methods
     
+    func sendEmail() {
+        if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            mail.setToRecipients(["simpsony94@gmail.com"])
+            mail.setSubject("Issue - ")
+
+            present(mail, animated: true)
+        } else {
+            // show failure alert
+            let reportVC = ReportPresenter(reportType: .issue)
+            reportVC.present(in: self)
+        }
+    }
+}
+
+extension SettingsViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                               didFinishWith result: MFMailComposeResult, error: Error?) {
+        if result == .sent {
+            InformationViewPresenter().showGenericSuccess(in: controller, description: "Sent Successfully") {
+                controller.dismiss(animated: true)
+            }
+        } else {
+            controller.dismiss(animated: true)
+        }
+    }
+}
+
+extension SettingsViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = indexPath.section
         let row = indexPath.row
@@ -125,9 +156,10 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             case 0:
                 let suggestionVC = SuggestionFeedViewController()
                 navigationController?.pushViewController(suggestionVC, animated: true)
+                
             case 1:
-                let issueVC = ReportPresenter(reportType: .issue)
-                issueVC.present(in: self)
+                sendEmail()
+
             case 2:
                 if !PermissionManager.shared.isPremium {
                     let alertVC = UIAlertController(
@@ -178,7 +210,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 2
     }
-    
 }
 
 // MARK: - Report Delegate

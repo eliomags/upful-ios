@@ -153,15 +153,21 @@ class SuggestionFeedViewController: UIViewController {
 
             present(mail, animated: true)
         } else {
-            // show failure alert
+            let reportVC = ReportPresenter(reportType: .suggestion)
+            reportVC.present(in: self)
         }
     }
 
 }
 
 extension SuggestionFeedViewController: MFMailComposeViewControllerDelegate {
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        InformationViewPresenter().showGenericSuccess(in: controller, description: "Sent Successfully") {
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                               didFinishWith result: MFMailComposeResult, error: Error?) {
+        if result == .sent {
+            InformationViewPresenter().showGenericSuccess(in: controller, description: "Sent Successfully") {
+                controller.dismiss(animated: true)
+            }
+        } else {
             controller.dismiss(animated: true)
         }
     }
