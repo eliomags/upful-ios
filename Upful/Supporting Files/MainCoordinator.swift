@@ -81,8 +81,4 @@ final class MainCoordinator: Coordinator {
         VersionManager.setTabBarColor(in: tabVC)
         return tabVC
     }
-    
-    private func setupTest() -> UIViewController {
-        return RecommendationViewController()
-    }
 }

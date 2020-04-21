@@ -27,7 +27,7 @@ class StockDetailsContainerView: MenuContainerViewController, NoteVCDelegate {
     
     lazy var notesButton: NotesButton = {
         let button = NotesButton()
-        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleOpenNotes)))
+//        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleOpenNotes)))
         return button
     }()
     
@@ -98,14 +98,16 @@ class StockDetailsContainerView: MenuContainerViewController, NoteVCDelegate {
     }
     
     fileprivate func showTradeButtonDetail() {
-        let presenter = TradeButtonDetailPresenter(sourceView: tradeButton, presentingViewController: self)
+        let presenter = TradeButtonDetailPresenter(sourceView: tradeButton,
+                                                   presentingViewController: self)
         presenter.present()
     }
     
     // MARK: - Core Data
     
     @objc private func checkIfCurrentlySaved() {
-        savedStockDataManager.loadSavedStocks { (result) in
+        savedStockDataManager.loadSavedStocks { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
             case .success(let savedStocks):
                 let stockTickers = savedStocks.map({ $0.ticker })
@@ -163,19 +165,24 @@ class StockDetailsContainerView: MenuContainerViewController, NoteVCDelegate {
         }
     }
     
-    @objc fileprivate func handleOpenNotes( _ sender: UIBarButtonItem) {
-        let notesVC = NotesViewController(delegate: self)
-        let navVC = UINavigationController(rootViewController: notesVC)
-        notesVC.preferredContentSize = CGSize(width: self.view.frame.width, height: 400)
-        notesVC.modalPresentationStyle = .popover
-        notesVC.popoverPresentationController?.delegate = self
-        present(navVC, animated: true, completion: nil)
-    }
+//    @objc fileprivate func handleOpenNotes( _ sender: UIBarButtonItem) {
+//        let notesVC = NotesViewController(delegate: self)
+//        let navVC = UINavigationController(rootViewController: notesVC)
+//        notesVC.preferredContentSize = CGSize(width: self.view.frame.width, height: 400)
+//        notesVC.modalPresentationStyle = .popover
+//        notesVC.popoverPresentationController?.delegate = self
+//        present(navVC, animated: true, completion: nil)
+//    }
 }
 
 // MARK: - UIPopOverPresentationDelegate
 
-extension StockDetailsContainerView: UIPopoverPresentationControllerDelegate {}
+extension StockDetailsContainerView: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController,
+                                   traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+         return .none
+     }
+}
 
 extension StockDetailsContainerView: SubscriptionViewControllerDelegate {
     func presentationControllerdDidDismissWithoutSignup() {}

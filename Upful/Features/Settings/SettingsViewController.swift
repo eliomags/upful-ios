@@ -113,7 +113,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
 
             present(mail, animated: true)
         } else {
-            // show failure alert
             let reportVC = ReportPresenter(reportType: .issue)
             reportVC.present(in: self)
         }

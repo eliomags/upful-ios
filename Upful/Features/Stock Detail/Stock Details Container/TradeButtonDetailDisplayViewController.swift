@@ -72,7 +72,8 @@ final class TradeButtonDetailDisplayViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        self.preferredContentSize = CGSize(width: 315, height: 56)
+        
+        preferredContentSize = CGSize(width: 315, height: 56)
         view.addSubview(contentView)
         contentView.fillSuperview()
     }
