@@ -29,9 +29,10 @@ class SubscriptionPresenter {
     
 
     func present(in viewController: SubscriptionViewControllerDelegate) {
+        AnalyticsLogger.instance.reportEvents(event: .signUpForPremiumPresented(trigger: type.rawValue))
+
         switch type {
         case .firstAppOpen:
-        
             if userDefaults.firstAppOpen {
                 userDefaults.toggleBool(.firstAppOpen)
                 present(vc: viewController)
@@ -42,7 +43,7 @@ class SubscriptionPresenter {
         
     }
     
-    func present(vc: SubscriptionViewControllerDelegate) {
+    private func present(vc: SubscriptionViewControllerDelegate) {
         let subscriptionVC = SubscriptionViewController(presenterType: type)
         subscriptionVC.delegate = vc
         let navVC = UINavigationController(rootViewController: subscriptionVC)
