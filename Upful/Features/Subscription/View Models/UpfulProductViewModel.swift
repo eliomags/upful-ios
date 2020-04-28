@@ -55,7 +55,7 @@ class UpfulProductViewModel {
 
     private func setMonthlyCost(from totalPricing: Double, duration: Int) {
         let subscriptionMonthlyCost = totalPricing / Double(duration)
-        self.monthlyPricing = "Then $\(subscriptionMonthlyCost.roundToTwoDecimal())" + "/month."
+        self.monthlyPricing = "Then $\(subscriptionMonthlyCost.roundToTwoDecimal())" + "/mo."
     }
     
     private func setSavingsPercentage(from pricing: Double, duration: Int) {
@@ -63,9 +63,13 @@ class UpfulProductViewModel {
         let savings = "\(Int((1-((pricing / Double(duration))/standardMonthlyCost))*100))%"
         self.savingPercentage = savings
     }
-    
 }
 
+extension UpfulProductViewModel {
+    var description: String {
+        return "1 Week Free. \(monthlyPricing ?? "")"
+    }
+}
 
 
 

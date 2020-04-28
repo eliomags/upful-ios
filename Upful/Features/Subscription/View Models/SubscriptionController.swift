@@ -9,7 +9,7 @@
 import Foundation
 import StoreKit
 
-class SubscriptionLogicController {
+class SubscriptionController {
     
     // MARK - Dependencies
     
@@ -50,7 +50,7 @@ class SubscriptionLogicController {
         }
     }
     
-    private var selectedProduct: SKProduct?
+    private(set) var selectedProduct: SKProduct?
     private(set) var productViewModels: [UpfulProductViewModel] = []
     
     // MARK: - Initializer
@@ -75,11 +75,12 @@ class SubscriptionLogicController {
         }
     }
     
-    func buy(_ product: SKProduct) {
-        self.selectedProduct = product
-        guard let selectedProduct = selectedProduct else { return }
-        iAPService.verifyProductSubscription(product)
-        iAPService.purchaseProduct(selectedProduct)
+    func buy(_ product: SKProduct?) {
+        if let product = product {
+            selectedProduct = product
+            iAPService.verifyProductSubscription(product)
+            iAPService.purchaseProduct(selectedProduct!)
+        }
     }
     
     func listenForPurchaseCompletion() {

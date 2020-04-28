@@ -10,8 +10,8 @@ import Foundation
 
 public struct Constants {
     struct MixPanel {
-        static let token = "90dafb0f4cbcc21d7a9bddb6611a8b30"
-//        static let token = ""
+//        static let token = "90dafb0f4cbcc21d7a9bddb6611a8b30"
+        static let token = ""
     }
     
     struct Intrinio {
@@ -35,5 +35,9 @@ public struct Constants {
     
     struct StockNewsAPI {
         static let token = "dkbfimvongik3r4pbn1dgbbstvesox5ufkl6q0cl"
+    }
+    
+    struct SharedUserDefaults {
+        static let firstAppOpen = "firstAppOpen"
     }
 }

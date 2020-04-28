@@ -20,37 +20,18 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    // MARK: - Dependencies
-        
-    var headerText: String {
-        var text = ""
-        switch presenterType {
-        case .savedStockLimit:
-            text = "You've reached your limit for saved stocks.\nGet Premium to unlock unlimited access."
-        case .savedScreenerLimit:
-            text = "You've reached your limit for saved screeners.\nGet Premium to unlock unlimited access."
-        case .screeningLimit:
-            text = "You've reached your daily limit for stock screens.\nGet Premium to unlock unlimited access."
-        case .settings:
-            text = "Upgrade to Premium."
-        case .fiveYearDataInterest:
-            break
-        }
-        return text
-    }
-    
     let presenterType: SubscriptionPresenter.PresenterType
     weak var delegate: SubscriptionViewControllerDelegate?
 
-    lazy var logicController: SubscriptionLogicController = {
-        let vm = SubscriptionLogicController()
+    lazy var logicController: SubscriptionController = {
+        let vm = SubscriptionController()
         return vm
     }()
 
     // MARK: - Views
     
-    private let tableHeader: SubscriptionHeaderView = {
-        let v = SubscriptionHeaderView()
+    private let tableHeader: SubscriptionView = {
+        let v = SubscriptionView()
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
@@ -123,7 +104,14 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = false
         navigationItem.title = "Premium"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        
+        switch presenterType {
+        case .firstAppOpen:
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Skip", style: .plain,
+                                                                target: self, action: #selector(handleCancelTap))
+        default:
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        }
     }
     
     fileprivate func setupDefaultSelection() {
@@ -218,7 +206,7 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
             return UITableViewCell()
         } else {
             let cell = SubscriptionTableViewCell(style: .default, reuseIdentifier: nil)
-            cell.monthlyPricingLabel.text = logicController.productViewModels[indexPath.row].monthlyPricing
+            cell.configure(with: logicController.productViewModels[indexPath.row])
             return cell
         }
     }
@@ -238,13 +226,13 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = TableSectionHeaderView()
-        headerView.headerTextLabel.text = "Options"
+        headerView.headerTextLabel.text = ""
         headerView.addButton.setTitle("", for: .normal)
         return logicController.state == .loading ? nil : headerView
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return logicController.state == .loading ? 0 : 60
+        return logicController.state == .loading ? 0 : 44
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SubscriptionHeaderView: UIView {
+class SubscriptionView: UIView {
     override var intrinsicContentSize: CGSize {
         return .init(width: 0, height: 220)
     }
@@ -19,9 +19,11 @@ class SubscriptionHeaderView: UIView {
         let v = UIImageView()
         v.image = UIImage(named: "revenueGraph")
         v.translatesAutoresizingMaskIntoConstraints = false
+        let height = (UIScreen.main.bounds.height / 4) - 50
+        
         NSLayoutConstraint.activate([
-            v.heightAnchor.constraint(equalToConstant: 285),
-            v.widthAnchor.constraint(equalToConstant: 225)
+            v.heightAnchor.constraint(equalToConstant: height),
+            v.widthAnchor.constraint(equalToConstant: (height * 0.8))
         ])
         return v
     }()
@@ -42,7 +44,7 @@ class SubscriptionHeaderView: UIView {
         return sv
     }()
     
-    lazy var indieIntroductionView: UIView = {
+    private lazy var indieIntroductionView: UIView = {
         let attributedString = NSMutableAttributedString(string: "Hi, I'm Yanik!")
         let restOfIndieString = NSMutableAttributedString(string: "\nI developed this app to help me find stocks to invest in.\n\nSubscribing helps to support this app's ongoing development!")
 
@@ -159,7 +161,7 @@ class SubscriptionHeaderView: UIView {
         label.numberOfLines = 0
         label.attributedText = description
         label.textAlignment = .center
-        label.textColor = .gray
+        label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         
         contentView.addSubview(label)
@@ -177,7 +179,7 @@ class SubscriptionHeaderView: UIView {
         imageView.widthAnchor.constraint(equalToConstant: 22).isActive = true
         
         let descriptionLabel = UILabel()
-        descriptionLabel.textColor = .gray
+        descriptionLabel.textColor = .label
         descriptionLabel.attributedText = description
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)

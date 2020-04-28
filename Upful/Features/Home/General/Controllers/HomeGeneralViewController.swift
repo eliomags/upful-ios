@@ -82,7 +82,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         observeViewModelHoldingsUpdates()
         observeViewModelPreferenceUpdates()
         logicController.fetchTableData()
-        
+                
         UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
     }
     
@@ -91,6 +91,11 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         
         logicController.loadHoldings()
         configureTransactionHeaderSuccess()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        SubscriptionPresenter(type: .firstAppOpen).present(in: self)
     }
     
     override func viewDidLayoutSubviews() {
@@ -610,5 +615,13 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         }) { (_) in
             cell?.isSelected = false
         }
+    }
+}
+
+extension HomeGeneralViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {}
+    
+    func userDidSignUp() {
+        print("Did Complete Sign up")
     }
 }

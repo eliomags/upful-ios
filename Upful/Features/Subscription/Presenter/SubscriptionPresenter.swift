@@ -10,13 +10,11 @@ import UIKit
 
 class SubscriptionPresenter {
     
+    let userDefaults: UserDefaults
     let type: PresenterType
     
-    init(type: PresenterType) {
-        self.type = type
-    }
-    
     enum PresenterType: String {
+        case firstAppOpen = "first_app_open"
         case savedStockLimit = "saved_stock_limit"
         case savedScreenerLimit = "saved_screener_limit"
         case screeningLimit = "screening_navigation_limit"
@@ -24,13 +22,35 @@ class SubscriptionPresenter {
         case fiveYearDataInterest = "5_year_data_interest"
     }
     
-    func present(in viewController: SubscriptionViewControllerDelegate) {
-        let subscriptionVC = SubscriptionViewController(presenterType: type)
-        subscriptionVC.delegate = viewController
-        let navVC = UINavigationController(rootViewController: subscriptionVC)
-        navVC.modalPresentationStyle = .fullScreen
-        viewController.present(navVC, animated: true, completion: nil)
+    init(type: PresenterType, userDefaults: UserDefaults = UserDefaults.standard) {
+        self.type = type
+        self.userDefaults = userDefaults
     }
+    
+
+    func present(in viewController: SubscriptionViewControllerDelegate) {
+        switch type {
+        case .firstAppOpen:
+        
+            if userDefaults.firstAppOpen {
+                userDefaults.toggleBool(.firstAppOpen)
+                present(vc: viewController)
+            }
+        default:
+            present(vc: viewController)
+        }
+        
+    }
+    
+    func present(vc: SubscriptionViewControllerDelegate) {
+        let subscriptionVC = SubscriptionViewController(presenterType: type)
+        subscriptionVC.delegate = vc
+        let navVC = UINavigationController(rootViewController: subscriptionVC)
+        navVC.modalPresentationStyle = .automatic
+        
+        vc.present(navVC, animated: true, completion: nil)
+    }
+    
 }
 
 
