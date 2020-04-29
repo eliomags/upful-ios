@@ -21,7 +21,7 @@ class GeneralEmptyCell: UITableViewCell {
     var emptyHeaderText: String {
         return String()
     }
-    
+     
     var emptyDescriptionText: String {
         return String()
     }
