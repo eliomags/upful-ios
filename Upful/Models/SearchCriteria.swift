@@ -58,3 +58,60 @@ enum SearchParameter: String, Equatable, CaseIterable {
         }
     }
 }
+
+extension SearchCriteria {
+  var definition: String {
+    switch self {
+    case .none, .industrycategory, .name:
+      fatalError("Shouldn't be able to get a definition of \(self.rawValue)")
+    case .marketcap:
+      return "Total number of outstanding shares x Current share price. For example, a company with 20 million shares selling at $50 a share would have a market cap of $1 billion."
+    case .totalrevenue:
+      return "Total value sales of goods and services. It is the top line or gross income figure from which costs are subtracted to determine net income."
+    case .netincome:
+      return "The amount of revenue left after subtracting all expenses, taxes and costs."
+//    case .totalassets:
+//      <#code#>
+//    case .totalliabilities:
+//      <#code#>
+//    case .totalequity:
+//      <#code#>
+//    case .pricetoearnings:
+//      <#code#>
+//    case .evtoebit:
+//      <#code#>
+//    case .pricetobook:
+//      <#code#>
+//    case .evtofcff:
+//      <#code#>
+//    case .debttoequity:
+//      <#code#>
+//    case .ebitdagrowth:
+//      <#code#>
+//    case .ebitgrowth:
+//      <#code#>
+//    case .divpayoutratio:
+//      <#code#>
+//    case .dividendyield:
+//      <#code#>
+//    case .revenuegrowth:
+//      <#code#>
+//    case .grossmargin:
+//      <#code#>
+//    case .ebitmargin:
+//      <#code#>
+//    case .investedcapitalgrowth:
+//      <#code#>
+//    case .epsgrowth:
+//      <#code#>
+//    case .fcffgrowth:
+//      <#code#>
+//    case .pricetorevenue:
+//      <#code#>
+//    case .revenueqoqgrowth:
+//      <#code#>
+    default:
+      fatalError("Not a valid SearchCriteria")
+    }
+  }
+}
