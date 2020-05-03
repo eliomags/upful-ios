@@ -28,7 +28,7 @@ final class GrowthSectionView: UIView {
         return sv
     }()
     
-    
+//
     let revenuegrowthStackView: StockDetailStackView = {
         let sv = SectionedDetailsStackView(description: SearchCriteria.revenuegrowth.explicit)
         sv.valueLabel.text = "-%"
@@ -64,8 +64,8 @@ final class GrowthSectionView: UIView {
     private lazy var valuationSV: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [
             row1SV,
-            row2SV,
-//            row3SV,
+//            row2SV,
+            row3SV,
             ])
         sv.axis = .vertical
         sv.distribution = .fillEqually

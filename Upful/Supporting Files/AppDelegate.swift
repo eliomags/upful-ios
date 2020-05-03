@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow()
         window?.rootViewController = coordinator?.presenter
-        window?.backgroundColor = VersionManager.mainContainerBackground()
+        window?.backgroundColor = .systemBackground
 
         FirebaseApp.configure()
         Mixpanel.initialize(token: Constants.MixPanel.token)
