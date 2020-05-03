@@ -82,20 +82,21 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         observeViewModelHoldingsUpdates()
         observeViewModelPreferenceUpdates()
         logicController.fetchTableData()
-                
-        UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
+        
+        guard self.tabBarController != nil else {
+            return
+        }
+        SplashScreenController.presentSplashScreen(in: self.tabBarController!, completion: { [weak self] in
+            guard let self = self else { return }
+            SubscriptionPresenter(type: .firstAppOpen).present(in: self)
+            UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         logicController.loadHoldings()
         configureTransactionHeaderSuccess()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        SubscriptionPresenter(type: .firstAppOpen).present(in: self)
     }
     
     override func viewDidLayoutSubviews() {
