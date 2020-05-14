@@ -231,7 +231,7 @@ extension ManualScreenContainerViewController: UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == viewModels.count-1 {
-            return 100
+            return 75
         } else {
             return 0
         }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class NewManualScreenerItemUpdateViewController: UIViewController {
+final class ManualScreenerItemUpdateViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -104,7 +104,7 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
         let sv = UIStackView(arrangedSubviews: [descriptionLabel, controlStackView, buttonStackView])
         sv.translatesAutoresizingMaskIntoConstraints = false
         sv.axis = .vertical
-        sv.spacing = 32
+        sv.spacing = 36
         return sv
     }()
     
@@ -152,7 +152,7 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
         
         contentView.addSubview(contentStackView)
         NSLayoutConstraint.activate([
-            contentStackView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor, constant: 24),
+            contentStackView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor, constant: 12),
             contentStackView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor, constant: 16),
             contentStackView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor, constant: -16),
             contentStackView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor, constant: -24),
@@ -173,13 +173,10 @@ final class NewManualScreenerItemUpdateViewController: UIViewController {
         switch self.screenerItem.criteria.parameterType {
         case .number:
             configuredSelectedValue = "$" + Int(selectedValue).formatUsingAbbreviation()
-            
         case .percentage:
             configuredSelectedValue = "$" + Double(selectedValue).convertToPercent() + "%"
-            
         case .ratio:
             configuredSelectedValue = String(Int(selectedValue))
-
         default:
             assert(false, "Only  Number, Ratio and Percentage options allowed")
         }
