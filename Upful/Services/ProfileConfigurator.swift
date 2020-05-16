@@ -19,18 +19,19 @@ class UserProfile {
     static let instance = UserProfile()
     
     private var isNewUser: Bool {
-        return UserDefaults.standard.bool(forKey: Constants.isNewUser)
+        return !UserDefaults.standard.bool(forKey: Constants.isNewUser)
     }
     
     lazy var profileID: String = {
         if isNewUser {
             let profileID = UserProfile.generateUserID()
-            UserDefaults.standard.set(false, forKey: Constants.isNewUser)
+            UserDefaults.standard.set(true, forKey: Constants.isNewUser)
             UserDefaults.standard.set(profileID, forKey: Constants.profileID)
             return profileID
         } else {
             guard let savedID = UserDefaults.standard.string(forKey: Constants.profileID) else {
-                fatalError("User ID not configured")
+                assertionFailure("No ID found.")
+                return "Unrecognized User"
             }
             return savedID
         }
