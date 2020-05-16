@@ -36,9 +36,10 @@ class TransactionLoggingManager {
 }
 
 extension Date {
-    var asString: String {
+    fileprivate var asString: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"
+        formatter.timeZone = TimeZone(abbreviation: "EST")
         return formatter.string(from: self)
     }
 }

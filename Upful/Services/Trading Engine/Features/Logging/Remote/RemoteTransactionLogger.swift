@@ -20,7 +20,8 @@ extension RemoteTransactionLogger: TransactionLogger {
             "price": transaction.tradePrice,
             "shares": transaction.numberOfShares,
             "date": transaction.transactionDate ?? "undetermined",
-            "type": transaction.type ?? "undetermined"
+            "type": transaction.type ?? "undetermined",
+            "user": UserProfile.instance.profileID
         ]) { err in
             if let err = err {
                 print("Error writing document: \(err)")
