@@ -26,7 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.backgroundColor = .systemBackground
 
         FirebaseApp.configure()
+        
         Mixpanel.initialize(token: Constants.MixPanel.token)
+        Mixpanel.mainInstance().userId = UserProfile.instance.profileID
+        
         IAPService().completeTransactions()
 
         window?.makeKeyAndVisible()
