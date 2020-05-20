@@ -29,11 +29,11 @@ class SubscriptionPresenter {
     
 
     func present(in viewController: SubscriptionViewControllerDelegate) {
-        AnalyticsLogger.instance.reportEvents(event: .signUpForPremiumPresented(trigger: type.rawValue))
 
         switch type {
         case .firstAppOpen:
             if userDefaults.firstAppOpen {
+                AnalyticsLogger.instance.reportEvents(event: .signUpForPremiumPresented(trigger: type.rawValue))
                 userDefaults.toggleBool(.firstAppOpen)
                 present(vc: viewController)
             }

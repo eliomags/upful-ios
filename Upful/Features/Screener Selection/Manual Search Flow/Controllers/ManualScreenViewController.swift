@@ -45,7 +45,7 @@ class ManualScreenViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLongPress()
+//        setupLongPress()
     }
     
     func setupLongPress() {

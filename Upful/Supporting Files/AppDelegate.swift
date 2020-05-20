@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Mixpanel.mainInstance().userId = UserProfile.instance.profileID
         
         IAPService().completeTransactions()
-
+        
         window?.makeKeyAndVisible()
         
         return true
