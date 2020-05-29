@@ -68,7 +68,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func loadView() {
         super.loadView()
-        
         setupNavBar()
         setupTableView()
         setupTableViewCells()
@@ -77,7 +76,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         observeViewModelNewsUpdates()
         observeViewModelHoldingsUpdates()
         observeViewModelPreferenceUpdates()
@@ -101,7 +99,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         if tableView.shouldUpdateHeaderViewFrame() {
             tableView.beginUpdates()
             tableView.endUpdates()
@@ -110,7 +107,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         logicController.cancelHoldingsLoad()
     }
     
@@ -595,7 +591,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.news.rawValue:
             if !logicController.stockNews.isEmpty {
                 let newsURLString = logicController.stockNews[indexPath.row].newsUrl
-                coordinator = WebViewCoordinator(presenter: self, urlString: newsURLString)
+                coordinator = SafariPresenter(presenter: self, urlString: newsURLString)
                 coordinator?.start()
             }
         default: break

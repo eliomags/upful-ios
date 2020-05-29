@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import SafariServices
 
-final class WebViewCoordinator: Coordinator {
+final class SafariPresenter: Coordinator {
     var presenter: UIViewController
     let urlString: String
     
@@ -19,10 +20,9 @@ final class WebViewCoordinator: Coordinator {
     
     func start() {
         AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
-
-        let newsWebVC = WebViewViewController(urlString: urlString)
-        let navVC = UINavigationController(rootViewController: newsWebVC)
-        presenter.present(navVC, animated: true, completion: nil)
+        guard let url = URL(string: urlString) else { return }
+        let newsWebVC = SFSafariViewController(url: url)
+        presenter.present(newsWebVC, animated: true, completion: nil)
     }
 }
 

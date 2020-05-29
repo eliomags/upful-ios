@@ -199,8 +199,8 @@ final class ExploreViewController: UIViewController, UISearchControllerDelegate,
             AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
             
             let selectedNewsURL = logicController.marketNewsViewModels[indexPath.row].newsUrl
-            let webviewVC = UINavigationController(rootViewController: WebViewViewController(urlString: selectedNewsURL))
-            present(webviewVC, animated: true, completion: nil)
+            let safariPresenter = SafariPresenter(presenter: self, urlString: selectedNewsURL)
+            safariPresenter.start()
         case Section.stocks.rawValue:
             AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .popular))
             

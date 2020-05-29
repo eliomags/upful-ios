@@ -241,9 +241,8 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
 
         let newsURLString = viewModel.stockNews[indexPath.row].newsUrl
-        let newsWebVC = WebViewViewController(urlString: newsURLString)
-        let navVC = UINavigationController(rootViewController: newsWebVC)
-        self.present(navVC, animated: true, completion: nil)
+        let safariPresenter = SafariPresenter(presenter: self, urlString: newsURLString)
+        safariPresenter.start()
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
