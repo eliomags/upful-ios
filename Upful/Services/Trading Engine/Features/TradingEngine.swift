@@ -81,17 +81,16 @@ final class TradingEngine {
     var completionHandler: (([Holding]) -> Void)?
 
     func loadHoldings() {
-        
         DispatchQueue.global().async {
             self.ledgerManager.loadSavedTransactions { [weak self] result in
                 guard let self = self else { return }
-                
                 switch result {
                 case .success(let ledgerTransactions):
                     self.holdingMapper.loadingHoldings(from: ledgerTransactions)
-                    
                     self.holdingMapper.completionHandler = { [unowned self] holdings in
                         self.updateEquityBalance(with: holdings)
+                        ProfileSyncCoordinator.shared.sync(holdings: holdings,
+                                                           equityBalance: self.balanceManager.totalEquityBalance)
                         self.completionHandler?(holdings)
                     }
                     

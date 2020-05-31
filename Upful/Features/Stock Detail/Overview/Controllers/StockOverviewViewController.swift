@@ -155,7 +155,8 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     }
     
     private func checkAndSetChartEmptyState() {
-        let noDataAvailable = viewModel.historicalEarnings.isEmpty && viewModel.historicalRevenue.isEmpty
+        let noDataAvailable = viewModel.historicalEarnings.isEmpty &&
+            viewModel.historicalRevenue.isEmpty
         if noDataAvailable {
             guard let chartCell = self.tableView.cellForRow(at: [0,0]) as? BarGraphTableViewCell else { return }
             chartCell.chartView.setNoDataText()
