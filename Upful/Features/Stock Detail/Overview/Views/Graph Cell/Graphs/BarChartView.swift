@@ -10,6 +10,7 @@ import Foundation
 import Charts
 
 class GenericBarChartView: BarChartView {
+    
     let chartViewModel = ChartViewModel()
 
     override init(frame: CGRect) {
@@ -19,8 +20,8 @@ class GenericBarChartView: BarChartView {
         animate()
     }
 
-    
     private func setupView() {
+        noDataText = ""
         chartDescription?.text = ""
         doubleTapToZoomEnabled = false
         dragEnabled = false
@@ -134,6 +135,10 @@ class GenericBarChartView: BarChartView {
     
     func animate() {
         self.animate(xAxisDuration: 0.75, yAxisDuration: 0.75, easingOption: .linear)
+    }
+    
+    func setNoDataText() {
+        noDataText = "no data available for ticker"
     }
     
     required init?(coder aDecoder: NSCoder) {

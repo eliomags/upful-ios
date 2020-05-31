@@ -295,6 +295,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             tableView.scrollToRow(at: [breakdownSection,0], at: .top, animated: true)
         } else {
             tableView.scrollToRow(at: [holdingsSection,0], at: .bottom, animated: true)
+            navigationItem.title = ""
         }
         
         let headerView = tableView.headerView(forSection: breakdownSection) as? HoldingBreakdownHeaderView

@@ -89,6 +89,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
             self?.refreshingControl.endRefreshing()
             self?.tableView.reloadData()
             self?.setupStockHeaderView()
+            self?.checkAndSetChartEmptyState()
         }
     }
     
@@ -151,6 +152,14 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
             dataPoints: viewModel.historicalRevenue.map { $0.date.formatDate() },
             values: viewModel.historicalRevenue.map { $0.value },
             values1: viewModel.historicalEarnings.map { $0.value })
+    }
+    
+    private func checkAndSetChartEmptyState() {
+        let noDataAvailable = viewModel.historicalEarnings.isEmpty && viewModel.historicalRevenue.isEmpty
+        if noDataAvailable {
+            guard let chartCell = self.tableView.cellForRow(at: [0,0]) as? BarGraphTableViewCell else { return }
+            chartCell.chartView.setNoDataText()
+        }
     }
     
     // MARK: - Private Functions
