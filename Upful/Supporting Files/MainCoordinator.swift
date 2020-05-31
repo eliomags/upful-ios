@@ -69,7 +69,7 @@ final class MainCoordinator: Coordinator {
             navVC.navigationBar.isTranslucent = false
             navVC.navigationBar.shadowImage = UIImage()
             navVC.navigationBar.tintColor = .label
-
+            
             if navVC.traitCollection.userInterfaceStyle == .dark {
                 navVC.navigationBar.backgroundColor = .black
             }
@@ -78,6 +78,7 @@ final class MainCoordinator: Coordinator {
             }
             return navVC
         })
+        
         VersionManager.setTabBarColor(in: tabVC)
         return tabVC
     }

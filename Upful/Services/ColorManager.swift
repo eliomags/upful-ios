@@ -72,6 +72,8 @@ struct VersionManager {
     static func setTabBarColor(in view: UITabBarController?) {
         if let view = view {
             let app = UITabBarAppearance()
+            app.shadowImage = nil
+            app.shadowColor = nil
             let background = UIColor.init { (trait) -> UIColor in
                 return trait.userInterfaceStyle == .dark ? .black: .white
             }
