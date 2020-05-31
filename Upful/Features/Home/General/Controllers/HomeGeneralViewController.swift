@@ -14,7 +14,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         case breakdown = 0
         case holdings = 1
         case preference = 2
-//        case news = 3
     }
     
     private enum Constants {
@@ -58,7 +57,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     // MARK: - Properties
     
-    fileprivate var shouldDisplayBreakDownCell = true {
+    fileprivate var shouldDisplayBreakDownCell = false {
         didSet {
             reloadBreakdownSectionHeader()
         }
