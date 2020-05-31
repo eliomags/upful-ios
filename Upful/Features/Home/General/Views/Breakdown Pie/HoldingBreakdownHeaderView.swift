@@ -14,7 +14,7 @@ class HoldingBreakdownHeaderView: TableSectionHeaderView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         setButtonView()
-        headerTextLabel.text = "Breakdown"
+        headerTextLabel.text = "Equity Breakdown"
     }
     
     required init?(coder aDecoder: NSCoder) {

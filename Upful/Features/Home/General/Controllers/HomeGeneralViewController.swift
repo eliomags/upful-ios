@@ -13,8 +13,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     private enum Section: Int, CaseIterable {
         case breakdown = 0
         case holdings = 1
-        case news = 2
-        case preference = 3
+        case preference = 2
+//        case news = 3
     }
     
     private enum Constants {
@@ -76,7 +76,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        observeViewModelNewsUpdates()
         observeViewModelHoldingsUpdates()
         observeViewModelPreferenceUpdates()
         logicController.fetchTableData()
@@ -143,14 +142,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             default:
                 break
             }
-        }
-    }
-    
-    fileprivate func observeViewModelNewsUpdates() {
-        logicController.newsLoadCompletion = { [weak self] in
-            guard let self = self else { return }
-            self.tableView.reloadSections([Section.news.rawValue], with: .automatic)
-            self.refreshControl.endRefreshing()
         }
     }
     
@@ -391,20 +382,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         return loadedCell
     }
     
-    fileprivate func makeNewsCells(at indexPath: IndexPath) -> UITableViewCell {
-        let row = indexPath.row
-        switch row {
-        case 0,1,2:
-            let newsCell = tableView.dequeueReusableCell(withIdentifier: Constants.newsCellID, for: indexPath) as! SmallNewsCell
-            if !logicController.stockNews.isEmpty {
-                newsCell.stockNews = logicController.stockNews[indexPath.row]
-            }
-            return newsCell
-        default:
-            return UITableViewCell()
-        }
-    }
-    
     fileprivate func makeLoadingCell(at indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.loadingCellID, for: indexPath)
         let activityView = UIActivityIndicatorView(style: .medium)
@@ -435,9 +412,6 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.holdings.rawValue:
             return logicController.holdings.isEmpty ? 1 : logicController.holdings.count
             
-        case Section.news.rawValue:
-            return 3
-            
         case Section.preference.rawValue:
             let isLoadedState = logicController.preferenceState == .loaded
             let isNew = logicController.preferenceState == .new
@@ -463,9 +437,6 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             return (logicController.holdingsState == .loading) ?
                 makeLoadingCell(at: indexPath) : makeHoldingsCell(at: indexPath)
 
-        case Section.news.rawValue:
-            return makeNewsCells(at: indexPath)
-            
         case Section.preference.rawValue:
             if logicController.preferenceState == .loaded { return makeStockCells(indexPath) }
             if logicController.preferenceState == .new { return makeNoPreferenceSetCell(indexPath) }
@@ -483,7 +454,6 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
 //                UITableView.automaticDimension : (UIScreen.main.bounds.height / 2) - 130
                 UITableView.automaticDimension : 280
 
-            
         default:
             return UITableView.automaticDimension
         }
@@ -498,14 +468,13 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             header?.buttonAction = { [weak self] in
                 guard let self = self else { return }
                 Vibration.light.vibrate()
-                
                 self.shouldDisplayBreakDownCell = !self.shouldDisplayBreakDownCell
             }
             return header
             
         case Section.holdings.rawValue:
             let holdingsHeader = TableSectionHeaderView()
-            holdingsHeader.headerTextLabel.text = "My Holdings"
+            holdingsHeader.headerTextLabel.text = "Holdings"
             holdingsHeader.addButton.setTitle("", for: .normal)
             return holdingsHeader
             
@@ -514,17 +483,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             preferenceHeader.headerTextLabel.text = "Stocks You May Like"
             preferenceHeader.addButton.setTitle("", for: .normal)
             return preferenceHeader
-            
-        case Section.news.rawValue:
-            let newsHeader = TableSectionHeaderView()
-            newsHeader.headerTextLabel.text = "Recent News"
-            
-            newsHeader.buttonAction = { [weak self] in
-                guard let self = self else { return }
-                self.coordinator = NewsCoordinator(presenter: self)
-                self.coordinator?.start()
-            }
-            return newsHeader
+
         default:
             return nil
         }
@@ -565,8 +524,6 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             case .empty:
                 return false
             }
-        case Section.news.rawValue:
-            return !logicController.stockNews.isEmpty
         default:
             return false
         }
@@ -588,12 +545,6 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.preference.rawValue:
             handleStockSuggestionCellSelection(for: indexPath)
             
-        case Section.news.rawValue:
-            if !logicController.stockNews.isEmpty {
-                let newsURLString = logicController.stockNews[indexPath.row].newsUrl
-                coordinator = SafariPresenter(presenter: self, urlString: newsURLString)
-                coordinator?.start()
-            }
         default: break
         }
     }
