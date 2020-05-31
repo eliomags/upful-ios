@@ -32,22 +32,22 @@ class SmallNewsCell: GenericNewsCell {
         articleImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
 
         addSubview(sentimentView)
-        sentimentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        sentimentView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: 0).isActive = true
         sentimentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
         
         addSubview(detailStackView)
         detailStackView.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
-        detailStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        detailStackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 0).isActive = true
         
         addSubview(articleImageView)
-        articleImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        articleImageView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: 0).isActive = true
         articleImageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         articleImageView.topAnchor.constraint(equalTo: detailStackView.bottomAnchor, constant: 8).isActive = true
         articleImageView.bottomAnchor.constraint(equalTo: sentimentView.topAnchor, constant: -8).isActive = true
         
         addSubview(textContextStackView)
         textContextStackView.trailingAnchor.constraint(equalTo: articleImageView.leadingAnchor, constant: -12).isActive = true
-        textContextStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        textContextStackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 0).isActive = true
         textContextStackView.topAnchor.constraint(equalTo: articleImageView.topAnchor).isActive = true
         textContextStackView.bottomAnchor.constraint(equalTo: sentimentView.topAnchor, constant: -6).isActive = true
     }

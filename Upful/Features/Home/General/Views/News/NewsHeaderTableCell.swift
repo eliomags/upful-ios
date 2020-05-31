@@ -38,22 +38,22 @@ class NewsHeaderTableCell: GenericNewsCell {
         sentimentView.anchor(top: nil,
                                 leading: nil,
                                 bottom: bottomAnchor,
-                                trailing: trailingAnchor,
-                                padding: .init(top: 0, left: 0, bottom: 8, right: 16))
+                                trailing: layoutMarginsGuide.trailingAnchor,
+                                padding: .init(top: 0, left: 0, bottom: 8, right: 0))
         
         addSubview(detailStackView)
         detailStackView.anchor(top: topAnchor,
-                               leading: leadingAnchor,
+                               leading: layoutMarginsGuide.leadingAnchor,
                                bottom: nil,
                                trailing: nil,
-                               padding: .init(top: 12, left: 16, bottom: 0, right: 0))
+                               padding: .init(top: 12, left: 0, bottom: 0, right: 0))
             
         addSubview(contentStackView)
         contentStackView.anchor(top: detailStackView.bottomAnchor,
-                                leading: leadingAnchor,
+                                leading: layoutMarginsGuide.leadingAnchor,
                                 bottom: nil,
-                                trailing: trailingAnchor,
-                                padding: .init(top: 8, left: 16, bottom: 10, right: 16))
+                                trailing: layoutMarginsGuide.trailingAnchor,
+                                padding: .init(top: 8, left: 0, bottom: 10, right: 0))
         
         addSubview(articleImageView)
         articleImageView.topAnchor.constraint(equalTo: contentStackView.bottomAnchor, constant: 8).isActive = true
