@@ -175,7 +175,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
                            forCellReuseIdentifier: Constants.newsCellID)
         tableView.register(CompanyPreviewTableViewCell.self,
                            forCellReuseIdentifier: Constants.resultsCellID)
-        tableView.register(NoPreferenceTableViewCell.self,
+        tableView.register(EmptyPreferenceTableViewCell.self,
                            forCellReuseIdentifier: Constants.noPreferenceCellID)
         tableView.register(StockHoldingTableViewCell.self,
                            forCellReuseIdentifier: Constants.stockHoldingCellID)
@@ -325,7 +325,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
         if logicController.holdings.isEmpty {
-            return EmptyStockHoldingCell()
+            return EmptyHoldingsTableViewCell()
         } else {
             let stockHoldingsCell = tableView.dequeueReusableCell(withIdentifier: Constants.stockHoldingCellID,
                                                                   for: indexPath) as? StockHoldingTableViewCell
@@ -351,7 +351,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     fileprivate func makeNoPreferenceSetCell(_ indexPath: IndexPath) -> UITableViewCell {
         guard let noPreferenceSetCell = tableView.dequeueReusableCell(withIdentifier: Constants.noPreferenceCellID)
-            as? NoPreferenceTableViewCell else { return UITableViewCell() }
+            as? EmptyPreferenceTableViewCell else { return UITableViewCell() }
         noPreferenceSetCell.selectionStyle = .none
         noPreferenceSetCell.backgroundColor = .clear
         return noPreferenceSetCell

@@ -21,16 +21,16 @@ class ProfileSyncCoordinator {
     private let db = Firestore.firestore()
     
     func sync(holdings: [Holding], equityBalance: Double) {
-        let currentUserID = UserProfile.instance.profileID
-        let mappableHoldings = ProfileSyncCoordinator.createMappableHoldings(from: holdings)
-        let performance = ProfileSyncCoordinator.calculateTotalPerformance(from: equityBalance)
-
-        db.collection(Collection.users).document(currentUserID).setData([
-            "userID": currentUserID,
-            "lastSync": Timestamp(date: Date()),
-            "performanceAsPercent": performance,
-            "holdings": mappableHoldings
-        ])
+//        let currentUserID = UserProfile.instance.profileID
+//        let mappableHoldings = ProfileSyncCoordinator.createMappableHoldings(from: holdings)
+//        let performance = ProfileSyncCoordinator.calculateTotalPerformance(from: equityBalance)
+//
+//        db.collection(Collection.users).document(currentUserID).setData([
+//            "userID": currentUserID,
+//            "lastSync": Timestamp(date: Date()),
+//            "performanceAsPercent": performance,
+//            "holdings": mappableHoldings
+//        ])
     }
     
     // MARK: Helpers

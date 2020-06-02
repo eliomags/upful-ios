@@ -48,7 +48,7 @@
 		3D206A5224229A9B00F7E44C /* TotalEquityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5124229A9B00F7E44C /* TotalEquityView.swift */; };
 		3D206A5A2423B05500F7E44C /* StockTradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A592423B05500F7E44C /* StockTradeViewController.swift */; };
 		3D206A5C242559AF00F7E44C /* StockHoldingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5B242559AF00F7E44C /* StockHoldingTableViewCell.swift */; };
-		3D206A5F242702BB00F7E44C /* EmptyStockHoldingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5E242702BB00F7E44C /* EmptyStockHoldingCell.swift */; };
+		3D206A5F242702BB00F7E44C /* EmptyHomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A5E242702BB00F7E44C /* EmptyHomeTableViewCell.swift */; };
 		3D206A6124284E8000F7E44C /* Holding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A6024284E8000F7E44C /* Holding.swift */; };
 		3D206A642428545B00F7E44C /* HoldingMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A632428545B00F7E44C /* HoldingMapperTests.swift */; };
 		3D206A68242858B200F7E44C /* HoldingMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D206A67242858B200F7E44C /* HoldingMapper.swift */; };
@@ -93,7 +93,6 @@
 		3D3749AC23B9B40A000D0597 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AB23B9B40A000D0597 /* NewsViewController.swift */; };
 		3D3749B023B9BA66000D0597 /* NewsLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AF23B9BA66000D0597 /* NewsLogicController.swift */; };
 		3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B123BA830D000D0597 /* StockScreeningService.swift */; };
-		3D3749B523BBADB1000D0597 /* NoPreferenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B423BBADB1000D0597 /* NoPreferenceTableViewCell.swift */; };
 		3D3749B823BE60F4000D0597 /* ScreenerSelectionContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B723BE60F4000D0597 /* ScreenerSelectionContainerView.swift */; };
 		3D3749BA23BE66B4000D0597 /* ScreenerPreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B923BE66B4000D0597 /* ScreenerPreviewTableViewCell.swift */; };
 		3D42BE4123098BD200806AFF /* CompanyPreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D42BE4023098BD200806AFF /* CompanyPreviewTableViewCell.swift */; };
@@ -323,7 +322,7 @@
 		3D206A5124229A9B00F7E44C /* TotalEquityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalEquityView.swift; sourceTree = "<group>"; };
 		3D206A592423B05500F7E44C /* StockTradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockTradeViewController.swift; sourceTree = "<group>"; };
 		3D206A5B242559AF00F7E44C /* StockHoldingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockHoldingTableViewCell.swift; sourceTree = "<group>"; };
-		3D206A5E242702BB00F7E44C /* EmptyStockHoldingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStockHoldingCell.swift; sourceTree = "<group>"; };
+		3D206A5E242702BB00F7E44C /* EmptyHomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyHomeTableViewCell.swift; sourceTree = "<group>"; };
 		3D206A6024284E8000F7E44C /* Holding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Holding.swift; sourceTree = "<group>"; };
 		3D206A632428545B00F7E44C /* HoldingMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingMapperTests.swift; sourceTree = "<group>"; };
 		3D206A67242858B200F7E44C /* HoldingMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingMapper.swift; sourceTree = "<group>"; };
@@ -376,7 +375,6 @@
 		3D3749AB23B9B40A000D0597 /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
 		3D3749AF23B9BA66000D0597 /* NewsLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsLogicController.swift; sourceTree = "<group>"; };
 		3D3749B123BA830D000D0597 /* StockScreeningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockScreeningService.swift; sourceTree = "<group>"; };
-		3D3749B423BBADB1000D0597 /* NoPreferenceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPreferenceTableViewCell.swift; sourceTree = "<group>"; };
 		3D3749B723BE60F4000D0597 /* ScreenerSelectionContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenerSelectionContainerView.swift; sourceTree = "<group>"; };
 		3D3749B923BE66B4000D0597 /* ScreenerPreviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenerPreviewTableViewCell.swift; sourceTree = "<group>"; };
 		3D42BE4023098BD200806AFF /* CompanyPreviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyPreviewTableViewCell.swift; sourceTree = "<group>"; };
@@ -859,7 +857,6 @@
 			isa = PBXGroup;
 			children = (
 				3D206A5B242559AF00F7E44C /* StockHoldingTableViewCell.swift */,
-				3D206A5E242702BB00F7E44C /* EmptyStockHoldingCell.swift */,
 			);
 			path = Holdings;
 			sourceTree = "<group>";
@@ -1231,7 +1228,6 @@
 		3D3749B323BBAD8A000D0597 /* Preference */ = {
 			isa = PBXGroup;
 			children = (
-				3D3749B423BBADB1000D0597 /* NoPreferenceTableViewCell.swift */,
 			);
 			path = Preference;
 			sourceTree = "<group>";
@@ -1878,12 +1874,13 @@
 		3DBEFFD323AACE6A00BA407E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3D206A5E242702BB00F7E44C /* EmptyHomeTableViewCell.swift */,
+				3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */,
 				3DAF279B2449F94E00CD001B /* Breakdown Pie */,
 				3D206A4D2422952000F7E44C /* Trading Header */,
 				3D206A5D24264F2C00F7E44C /* Holdings */,
 				3D206A4E2422954000F7E44C /* News */,
 				3D3749B323BBAD8A000D0597 /* Preference */,
-				3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2544,7 +2541,6 @@
 				3D8D3268237320A600123731 /* PopularStockLoader.swift in Sources */,
 				3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */,
 				3D22CE632483743D00662360 /* ProfileSyncCoordinator.swift in Sources */,
-				3D3749B523BBADB1000D0597 /* NoPreferenceTableViewCell.swift in Sources */,
 				3D6B07202415C99400C55021 /* AuxiliaryActionView.swift in Sources */,
 				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
 				3D206A5C242559AF00F7E44C /* StockHoldingTableViewCell.swift in Sources */,
@@ -2632,7 +2628,7 @@
 				3D2F965823171F52003811AB /* CompanyNewsCell.swift in Sources */,
 				3D55BD6023B69EAD00B4FDF0 /* NewsLoader.swift in Sources */,
 				3D206A1B241F18A900F7E44C /* CoreDataModelContainerManager.swift in Sources */,
-				3D206A5F242702BB00F7E44C /* EmptyStockHoldingCell.swift in Sources */,
+				3D206A5F242702BB00F7E44C /* EmptyHomeTableViewCell.swift in Sources */,
 				3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */,
 				3D55BD7023B847EC00B4FDF0 /* TableSectionHeaderView.swift in Sources */,
 				3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */,
