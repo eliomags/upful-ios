@@ -196,14 +196,9 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
         switch logicController.preferenceState {
-        case .new:
-            let preferencePresenter = PreferencePresenter(presentingViewController: self)
-            preferencePresenter.present()
-            
         case .loaded:
             coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: logicController.stocksYouMayLike[indexPath.row])
             coordinator?.start()
-            
         default:
             break
         }
@@ -212,6 +207,12 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     @objc fileprivate func handleScreenerSelectionTap() {
         let screenerSelectionVC = ScreenerSelectionContainerView(collectionViewLayout: UICollectionViewFlowLayout())
         navigationController?.pushViewController(screenerSelectionVC, animated: true)
+    }
+    
+    @objc
+    private func handlePreferencesGetStartedTap() {
+        let preferencePresenter = PreferencePresenter(presentingViewController: self)
+        preferencePresenter.present()
     }
 
     // MARK: - Preference Delegate Methods
@@ -325,7 +326,9 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     fileprivate func makeHoldingsCell(at indexPath: IndexPath) -> UITableViewCell {
         if logicController.holdings.isEmpty {
-            return EmptyHoldingsTableViewCell()
+            let emptyHoldingsCell = EmptyHoldingsTableViewCell()
+            emptyHoldingsCell.actionButton.addTarget(self, action: #selector(handleScreenerSelectionTap), for: .touchUpInside)
+            return emptyHoldingsCell
         } else {
             let stockHoldingsCell = tableView.dequeueReusableCell(withIdentifier: Constants.stockHoldingCellID,
                                                                   for: indexPath) as? StockHoldingTableViewCell
@@ -354,6 +357,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             as? EmptyPreferenceTableViewCell else { return UITableViewCell() }
         noPreferenceSetCell.selectionStyle = .none
         noPreferenceSetCell.backgroundColor = .clear
+        noPreferenceSetCell.actionButton.addTarget(self, action: #selector(handlePreferencesGetStartedTap), for: .touchUpInside)
         return noPreferenceSetCell
     }
     
@@ -509,12 +513,12 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         let section = indexPath.section
         switch section {
         case Section.holdings.rawValue:
-            return true
-            
+            return !logicController.holdings.isEmpty
+
         case Section.preference.rawValue:
             switch logicController.preferenceState {
             case .new:
-                return true
+                return false
             case .loading:
                 return false
             case .loaded:

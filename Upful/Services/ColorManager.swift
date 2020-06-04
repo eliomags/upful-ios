@@ -44,6 +44,12 @@ struct VersionManager {
         }
     }
     
+    static func collectionCellColor3() -> UIColor {
+        UIColor.init { (trait) -> UIColor in
+            return trait.userInterfaceStyle == .dark ? .secondarySystemGroupedBackground: .white
+        }
+    }
+    
    // MARK: - Navigation Bar
    
    static func setNavigationBar(in view: UINavigationController?) {

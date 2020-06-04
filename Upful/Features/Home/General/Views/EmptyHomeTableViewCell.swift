@@ -54,10 +54,10 @@ class EmptyHomeTableViewCell: UITableViewCell {
     
     lazy var actionButton: UIButton = {
         let button = UIButton()
-        button.layer.cornerRadius = 22
+        button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
-        button.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: .regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: size, weight: .semibold)
         button.backgroundColor = .appAccent3
         button.setTitleColor(.white, for: .normal)
         button.setTitle(actionButtonTitle, for: .normal)
@@ -69,33 +69,34 @@ class EmptyHomeTableViewCell: UITableViewCell {
     
     private lazy var contentBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = VersionManager.collectionCellColor()
+        view.backgroundColor = VersionManager.collectionCellColor3()
         
         let imageBackground = cellImageView.insertOnBackgroundView(padding: .init(top: 8, left: 8, bottom: 8, right: 8))
-        imageBackground.backgroundColor = .appAccent4
+        imageBackground.backgroundColor = .clear
         imageBackground.layer.cornerRadius = 12
         imageBackground.layer.masksToBounds = true
         
         view.addSubview(imageBackground)
-        imageBackground.anchor(top: view.topAnchor, leading: nil,
-                               bottom: nil, trailing: view.trailingAnchor,
+        imageBackground.anchor(top: view.layoutMarginsGuide.topAnchor, leading: nil,
+                               bottom: nil, trailing: view.layoutMarginsGuide.trailingAnchor,
                                padding: .init(top: 12, left: 0, bottom: 0, right: 12),
                                size: CGSize(width: 44, height: 44))
         view.addSubview(headerLabel)
         headerLabel.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.layoutMarginsGuide.leadingAnchor,
                            bottom: nil, trailing: imageBackground.leadingAnchor,
-                           padding: .init(top: 8, left: 8, bottom: 0, right: 12))
+                           padding: .init(top: 12, left: 12, bottom: 0, right: 12))
         view.addSubview(actionButton)
         actionButton.anchor(top: nil, leading: nil,
-                            bottom: view.bottomAnchor, trailing: nil,
-                            padding: .init(top: 12, left: 28, bottom: 16, right: 28))
+                            bottom: view.layoutMarginsGuide.bottomAnchor, trailing: nil,
+                            padding: .init(top: 12, left: 28, bottom: 12, right: 28))
         actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         view.addSubview(descriptionLabel)
         descriptionLabel.anchor(top: headerLabel.layoutMarginsGuide.bottomAnchor, leading: view.layoutMarginsGuide.leadingAnchor,
                                 bottom: actionButton.layoutMarginsGuide.topAnchor, trailing: view.layoutMarginsGuide.trailingAnchor,
-                                padding: .init(top: 26, left: 8, bottom: 32, right: 8))
+                                padding: .init(top: 26, left: 12, bottom: 32, right: 8))
         view.layer.cornerRadius = 16
         view.layer.masksToBounds = true
+        view.setupShadow(intensity: .light, color: .gray)
         return view
     }()
     
@@ -148,7 +149,7 @@ class EmptyHoldingsTableViewCell: EmptyHomeTableViewCell {
     
     override var cellImage: UIImage? {
         return UIImage(systemName: "chart.bar.fill")?
-            .withTintColor(.white, renderingMode: .alwaysOriginal)
+            .withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
     }
     
 }
@@ -158,15 +159,15 @@ class EmptyPreferenceTableViewCell: EmptyHomeTableViewCell {
     // MARK: Properties
     
     override var headerText: String {
-        return "Upful uses live stock data to keep your analysis accurate."
+        return "You can start getting stock recommendations fitting your custom preferences."
     }
     
     override var descriptionText: String {
-        return "Set up your preferences to start getting recommendations."
+        return "Set up your preferences and start getting recommendations."
     }
     
     override var cellImage: UIImage? {
         return UIImage(systemName: "hand.thumbsup.fill")?
-            .withTintColor(.white, renderingMode: .alwaysOriginal)
+            .withTintColor(.appAccent3, renderingMode: .alwaysOriginal)
     }
 }
