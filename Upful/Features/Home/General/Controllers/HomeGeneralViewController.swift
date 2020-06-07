@@ -314,7 +314,39 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         pieChartViewModels = vmLoader.makeViewModels(from: holdings, cash: cash)
     }
     
-    // MARK: - TableViewCell Configuration
+    // MARK: Create Context Menus
+    
+    fileprivate func makeHoldingsContextActions(_ row: Int) -> [UIAction] {
+        let viewImage = UIImage(systemName: "magnifyingglass")
+        let viewAction = UIAction(
+                            title: "View",
+                            image: viewImage,
+                            identifier: nil,
+                            discoverabilityTitle: nil,
+                            attributes: [], state: .off) { (_) in
+            let stockViewModel = StockViewModel(stock: Stock(name: "", ticker: self.logicController.holdings[row].ticker))
+            self.coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: stockViewModel)
+            self.coordinator?.start()
+        }
+        
+        let tradeImage = UIImage(systemName: "arrow.up.arrow.down")
+        let tradeAction = UIAction(
+                            title: "Trade",
+                            image: tradeImage,
+                            identifier: nil,
+                            discoverabilityTitle: nil,
+                            attributes: [], state: .off) { (_) in
+                                
+                                
+            let stockTicker = self.logicController.holdings[row].ticker
+            self.coordinator = StockTradeCoordinator(self, ticker: stockTicker)
+            self.coordinator?.start()
+        }
+        
+        return [viewAction, tradeAction]
+    }
+    
+    // MARK: TableViewCell Configuration
     
     fileprivate func makeBreakdownCell(at indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.breakdownCellID,
@@ -358,6 +390,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         noPreferenceSetCell.selectionStyle = .none
         noPreferenceSetCell.backgroundColor = .clear
         noPreferenceSetCell.actionButton.addTarget(self, action: #selector(handlePreferencesGetStartedTap), for: .touchUpInside)
+        
         return noPreferenceSetCell
     }
     
@@ -567,6 +600,32 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         }) { (_) in
             cell?.isSelected = false
         }
+    }
+}
+
+extension HomeGeneralViewController {
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        
+        logicController.cancelHoldingsLoad()
+
+        let isHoldingsSection = indexPath.section == Section.holdings.rawValue  && logicController.holdings.count > 0
+        if isHoldingsSection {
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (_) -> UIMenu? in
+                let children: [UIMenuElement] = self.makeHoldingsContextActions(indexPath.row)
+                return UIMenu(title: "", children: children)
+            }
+        }
+        
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        refreshControl.endRefreshing()
+        logicController.fetchTableData()
+        logicController.loadHoldings()
+        
+        return nil
     }
 }
 
