@@ -15,7 +15,7 @@ class TableSectionHeaderView: UITableViewHeaderFooterView {
     let headerTextLabel: UILabel = {
         let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: size, weight: .medium)
         return label
     }()
     

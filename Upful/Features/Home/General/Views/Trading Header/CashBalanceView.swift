@@ -25,7 +25,7 @@ final class CashBalanceView: UIView {
         let label = UILabel()
         label.text = "$25,000"
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
         label.textColor = .label
         label.textAlignment = .left
         return label
