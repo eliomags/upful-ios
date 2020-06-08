@@ -336,14 +336,37 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
                             identifier: nil,
                             discoverabilityTitle: nil,
                             attributes: [], state: .off) { (_) in
-                                
-                                
             let stockTicker = self.logicController.holdings[row].ticker
             self.coordinator = StockTradeCoordinator(self, ticker: stockTicker)
             self.coordinator?.start()
         }
         
-        return [viewAction, tradeAction]
+        let sellImage = UIImage(systemName: "arrow.up")
+        let sellAllAction = UIAction(
+            title: "Sell All",
+            image: sellImage,
+            identifier: nil,
+            discoverabilityTitle: nil,
+            attributes: [.destructive], state: .off) { (_) in
+                print("Sell all")
+                let holding = self.logicController.holdings[row]
+                let tradePrice = holding.currentPrice
+
+                let transaction = TransactionAdapter(ticker: holding.ticker, shares: Int32(holding.totalShareCount), tradePrice: tradePrice!)
+                TradingEngine.shared.sell(transaction: transaction) { [weak self] in
+                    guard let self = self else { return }
+                    
+                    DispatchQueue.main.async {
+                        InformationViewPresenter().showGenericSuccess(in: self, description: "Sold Successfully", completion: { [weak self] in
+                            self?.refreshControl.endRefreshing()
+                            self?.logicController.fetchTableData()
+                            self?.logicController.loadHoldings()
+                        })
+                    }
+                }
+            }
+        
+        return [viewAction, tradeAction, sellAllAction]
     }
     
     // MARK: TableViewCell Configuration
@@ -621,10 +644,7 @@ extension HomeGeneralViewController {
     }
     
     func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        refreshControl.endRefreshing()
-        logicController.fetchTableData()
-        logicController.loadHoldings()
-        
+    
         return nil
     }
 }
