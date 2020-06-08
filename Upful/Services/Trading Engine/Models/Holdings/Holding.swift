@@ -8,11 +8,15 @@
 
 import Foundation
 
+protocol StockViewable {
+    var ticker: String { get }
+}
+
 class Holding {
     
     // MARK: - Dependencies
     
-    let ticker: String
+    var ticker: String
     private(set) var transactions: [Transaction]
     
     // MARK: - Properties
@@ -77,3 +81,5 @@ extension Holding {
         return (Double(((totalPriceMovementDollar / Double(totalShareCount)) / averagePrice)) * 100).roundToTwoDecimal() + "%"
     }
 }
+
+extension Holding: StockViewable {}

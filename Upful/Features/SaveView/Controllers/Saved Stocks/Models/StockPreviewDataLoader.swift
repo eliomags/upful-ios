@@ -21,6 +21,7 @@ final class StockViewModel {
     var updateHandler: (() -> Void)?
 
     // MARK: - Initializer
+    
     init(stock: Stock,
          quoteLoader: QuoteLoader = StockPriceLoader(),
          stockFinancialLoader: FinancialLoader = StockFinancialLoader()) {
@@ -102,5 +103,13 @@ extension StockViewModel: Hashable {
     }
     func hash(into hasher: inout Hasher) {
         hasher.combine(stock.ticker)
+    }
+}
+
+extension StockViewModel: StockViewable {
+    var ticker: String {
+        get {
+            return stock.ticker
+        }
     }
 }

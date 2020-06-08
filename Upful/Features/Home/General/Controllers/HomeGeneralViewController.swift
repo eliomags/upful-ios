@@ -188,7 +188,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     // MARK: - Actions
     
-    @objc fileprivate func handleResfreshing(_ sender: Any) {
+    @objc fileprivate func handleResfreshing() {
         refreshControl.endRefreshing()
         logicController.fetchTableData()
         logicController.loadHoldings()
@@ -316,31 +316,35 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     // MARK: Create Context Menus
     
-    fileprivate func makeHoldingsContextActions(_ row: Int) -> [UIAction] {
+    fileprivate func makeStockViewAction(for dataSource: [StockViewable], at row: Int) -> UIAction {
         let viewImage = UIImage(systemName: "magnifyingglass")
-        let viewAction = UIAction(
-                            title: "View",
-                            image: viewImage,
-                            identifier: nil,
-                            discoverabilityTitle: nil,
-                            attributes: [], state: .off) { (_) in
-            let stockViewModel = StockViewModel(stock: Stock(name: "", ticker: self.logicController.holdings[row].ticker))
+        return UIAction(
+                    title: "View",
+                    image: viewImage,
+                    identifier: nil,
+                    discoverabilityTitle: nil,
+                    attributes: [], state: .off) { (_) in
+            let stockViewModel = StockViewModel(stock: Stock(name: "", ticker: dataSource[row].ticker))
             self.coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: stockViewModel)
             self.coordinator?.start()
         }
-        
+    }
+    
+    fileprivate func makeTradeAction(for dataSource: [StockViewable], at row: Int) -> UIAction {
         let tradeImage = UIImage(systemName: "arrow.up.arrow.down")
-        let tradeAction = UIAction(
-                            title: "Trade",
-                            image: tradeImage,
-                            identifier: nil,
-                            discoverabilityTitle: nil,
-                            attributes: [], state: .off) { (_) in
-            let stockTicker = self.logicController.holdings[row].ticker
+        return UIAction(
+                    title: "Trade",
+                    image: tradeImage,
+                    identifier: nil,
+                    discoverabilityTitle: nil,
+                    attributes: [], state: .off) { (_) in
+            let stockTicker = dataSource[row].ticker
             self.coordinator = StockTradeCoordinator(self, ticker: stockTicker)
             self.coordinator?.start()
         }
-        
+    }
+    
+    fileprivate func makeHoldingsContextActions(_ row: Int) -> [UIAction] {
         let sellImage = UIImage(systemName: "arrow.up")
         let sellAllAction = UIAction(
             title: "Sell All",
@@ -348,7 +352,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             identifier: nil,
             discoverabilityTitle: nil,
             attributes: [.destructive], state: .off) { (_) in
-                print("Sell all")
                 let holding = self.logicController.holdings[row]
                 let tradePrice = holding.currentPrice
 
@@ -358,15 +361,15 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
                     
                     DispatchQueue.main.async {
                         InformationViewPresenter().showGenericSuccess(in: self, description: "Sold Successfully", completion: { [weak self] in
-                            self?.refreshControl.endRefreshing()
-                            self?.logicController.fetchTableData()
-                            self?.logicController.loadHoldings()
+                            self?.handleResfreshing()
                         })
                     }
                 }
             }
         
-        return [viewAction, tradeAction, sellAllAction]
+        return [makeStockViewAction(for: self.logicController.holdings, at: row),
+                makeTradeAction(for: self.logicController.holdings, at: row),
+                sellAllAction]
     }
     
     // MARK: TableViewCell Configuration
@@ -608,22 +611,6 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         default: break
         }
     }
-    
-    func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath)
-        UIView.animate(withDuration: 0.3) {
-            cell?.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath)
-        UIView.animate(withDuration: 0.15, animations: {
-            cell?.transform = .identity
-        }) { (_) in
-            cell?.isSelected = false
-        }
-    }
 }
 
 extension HomeGeneralViewController {
@@ -631,7 +618,7 @@ extension HomeGeneralViewController {
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         
         logicController.cancelHoldingsLoad()
-
+        
         let isHoldingsSection = indexPath.section == Section.holdings.rawValue  && logicController.holdings.count > 0
         if isHoldingsSection {
             return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (_) -> UIMenu? in
@@ -640,11 +627,23 @@ extension HomeGeneralViewController {
             }
         }
         
+        let isPreferenceSection = indexPath.section == Section.preference.rawValue && logicController.stocksYouMayLike.count > 0
+        if isPreferenceSection {
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (_) -> UIMenu? in
+                let children: [UIMenuElement] = [self.makeStockViewAction(for: self.logicController.stocksYouMayLike, at: indexPath.row),
+                                                 self.makeTradeAction(for: self.logicController.stocksYouMayLike, at: indexPath.row)]
+                return UIMenu(title: "", children: children)
+            }
+        }
+        
         return nil
     }
     
     func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-    
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.logicController.loadHoldings()
+        }
+        
         return nil
     }
 }
