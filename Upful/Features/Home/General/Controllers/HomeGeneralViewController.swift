@@ -75,16 +75,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        observeViewModelHoldingsUpdates()
-        observeViewModelPreferenceUpdates()
-        logicController.fetchTableData()
+        beginOperationUpdates()
         
         guard self.tabBarController != nil else {
             return
         }
         SplashScreenController.presentSplashScreen(in: self.tabBarController!, completion: { [weak self] in
             guard let self = self else { return }
-            SubscriptionPresenter(type: .firstAppOpen).present(in: self)
+//            SubscriptionPresenter(type: .firstAppOpen).present(in: self) // Actually led to a decrease in conversions
             UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
         })
     }
@@ -142,6 +140,17 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
                 break
             }
         }
+    }
+    
+    fileprivate func beginOperationUpdates() {
+        observeViewModelHoldingsUpdates()
+        observeViewModelPreferenceUpdates()
+        logicController.fetchTableData()
+    }
+    
+    fileprivate func cancelOperationUpdates() {
+        logicController.holdingsLoadCompletion = { _ in }
+        logicController.cancelHoldingsLoad()
     }
     
     // MARK: - View Setup
@@ -616,8 +625,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
 extension HomeGeneralViewController {
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        
-        logicController.cancelHoldingsLoad()
+        cancelOperationUpdates()
         
         let isHoldingsSection = indexPath.section == Section.holdings.rawValue  && logicController.holdings.count > 0
         if isHoldingsSection {
@@ -640,7 +648,8 @@ extension HomeGeneralViewController {
     }
     
     func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.observeViewModelHoldingsUpdates()
             self.logicController.loadHoldings()
         }
         
