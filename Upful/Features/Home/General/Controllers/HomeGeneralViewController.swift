@@ -82,7 +82,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         }
         SplashScreenController.presentSplashScreen(in: self.tabBarController!, completion: { [weak self] in
             guard let self = self else { return }
-//            SubscriptionPresenter(type: .firstAppOpen).present(in: self) // Actually led to a decrease in conversions
+            SubscriptionPresenter(type: .firstAppOpen).present(in: self)
             UserFeedbackPresenter.checkAndAskForReview(checkType: .newSession, in: self)
         })
     }
