@@ -16,11 +16,13 @@ class TransactionAdapter {
     var transactionDate: String?
     var id: String
     
-    init(ticker: String, shares: Int32, tradePrice: Double) {
+    init(ticker: String, shares: Int32, tradePrice: Double, transactionDate: String = "\(Date())") {
         self.ticker = ticker
         self.numberOfShares = shares
         self.tradePrice = tradePrice
         self.id = UUID().uuidString
+        self.transactionDate = "\(Date())"
+        self.transactionDate = transactionDate
     }
     
     init(transaction: Transaction) {
@@ -31,13 +33,6 @@ class TransactionAdapter {
         self.transactionDate = transaction.transactionDate
         self.id = transaction.id
     }
-    
-    init(stock: Stock, numberOfShares: Int32) {
-        self.ticker = stock.ticker
-        self.numberOfShares = numberOfShares
-        self.tradePrice = stock.stockQuote?.latestPrice ?? 0
-        self.id = UUID().uuidString
-   }
 }
 
 extension TransactionAdapter: Transaction {}

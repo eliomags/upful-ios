@@ -129,7 +129,7 @@
 		3D6BD0BB23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */; };
 		3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6BD0C423B507DE00FBC1ED /* EmptyScreenerCell.swift */; };
 		3D6EFA462457FA2D00457121 /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6EFA452457FA2D00457121 /* UserDefaults+Extensions.swift */; };
-		3D6F46B7246DF5BB00844C5E /* ProfileConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F46B6246DF5BB00844C5E /* ProfileConfigurator.swift */; };
+		3D6F46B7246DF5BB00844C5E /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F46B6246DF5BB00844C5E /* UserProfile.swift */; };
 		3D7013DB23EC9B3800102E9C /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7013DA23EC9B3800102E9C /* MainCoordinator.swift */; };
 		3D7013DE23ECF45000102E9C /* NewsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7013DD23ECF45000102E9C /* NewsCoordinator.swift */; };
 		3D7013E123ECF98F00102E9C /* StockDetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7013E023ECF98F00102E9C /* StockDetailsCoordinator.swift */; };
@@ -221,6 +221,7 @@
 		3DD75A30236BAF6700C298B9 /* ColorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A2F236BAF6700C298B9 /* ColorManager.swift */; };
 		3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A362372456700C298B9 /* FirestoreService.swift */; };
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
+		3DE2B9CF249283F9008742F3 /* ProfileDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE2B9CE249283F9008742F3 /* ProfileDataManagerTests.swift */; };
 		3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */; };
 		3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */; };
 		3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */; };
@@ -411,7 +412,7 @@
 		3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersViewModelTest.swift; sourceTree = "<group>"; };
 		3D6BD0C423B507DE00FBC1ED /* EmptyScreenerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenerCell.swift; sourceTree = "<group>"; };
 		3D6EFA452457FA2D00457121 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
-		3D6F46B6246DF5BB00844C5E /* ProfileConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileConfigurator.swift; sourceTree = "<group>"; };
+		3D6F46B6246DF5BB00844C5E /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		3D7013DA23EC9B3800102E9C /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		3D7013DD23ECF45000102E9C /* NewsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCoordinator.swift; sourceTree = "<group>"; };
 		3D7013E023ECF98F00102E9C /* StockDetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsCoordinator.swift; sourceTree = "<group>"; };
@@ -502,6 +503,7 @@
 		3DD75A2F236BAF6700C298B9 /* ColorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorManager.swift; sourceTree = "<group>"; };
 		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
+		3DE2B9CE249283F9008742F3 /* ProfileDataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDataManagerTests.swift; sourceTree = "<group>"; };
 		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupVC.swift; sourceTree = "<group>"; };
 		3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePersistenceManagerTest.swift; sourceTree = "<group>"; };
@@ -970,6 +972,7 @@
 		3D20FB3C22FB1F0A007836DD /* UpfulTests */ = {
 			isa = PBXGroup;
 			children = (
+				3DE2B9CD249283E8008742F3 /* Managers */,
 				3DBF0C5723D94A24003023D7 /* Services */,
 				3DB345FB23CBFAF200EADFFD /* VIewModels */,
 				3DAB3ED6235130970008CC18 /* Features */,
@@ -1034,9 +1037,9 @@
 				3DF5FC0423342BDF00856205 /* Persistence */,
 				3DD75A2F236BAF6700C298B9 /* ColorManager.swift */,
 				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
-				3D6F46B6246DF5BB00844C5E /* ProfileConfigurator.swift */,
-				3DD4291C2347EC530079DA18 /* Vibration.swift */,
+				3D6F46B6246DF5BB00844C5E /* UserProfile.swift */,
 				3D22CE622483743D00662360 /* ProfileSyncCoordinator.swift */,
+				3DD4291C2347EC530079DA18 /* Vibration.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -2059,6 +2062,14 @@
 			path = "Logic Controllers";
 			sourceTree = "<group>";
 		};
+		3DE2B9CD249283E8008742F3 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				3DE2B9CE249283F9008742F3 /* ProfileDataManagerTests.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		3DE8C7FE239420DE00CC0056 /* Assistance */ = {
 			isa = PBXGroup;
 			children = (
@@ -2376,7 +2387,7 @@
 				3D20FB2222FB1F08007836DD /* Frameworks */,
 				3D20FB2322FB1F08007836DD /* Resources */,
 				3DA37C3223453049008832AB /* Embed Frameworks */,
-				8D6B2014AF9687D437477B92 /* [CP] Embed Pods Frameworks */,
+				2E122AFC1A9DDEBB8C1841C3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2471,6 +2482,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2E122AFC1A9DDEBB8C1841C3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		6DA628A217B730F9C49336BC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2487,23 +2515,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8D6B2014AF9687D437477B92 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BA8A5399EEDABAAEA09927E9 /* [CP] Check Pods Manifest.lock */ = {
@@ -2563,7 +2574,7 @@
 				3D206A1F241F198D00F7E44C /* TransactionContainerManager.swift in Sources */,
 				3D7C854C2337479300A2E63E /* CustomSizeImageView.swift in Sources */,
 				3D58651A231C946600495D79 /* UserFeedbackPresenter.swift in Sources */,
-				3D6F46B7246DF5BB00844C5E /* ProfileConfigurator.swift in Sources */,
+				3D6F46B7246DF5BB00844C5E /* UserProfile.swift in Sources */,
 				3D4B1EBF242BC6410021A00D /* SavedViewController.swift in Sources */,
 				3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */,
 				3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */,
@@ -2768,6 +2779,7 @@
 				3DF734E12407144800B297A4 /* SearchResultsViewModelTests.swift in Sources */,
 				3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */,
 				3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */,
+				3DE2B9CF249283F9008742F3 /* ProfileDataManagerTests.swift in Sources */,
 				3D206A18241F047F00F7E44C /* TransactionLedgerPersistence.swift in Sources */,
 				3DD5218C235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift in Sources */,
 				3D55BD6E23B805F400B4FDF0 /* StockNewsViewModelTest.swift in Sources */,
@@ -2914,7 +2926,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -2936,7 +2948,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = DNPC864748;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
