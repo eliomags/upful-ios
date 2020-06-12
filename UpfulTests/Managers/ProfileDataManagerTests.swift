@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CoreData
 @testable import Upful
 
 class ProfileDataManagerTests: XCTestCase {
@@ -31,6 +32,7 @@ class ProfileDataManagerTests: XCTestCase {
                 assertionFailure("Should not throw error")
             }
         }
+
         wait(for: [expectations], timeout: 1)
     }
     
@@ -48,7 +50,7 @@ class ProfileDataManagerTests: XCTestCase {
                 }
             }
         }
-        
+        clearDatabase()
         wait(for: [expectations], timeout: 1)
     }
     
@@ -60,7 +62,7 @@ class ProfileDataManagerTests: XCTestCase {
             XCTAssertEqual(weeks, 0)
             expectations.fulfill()
         }
-        
+
         wait(for: [expectations], timeout: 1)
     }
     
@@ -76,7 +78,7 @@ class ProfileDataManagerTests: XCTestCase {
                 expectations.fulfill()
             }
         }
-        
+        clearDatabase()
         wait(for: [expectations], timeout: 1)
     }
 }
@@ -91,6 +93,19 @@ extension ProfileDataManagerTests {
                 })
             })
         })
+    }
+    
+    fileprivate func clearDatabase() {
+        let fetchRequest = PersistedTransaction.fetchRequest()
+    
+        addTeardownBlock {
+            let transactions = try! MockTransactionContainerManager.shared.persistentContainer.viewContext.fetch(fetchRequest)
+            
+            for transaction in transactions {
+                guard let transaction = transaction as? NSManagedObject else {continue}
+                MockTransactionContainerManager.shared.persistentContainer.viewContext.delete(transaction)
+            }
+        }
     }
 }
 
