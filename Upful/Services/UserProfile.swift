@@ -22,7 +22,7 @@ class ProfileDataManager {
         }
     }
     
-    let userProfile: UserProfile = UserProfile()
+    let userProfile: UserProfile = UserProfile.instance
     private let ledgerLoader: TransactionLoader
     
     init(ledgerLoader: TransactionLoader = LocalTransactionLedgerLoader()) {
@@ -32,12 +32,11 @@ class ProfileDataManager {
     func weeksFromFirstTradeDate(completion: @escaping (Double?) -> Void) {
         fetchFirstTransactionDate { result in
             switch result {
-            case .success(let earliestDate):
-                if let earliestDate = earliestDate {
+            case .success(let earliestTradeDate):
+                if let earliestTradeDate = earliestTradeDate {
                     let range = Calendar.current.dateComponents([.weekOfYear, .day, .hour, .minute],
-                                                                                from: earliestDate,
+                                                                                from: earliestTradeDate,
                                                                                 to: Date())
-                    
                     let weekDiff = Double(range.weekOfYear ?? 0)
                     let dayDiff = Double((range.day ?? 0)) / 5
                     let hourDiff = Double((range.hour ?? 0)) / (5 * 24)
@@ -74,7 +73,7 @@ class ProfileDataManager {
         }
     }
     
-    func convertToDate(from string: String) -> Date {
+    private func convertToDate(from string: String) -> Date {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         

@@ -52,6 +52,18 @@ class ProfileDataManagerTests: XCTestCase {
         wait(for: [expectations], timeout: 1)
     }
     
+    
+    func testWeeksFromFirstTradeDateWithEmptyResult() {
+        let expectations = expectation(description: #function)
+                
+        self.sut.weeksFromFirstTradeDate { weeks in
+            XCTAssertEqual(weeks, 0)
+            expectations.fulfill()
+        }
+        
+        wait(for: [expectations], timeout: 1)
+    }
+    
     func testWeeksFromFirstTradeDateWithResult() {
         let expectations = expectation(description: #function)
     
