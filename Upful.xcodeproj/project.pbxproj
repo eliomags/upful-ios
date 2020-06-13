@@ -222,6 +222,7 @@
 		3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD75A362372456700C298B9 /* FirestoreService.swift */; };
 		3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */; };
 		3DE2B9CF249283F9008742F3 /* ProfileDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE2B9CE249283F9008742F3 /* ProfileDataManagerTests.swift */; };
+		3DE2B9D724945767008742F3 /* User+CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE2B9D624945766008742F3 /* User+CoreData.swift */; };
 		3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */; };
 		3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */; };
 		3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */; };
@@ -504,6 +505,7 @@
 		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
 		3DE2B9CE249283F9008742F3 /* ProfileDataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDataManagerTests.swift; sourceTree = "<group>"; };
+		3DE2B9D624945766008742F3 /* User+CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "User+CoreData.swift"; path = "/Users/yaniksimpson/Desktop/Upful/Upful/Services/Persistence/User+CoreData.swift"; sourceTree = "<absolute>"; };
 		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupVC.swift; sourceTree = "<group>"; };
 		3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePersistenceManagerTest.swift; sourceTree = "<group>"; };
@@ -2224,6 +2226,7 @@
 		3DF5FC0423342BDF00856205 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				3DE2B9D624945766008742F3 /* User+CoreData.swift */,
 				3D0C5F6623395CE000F4A5FC /* Notes */,
 				3DC710922336992500A2A0DA /* SavedScreener */,
 				3DF5FC0B23343E5C00856205 /* SavedStock */,
@@ -2583,6 +2586,7 @@
 				3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */,
 				3D206A4C242290D600F7E44C /* TradingBalanceView.swift in Sources */,
 				3D7C855523380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift in Sources */,
+				3DE2B9D724945767008742F3 /* User+CoreData.swift in Sources */,
 				3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */,
 				3DCE8DB4243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift in Sources */,
 				3D562C8D235F248E00837B2F /* SubscriptionController.swift in Sources */,

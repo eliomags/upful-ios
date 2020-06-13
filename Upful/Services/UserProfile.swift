@@ -6,28 +6,108 @@
 //  Copyright © 2020 Yanik Simpson. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 class ProfileDataManager {
     
     enum ProfileDataError: Error {
         case noPreviousTransactions
+        case userCreation
         
         var localizedDescription: String {
             switch self {
             case .noPreviousTransactions:
                 return "No previoous transactions found"
+            case .userCreation:
+                return "Error creating user"
             }
         }
     }
     
-    let userProfile: UserProfile = UserProfile.instance
     private let ledgerLoader: TransactionLoader
+    private let userProfile = UserProfile.instance
     
-    init(ledgerLoader: TransactionLoader = LocalTransactionLedgerLoader()) {
+    private let managedObjectContext: NSManagedObjectContext
+    
+    // MARK: Initializer
+    
+    init(ledgerLoader: TransactionLoader = LocalTransactionLedgerLoader(),
+         managedObjectContext: NSManagedObjectContext) {
         self.ledgerLoader = ledgerLoader
+        self.managedObjectContext = managedObjectContext
     }
+    
+    // MARK: User CRUD
+    
+    func readUser(completion: ((User) -> Void)) {
+        let fetchRequest = User.createFetchRequest()
+        guard
+            let users = try? managedObjectContext.fetch(fetchRequest),
+            let currentUser = users.first
+            else { return }
+        
+        completion(currentUser)
+    }
+    
+    func createUser(completion: @escaping ((User) -> Void)) {
+        let fetchRequest = User.createFetchRequest()
+        guard
+            let users = try? managedObjectContext.fetch(fetchRequest),
+            users.isEmpty
+            else { return }
+        
+        managedObjectContext.perform {
+            let user = User.init(context: self.managedObjectContext)
+            user.id = UUID().uuidString
+            
+            try? self.managedObjectContext.save()
+            completion(user)
+        }
+    }
+    
+    func createUser(firstTransactionDate: Date, completion: @escaping ((User) -> Void)) {
+        let fetchRequest = User.createFetchRequest()
+        guard
+            let users = try? managedObjectContext.fetch(fetchRequest),
+            users.isEmpty
+            else { return }
+        
+        managedObjectContext.perform {
+            let user = User.init(context: self.managedObjectContext)
+            user.id = UUID().uuidString
+            user.firstTransactionDate = firstTransactionDate
+            
+            try? self.managedObjectContext.save()
+            completion(user)
+        }
+    }
+    
+    func updateUser(completion: @escaping ((User) -> Void)) {
+        let fetchRequest = User.createFetchRequest()
+        guard
+            let users = try? managedObjectContext.fetch(fetchRequest),
+            let currentUser = users.first
+            else { return }
+        
+        fetchFirstTransactionDate { [weak self] result in
+            
+            self?.managedObjectContext.perform {
+                
+                switch result {
+                case .success(let firstTransactionDate):
+                    currentUser.firstTransactionDate = firstTransactionDate
+                case .failure(_):
+                    currentUser.firstTransactionDate = nil
+                }
+                
+                try? self?.managedObjectContext.save()
+                completion(currentUser)
+            }
+        }
+    }
+    
+    // MARK: Data Updates
     
     func weeksFromFirstTradeDate(completion: @escaping (Double?) -> Void) {
         fetchFirstTransactionDate { result in
@@ -53,11 +133,13 @@ class ProfileDataManager {
         }
     }
     
-    func fetchFirstTransactionDate(completion: @escaping (Result<Date?, Error>) -> Swift.Void) {
+    func fetchFirstTransactionDate(completion: @escaping (Result<Date?, Error>) -> Void) {
         if let userFirstTransactionDate = userProfile.firstTransactionDate {
             completion(.success(userFirstTransactionDate))
         }
-        ledgerLoader.load { (result) in
+        ledgerLoader.load { [weak self] (result) in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let transactions):
                 
@@ -74,6 +156,16 @@ class ProfileDataManager {
     }
     
     private func convertToDate(from string: String) -> Date {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        
+        return df.date(from: string)!
+    }
+}
+
+class DateTransformer {
+    
+    static func convertStringToDate(_ string: String) -> Date {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         
