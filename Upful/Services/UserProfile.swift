@@ -25,9 +25,14 @@ class ProfileDataManager {
         }
     }
     
+    private enum Constants {
+        static let profileID = "profileID"
+    }
+    
+    // MARK: Dependencies
+    
     private let ledgerLoader: TransactionLoader
     private let userProfile = UserProfile.instance
-    
     private let managedObjectContext: NSManagedObjectContext
     
     // MARK: Initializer
@@ -40,14 +45,14 @@ class ProfileDataManager {
     
     // MARK: User CRUD
     
-    func readUser(completion: ((User) -> Void)) {
+    func readUser() -> User? {
         let fetchRequest = User.createFetchRequest()
         guard
             let users = try? managedObjectContext.fetch(fetchRequest),
             let currentUser = users.first
-            else { return }
+            else { return nil }
         
-        completion(currentUser)
+        return currentUser
     }
     
     func createUser(completion: @escaping ((User) -> Void)) {
@@ -88,7 +93,12 @@ class ProfileDataManager {
         guard
             let users = try? managedObjectContext.fetch(fetchRequest),
             let currentUser = users.first
-            else { return }
+            else {
+                createUser(completion: { [weak self] _ in
+                    self?.updateUser(completion: completion)
+                })
+                return
+        }
         
         fetchFirstTransactionDate { [weak self] result in
             
@@ -98,6 +108,7 @@ class ProfileDataManager {
                 case .success(let firstTransactionDate):
                     currentUser.firstTransactionDate = firstTransactionDate
                 case .failure(_):
+                    assertionFailure("Failed to fetch transaction date")
                     currentUser.firstTransactionDate = nil
                 }
                 
@@ -109,26 +120,84 @@ class ProfileDataManager {
     
     // MARK: Data Updates
     
-    func weeksFromFirstTradeDate(completion: @escaping (Double?) -> Void) {
-        fetchFirstTransactionDate { result in
-            switch result {
-            case .success(let earliestTradeDate):
-                if let earliestTradeDate = earliestTradeDate {
-                    let range = Calendar.current.dateComponents([.weekOfYear, .day, .hour, .minute],
-                                                                                from: earliestTradeDate,
-                                                                                to: Date())
-                    let weekDiff = Double(range.weekOfYear ?? 0)
-                    let dayDiff = Double((range.day ?? 0)) / 5
-                    let hourDiff = Double((range.hour ?? 0)) / (5 * 24)
-                    let minDiff = Double((range.minute ?? 0)) / (5 * 24 * 60)
-                    let totalTimeDifference: Double = weekDiff + dayDiff + hourDiff + minDiff
+    func calculateUserScore(percentPerformance: Double, completion: @escaping (Double?) -> Void) {
+        let currentUser = readUser()
+        
+        if let currentUser = currentUser {
+            
+            if let firstTransactionDate = currentUser.firstTransactionDate {
+                
+                self.weeksFromFirstTradeDate(firstTransactionDate) { weeksSinceFirstTrade in
                     
-                    completion(totalTimeDifference)
-                } else {
-                    completion(0)
+                    if let weeksSinceFirstTrade = weeksSinceFirstTrade {
+                        
+                        if weeksSinceFirstTrade > 0 {
+                            
+                            if percentPerformance == 0 {
+                                completion(-0.5)
+                            } else {
+                                let initialValue = (abs(percentPerformance) / weeksSinceFirstTrade) * pow((weeksSinceFirstTrade / 3), 2)
+                                let absresult = Double.logC(val: initialValue)
+                                let result = percentPerformance > 0 ? absresult : -absresult
+                                completion(result)
+                            }
+                        }
+                        
+                    } else {
+                        completion(nil)
+                    }
                 }
-            case .failure(_):
-                completion(nil)
+            } else {
+                updateUser { user in
+                    if let _ = user.firstTransactionDate {
+                        self.calculateUserScore(percentPerformance: percentPerformance, completion: completion)
+                    } else {
+                        completion(nil)
+                    }
+                }
+            }
+            
+        } else {
+            updateUser { user in
+                if let _ = user.firstTransactionDate {
+                    self.calculateUserScore(percentPerformance: percentPerformance, completion: completion)
+                } else {
+                    completion(nil)
+                }
+            }
+        }
+        
+        completion(nil)
+    }
+    
+    func weeksFromFirstTradeDate(_ firstTransactionDate: Date? = nil, completion: @escaping (Double?) -> Void) {
+        
+        func calculateWeekDifference(from firstTransactionDate: Date) -> Double {
+            let range = Calendar.current.dateComponents([.weekOfYear, .day, .hour, .minute],
+                                                        from: firstTransactionDate,
+                                                        to: Date())
+            let weekDiff = Double(range.weekOfYear ?? 0)
+            let dayDiff = Double((range.day ?? 0)) / 5
+            let hourDiff = Double((range.hour ?? 0)) / (5 * 24)
+            let minDiff = Double((range.minute ?? 0)) / (5 * 24 * 60)
+            let totalTimeDifference: Double = weekDiff + dayDiff + hourDiff + minDiff
+            return totalTimeDifference
+        }
+        
+        if let firstTransactionDate = firstTransactionDate {
+            completion(calculateWeekDifference(from: firstTransactionDate))
+        } else {
+            fetchFirstTransactionDate { result in
+                switch result {
+                case .success(let earliestTradeDate):
+                    if let earliestTradeDate = earliestTradeDate {
+                        completion(calculateWeekDifference(from: earliestTradeDate))
+                    } else {
+                        completion(0)
+                    }
+                case .failure(_):
+                    completion(nil)
+                }
             }
         }
     }
@@ -160,6 +229,12 @@ class ProfileDataManager {
         df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         
         return df.date(from: string)!
+    }
+}
+
+extension Double {
+    static func logC(val: Double, forBase base: Double = 10) -> Double {
+        return log(val)/log(base)
     }
 }
 
