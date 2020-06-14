@@ -192,9 +192,83 @@ class ProfileDataManagerTests: XCTestCase {
     // MARK: - Score Calculation
     
     func testUserScoreCalculationWithNewUser() {
-//        let expectations = expectation(description: #function)
+        let expectations = expectation(description: #function)
         
-//        wait(for: [expectations], timeout: 1)
+        sut.calculateUserScore(percentPerformance: 25) { score in
+            XCTAssertNil(score)
+            expectations.fulfill()
+        }
+        
+        wait(for: [expectations], timeout: 1)
+    }
+
+    func test_userScoreCalculation_with_noFirstTransaction() {
+        let expectations = expectation(description: #function)
+        
+        sut.createUser { _ in
+            
+            self.sut.calculateUserScore(percentPerformance: 15) { score in
+                XCTAssertNil(score)
+                expectations.fulfill()
+            }
+        }
+        clearUser()
+        
+        wait(for: [expectations], timeout: 1)
+    }
+    
+    func test_userScoreCalculation_with_weeksSinceFirstTradeGreaterThanZero() {
+        let expectations = expectation(description: #function)
+        
+        let oneWeekInSeconds: Double = 604800
+        let date = Date().addingTimeInterval(-oneWeekInSeconds)
+        let dateString = "\(date)"
+        
+        makeTransactions(firstTradeDateAsString: dateString) {
+            self.sut.calculateUserScore(percentPerformance: 15) { score in
+                XCTAssertEqual(score, 0.2218487496163563)
+                expectations.fulfill()
+            }
+        }
+        clearUser()
+        
+        wait(for: [expectations], timeout: 1)
+    }
+    
+    func test_userScoreCalculation_with_weeksSinceFirstNegativePerformance() {
+        let expectations = expectation(description: #function)
+        
+        let oneWeekInSeconds: Double = 604800
+        let date = Date().addingTimeInterval(-oneWeekInSeconds)
+        let dateString = "\(date)"
+        
+        makeTransactions(firstTradeDateAsString: dateString) {
+            self.sut.calculateUserScore(percentPerformance: -15) { score in
+                XCTAssertEqual(score, -0.2218487496163563)
+                expectations.fulfill()
+            }
+        }
+        clearUser()
+        
+        wait(for: [expectations], timeout: 1)
+    }
+    
+    func test_userScoreCalculation_with_weeksSinceFirstZeroPercentPerformance() {
+        let expectations = expectation(description: #function)
+        
+        let oneWeekInSeconds: Double = 604800
+        let date = Date().addingTimeInterval(-oneWeekInSeconds)
+        let dateString = "\(date)"
+        
+        makeTransactions(firstTradeDateAsString: dateString) {
+            self.sut.calculateUserScore(percentPerformance: 0) { score in
+                XCTAssertEqual(score, -0.5)
+                expectations.fulfill()
+            }
+        }
+        clearUser()
+        
+        wait(for: [expectations], timeout: 1)
     }
 }
 

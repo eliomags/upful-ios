@@ -174,8 +174,6 @@ class ProfileDataManager {
                 }
             }
         }
-        
-        completion(nil)
     }
     
     func weeksFromFirstTradeDate(_ firstTransactionDate: Date? = nil, completion: @escaping (Double?) -> Void) {
