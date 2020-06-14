@@ -69,6 +69,13 @@ class ProfileDataManagerTests: XCTestCase {
         wait(for: [expectations], timeout: 1)
     }
     
+    func test_generateProfileID_alwaysReturnsSameID() {
+        let firstGeneratedID = sut.generateProfileID()
+        let secondGeneratedID = sut.generateProfileID()
+        
+        XCTAssertEqual(firstGeneratedID, secondGeneratedID)
+    }
+    
     // MARK: Weeks From First Trade
     
     func testWeeksFromFirstTradeDateWithEmptyResult() {

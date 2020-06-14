@@ -237,9 +237,7 @@ class ProfileDataManager {
         completion(.success(firstTransactionDate))
     }
     
-    // MARK: - Private Methods
-    
-    private func generateProfileID() -> String {
+    func generateProfileID() -> String {
         if let savedID = userDefaults.string(forKey: Constants.profileID)  {
             return savedID
         } else {
@@ -248,6 +246,8 @@ class ProfileDataManager {
             return profileID
         }
     }
+    
+    // MARK: - Private Methods
     
     private func convertToDate(from string: String) -> Date {
         let df = DateFormatter()
