@@ -209,25 +209,32 @@ class ProfileDataManager {
     }
     
     func fetchFirstTransactionDate(completion: @escaping (Result<Date?, Error>) -> Void) {
-        if let userFirstTransactionDate = userProfile.firstTransactionDate {
-            completion(.success(userFirstTransactionDate))
-        }
-        ledgerLoader.load { [weak self] (result) in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let transactions):
+        let fetchRequest = User.createFetchRequest()
+        guard
+            let users = try? managedObjectContext.fetch(fetchRequest),
+            let firstTransactionDate = users.first?.firstTransactionDate else {
                 
-                if let firstTransactionDate = transactions.sorted(by: { self.convertToDate(from: $0.transactionDate!) <
-                    self.convertToDate(from: $1.transactionDate!) }).first?.transactionDate {
-                    completion(.success(self.convertToDate(from: firstTransactionDate)))
-                } else {
-                    completion(.success(nil))
+                ledgerLoader.load { [weak self] (result) in
+                    guard let self = self else { return }
+                    
+                    switch result {
+                    case .success(let transactions):
+                        
+                        if let firstTransactionDate = transactions.sorted(by: { self.convertToDate(from: $0.transactionDate!) <
+                            self.convertToDate(from: $1.transactionDate!) }).first?.transactionDate {
+                            completion(.success(self.convertToDate(from: firstTransactionDate)))
+                        } else {
+                            completion(.success(nil))
+                        }
+                    case .failure(_):
+                        completion(.failure(ProfileDataError.noPreviousTransactions))
+                    }
                 }
-            case .failure(_):
-                completion(.failure(ProfileDataError.noPreviousTransactions))
-            }
+                
+            return
         }
+        
+        completion(.success(firstTransactionDate))
     }
     
     // MARK: - Private Methods
