@@ -99,7 +99,32 @@ class ProfileDataManagerTests: XCTestCase {
         wait(for: [expectations], timeout: 1)
     }
     
-    // MARK: User Creation
+    // MARK: - User
+    
+    // MARK: Read
+    
+    func testReadUserWithNoneSaved() {
+        let currentUser = sut.readUser()
+        
+        XCTAssertNil(currentUser)
+    }
+    
+    func testReadUserWithCurrentUserSaved() {
+        let expectations = expectation(description: #function)
+
+        sut.createUser { _ in
+            let currentUser = self.sut.readUser()
+            XCTAssertNotNil(currentUser?.id)
+            XCTAssertNil(currentUser?.firstTransactionDate)
+            
+            expectations.fulfill()
+        }
+        clearUser()
+        
+        wait(for: [expectations], timeout: 1)
+    }
+    
+    // MARK: Creation
     
     func testUserCreation() {
         let expectations = expectation(description: #function)
@@ -111,6 +136,26 @@ class ProfileDataManagerTests: XCTestCase {
             XCTAssertEqual(user.firstTransactionDate, date)
             
             expectations.fulfill()
+        }
+        clearUser()
+        
+        wait(for: [expectations], timeout: 1)
+    }
+    
+    func testUserCreationMultipleCall() {
+        let expectations = expectation(description: #function)
+        expectations.expectedFulfillmentCount = 2
+        let date = Date()
+        
+        sut.createUser(firstTransactionDate: date) { user in
+            expectations.fulfill()
+
+            self.sut.createUser { (user2) in
+                XCTAssertEqual(user.id, user2.id)
+                XCTAssertEqual(user.firstTransactionDate, user2.firstTransactionDate)
+                
+                expectations.fulfill()
+            }
         }
         clearUser()
         
@@ -142,6 +187,14 @@ class ProfileDataManagerTests: XCTestCase {
         clearUser()
         
         wait(for: [expectations], timeout: 1)
+    }
+    
+    // MARK: - Score Calculation
+    
+    func testUserScoreCalculationWithNewUser() {
+//        let expectations = expectation(description: #function)
+        
+//        wait(for: [expectations], timeout: 1)
     }
 }
 

@@ -33,12 +33,16 @@ class ProfileDataManager {
     
     private let ledgerLoader: TransactionLoader
     private let userProfile = UserProfile.instance
+    
+    private let userDefaults: UserDefaults
     private let managedObjectContext: NSManagedObjectContext
     
     // MARK: Initializer
     
     init(ledgerLoader: TransactionLoader = LocalTransactionLedgerLoader(),
+         userDefaults: UserDefaults = UserDefaults.standard,
          managedObjectContext: NSManagedObjectContext) {
+        self.userDefaults = userDefaults
         self.ledgerLoader = ledgerLoader
         self.managedObjectContext = managedObjectContext
     }
@@ -57,14 +61,16 @@ class ProfileDataManager {
     
     func createUser(completion: @escaping ((User) -> Void)) {
         let fetchRequest = User.createFetchRequest()
-        guard
-            let users = try? managedObjectContext.fetch(fetchRequest),
-            users.isEmpty
-            else { return }
+        let users = try? managedObjectContext.fetch(fetchRequest)
+        
+        guard users?.isEmpty ?? false else {
+            completion((users?.first!)!)
+            return
+        }
         
         managedObjectContext.perform {
             let user = User.init(context: self.managedObjectContext)
-            user.id = UUID().uuidString
+            user.id = self.generateProfileID()
             
             try? self.managedObjectContext.save()
             completion(user)
@@ -73,14 +79,16 @@ class ProfileDataManager {
     
     func createUser(firstTransactionDate: Date, completion: @escaping ((User) -> Void)) {
         let fetchRequest = User.createFetchRequest()
-        guard
-            let users = try? managedObjectContext.fetch(fetchRequest),
-            users.isEmpty
-            else { return }
+        let users = try? managedObjectContext.fetch(fetchRequest)
+        
+        guard users?.isEmpty ?? false else {
+            completion((users?.first!)!)
+            return
+        }
         
         managedObjectContext.perform {
             let user = User.init(context: self.managedObjectContext)
-            user.id = UUID().uuidString
+            user.id = self.generateProfileID()
             user.firstTransactionDate = firstTransactionDate
             
             try? self.managedObjectContext.save()
@@ -221,6 +229,18 @@ class ProfileDataManager {
             case .failure(_):
                 completion(.failure(ProfileDataError.noPreviousTransactions))
             }
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func generateProfileID() -> String {
+        if let savedID = userDefaults.string(forKey: Constants.profileID)  {
+            return savedID
+        } else {
+            let profileID = UUID().uuidString
+            userDefaults.set(profileID, forKey: Constants.profileID)
+            return profileID
         }
     }
     
