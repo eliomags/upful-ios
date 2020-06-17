@@ -11,8 +11,15 @@ import Firebase
 
 class ProfileSyncCoordinator {
     
+    let profileManager: ProfileDataManager
+    
+    let profileSyncQueue = DispatchQueue(label: "come.upful.profileSyncQueue", qos: .background, attributes: .concurrent)
+    
     static let shared = ProfileSyncCoordinator()
-    private init() {}
+    private init() {
+        let context = TransactionContainerManager.shared.persistentContainer.viewContext
+        profileManager = ProfileDataManager(managedObjectContext: context)
+    }
     
     private enum Collection {
         static let users = "users"
@@ -21,16 +28,26 @@ class ProfileSyncCoordinator {
     private let db = Firestore.firestore()
     
     func sync(holdings: [Holding], equityBalance: Double) {
-        let currentUserID = UserProfile.instance.profileID
-        let mappableHoldings = ProfileSyncCoordinator.createMappableHoldings(from: holdings)
-        let performance = ProfileSyncCoordinator.calculateTotalPerformance(from: equityBalance)
-
-        db.collection(Collection.users).document(currentUserID).setData([
-            "userID": currentUserID,
-            "lastSync": Timestamp(date: Date()),
-            "performanceAsPercent": performance,
-            "holdings": mappableHoldings
-        ])
+        profileSyncQueue.async {
+            let currentUserID = UserProfile.instance.profileID
+            let mappableHoldings = ProfileSyncCoordinator.createMappableHoldings(from: holdings)
+            let performance = ProfileSyncCoordinator.calculateTotalPerformance(from: equityBalance)
+            
+            self.profileManager.updateUser { [weak self] user in
+                
+                self?.profileManager.calculateUserScore(percentPerformance: performance, completion: { score in
+                    
+                    self?.db.collection(Collection.users).document(currentUserID).setData([
+                        "userID": currentUserID,
+                        "lastSync": Timestamp(date: Date()),
+                        "performanceAsPercent": performance,
+                        "holdings": mappableHoldings,
+                        "firstTradeDate": "\(user.firstTransactionDate ?? Date.distantPast)",
+                        "score": score ?? Int32.min
+                    ])
+                })
+            }
+        }
     }
     
     // MARK: Helpers

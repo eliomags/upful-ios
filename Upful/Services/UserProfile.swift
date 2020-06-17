@@ -145,9 +145,14 @@ class ProfileDataManager {
                                 completion(-0.5)
                             } else {
                                 let initialValue = (abs(percentPerformance) / weeksSinceFirstTrade) * pow((weeksSinceFirstTrade / 3), 2)
-                                let absresult = Double.logC(val: initialValue)
-                                let result = percentPerformance > 0 ? absresult : -absresult
-                                completion(result)
+                                let absresult = Double.logC(val: initialValue) + 3
+                                
+                                if absresult > 0 {
+                                    let result = percentPerformance > 0 ? absresult : -absresult
+                                    completion(result)
+                                } else {
+                                    completion(absresult)
+                                }
                             }
                         }
                         
@@ -251,7 +256,11 @@ class ProfileDataManager {
     
     private func convertToDate(from string: String) -> Date {
         let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        if string.contains("+") {
+            df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        } else if string.contains(".") {
+            df.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        }
         
         return df.date(from: string)!
     }
@@ -267,7 +276,11 @@ class DateTransformer {
     
     static func convertStringToDate(_ string: String) -> Date {
         let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        if string.contains("+") {
+            df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        } else if string.contains(".") {
+            df.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        }
         
         return df.date(from: string)!
     }

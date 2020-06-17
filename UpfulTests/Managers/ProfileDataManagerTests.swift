@@ -106,6 +106,21 @@ class ProfileDataManagerTests: XCTestCase {
         wait(for: [expectations], timeout: 1)
     }
     
+    func test_User_weeksFromFirstTransactionDate() {
+        let expectations = expectation(description: #function)
+        
+        let weekAndAHalfInSeconds = 604800 * 1.5
+        let firstTransactionDate = Date().addingTimeInterval(-weekAndAHalfInSeconds)
+        
+        sut.createUser(firstTransactionDate: firstTransactionDate) { user in
+            XCTAssertEqual(user.weeksSinceFirstTrade, 1.7000000000000002)
+            
+            expectations.fulfill()
+        }
+        
+        wait(for: [expectations], timeout: 1)
+    }
+    
     // MARK: - User
     
     // MARK: Read
@@ -212,9 +227,9 @@ class ProfileDataManagerTests: XCTestCase {
     func test_userScoreCalculation_with_noFirstTransaction() {
         let expectations = expectation(description: #function)
         
-        sut.createUser { _ in
+        sut.createUser { [weak self] _ in
             
-            self.sut.calculateUserScore(percentPerformance: 15) { score in
+            self?.sut.calculateUserScore(percentPerformance: 15) { score in
                 XCTAssertNil(score)
                 expectations.fulfill()
             }
@@ -231,9 +246,9 @@ class ProfileDataManagerTests: XCTestCase {
         let date = Date().addingTimeInterval(-oneWeekInSeconds)
         let dateString = "\(date)"
         
-        makeTransactions(firstTradeDateAsString: dateString) {
-            self.sut.calculateUserScore(percentPerformance: 15) { score in
-                XCTAssertEqual(score, 0.2218487496163563)
+        makeTransactions(firstTradeDateAsString: dateString) { [weak self] in
+            self?.sut.calculateUserScore(percentPerformance: 15) { score in
+                XCTAssertEqual(score, 3.2218487496163563)
                 expectations.fulfill()
             }
         }
@@ -249,9 +264,9 @@ class ProfileDataManagerTests: XCTestCase {
         let date = Date().addingTimeInterval(-oneWeekInSeconds)
         let dateString = "\(date)"
         
-        makeTransactions(firstTradeDateAsString: dateString) {
-            self.sut.calculateUserScore(percentPerformance: -15) { score in
-                XCTAssertEqual(score, -0.2218487496163563)
+        makeTransactions(firstTradeDateAsString: dateString) { [weak self] in
+            self?.sut.calculateUserScore(percentPerformance: -15) { score in
+                XCTAssertEqual(score, -3.2218487496163563)
                 expectations.fulfill()
             }
         }
@@ -267,8 +282,8 @@ class ProfileDataManagerTests: XCTestCase {
         let date = Date().addingTimeInterval(-oneWeekInSeconds)
         let dateString = "\(date)"
         
-        makeTransactions(firstTradeDateAsString: dateString) {
-            self.sut.calculateUserScore(percentPerformance: 0) { score in
+        makeTransactions(firstTradeDateAsString: dateString) { [weak self] in
+            self?.sut.calculateUserScore(percentPerformance: 0) { score in
                 XCTAssertEqual(score, -0.5)
                 expectations.fulfill()
             }
