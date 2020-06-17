@@ -297,14 +297,14 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             tableView.deleteRows(at: [[0,0]], with: .fade)
         }
         let breakdownSection = Section.breakdown.rawValue
-        let holdingsSection = Section.holdings.rawValue
+//        let holdingsSection = Section.holdings.rawValue
 
         tableView.reloadSections([breakdownSection], with: .automatic)
         
         if shouldDisplayBreakDownCell {
-            tableView.scrollToRow(at: [breakdownSection,0], at: .top, animated: true)
+//            tableView.scrollToRow(at: [breakdownSection,0], at: .top, animated: true)
         } else {
-            tableView.scrollToRow(at: [holdingsSection,0], at: .bottom, animated: true)
+//            tableView.scrollToRow(at: [holdingsSection,0], at: .bottom, animated: true)
             navigationItem.title = ""
         }
         
