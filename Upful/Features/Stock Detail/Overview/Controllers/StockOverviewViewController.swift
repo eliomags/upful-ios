@@ -18,6 +18,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
     // MARK: - Dependencies
     
     let viewModel: StockOverviewViewModel
+    let stockPerformanceViewModel = StockPerformanceChartViewModel()
 
     private enum ReuseID {
         static let graphCell = "graphCell"
@@ -55,9 +56,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         rc.addTarget(self, action: #selector(loadOverviewData), for: .valueChanged)
         return rc
     }()
-    
-    private let stockpriceVC = StockChartViewController()
-    
+        
     // MARK: - Initializer Methods
     
     init(ticker: String, companyName: String) {
@@ -76,7 +75,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         super.loadView()
         view.backgroundColor = VersionManager.mainContainerBackground()
         setupViews()
-        addChildren()
     }
     
     override func viewDidLoad() {
@@ -166,10 +164,6 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         }
     }
     
-    private func addChildren() {
-        add(stockpriceVC)
-    }
-    
     // MARK: - Private Functions
     
     @objc fileprivate func loadOverviewData() {
@@ -212,12 +206,10 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case Section.price.rawValue:
-            let cell = UITableViewCell()
-            cell.selectionStyle = .none
-            cell.backgroundColor = .clear
-            cell.addSubview(stockpriceVC.view)
-            stockpriceVC.view.fillSuperview(padding: .init(top: 8, left: 16, bottom: 8, right: 16))
-
+            let cell = PerformanceCell()
+            
+            stockPerformanceViewModel.configure(cell)
+            
             return cell
             
         case Section.barGraph.rawValue:
@@ -253,7 +245,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         let section = indexPath.section
         switch section {
         case Section.price.rawValue:
-            return 350
+            return 275
         case Section.barGraph.rawValue:
             return (UIScreen.main.bounds.height / 2) - 50
         default:
