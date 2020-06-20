@@ -56,6 +56,8 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         return rc
     }()
     
+    private let stockpriceVC = StockChartViewController()
+    
     // MARK: - Initializer Methods
     
     init(ticker: String, companyName: String) {
@@ -74,6 +76,7 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         super.loadView()
         view.backgroundColor = VersionManager.mainContainerBackground()
         setupViews()
+        addChildren()
     }
     
     override func viewDidLoad() {
@@ -163,6 +166,10 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
         }
     }
     
+    private func addChildren() {
+        add(stockpriceVC)
+    }
+    
     // MARK: - Private Functions
     
     @objc fileprivate func loadOverviewData() {
@@ -183,37 +190,55 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
 }
 
 extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    enum Section: Int, CaseIterable {
+        case price
+        case barGraph
+        case calculations
+        case news
+        case description
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableView.separatorStyle = .none
-        if section == 2 { return viewModel.stockNews.count}
+        if section == Section.news.rawValue { return viewModel.stockNews.count}
         return 1
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return Section.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
-        case 0:
+        case Section.price.rawValue:
+            let cell = UITableViewCell()
+            cell.selectionStyle = .none
+            cell.backgroundColor = .clear
+            cell.addSubview(stockpriceVC.view)
+            stockpriceVC.view.fillSuperview(padding: .init(top: 8, left: 16, bottom: 8, right: 16))
+
+            return cell
+            
+        case Section.barGraph.rawValue:
             guard let barGraphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? BarGraphTableViewCell else { return UITableViewCell() }
             barGraphCell.backgroundColor = .clear
             barGraphCell.chartView.delegate = self
             configureChart(chartView: barGraphCell.chartView)
             return barGraphCell
             
-        case 1:
+        case Section.calculations.rawValue:
             guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath) as? DetailsCalculationCell else { return UITableViewCell() }
             calculationsCell.setupCell(with: viewModel.calcData)
             calculationsCell.setupWithLookUp(lookUp: viewModel.financialLookup)
             return calculationsCell
             
-        case 2:
+        case Section.news.rawValue:
             guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? SmallNewsCell else { return UITableViewCell() }
             newsCell.stockNews = viewModel.stockNews[indexPath.row]
         return newsCell
 
-        case 3:
+        case Section.description.rawValue:
             guard let descriptionCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.descriptionCellID, for: indexPath) as? StockDescriptionCell else { return UITableViewCell() }
             descriptionCell.descriptionLabel.text = viewModel.stockDetail?.description ?? ""
             descriptionCell.employeeStackView.valueLabel.text = String(viewModel.stockDetail?.employees ?? 0)
@@ -227,7 +252,9 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let section = indexPath.section
         switch section {
-        case 0:
+        case Section.price.rawValue:
+            return 350
+        case Section.barGraph.rawValue:
             return (UIScreen.main.bounds.height / 2) - 50
         default:
             return UITableView.automaticDimension
@@ -236,13 +263,14 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = TableSectionHeaderView()
-        let headerText = ["Financials", "Metrics", "News", "About"]
+        let headerText = ["", "Financials", "Metrics", "News", "About"]
         header.headerTextLabel.text = headerText[section]
         header.addButton.setTitle("", for: .normal)
         return header
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == Section.price.rawValue { return 0 }
         return 50
     }
     
@@ -260,7 +288,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 3 {
+        if section == Section.allCases.count {
             return 85
         } else {
             return 25
