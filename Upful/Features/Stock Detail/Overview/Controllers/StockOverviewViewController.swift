@@ -9,7 +9,7 @@
 import UIKit
 import Charts
 
-final class StockOverviewViewController: UIViewController, ChartViewDelegate {
+final class StockOverviewViewController: UIViewController {
     
     // MARK: - MenuBarDisplayable Protocol Properties
     
@@ -17,8 +17,11 @@ final class StockOverviewViewController: UIViewController, ChartViewDelegate {
 
     // MARK: - Dependencies
     
-    let viewModel: StockOverviewViewModel
-    let stockPerformanceViewModel = StockPerformanceChartViewModel()
+    private let viewModel: StockOverviewViewModel
+    private lazy var stockPerformanceViewModel: StockPerformanceChartViewModel = {
+        let vm = StockPerformanceChartViewModel()
+        return vm
+    }()
 
     private enum ReuseID {
         static let graphCell = "graphCell"
@@ -207,9 +210,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         switch indexPath.section {
         case Section.price.rawValue:
             let cell = PerformanceCell()
-            
             stockPerformanceViewModel.configure(cell)
-            
             return cell
             
         case Section.barGraph.rawValue:
@@ -245,7 +246,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         let section = indexPath.section
         switch section {
         case Section.price.rawValue:
-            return 275
+            return 250
         case Section.barGraph.rawValue:
             return (UIScreen.main.bounds.height / 2) - 50
         default:
@@ -287,3 +288,5 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         }
     }
 }
+
+extension StockOverviewViewController: ChartViewDelegate {}
