@@ -9,12 +9,6 @@
 import UIKit
 import Charts
 
-struct ChartDataPoint {
-    let date: String
-    let close: Double
-    let changeOverTime: Double
-}
-
 class StockPerformanceChartViewModel {
     
     // MARK: Properties
@@ -31,11 +25,20 @@ class StockPerformanceChartViewModel {
         let view = PerformanceChartHelperView()
         return view
     }()
-    
+        
     // MARK: Initializer
 
     init() {
         loadDataPoints(at: chartTimeOptions.first!)
+        
+        HistoricalPriceLoader.load(ticker: "TWTR", period: .oneMonth) { result in
+            switch result {
+            case .success(let datapoints):
+                print(datapoints.map { $0.close })
+            case .failure(let err):
+                print(err)
+            }
+        }
     }
     
     // MARK: Data Loading
@@ -55,12 +58,6 @@ class StockPerformanceChartViewModel {
     
     func configure(_ performanceCell: PerformanceCell) {
         performanceCell.chartView.delegate = self
-        
-        let helperView = performanceChartHelperView
-        performanceCell.chartView.dragCompletion = {
-            helperView.removeFromSuperview()
-            print("drag completion")
-        }
         
         for index in 0..<chartTimeOptions.count {
             performanceCell.chartTimeControl.insertSegment(withTitle: chartTimeOptions[index], at: index, animated: false)
@@ -110,7 +107,10 @@ class StockPerformanceChartViewModel {
 
 extension StockPerformanceChartViewModel: ChartViewDelegate {
     
-    func chartViewDidEndPanning(_ chartView: ChartViewBase) {}
+    func chartViewDidEndPanning(_ chartView: ChartViewBase) {
+        performanceChartHelperView.removeFromSuperview()
+        chartView.highlightValue(nil)
+    }
     
     func chartValueNothingSelected(_ chartView: ChartViewBase) {
         performanceChartHelperView.removeFromSuperview()
@@ -118,6 +118,7 @@ extension StockPerformanceChartViewModel: ChartViewDelegate {
     
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
         Vibration.light.vibrate()
+        
         performanceChartHelperView.removeFromSuperview()
         setupHelperView(chartView: chartView, entry: entry, highlight: highlight)
         configureHelperView(at: Int(entry.x))
@@ -170,9 +171,7 @@ class PerformanceChartHelperView: UIView {
 }
 
 class PerformanceLineChartView: LineChartView {
-    
-    var dragCompletion: () -> Void = {}
-    
+        
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -181,7 +180,7 @@ class PerformanceLineChartView: LineChartView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("coder not implemened")
     }
-
+    
     func configure() {
         noDataText = ""
         chartDescription?.text = ""

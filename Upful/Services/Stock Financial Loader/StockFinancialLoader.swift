@@ -11,6 +11,7 @@ import Foundation
 enum NetworkError: Error {
     case invalidData
     case connection
+    case parsing
 }
 
 enum FinancialsFrequency: Equatable {

@@ -246,7 +246,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         let section = indexPath.section
         switch section {
         case Section.price.rawValue:
-            return 250
+            return 200
         case Section.barGraph.rawValue:
             return (UIScreen.main.bounds.height / 2) - 50
         default:
