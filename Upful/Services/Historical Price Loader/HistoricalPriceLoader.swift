@@ -13,7 +13,15 @@ struct ChartDataPointCollection: Codable {
     let data: [ChartDataPoint]
 }
 
-struct ChartDataPoint: Codable {
+class ChartDataPoint: Codable, Hashable {
+    static func == (lhs: ChartDataPoint, rhs: ChartDataPoint) -> Bool {
+        return lhs.date == rhs.date
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self)
+    }
+    
     let date: String
     let close: Double
     let changeOverTime: Double
@@ -30,6 +38,15 @@ class HistoricalPriceLoader {
         case yearToDate = "ytd"
         case oneYear = "1y"
         case fiveYear = "5y"
+        
+        var explicit: String {
+            switch self {
+            case .oneDay:
+                return "1D"
+            default:
+                return self.rawValue.capitalized
+            }
+        }
     }
     
     enum RequestBuilder {
@@ -58,8 +75,16 @@ class HistoricalPriceLoader {
         }
     }
     
+    private(set) var cache: [TimePeriod: [ChartDataPoint]] = [:]
+    
     typealias HistoricalPriceLoaderCompletion = (Result<[ChartDataPoint], NetworkError>) -> Void
-    static func load(ticker: String, period: TimePeriod, completion: @escaping HistoricalPriceLoaderCompletion) {
+    func load(ticker: String, period: TimePeriod, completion: @escaping HistoricalPriceLoaderCompletion) {
+        
+        if let cachedResponse = cache[period] {
+            completion(.success(cachedResponse))
+            return
+        }
+        
         let request = RequestBuilder.build(ticker: ticker, period: period)
         let session = URLSession.shared
         
@@ -71,6 +96,8 @@ class HistoricalPriceLoader {
             if let data = data {
                 do {
                     let datapoints = try self.parse(data: data, timePeriod: period)
+                    self.cache[period] = datapoints
+                    
                     completion(.success(datapoints))
                 } catch {
                     completion(.failure(.parsing))
@@ -82,7 +109,7 @@ class HistoricalPriceLoader {
         .resume()
     }
     
-    static func parse(data: Data, timePeriod: TimePeriod) throws -> [ChartDataPoint] {
+    func parse(data: Data, timePeriod: TimePeriod) throws -> [ChartDataPoint] {
         let chartDataPoints: [ChartDataPoint]
         
         switch timePeriod {

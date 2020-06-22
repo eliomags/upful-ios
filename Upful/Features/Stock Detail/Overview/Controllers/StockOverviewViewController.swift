@@ -19,7 +19,7 @@ final class StockOverviewViewController: UIViewController {
     
     private let viewModel: StockOverviewViewModel
     private lazy var stockPerformanceViewModel: StockPerformanceChartViewModel = {
-        let vm = StockPerformanceChartViewModel()
+        let vm = StockPerformanceChartViewModel(ticker: self.viewModel.ticker)
         return vm
     }()
 
@@ -108,6 +108,12 @@ final class StockOverviewViewController: UIViewController {
         }
     }
     
+    fileprivate func priceLoadHandler() {
+        stockPerformanceViewModel.loadCompletion = { [weak self] in
+            self?.tableView.reloadSections([Section.price.rawValue], with: .none)
+        }
+    }
+    
     // MARK: - View Setup
     
     private func setupViews() {
@@ -171,6 +177,7 @@ final class StockOverviewViewController: UIViewController {
     
     @objc fileprivate func loadOverviewData() {
         LoadingViewPresenter.show(in: self)
+        priceLoadHandler()
         viewModel.loadData()
         successHandler()
         errorHandler()

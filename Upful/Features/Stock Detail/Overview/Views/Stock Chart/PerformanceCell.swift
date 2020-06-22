@@ -11,47 +11,59 @@ import Charts
 
 class StockPerformanceChartViewModel {
     
+    private let historicalPriceLoader = HistoricalPriceLoader()
+    
     // MARK: Properties
     
     private var currentSelectedIndex = 0
     private var datapoints: [ChartDataPoint] = []
     
-    typealias ChartTimeOption = String
-    private let chartTimeOptions: [ChartTimeOption] = ["1d", "1w", "1m", "3m", "ytd", "1y", "5y"]
+    private let ticker: String
+    private let timePeriods = HistoricalPriceLoader.TimePeriod.allCases
+    private var chartTimeOptions: [String] {
+        return timePeriods.map { $0.explicit }
+    }
+    
+    // MARK: Callbacks
+    
+    var loadCompletion: () -> Void = {}
     
     // MARK: Views
     
-    private var performanceChartHelperView: PerformanceChartHelperView = {
+    private let performanceChartHelperView: PerformanceChartHelperView = {
         let view = PerformanceChartHelperView()
         return view
     }()
         
     // MARK: Initializer
 
-    init() {
-        loadDataPoints(at: chartTimeOptions.first!)
-        
-        HistoricalPriceLoader.load(ticker: "TWTR", period: .oneDay) { result in
-            switch result {
-            case .success(let datapoints):
-                print(datapoints.map { $0.close })
-            case .failure(let err):
-                print(err)
-            }
-        }
+    init(ticker: String) {
+        self.ticker = ticker
+        loadDataPoints(at: timePeriods.first!)
     }
     
     // MARK: Data Loading
     
-    func loadDataPoints(at timeOption: ChartTimeOption) {
-        datapoints = [
-            .init(date: "2020-06-12", close: 34.4, changeOverTime: 0),
-            .init(date: "2020-06-15", close: 35.18, changeOverTime: 0.02212),
-            .init(date: "2020-06-16", close: 34.79, changeOverTime: 0.037418),
-            .init(date: "2020-06-17", close: 35.22, changeOverTime: 0.02894),
-            .init(date: "2020-06-18", close: 35.53, changeOverTime: 0.019732),
-            .init(date: "2020-06-21", close: 33.1, changeOverTime: 0.019732),
-        ]
+    func loadDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod) {
+        historicalPriceLoader.load(ticker: ticker, period: timeOption) { [weak self] result in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let datapoints):
+                    self.datapoints = datapoints
+                        self.loadCompletion()
+                case .failure(let err):
+                    print(err)
+                }
+            }
+        }
+    }
+    
+    @objc
+    private func handleTimePeriodChange(control: UISegmentedControl) {
+        currentSelectedIndex = control.selectedSegmentIndex
+        loadDataPoints(at: timePeriods[currentSelectedIndex])
     }
     
     // MARK: View Setup
@@ -63,6 +75,7 @@ class StockPerformanceChartViewModel {
             performanceCell.chartTimeControl.insertSegment(withTitle: chartTimeOptions[index], at: index, animated: false)
         }
         performanceCell.chartTimeControl.selectedSegmentIndex = currentSelectedIndex
+        performanceCell.chartTimeControl.addTarget(self, action: #selector(handleTimePeriodChange), for: .valueChanged)
         
         var chartDataEntries: [ChartDataEntry] = []
         for i in 0..<datapoints.count {
@@ -89,7 +102,7 @@ class StockPerformanceChartViewModel {
     }
     
     func configureHelperView(at index: Int) {
-//        guard let datapoints = datapoints else { return }
+        guard !datapoints.isEmpty else { return }
         let dataPoint = datapoints[index]
         let firstClose = datapoints.first!.close
         let changeFromFirst: Double = (dataPoint.close / firstClose) - 1
@@ -205,9 +218,10 @@ class PerformanceLineChartView: LineChartView {
         lineChartDataSet.drawCirclesEnabled = false
         lineChartDataSet.drawHorizontalHighlightIndicatorEnabled = false
         
-//        lineChartDataSet.mode = .cubicBezier
         lineChartDataSet.cubicIntensity = 0.25
-        lineChartDataSet.colors = [UIColor.appAccent3]
+        
+        let isPositiveChange = (chartDataEntries.first?.y ?? 0) < (chartDataEntries.last?.y ?? 0)
+        lineChartDataSet.colors = isPositiveChange ? [UIColor.appAccent3] : [UIColor.systemRed]
         
         lineChartDataSet.highlightLineWidth = 2
         lineChartDataSet.highlightColor = UIColor.lightGray.withAlphaComponent(0.5)
