@@ -31,7 +31,7 @@ class StockPerformanceChartViewModel {
     init() {
         loadDataPoints(at: chartTimeOptions.first!)
         
-        HistoricalPriceLoader.load(ticker: "TWTR", period: .oneMonth) { result in
+        HistoricalPriceLoader.load(ticker: "TWTR", period: .oneDay) { result in
             switch result {
             case .success(let datapoints):
                 print(datapoints.map { $0.close })

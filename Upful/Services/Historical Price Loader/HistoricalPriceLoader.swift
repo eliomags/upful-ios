@@ -8,6 +8,11 @@
 
 import Foundation
 
+struct ChartDataPointCollection: Codable {
+    let range: String
+    let data: [ChartDataPoint]
+}
+
 struct ChartDataPoint: Codable {
     let date: String
     let close: Double
@@ -65,7 +70,7 @@ class HistoricalPriceLoader {
             
             if let data = data {
                 do {
-                    let datapoints = try self.parse(data: data)
+                    let datapoints = try self.parse(data: data, timePeriod: period)
                     completion(.success(datapoints))
                 } catch {
                     completion(.failure(.parsing))
@@ -77,8 +82,17 @@ class HistoricalPriceLoader {
         .resume()
     }
     
-    static func parse(data: Data) throws -> [ChartDataPoint] {
-        let decodedData = try JSONDecoder().decode([ChartDataPoint].self, from: data)
-        return decodedData
+    static func parse(data: Data, timePeriod: TimePeriod) throws -> [ChartDataPoint] {
+        let chartDataPoints: [ChartDataPoint]
+        
+        switch timePeriod {
+        case .oneDay:
+            let dataPointCollection = try JSONDecoder().decode(ChartDataPointCollection.self, from: data)
+            chartDataPoints = dataPointCollection.data
+        default:
+            chartDataPoints = try JSONDecoder().decode([ChartDataPoint].self, from: data)
+        }
+    
+        return chartDataPoints
     }
 }
