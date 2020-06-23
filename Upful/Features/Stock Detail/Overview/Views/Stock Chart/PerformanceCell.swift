@@ -20,6 +20,7 @@ class StockPerformanceChartViewModel {
     
     private let ticker: String
     private let timePeriods = HistoricalPriceLoader.TimePeriod.allCases
+    
     private var chartTimeOptions: [String] {
         return timePeriods.map { $0.explicit }
     }
@@ -30,10 +31,7 @@ class StockPerformanceChartViewModel {
     
     // MARK: Views
     
-    private let performanceChartHelperView: PerformanceChartHelperView = {
-        let view = PerformanceChartHelperView()
-        return view
-    }()
+    private let performanceChartHelperView = PerformanceChartHelperView()
         
     // MARK: Initializer
 
@@ -52,7 +50,7 @@ class StockPerformanceChartViewModel {
                 switch result {
                 case .success(let datapoints):
                     self.datapoints = datapoints
-                        self.loadCompletion()
+                    self.loadCompletion()
                 case .failure(let err):
                     print(err)
                 }
@@ -79,7 +77,8 @@ class StockPerformanceChartViewModel {
         
         var chartDataEntries: [ChartDataEntry] = []
         for i in 0..<datapoints.count {
-            let entry = ChartDataEntry(x: Double(i), y: datapoints[i].close)
+            guard let value = datapoints[i].close else { continue }
+            let entry = ChartDataEntry(x: Double(i), y: value)
             chartDataEntries.append(entry)
         }
         performanceCell.chartView.setDataSet(with: chartDataEntries)
@@ -104,8 +103,11 @@ class StockPerformanceChartViewModel {
     func configureHelperView(at index: Int) {
         guard !datapoints.isEmpty else { return }
         let dataPoint = datapoints[index]
-        let firstClose = datapoints.first!.close
-        let changeFromFirst: Double = (dataPoint.close / firstClose) - 1
+        guard
+            let selectedValue = dataPoint.close,
+            let firstClose = datapoints.first!.close
+            else { return }
+        let changeFromFirst: Double = (selectedValue / firstClose) - 1
         let percentChange = changeFromFirst.convertToPercent() + "%"
         
         if changeFromFirst < 0 {
@@ -113,8 +115,8 @@ class StockPerformanceChartViewModel {
         } else {
             performanceChartHelperView.valueChangeLabel.textColor = .systemGreen
         }
-        performanceChartHelperView.dateLabel.text = dataPoint.date
-        performanceChartHelperView.valueChangeLabel.text = "$\(dataPoint.close)(\(percentChange))"
+        performanceChartHelperView.dateLabel.text = dataPoint.label
+        performanceChartHelperView.valueChangeLabel.text = "$\(selectedValue)(\(percentChange))"
     }
 }
 

@@ -8,29 +8,56 @@
 
 import Foundation
 
-struct ChartDataPointCollection: Codable {
-    let range: String
-    let data: [ChartDataPoint]
+struct IntraDayDataPoint: Codable {
+    let label: String
+    let date: String
+    let average: Double?
+}
+
+extension Array where Element == IntraDayDataPoint {
+    
+    func convertToChartDataPoints() -> [ChartDataPoint] {
+        return self.map { intraDayObject -> ChartDataPoint in
+            let label: String
+            
+            let now = Date()
+            let convertedDate = DateTransformer.convertStringToDate(intraDayObject.date)
+
+            let isToday = Calendar.current.isDate(convertedDate, inSameDayAs: now)
+            if isToday {
+                label = intraDayObject.label
+            } else {
+                let transformedDate = DateTransformer.convertToMonthAbbreviation(convertedDate)
+                label = transformedDate + ":" + intraDayObject.label
+            }
+            
+            return ChartDataPoint(label: label, close: intraDayObject.average)
+        }
+    }
 }
 
 class ChartDataPoint: Codable, Hashable {
     static func == (lhs: ChartDataPoint, rhs: ChartDataPoint) -> Bool {
-        return lhs.date == rhs.date
+        return lhs.label == rhs.label
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(self)
     }
     
-    let date: String
-    let close: Double
-    let changeOverTime: Double
+    let label: String
+    let close: Double?
+    
+    init(label: String, close: Double?) {
+        self.label = label
+        self.close = close
+    }
 }
 
 class HistoricalPriceLoader {
     
     enum TimePeriod: String, CaseIterable {
-        case oneDay = "dynamic"
+        case oneDay
         case fiveDay = "5d"
         case oneMonth = "1m"
         case threeMonth = "3m"
@@ -53,9 +80,10 @@ class HistoricalPriceLoader {
         case sandbox
         case production
         
-        private static let urlComponent = "chart"
+        private static let chartComponent = "chart"
+        private static let intraDayComponent = "intraday-prices/chartInterval=15"
         
-        static func build(environment: RequestBuilder = .sandbox, ticker: String, period: TimePeriod) -> URLRequest {
+        static func buildDaily(environment: RequestBuilder, ticker: String) -> URLRequest {
             let baseURL: String
             let token: String
             
@@ -68,9 +96,30 @@ class HistoricalPriceLoader {
                 baseURL = Constants.IEXTrading.EndPoints.production
             }
             
-            guard let url = URL(string: baseURL + ticker + "/" + urlComponent + "/" + period.rawValue + token) else {
+            guard let url = URL(string: baseURL + ticker + "/" + intraDayComponent + token) else {
                 fatalError("Error Constructing URL")
             }
+            
+            return URLRequest(url: url)
+        }
+        
+        static func build(environment: RequestBuilder, ticker: String, period: TimePeriod) -> URLRequest {
+            let baseURL: String
+            let token: String
+            
+            switch environment {
+            case .sandbox:
+                token = Constants.IEXTrading.sandboxKey
+                baseURL = Constants.IEXTrading.EndPoints.sandbox
+            case .production:
+                token = Constants.IEXTrading.productionKey
+                baseURL = Constants.IEXTrading.EndPoints.production
+            }
+            
+            guard let url = URL(string: baseURL + ticker + "/" + chartComponent + "/" + period.rawValue + token) else {
+                fatalError("Error Constructing URL")
+            }
+            
             return URLRequest(url: url)
         }
     }
@@ -85,8 +134,8 @@ class HistoricalPriceLoader {
             return
         }
         
-        let request = RequestBuilder.build(ticker: ticker, period: period)
         let session = URLSession.shared
+        let request = constructRequest(for: period, ticker: ticker)
         
         session.dataTask(with: request) { (data, _, error) in
             if let _ = error {
@@ -109,17 +158,44 @@ class HistoricalPriceLoader {
         .resume()
     }
     
-    func parse(data: Data, timePeriod: TimePeriod) throws -> [ChartDataPoint] {
+    private func parse(data: Data, timePeriod: TimePeriod) throws -> [ChartDataPoint] {
         let chartDataPoints: [ChartDataPoint]
         
         switch timePeriod {
         case .oneDay:
-            let dataPointCollection = try JSONDecoder().decode(ChartDataPointCollection.self, from: data)
-            chartDataPoints = dataPointCollection.data
+            let dataPointCollection = try JSONDecoder().decode([IntraDayDataPoint].self, from: data)
+            chartDataPoints = dataPointCollection.convertToChartDataPoints()
         default:
             chartDataPoints = try JSONDecoder().decode([ChartDataPoint].self, from: data)
         }
     
         return chartDataPoints
     }
+    
+    // MARK: Private Helper
+    
+    private func constructRequest(for timePeriod: TimePeriod, ticker: String) -> URLRequest {
+        let request: URLRequest
+        let environment = RequestBuilder.production
+        
+        switch timePeriod {
+        case .oneDay:
+            request = RequestBuilder.buildDaily(environment: environment, ticker: ticker)
+        default:
+            request = RequestBuilder.build(environment: environment, ticker: ticker, period: timePeriod)
+        }
+        
+        return request
+    }
 }
+
+extension DateTransformer {
+    
+    fileprivate static func convertToMonthAbbreviation(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d"
+        
+        return dateFormatter.string(from: date)
+    }
+}
+

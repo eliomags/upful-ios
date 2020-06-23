@@ -280,6 +280,8 @@ class DateTransformer {
             df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         } else if string.contains(".") {
             df.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        } else {
+            df.dateFormat = "yyyy-MM-dd"
         }
         
         return df.date(from: string)!
