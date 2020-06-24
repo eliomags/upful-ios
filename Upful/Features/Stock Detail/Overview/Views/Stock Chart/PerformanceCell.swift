@@ -31,6 +31,7 @@ class StockPerformanceChartViewModel {
     
     // MARK: Views
     
+    private var performanceCell: PerformanceCell?
     private let performanceChartHelperView = PerformanceChartHelperView()
         
     // MARK: Initializer
@@ -62,6 +63,9 @@ class StockPerformanceChartViewModel {
     
     @objc
     private func handleTimePeriodChange(control: UISegmentedControl) {
+        performanceCell?.chartView.highlightValue(nil)
+        performanceChartHelperView.removeFromSuperview()
+
         currentSelectedIndex = control.selectedSegmentIndex
         loadDataPoints(at: timePeriods[currentSelectedIndex])
     }
@@ -77,6 +81,7 @@ class StockPerformanceChartViewModel {
     }
     
     func configure(_ performanceCell: PerformanceCell) {
+        self.performanceCell = performanceCell
         performanceCell.chartView.delegate = self
         
         configureSegmentControl(performanceCell)

@@ -222,30 +222,35 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case Section.price.rawValue:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.stockID, for: indexPath) as? PerformanceCell else { return UITableViewCell() }
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.stockID, for: indexPath)
+                as? PerformanceCell else { return UITableViewCell() }
             stockPerformanceViewModel.configure(cell)
             return cell
             
         case Section.barGraph.rawValue:
-            guard let barGraphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath) as? BarGraphTableViewCell else { return UITableViewCell() }
+            guard let barGraphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath)
+                as? BarGraphTableViewCell else { return UITableViewCell() }
             barGraphCell.backgroundColor = .clear
             barGraphCell.chartView.delegate = self
             configureChart(chartView: barGraphCell.chartView)
             return barGraphCell
             
         case Section.calculations.rawValue:
-            guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath) as? DetailsCalculationCell else { return UITableViewCell() }
+            guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath)
+                as? DetailsCalculationCell else { return UITableViewCell() }
             calculationsCell.setupCell(with: viewModel.calcData)
             calculationsCell.setupWithLookUp(lookUp: viewModel.financialLookup)
             return calculationsCell
             
         case Section.news.rawValue:
-            guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath) as? SmallNewsCell else { return UITableViewCell() }
+            guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath)
+                as? SmallNewsCell else { return UITableViewCell() }
             newsCell.stockNews = viewModel.stockNews[indexPath.row]
-        return newsCell
+            return newsCell
 
         case Section.description.rawValue:
-            guard let descriptionCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.descriptionCellID, for: indexPath) as? StockDescriptionCell else { return UITableViewCell() }
+            guard let descriptionCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.descriptionCellID, for: indexPath)
+                as? StockDescriptionCell else { return UITableViewCell() }
             descriptionCell.descriptionLabel.text = viewModel.stockDetail?.description ?? ""
             descriptionCell.employeeStackView.valueLabel.text = String(viewModel.stockDetail?.employees ?? 0)
             descriptionCell.locationStackView.valueLabel.text = "\(viewModel.stockDetail?.city ?? ""),\(viewModel.stockDetail?.state ?? "")"
