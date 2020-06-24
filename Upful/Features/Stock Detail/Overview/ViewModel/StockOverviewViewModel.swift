@@ -54,7 +54,7 @@ class StockOverviewViewModel {
     
     // MARK: - Operations
     
-    private let loadingOperations = DispatchGroup()
+    let loadingOperations = DispatchGroup()
     
     // MARK: - API
     
@@ -74,6 +74,7 @@ class StockOverviewViewModel {
     
     fileprivate func loadStockPrice() {
         loadingOperations.enter()
+        
         stockQuoteLoader.load(for: ticker) { [weak self] (result) in
             guard let self = self else { return }
             

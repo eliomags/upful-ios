@@ -25,6 +25,7 @@ final class StockOverviewViewController: UIViewController {
 
     private enum ReuseID {
         static let graphCell = "graphCell"
+        static let stockID = "stockID"
         static let calculationsCell = "calculationsCell"
         static let newsCell = "newsCell"
         static let descriptionCellID = "descriptionCellID"
@@ -118,10 +119,11 @@ final class StockOverviewViewController: UIViewController {
     
     private func setupViews() {
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
+        tableView.register(PerformanceCell.self, forCellReuseIdentifier: ReuseID.stockID)
         tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
         tableView.register(StockDescriptionCell.self, forCellReuseIdentifier: ReuseID.descriptionCellID)
-        tableView.backgroundColor = .clear
+        tableView.backgroundColor = .systemBackground
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
@@ -176,9 +178,13 @@ final class StockOverviewViewController: UIViewController {
     // MARK: - Private Functions
     
     @objc fileprivate func loadOverviewData() {
-        LoadingViewPresenter.show(in: self)
+        LoadingViewPresenter.show(in: self.parent ?? self)
         priceLoadHandler()
         viewModel.loadData()
+        
+        stockPerformanceViewModel.currentSelectedIndex = 0
+        stockPerformanceViewModel.loadDataPoints(at: .oneDay, dispatchGroup: viewModel.loadingOperations)
+        
         successHandler()
         errorHandler()
     }
@@ -205,7 +211,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableView.separatorStyle = .none
-        if section == Section.news.rawValue { return viewModel.stockNews.count}
+        if section == Section.news.rawValue { return viewModel.stockNews.count }
         return 1
     }
     
@@ -216,7 +222,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case Section.price.rawValue:
-            let cell = PerformanceCell()
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.stockID, for: indexPath) as? PerformanceCell else { return UITableViewCell() }
             stockPerformanceViewModel.configure(cell)
             return cell
             
@@ -244,6 +250,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
             descriptionCell.employeeStackView.valueLabel.text = String(viewModel.stockDetail?.employees ?? 0)
             descriptionCell.locationStackView.valueLabel.text = "\(viewModel.stockDetail?.city ?? ""),\(viewModel.stockDetail?.state ?? "")"
             return descriptionCell
+            
         default:
             return UITableViewCell()
         }

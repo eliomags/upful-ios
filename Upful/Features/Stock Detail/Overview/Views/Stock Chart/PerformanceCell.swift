@@ -15,7 +15,7 @@ class StockPerformanceChartViewModel {
     
     // MARK: Properties
     
-    private var currentSelectedIndex = 0
+    var currentSelectedIndex = 0
     private var datapoints: [ChartDataPoint] = []
     
     private let ticker: String
@@ -37,12 +37,13 @@ class StockPerformanceChartViewModel {
 
     init(ticker: String) {
         self.ticker = ticker
-        loadDataPoints(at: timePeriods.first!)
     }
     
     // MARK: Data Loading
     
-    func loadDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod) {
+    func loadDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod, dispatchGroup: DispatchGroup? = nil) {
+        dispatchGroup?.enter()
+        
         historicalPriceLoader.load(ticker: ticker, period: timeOption) { [weak self] result in
             guard let self = self else { return }
             
@@ -54,6 +55,7 @@ class StockPerformanceChartViewModel {
                 case .failure(let err):
                     print(err)
                 }
+                dispatchGroup?.leave()
             }
         }
     }
@@ -66,12 +68,19 @@ class StockPerformanceChartViewModel {
     
     // MARK: View Setup
     
-    func configure(_ performanceCell: PerformanceCell) {
-        performanceCell.chartView.delegate = self
+    fileprivate func configureSegmentControl(_ performanceCell: PerformanceCell) {
+        guard performanceCell.chartTimeControl.numberOfSegments == 0 else { return }
         
         for index in 0..<chartTimeOptions.count {
             performanceCell.chartTimeControl.insertSegment(withTitle: chartTimeOptions[index], at: index, animated: false)
         }
+    }
+    
+    func configure(_ performanceCell: PerformanceCell) {
+        performanceCell.chartView.delegate = self
+        
+        configureSegmentControl(performanceCell)
+        
         performanceCell.chartTimeControl.selectedSegmentIndex = currentSelectedIndex
         performanceCell.chartTimeControl.addTarget(self, action: #selector(handleTimePeriodChange), for: .valueChanged)
         
