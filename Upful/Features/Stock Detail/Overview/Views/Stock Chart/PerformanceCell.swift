@@ -102,12 +102,16 @@ class StockPerformanceChartViewModel {
         var leftDistance = highlight.xPx
         chartView.addSubview(performanceChartHelperView)
         
-        if Int(entry.x) == datapoints.count-1 {
-            performanceChartHelperView.labels.forEach({ $0.textAlignment = .right })
-            leftDistance -= performanceChartHelperView.frame.width + 3
+        let totalChartViewWidth = chartView.frame.width
+        let entryAndLabelWidth = performanceChartHelperView.frame.width + highlight.xPx
+        let didExceedChartViewWidth = entryAndLabelWidth > totalChartViewWidth
+        
+        if didExceedChartViewWidth {
+            performanceChartHelperView.labels.forEach{ $0.textAlignment = .right }
+            leftDistance -= performanceChartHelperView.frame.width + 5
         } else {
-            performanceChartHelperView.labels.forEach({ $0.textAlignment = .left })
-            leftDistance += 3
+            performanceChartHelperView.labels.forEach{ $0.textAlignment = .left }
+            leftDistance += 5
         }
         performanceChartHelperView.anchor(top: chartView.topAnchor, leading: chartView.leadingAnchor,
                                           bottom: nil, trailing: nil,
@@ -241,7 +245,7 @@ class PerformanceLineChartView: LineChartView {
         
         lineChartDataSet.highlightLineWidth = 2
         lineChartDataSet.highlightColor = UIColor.lightGray.withAlphaComponent(0.5)
-
+        
         data = LineChartData(dataSet: lineChartDataSet)
     }
 }
