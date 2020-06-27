@@ -25,7 +25,7 @@ final class StockOverviewViewController: UIViewController {
 
     private enum ReuseID {
         static let graphCell = "graphCell"
-        static let stockID = "stockID"
+        static let performanceCell = "performanceCellID"
         static let calculationsCell = "calculationsCell"
         static let newsCell = "newsCell"
         static let descriptionCellID = "descriptionCellID"
@@ -119,7 +119,7 @@ final class StockOverviewViewController: UIViewController {
     
     private func setupViews() {
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
-        tableView.register(PerformanceCell.self, forCellReuseIdentifier: ReuseID.stockID)
+        tableView.register(PerformanceCell.self, forCellReuseIdentifier: ReuseID.performanceCell)
         tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
         tableView.register(SmallNewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
         tableView.register(StockDescriptionCell.self, forCellReuseIdentifier: ReuseID.descriptionCellID)
@@ -180,9 +180,8 @@ final class StockOverviewViewController: UIViewController {
     @objc fileprivate func loadOverviewData() {
         LoadingViewPresenter.show(in: self.parent ?? self)
         priceLoadHandler()
-        viewModel.loadData()
-        
         stockPerformanceViewModel.currentSelectedIndex = 0
+        viewModel.loadData()
         stockPerformanceViewModel.loadDataPoints(at: .oneDay, dispatchGroup: viewModel.loadingOperations)
         
         successHandler()
@@ -222,7 +221,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case Section.price.rawValue:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.stockID, for: indexPath)
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.performanceCell, for: indexPath)
                 as? PerformanceCell else { return UITableViewCell() }
             stockPerformanceViewModel.configure(cell)
             return cell

@@ -138,20 +138,6 @@ class StockPerformanceChartViewModel {
         performanceChartHelperView.dateLabel.text = dataPoint.label
         performanceChartHelperView.valueChangeLabel.text = "$\(selectedValue)(\(percentChange))"
     }
-    
-    // MARK: Helper
-    
-    private static func transformDate(_ dateString: String) {
-        /*
-         If 1D,
-            convert chart date to local time
-            check if returned date is today in local time,
-                if last date is still today,
-                    show time as 10:44 AM EST or w/e
-                not today,
-                    show time as 10:44 AM
-         */
-    }
 }
 
 extension StockPerformanceChartViewModel: ChartViewDelegate {
