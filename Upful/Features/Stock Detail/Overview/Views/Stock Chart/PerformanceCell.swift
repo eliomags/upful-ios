@@ -42,9 +42,7 @@ class StockPerformanceChartViewModel {
     
     // MARK: Data Loading
     
-    func loadDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod, dispatchGroup: DispatchGroup? = nil) {
-        dispatchGroup?.enter()
-        
+    func loadDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod) {
         historicalPriceLoader.load(ticker: ticker, period: timeOption) { [weak self] result in
             guard let self = self else { return }
             
@@ -53,6 +51,23 @@ class StockPerformanceChartViewModel {
                 case .success(let datapoints):
                     self.datapoints = datapoints
                     self.loadCompletion()
+                case .failure(let err):
+                    print(err)
+                }
+            }
+        }
+    }
+    
+    func loadInitialDataPoints(dispatchGroup: DispatchGroup? = nil) {
+        dispatchGroup?.enter()
+        
+        historicalPriceLoader.load(ticker: ticker, period: .oneDay) { [weak self] result in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let datapoints):
+                    self.datapoints = datapoints
                 case .failure(let err):
                     print(err)
                 }

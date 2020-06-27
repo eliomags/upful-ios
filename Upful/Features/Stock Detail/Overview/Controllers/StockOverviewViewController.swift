@@ -181,8 +181,10 @@ final class StockOverviewViewController: UIViewController {
         LoadingViewPresenter.show(in: self.parent ?? self)
         priceLoadHandler()
         stockPerformanceViewModel.currentSelectedIndex = 0
+        
         viewModel.loadData()
-        stockPerformanceViewModel.loadDataPoints(at: .oneDay, dispatchGroup: viewModel.loadingOperations)
+        stockPerformanceViewModel.loadInitialDataPoints(dispatchGroup: viewModel.loadingOperations)
+        viewModel.listenForUpdates()
         
         successHandler()
         errorHandler()
@@ -209,9 +211,12 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tableView.separatorStyle = .none
-        if section == Section.news.rawValue { return viewModel.stockNews.count }
-        return 1
+        
+        if section == Section.news.rawValue {
+            return viewModel.stockNews.count
+        } else {
+            return 1
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

@@ -52,11 +52,9 @@ class StockOverviewViewModel {
         self.descriptionLoader = descriptionLoader
     }
     
-    // MARK: - Operations
-    
-    let loadingOperations = DispatchGroup()
-    
     // MARK: - API
+
+    let loadingOperations = DispatchGroup()
     
     func loadData() {
         loadNewsData()
@@ -66,11 +64,15 @@ class StockOverviewViewModel {
         loadCalculationsData()
         loadStockDescription()
         loadAdditionalCalculationsData()
-        
+    }
+    
+    func listenForUpdates() {
         loadingOperations.notify(queue: .main) {
             self.loadingCompletionHandler?()
         }
     }
+    
+    // MARK: - Private Functions
     
     fileprivate func loadStockPrice() {
         loadingOperations.enter()
