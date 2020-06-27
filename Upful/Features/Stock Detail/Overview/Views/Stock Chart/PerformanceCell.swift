@@ -27,7 +27,7 @@ class StockPerformanceChartViewModel {
     
     // MARK: Callbacks
     
-    var loadCompletion: () -> Void = {}
+    var loadCompletion: (() -> Void)?
     
     // MARK: Views
     
@@ -40,54 +40,31 @@ class StockPerformanceChartViewModel {
         self.ticker = ticker
     }
     
-    // MARK: Data Loading
-    
-    func loadDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod) {
-        historicalPriceLoader.load(ticker: ticker, period: timeOption) { [weak self] result in
-            guard let self = self else { return }
-
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let datapoints):
-                    self.datapoints = datapoints
-                    self.loadCompletion()
-                case .failure(let err):
-                    print(err)
-                }
-            }
-        }
-    }
+    // MARK: API
     
     func loadInitialDataPoints(dispatchGroup: DispatchGroup? = nil) {
         dispatchGroup?.enter()
         
-        historicalPriceLoader.load(ticker: ticker, period: .oneDay) { [weak self] result in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let datapoints):
-                    self.datapoints = datapoints
-                case .failure(let err):
-                    print(err)
-                }
-                dispatchGroup?.leave()
-            }
+        loadChartDataPoints(at: .oneDay) {
+            dispatchGroup?.leave()
         }
     }
-    
+
     // MARK: Actions
     
-    @objc
-    private func handleTimePeriodChange(control: UISegmentedControl) {
+    @objc private func handleTimePeriodChange(control: UISegmentedControl) {
         performanceCell?.chartView.highlightValue(nil)
         performanceChartHelperView.removeFromSuperview()
 
         currentSelectedIndex = control.selectedSegmentIndex
-        loadDataPoints(at: timePeriods[currentSelectedIndex])
+        
+        let selectedTimePeriod = timePeriods[currentSelectedIndex]
+        loadChartDataPoints(at: selectedTimePeriod) { [weak self] in
+            self?.loadCompletion?()
+        }
     }
     
-    // MARK: View Setup
+    // MARK: Cell Setup
     
     fileprivate func configureSegmentControl(_ performanceCell: PerformanceCell) {
         guard performanceCell.chartTimeControl.numberOfSegments == 0 else { return }
@@ -115,6 +92,8 @@ class StockPerformanceChartViewModel {
         
         performanceCell.chartView.setDataSet(with: chartDataEntries)
     }
+    
+    // MARK: Chart Helper View Setup/Configuration
     
     func setupHelperView(chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
         var leftDistance = highlight.xPx
@@ -156,6 +135,25 @@ class StockPerformanceChartViewModel {
         performanceChartHelperView.dateLabel.text = dataPoint.label
         performanceChartHelperView.valueChangeLabel.text = "$\(selectedValue)(\(percentChange))"
     }
+    
+    // MARK: Private Methods
+    
+    private func loadChartDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod, _ completion: @escaping () -> Void) {
+        historicalPriceLoader.load(ticker: ticker, period: timeOption) { [weak self] result in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let datapoints):
+                    self.datapoints = datapoints
+                case .failure(let err):
+                    print(err)
+                }
+                completion()
+            }
+        }
+    }
+    
 }
 
 extension StockPerformanceChartViewModel: ChartViewDelegate {
@@ -171,7 +169,7 @@ extension StockPerformanceChartViewModel: ChartViewDelegate {
     
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
         Vibration.light.vibrate()
-        
+
         performanceChartHelperView.removeFromSuperview()
         setupHelperView(chartView: chartView, entry: entry, highlight: highlight)
         configureHelperView(at: Int(entry.x))
@@ -183,7 +181,7 @@ class PerformanceChartHelperView: UIView {
     let dateLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
-        label.text = "PlaceHolder Date"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 10, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -192,7 +190,7 @@ class PerformanceChartHelperView: UIView {
     let valueChangeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .systemGreen
-        label.text = "PlaceHolder Date"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 10, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

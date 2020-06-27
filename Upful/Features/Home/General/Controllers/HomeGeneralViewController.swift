@@ -104,8 +104,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        title = ""
-        navigationItem.title = ""
+        clearTitle()
         logicController.cancelHoldingsLoad()
     }
     
@@ -249,7 +248,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         if tableView.contentOffset.y >= height {
             navigationItem.title = "$\(logicController.totalEquity?.withCommas() ?? " -")"
         } else {
-            navigationItem.title = ""
+            clearTitle()
         }
     }
     
@@ -296,6 +295,11 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         tradingBalanceView.setNegative()
         
         tradingBalanceView.totalEquityView.totalReturnLabel.text = "Error"
+    }
+    
+    private func clearTitle() {
+        title = ""
+        navigationItem.title = ""
     }
     
     // MARK: Breakdown Section

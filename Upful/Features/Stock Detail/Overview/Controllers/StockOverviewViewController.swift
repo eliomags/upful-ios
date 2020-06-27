@@ -180,13 +180,13 @@ final class StockOverviewViewController: UIViewController {
     
     @objc fileprivate func loadOverviewData() {
         LoadingViewPresenter.show(in: self.parent ?? self)
-        priceLoadHandler()
         stockPerformanceViewModel.currentSelectedIndex = 0
         
         viewModel.loadData()
         stockPerformanceViewModel.loadInitialDataPoints(dispatchGroup: viewModel.loadingOperations)
         viewModel.listenForUpdates()
         
+        priceLoadHandler()
         successHandler()
         errorHandler()
     }
