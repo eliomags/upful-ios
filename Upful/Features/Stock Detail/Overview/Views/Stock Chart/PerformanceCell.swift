@@ -45,7 +45,7 @@ class StockPerformanceChartViewModel {
     func loadDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod) {
         historicalPriceLoader.load(ticker: ticker, period: timeOption) { [weak self] result in
             guard let self = self else { return }
-            
+
             DispatchQueue.main.async {
                 switch result {
                 case .success(let datapoints):
@@ -105,13 +105,14 @@ class StockPerformanceChartViewModel {
         
         performanceCell.chartTimeControl.selectedSegmentIndex = currentSelectedIndex
         performanceCell.chartTimeControl.addTarget(self, action: #selector(handleTimePeriodChange), for: .valueChanged)
-        
+                
         var chartDataEntries: [ChartDataEntry] = []
         for i in 0..<datapoints.count {
             guard let value = datapoints[i].close else { continue }
             let entry = ChartDataEntry(x: Double(i), y: value)
             chartDataEntries.append(entry)
         }
+        
         performanceCell.chartView.setDataSet(with: chartDataEntries)
     }
     
@@ -130,6 +131,7 @@ class StockPerformanceChartViewModel {
             performanceChartHelperView.labels.forEach{ $0.textAlignment = .left }
             leftDistance += 5
         }
+        
         performanceChartHelperView.anchor(top: chartView.topAnchor, leading: chartView.leadingAnchor,
                                           bottom: nil, trailing: nil,
                                           padding: .init(top: 0, left: leftDistance, bottom: 0, right: 0))
@@ -150,6 +152,7 @@ class StockPerformanceChartViewModel {
         } else {
             performanceChartHelperView.valueChangeLabel.textColor = .systemGreen
         }
+        
         performanceChartHelperView.dateLabel.text = dataPoint.label
         performanceChartHelperView.valueChangeLabel.text = "$\(selectedValue)(\(percentChange))"
     }

@@ -91,6 +91,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         super.viewWillAppear(animated)
         logicController.loadHoldings()
         configureTransactionHeaderSuccess()
+        checkIfNeedsShowTitle()
     }
     
     override func viewDidLayoutSubviews() {
@@ -103,6 +104,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        title = ""
+        navigationItem.title = ""
         logicController.cancelHoldingsLoad()
     }
     
@@ -218,8 +221,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         navigationController?.pushViewController(screenerSelectionVC, animated: true)
     }
     
-    @objc
-    private func handlePreferencesGetStartedTap() {
+    @objc private func handlePreferencesGetStartedTap() {
         let preferencePresenter = PreferencePresenter(presentingViewController: self)
         preferencePresenter.present()
     }
@@ -233,12 +235,18 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     // MARK: - ScrollView Delegate Methods
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        checkIfNeedsShowTitle()
+    }
+    
+    private func checkIfNeedsShowTitle() {
+        if tableView.contentOffset.y == 0 { return }
+        
         let height: CGFloat = tradingBalanceView.frame.height -
             tradingBalanceView.cashBalanceView.frame.height -
             tradingBalanceView.lastUpdatedLabel.frame.height -
             70
         
-        if scrollView.contentOffset.y >= height {
+        if tableView.contentOffset.y >= height {
             navigationItem.title = "$\(logicController.totalEquity?.withCommas() ?? " -")"
         } else {
             navigationItem.title = ""
