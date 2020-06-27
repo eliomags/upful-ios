@@ -24,11 +24,13 @@ extension Array where Element == IntraDayDataPoint {
             let convertedDate = DateTransformer.convertStringToDate(intraDayObject.date)
 
             let isToday = Calendar.current.isDate(convertedDate, inSameDayAs: now)
+            let estTimezone = " EST"
+            
             if isToday {
-                label = intraDayObject.label
+                label = intraDayObject.label.appending(estTimezone)
             } else {
                 let transformedDate = DateTransformer.convertToMonthAbbreviation(convertedDate)
-                label = transformedDate + ":" + intraDayObject.label
+                label = transformedDate + ":" + intraDayObject.label.appending(estTimezone)
             }
             
             return ChartDataPoint(label: label, close: intraDayObject.average)
