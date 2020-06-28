@@ -15,7 +15,7 @@ class StockPerformanceChartViewModel {
     
     // MARK: Properties
     
-    var currentSelectedIndex = 0
+    private(set)var currentSelectedIndex = 0
     private var datapoints: [ChartDataPoint] = []
     
     private let ticker: String
@@ -45,7 +45,8 @@ class StockPerformanceChartViewModel {
     func loadInitialDataPoints(dispatchGroup: DispatchGroup? = nil) {
         dispatchGroup?.enter()
         
-        loadChartDataPoints(at: .oneDay) {
+        let selectedTimePeriod = timePeriods[currentSelectedIndex]
+        loadChartDataPoints(at: selectedTimePeriod) {
             dispatchGroup?.leave()
         }
     }
@@ -53,9 +54,8 @@ class StockPerformanceChartViewModel {
     // MARK: Actions
     
     @objc private func handleTimePeriodChange(control: UISegmentedControl) {
-        performanceCell?.chartView.highlightValue(nil)
-        performanceChartHelperView.removeFromSuperview()
-
+        Vibration.selection.vibrate()
+        
         currentSelectedIndex = control.selectedSegmentIndex
         
         let selectedTimePeriod = timePeriods[currentSelectedIndex]
@@ -64,15 +64,28 @@ class StockPerformanceChartViewModel {
         }
     }
     
-    // MARK: Cell Setup
+    // MARK: Private Methods
     
-    fileprivate func configureSegmentControl(_ performanceCell: PerformanceCell) {
-        guard performanceCell.chartTimeControl.numberOfSegments == 0 else { return }
+    private func loadChartDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod, _ completion: @escaping () -> Void) {
+        performanceChartHelperView.removeFromSuperview()
+        performanceCell?.chartView.highlightValue(nil)
         
-        for index in 0..<chartTimeOptions.count {
-            performanceCell.chartTimeControl.insertSegment(withTitle: chartTimeOptions[index], at: index, animated: false)
+        historicalPriceLoader.load(ticker: ticker, period: timeOption) { [weak self] result in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let datapoints):
+                    self.datapoints = datapoints.filter { $0.close != nil }
+                case .failure(let err):
+                    print(err)
+                }
+                completion()
+            }
         }
     }
+    
+    // MARK: Cell Setup
     
     func configure(_ performanceCell: PerformanceCell) {
         self.performanceCell = performanceCell
@@ -80,9 +93,6 @@ class StockPerformanceChartViewModel {
         
         configureSegmentControl(performanceCell)
         
-        performanceCell.chartTimeControl.selectedSegmentIndex = currentSelectedIndex
-        performanceCell.chartTimeControl.addTarget(self, action: #selector(handleTimePeriodChange), for: .valueChanged)
-                
         var chartDataEntries: [ChartDataEntry] = []
         for i in 0..<datapoints.count {
             guard let value = datapoints[i].close else { continue }
@@ -93,6 +103,17 @@ class StockPerformanceChartViewModel {
         performanceCell.chartView.setDataSet(with: chartDataEntries)
     }
     
+    fileprivate func configureSegmentControl(_ performanceCell: PerformanceCell) {
+        guard performanceCell.chartTimeControl.numberOfSegments == 0 else { return }
+        
+        for index in 0..<chartTimeOptions.count {
+            performanceCell.chartTimeControl.insertSegment(withTitle: chartTimeOptions[index], at: index, animated: false)
+        }
+        
+        performanceCell.chartTimeControl.selectedSegmentIndex = currentSelectedIndex
+        performanceCell.chartTimeControl.addTarget(self, action: #selector(handleTimePeriodChange), for: .valueChanged)
+    }
+
     // MARK: Chart Helper View Setup/Configuration
     
     func setupHelperView(chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
@@ -135,25 +156,7 @@ class StockPerformanceChartViewModel {
         performanceChartHelperView.dateLabel.text = dataPoint.label
         performanceChartHelperView.valueChangeLabel.text = "$\(selectedValue)(\(percentChange))"
     }
-    
-    // MARK: Private Methods
-    
-    private func loadChartDataPoints(at timeOption: HistoricalPriceLoader.TimePeriod, _ completion: @escaping () -> Void) {
-        historicalPriceLoader.load(ticker: ticker, period: timeOption) { [weak self] result in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let datapoints):
-                    self.datapoints = datapoints
-                case .failure(let err):
-                    print(err)
-                }
-                completion()
-            }
-        }
-    }
-    
+
 }
 
 extension StockPerformanceChartViewModel: ChartViewDelegate {
