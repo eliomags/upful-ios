@@ -104,6 +104,8 @@ class StockPerformanceChartViewModel {
     }
     
     fileprivate func configureSegmentControl(_ performanceCell: PerformanceCell) {
+        performanceCell.chartTimeControl.selectedSegmentIndex = currentSelectedIndex
+        
         guard performanceCell.chartTimeControl.numberOfSegments == 0 else { return }
         
         for index in 0..<chartTimeOptions.count {
