@@ -33,7 +33,7 @@ class TableHeaderView: UIView {
     private lazy var headerStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [headerLabel, detailsLabel])
         sv.axis = .vertical
-        sv.spacing = 6
+        sv.spacing = 2
         sv.alignment = .leading
         return sv
     }()

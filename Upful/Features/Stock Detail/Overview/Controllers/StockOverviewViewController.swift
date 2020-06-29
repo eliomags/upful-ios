@@ -33,13 +33,23 @@ final class StockOverviewViewController: UIViewController {
     
     // MARK: - Views
     
-    let quoteView = StockQuoteView(priceLabelFontSize: 21, priceChangeLabelFontSize: 17, priceChangeLabelWidth: 70)
+    private let quoteView = StockQuoteView(priceLabelFontSize: 21, priceChangeLabelFontSize: 17, priceChangeLabelWidth: 70)
+    private let lastUpdatedLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
+        let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption2).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .light)
+        return label
+    }()
     
     lazy var stockHeaderView: TableHeaderView = {
         let v = TableHeaderView()
         v.detailsLabel.text = ""
         v.headerLabel.text = ""
         v.accessoryStackView.addArrangedSubview(quoteView)
+        v.accessoryStackView.addArrangedSubview(lastUpdatedLabel)
         return v
     }()
     
@@ -144,6 +154,11 @@ final class StockOverviewViewController: UIViewController {
         } else if stockQuote?.changePercent ?? 0 < 0 {
             quoteView.setNegative()
         }
+        
+        let df = DateFormatter()
+        df.dateFormat = "MMM d, h:mm a"
+        df.timeZone = TimeZone(abbreviation: "EST")
+        lastUpdatedLabel.text = "Last Updated, \(df.string(from: Date())) EST"
     }
     
     func showErrorAlert() {
