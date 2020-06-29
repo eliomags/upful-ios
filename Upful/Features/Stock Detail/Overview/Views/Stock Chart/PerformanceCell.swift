@@ -112,7 +112,6 @@ class StockPerformanceChartViewModel {
             performanceCell.chartTimeControl.insertSegment(withTitle: chartTimeOptions[index], at: index, animated: false)
         }
         
-        performanceCell.chartTimeControl.selectedSegmentIndex = currentSelectedIndex
         performanceCell.chartTimeControl.addTarget(self, action: #selector(handleTimePeriodChange), for: .valueChanged)
     }
 
