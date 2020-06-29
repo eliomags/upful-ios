@@ -38,7 +38,6 @@ final class StockOverviewViewController: UIViewController {
         let label = UILabel()
         label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption2).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .light)
         return label
@@ -49,7 +48,6 @@ final class StockOverviewViewController: UIViewController {
         v.detailsLabel.text = ""
         v.headerLabel.text = ""
         v.accessoryStackView.addArrangedSubview(quoteView)
-        v.accessoryStackView.addArrangedSubview(lastUpdatedLabel)
         return v
     }()
     
@@ -155,6 +153,10 @@ final class StockOverviewViewController: UIViewController {
             quoteView.setNegative()
         }
         
+        stockHeaderView.addSubview(lastUpdatedLabel)
+        lastUpdatedLabel.topAnchor.constraint(equalTo: quoteView.bottomAnchor, constant: 8).isActive = true
+        lastUpdatedLabel.leadingAnchor.constraint(equalTo: stockHeaderView.detailsLabel.leadingAnchor).isActive = true
+
         let df = DateFormatter()
         df.dateFormat = "MMM d, h:mm a"
         df.timeZone = TimeZone(abbreviation: "EST")
