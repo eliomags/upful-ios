@@ -31,6 +31,7 @@ class StockPerformanceChartViewModel {
     
     // MARK: Views
     
+    private(set) var tableView: UITableView?
     private var performanceCell: PerformanceCell?
     private let performanceChartHelperView = PerformanceChartHelperView()
         
@@ -50,12 +51,19 @@ class StockPerformanceChartViewModel {
             dispatchGroup?.leave()
         }
     }
-
+    
+    func configureInactiveScrollState() {
+        tableView?.isScrollEnabled = true
+        performanceCell?.chartView.highlightValue(nil)
+        performanceChartHelperView.removeFromSuperview()
+    }
+    
     // MARK: Actions
     
     @objc private func handleTimePeriodChange(control: UISegmentedControl) {
         Vibration.selection.vibrate()
         
+        tableView?.isScrollEnabled = true
         currentSelectedIndex = control.selectedSegmentIndex
         
         let selectedTimePeriod = timePeriods[currentSelectedIndex]
@@ -86,8 +94,9 @@ class StockPerformanceChartViewModel {
     }
     
     // MARK: Cell Setup
-    
-    func configure(_ performanceCell: PerformanceCell) {
+        
+    func configure(_ performanceCell: PerformanceCell, tableView: UITableView) {
+        self.tableView = tableView
         self.performanceCell = performanceCell
         performanceCell.chartView.delegate = self
         
@@ -157,26 +166,36 @@ class StockPerformanceChartViewModel {
         performanceChartHelperView.dateLabel.text = dataPoint.label
         performanceChartHelperView.valueChangeLabel.text = "$\(selectedValue)(\(percentChange))"
     }
-
+    
+    fileprivate func handleTapGesture(inside chartView: ChartViewBase) {
+        if let tapGesture = (chartView.gestureRecognizers)?.first(where: { $0 is UITapGestureRecognizer }) {
+            if tapGesture.state == .ended {
+                configureInactiveScrollState()
+            } else {
+                Vibration.light.vibrate()
+            }
+        }
+    }
 }
 
 extension StockPerformanceChartViewModel: ChartViewDelegate {
     
     func chartViewDidEndPanning(_ chartView: ChartViewBase) {
-        performanceChartHelperView.removeFromSuperview()
-        chartView.highlightValue(nil)
+        configureInactiveScrollState()
     }
     
     func chartValueNothingSelected(_ chartView: ChartViewBase) {
-        performanceChartHelperView.removeFromSuperview()
+        configureInactiveScrollState()
     }
     
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
-        Vibration.light.vibrate()
-
+        tableView?.isScrollEnabled = false
         performanceChartHelperView.removeFromSuperview()
+
         setupHelperView(chartView: chartView, entry: entry, highlight: highlight)
         configureHelperView(at: Int(entry.x))
+        
+        handleTapGesture(inside: chartView)
     }
 }
 

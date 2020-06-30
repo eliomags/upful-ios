@@ -245,7 +245,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         case Section.price.rawValue:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.performanceCell, for: indexPath)
                 as? PerformanceCell else { return UITableViewCell() }
-            stockPerformanceViewModel.configure(cell)
+            stockPerformanceViewModel.configure(cell, tableView: tableView)
             return cell
             
         case Section.barGraph.rawValue:
