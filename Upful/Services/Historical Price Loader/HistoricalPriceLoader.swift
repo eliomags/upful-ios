@@ -59,23 +59,14 @@ class ChartDataPoint: Codable, Hashable {
 class HistoricalPriceLoader {
     
     enum TimePeriod: String, CaseIterable {
-        case oneDay
-        case fiveDay = "5d"
-        case oneMonth = "1m"
-        case threeMonth = "3m"
-        case sixMonth = "6m"
-        case yearToDate = "ytd"
-        case oneYear = "1y"
-        case fiveYear = "5y"
-        
-        var explicit: String {
-            switch self {
-            case .oneDay:
-                return "1D"
-            default:
-                return self.rawValue.capitalized
-            }
-        }
+        case oneDay = "1D"
+        case fiveDay = "5D"
+        case oneMonth = "1M"
+        case threeMonth = "3M"
+        case sixMonth = "6M"
+        case yearToDate = "YTD"
+        case oneYear = "1Y"
+        case fiveYear = "5Y"
     }
     
     enum RequestBuilder {

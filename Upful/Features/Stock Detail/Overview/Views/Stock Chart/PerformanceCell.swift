@@ -22,7 +22,7 @@ class StockPerformanceChartViewModel {
     private let timePeriods = HistoricalPriceLoader.TimePeriod.allCases
     
     private var chartTimeOptions: [String] {
-        return timePeriods.map { $0.explicit }
+        return timePeriods.map { $0.rawValue }
     }
     
     // MARK: Callbacks
@@ -272,21 +272,23 @@ class PerformanceLineChartView: LineChartView {
     }
     
     func setDataSet(with chartDataEntries: [ChartDataEntry]) {
-        let lineChartDataSet = LineChartDataSet(entries: chartDataEntries)
+        let lineChartDataSet = LineChartDataSet(entries: chartDataEntries)        
+        lineChartDataSet.mode = .cubicBezier
+
         lineChartDataSet.lineWidth = 2.5
         lineChartDataSet.circleRadius = 0
         lineChartDataSet.drawValuesEnabled = false
         lineChartDataSet.drawCirclesEnabled = false
         lineChartDataSet.drawHorizontalHighlightIndicatorEnabled = false
         
-        lineChartDataSet.cubicIntensity = 0.25
+        lineChartDataSet.cubicIntensity = 0.3
         
         let isPositiveChange = (chartDataEntries.first?.y ?? 0) < (chartDataEntries.last?.y ?? 0)
         lineChartDataSet.colors = isPositiveChange ? [UIColor.appAccent3] : [UIColor.systemRed]
         
         lineChartDataSet.highlightLineWidth = 2
         lineChartDataSet.highlightColor = UIColor.lightGray.withAlphaComponent(0.5)
-        
+                
         data = LineChartData(dataSet: lineChartDataSet)
     }
 }
