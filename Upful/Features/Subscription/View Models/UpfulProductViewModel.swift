@@ -67,7 +67,7 @@ class UpfulProductViewModel {
 
 extension UpfulProductViewModel {
     var description: String {
-        return "1 Week Free. \(monthlyPricing ?? "")"
+        return "1 Month Free. \(monthlyPricing ?? "")"
     }
 }
 
