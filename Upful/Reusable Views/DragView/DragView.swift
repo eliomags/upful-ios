@@ -8,10 +8,7 @@
 
 import UIKit
 
-@objc protocol DragViewDelegate: class {
-    @objc optional func dragViewDidScroll(_ dragView: DragView)
-    @objc optional func dragViewDidBeginScrolling(_ dragView: DragView)
-    
+protocol DragViewDelegate: class {
     func dragViewDidEndScrolling(_ dragView: DragView, dragState: DragViewPresentationState)
 }
 
