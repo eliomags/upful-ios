@@ -288,7 +288,7 @@ extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegat
         case Section.price.rawValue:
             return 200
         case Section.barGraph.rawValue:
-            return (UIScreen.main.bounds.height / 2) - 50
+            return 300
         default:
             return UITableView.automaticDimension
         }
