@@ -7,31 +7,56 @@
 //
 
 import UIKit
-import Charts
 
-final class StockOverviewViewController: UIViewController {
+struct StockDetailsModuleConstants {
+    enum Section: Int, CaseIterable {
+        case price
+        case barGraph
+        case calculations
+        case news
+        case description
+    }
     
-    // MARK: - MenuBarDisplayable Protocol Properties
-    
-    weak var menuViewItemDelegate: MenuViewItemDelegate?
-
-    // MARK: - Dependencies
-    
-    private let viewModel: StockOverviewViewModel
-    private lazy var stockPerformanceViewModel: StockPerformanceChartViewModel = {
-        let vm = StockPerformanceChartViewModel(ticker: self.viewModel.ticker)
-        return vm
-    }()
-
-    private enum ReuseID {
+    enum ReuseID {
         static let graphCell = "graphCell"
         static let performanceCell = "performanceCellID"
         static let calculationsCell = "calculationsCell"
         static let newsCell = "newsCell"
         static let descriptionCellID = "descriptionCellID"
     }
+}
+
+final class StockOverviewViewController: UIViewController {
+
+    // MARK: - Dependencies
     
+    let ticker: String
+    let companyName: String
+    
+    let savedStockDataManager: LocalStockDataLoaderProtocol = LocalStockLoader()
+
+    lazy var datasource: StockOverviewDatasource = {
+        let stockPerformanceViewModel = StockPerformanceChartViewModel(ticker: ticker)
+        let stockOverviewViewModel = StockOverviewViewModel(ticker: ticker, companyName: companyName)
+        let ds = StockOverviewDatasource(stockOverviewViewModel: stockOverviewViewModel,
+                                         stockPerformanceViewModel: stockPerformanceViewModel)
+        ds.delegate = self
+        return ds
+    }()
+
     // MARK: - Views
+    
+    lazy var saveButton: SaveButton = {
+        let button = SaveButton()
+        button.addTarget(self, action: #selector(handleSaveTap), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var cancelButton: CancelButton = {
+        let button = CancelButton()
+        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
+        return button
+    }()
     
     private let quoteView = StockQuoteView(priceLabelFontSize: 21, priceChangeLabelFontSize: 17, priceChangeLabelWidth: 70)
     private let lastUpdatedLabel: UILabel = {
@@ -50,7 +75,7 @@ final class StockOverviewViewController: UIViewController {
         v.accessoryStackView.addArrangedSubview(quoteView)
         return v
     }()
-    
+
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -58,8 +83,8 @@ final class StockOverviewViewController: UIViewController {
         tv.refreshControl = refreshingControl
         tv.showsVerticalScrollIndicator = false
         tv.separatorStyle = .none
-        tv.dataSource = self
-        tv.delegate = self
+        tv.dataSource = datasource
+        tv.delegate = datasource
         return tv
     }()
     
@@ -68,13 +93,20 @@ final class StockOverviewViewController: UIViewController {
         rc.addTarget(self, action: #selector(loadOverviewData), for: .valueChanged)
         return rc
     }()
+    
+    let dragView: DragView = {
+        let dragConfig = DragStateConfiguration(closedHeight: 140, partialHeight: 350, fullHeight: 600)
+        let view = DragView(configuration: dragConfig)
+        view.backgroundColor = .clear
+        return view
+    }()
         
     // MARK: - Initializer Methods
     
     init(ticker: String, companyName: String) {
-        self.viewModel = StockOverviewViewModel(ticker: ticker, companyName: companyName)
+        self.ticker = ticker
+        self.companyName = companyName
         super.init(nibName: nil, bundle: nil)
-        title = "Overview"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -86,17 +118,19 @@ final class StockOverviewViewController: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        setupNavBar()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
         loadOverviewData()
     }
     
     // MARK: - Observe Updates
     
     fileprivate func successHandler() {
-        viewModel.loadingCompletionHandler = { [weak self] in
+        datasource.viewModel.loadingCompletionHandler = { [weak self] in
             LoadingViewPresenter.remove()
             self?.refreshingControl.endRefreshing()
             self?.tableView.reloadData()
@@ -106,7 +140,7 @@ final class StockOverviewViewController: UIViewController {
     }
     
     fileprivate func errorHandler() {
-        viewModel.errorHandler = { [weak self] in
+        datasource.viewModel.errorHandler = { [weak self] in
             DispatchQueue.main.async {
                 LoadingViewPresenter.remove()
                 self?.refreshingControl.endRefreshing()
@@ -117,33 +151,50 @@ final class StockOverviewViewController: UIViewController {
     }
     
     fileprivate func priceLoadHandler() {
-        stockPerformanceViewModel.loadCompletion = { [weak self] in
-            self?.tableView.reloadSections([Section.price.rawValue], with: .none)
+        datasource.stockPerformanceViewModel.loadCompletion = { [weak self] in
+            self?.tableView.reloadSections([StockDetailsModuleConstants.Section.price.rawValue], with: .none)
         }
     }
     
     // MARK: - View Setup
     
+    private func setupNavBar() {
+        navigationItem.title = ""
+        navigationItem.largeTitleDisplayMode = .never
+        let save = UIBarButtonItem(customView: saveButton)
+        let cancel = UIBarButtonItem(customView: cancelButton)
+        navigationItem.leftBarButtonItem = cancel
+        navigationItem.rightBarButtonItems = [save]
+        VersionManager.navigationBarColor(in: navigationController)
+        VersionManager.setNavigationBar(in: navigationController)
+    }
+    
     private func setupViews() {
         view.backgroundColor = VersionManager.mainContainerBackground()
 
-        tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: ReuseID.graphCell)
-        tableView.register(PerformanceCell.self, forCellReuseIdentifier: ReuseID.performanceCell)
-        tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: ReuseID.calculationsCell)
-        tableView.register(SmallNewsCell.self, forCellReuseIdentifier: ReuseID.newsCell)
-        tableView.register(StockDescriptionCell.self, forCellReuseIdentifier: ReuseID.descriptionCellID)
+        tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: StockDetailsModuleConstants.ReuseID.graphCell)
+        tableView.register(PerformanceCell.self, forCellReuseIdentifier: StockDetailsModuleConstants.ReuseID.performanceCell)
+        tableView.register(DetailsCalculationCell.self, forCellReuseIdentifier: StockDetailsModuleConstants.ReuseID.calculationsCell)
+        tableView.register(SmallNewsCell.self, forCellReuseIdentifier: StockDetailsModuleConstants.ReuseID.newsCell)
+        tableView.register(StockDescriptionCell.self, forCellReuseIdentifier: StockDetailsModuleConstants.ReuseID.descriptionCellID)
         tableView.backgroundColor = .systemBackground
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        
+        view.addSubview(dragView)
+        dragView.translatesAutoresizingMaskIntoConstraints = false
+        dragView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        dragView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        dragView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
     }
     
-    func setupStockHeaderView() {
-        stockHeaderView.detailsLabel.text = viewModel.companyName
-        stockHeaderView.headerLabel.text = viewModel.ticker
-        let stockQuote = viewModel.stockQuote
+    private func setupStockHeaderView() {
+        stockHeaderView.detailsLabel.text = datasource.viewModel.companyName
+        stockHeaderView.headerLabel.text = datasource.viewModel.ticker
+        let stockQuote = datasource.viewModel.stockQuote
         quoteView.priceLabel.text = "$\(stockQuote?.latestPrice.roundToTwoDecimal() ?? "-")"
         quoteView.percentChangeView.percentChangeLabel.text = "\(stockQuote?.changePercent.convertToPercent() ?? "-")%"
         
@@ -163,7 +214,7 @@ final class StockOverviewViewController: UIViewController {
         lastUpdatedLabel.text = "Last Updated, \(df.string(from: Date())) EST"
     }
     
-    func showErrorAlert() {
+    private func showErrorAlert() {
         let errorAlert = UIAlertController(title: "Network Error",
                                            message: "Experienced an error connecting to the network.",
                                            preferredStyle: .alert)
@@ -176,157 +227,96 @@ final class StockOverviewViewController: UIViewController {
         present(errorAlert, animated: true, completion: nil)
     }
     
-    private func configureChart(chartView: GenericBarChartView) {
-        guard !viewModel.historicalRevenue.isEmpty && !viewModel.historicalEarnings.isEmpty else { return }
-        chartView.setupChart(
-            dataPoints: viewModel.historicalRevenue.map { $0.date.formatDate() },
-            values: viewModel.historicalRevenue.map { $0.value },
-            values1: viewModel.historicalEarnings.map { $0.value })
-    }
-    
     private func checkAndSetChartEmptyState() {
-        let noDataAvailable = viewModel.historicalEarnings.isEmpty &&
-            viewModel.historicalRevenue.isEmpty
+        let noDataAvailable = datasource.viewModel.historicalEarnings.isEmpty &&
+            datasource.viewModel.historicalRevenue.isEmpty
         if noDataAvailable {
             guard let chartCell = self.tableView.cellForRow(at: [0,0]) as? BarGraphTableViewCell else { return }
             chartCell.chartView.setNoDataText()
         }
     }
     
-    // MARK: - Private Functions
+    // MARK: - Actions
+    
+    @objc fileprivate func handleDismiss(sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
     
     @objc fileprivate func loadOverviewData() {
-        LoadingViewPresenter.show(in: self.parent ?? self)
-        
-        viewModel.loadData()
-        stockPerformanceViewModel.loadInitialDataPoints(dispatchGroup: viewModel.loadingOperations)
-        viewModel.listenForUpdates()
-        
+        LoadingViewPresenter.show(in: self)
+        datasource.loadData()
         priceLoadHandler()
         successHandler()
         errorHandler()
     }
     
-    // MARK: - Scroll View Delegate
-     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let bufferHeight: CGFloat = 15
-        let heightThreshold: CGFloat = stockHeaderView.intrinsicContentSize.height - bufferHeight
-        let didReachThreshold = scrollView.contentOffset.y >= heightThreshold
-        parent?.navigationItem.title = didReachThreshold ? viewModel.ticker : ""
+    @objc private func checkIfCurrentlySaved() {
+        savedStockDataManager.loadSavedStocks { [weak self] (result) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let savedStocks):
+                let stockTickers = savedStocks.map({ $0.ticker })
+                DispatchQueue.main.async {
+                    self.saveButton.isSelected = stockTickers.contains(self.ticker)
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+            }
+        }
+    }
+    
+    private func removeFavorite(button: UIButton) {
+        button.isSelected = !button.isSelected
+        savedStockDataManager.removeFavoriteCompany(ticker, completion: nil)
+    }
+    
+    private func saveCompany(button: UIButton) {
+        button.isSelected = !button.isSelected
+        savedStockDataManager.saveCompany(ticker: ticker, companyName: companyName)
+        
+        if button.isSelected {
+            Vibration.light.vibrate()
+            AnalyticsLogger.instance.reportEvents(event: .savedTicker(ticker: ticker))
+        }
+    }
+    
+    @objc fileprivate func handleSaveTap(_ sender: UIButton) {
+        if sender.isSelected {
+            self.removeFavorite(button: sender)
+            return
+        }
+        
+        PermissionManager.shared.getSaveStockPermission { [weak self] (permissionGranted) in
+            guard let self = self else { return }
+            
+            if !permissionGranted {
+                let presenter = SubscriptionPresenter(type: .savedStockLimit)
+                presenter.present(in: self)
+            }
+            if permissionGranted { self.saveCompany(button: sender) }
+        }
     }
 }
 
-extension StockOverviewViewController: UITableViewDataSource, UITableViewDelegate {
+extension StockOverviewViewController: StockOverViewDataSourceDelegate {
     
-    enum Section: Int, CaseIterable {
-        case price
-        case barGraph
-        case calculations
-        case news
-        case description
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        if section == Section.news.rawValue {
-            return viewModel.stockNews.count
-        } else {
-            return 1
-        }
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return Section.allCases.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case Section.price.rawValue:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.performanceCell, for: indexPath)
-                as? PerformanceCell else { return UITableViewCell() }
-            stockPerformanceViewModel.configure(cell, tableView: tableView)
-            return cell
-            
-        case Section.barGraph.rawValue:
-            guard let barGraphCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphCell, for: indexPath)
-                as? BarGraphTableViewCell else { return UITableViewCell() }
-            barGraphCell.backgroundColor = .clear
-            barGraphCell.chartView.delegate = self
-            configureChart(chartView: barGraphCell.chartView)
-            return barGraphCell
-            
-        case Section.calculations.rawValue:
-            guard let calculationsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.calculationsCell, for: indexPath)
-                as? DetailsCalculationCell else { return UITableViewCell() }
-            calculationsCell.setupCell(with: viewModel.calcData)
-            calculationsCell.setupWithLookUp(lookUp: viewModel.financialLookup)
-            return calculationsCell
-            
-        case Section.news.rawValue:
-            guard let newsCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.newsCell, for: indexPath)
-                as? SmallNewsCell else { return UITableViewCell() }
-            newsCell.stockNews = viewModel.stockNews[indexPath.row]
-            return newsCell
-
-        case Section.description.rawValue:
-            guard let descriptionCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.descriptionCellID, for: indexPath)
-                as? StockDescriptionCell else { return UITableViewCell() }
-            descriptionCell.descriptionLabel.text = viewModel.stockDetail?.description ?? ""
-            descriptionCell.employeeStackView.valueLabel.text = String(viewModel.stockDetail?.employees ?? 0)
-            descriptionCell.locationStackView.valueLabel.text = "\(viewModel.stockDetail?.city ?? ""),\(viewModel.stockDetail?.state ?? "")"
-            return descriptionCell
-            
-        default:
-            return UITableViewCell()
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let section = indexPath.section
-        switch section {
-        case Section.price.rawValue:
-            return 200
-        case Section.barGraph.rawValue:
-            return 300
-        default:
-            return UITableView.automaticDimension
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = TableSectionHeaderView()
-        let headerText = ["", "Financials", "Metrics", "News", "About"]
-        header.headerTextLabel.text = headerText[section]
-        header.addButton.setTitle("", for: .normal)
-        return header
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == Section.price.rawValue { return 0 }
-        return 50
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let _ = tableView.cellForRow(at: indexPath) as? SmallNewsCell else { return }
-        AnalyticsLogger.instance.reportEvents(event: .selectedNewsArticle)
-
-        let newsURLString = viewModel.stockNews[indexPath.row].newsUrl
-        let safariPresenter = SafariPresenter(presenter: self, urlString: newsURLString)
+    func didSelectNews(tableView: UITableView, urlString: String) {
+        let safariPresenter = SafariPresenter(presenter: self, urlString: urlString)
         safariPresenter.start()
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return UIView()
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == Section.allCases.count {
-            return 85
-        } else {
-            return 25
-        }
+    func didScroll(scrollView: UIScrollView) {
+        let bufferHeight: CGFloat = 12
+        let heightThreshold: CGFloat = stockHeaderView.intrinsicContentSize.height - bufferHeight
+        let didReachThreshold = scrollView.contentOffset.y >= heightThreshold
+        navigationItem.title = didReachThreshold ? datasource.viewModel.ticker : ""
     }
 }
-
-extension StockOverviewViewController: ChartViewDelegate {}
+extension StockOverviewViewController: SubscriptionViewControllerDelegate {
+    func presentationControllerdDidDismissWithoutSignup() {}
+    
+    func userDidSignUp() {
+        loadOverviewData()
+    }
+}

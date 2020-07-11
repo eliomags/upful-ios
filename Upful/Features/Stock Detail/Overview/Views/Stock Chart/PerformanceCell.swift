@@ -68,7 +68,7 @@ class StockPerformanceChartViewModel {
         
         let selectedTimePeriod = timePeriods[currentSelectedIndex]
         loadChartDataPoints(at: selectedTimePeriod) { [weak self] in
-            self?.loadCompletion?()
+            DispatchQueue.main.async { self?.loadCompletion?() }
         }
     }
     

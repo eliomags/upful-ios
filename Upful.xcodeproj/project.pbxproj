@@ -215,6 +215,7 @@
 		3DD3438324B826D90081DBE6 /* DragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3438224B826D90081DBE6 /* DragView.swift */; };
 		3DD3438524B826F10081DBE6 /* DragController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3438424B826F10081DBE6 /* DragController.swift */; };
 		3DD3438924B94AB10081DBE6 /* DragControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3438824B94AB10081DBE6 /* DragControllerTests.swift */; };
+		3DD3438C24B9689C0081DBE6 /* StockOverviewDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3438B24B9689C0081DBE6 /* StockOverviewDatasource.swift */; };
 		3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291C2347EC530079DA18 /* Vibration.swift */; };
 		3DD42920234959FD0079DA18 /* NotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291F234959FD0079DA18 /* NotesButton.swift */; };
 		3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD429222349633E0079DA18 /* GenericNavBarButton.swift */; };
@@ -502,6 +503,7 @@
 		3DD3438224B826D90081DBE6 /* DragView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragView.swift; sourceTree = "<group>"; };
 		3DD3438424B826F10081DBE6 /* DragController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragController.swift; sourceTree = "<group>"; };
 		3DD3438824B94AB10081DBE6 /* DragControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragControllerTests.swift; sourceTree = "<group>"; };
+		3DD3438B24B9689C0081DBE6 /* StockOverviewDatasource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockOverviewDatasource.swift; sourceTree = "<group>"; };
 		3DD4291C2347EC530079DA18 /* Vibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibration.swift; sourceTree = "<group>"; };
 		3DD4291F234959FD0079DA18 /* NotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesButton.swift; sourceTree = "<group>"; };
 		3DD429222349633E0079DA18 /* GenericNavBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericNavBarButton.swift; sourceTree = "<group>"; };
@@ -2043,6 +2045,14 @@
 			path = "../New Group/DragView";
 			sourceTree = "<group>";
 		};
+		3DD3438A24B957110081DBE6 /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				3DD3438B24B9689C0081DBE6 /* StockOverviewDatasource.swift */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
 		3DD4291E2348F7D20079DA18 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -2144,6 +2154,7 @@
 			isa = PBXGroup;
 			children = (
 				3D2F96482315CD18003811AB /* Views */,
+				3DD3438A24B957110081DBE6 /* DataSources */,
 				3DF5FBA7232BF52000856205 /* Controllers */,
 				3DF734CA2402DDEE00B297A4 /* ViewModel */,
 			);
@@ -2800,6 +2811,7 @@
 				3D562C8F2360828800837B2F /* IAPService.swift in Sources */,
 				3DB345E123C39D5F00EADFFD /* RemoteScreenerLoader.swift in Sources */,
 				3DC710962336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift in Sources */,
+				3DD3438C24B9689C0081DBE6 /* StockOverviewDatasource.swift in Sources */,
 				3DAB3EC0234CA4490008CC18 /* PreferenceCollectionView.swift in Sources */,
 				3DB345F423C8A64D00EADFFD /* ExploreLogicController.swift in Sources */,
 				3D206A1D241F193F00F7E44C /* LocalTransactionLedgerLoader.swift in Sources */,
