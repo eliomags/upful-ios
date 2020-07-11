@@ -33,7 +33,8 @@ class StockDetailDragViewController: UIViewController {
     lazy var dragView: DragView = {
         let dragConfig = DragStateConfiguration(closedHeight: 120, partialHeight: 350, fullHeight: 600)
         let view = DragView(configuration: dragConfig)
-        view.backgroundColor = .secondarySystemGroupedBackground
+        view.backgroundColor = .tertiarySystemGroupedBackground
+        view.tableView.backgroundColor = .tertiarySystemGroupedBackground
         view.tableView.delegate = self
         view.tableView.dataSource = self
         view.tableView.showsVerticalScrollIndicator = false
@@ -95,7 +96,7 @@ extension StockDetailDragViewController: UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footer = UIView()
-        footer.backgroundColor = .clear
+        footer.backgroundColor = .tertiarySystemGroupedBackground
         footer.addSubview(tradeButton)
         tradeButton.anchor(top: footer.topAnchor, leading: nil, bottom: nil,
                            trailing: footer.layoutMarginsGuide.trailingAnchor,

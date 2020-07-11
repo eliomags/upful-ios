@@ -33,7 +33,7 @@ class DragView: UIView {
     }()
     
     lazy var tableView: UITableView = {
-        let view = UITableView(frame: .zero, style: .grouped)
+        let view = UITableView(frame: .zero, style: .plain)
         view.delegate = delegate
         view.dataSource = delegate
         view.isScrollEnabled = false
