@@ -94,12 +94,7 @@ final class StockOverviewViewController: UIViewController {
         return rc
     }()
     
-    let dragView: DragView = {
-        let dragConfig = DragStateConfiguration(closedHeight: 140, partialHeight: 350, fullHeight: 600)
-        let view = DragView(configuration: dragConfig)
-        view.backgroundColor = .clear
-        return view
-    }()
+    let dragViewController = StockDetailDragViewController()
         
     // MARK: - Initializer Methods
     
@@ -185,11 +180,13 @@ final class StockOverviewViewController: UIViewController {
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         
-        view.addSubview(dragView)
-        dragView.translatesAutoresizingMaskIntoConstraints = false
-        dragView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        dragView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        dragView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        addChild(dragViewController)
+        view.addSubview(dragViewController.dragView)
+        dragViewController.dragView.translatesAutoresizingMaskIntoConstraints = false
+        dragViewController.dragView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        dragViewController.dragView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        dragViewController.dragView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        dragViewController.didMove(toParent: self)
     }
     
     private func setupStockHeaderView() {

@@ -16,7 +16,7 @@ class DragView: UIView {
     
     // MARK: Properties
     
-    var controller: DragController!
+    private(set) var controller: DragController!
     
     weak var delegate: (DragViewDelegate & UITableViewDelegate & UITableViewDataSource)?
     
@@ -34,9 +34,8 @@ class DragView: UIView {
     
     lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .grouped)
-        //        view.bounces = false
-        view.delegate = self
-        view.dataSource = self
+        view.delegate = delegate
+        view.dataSource = delegate
         view.isScrollEnabled = false
         return view
     }()
@@ -68,7 +67,7 @@ class DragView: UIView {
     
     private func commonInit() {
         translatesAutoresizingMaskIntoConstraints = false
-        heightAnchor.constraint(equalToConstant: controller.configuration.closedHeight).isActive = true
+        heightAnchor.constraint(equalToConstant: controller.configuration.partialHeight).isActive = true
         observePresentationStateChanges()
     }
     
@@ -96,6 +95,7 @@ class DragView: UIView {
                 self.heightAnchor.constraint(equalToConstant: heightForState).isActive = true
             }) { _ in
                 self.delegate?.dragViewDidEndScrolling(self, dragState: newState)
+                self.tableView.reloadData()
             }
         }
     }
@@ -104,7 +104,7 @@ class DragView: UIView {
     
     func setupView() {
         layer.cornerRadius = 16
-        backgroundColor = .white
+        backgroundColor = .clear
         
         addGestureRecognizer(defaultPanGesture)
         
@@ -156,37 +156,12 @@ class DragView: UIView {
         }
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offset = scrollView.contentOffset.y
-        if offset <= -25 {
-            controller.changeState(for: bounds.height-300)
-        }
-    }
-    
     private func handleDragHeightUpdate(newHeight: CGFloat) {
         guard newHeight >= controller.configuration.closedHeight && newHeight <= controller.configuration.fullHeight else { return }
         self.constraints.first { $0.firstAnchor == self.heightAnchor }?.isActive = false
         UIView.animate(withDuration: 0) {
             self.heightAnchor.constraint(equalToConstant: newHeight).isActive = true
         }
-    }
-}
-
-extension DragView: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return delegate?.tableView(tableView, numberOfRowsInSection: section) ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return delegate?.tableView(tableView, cellForRowAt: indexPath) ?? UITableViewCell()
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let delegate = delegate else {
-            return UITableView.automaticDimension
-        }
-        return delegate.tableView!(tableView, heightForRowAt: indexPath)
     }
 }
 

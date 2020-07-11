@@ -33,7 +33,7 @@ class DragController {
         return DragViewPresentationState.allCases[currentPosition]
     }
     
-    var currentPosition: Int = DragViewPresentationState.closed.rawValue {
+    var currentPosition: Int = DragViewPresentationState.partial.rawValue {
         didSet {
             presentationStateChangeHandler?(currentPresentationState)
         }
