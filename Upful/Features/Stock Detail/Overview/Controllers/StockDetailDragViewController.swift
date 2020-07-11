@@ -10,6 +10,12 @@ import UIKit
 
 class StockDetailDragViewController: UIViewController {
     
+    let ticker: String
+    
+    private(set) var coordinator: Coordinator?
+
+    // MARK: Views
+    
     lazy var tradeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("TRADE", for: .normal)
@@ -20,6 +26,7 @@ class StockDetailDragViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.widthAnchor.constraint(equalToConstant: 100).isActive = true
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.addTarget(self, action: #selector(handleTradeTap), for: .touchUpInside)
         return button
     }()
     
@@ -33,11 +40,32 @@ class StockDetailDragViewController: UIViewController {
         return view
     }()
     
+    // MARK: Initializer
+    
+    init(ticker: String) {
+        self.ticker = ticker
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: ScrollView Delegate
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset.y
-        if offset <= -25 {
-            dragView.controller.changeState(for: dragView.bounds.height-300)
+        if offset <= -44 {
+            dragView.controller.changeState(for: dragView.bounds.height-250)
         }
+    }
+    
+    // MARK: Actions
+        
+    @objc fileprivate func handleTradeTap() {
+        let presentingViewController = parent ?? self
+        coordinator = StockTradeCoordinator(presentingViewController, ticker: ticker)
+        coordinator?.start()
     }
 }
 

@@ -94,7 +94,10 @@ final class StockOverviewViewController: UIViewController {
         return rc
     }()
     
-    let dragViewController = StockDetailDragViewController()
+    lazy var dragViewController: StockDetailDragViewController = {
+        let vc = StockDetailDragViewController(ticker: ticker)
+        return vc
+    }()
         
     // MARK: - Initializer Methods
     
