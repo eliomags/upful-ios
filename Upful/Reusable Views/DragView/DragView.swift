@@ -138,11 +138,11 @@ class DragView: UIView {
             currentPosition = gesture.location(in: self)
             
             if frame.height == controller.configuration.closedHeight && swipeVelocity < 0 {
-                fatalError()
+                return
             }
             
             if frame.height == controller.configuration.fullHeight && swipeVelocity > 0 {
-                fatalError()
+                return
             }
             
             //            controller.changeState(at: swipeVelocity)
@@ -164,6 +164,7 @@ class DragView: UIView {
     }
     
     private func handleDragHeightUpdate(newHeight: CGFloat) {
+        guard newHeight >= controller.configuration.closedHeight && newHeight <= controller.configuration.fullHeight else { return }
         self.constraints.first { $0.firstAnchor == self.heightAnchor }?.isActive = false
         UIView.animate(withDuration: 0) {
             self.heightAnchor.constraint(equalToConstant: newHeight).isActive = true
