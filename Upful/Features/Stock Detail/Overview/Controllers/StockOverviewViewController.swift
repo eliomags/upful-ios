@@ -123,8 +123,9 @@ final class StockOverviewViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
         loadOverviewData()
+        performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
+        UserFeedbackPresenter.checkAndAskForReview(checkType: .importantAction, in: self)
     }
     
     // MARK: - Observe Updates
