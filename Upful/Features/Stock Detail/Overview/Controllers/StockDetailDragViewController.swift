@@ -8,11 +8,13 @@
 
 import UIKit
 
-class StockDetailDragViewController: UIViewController {
+final class StockDetailDragViewController: UIViewController {
     
     let ticker: String
     
     private(set) var coordinator: Coordinator?
+    
+    var metricPreviewViewModels = [MetricPreviewViewModel]()
 
     // MARK: Views
     
@@ -31,7 +33,7 @@ class StockDetailDragViewController: UIViewController {
     }()
     
     lazy var dragView: DragView = {
-        let dragConfig = DragStateConfiguration(closedHeight: 120, partialHeight: 350, fullHeight: 600)
+        let dragConfig = DragStateConfiguration(closedHeight: 112, partialHeight: 210, fullHeight: 450)
         let view = DragView(configuration: dragConfig)
         view.backgroundColor = .tertiarySystemGroupedBackground
         view.tableView.backgroundColor = .tertiarySystemGroupedBackground
@@ -46,10 +48,22 @@ class StockDetailDragViewController: UIViewController {
     init(ticker: String) {
         self.ticker = ticker
         super.init(nibName: nil, bundle: nil)
+        dragView.tableView.register(MetricPreviewTableViewCell.self, forCellReuseIdentifier: MetricPreviewTableViewCell.reuseID)
+        createViewModels()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func createViewModels() {
+        metricPreviewViewModels = [
+            MetricPreviewViewModel(ticker: ticker, searchCriteria: .pricetoearnings),
+            MetricPreviewViewModel(ticker: ticker, searchCriteria: .grossmargin)]
+        metricPreviewViewModels.forEach({
+            $0.delegate = self
+            $0.loadHistoricalData()
+        })
     }
     
     // MARK: ScrollView Delegate
@@ -77,30 +91,45 @@ extension StockDetailDragViewController: UITableViewDelegate, UITableViewDataSou
         case .closed:
             return 0
         case .partial:
-            return 5
+            return metricPreviewViewModels.count
         case .full:
-            return 12
+            return metricPreviewViewModels.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
-        cell.textLabel?.text = "Text"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MetricPreviewTableViewCell.reuseID, for: indexPath)
+            as? MetricPreviewTableViewCell else { return UITableViewCell() }
         cell.backgroundColor = .clear
+        let metricViewModel = metricPreviewViewModels[indexPath.row]
+        metricViewModel.configureCell(cell)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 60
+        return 50
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footer = UIView()
         footer.backgroundColor = .tertiarySystemGroupedBackground
         footer.addSubview(tradeButton)
+        var topPadding: CGFloat = 0
+        switch dragView.controller.currentPresentationState {
+        case .closed:
+            topPadding = 0
+        case .partial, .full:
+            topPadding = 8
+        }
         tradeButton.anchor(top: footer.topAnchor, leading: nil, bottom: nil,
                            trailing: footer.layoutMarginsGuide.trailingAnchor,
-                           padding: .init(top: 8, left: 4, bottom: 8, right: 16))
+                           padding: .init(top: topPadding, left: 4, bottom: 8, right: 16))
         return footer
+    }
+}
+
+extension StockDetailDragViewController: MetricPreviewViewModelDelegate {
+    func didLoadCellData(cell: MetricPreviewTableViewCell?) {
+        dragView.tableView.reloadData()
     }
 }

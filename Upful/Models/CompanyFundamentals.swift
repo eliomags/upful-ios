@@ -56,6 +56,5 @@ struct Companies: Decodable {
 struct Company: Decodable {
     let id, ticker, name, lei: String?
     let cik: String?
-    var filings: [Filings]?
 }
 
