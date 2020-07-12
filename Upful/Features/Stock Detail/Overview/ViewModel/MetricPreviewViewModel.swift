@@ -26,8 +26,9 @@ final class MetricPreviewViewModel {
             loadHistoricalData()
         }
     }
-    private(set) var configuringCell: MetricPreviewTableViewCell?
     
+    private(set) var configuringCell: MetricPreviewTableViewCell?
+
     // MARK: Init
     
     init(ticker: String,
@@ -57,6 +58,8 @@ final class MetricPreviewViewModel {
     
     func configureCell(_ cell: MetricPreviewTableViewCell) {
         configuringCell = cell
+        cell.layer.cornerRadius = 8
+
         cell.metricLabel.text = searchCriteria.explicit
         
         var chartDataEntries: [ChartDataEntry] = []
@@ -67,7 +70,9 @@ final class MetricPreviewViewModel {
         cell.lineChartView.dragEnabled = false
         cell.lineChartView.isUserInteractionEnabled = false
         cell.lineChartView.setDataSet(with: chartDataEntries)
-        
+        cell.lineChartView.noDataTextColor = .label
+        cell.lineChartView.noDataText = "No Data Found"
+                
         guard !historicalData.isEmpty else { return }
         let lastValue = historicalData.last!.value
         let firstValue = historicalData.first!.value

@@ -42,6 +42,7 @@ final class MetricPreviewTableViewCell: UITableViewCell {
     }
     
     private func commonInit() {
+        selectionStyle = .none
         accessoryType = .disclosureIndicator
         
         addSubview(metricLabel)

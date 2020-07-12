@@ -14,7 +14,7 @@ final class StockDetailDragViewController: UIViewController {
     
     private(set) var coordinator: Coordinator?
     
-    var metricPreviewViewModels = [MetricPreviewViewModel]()
+    private(set) var metricPreviewViewModels = [MetricPreviewViewModel]()
 
     // MARK: Views
     
@@ -100,7 +100,6 @@ extension StockDetailDragViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MetricPreviewTableViewCell.reuseID, for: indexPath)
             as? MetricPreviewTableViewCell else { return UITableViewCell() }
-        cell.backgroundColor = .clear
         let metricViewModel = metricPreviewViewModels[indexPath.row]
         metricViewModel.configureCell(cell)
         return cell
@@ -123,12 +122,13 @@ extension StockDetailDragViewController: UITableViewDelegate, UITableViewDataSou
         }
         tradeButton.anchor(top: footer.topAnchor, leading: nil, bottom: nil,
                            trailing: footer.layoutMarginsGuide.trailingAnchor,
-                           padding: .init(top: topPadding, left: 4, bottom: 8, right: 16))
+                           padding: .init(top: topPadding, left: 4, bottom: 8, right: 0))
         return footer
     }
 }
 
 extension StockDetailDragViewController: MetricPreviewViewModelDelegate {
+    
     func didLoadCellData(cell: MetricPreviewTableViewCell?) {
         dragView.tableView.reloadData()
     }

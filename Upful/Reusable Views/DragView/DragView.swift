@@ -103,7 +103,7 @@ class DragView: UIView {
     // MARK: View Setup
     
     func setupView() {
-        roundCorners(corners: [.topLeft, .topRight], radius: 16)
+        roundCorners(corners: [.topLeft, .topRight], radius: 24)
         
         addGestureRecognizer(defaultPanGesture)
         
@@ -114,8 +114,8 @@ class DragView: UIView {
         addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24).isActive = true
         tableView.topAnchor.constraint(equalTo: dragIndicator.bottomAnchor, constant: 8).isActive = true
     }
     
