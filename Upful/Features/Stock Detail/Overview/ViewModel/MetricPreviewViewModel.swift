@@ -27,6 +27,8 @@ final class MetricPreviewViewModel {
         }
     }
     
+    private(set) var isLoading = false
+    
     private(set) var configuringCell: MetricPreviewTableViewCell?
 
     // MARK: Init
@@ -42,6 +44,8 @@ final class MetricPreviewViewModel {
     // MARK: Methods
     
     func loadHistoricalData() {
+        isLoading = true
+        
         financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .fiveYear, financial: searchCriteria) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
@@ -51,6 +55,7 @@ final class MetricPreviewViewModel {
                 print(err.localizedDescription)
             }
             DispatchQueue.main.async {
+                self.isLoading = false
                 self.delegate?.didLoadCellData(cell: self.configuringCell)
             }
         }
@@ -73,6 +78,7 @@ final class MetricPreviewViewModel {
         cell.lineChartView.noDataTextColor = .label
         cell.lineChartView.noDataText = "No Data Found"
                 
+        handleLoadingState()
         guard !historicalData.isEmpty else { return }
         let lastValue = historicalData.last!.value
         let firstValue = historicalData.first!.value
@@ -80,5 +86,22 @@ final class MetricPreviewViewModel {
         let percentChange = changeFromFirst.convertToPercent() + "%"
         cell.totalChangeLabel.text = percentChange
     }
+    
+    let activityView = UIActivityIndicatorView(style: .medium)
+    
+    func handleLoadingState() {
+        if isLoading {
+            configuringCell?.addSubview(activityView)
+            activityView.centerInSuperview()
+            activityView.startAnimating()
+        } else {
+            activityView.removeFromSuperview()
+        }
+        
+        if historicalData.isEmpty && !isLoading {
+            configuringCell?.totalChangeLabel.text = "No data"
+        }
+    }
+    
 }
 

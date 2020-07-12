@@ -59,7 +59,9 @@ final class StockDetailDragViewController: UIViewController {
     func createViewModels() {
         metricPreviewViewModels = [
             MetricPreviewViewModel(ticker: ticker, searchCriteria: .pricetoearnings),
-            MetricPreviewViewModel(ticker: ticker, searchCriteria: .grossmargin)]
+            MetricPreviewViewModel(ticker: ticker, searchCriteria: .ebitmargin)
+        ]
+        
         metricPreviewViewModels.forEach({
             $0.delegate = self
             $0.loadHistoricalData()
