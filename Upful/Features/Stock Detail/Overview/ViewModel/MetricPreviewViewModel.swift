@@ -75,8 +75,6 @@ final class MetricPreviewViewModel {
         cell.lineChartView.dragEnabled = false
         cell.lineChartView.isUserInteractionEnabled = false
         cell.lineChartView.setDataSet(with: chartDataEntries)
-        cell.lineChartView.noDataTextColor = .label
-        cell.lineChartView.noDataText = "No Data Found"
                 
         handleLoadingState()
         guard !historicalData.isEmpty else { return }
