@@ -33,7 +33,7 @@ final class StockDetailDragViewController: UIViewController {
     }()
     
     lazy var dragView: DragView = {
-        let dragConfig = DragStateConfiguration(closedHeight: 112, partialHeight: 210, fullHeight: 450)
+        let dragConfig = DragStateConfiguration(closedHeight: 112, partialHeight: 235, fullHeight: 450)
         let view = DragView(configuration: dragConfig)
         view.backgroundColor = .tertiarySystemGroupedBackground
         view.tableView.backgroundColor = .tertiarySystemGroupedBackground
@@ -86,7 +86,7 @@ final class StockDetailDragViewController: UIViewController {
     }
 }
 
-extension StockDetailDragViewController: UITableViewDelegate, UITableViewDataSource {
+extension StockDetailDragViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch dragView.controller.currentPresentationState {
@@ -109,11 +109,33 @@ extension StockDetailDragViewController: UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
-        let navVC = UINavigationController(rootViewController: searchCriteriaSelectionVC)
-
         searchCriteriaSelectionVC.delegate = self
         searchCriteriaSelectionVC.currentSearchCriteria = metricPreviewViewModels[indexPath.row].searchCriteria
-        parent?.present(navVC, animated: true, completion: nil)
+        parent?.present(searchCriteriaSelectionVC, animated: true, completion: nil)
+    }
+}
+extension StockDetailDragViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if let firstMetricViewModel = metricPreviewViewModels.first,
+            let lastMetricViewModel = metricPreviewViewModels.last {
+            let maxDataPointCount = max(firstMetricViewModel.historicalData.count, lastMetricViewModel.historicalData.count)
+            let headerView = UIView()
+            let titleLabel = UILabel()
+            titleLabel.text = "\(maxDataPointCount) year data"
+            titleLabel.textAlignment = .right
+            titleLabel.font = UIFont.systemFont(ofSize: 12, weight: .light)
+            titleLabel.textColor = .darkGray
+            headerView.addSubview(titleLabel)
+            titleLabel.setCenterYAnchor(padding: 0).setTrailingAnchor(padding: 8)
+            return headerView
+        } else {
+            return nil
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return dragView.controller.currentPresentationState == .closed ? 0 : 22
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

@@ -77,6 +77,7 @@ final class MetricPreviewViewModel {
         cell.lineChartView.setDataSet(with: chartDataEntries)
                 
         handleLoadingState()
+        
         guard !historicalData.isEmpty else { return }
         let lastValue = historicalData.last!.value
         let firstValue = historicalData.first!.value

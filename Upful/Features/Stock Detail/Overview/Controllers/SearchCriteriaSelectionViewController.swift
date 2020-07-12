@@ -28,7 +28,7 @@ class SearchCriteriaSelectionViewController: UIViewController {
         tv.delegate = self
         tv.dataSource = self
         tv.showsVerticalScrollIndicator = false
-        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.tableHeaderView = UIView()
         return tv
     }()
     
@@ -50,10 +50,11 @@ class SearchCriteriaSelectionViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.criteriaCell)
         
         view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
     
     // MARK: - Data Setup
@@ -63,7 +64,7 @@ class SearchCriteriaSelectionViewController: UIViewController {
         var valuation: [ManualScreenItem] = []
         var financial: [ManualScreenItem] = []
         
-        SearchCriteria.allCases.forEach { (criteria) in
+        SearchCriteria.allCases.forEach { criteria in
             switch criteria.classification {
             case .valuation:
                 switch criteria {
@@ -112,11 +113,12 @@ extension SearchCriteriaSelectionViewController: UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.criteriaCell, for: indexPath)
+        let searchCriteria = data[indexPath.section][indexPath.row].criteria
         cell.textLabel?.font = UIFont.details1
-        cell.textLabel?.text = "\(data[indexPath.section][indexPath.row].criteria.explicit)"
+        cell.textLabel?.text = "\(searchCriteria.explicit)"
         
         if let currentSearchCriteria = currentSearchCriteria {
-            if currentSearchCriteria == data[indexPath.section][indexPath.row].criteria {
+            if currentSearchCriteria == searchCriteria {
                 cell.accessoryType = .checkmark
             }
         }
@@ -133,11 +135,7 @@ extension SearchCriteriaSelectionViewController: UITableViewDelegate, UITableVie
         view.addSubview(header)
         header.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
                       padding: .init(top: 0, left: 0, bottom: 4, right: 18))
-        let labelText = [
-            "FINANCIAL STATEMENT VALUES",
-            "VALUATION",
-            "FINANCIAL"
-        ]
+        let labelText = ["FINANCIAL STATEMENT VALUES", "VALUATION", "FINANCIAL"]
         header.text = labelText[section].uppercased()
         return view
     }
