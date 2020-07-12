@@ -219,6 +219,7 @@
 		3DD3439024BA12260081DBE6 /* StockDetailDragViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3438F24BA12260081DBE6 /* StockDetailDragViewController.swift */; };
 		3DD3439424BA71500081DBE6 /* MetricPreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3439324BA71500081DBE6 /* MetricPreviewTableViewCell.swift */; };
 		3DD3439624BA9B360081DBE6 /* MetricPreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3439524BA9B360081DBE6 /* MetricPreviewViewModel.swift */; };
+		3DD3439824BB59A70081DBE6 /* SearchCriteriaSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3439724BB59A70081DBE6 /* SearchCriteriaSelectionViewController.swift */; };
 		3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291C2347EC530079DA18 /* Vibration.swift */; };
 		3DD42920234959FD0079DA18 /* NotesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD4291F234959FD0079DA18 /* NotesButton.swift */; };
 		3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD429222349633E0079DA18 /* GenericNavBarButton.swift */; };
@@ -241,7 +242,7 @@
 		3DF5FBB0232BFCF100856205 /* AnalysisChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBAF232BFCF100856205 /* AnalysisChartCell.swift */; };
 		3DF5FBB2232F16F300856205 /* SearchSelectionVIewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBB1232F16F300856205 /* SearchSelectionVIewController.swift */; };
 		3DF5FBBB233114D700856205 /* CompanyReportsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBBA233114D700856205 /* CompanyReportsCell.swift */; };
-		3DF5FBBE2333A48B00856205 /* ChartUpdatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBBD2333A48B00856205 /* ChartUpdatable.swift */; };
+		3DF5FBBE2333A48B00856205 /* ChartTypeUpdatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBBD2333A48B00856205 /* ChartTypeUpdatable.swift */; };
 		3DF5FBC6233429B600856205 /* StockDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBC4233429B600856205 /* StockDataModel.xcdatamodeld */; };
 		3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC0523342BED00856205 /* PersistenceService.swift */; };
 		3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */; };
@@ -509,6 +510,7 @@
 		3DD3438F24BA12260081DBE6 /* StockDetailDragViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailDragViewController.swift; sourceTree = "<group>"; };
 		3DD3439324BA71500081DBE6 /* MetricPreviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricPreviewTableViewCell.swift; sourceTree = "<group>"; };
 		3DD3439524BA9B360081DBE6 /* MetricPreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricPreviewViewModel.swift; sourceTree = "<group>"; };
+		3DD3439724BB59A70081DBE6 /* SearchCriteriaSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCriteriaSelectionViewController.swift; sourceTree = "<group>"; };
 		3DD4291C2347EC530079DA18 /* Vibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibration.swift; sourceTree = "<group>"; };
 		3DD4291F234959FD0079DA18 /* NotesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesButton.swift; sourceTree = "<group>"; };
 		3DD429222349633E0079DA18 /* GenericNavBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericNavBarButton.swift; sourceTree = "<group>"; };
@@ -531,7 +533,7 @@
 		3DF5FBAF232BFCF100856205 /* AnalysisChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisChartCell.swift; sourceTree = "<group>"; };
 		3DF5FBB1232F16F300856205 /* SearchSelectionVIewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSelectionVIewController.swift; sourceTree = "<group>"; };
 		3DF5FBBA233114D700856205 /* CompanyReportsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyReportsCell.swift; sourceTree = "<group>"; };
-		3DF5FBBD2333A48B00856205 /* ChartUpdatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartUpdatable.swift; sourceTree = "<group>"; };
+		3DF5FBBD2333A48B00856205 /* ChartTypeUpdatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartTypeUpdatable.swift; sourceTree = "<group>"; };
 		3DF5FBC5233429B600856205 /* StockDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StockDataModel.xcdatamodel; sourceTree = "<group>"; };
 		3DF5FC0523342BED00856205 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		3DF5FC072334360200856205 /* SavedStock+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedStock+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -2186,6 +2188,7 @@
 			children = (
 				3D2F963B230F4922003811AB /* StockOverviewViewController.swift */,
 				3DD3438F24BA12260081DBE6 /* StockDetailDragViewController.swift */,
+				3DD3439724BB59A70081DBE6 /* SearchCriteriaSelectionViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2244,7 +2247,7 @@
 		3DF5FBBC2333A47500856205 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				3DF5FBBD2333A48B00856205 /* ChartUpdatable.swift */,
+				3DF5FBBD2333A48B00856205 /* ChartTypeUpdatable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -2722,6 +2725,7 @@
 				3D297A072390226A001D02C3 /* SuggestionFeedViewController.swift in Sources */,
 				3DF734DD2406B47500B297A4 /* ScreenResultsViewModel.swift in Sources */,
 				3D6B07302416E36800C55021 /* AnalysisItemViewModel.swift in Sources */,
+				3DD3439824BB59A70081DBE6 /* SearchCriteriaSelectionViewController.swift in Sources */,
 				3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
 				3DAF279D2449F98300CD001B /* HoldingBreakdownHeaderView.swift in Sources */,
@@ -2815,7 +2819,7 @@
 				3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */,
 				3D206A2A242104BE00F7E44C /* TransactionType.swift in Sources */,
 				3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */,
-				3DF5FBBE2333A48B00856205 /* ChartUpdatable.swift in Sources */,
+				3DF5FBBE2333A48B00856205 /* ChartTypeUpdatable.swift in Sources */,
 				3DF5FBB0232BFCF100856205 /* AnalysisChartCell.swift in Sources */,
 				3DAB3ED1234F9F590008CC18 /* PrefrenceHeaderView.swift in Sources */,
 				3DBEFFCB23A9CCA000BA407E /* SavedScreenersViewController.swift in Sources */,

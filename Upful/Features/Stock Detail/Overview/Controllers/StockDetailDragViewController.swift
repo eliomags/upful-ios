@@ -107,6 +107,15 @@ extension StockDetailDragViewController: UITableViewDelegate, UITableViewDataSou
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
+        let navVC = UINavigationController(rootViewController: searchCriteriaSelectionVC)
+
+        searchCriteriaSelectionVC.delegate = self
+        searchCriteriaSelectionVC.currentSearchCriteria = metricPreviewViewModels[indexPath.row].searchCriteria
+        parent?.present(navVC, animated: true, completion: nil)
+    }
+    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 50
     }
@@ -126,6 +135,14 @@ extension StockDetailDragViewController: UITableViewDelegate, UITableViewDataSou
                            trailing: footer.layoutMarginsGuide.trailingAnchor,
                            padding: .init(top: topPadding, left: 4, bottom: 8, right: 0))
         return footer
+    }
+}
+
+extension StockDetailDragViewController: ChartSearchCriteriaSelectionDelegate {
+    
+    func didChangeSearchCriteria(previousSearchCriteria: SearchCriteria, updatedSearchCriteria: SearchCriteria) {
+        let viewModel = metricPreviewViewModels.first(where: { $0.searchCriteria == previousSearchCriteria })
+        viewModel?.searchCriteria = updatedSearchCriteria
     }
 }
 

@@ -9,7 +9,7 @@
 import UIKit
 import Charts
 
-class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartUpdatable {
+class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartTypeUpdatable {
     
     // MARK: - Dependencies
     

@@ -1,98 +1,59 @@
 //
-//  SearchSelectionVIewController.swift
+//  SearchCriteriaSelectionViewController.swift
 //  Upful
 //
-//  Created by Yanik Simpson on 9/15/19.
-//  Copyright © 2019 Yanik Simpson. All rights reserved.
+//  Created by Yanik Simpson on 7/12/20.
+//  Copyright © 2020 Yanik Simpson. All rights reserved.
 //
 
 import UIKit
 
-class SearchSelectionViewController: UIViewController {
+class SearchCriteriaSelectionViewController: UIViewController {
+    
     struct Constants {
         static let criteriaCell = "CriteriaCell"
     }
     
     // MARK: - State
-
-    var data: [[ManualScreenItem]] = []
-    weak var delegate: ChartTypeUpdatable?
-    let chartType: ChartType
+    
+    weak var delegate: ChartSearchCriteriaSelectionDelegate?
+    
+    var currentSearchCriteria: SearchCriteria?
+    private(set) var data: [[ManualScreenItem]] = []
     
     // MARK: - Views
     
-    lazy var cancelButton: CancelButton = { [unowned self] in
-        let button = CancelButton()
-        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
-        return button
-    }()
-    
-    lazy var tableHeader: TableHeaderView = {
-        let header = TableHeaderView()
-        header.translatesAutoresizingMaskIntoConstraints = false
-        header.heightAnchor.constraint(equalToConstant: header.intrinsicContentSize.height).isActive = true
-        header.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
-        header.headerLabel.text = "Select a criteria."
-        header.detailsLabel.text = ""
-        return header
-    }()
-    
-    lazy var tableView: UITableView = { [unowned self] in
-        let tv = UITableView(frame: .zero, style: .grouped)
+    lazy var tableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .insetGrouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.tableHeaderView = tableHeader
+        tv.showsVerticalScrollIndicator = false
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
     
-    // MARK: - Initializer Functions
-    
-    init(chartType: ChartType) {
-        self.chartType = chartType
-        super.init(nibName: nil, bundle: nil)
-        initializeDisplayData()
-        modalPresentationStyle = .overCurrentContext
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     // MARK: - View Life Cycle Methods
+    
+    override func loadView() {
+        super.loadView()
+        setupTableView()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
-        setupNavBar()
-        setupTableHeader()
+        initializeDisplayData()
     }
     
     // MARK: - View Setup
     
-    fileprivate func setupNavBar() {
-        let cancel = UIBarButtonItem(customView: cancelButton)
-        cancel.tintColor = .black
-        navigationItem.leftBarButtonItem = cancel
-    }
-    
     fileprivate func setupTableView() {
-        if #available(iOS 13.0, *) {
-            if traitCollection.userInterfaceStyle == .dark { tableView.backgroundColor = .black }
-        } else { tableView.backgroundColor = .groupTableViewBackground }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.criteriaCell)
-        tableView.contentInsetAdjustmentBehavior = .automatic
+        
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-    }
-    
-    fileprivate func setupTableHeader() {
-        tableView.tableHeaderView = tableHeader
-        tableView.setNeedsLayout()
-        tableView.layoutIfNeeded()
     }
     
     // MARK: - Data Setup
@@ -101,7 +62,6 @@ class SearchSelectionViewController: UIViewController {
         var values: [ManualScreenItem] = []
         var valuation: [ManualScreenItem] = []
         var financial: [ManualScreenItem] = []
-        var performance: [ManualScreenItem] = []
         
         SearchCriteria.allCases.forEach { (criteria) in
             switch criteria.classification {
@@ -115,7 +75,7 @@ class SearchSelectionViewController: UIViewController {
             case .financial:
                 financial.append(ManualScreenItem(criteria: criteria))
             case .performance:
-                performance.append(ManualScreenItem(criteria: criteria))
+                break
             case .other:
                 switch criteria {
                 case .name, .industrycategory, .none: break
@@ -126,36 +86,40 @@ class SearchSelectionViewController: UIViewController {
         data.append(values)
         data.append(valuation)
         data.append(financial)
-        data.append(performance)
-    }
-    
-    // MARK: - Actions
-    
-    @objc fileprivate func handleDismiss(_ sender: UIButton) {
-        dismiss(animated: true)
     }
     
     fileprivate func handleCrtieriaTap(criteria: SearchCriteria) {
         AnalyticsLogger.instance.reportEvents(event: .selectedAnalysis(criteria: criteria))
-
+        
         dismiss(animated: true) {
-            self.delegate?.updateChartData(chartType: self.chartType, criteria: criteria)
+            if let currentSearchCriteria = self.currentSearchCriteria {
+                self.delegate?.didChangeSearchCriteria(previousSearchCriteria: currentSearchCriteria,
+                                                       updatedSearchCriteria: criteria)
+            }
         }
     }
 }
 
-extension SearchSelectionViewController: UITableViewDelegate, UITableViewDataSource {
+extension SearchCriteriaSelectionViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return data.count
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data[section].count
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.criteriaCell, for: indexPath)
         cell.textLabel?.font = UIFont.details1
         cell.textLabel?.text = "\(data[indexPath.section][indexPath.row].criteria.explicit)"
         
+        if let currentSearchCriteria = currentSearchCriteria {
+            if currentSearchCriteria == data[indexPath.section][indexPath.row].criteria {
+                cell.accessoryType = .checkmark
+            }
+        }
         return cell
     }
     
@@ -172,8 +136,7 @@ extension SearchSelectionViewController: UITableViewDelegate, UITableViewDataSou
         let labelText = [
             "FINANCIAL STATEMENT VALUES",
             "VALUATION",
-            "FINANCIAL",
-            "GROWTH"
+            "FINANCIAL"
         ]
         header.text = labelText[section].uppercased()
         return view

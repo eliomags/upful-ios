@@ -12,6 +12,10 @@ enum ChartType {
     case bar, line
 }
 
-protocol ChartUpdatable: class {
+protocol ChartTypeUpdatable: class {
     func updateChartData(chartType: ChartType, criteria: SearchCriteria)
+}
+
+protocol ChartSearchCriteriaSelectionDelegate: class {
+    func didChangeSearchCriteria(previousSearchCriteria: SearchCriteria, updatedSearchCriteria: SearchCriteria)
 }
