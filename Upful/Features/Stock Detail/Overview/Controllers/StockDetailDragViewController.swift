@@ -138,6 +138,7 @@ extension StockDetailDragViewController: UITableViewDelegate {
             titleLabel.textColor = .darkGray
             headerView.addSubview(titleLabel)
             titleLabel.setCenterYAnchor(padding: 0).setTrailingAnchor(padding: 8)
+            
             return headerView
         } else {
             return nil

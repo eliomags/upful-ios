@@ -18,15 +18,16 @@ final class MetricPreviewViewModel {
     weak var delegate: MetricPreviewViewModelDelegate?
     
     let ticker: String
-    let financialLoader: FinancialLoader
-    
-    var historicalData = [CompanyHistoricalDatum]()
+    typealias MetricDataFetch = (String, FinancialsFrequency, SearchCriteria,
+        @escaping (Result<[CompanyHistoricalDatum], NetworkError>) -> Void) -> ()
+    var fetchMetricData: MetricDataFetch
     var searchCriteria: SearchCriteria {
         didSet {
             loadHistoricalData()
         }
     }
-    
+    var historicalData = [CompanyHistoricalDatum]()
+
     private(set) var isLoading = false
     
     private(set) var configuringCell: MetricPreviewTableViewCell?
@@ -34,11 +35,11 @@ final class MetricPreviewViewModel {
     // MARK: Init
     
     init(ticker: String,
-         financialLoader: FinancialLoader = StockFinancialLoader(),
-         searchCriteria: SearchCriteria) {
+         searchCriteria: SearchCriteria,
+         fetching: @escaping MetricDataFetch = StockFinancialLoader().getStockFinancials) {
         self.ticker = ticker
         self.searchCriteria = searchCriteria
-        self.financialLoader = financialLoader
+        self.fetchMetricData = fetching
     }
     
     // MARK: Methods
@@ -46,7 +47,7 @@ final class MetricPreviewViewModel {
     func loadHistoricalData() {
         isLoading = true
         
-        financialLoader.getStockFinancials(ticker: ticker, financialFrequency: .fiveYear, financial: searchCriteria) { [weak self] (result) in
+        fetchMetricData(ticker, .fiveYear, searchCriteria) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let historicalData):
