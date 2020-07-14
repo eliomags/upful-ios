@@ -119,10 +119,20 @@ extension StockDetailDragViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let firstMetricViewModel = metricPreviewViewModels.first,
             let lastMetricViewModel = metricPreviewViewModels.last {
-            let maxDataPointCount = max(firstMetricViewModel.historicalData.count, lastMetricViewModel.historicalData.count)
+            let firstVMStartDate = firstMetricViewModel.historicalData.first?.date ?? ""
+            let firstVMEndDate = firstMetricViewModel.historicalData.last?.date ?? ""
+            let lastVMStartDate = lastMetricViewModel.historicalData.first?.date ?? ""
+            let lastVMEndDate = lastMetricViewModel.historicalData.last?.date ?? ""
+            
+            var startDate = firstVMStartDate.isEmpty ? lastVMStartDate : firstVMStartDate
+            var endDate = firstVMEndDate.isEmpty ? lastVMEndDate : firstVMEndDate
+            
+            if !startDate.isEmpty { startDate = String(Array(startDate)[0...3]) }
+            if !endDate.isEmpty { endDate = String(Array(endDate)[0...3]) }
+            
             let headerView = UIView()
             let titleLabel = UILabel()
-            titleLabel.text = "\(maxDataPointCount) year data"
+            titleLabel.text = "\(startDate) - \(endDate)"
             titleLabel.textAlignment = .right
             titleLabel.font = UIFont.systemFont(ofSize: 12, weight: .light)
             titleLabel.textColor = .darkGray
