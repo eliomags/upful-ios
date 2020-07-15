@@ -13,7 +13,6 @@ final class StockDetailDragViewController: UIViewController {
     let ticker: String
     
     private(set) var coordinator: Coordinator?
-    
     private(set) var metricPreviewViewModels = [MetricPreviewViewModel]()
 
     // MARK: Views
@@ -48,6 +47,7 @@ final class StockDetailDragViewController: UIViewController {
     init(ticker: String) {
         self.ticker = ticker
         super.init(nibName: nil, bundle: nil)
+        dragView.tableView.register(AnalysisChartCell.self, forCellReuseIdentifier: AnalysisChartCell.reuseID)
         dragView.tableView.register(MetricPreviewTableViewCell.self, forCellReuseIdentifier: MetricPreviewTableViewCell.reuseID)
         createViewModels()
     }
@@ -95,16 +95,37 @@ extension StockDetailDragViewController: UITableViewDataSource {
         case .partial:
             return metricPreviewViewModels.count
         case .full:
-            return metricPreviewViewModels.count
+            return 1
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MetricPreviewTableViewCell.reuseID, for: indexPath)
-            as? MetricPreviewTableViewCell else { return UITableViewCell() }
-        let metricViewModel = metricPreviewViewModels[indexPath.row]
-        metricViewModel.configureCell(cell)
-        return cell
+        switch dragView.controller.currentPresentationState {
+        case .partial, .closed:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: MetricPreviewTableViewCell.reuseID, for: indexPath)
+                as? MetricPreviewTableViewCell else { return UITableViewCell() }
+            let metricViewModel = metricPreviewViewModels[indexPath.row]
+            metricViewModel.configureCell(cell)
+            
+            return cell
+            
+        case .full:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: AnalysisChartCell.reuseID, for: indexPath)
+                as? AnalysisChartCell else { return UITableViewCell() }
+            
+            if let firstVM = metricPreviewViewModels.first,
+                let secondVM = metricPreviewViewModels.last {
+                guard !firstVM.historicalData.isEmpty else { return cell }
+                let firstVMValues = firstVM.historicalData.map { $0.value }
+                let secondVMValues = secondVM.historicalData.map { $0.value }
+                let firstVMDates = firstVM.historicalData.map { $0.date.formatDate() }
+                let secondVMDates = secondVM.historicalData.map { $0.date.formatDate() }
+                cell.chartView.generateBarData(dataPoints: firstVMDates, values: firstVMValues, criteria: firstVM.searchCriteria)
+                cell.chartView.generateLineData(dataPoints: secondVMDates, values: secondVMValues, criteria: secondVM.searchCriteria)
+            }
+        
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -115,6 +136,15 @@ extension StockDetailDragViewController: UITableViewDataSource {
     }
 }
 extension StockDetailDragViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch dragView.controller.currentPresentationState {
+        case .partial, .closed:
+            return UITableView.automaticDimension
+        case .full:
+            return 225
+        }
+    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let firstMetricViewModel = metricPreviewViewModels.first,
@@ -138,7 +168,6 @@ extension StockDetailDragViewController: UITableViewDelegate {
             titleLabel.textColor = .darkGray
             headerView.addSubview(titleLabel)
             titleLabel.setCenterYAnchor(padding: 0).setTrailingAnchor(padding: 8)
-            
             return headerView
         } else {
             return nil

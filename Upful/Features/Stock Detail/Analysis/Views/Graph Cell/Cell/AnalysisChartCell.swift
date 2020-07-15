@@ -9,6 +9,8 @@
 import UIKit
 
 class AnalysisChartCell: UITableViewCell {
+    
+    static let reuseID = "AnalysisChartCell"
         
     let chartView = CombinedLineChartView()
     
