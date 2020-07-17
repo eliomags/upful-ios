@@ -120,6 +120,7 @@ extension StockDetailDragViewController: UITableViewDataSource {
                 let secondVMValues = secondVM.historicalData.map { $0.value }
                 let firstVMDates = firstVM.historicalData.map { $0.date.formatDate() }
                 let secondVMDates = secondVM.historicalData.map { $0.date.formatDate() }
+                cell.layer.cornerRadius = 12
                 cell.chartView.generateBarData(dataPoints: firstVMDates, values: firstVMValues, criteria: firstVM.searchCriteria)
                 cell.chartView.generateLineData(dataPoints: secondVMDates, values: secondVMValues, criteria: secondVM.searchCriteria)
             }
@@ -142,7 +143,7 @@ extension StockDetailDragViewController: UITableViewDelegate {
         case .partial, .closed:
             return UITableView.automaticDimension
         case .full:
-            return 225
+            return 275
         }
     }
     

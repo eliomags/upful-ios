@@ -12,7 +12,7 @@ class CombinedLineChartView: CombinedChartView {
     
     private let chartViewModel = ChartViewModel()
 
-    // MARK: - Initializer Methods
+    // MARK: - Initializer
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,34 +40,28 @@ class CombinedLineChartView: CombinedChartView {
     
     private func setupYAxis() {
         drawValueAboveBarEnabled = false
-        leftAxis.spaceTop = 0.15
+        leftAxis.granularity = 1
+        leftAxis.spaceTop = 0.05
         leftAxis.spaceBottom = 0.2
-        if #available(iOS 13.0, *) {
-            leftAxis.labelTextColor = .label
-        } else {
-            leftAxis.labelTextColor = .black
-        }
+        leftAxis.labelTextColor = .label
         leftAxis.labelFont = UIFont.systemFont(ofSize: 10, weight: .semibold)
-        leftAxis.gridColor = .lightGray
         leftAxis.drawGridLinesEnabled = true
         leftAxis.drawAxisLineEnabled = false
-        leftAxis.granularity = 1
         leftAxis.drawBottomYLabelEntryEnabled = true
-        leftAxis.axisMaxLabels = 5
+        leftAxis.labelCount = 5
+        leftAxis.forceLabelsEnabled = true
         
         rightAxis.enabled = true
-        rightAxis.spaceTop = 0.15
+        rightAxis.spaceTop = 0.05
         rightAxis.spaceBottom = 0.2
-        if #available(iOS 13.0, *) {
-            rightAxis.labelTextColor = .label
-        } else {
-            rightAxis.labelTextColor = .black
-        }
+        rightAxis.labelTextColor = .label
         rightAxis.labelFont = UIFont.systemFont(ofSize: 10, weight: .semibold)
         rightAxis.gridColor = .lightGray
         rightAxis.drawGridLinesEnabled = false
         rightAxis.drawAxisLineEnabled = false
-        rightAxis.axisMaxLabels = 5
+        rightAxis.drawBottomYLabelEntryEnabled = true
+        rightAxis.labelCount = 5
+        rightAxis.forceLabelsEnabled = true
     }
     
     private func setupXAxis() {
@@ -76,29 +70,24 @@ class CombinedLineChartView: CombinedChartView {
         xAxis.drawGridLinesEnabled = false
         xAxis.centerAxisLabelsEnabled = false
         xAxis.granularity = 1
-        xAxis.avoidFirstLastClippingEnabled = true
-        xAxis.spaceMin = 0.3
-        xAxis.spaceMax = 0.3
+        xAxis.avoidFirstLastClippingEnabled = false
+        xAxis.spaceMin = 0.5
+        xAxis.spaceMax = 0.5
     }
     
     private func setupLegend() {
         legend.enabled = false
-        legend.textColor = .label
-        legend.font = UIFont.systemFont(ofSize: 10, weight: .semibold)
-        legend.horizontalAlignment = .right
-        legend.verticalAlignment = .top
-        legend.orientation = .vertical
-        legend.drawInside = true
-        legend.yOffset = -10
-        legend.xOffset = 15
-        legend.yEntrySpace = 0
     }
     
     let chartData = CombinedChartData()
     
     func generateLineData(dataPoints: [String], values: [Double], criteria: SearchCriteria) {
         var entries = [ChartDataEntry]()
-        setVisibleXRange(minXRange: 0, maxXRange: Double(dataPoints.count - 1))
+        
+        let negativeValues = values.filter{ $0 <= 0 }
+        if !negativeValues.isEmpty { setVisibleYRangeMinimum(0, axis: .right) }
+        
+        guard !dataPoints.isEmpty, !values.isEmpty else { return }
         for i in 0..<dataPoints.count {
             let dataEntry = ChartDataEntry(x: Double(i), y: values[i])
             entries.append(dataEntry)
@@ -108,15 +97,15 @@ class CombinedLineChartView: CombinedChartView {
         dataSet.setCircleColors(NSUIColor.appAccent)
         dataSet.valueTextColor = UIColor.label
         dataSet.mode = .cubicBezier
-        dataSet.drawValuesEnabled = true
+        dataSet.drawValuesEnabled = false
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 10, weight: .light)
         dataSet.circleRadius = 3
         dataSet.circleHoleRadius = 0
         dataSet.drawVerticalHighlightIndicatorEnabled = false
-        dataSet.drawHorizontalHighlightIndicatorEnabled = true
+        dataSet.drawHorizontalHighlightIndicatorEnabled = false
         
         dataSet.axisDependency = .right
-        rightAxis.axisMaximum = dataSet.yMax * 1.3
+        rightAxis.axisMaximum = dataSet.yMax * 1.1
         xAxis.valueFormatter = IndexAxisValueFormatter(values: dataPoints)
 
         let lineChartData = LineChartData(dataSet: dataSet)
@@ -142,8 +131,10 @@ class CombinedLineChartView: CombinedChartView {
     
     func generateBarData(dataPoints: [String], values: [Double], criteria: SearchCriteria) {
         var entries = [BarChartDataEntry]()
-        setVisibleXRange(minXRange: 0, maxXRange: Double(dataPoints.count - 1))
-
+        
+        let negativeValues = values.filter{ $0 <= 0 }
+        if !negativeValues.isEmpty { setVisibleYRangeMinimum(0, axis: .left) }
+        
         for i in 0..<dataPoints.count {
             let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
             entries.append(dataEntry)
@@ -155,12 +146,13 @@ class CombinedLineChartView: CombinedChartView {
         dataSet.drawValuesEnabled = true
         dataSet.highlightEnabled = false
         dataSet.axisDependency = .left
-        leftAxis.axisMaximum = dataSet.yMax * 1.4
+    
+        leftAxis.axisMaximum = dataSet.yMax * 1.1
         xAxis.valueFormatter = IndexAxisValueFormatter(values: dataPoints)
         
         let chartData = BarChartData(dataSet: dataSet)
-        chartData.barWidth = 0.3
-        
+        chartData.barWidth = 0.5
+
         if criteria.parameterType == .number {
             dataSet.valueFormatter = chartViewModel
             leftAxis.valueFormatter = chartViewModel

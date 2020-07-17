@@ -64,7 +64,7 @@ final class MetricPreviewViewModel {
     
     func configureCell(_ cell: MetricPreviewTableViewCell) {
         configuringCell = cell
-        cell.layer.cornerRadius = 8
+        cell.layer.cornerRadius = 12
 
         cell.metricLabel.text = searchCriteria.explicit
         
