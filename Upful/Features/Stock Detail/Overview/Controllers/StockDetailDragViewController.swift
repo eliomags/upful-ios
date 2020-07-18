@@ -128,7 +128,7 @@ final class StockDetailDragViewController: UIViewController {
             return UITableView.automaticDimension
         case .full:
             if row == Sections.Full.chart.rawValue {
-                return 220
+                return 245
             } else {
                 return UITableView.automaticDimension
             }
@@ -227,7 +227,7 @@ extension StockDetailDragViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return dragView.controller.currentPresentationState == .closed ? 0 : 25
+        return dragView.controller.currentPresentationState == .partial ? 25 : 0
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

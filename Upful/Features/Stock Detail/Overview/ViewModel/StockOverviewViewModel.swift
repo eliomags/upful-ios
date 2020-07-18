@@ -57,6 +57,7 @@ class StockOverviewViewModel {
     let loadingOperations = DispatchGroup()
     
     func loadData() {
+        loadName()
         loadNewsData()
         loadStockPrice()
         loadRevenueData()
@@ -73,6 +74,23 @@ class StockOverviewViewModel {
     }
     
     // MARK: - Private Functions
+    
+    fileprivate func loadName() {
+        loadingOperations.enter()
+
+        if companyName.isEmpty {
+            CompanyNameLoader().loadName(for: ticker) { result in
+                switch result {
+                case .success(let name):
+                    self.companyName = name
+                case .failure(let error):
+                    print("failed", error)
+                }
+                
+                self.loadingOperations.leave()
+            }
+        }
+    }
     
     fileprivate func loadStockPrice() {
         loadingOperations.enter()
