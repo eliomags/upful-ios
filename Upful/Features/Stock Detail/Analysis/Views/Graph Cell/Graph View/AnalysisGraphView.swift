@@ -97,7 +97,7 @@ class CombinedLineChartView: CombinedChartView {
         dataSet.setCircleColors(NSUIColor.appAccent)
         dataSet.valueTextColor = UIColor.label
         dataSet.mode = .cubicBezier
-        dataSet.drawValuesEnabled = false
+        dataSet.drawValuesEnabled = true
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 10, weight: .light)
         dataSet.circleRadius = 3
         dataSet.circleHoleRadius = 0
@@ -143,7 +143,7 @@ class CombinedLineChartView: CombinedChartView {
         dataSet.setColor(NSUIColor.appAccent3)
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         dataSet.valueTextColor = UIColor.label
-        dataSet.drawValuesEnabled = true
+        dataSet.drawValuesEnabled = false
         dataSet.highlightEnabled = false
         dataSet.axisDependency = .left
     

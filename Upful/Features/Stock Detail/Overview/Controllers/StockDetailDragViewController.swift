@@ -34,11 +34,12 @@ final class StockDetailDragViewController: UIViewController {
     lazy var dragView: DragView = {
         let dragConfig = DragStateConfiguration(closedHeight: 112, partialHeight: 235, fullHeight: 450)
         let view = DragView(configuration: dragConfig)
-        view.backgroundColor = .tertiarySystemGroupedBackground
-        view.tableView.backgroundColor = .tertiarySystemGroupedBackground
+        view.backgroundColor = VersionManager.collectionCellColor()
+        view.tableView.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.delegate = self
         view.tableView.dataSource = self
         view.tableView.showsVerticalScrollIndicator = false
+        view.tableView.separatorStyle = .singleLine
         return view
     }()
     
@@ -49,6 +50,7 @@ final class StockDetailDragViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         dragView.tableView.register(AnalysisChartCell.self, forCellReuseIdentifier: AnalysisChartCell.reuseID)
         dragView.tableView.register(MetricPreviewTableViewCell.self, forCellReuseIdentifier: MetricPreviewTableViewCell.reuseID)
+        dragView.tableView.register(MetricSelectionTableViewCell.self, forCellReuseIdentifier: MetricSelectionTableViewCell.reuseID)
         createViewModels()
     }
     
@@ -84,9 +86,72 @@ final class StockDetailDragViewController: UIViewController {
         coordinator = StockTradeCoordinator(presentingViewController, ticker: ticker)
         coordinator?.start()
     }
+    
+    // MARK: Full State View Configuration
+    
+    fileprivate func displayCellForFullState(_ indexPath: IndexPath, _ tableView: UITableView) -> UITableViewCell {
+        let row = indexPath.row
+        if row == Sections.Full.chart.rawValue {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: AnalysisChartCell.reuseID, for: indexPath)
+                as? AnalysisChartCell else { return UITableViewCell() }
+            cell.backgroundColor = VersionManager.collectionCellColor3()
+
+            if let firstVM = metricPreviewViewModels.first, let secondVM = metricPreviewViewModels.last {
+                guard !firstVM.historicalData.isEmpty else { return cell }
+                let firstVMValues = firstVM.historicalData.map { $0.value }
+                let secondVMValues = secondVM.historicalData.map { $0.value }
+                let firstVMDates = firstVM.historicalData.map { $0.date.formatDate() }
+                let secondVMDates = secondVM.historicalData.map { $0.date.formatDate() }
+                cell.chartView.generateBarData(dataPoints: secondVMDates, values: secondVMValues, criteria: secondVM.searchCriteria)
+                cell.chartView.generateLineData(dataPoints: firstVMDates, values: firstVMValues, criteria: firstVM.searchCriteria)
+            }
+            return cell
+        }
+        else if row == 1 || row == 2 {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: MetricSelectionTableViewCell.reuseID, for: indexPath)
+                as? MetricSelectionTableViewCell {
+                cell.backgroundColor = VersionManager.collectionCellColor3()
+                
+                let criteria = metricPreviewViewModels[row-1].searchCriteria
+                cell.titleLabel.text = criteria.explicit
+                cell.iconView.backgroundColor = row == 1 ? .appAccent : .appAccent3
+
+                return cell
+            }
+        }
+        return UITableViewCell()
+    }
+    
+    fileprivate func heightsForCell(_ row: Int) -> CGFloat {
+        switch dragView.controller.currentPresentationState {
+        case .closed, .partial:
+            return UITableView.automaticDimension
+        case .full:
+            if row == Sections.Full.chart.rawValue {
+                return 220
+            } else {
+                return UITableView.automaticDimension
+            }
+        }
+    }
+    
+    private func handleSearchCriteriaTap(row: Int) {
+        let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
+        searchCriteriaSelectionVC.delegate = self
+        searchCriteriaSelectionVC.currentSearchCriteria = metricPreviewViewModels[row].searchCriteria
+        parent?.present(searchCriteriaSelectionVC, animated: true, completion: nil)
+    }
 }
 
 extension StockDetailDragViewController: UITableViewDataSource {
+    
+    struct Sections {
+        enum Full: Int, CaseIterable {
+            case chart
+            case metricOne
+            case metricTwo
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch dragView.controller.currentPresentationState {
@@ -95,7 +160,7 @@ extension StockDetailDragViewController: UITableViewDataSource {
         case .partial:
             return metricPreviewViewModels.count
         case .full:
-            return 1
+            return Sections.Full.allCases.count
         }
     }
     
@@ -104,52 +169,37 @@ extension StockDetailDragViewController: UITableViewDataSource {
         case .partial, .closed:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MetricPreviewTableViewCell.reuseID, for: indexPath)
                 as? MetricPreviewTableViewCell else { return UITableViewCell() }
+            cell.backgroundColor = VersionManager.collectionCellColor3()
             let metricViewModel = metricPreviewViewModels[indexPath.row]
             metricViewModel.configureCell(cell)
-            
             return cell
-            
         case .full:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: AnalysisChartCell.reuseID, for: indexPath)
-                as? AnalysisChartCell else { return UITableViewCell() }
-            
-            if let firstVM = metricPreviewViewModels.first,
-                let secondVM = metricPreviewViewModels.last {
-                guard !firstVM.historicalData.isEmpty else { return cell }
-                let firstVMValues = firstVM.historicalData.map { $0.value }
-                let secondVMValues = secondVM.historicalData.map { $0.value }
-                let firstVMDates = firstVM.historicalData.map { $0.date.formatDate() }
-                let secondVMDates = secondVM.historicalData.map { $0.date.formatDate() }
-                cell.layer.cornerRadius = 12
-                cell.chartView.generateBarData(dataPoints: firstVMDates, values: firstVMValues, criteria: firstVM.searchCriteria)
-                cell.chartView.generateLineData(dataPoints: secondVMDates, values: secondVMValues, criteria: secondVM.searchCriteria)
-            }
-        
-            return cell
+            return displayCellForFullState(indexPath, tableView)
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
-        searchCriteriaSelectionVC.delegate = self
-        searchCriteriaSelectionVC.currentSearchCriteria = metricPreviewViewModels[indexPath.row].searchCriteria
-        parent?.present(searchCriteriaSelectionVC, animated: true, completion: nil)
+        switch dragView.controller.currentPresentationState {
+        case .closed:
+            fatalError("Does not exist")
+         case .partial:
+            handleSearchCriteriaTap(row: indexPath.row)
+        case .full:
+            let row = indexPath.row
+            if row == Sections.Full.metricOne.rawValue || row == Sections.Full.metricTwo.rawValue {
+                handleSearchCriteriaTap(row: row-1)
+            }
+        }
     }
 }
 extension StockDetailDragViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch dragView.controller.currentPresentationState {
-        case .partial, .closed:
-            return UITableView.automaticDimension
-        case .full:
-            return 275
-        }
+        return heightsForCell(indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if let firstMetricViewModel = metricPreviewViewModels.first,
-            let lastMetricViewModel = metricPreviewViewModels.last {
+        if let firstMetricViewModel = metricPreviewViewModels.first, let lastMetricViewModel = metricPreviewViewModels.last {
             let firstVMStartDate = firstMetricViewModel.historicalData.first?.date ?? ""
             let firstVMEndDate = firstMetricViewModel.historicalData.last?.date ?? ""
             let lastVMStartDate = lastMetricViewModel.historicalData.first?.date ?? ""
@@ -162,6 +212,7 @@ extension StockDetailDragViewController: UITableViewDelegate {
             if !endDate.isEmpty { endDate = String(Array(endDate)[0...3]) }
             
             let headerView = UIView()
+            headerView.backgroundColor = VersionManager.collectionCellColor()
             let titleLabel = UILabel()
             titleLabel.text = "\(startDate) - \(endDate)"
             titleLabel.textAlignment = .right
@@ -176,7 +227,7 @@ extension StockDetailDragViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return dragView.controller.currentPresentationState == .closed ? 0 : 22
+        return dragView.controller.currentPresentationState == .closed ? 0 : 25
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -185,7 +236,7 @@ extension StockDetailDragViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footer = UIView()
-        footer.backgroundColor = .tertiarySystemGroupedBackground
+        footer.backgroundColor = VersionManager.collectionCellColor()
         footer.addSubview(tradeButton)
         var topPadding: CGFloat = 0
         switch dragView.controller.currentPresentationState {

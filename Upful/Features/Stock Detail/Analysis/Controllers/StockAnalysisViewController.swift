@@ -62,7 +62,7 @@ class StockAnalysisViewController: UIViewController, ChartViewDelegate, ChartTyp
         let tv = UITableView(frame: .zero, style: .grouped)
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.register(AnalysisChartCell.self, forCellReuseIdentifier: ReuseID.graphCell)
-        tv.register(GenericTableViewCell.self, forCellReuseIdentifier: ReuseID.graphConfigurationCell)
+        tv.register(MetricSelectionTableViewCell.self, forCellReuseIdentifier: ReuseID.graphConfigurationCell)
         tv.register(NewsCell.self, forCellReuseIdentifier: ReuseID.reportsCell)
         tv.setTableHeaderView(headerView: stockHeaderView)
         tv.delegate = self
@@ -199,7 +199,7 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
             case 1:
                 // MARK: - Cells For Line Data
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphConfigurationCell,
-                                                               for: indexPath) as? GenericTableViewCell else { return UITableViewCell() }
+                                                               for: indexPath) as? MetricSelectionTableViewCell else { return UITableViewCell() }
                 guard let criteria = viewModel.lineAnalysisItem?.searchCriteria else { return cell }
                 cell.titleLabel.text = "\(criteria.explicit)"
                 cell.iconView.backgroundColor = .appAccent
@@ -208,7 +208,7 @@ extension StockAnalysisViewController: UITableViewDelegate, UITableViewDataSourc
             case 2:
                 // MARK: - Cells For Bar Data
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: ReuseID.graphConfigurationCell,
-                                                               for: indexPath) as? GenericTableViewCell else { return UITableViewCell() }
+                                                               for: indexPath) as? MetricSelectionTableViewCell else { return UITableViewCell() }
                 guard let criteria = viewModel.barAnalysisItem?.searchCriteria else { return cell }
                 cell.titleLabel.text = "\(criteria.explicit)"
                 cell.iconView.backgroundColor =  .appAccent3
@@ -303,7 +303,9 @@ extension StockAnalysisViewController: SubscriptionViewControllerDelegate {
 }
 
 
-class GenericTableViewCell: UITableViewCell {
+class MetricSelectionTableViewCell: UITableViewCell {
+    
+    static let reuseID = "GenericTableViewCell"
     
     let iconView: GenericCellImageView = {
         let iv = GenericCellImageView(frame: .zero)
@@ -337,9 +339,7 @@ class GenericTableViewCell: UITableViewCell {
     }
     
     func setupView() {
-        addBottomSeparator()
         accessoryType = .disclosureIndicator
-        backgroundColor = .clear
         addSubview(contentStackView)
         contentStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true

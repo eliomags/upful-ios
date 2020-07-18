@@ -46,7 +46,7 @@ struct VersionManager {
     
     static func collectionCellColor3() -> UIColor {
         UIColor.init { (trait) -> UIColor in
-            return trait.userInterfaceStyle == .dark ? .secondarySystemGroupedBackground: .white
+            return trait.userInterfaceStyle == .dark ? .tertiarySystemBackground: .white
         }
     }
     
