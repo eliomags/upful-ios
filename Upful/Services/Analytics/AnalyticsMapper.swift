@@ -44,7 +44,7 @@ final class AnalyticsLogger {
             let analyticsAPIs: [AnalyticsTracker] = [mixpanelAnalytics, googleAnalytics]
             analyticsAPIs.forEach { (analyticsItem) in
                 analyticsItem.log(event: event)
-                print("Logged event for:", event, analyticsItem)
+//                print("Logged event for:", event, analyticsItem)
             }
         }
     }
