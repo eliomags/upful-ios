@@ -24,6 +24,8 @@ final class ScreenResultsViewController: UIViewController {
         static let resultsCellID = "resultsCellID"
     }
     
+    var coordinator: Coordinator?
+    
     // MARK: - Views
     
     let resultsDescriptionHeaderLabel: ResultsDescriptionView = {
@@ -235,12 +237,9 @@ extension ScreenResultsViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .searchResult))
-        let selectedCompany = viewModel.stockViewModels[indexPath.item]
-        let detailVC = StockDetailsContainerView(stockViewModel: selectedCompany)
-        
-        RemoteStockManager.updateInterest(for: selectedCompany.stock.ticker, name: selectedCompany.stock.name)
-        self.navigationController?.pushViewController(detailVC, animated: true)
+        let selectedStockViewModel = viewModel.stockViewModels[indexPath.item]
+        coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: selectedStockViewModel)
+        coordinator?.start()
     }
 }
 

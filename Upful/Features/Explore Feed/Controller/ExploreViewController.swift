@@ -209,9 +209,8 @@ final class ExploreViewController: UIViewController, UISearchControllerDelegate,
                 for: selectedPopularStock.stock.ticker,
                 name: selectedPopularStock.stock.name
             )
-            let stockDetailsVC = StockDetailsContainerView(stockViewModel: logicController.stockViewModels[indexPath.row])
-             
-            self.navigationController?.pushViewController(stockDetailsVC, animated: true)
+            coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: logicController.stockViewModels[indexPath.row])
+            coordinator?.start()
             
         case Section.screeners.rawValue:
             PermissionManager.shared.verifyScreenerNavigationPermission { (permissionGranted) in
@@ -364,10 +363,8 @@ extension ExploreViewController {
             let selectedCompany = logicController.stockSearchDisplay[indexPath.row]
             let stockVM = StockViewModel(stock: Stock(name: selectedCompany.name ?? "",
                                                       ticker: selectedCompany.ticker ?? ""))
-            let detailsVC = StockDetailsContainerView(stockViewModel: stockVM)
-            
-            AnalyticsLogger.instance.reportEvents(event: .selectedStock(selectionType: .nameSearch))
-            navigationController?.pushViewController(detailsVC, animated: true)
+            coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: stockVM)
+            coordinator?.start()
         }
     }
     
