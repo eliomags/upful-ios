@@ -34,6 +34,7 @@ final class StockDetailDragViewController: UIViewController {
     lazy var dragView: DragView = {
         let dragConfig = DragStateConfiguration(closedHeight: 112, partialHeight: 235, fullHeight: 450)
         let view = DragView(configuration: dragConfig)
+        view.controller.currentPosition = DragViewPresentationState.closed.rawValue
         view.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.delegate = self
