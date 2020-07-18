@@ -76,18 +76,18 @@ class StockOverviewViewModel {
     // MARK: - Private Functions
     
     fileprivate func loadName() {
-        loadingOperations.enter()
-
         if companyName.isEmpty {
-            CompanyNameLoader().loadName(for: ticker) { result in
+            loadingOperations.enter()
+
+            CompanyNameLoader().loadName(for: ticker) { [weak self] result in
                 switch result {
                 case .success(let name):
-                    self.companyName = name
+                    self?.companyName = name
                 case .failure(let error):
                     print("failed", error)
                 }
                 
-                self.loadingOperations.leave()
+                self?.loadingOperations.leave()
             }
         }
     }
