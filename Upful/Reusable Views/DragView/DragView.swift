@@ -25,7 +25,7 @@ class DragView: UIView {
     private let dragIndicator: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 3
-        view.backgroundColor = UIColor.lightGray
+        view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.4)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: 6).isActive = true
         view.widthAnchor.constraint(equalToConstant: 44).isActive = true
