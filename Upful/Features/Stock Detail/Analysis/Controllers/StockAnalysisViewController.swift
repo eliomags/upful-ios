@@ -339,6 +339,8 @@ class MetricSelectionTableViewCell: UITableViewCell {
     }
     
     func setupView() {
+        backgroundColor = VersionManager.collectionCellColor3()
+
         accessoryType = .disclosureIndicator
         addSubview(contentStackView)
         contentStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
