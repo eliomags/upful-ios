@@ -27,6 +27,9 @@ extension UIFont {
         return UIFont.systemFont(ofSize: 14, weight: .bold)
     }
     
+    static var details3: UIFont {
+        return systemFont(ofSize: 14, weight: .regular)
+    }
 }
 
 

@@ -14,7 +14,7 @@ final class MetricPreviewTableViewCell: UITableViewCell {
     
     let metricLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.font = UIFont.details3
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -27,7 +27,7 @@ final class MetricPreviewTableViewCell: UITableViewCell {
     
     let totalChangeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.font = .details3
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

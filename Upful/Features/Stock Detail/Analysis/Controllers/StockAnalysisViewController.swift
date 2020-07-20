@@ -314,7 +314,7 @@ class MetricSelectionTableViewCell: UITableViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.details1
+        label.font = UIFont.details3
         label.text = "No Data"
         return label
     }()
@@ -344,7 +344,7 @@ class MetricSelectionTableViewCell: UITableViewCell {
         accessoryType = .disclosureIndicator
         addSubview(contentStackView)
         contentStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        contentStackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 8).isActive = true
         if let accessoryView = accessoryView {
             contentStackView.trailingAnchor.constraint(equalTo: accessoryView.leadingAnchor, constant: -8).isActive = true
         } else {
