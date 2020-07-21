@@ -14,14 +14,14 @@ protocol StockDetailDragViewPresentable: DragControllerDataSource {
     var cellTapAction: MetricCellTapAction? { get set }
     
     var viewModels: [MetricPreviewViewModel] { get set }
-    var footerView: ((UIView) -> UIView)? { get set }
+    var createFooterIn: ((UIView) -> UIView)? { get set }
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)? { get set }
 }
 
 class EmptyStockMetricDataSource: NSObject, StockDetailDragViewPresentable {
     
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var footerView: ((UIView) -> UIView)?
+    var createFooterIn: ((UIView) -> UIView)?
     
     var viewModels = [MetricPreviewViewModel]()
     var cellTapAction: MetricCellTapAction?
@@ -46,14 +46,14 @@ class EmptyStockMetricDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        return footerView?(view)
+        return createFooterIn?(view)
     }
 }
 
 class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
     
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var footerView: ((UIView) -> UIView)?
+    var createFooterIn: ((UIView) -> UIView)?
     
     var viewModels = [MetricPreviewViewModel]()
     var cellTapAction: MetricCellTapAction?
@@ -100,14 +100,14 @@ class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        return footerView?(view)
+        return createFooterIn?(view)
     }
 }
 
 class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
     
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var footerView: ((UIView) -> UIView)?
+    var createFooterIn: ((UIView) -> UIView)?
     
     var viewModels = [MetricPreviewViewModel]()
     var cellTapAction: MetricCellTapAction?
@@ -186,6 +186,6 @@ class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        return footerView?(view)
+        return createFooterIn?(view)
     }
 }
