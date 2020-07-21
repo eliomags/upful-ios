@@ -14,13 +14,47 @@ protocol StockDetailDragViewPresentable: DragControllerDataSource {
     var cellTapAction: MetricCellTapAction? { get set }
     
     var viewModels: [MetricPreviewViewModel] { get set }
-    var footerView: UIView? { get set }
+    var footerView: ((UIView) -> UIView)? { get set }
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)? { get set }
 }
 
-class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
+class EmptyStockMetricDataSource: NSObject, StockDetailDragViewPresentable {
+    
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var footerView: UIView?
+    var footerView: ((UIView) -> UIView)?
+    
+    var viewModels = [MetricPreviewViewModel]()
+    var cellTapAction: MetricCellTapAction?
+    
+    weak var controller: DragControllerStateManager?
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        handleStateChange(scrollView: scrollView)
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = UIView()
+        return footerView?(view)
+    }
+}
+
+class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
+    
+    var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
+    var footerView: ((UIView) -> UIView)?
+    
     var viewModels = [MetricPreviewViewModel]()
     var cellTapAction: MetricCellTapAction?
     
@@ -65,13 +99,16 @@ class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return footerView
+        let view = UIView()
+        return footerView?(view)
     }
 }
 
 class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
+    
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var footerView: UIView?
+    var footerView: ((UIView) -> UIView)?
+    
     var viewModels = [MetricPreviewViewModel]()
     var cellTapAction: MetricCellTapAction?
     
@@ -93,6 +130,7 @@ class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = indexPath.row
+        
         if row == Rows.chart.rawValue {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: AnalysisChartCell.reuseID, for: indexPath)
                 as? AnalysisChartCell else { return UITableViewCell() }
@@ -106,8 +144,8 @@ class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
                 cell.chartView.generateLineData(dataPoints: firstVMDates, values: firstVMValues, criteria: firstVM.searchCriteria)
             }
             return cell
-        }
-        else if row == Rows.metricOne.rawValue || row == Rows.metricTwo.rawValue {
+        } else
+            if row == Rows.metricOne.rawValue || row == Rows.metricTwo.rawValue {
             if let cell = tableView.dequeueReusableCell(withIdentifier: MetricSelectionTableViewCell.reuseID, for: indexPath)
                 as? MetricSelectionTableViewCell {
                 let criteria = viewModels[row-1].searchCriteria
@@ -147,6 +185,7 @@ class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return footerView
+        let view = UIView()
+        return footerView?(view)
     }
 }
