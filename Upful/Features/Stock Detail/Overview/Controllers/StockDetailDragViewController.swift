@@ -42,12 +42,12 @@ final class StockDetailDragViewController: UIViewController {
             $0.cellTapAction = handleSearchCriteriaTap
             $0.viewModels = metricPreviewViewModels
         })
-        let firstPosition = DragControllerState(dataSource: emptyMetricDataSource, height: 112)
+        let firstPosition = DragControllerState(dataSource: emptyMetricDataSource, height: 102)
         let secondPosition = DragControllerState(dataSource: metricDisplayDataSource, height: 235)
-        let thirdPosition = DragControllerState(dataSource: metricAnalysisDataSource, height: 450)
+        let thirdPosition = DragControllerState(dataSource: metricAnalysisDataSource, height: 500)
         let view = DragView(configuration: [firstPosition, secondPosition, thirdPosition])
         view.tableViewStyle = .plain
-        view.tableViewPadding = .init(top: 12, left: 16, bottom: -24, right: -16)
+        view.tableViewPadding = .init(top: 8, left: 16, bottom: -12, right: -16)
         view.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.separatorStyle = .singleLine
@@ -127,11 +127,14 @@ extension StockDetailDragViewController {
         }
     }
     
-    private func createFooterView(in view: UIView) -> UIView {
+    private func createFooterView(in view: UIView, topPadding: CGFloat) -> UIView {
         let view = UIView()
         view.backgroundColor = VersionManager.collectionCellColor()
         view.addSubview(tradeButton)
-        tradeButton.setCenterYAnchor(padding: -2).setTrailingAnchor(padding: 8)
+        tradeButton
+            .setTopAnchor(padding: topPadding)
+            .setTrailingAnchor(padding: 8)
+
         return view
     }
 }

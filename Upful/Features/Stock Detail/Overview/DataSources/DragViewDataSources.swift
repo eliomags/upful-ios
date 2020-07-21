@@ -14,15 +14,15 @@ protocol StockDetailDragViewPresentable: DragControllerDataSource {
     var cellTapAction: MetricCellTapAction? { get set }
     
     var viewModels: [MetricPreviewViewModel] { get set }
-    var createFooterIn: ((UIView) -> UIView)? { get set }
+    var createFooterIn: ((UIView, CGFloat) -> UIView)? { get set }
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)? { get set }
 }
 
 class EmptyStockMetricDataSource: NSObject, StockDetailDragViewPresentable {
     
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var createFooterIn: ((UIView) -> UIView)?
-    
+    var createFooterIn: ((UIView, CGFloat) -> UIView)?
+
     var viewModels = [MetricPreviewViewModel]()
     var cellTapAction: MetricCellTapAction?
     
@@ -46,15 +46,15 @@ class EmptyStockMetricDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        return createFooterIn?(view)
+        return createFooterIn?(view, 4)
     }
 }
 
 class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
     
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var createFooterIn: ((UIView) -> UIView)?
-    
+    var createFooterIn: ((UIView, CGFloat) -> UIView)?
+
     var viewModels = [MetricPreviewViewModel]()
     var cellTapAction: MetricCellTapAction?
     
@@ -100,17 +100,23 @@ class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        return createFooterIn?(view)
+        return createFooterIn?(view, 12)
     }
 }
 
 class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
     
     var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var createFooterIn: ((UIView) -> UIView)?
+    var createFooterIn: ((UIView, CGFloat) -> UIView)?
     
     var viewModels = [MetricPreviewViewModel]()
     var cellTapAction: MetricCellTapAction?
+    
+    lazy var headerControl: UISegmentedControl = {
+        let control = UISegmentedControl(items: ["Analyze", "Compare"])
+        control.selectedSegmentIndex = 0
+        return control
+    }()
     
     weak var controller: DragControllerStateManager?
     
@@ -173,11 +179,15 @@ class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return nil
+        let header = UIView()
+        header.backgroundColor = VersionManager.collectionCellColor()
+        header.addSubview(headerControl)
+        headerControl.setCenterYAnchor(padding: 0).setLeadingAnchor(padding: 32).setTrailingAnchor(padding: 32)
+        return header
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0
+        return 50
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -186,6 +196,6 @@ class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        return createFooterIn?(view)
+        return createFooterIn?(view, 12)
     }
 }
