@@ -47,7 +47,7 @@ final class StockDetailDragViewController: UIViewController {
         let thirdPosition = DragControllerState(dataSource: metricAnalysisDataSource, height: 450)
         let view = DragView(configuration: [firstPosition, secondPosition, thirdPosition])
         view.tableViewStyle = .plain
-        view.tableViewPadding = .init(top: 12, left: 16, bottom: 0, right: -16)
+        view.tableViewPadding = .init(top: 12, left: 16, bottom: -24, right: -16)
         view.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.separatorStyle = .singleLine
@@ -131,7 +131,7 @@ extension StockDetailDragViewController {
         let view = UIView()
         view.backgroundColor = VersionManager.collectionCellColor()
         view.addSubview(tradeButton)
-        tradeButton.setCenterYAnchor(padding: -4).setTrailingAnchor(padding: 8)
+        tradeButton.setCenterYAnchor(padding: -2).setTrailingAnchor(padding: 8)
         return view
     }
 }
