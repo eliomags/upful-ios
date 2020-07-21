@@ -135,6 +135,7 @@ class CombinedLineChartView: CombinedChartView {
         let negativeValues = values.filter{ $0 <= 0 }
         if !negativeValues.isEmpty { setVisibleYRangeMinimum(0, axis: .left) }
         
+        guard !dataPoints.isEmpty, !values.isEmpty else { return }
         for i in 0..<dataPoints.count {
             let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
             entries.append(dataEntry)
