@@ -11,11 +11,15 @@ import YSDraggy
 
 protocol AnalysisDragContentDelegate: class {
     func createTradeButtonFooterView(in view: UIView, topPadding: CGFloat) -> UIView?
-    
+    func didSelectMetricPreviewCell(at row: Int)
+}
+
+protocol MetricPreviewDataSourceDelegate: AnalysisDragContentDelegate {
     func createMetricPreviewHeader(in view: UIView) -> UIView?
     func createMetricPreviewCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricPreviewTableViewCell?
-    func didSelectMetricPreviewCell(at row: Int)
-    
+}
+
+protocol AnalysisCompareDataSourceDelegate: AnalysisDragContentDelegate {
     func didChangeDataSource(selectedIndex: Int)
     func createDataSourceSelectionHeader(in view: UIView) -> UIView
     func createAnalysisChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> AnalysisChartCell?
@@ -46,7 +50,7 @@ final class StockDetailDragViewController: UIViewController {
     }()
     
     let emptyMetricDataSource = EmptyStockMetricDataSource()
-    let metricDisplayDataSource = StockMetricDisplayDataSource()
+    let metricDisplayDataSource = MetricPreviewDataSource()
     let metricAnalysisDataSource = MetricAnalysisDataSource()
     
     lazy var dragView: DragView = {
@@ -164,6 +168,9 @@ extension StockDetailDragViewController: AnalysisDragContentDelegate {
         metricViewModel.configureCell(cell)
         return cell
     }
+}
+
+extension StockDetailDragViewController: MetricPreviewDataSourceDelegate {
     
     func didSelectMetricPreviewCell(at row: Int) {
         let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
@@ -178,6 +185,9 @@ extension StockDetailDragViewController: AnalysisDragContentDelegate {
         headerControl.setCenterYAnchor(padding: 0).setLeadingAnchor(padding: 32).setTrailingAnchor(padding: 32)
         return view
     }
+}
+
+extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
     
     func didChangeDataSource(selectedIndex: Int) {
         print("something happened here lol")

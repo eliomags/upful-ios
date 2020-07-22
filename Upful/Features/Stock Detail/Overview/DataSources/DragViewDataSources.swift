@@ -36,9 +36,9 @@ class EmptyStockMetricDataSource: NSObject, DragControllerDataSource {
     }
 }
 
-class StockMetricDisplayDataSource: NSObject, DragControllerDataSource {
+class MetricPreviewDataSource: NSObject, DragControllerDataSource {
     
-    weak var delegate: AnalysisDragContentDelegate?
+    weak var delegate: MetricPreviewDataSourceDelegate?
     weak var controller: DragControllerStateManager?
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -81,9 +81,6 @@ class StockMetricDisplayDataSource: NSObject, DragControllerDataSource {
 }
 
 final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
-
-    weak var delegate: AnalysisDragContentDelegate?
-    weak var controller: DragControllerStateManager?
     
     enum State: Int {
         case analysis
@@ -95,6 +92,11 @@ final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
         case metricOne
         case metricTwo
     }
+    
+    weak var delegate: AnalysisCompareDataSourceDelegate?
+    weak var controller: DragControllerStateManager?
+    
+    var state: State = .analysis
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         handleStateChange(scrollView: scrollView)
