@@ -9,6 +9,19 @@
 import UIKit
 import YSDraggy
 
+protocol AnalysisDragContentDelegate: class {
+    func createTradeButtonFooterView(in view: UIView, topPadding: CGFloat) -> UIView?
+    
+    func createMetricPreviewHeader(in view: UIView) -> UIView?
+    func createMetricPreviewCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricPreviewTableViewCell?
+    func didSelectMetricPreviewCell(at row: Int)
+    
+    func didChangeDataSource(selectedIndex: Int)
+    func createDataSourceSelectionHeader(in view: UIView) -> UIView
+    func createAnalysisChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> AnalysisChartCell?
+    func createMetricSelectionCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricSelectionTableViewCell?
+}
+
 final class StockDetailDragViewController: UIViewController {
     
     private let ticker: String
@@ -32,20 +45,20 @@ final class StockDetailDragViewController: UIViewController {
         return button
     }()
     
+    let emptyMetricDataSource = EmptyStockMetricDataSource()
+    let metricDisplayDataSource = StockMetricDisplayDataSource()
+    let metricAnalysisDataSource = MetricAnalysisDataSource()
+    
     lazy var dragView: DragView = {
-        let emptyMetricDataSource: StockDetailDragViewPresentable = EmptyStockMetricDataSource()
-        let metricDisplayDataSource: StockDetailDragViewPresentable = StockMetricDisplayDataSource()
-        let metricAnalysisDataSource: StockDetailDragViewPresentable = MetricAnalysisDataSource()
-        [emptyMetricDataSource, metricDisplayDataSource, metricAnalysisDataSource].forEach({
-            $0.createFooterIn = createFooterView
-            $0.headerDisplay = createDragViewHeader
-            $0.cellTapAction = handleSearchCriteriaTap
-            $0.viewModels = metricPreviewViewModels
-        })
+        emptyMetricDataSource.delegate = self
+        metricDisplayDataSource.delegate = self
+        metricAnalysisDataSource.delegate = self
+        
         let firstPosition = DragControllerState(dataSource: emptyMetricDataSource, height: 102)
         let secondPosition = DragControllerState(dataSource: metricDisplayDataSource, height: 235)
         let thirdPosition = DragControllerState(dataSource: metricAnalysisDataSource, height: 500)
         let view = DragView(configuration: [firstPosition, secondPosition, thirdPosition])
+        
         view.tableViewStyle = .plain
         view.tableViewPadding = .init(top: 8, left: 16, bottom: -12, right: -16)
         view.backgroundColor = VersionManager.collectionCellColor()
@@ -53,6 +66,13 @@ final class StockDetailDragViewController: UIViewController {
         view.tableView.separatorStyle = .singleLine
         view.tableView.showsVerticalScrollIndicator = false
         return view
+    }()
+    
+    lazy var headerControl: UISegmentedControl = {
+        let control = UISegmentedControl(items: ["Analyze", "Compare"])
+        control.selectedSegmentIndex = 0
+        control.addTarget(self, action: #selector(handleSegmentControlTap), for: .valueChanged)
+        return control
     }()
     
     // MARK: Initializer
@@ -90,17 +110,27 @@ final class StockDetailDragViewController: UIViewController {
         coordinator?.start()
     }
     
-    private func handleSearchCriteriaTap(row: Int) {
-        let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
-        searchCriteriaSelectionVC.delegate = self
-        searchCriteriaSelectionVC.currentSearchCriteria = metricPreviewViewModels[row].searchCriteria
-        parent?.present(searchCriteriaSelectionVC, animated: true, completion: nil)
+    @objc fileprivate func handleSegmentControlTap(_ sender: UISegmentedControl) {
+        print("sender changed to", sender.selectedSegmentIndex)
     }
 }
-
-extension StockDetailDragViewController {
-    private func createDragViewHeader(viewModels: [MetricPreviewViewModel]) -> UIView? {
-        if let firstMetricViewModel = viewModels.first, let lastMetricViewModel = viewModels.last {
+extension StockDetailDragViewController: AnalysisDragContentDelegate {
+    
+    func createTradeButtonFooterView(in view: UIView, topPadding: CGFloat) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = VersionManager.collectionCellColor()
+        view.addSubview(tradeButton)
+        tradeButton
+            .setTopAnchor(padding: topPadding)
+            .setTrailingAnchor(padding: 8)
+        
+        return view
+    }
+    
+    func createMetricPreviewHeader(in view: UIView) -> UIView? {
+        if let firstMetricViewModel = metricPreviewViewModels.first,
+            let lastMetricViewModel = metricPreviewViewModels.last {
+            
             let firstVMStartDate = firstMetricViewModel.historicalData.first?.date ?? ""
             let firstVMEndDate = firstMetricViewModel.historicalData.last?.date ?? ""
             let lastVMStartDate = lastMetricViewModel.historicalData.first?.date ?? ""
@@ -127,15 +157,57 @@ extension StockDetailDragViewController {
         }
     }
     
-    private func createFooterView(in view: UIView, topPadding: CGFloat) -> UIView {
-        let view = UIView()
+    func createMetricPreviewCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricPreviewTableViewCell? {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MetricPreviewTableViewCell.reuseID, for: indexPath) as? MetricPreviewTableViewCell else { return nil }
+        cell.backgroundColor = VersionManager.collectionCellColor3()
+        let metricViewModel = metricPreviewViewModels[indexPath.row]
+        metricViewModel.configureCell(cell)
+        return cell
+    }
+    
+    func didSelectMetricPreviewCell(at row: Int) {
+        let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
+        searchCriteriaSelectionVC.delegate = self
+        searchCriteriaSelectionVC.currentSearchCriteria = metricPreviewViewModels[row].searchCriteria
+        parent?.present(searchCriteriaSelectionVC, animated: true, completion: nil)
+    }
+    
+    func createDataSourceSelectionHeader(in view: UIView) -> UIView {
         view.backgroundColor = VersionManager.collectionCellColor()
-        view.addSubview(tradeButton)
-        tradeButton
-            .setTopAnchor(padding: topPadding)
-            .setTrailingAnchor(padding: 8)
-
+        view.addSubview(headerControl)
+        headerControl.setCenterYAnchor(padding: 0).setLeadingAnchor(padding: 32).setTrailingAnchor(padding: 32)
         return view
+    }
+    
+    func didChangeDataSource(selectedIndex: Int) {
+        print("something happened here lol")
+    }
+    
+    func createAnalysisChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> AnalysisChartCell? {
+        let cell = tableView.dequeueReusableCell(withIdentifier: AnalysisChartCell.reuseID, for: indexPath)
+            as? AnalysisChartCell
+        if let firstVM = metricPreviewViewModels.first, let secondVM = metricPreviewViewModels.last {
+            guard !firstVM.historicalData.isEmpty else { return cell }
+            let firstVMValues = firstVM.historicalData.map { $0.value }
+            let secondVMValues = secondVM.historicalData.map { $0.value }
+            let firstVMDates = firstVM.historicalData.map { $0.date.formatDate() }
+            let secondVMDates = secondVM.historicalData.map { $0.date.formatDate() }
+            cell?.chartView.generateBarData(dataPoints: secondVMDates, values: secondVMValues, criteria: secondVM.searchCriteria)
+            cell?.chartView.generateLineData(dataPoints: firstVMDates, values: firstVMValues, criteria: firstVM.searchCriteria)
+        }
+        return cell
+    }
+    
+    func createMetricSelectionCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricSelectionTableViewCell? {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: MetricSelectionTableViewCell.reuseID, for: indexPath)
+            as? MetricSelectionTableViewCell {
+            let criteria = metricPreviewViewModels[indexPath.row-1].searchCriteria
+            cell.titleLabel.text = criteria.explicit
+            cell.iconView.backgroundColor = indexPath.row == 1 ? .appAccent : .appAccent3
+            return cell
+        } else {
+            return nil
+        }
     }
 }
 

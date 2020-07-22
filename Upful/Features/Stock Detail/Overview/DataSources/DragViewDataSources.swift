@@ -9,23 +9,9 @@
 import UIKit
 import YSDraggy
 
-protocol StockDetailDragViewPresentable: DragControllerDataSource {
-    typealias MetricCellTapAction = ((Int) -> Void)
-    var cellTapAction: MetricCellTapAction? { get set }
+class EmptyStockMetricDataSource: NSObject, DragControllerDataSource {
     
-    var viewModels: [MetricPreviewViewModel] { get set }
-    var createFooterIn: ((UIView, CGFloat) -> UIView)? { get set }
-    var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)? { get set }
-}
-
-class EmptyStockMetricDataSource: NSObject, StockDetailDragViewPresentable {
-    
-    var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var createFooterIn: ((UIView, CGFloat) -> UIView)?
-
-    var viewModels = [MetricPreviewViewModel]()
-    var cellTapAction: MetricCellTapAction?
-    
+    weak var delegate: AnalysisDragContentDelegate?
     weak var controller: DragControllerStateManager?
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -46,18 +32,13 @@ class EmptyStockMetricDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        return createFooterIn?(view, 4)
+        return delegate?.createTradeButtonFooterView(in: view, topPadding: 4)
     }
 }
 
-class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
+class StockMetricDisplayDataSource: NSObject, DragControllerDataSource {
     
-    var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var createFooterIn: ((UIView, CGFloat) -> UIView)?
-
-    var viewModels = [MetricPreviewViewModel]()
-    var cellTapAction: MetricCellTapAction?
-    
+    weak var delegate: AnalysisDragContentDelegate?
     weak var controller: DragControllerStateManager?
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -65,21 +46,15 @@ class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModels.count
+        return 2
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MetricPreviewTableViewCell.reuseID, for: indexPath)
-            as? MetricPreviewTableViewCell else { return UITableViewCell() }
-        cell.backgroundColor = VersionManager.collectionCellColor3()
-        let metricViewModel = viewModels[indexPath.row]
-        metricViewModel.configureCell(cell)
-        
-        return cell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell { 
+        return delegate?.createMetricPreviewCell(tableView, at: indexPath) ?? UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        cellTapAction?(indexPath.row)
+        delegate?.didSelectMetricPreviewCell(at: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -87,7 +62,8 @@ class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return headerDisplay?(viewModels)
+        let view = UIView()
+        return delegate?.createMetricPreviewHeader(in: view)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -100,34 +76,28 @@ class StockMetricDisplayDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        return createFooterIn?(view, 12)
+        return delegate?.createTradeButtonFooterView(in: view, topPadding: 12)
     }
 }
 
-class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
-    
-    var headerDisplay: (([MetricPreviewViewModel]) -> UIView?)?
-    var createFooterIn: ((UIView, CGFloat) -> UIView)?
-    
-    var viewModels = [MetricPreviewViewModel]()
-    var cellTapAction: MetricCellTapAction?
-    
-    lazy var headerControl: UISegmentedControl = {
-        let control = UISegmentedControl(items: ["Analyze", "Compare"])
-        control.selectedSegmentIndex = 0
-        return control
-    }()
-    
+final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
+
+    weak var delegate: AnalysisDragContentDelegate?
     weak var controller: DragControllerStateManager?
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        handleStateChange(scrollView: scrollView)
+    enum State: Int {
+        case analysis
+        case compare
     }
     
     enum Rows: Int, CaseIterable {
         case chart
         case metricOne
         case metricTwo
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        handleStateChange(scrollView: scrollView)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -138,27 +108,11 @@ class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
         let row = indexPath.row
         
         if row == Rows.chart.rawValue {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: AnalysisChartCell.reuseID, for: indexPath)
-                as? AnalysisChartCell else { return UITableViewCell() }
-            if let firstVM = viewModels.first, let secondVM = viewModels.last {
-                guard !firstVM.historicalData.isEmpty else { return cell }
-                let firstVMValues = firstVM.historicalData.map { $0.value }
-                let secondVMValues = secondVM.historicalData.map { $0.value }
-                let firstVMDates = firstVM.historicalData.map { $0.date.formatDate() }
-                let secondVMDates = secondVM.historicalData.map { $0.date.formatDate() }
-                cell.chartView.generateBarData(dataPoints: secondVMDates, values: secondVMValues, criteria: secondVM.searchCriteria)
-                cell.chartView.generateLineData(dataPoints: firstVMDates, values: firstVMValues, criteria: firstVM.searchCriteria)
-            }
-            return cell
-        } else
+            return delegate?.createAnalysisChartCell(tableView, at: indexPath) ?? UITableViewCell()
+    
+        } else {
             if row == Rows.metricOne.rawValue || row == Rows.metricTwo.rawValue {
-            if let cell = tableView.dequeueReusableCell(withIdentifier: MetricSelectionTableViewCell.reuseID, for: indexPath)
-                as? MetricSelectionTableViewCell {
-                let criteria = viewModels[row-1].searchCriteria
-                cell.titleLabel.text = criteria.explicit
-                cell.iconView.backgroundColor = row == 1 ? .appAccent : .appAccent3
-                
-                return cell
+                return delegate?.createMetricSelectionCell(tableView, at: indexPath) ?? UITableViewCell()
             }
         }
         return UITableViewCell()
@@ -175,15 +129,12 @@ class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == Rows.chart.rawValue { return }
-        cellTapAction?(indexPath.row-1)
+        delegate?.didSelectMetricPreviewCell(at: indexPath.row-1)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = UIView()
-        header.backgroundColor = VersionManager.collectionCellColor()
-        header.addSubview(headerControl)
-        headerControl.setCenterYAnchor(padding: 0).setLeadingAnchor(padding: 32).setTrailingAnchor(padding: 32)
-        return header
+        return delegate?.createDataSourceSelectionHeader(in: header)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -196,6 +147,6 @@ class MetricAnalysisDataSource: NSObject, StockDetailDragViewPresentable {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        return createFooterIn?(view, 12)
+        return delegate?.createTradeButtonFooterView(in: view, topPadding: 12)
     }
 }
