@@ -20,10 +20,16 @@ protocol MetricPreviewDataSourceDelegate: AnalysisDragContentDelegate {
 }
 
 protocol AnalysisCompareDataSourceDelegate: AnalysisDragContentDelegate {
-    func didChangeDataSource(selectedIndex: Int)
     func createDataSourceSelectionHeader(in view: UIView) -> UIView
     func createAnalysisChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> AnalysisChartCell?
     func createMetricSelectionCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricSelectionTableViewCell?
+    
+    /*
+     create MultiLineChartCell()
+     create metric selection cell
+     didSelectMetricSelectionCell to be resused
+     create stock comparison cells
+     */
 }
 
 final class StockDetailDragViewController: UIViewController {
@@ -115,7 +121,8 @@ final class StockDetailDragViewController: UIViewController {
     }
     
     @objc fileprivate func handleSegmentControlTap(_ sender: UISegmentedControl) {
-        print("sender changed to", sender.selectedSegmentIndex)
+        metricAnalysisDataSource.state = MetricAnalysisDataSource.State(rawValue: sender.selectedSegmentIndex)!
+        dragView.tableView.reloadData()
     }
 }
 extension StockDetailDragViewController: AnalysisDragContentDelegate {
@@ -188,11 +195,7 @@ extension StockDetailDragViewController: MetricPreviewDataSourceDelegate {
 }
 
 extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
-    
-    func didChangeDataSource(selectedIndex: Int) {
-        print("something happened here lol")
-    }
-    
+
     func createAnalysisChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> AnalysisChartCell? {
         let cell = tableView.dequeueReusableCell(withIdentifier: AnalysisChartCell.reuseID, for: indexPath)
             as? AnalysisChartCell

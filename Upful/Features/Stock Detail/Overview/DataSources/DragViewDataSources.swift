@@ -87,51 +87,82 @@ final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
         case compare
     }
     
-    enum Rows: Int, CaseIterable {
+    enum AnalysisRows: Int, CaseIterable {
         case chart
         case metricOne
         case metricTwo
     }
     
-    weak var delegate: AnalysisCompareDataSourceDelegate?
-    weak var controller: DragControllerStateManager?
+    enum ComparisonRows: Int, CaseIterable {
+        case chart
+        case metric
+        case currentCompany
+        case comparingCompany
+    }
     
     var state: State = .analysis
     
+    weak var delegate: AnalysisCompareDataSourceDelegate?
+    weak var controller: DragControllerStateManager?
+        
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         handleStateChange(scrollView: scrollView)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Rows.allCases.count
+        switch state {
+        case .analysis:
+            return AnalysisRows.allCases.count
+        case .compare:
+            return ComparisonRows.allCases.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = indexPath.row
         
-        if row == Rows.chart.rawValue {
-            return delegate?.createAnalysisChartCell(tableView, at: indexPath) ?? UITableViewCell()
-    
-        } else {
-            if row == Rows.metricOne.rawValue || row == Rows.metricTwo.rawValue {
-                return delegate?.createMetricSelectionCell(tableView, at: indexPath) ?? UITableViewCell()
+        switch state {
+        case .analysis:
+            if row == AnalysisRows.chart.rawValue {
+                return delegate?.createAnalysisChartCell(tableView, at: indexPath) ?? UITableViewCell()
+                
+            } else {
+                if row == AnalysisRows.metricOne.rawValue || row == AnalysisRows.metricTwo.rawValue {
+                    return delegate?.createMetricSelectionCell(tableView, at: indexPath) ?? UITableViewCell()
+                }
             }
+            
+        case .compare:
+            return UITableViewCell()
         }
+        
         return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.row {
-        case Rows.chart.rawValue:
-            return 245
-        default:
+        switch state {
+        case .analysis:
+            switch indexPath.row {
+            case AnalysisRows.chart.rawValue:
+                return 245
+            default:
+                return UITableView.automaticDimension
+            }
+            
+        case .compare:
             return UITableView.automaticDimension
         }
+       
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == Rows.chart.rawValue { return }
-        delegate?.didSelectMetricPreviewCell(at: indexPath.row-1)
+        switch state {
+        case .analysis:
+            if indexPath.row == AnalysisRows.chart.rawValue { return }
+            delegate?.didSelectMetricPreviewCell(at: indexPath.row-1)
+        case .compare:
+            print("selected cell", indexPath)
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
