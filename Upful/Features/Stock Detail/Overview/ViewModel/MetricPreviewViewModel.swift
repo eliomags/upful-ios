@@ -75,7 +75,7 @@ final class MetricPreviewViewModel {
         cell.lineChartView.dragEnabled = false
         cell.lineChartView.isUserInteractionEnabled = false
         cell.lineChartView.setDataSet(with: chartDataEntries)
-                
+
         handleLoadingState()
         
         guard !historicalData.isEmpty else { return }
@@ -103,4 +103,3 @@ final class MetricPreviewViewModel {
     }
     
 }
-

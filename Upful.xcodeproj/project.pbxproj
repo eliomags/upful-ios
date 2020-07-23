@@ -233,6 +233,7 @@
 		3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */; };
 		3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */; };
 		3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */; };
+		3DEA3B4924C93ACE00A79197 /* StockComparisonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEA3B4824C93ACE00A79197 /* StockComparisonViewModel.swift */; };
 		3DF4D8CB244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF4D8CA244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift */; };
 		3DF5FBA2232BB9BB00856205 /* StockDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */; };
 		3DF5FBA4232BF44300856205 /* StockAnalysisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */; };
@@ -521,6 +522,7 @@
 		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupVC.swift; sourceTree = "<group>"; };
 		3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePersistenceManagerTest.swift; sourceTree = "<group>"; };
+		3DEA3B4824C93ACE00A79197 /* StockComparisonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockComparisonViewModel.swift; sourceTree = "<group>"; };
 		3DF4D8CA244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartViewModelLoaderTest.swift; sourceTree = "<group>"; };
 		3DF5FBA1232BB9BB00856205 /* StockDetailsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsContainerView.swift; sourceTree = "<group>"; };
 		3DF5FBA3232BF44300856205 /* StockAnalysisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockAnalysisViewController.swift; sourceTree = "<group>"; };
@@ -2290,6 +2292,7 @@
 			children = (
 				3DF734CB2402DDFD00B297A4 /* StockOverviewViewModel.swift */,
 				3DD3439524BA9B360081DBE6 /* MetricPreviewViewModel.swift */,
+				3DEA3B4824C93ACE00A79197 /* StockComparisonViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -2701,6 +2704,7 @@
 				3DD3439824BB59A70081DBE6 /* SearchCriteriaSelectionViewController.swift in Sources */,
 				3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */,
 				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
+				3DEA3B4924C93ACE00A79197 /* StockComparisonViewModel.swift in Sources */,
 				3DAF279D2449F98300CD001B /* HoldingBreakdownHeaderView.swift in Sources */,
 				3D206A16241EFCDE00F7E44C /* TransactionLedgerPersistence.swift in Sources */,
 				3D55BD6423B7BEBB00B4FDF0 /* UIImage+Extensions.swift in Sources */,

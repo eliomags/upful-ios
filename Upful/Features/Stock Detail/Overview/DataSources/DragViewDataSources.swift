@@ -133,6 +133,16 @@ final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
             }
             
         case .compare:
+            if row == 1 {
+                
+            }
+            else if row == 2 {
+                return delegate?.createCurrentTickerCell(tableView, at: indexPath) ?? UITableViewCell()
+            }
+            else if row == 3 {
+                return delegate?.createStocksToCompareCell(tableView, at: indexPath) ?? UITableViewCell()
+            }
+            
             return UITableViewCell()
         }
         
@@ -140,9 +150,11 @@ final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let row = indexPath.row
+        
         switch state {
         case .analysis:
-            switch indexPath.row {
+            switch row {
             case AnalysisRows.chart.rawValue:
                 return 245
             default:
@@ -150,9 +162,13 @@ final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
             }
             
         case .compare:
-            return UITableView.automaticDimension
+            switch row {
+            case 0:
+                return 200
+            default:
+                return UITableView.automaticDimension
+            }
         }
-       
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -160,6 +176,7 @@ final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
         case .analysis:
             if indexPath.row == AnalysisRows.chart.rawValue { return }
             delegate?.didSelectMetricPreviewCell(at: indexPath.row-1)
+            
         case .compare:
             print("selected cell", indexPath)
         }

@@ -24,20 +24,25 @@ protocol AnalysisCompareDataSourceDelegate: AnalysisDragContentDelegate {
     func createAnalysisChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> AnalysisChartCell?
     func createMetricSelectionCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricSelectionTableViewCell?
     
-    /*
+    func createCurrentTickerCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
+    func createStocksToCompareCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
+}
+
+/*
      create MultiLineChartCell()
      create metric selection cell
      didSelectMetricSelectionCell to be resused
      create stock comparison cells
-     */
-}
+*/
 
 final class StockDetailDragViewController: UIViewController {
     
     private let ticker: String
-    
+ 
     private(set) var coordinator: Coordinator?
     private(set) var metricPreviewViewModels = [MetricPreviewViewModel]()
+    
+    let comparisonViewModel: StockComparisonViewModel
 
     // MARK: Views
     
@@ -70,7 +75,7 @@ final class StockDetailDragViewController: UIViewController {
         let view = DragView(configuration: [firstPosition, secondPosition, thirdPosition])
         
         view.tableViewStyle = .plain
-        view.tableViewPadding = .init(top: 8, left: 16, bottom: -12, right: -16)
+        view.tableViewPadding = .init(top: 12, left: 16, bottom: -16, right: -16)
         view.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.separatorStyle = .singleLine
@@ -89,11 +94,13 @@ final class StockDetailDragViewController: UIViewController {
     
     init(ticker: String) {
         self.ticker = ticker
+        self.comparisonViewModel = StockComparisonViewModel(mainTicker: ticker)
         super.init(nibName: nil, bundle: nil)
         createViewModels()
         dragView.tableView.register(AnalysisChartCell.self, forCellReuseIdentifier: AnalysisChartCell.reuseID)
         dragView.tableView.register(MetricPreviewTableViewCell.self, forCellReuseIdentifier: MetricPreviewTableViewCell.reuseID)
         dragView.tableView.register(MetricSelectionTableViewCell.self, forCellReuseIdentifier: MetricSelectionTableViewCell.reuseID)
+        dragView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "StocksToCompareCell")
     }
     
     required init?(coder: NSCoder) {
@@ -189,7 +196,10 @@ extension StockDetailDragViewController: MetricPreviewDataSourceDelegate {
     func createDataSourceSelectionHeader(in view: UIView) -> UIView {
         view.backgroundColor = VersionManager.collectionCellColor()
         view.addSubview(headerControl)
-        headerControl.setCenterYAnchor(padding: 0).setLeadingAnchor(padding: 32).setTrailingAnchor(padding: 32)
+        headerControl
+            .setCenterYAnchor(padding: 0)
+            .setLeadingAnchor(padding: 32)
+            .setTrailingAnchor(padding: 32)
         return view
     }
 }
@@ -221,6 +231,24 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
         } else {
             return nil
         }
+    }
+    
+    func createCurrentTickerCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "StocksToCompareCell", for: indexPath)
+        cell.accessoryType = .disclosureIndicator
+        cell.textLabel?.text = comparisonViewModel.mainTicker
+        cell.textLabel?.font = .details3
+        
+        return cell
+    }
+    
+    func createStocksToCompareCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "StocksToCompareCell", for: indexPath)
+        cell.accessoryType = .disclosureIndicator
+        cell.textLabel?.text = comparisonViewModel.secondTicker ?? "Select a stock to compare"
+        cell.textLabel?.font = .details3
+        
+        return cell
     }
 }
 
