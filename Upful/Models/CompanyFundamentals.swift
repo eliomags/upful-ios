@@ -56,5 +56,13 @@ struct Companies: Decodable {
 struct Company: Decodable {
     let id, ticker, name, lei: String?
     let cik: String?
+    
+    init(id: String?, ticker: String?, name: String?, lei: String?, cik: String?) {
+        self.id = id
+        self.ticker = ticker
+        self.name = name
+        self.lei = lei
+        self.cik = cik
+    }
 }
 

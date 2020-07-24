@@ -175,8 +175,8 @@ class MockStockSearcher: StockSearcherProtocol {
     }
     
     func returnTwoValues() -> [Company] {
-        let company1 = Company(id: nil, ticker: "AAPL", name: "Apple Inc.", lei: nil, cik: nil, filings: nil)
-        let company2 = Company(id: nil, ticker: "AMD", name: "Advanced Micro Devices", lei: nil, cik: nil, filings: nil)
+        let company1 = Company(id: nil, ticker: "AAPL", name: "Apple Inc.", lei: nil, cik: nil)
+        let company2 = Company(id: nil, ticker: "AMD", name: "Advanced Micro Devices", lei: nil, cik: nil)
         return [company1, company2]
     }
 }
