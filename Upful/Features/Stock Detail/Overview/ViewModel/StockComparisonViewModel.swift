@@ -51,9 +51,12 @@ final class StockComparisonViewModel {
 
         fetchMetric(for: mainTicker) { [weak self] data in
             guard let self = self else { return }
-
-            self.mainTickerResults = data
-            self.handleLoadCompletion?()
+            
+            DispatchQueue.main.async {
+                print(data.map { $0.value })
+                self.mainTickerResults = data
+                self.handleLoadCompletion?()
+            }
         }
     }
     
@@ -67,8 +70,10 @@ final class StockComparisonViewModel {
         fetchMetric(for: secondTicker) { [weak self] data in
             guard let self = self else { return }
 
-            self.secondTickerResults = data
-            self.handleLoadCompletion?()
+            DispatchQueue.main.async {
+                self.secondTickerResults = data
+                self.handleLoadCompletion?()
+            }
         }
     }
     

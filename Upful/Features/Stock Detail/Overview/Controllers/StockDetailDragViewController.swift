@@ -25,15 +25,12 @@ protocol AnalysisCompareDataSourceDelegate: AnalysisDragContentDelegate {
     func createMetricSelectionCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricSelectionTableViewCell?
     
     func createCurrentTickerCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
+    func createMetricComparisionCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
     func createStocksToCompareCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
+    
+    func didSelectComparisonCell(at row: Int)
+    func didSelectMetricForComparison(at row: Int)
 }
-
-/*
-     create MultiLineChartCell()
-     create metric selection cell
-     didSelectMetricSelectionCell to be resused
-     create stock comparison cells
-*/
 
 final class StockDetailDragViewController: UIViewController {
     
@@ -63,6 +60,10 @@ final class StockDetailDragViewController: UIViewController {
     let emptyMetricDataSource = EmptyStockMetricDataSource()
     let metricDisplayDataSource = MetricPreviewDataSource()
     let metricAnalysisDataSource = MetricAnalysisDataSource()
+    lazy var comparisonDataSource: StockComparisonViewModel = {
+        let ds = StockComparisonViewModel(mainTicker: ticker)
+        return ds
+    }()
     
     lazy var dragView: DragView = {
         emptyMetricDataSource.delegate = self
@@ -108,6 +109,10 @@ final class StockDetailDragViewController: UIViewController {
     }
     
     func createViewModels() {
+        comparisonViewModel.handleLoadCompletion = { [weak self] in
+            self?.dragView.tableView.reloadData()
+        }
+        
         metricPreviewViewModels = [
             MetricPreviewViewModel(ticker: ticker, searchCriteria: .pricetoearnings),
             MetricPreviewViewModel(ticker: ticker, searchCriteria: .ebitmargin)
@@ -132,6 +137,7 @@ final class StockDetailDragViewController: UIViewController {
         dragView.tableView.reloadData()
     }
 }
+
 extension StockDetailDragViewController: AnalysisDragContentDelegate {
     
     func createTradeButtonFooterView(in view: UIView, topPadding: CGFloat) -> UIView? {
@@ -233,6 +239,13 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
         }
     }
     
+    func createMetricComparisionCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "ValueCell")
+        cell.textLabel?.text = comparisonViewModel.searchingCriteria.rawValue
+        cell.accessoryType = .disclosureIndicator
+        return cell
+    }
+    
     func createCurrentTickerCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "StocksToCompareCell", for: indexPath)
         cell.accessoryType = .disclosureIndicator
@@ -250,6 +263,33 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
         
         return cell
     }
+
+    func didSelectMetricForComparison(at row: Int) {
+        
+    }
+    
+    func didSelectComparisonCell(at row: Int) {
+        var selectedTicker: String?
+        if row == 2 {
+            selectedTicker = comparisonViewModel.mainTicker
+        } else {
+            selectedTicker = comparisonViewModel.secondTicker
+        }
+        
+        let savedStockCoordinator = SavedStockCoordinator(presenter: self, selectedTicker: selectedTicker)
+        
+        savedStockCoordinator.presenting.handleCellSelection = { [unowned self] item in
+            if row == 2 {
+                self.comparisonViewModel.mainTicker = item.title
+            } else {
+                self.comparisonViewModel.secondTicker = item.title
+            }
+            self.dragView.tableView.reloadData()
+        }
+        
+        coordinator = savedStockCoordinator
+        coordinator?.start()
+    }
 }
 
 extension StockDetailDragViewController: ChartSearchCriteriaSelectionDelegate {
@@ -262,5 +302,78 @@ extension StockDetailDragViewController: ChartSearchCriteriaSelectionDelegate {
 extension StockDetailDragViewController: MetricPreviewViewModelDelegate {
     func didLoadCellData(cell: MetricPreviewTableViewCell?) {
         dragView.tableView.reloadData()
+    }
+}
+
+
+final class SavedStockCoordinator: Coordinator {
+    
+    var presenter: UIViewController
+    let presenting = TableItemDisplayViewController(style: .insetGrouped)
+
+    var selectedTicker: String?
+    var fetch = LocalStockLoader().loadSavedStocks
+        
+    init(presenter: UIViewController, selectedTicker: String?) {
+        self.presenter = presenter
+        self.selectedTicker = selectedTicker
+    }
+    
+    func start() {
+        (presenter.parent ?? presenter).present(presenting, animated: true, completion: nil)
+        
+        fetch { [weak self] result in
+            switch result {
+            case .success(let savedStocks):
+                let tableItems = savedStocks.map {
+                    TableItemDisplayViewController
+                        .Item(title: $0.ticker, subtitle: $0.name)
+                }
+                if let selectedTicker = self?.selectedTicker {
+                    self?.presenting.currentlySelectedIndexPath = tableItems.firstIndex(where: { $0.title == selectedTicker })
+                }
+                self?.presenting.items = tableItems
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+}
+
+final class TableItemDisplayViewController: UITableViewController {
+    
+    struct Item {
+        let title: String
+        let subtitle: String?
+    }
+    var currentlySelectedIndexPath: Int?
+    var items = [Item]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    var handleCellSelection: ((Item) -> Void)?
+    
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ValueCell")
+        cell.textLabel?.text = items[indexPath.row].title
+        cell.textLabel?.font = .details4
+        
+        cell.detailTextLabel?.text = items[indexPath.row].subtitle
+        cell.detailTextLabel?.font = .details3
+        cell.detailTextLabel?.textColor = .gray
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dismiss(animated: true, completion: { [unowned self] in
+            self.handleCellSelection?(self.items[indexPath.item])
+        })
     }
 }

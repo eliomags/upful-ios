@@ -134,7 +134,7 @@ final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
             
         case .compare:
             if row == 1 {
-                
+                return delegate?.createMetricComparisionCell(tableView, at: indexPath) ?? UITableViewCell()
             }
             else if row == 2 {
                 return delegate?.createCurrentTickerCell(tableView, at: indexPath) ?? UITableViewCell()
@@ -178,7 +178,14 @@ final class MetricAnalysisDataSource: NSObject, DragControllerDataSource {
             delegate?.didSelectMetricPreviewCell(at: indexPath.row-1)
             
         case .compare:
-            print("selected cell", indexPath)
+            switch indexPath.row {
+            case ComparisonRows.currentCompany.rawValue, ComparisonRows.comparingCompany.rawValue:
+                delegate?.didSelectComparisonCell(at: indexPath.row)
+            case ComparisonRows.metric.rawValue:
+                delegate?.didSelectMetricForComparison(at: indexPath.row)
+            default:
+                break
+            }
         }
     }
     

@@ -30,6 +30,10 @@ extension UIFont {
     static var details3: UIFont {
         return systemFont(ofSize: 14, weight: .regular)
     }
+    
+    static var details4: UIFont {
+        return systemFont(ofSize: 15, weight: .semibold)
+    }
 }
 
 

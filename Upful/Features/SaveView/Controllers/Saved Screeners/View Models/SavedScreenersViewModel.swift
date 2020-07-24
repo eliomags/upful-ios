@@ -40,13 +40,13 @@ class SavedScreenersViewModel {
     
     func loadScreeners() {
         state = .loading
-        savedScreenerLoader.load { (result) in
+        savedScreenerLoader.load { [weak self] (result) in
             switch result {
             case .success(let screeners):
-                self.screeners = screeners
-                self.refreshState()
+                self?.screeners = screeners
+                self?.refreshState()
             case .failure(_):
-                self.state = .error
+                self?.state = .error
             }
         }
     }
