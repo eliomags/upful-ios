@@ -11,18 +11,49 @@ import XCTest
 
 class StockComparisonViewModelTests: XCTestCase {
     
-    
     func test_loadResultsOnInit() {
         let sut = makeSUT()
+        let exp = expectation(description: #function)
+        sut.handleLoadCompletion = { exp.fulfill() }
+            
+        wait(for: [exp], timeout: 0.5)
         XCTAssertEqual(sut.mainTicker, "TEST")
+        XCTAssertNil(sut.secondTicker)
+        XCTAssertFalse(sut.mainTickerResults.isEmpty)
+        XCTAssertTrue(sut.secondTickerResults.isEmpty)
+    }
+    
+    func test_fetchMainTickerResultsOnMainTickerChange() {
+        let sut = makeSUT()
+        let exp = expectation(description: #function)
+        exp.expectedFulfillmentCount = 2
+        sut.handleLoadCompletion = { exp.fulfill() }
+        
+        sut.mainTicker = "TEST2"
+        
+        wait(for: [exp], timeout: 0.5)
+        XCTAssertEqual(sut.mainTicker, "TEST2")
+        XCTAssertFalse(sut.mainTickerResults.isEmpty)
+    }
+    
+    func test_fetchSecondTickerResultsOnSecondTickerChange() {
+        let sut = makeSUT()
+        let exp = expectation(description: #function)
+        exp.expectedFulfillmentCount = 2
+        sut.handleLoadCompletion = { exp.fulfill() }
+        
+        sut.secondTicker = "2TEST"
+        
+        wait(for: [exp], timeout: 0.5)
+        XCTAssertEqual(sut.secondTicker, "2TEST")
+        XCTAssertFalse(sut.secondTickerResults.isEmpty)
     }
     
     // MARK: - Helpers
     
     private func makeSUT() -> StockComparisonViewModel {
         let fetch: StockComparisonViewModel.MetricDataFetch = getResultsForTickerTEST
-        let sut = StockComparisonViewModel(mainTicker: "TEST")
-        sut.fetch = fetch
+        let sut = StockComparisonViewModel(mainTicker: "TEST", fetching: fetch)
         return sut
     }
     

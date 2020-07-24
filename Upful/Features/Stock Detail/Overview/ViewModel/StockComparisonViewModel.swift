@@ -42,6 +42,7 @@ final class StockComparisonViewModel {
         fetching: @escaping MetricDataFetch = StockFinancialLoader().getStockFinancials) {
         fetch = fetching
         self.mainTicker = mainTicker
+        fetchMetricForPrimary()
     }
     
     // MARK: Methods
@@ -53,7 +54,6 @@ final class StockComparisonViewModel {
             guard let self = self else { return }
             
             DispatchQueue.main.async {
-                print(data.map { $0.value })
                 self.mainTickerResults = data
                 self.handleLoadCompletion?()
             }
