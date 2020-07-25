@@ -24,7 +24,7 @@ final class StockComparisonViewModel {
             fetchMetricForSecondary()
         }
     }
-    var searchingCriteria: SearchCriteria = .revenuegrowth {
+    var searchingCriteria: SearchCriteria = .pricetoearnings {
         didSet {
             fetchMetricForPrimary()
             fetchMetricForSecondary()

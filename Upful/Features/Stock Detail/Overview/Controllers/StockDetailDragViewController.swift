@@ -20,16 +20,8 @@ protocol MetricPreviewDataSourceDelegate: AnalysisDragContentDelegate {
 }
 
 protocol AnalysisCompareDataSourceDelegate: AnalysisDragContentDelegate {
-    func createDataSourceSelectionHeader(in view: UIView) -> UIView
     func createAnalysisChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> AnalysisChartCell?
     func createMetricSelectionCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricSelectionTableViewCell?
-    
-    func createCurrentTickerCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
-    func createMetricComparisionCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
-    func createStocksToCompareCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
-    
-    func didSelectComparisonCell(at row: Int)
-    func didSelectMetricForComparison(at row: Int)
 }
 
 final class StockDetailDragViewController: UIViewController {
@@ -72,7 +64,7 @@ final class StockDetailDragViewController: UIViewController {
         
         let firstPosition = DragControllerState(dataSource: emptyMetricDataSource, height: 102)
         let secondPosition = DragControllerState(dataSource: metricDisplayDataSource, height: 235)
-        let thirdPosition = DragControllerState(dataSource: metricAnalysisDataSource, height: 500)
+        let thirdPosition = DragControllerState(dataSource: metricAnalysisDataSource, height: 475)
         let view = DragView(configuration: [firstPosition, secondPosition, thirdPosition])
         
         view.tableViewStyle = .plain
@@ -82,13 +74,6 @@ final class StockDetailDragViewController: UIViewController {
         view.tableView.separatorStyle = .singleLine
         view.tableView.showsVerticalScrollIndicator = false
         return view
-    }()
-    
-    lazy var headerControl: UISegmentedControl = {
-        let control = UISegmentedControl(items: ["Analyze", "Compare"])
-        control.selectedSegmentIndex = 0
-        control.addTarget(self, action: #selector(handleSegmentControlTap), for: .valueChanged)
-        return control
     }()
     
     // MARK: Initializer
@@ -130,11 +115,6 @@ final class StockDetailDragViewController: UIViewController {
         let presentingViewController = parent ?? self
         coordinator = StockTradeCoordinator(presentingViewController, ticker: ticker)
         coordinator?.start()
-    }
-    
-    @objc fileprivate func handleSegmentControlTap(_ sender: UISegmentedControl) {
-        metricAnalysisDataSource.state = MetricAnalysisDataSource.State(rawValue: sender.selectedSegmentIndex)!
-        dragView.tableView.reloadData()
     }
 }
 
@@ -198,16 +178,6 @@ extension StockDetailDragViewController: MetricPreviewDataSourceDelegate {
         searchCriteriaSelectionVC.currentSearchCriteria = metricPreviewViewModels[row].searchCriteria
         parent?.present(searchCriteriaSelectionVC, animated: true, completion: nil)
     }
-    
-    func createDataSourceSelectionHeader(in view: UIView) -> UIView {
-        view.backgroundColor = VersionManager.collectionCellColor()
-        view.addSubview(headerControl)
-        headerControl
-            .setCenterYAnchor(padding: 0)
-            .setLeadingAnchor(padding: 32)
-            .setTrailingAnchor(padding: 32)
-        return view
-    }
 }
 
 extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
@@ -233,6 +203,7 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
             let criteria = metricPreviewViewModels[indexPath.row-1].searchCriteria
             cell.titleLabel.text = criteria.explicit
             cell.iconView.backgroundColor = indexPath.row == 1 ? .appAccent : .appAccent3
+            
             return cell
         } else {
             return nil
@@ -241,8 +212,11 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
     
     func createMetricComparisionCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "ValueCell")
-        cell.textLabel?.text = comparisonViewModel.searchingCriteria.rawValue
+        cell.textLabel?.font = .details3
+        cell.textLabel?.text = comparisonViewModel.searchingCriteria.explicit
         cell.accessoryType = .disclosureIndicator
+        cell.backgroundColor = VersionManager.collectionCellColor3()
+
         return cell
     }
     
@@ -251,7 +225,8 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
         cell.accessoryType = .disclosureIndicator
         cell.textLabel?.text = comparisonViewModel.mainTicker
         cell.textLabel?.font = .details3
-        
+        cell.backgroundColor = VersionManager.collectionCellColor3()
+
         return cell
     }
     
@@ -260,12 +235,16 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
         cell.accessoryType = .disclosureIndicator
         cell.textLabel?.text = comparisonViewModel.secondTicker ?? "Select a stock to compare"
         cell.textLabel?.font = .details3
-        
+        cell.backgroundColor = VersionManager.collectionCellColor3()
+
         return cell
     }
 
     func didSelectMetricForComparison(at row: Int) {
-        
+        let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
+        searchCriteriaSelectionVC.delegate = self
+        searchCriteriaSelectionVC.currentSearchCriteria = comparisonViewModel.searchingCriteria
+        parent?.present(searchCriteriaSelectionVC, animated: true, completion: nil)
     }
     
     func didSelectComparisonCell(at row: Int) {
@@ -277,7 +256,6 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
         }
         
         let savedStockCoordinator = SavedStockCoordinator(presenter: self, selectedTicker: selectedTicker)
-        
         savedStockCoordinator.presenting.handleCellSelection = { [unowned self] item in
             if row == 2 {
                 self.comparisonViewModel.mainTicker = item.title

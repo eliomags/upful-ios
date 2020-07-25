@@ -181,7 +181,7 @@ class HomeGeneralLogicController {
         preferenceFetchGroup.notify(queue: .main) {
             self.preferenceState = .loaded
             
-            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
                 self.stocksYouMayLike.forEach {
                     $0.updateHandler = { [weak self] in
                         DispatchQueue.main.async { self?.preferenceState = .loaded }
