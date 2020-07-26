@@ -41,11 +41,22 @@ final class StockDetailDragViewController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .appAccent3
-        button.layer.cornerRadius = 44 / 2
+        button.layer.cornerRadius = 35 / 2
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
         button.addTarget(self, action: #selector(handleTradeTap), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var compareButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("COMPARE", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .appAccent4
+        button.layer.cornerRadius = 35 / 2
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
         return button
     }()
     
@@ -62,7 +73,7 @@ final class StockDetailDragViewController: UIViewController {
         metricDisplayDataSource.delegate = self
         metricAnalysisDataSource.delegate = self
         
-        let firstPosition = DragControllerState(dataSource: emptyMetricDataSource, height: 102)
+        let firstPosition = DragControllerState(dataSource: emptyMetricDataSource, height: 100)
         let secondPosition = DragControllerState(dataSource: metricDisplayDataSource, height: 235)
         let thirdPosition = DragControllerState(dataSource: metricAnalysisDataSource, height: 475)
         let view = DragView(configuration: [firstPosition, secondPosition, thirdPosition])
@@ -121,13 +132,19 @@ final class StockDetailDragViewController: UIViewController {
 extension StockDetailDragViewController: AnalysisDragContentDelegate {
     
     func createTradeButtonFooterView(in view: UIView, topPadding: CGFloat) -> UIView? {
-        let view = UIView()
-        view.backgroundColor = VersionManager.collectionCellColor()
-        view.addSubview(tradeButton)
-        tradeButton
-            .setTopAnchor(padding: topPadding)
-            .setTrailingAnchor(padding: 8)
+        let stackView = UIStackView(arrangedSubviews: [compareButton, tradeButton])
+        stackView.spacing = 16
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.setLeadingAnchor(padding: 16).setTrailingAnchor(padding: 16)
         
+        if dragView.currentStateIndex == 0 {
+            stackView.setTopAnchor(padding: 8)
+        } else {
+            stackView.setTopAnchor(padding: 16)
+        }
         return view
     }
     
