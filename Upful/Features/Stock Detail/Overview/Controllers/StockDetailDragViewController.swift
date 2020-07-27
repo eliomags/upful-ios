@@ -57,6 +57,7 @@ final class StockDetailDragViewController: UIViewController {
         button.layer.cornerRadius = 35 / 2
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        button.addTarget(self, action: #selector(handleCompareTap), for: .touchUpInside)
         return button
     }()
     
@@ -126,6 +127,15 @@ final class StockDetailDragViewController: UIViewController {
         let presentingViewController = parent ?? self
         coordinator = StockTradeCoordinator(presentingViewController, ticker: ticker)
         coordinator?.start()
+    }
+    
+    @objc fileprivate func handleCompareTap() {
+        if let navigationController = self.navigationController {
+            let navigationConstructor = StockComparisonConstructor(
+                                            navigationController: navigationController,
+                                            tickerToCompare: ticker)
+            navigationConstructor.push()
+        }
     }
 }
 
@@ -225,65 +235,6 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
         } else {
             return nil
         }
-    }
-    
-    func createMetricComparisionCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "ValueCell")
-        cell.textLabel?.font = .details3
-        cell.textLabel?.text = comparisonViewModel.searchingCriteria.explicit
-        cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = VersionManager.collectionCellColor3()
-
-        return cell
-    }
-    
-    func createCurrentTickerCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "StocksToCompareCell", for: indexPath)
-        cell.accessoryType = .disclosureIndicator
-        cell.textLabel?.text = comparisonViewModel.mainTicker
-        cell.textLabel?.font = .details3
-        cell.backgroundColor = VersionManager.collectionCellColor3()
-
-        return cell
-    }
-    
-    func createStocksToCompareCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "StocksToCompareCell", for: indexPath)
-        cell.accessoryType = .disclosureIndicator
-        cell.textLabel?.text = comparisonViewModel.secondTicker ?? "Select a stock to compare"
-        cell.textLabel?.font = .details3
-        cell.backgroundColor = VersionManager.collectionCellColor3()
-
-        return cell
-    }
-
-    func didSelectMetricForComparison(at row: Int) {
-        let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
-        searchCriteriaSelectionVC.delegate = self
-        searchCriteriaSelectionVC.currentSearchCriteria = comparisonViewModel.searchingCriteria
-        parent?.present(searchCriteriaSelectionVC, animated: true, completion: nil)
-    }
-    
-    func didSelectComparisonCell(at row: Int) {
-        var selectedTicker: String?
-        if row == 2 {
-            selectedTicker = comparisonViewModel.mainTicker
-        } else {
-            selectedTicker = comparisonViewModel.secondTicker
-        }
-        
-        let savedStockCoordinator = SavedStockCoordinator(presenter: self, selectedTicker: selectedTicker)
-        savedStockCoordinator.presenting.handleCellSelection = { [unowned self] item in
-            if row == 2 {
-                self.comparisonViewModel.mainTicker = item.title
-            } else {
-                self.comparisonViewModel.secondTicker = item.title
-            }
-            self.dragView.tableView.reloadData()
-        }
-        
-        coordinator = savedStockCoordinator
-        coordinator?.start()
     }
 }
 

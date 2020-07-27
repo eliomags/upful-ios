@@ -1,5 +1,5 @@
 //
-//  ComparisonCellViewModel.swift
+//  StockComparisonViewModel.swift
 //  Upful
 //
 //  Created by Yanik Simpson on 7/22/20.

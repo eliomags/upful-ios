@@ -107,6 +107,7 @@
 		3D4FB99C2384403C00B9BFE1 /* Screener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FB99B2384403C00B9BFE1 /* Screener.swift */; };
 		3D4FB99E238444B200B9BFE1 /* NavigationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */; };
 		3D51639624CB118200F86951 /* StockComparisonViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D51639524CB118200F86951 /* StockComparisonViewModelTests.swift */; };
+		3D51639A24CE7B4A00F86951 /* StockComparisonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D51639924CE7B4A00F86951 /* StockComparisonViewController.swift */; };
 		3D55BD6023B69EAD00B4FDF0 /* NewsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD5F23B69EAD00B4FDF0 /* NewsLoader.swift */; };
 		3D55BD6223B7BE8B00B4FDF0 /* SmallNewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD6123B7BE8B00B4FDF0 /* SmallNewsCell.swift */; };
 		3D55BD6423B7BEBB00B4FDF0 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55BD6323B7BEBB00B4FDF0 /* UIImage+Extensions.swift */; };
@@ -399,6 +400,7 @@
 		3D4FB99B2384403C00B9BFE1 /* Screener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screener.swift; sourceTree = "<group>"; };
 		3D4FB99D238444B200B9BFE1 /* NavigationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationHeaderView.swift; sourceTree = "<group>"; };
 		3D51639524CB118200F86951 /* StockComparisonViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockComparisonViewModelTests.swift; sourceTree = "<group>"; };
+		3D51639924CE7B4A00F86951 /* StockComparisonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockComparisonViewController.swift; sourceTree = "<group>"; };
 		3D55BD5F23B69EAD00B4FDF0 /* NewsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsLoader.swift; sourceTree = "<group>"; };
 		3D55BD6123B7BE8B00B4FDF0 /* SmallNewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallNewsCell.swift; sourceTree = "<group>"; };
 		3D55BD6323B7BEBB00B4FDF0 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
@@ -1323,6 +1325,31 @@
 				3D4D8607231C5B5D0065CF9F /* StockSearchViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		3D51639824CE7B2700F86951 /* Stock Comparison */ = {
+			isa = PBXGroup;
+			children = (
+				3D51639B24CE7B9C00F86951 /* Controllers */,
+				3D51639C24CE7BCB00F86951 /* View Models */,
+			);
+			path = "Stock Comparison";
+			sourceTree = "<group>";
+		};
+		3D51639B24CE7B9C00F86951 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3D51639924CE7B4A00F86951 /* StockComparisonViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		3D51639C24CE7BCB00F86951 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				3DEA3B4824C93ACE00A79197 /* StockComparisonViewModel.swift */,
+			);
+			path = "View Models";
 			sourceTree = "<group>";
 		};
 		3D55BD6B23B805DD00B4FDF0 /* News */ = {
@@ -2254,6 +2281,7 @@
 				3D0C5F7C233FC1A700F4A5FC /* Settings */,
 				3DC4ED3022FE6EAA00232155 /* Search Results */,
 				3D2F963A230F490A003811AB /* Stock Detail */,
+				3D51639824CE7B2700F86951 /* Stock Comparison */,
 				3D0C5F76233FA3EA00F4A5FC /* WebNavigation */,
 				3DC7108B2335D9AD00A2A0DA /* Notes View */,
 			);
@@ -2294,7 +2322,6 @@
 			children = (
 				3DF734CB2402DDFD00B297A4 /* StockOverviewViewModel.swift */,
 				3DD3439524BA9B360081DBE6 /* MetricPreviewViewModel.swift */,
-				3DEA3B4824C93ACE00A79197 /* StockComparisonViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -2679,6 +2706,7 @@
 				3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */,
 				3D206A4C242290D600F7E44C /* TradingBalanceView.swift in Sources */,
 				3D7C855523380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift in Sources */,
+				3D51639A24CE7B4A00F86951 /* StockComparisonViewController.swift in Sources */,
 				3DE2B9D724945767008742F3 /* User+CoreData.swift in Sources */,
 				3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */,
 				3DCE8DB4243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift in Sources */,
