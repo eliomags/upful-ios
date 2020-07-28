@@ -6,7 +6,7 @@
 //  Copyright © 2020 Yanik Simpson. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 final class StockComparisonViewModel {
     
@@ -45,36 +45,50 @@ final class StockComparisonViewModel {
         fetchMetricForPrimary()
     }
     
+    deinit {
+        print("Show deinit", self)
+    }
+    
     // MARK: Methods
     
     func fetchMetricForPrimary() {
         mainTickerResults.removeAll()
 
-        fetchMetric(for: mainTicker) { [weak self] data in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                self.mainTickerResults = data
-                self.handleLoadCompletion?()
-            }
+        fetchMetric(for: mainTicker) { data in
+            self.mainTickerResults = data
+            self.handleLoadCompletion?()
         }
     }
     
     func fetchMetricForSecondary() {
-        guard let secondTicker = secondTicker else {
-            return
+        secondTickerResults.removeAll()
+        guard let secondTicker = secondTicker else { return }
+
+        fetchMetric(for: secondTicker) { data in
+            self.secondTickerResults = data
+            self.handleLoadCompletion?()
+        }
+    }
+    
+    func handleTap(in viewController: UIViewController, at row: Int) -> Coordinator? {
+        var selectedTicker: String?
+
+        if row == 2 {
+            selectedTicker = mainTicker
+        } else {
+            selectedTicker = secondTicker
         }
         
-        secondTickerResults.removeAll()
-
-        fetchMetric(for: secondTicker) { [weak self] data in
-            guard let self = self else { return }
-
-            DispatchQueue.main.async {
-                self.secondTickerResults = data
-                self.handleLoadCompletion?()
+        let savedStockCoordinator = SavedStockCoordinator(presenter: viewController, selectedTicker: selectedTicker)
+        savedStockCoordinator.presenting.handleCellSelection = { [unowned self] item in
+            if row == 2 {
+                self.mainTicker = item.title
+            } else {
+                self.secondTicker = item.title
             }
+            self.handleLoadCompletion?()
         }
+        return savedStockCoordinator
     }
     
     // MARK: Helper
@@ -84,7 +98,6 @@ final class StockComparisonViewModel {
             switch result {
             case .success(let critera):
                 completion(critera)
-                
             case .failure(_):
                 completion([])
             }

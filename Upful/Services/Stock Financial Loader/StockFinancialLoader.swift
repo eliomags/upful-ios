@@ -56,18 +56,20 @@ final class StockFinancialLoader: FinancialLoader {
         let urlString = historicLookupEnpoint + ticker + searchType + financial.rawValue + financialFrequency.asString + apiKey
         
         loadData?(urlString, { result in
-            switch result {
-            case .success(let data):
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                do {
-                    let companyData = try decoder.decode(HistoricalDataSearch.self, from: data)
-                    completion(.success(companyData.historicalData))
-                } catch {
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    do {
+                        let companyData = try decoder.decode(HistoricalDataSearch.self, from: data)
+                        completion(.success(companyData.historicalData))
+                    } catch {
+                        completion(.failure(.invalidData))
+                    }
+                case .failure(_):
                     completion(.failure(.invalidData))
                 }
-            case .failure(_):
-                completion(.failure(.invalidData))
             }
         })
     }
