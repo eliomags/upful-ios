@@ -47,31 +47,28 @@ final class StockFinancialLoader: FinancialLoader {
     private let historicLookupEnpoint = "https://api-v2.intrinio.com/securities/"
     private let searchType = "/historical_data/"
 
+    var loadData: ((String, @escaping DownloadCompletionHandler) -> ())? = NetworkService().downloadContentWithCache
+
     func getStockFinancials(ticker: String,
                       financialFrequency: FinancialsFrequency,
                       financial: SearchCriteria,
                       completion: @escaping (Result<[CompanyHistoricalDatum], NetworkError>) -> Void) {
         let urlString = historicLookupEnpoint + ticker + searchType + financial.rawValue + financialFrequency.asString + apiKey
-        guard let url = URL(string: urlString) else { return }
-        let decoder = JSONDecoder()
-        let session = URLSession.shared
-        let task = session.dataTask(with: url) { (data, response, error) in
-            if let _ = error {
-                completion(.failure(.connection))
-                return
-            }
-            guard let data = data else {
-                completion(.failure(.connection))
-                return
-            }
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            do {
-                let companyData = try decoder.decode(HistoricalDataSearch.self, from: data)
-                completion(.success(companyData.historicalData))
-            } catch {
+        
+        loadData?(urlString, { result in
+            switch result {
+            case .success(let data):
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                do {
+                    let companyData = try decoder.decode(HistoricalDataSearch.self, from: data)
+                    completion(.success(companyData.historicalData))
+                } catch {
+                    completion(.failure(.invalidData))
+                }
+            case .failure(_):
                 completion(.failure(.invalidData))
             }
-        }
-        task.resume()
+        })
     }
 }

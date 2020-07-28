@@ -29,9 +29,7 @@ final class NetworkService {
         let urlRequest = URLRequest(url: downloadUrl)
 
         if let cachedData = cache.cachedResponse(for: urlRequest) {
-            print("Cached data in bytes:", cachedData.data)
             completionHandler(.success(cachedData.data))
-            
         } else {
             createAndRetrieveURLSession().dataTask(with: urlRequest) { (data, response, error) in
                 if let error = error {
