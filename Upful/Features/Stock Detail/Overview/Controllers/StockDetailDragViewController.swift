@@ -140,7 +140,6 @@ final class StockDetailDragViewController: UIViewController {
 }
 
 extension StockDetailDragViewController: AnalysisDragContentDelegate {
-    
     func createTradeButtonFooterView(in view: UIView, topPadding: CGFloat) -> UIView? {
         let stackView = UIStackView(arrangedSubviews: [compareButton, tradeButton])
         stackView.spacing = 16
@@ -198,7 +197,6 @@ extension StockDetailDragViewController: AnalysisDragContentDelegate {
 }
 
 extension StockDetailDragViewController: MetricPreviewDataSourceDelegate {
-    
     func didSelectMetricPreviewCell(at row: Int) {
         let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
         searchCriteriaSelectionVC.delegate = self
@@ -208,7 +206,6 @@ extension StockDetailDragViewController: MetricPreviewDataSourceDelegate {
 }
 
 extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
-
     func createAnalysisChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> AnalysisChartCell? {
         let cell = tableView.dequeueReusableCell(withIdentifier: AnalysisChartCell.reuseID, for: indexPath)
             as? AnalysisChartCell
@@ -229,8 +226,7 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
             as? MetricSelectionTableViewCell {
             let criteria = metricPreviewViewModels[indexPath.row-1].searchCriteria
             cell.titleLabel.text = criteria.explicit
-            cell.iconView.backgroundColor = indexPath.row == 1 ? .appAccent : .appAccent3
-            
+            cell.iconView.backgroundColor = indexPath.row == 1 ? .appAccent : .appAccent4
             return cell
         } else {
             return nil

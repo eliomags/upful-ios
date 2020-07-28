@@ -97,7 +97,7 @@ class GenericBarChartView: BarChartView {
         let chartDataSet1 = BarChartDataSet(entries: dataEntries1, label: "Earnings")
         let dataSets: [BarChartDataSet] = [chartDataSet, chartDataSet1]
         
-        chartDataSet.colors = [UIColor.positive]
+        chartDataSet.colors = [UIColor.appAccent4]
         chartDataSet1.colors = [UIColor.appAccent]
         
         chartDataSet.highlightEnabled = false
@@ -106,13 +106,8 @@ class GenericBarChartView: BarChartView {
         chartDataSet.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         chartDataSet1.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         
-        if #available(iOS 13.0, *) {
-            chartDataSet.valueColors = [NSUIColor.label]
-            chartDataSet1.valueColors = [NSUIColor.label]
-
-        } else {
-            chartDataSet1.valueColors = [NSUIColor.black]
-        }
+        chartDataSet.valueColors = [NSUIColor.label]
+        chartDataSet1.valueColors = [NSUIColor.label]
 
         chartDataSet.valueFormatter = chartViewModel
         chartDataSet1.valueFormatter = chartViewModel

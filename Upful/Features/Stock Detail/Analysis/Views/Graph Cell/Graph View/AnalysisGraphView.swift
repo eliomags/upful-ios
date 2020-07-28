@@ -141,7 +141,7 @@ class CombinedLineChartView: CombinedChartView {
             entries.append(dataEntry)
         }
         let dataSet = BarChartDataSet(entries: entries, label: criteria.explicit)
-        dataSet.setColor(NSUIColor.appAccent3)
+        dataSet.setColor(NSUIColor.appAccent4)
         dataSet.valueFont = NSUIFont.systemFont(ofSize: 9.5, weight: .semibold)
         dataSet.valueTextColor = UIColor.label
         dataSet.drawValuesEnabled = false

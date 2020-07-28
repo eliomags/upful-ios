@@ -284,7 +284,7 @@ class PerformanceLineChartView: LineChartView {
         lineChartDataSet.cubicIntensity = 0.3
         
         let isPositiveChange = (chartDataEntries.first?.y ?? 0) < (chartDataEntries.last?.y ?? 0)
-        lineChartDataSet.colors = isPositiveChange ? [UIColor.appAccent3] : [UIColor.systemRed]
+        lineChartDataSet.colors = isPositiveChange ? [UIColor.appAccent4] : [UIColor.systemRed]
         
         lineChartDataSet.highlightLineWidth = 2
         lineChartDataSet.highlightColor = UIColor.lightGray.withAlphaComponent(0.5)

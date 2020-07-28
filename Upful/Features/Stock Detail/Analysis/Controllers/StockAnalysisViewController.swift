@@ -273,7 +273,7 @@ class GenericCellImageView: UIImageView {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: 20).isActive = true
-        widthAnchor.constraint(equalToConstant: 20).isActive = true
+        widthAnchor.constraint(equalToConstant: 5).isActive = true
         layer.masksToBounds = true
         backgroundColor = .red
     }
@@ -284,7 +284,7 @@ class GenericCellImageView: UIImageView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = 4
+        layer.cornerRadius = 2
     }
 }
 
