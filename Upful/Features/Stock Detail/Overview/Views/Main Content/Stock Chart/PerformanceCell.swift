@@ -160,7 +160,7 @@ class StockPerformanceChartViewModel {
         if changeFromFirst < 0 {
             performanceChartHelperView.valueChangeLabel.textColor = .systemRed
         } else {
-            performanceChartHelperView.valueChangeLabel.textColor = .systemGreen
+            performanceChartHelperView.valueChangeLabel.textColor = .appAccent4
         }
         
         performanceChartHelperView.dateLabel.text = dataPoint.label

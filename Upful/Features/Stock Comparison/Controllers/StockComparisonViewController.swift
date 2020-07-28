@@ -51,6 +51,7 @@ final class StockComparisonViewController: UITableViewController {
     
     override func loadView() {
         super.loadView()
+        tableView.backgroundColor = .systemBackground
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ValueCell")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "StocksToCompareCell")
     }

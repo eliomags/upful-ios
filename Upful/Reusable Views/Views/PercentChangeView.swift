@@ -51,7 +51,7 @@ class PercentChangeView: UIView {
     }
     func showPositive() {
         imageView.image = UIImage(systemName: "arrow.up")?
-            .withTintColor(.systemGreen, renderingMode: .alwaysOriginal)
+            .withTintColor(.appAccent4, renderingMode: .alwaysOriginal)
     }
     func showNeutral() {
         imageView.image = UIImage()
