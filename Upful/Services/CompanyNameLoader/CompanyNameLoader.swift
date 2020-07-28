@@ -9,6 +9,7 @@
 import Foundation
 
 final class CompanyNameLoader {
+
     func loadName(for ticker: String, completion: @escaping (Result<String,Error>) -> Void) {
         let urlString = "https://api-v2.intrinio.com/companies/\(ticker)?\(Constants.Intrinio.apiKey)"
         

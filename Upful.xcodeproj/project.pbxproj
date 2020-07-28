@@ -1047,6 +1047,7 @@
 		3D20FB4D22FB258A007836DD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
 				3DF92413249FC2DA0028EE01 /* Historical Price Loader */,
 				3D31AA84242FCB2000326D7E /* CompanyNameLoader */,
 				3D583BB92413209E0001EEA5 /* Quote Loader */,
@@ -1058,7 +1059,6 @@
 				3DFB62B8235E3B140026D3DC /* Payment */,
 				3DF5FC0423342BDF00856205 /* Persistence */,
 				3DD75A2F236BAF6700C298B9 /* ColorManager.swift */,
-				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
 				3DD4291C2347EC530079DA18 /* Vibration.swift */,
 			);
 			path = Services;
