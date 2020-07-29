@@ -138,8 +138,11 @@ extension StockComparisonViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let row = indexPath.row
-        let coordinator = comparisonViewModel.handleTap(in: self, at: row)
-        coordinator?.start()
+        if row == Section.First.mainTicker.rawValue ||
+            row == Section.First.comparingTicker.rawValue {
+            let coordinator = comparisonViewModel.createCoordinatorFromTickerCellTap(in: self, at: row)
+            coordinator?.start()
+        }
     }
 }
 

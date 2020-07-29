@@ -70,20 +70,17 @@ final class StockComparisonViewModel {
         }
     }
     
-    func handleTap(in viewController: UIViewController, at row: Int) -> Coordinator? {
+    func createCoordinatorFromTickerCellTap(in viewController: UIViewController, at row: Int) -> Coordinator? {
         var selectedTicker: String?
-
-        if row == 2 {
-            selectedTicker = mainTicker
-        } else {
-            selectedTicker = secondTicker
-        }
         
         let savedStockCoordinator = SavedStockCoordinator(presenter: viewController, selectedTicker: selectedTicker)
         savedStockCoordinator.presenting.handleCellSelection = { [unowned self] item in
             if row == 2 {
+                selectedTicker = self.mainTicker
                 self.mainTicker = item.title
-            } else {
+            }
+            else if row == 3 {
+                selectedTicker = self.secondTicker
                 self.secondTicker = item.title
             }
             self.handleLoadCompletion?()
