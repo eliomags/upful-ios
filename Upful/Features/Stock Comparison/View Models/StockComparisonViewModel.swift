@@ -45,10 +45,6 @@ final class StockComparisonViewModel {
         fetchMetricForPrimary()
     }
     
-    deinit {
-        print("Show deinit", self)
-    }
-    
     // MARK: Methods
     
     func fetchMetricForPrimary() {

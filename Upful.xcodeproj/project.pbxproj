@@ -153,6 +153,7 @@
 		3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */; };
 		3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */; };
 		3D90ADBA2301BE0F00C52455 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB92301BE0F00C52455 /* Double+Extensions.swift */; };
+		3D90E1BB24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90E1BA24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift */; };
 		3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B4322FC84C4001D5E39 /* UIFont+Extensions.swift */; };
 		3D917B4622FD2D7E001D5E39 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D917B4522FD2D7E001D5E39 /* GoogleService-Info.plist */; };
 		3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B4D22FE006D001D5E39 /* ManualSearchModel.swift */; };
@@ -446,6 +447,7 @@
 		3D90ADB42301971500C52455 /* ManualSearchParametersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchParametersTableViewController.swift; sourceTree = "<group>"; };
 		3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchHeaderView.swift; sourceTree = "<group>"; };
 		3D90ADB92301BE0F00C52455 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
+		3D90E1BA24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonLineChartViewModel.swift; sourceTree = "<group>"; };
 		3D917B4322FC84C4001D5E39 /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
 		3D917B4522FD2D7E001D5E39 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3D917B4D22FE006D001D5E39 /* ManualSearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchModel.swift; sourceTree = "<group>"; };
@@ -1330,6 +1332,7 @@
 		3D51639824CE7B2700F86951 /* Stock Comparison */ = {
 			isa = PBXGroup;
 			children = (
+				3D90E1B924D2EF9D00EF5E37 /* Views */,
 				3D51639B24CE7B9C00F86951 /* Controllers */,
 				3D51639C24CE7BCB00F86951 /* View Models */,
 			);
@@ -1348,6 +1351,7 @@
 			isa = PBXGroup;
 			children = (
 				3DEA3B4824C93ACE00A79197 /* StockComparisonViewModel.swift */,
+				3D90E1BA24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
@@ -1639,6 +1643,13 @@
 				3DCE8DB3243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift */,
 				3DCE8DB8243EB1D50007F9EB /* ManualScreenSectionHeaderView.swift */,
 				3DCE8DC4244282EB0007F9EB /* ManualScreenContainerHeaderView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3D90E1B924D2EF9D00EF5E37 /* Views */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2825,6 +2836,7 @@
 				3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */,
 				3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */,
 				3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */,
+				3D90E1BB24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift in Sources */,
 				3D206A2A242104BE00F7E44C /* TransactionType.swift in Sources */,
 				3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */,
 				3DF5FBBE2333A48B00856205 /* ChartTypeUpdatable.swift in Sources */,

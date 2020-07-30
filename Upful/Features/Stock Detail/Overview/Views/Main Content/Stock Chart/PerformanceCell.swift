@@ -288,7 +288,7 @@ class PerformanceLineChartView: LineChartView {
         
         lineChartDataSet.highlightLineWidth = 2
         lineChartDataSet.highlightColor = UIColor.lightGray.withAlphaComponent(0.5)
-                
+                        
         data = LineChartData(dataSet: lineChartDataSet)
     }
 }

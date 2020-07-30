@@ -47,16 +47,13 @@ final class StockComparisonViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        print("Not retained", self)
-    }
-    
     // MARK: - View Lifecycle Methods
     
     override func loadView() {
         super.loadView()
         tableView.backgroundColor = .systemBackground
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ValueCell")
+        tableView.register(LineChartTableViewCell.self, forCellReuseIdentifier: LineChartTableViewCell.reuseID)
         tableView.register(MetricSelectionTableViewCell.self, forCellReuseIdentifier: MetricSelectionTableViewCell.reuseID)
     }
     
@@ -68,6 +65,15 @@ final class StockComparisonViewController: UITableViewController {
     }
     
     // MARK: - View Creation
+        
+    func createLineChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: LineChartTableViewCell.reuseID, for: indexPath)
+            as? LineChartTableViewCell else { return UITableViewCell() }
+        ComparisonLineChartViewModel.configure(cell,
+                                               firstHistoricalData: comparisonViewModel.mainTickerResults,
+                                               secondHistoricalData: comparisonViewModel.secondTickerResults)
+        return cell
+    }
     
     func createMetricComparisionCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "ValueCell")
@@ -118,7 +124,7 @@ extension StockComparisonViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = indexPath.row
         if row == Section.First.lineChart.rawValue {
-            
+            return createLineChartCell(tableView, at: indexPath)
         }
         if row == Section.First.metric.rawValue {
             return createMetricComparisionCell(tableView, at: indexPath)
@@ -142,6 +148,9 @@ extension StockComparisonViewController {
             row == Section.First.comparingTicker.rawValue {
             let coordinator = comparisonViewModel.createCoordinatorFromTickerCellTap(in: self, at: row)
             coordinator?.start()
+        }
+        else if row == Section.First.metric.rawValue {
+            didSelectMetricForComparison(at: row)
         }
     }
 }
