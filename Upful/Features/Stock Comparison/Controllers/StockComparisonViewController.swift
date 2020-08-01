@@ -71,7 +71,8 @@ final class StockComparisonViewController: UITableViewController {
             as? LineChartTableViewCell else { return UITableViewCell() }
         ComparisonLineChartViewModel.configure(cell,
                                                firstHistoricalData: comparisonViewModel.mainTickerResults,
-                                               secondHistoricalData: comparisonViewModel.secondTickerResults)
+                                               secondHistoricalData: comparisonViewModel.secondTickerResults,
+                                               searchCriteria: comparisonViewModel.searchingCriteria)
         return cell
     }
     
