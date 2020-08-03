@@ -142,7 +142,7 @@ final class StockDetailDragViewController: UIViewController {
 extension StockDetailDragViewController: AnalysisDragContentDelegate {
     func createTradeButtonFooterView(in view: UIView, topPadding: CGFloat) -> UIView? {
         let stackView = UIStackView(arrangedSubviews: [compareButton, tradeButton])
-        stackView.spacing = 16
+        stackView.spacing = 24
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         view.addSubview(stackView)
