@@ -22,8 +22,9 @@ struct ComparisonLineChartViewModel {
         configureXAxis(lineChart)
         configureLeftAxis(lineChart)
         toggleChartConfigs(lineChart)
-        formatAxis(firstHistoricalData, secondHistoricalData, cell, searchCriteria)
+        formatAxis(lineChart, searchCriteria, firstHistoricalData, secondHistoricalData)
         insertDataSets(into: lineChart, searchCriteria, firstHistoricalData, secondHistoricalData)
+        lineChart.animate(xAxisDuration: 0.25, yAxisDuration: 0, easingOption: .easeInCubic)
     }
     
     fileprivate static func createDataSet(from historicalData: [CompanyHistoricalDatum],
@@ -50,7 +51,7 @@ struct ComparisonLineChartViewModel {
         lineChartDataSet.circleRadius = 0
         lineChartDataSet.cubicIntensity = 0.3
         lineChartDataSet.highlightEnabled = false
-        lineChartDataSet.drawValuesEnabled = false
+        lineChartDataSet.drawValuesEnabled = true
         lineChartDataSet.drawCirclesEnabled = false
         lineChartDataSet.drawHorizontalHighlightIndicatorEnabled = false
         lineChartDataSet.colors = [color]
@@ -66,22 +67,22 @@ struct ComparisonLineChartViewModel {
         chartView.data = LineChartData(dataSets: [firstData, secondData])
     }
     
-    fileprivate static func formatAxis(_ firstHistoricalData: [CompanyHistoricalDatum],
-                                       _ secondHistoricalData: [CompanyHistoricalDatum],
-                                       _ cell: LineChartTableViewCell,
-                                       _ searchCriteria: SearchCriteria) {
+    fileprivate static func formatAxis(_ chartView: LineChartView,
+                                       _ searchCriteria: SearchCriteria,
+                                       _ firstHistoricalData: [CompanyHistoricalDatum],
+                                       _ secondHistoricalData: [CompanyHistoricalDatum]) {
         let isFirstDataSetLarger = firstHistoricalData.count > secondHistoricalData.count
         let xAxisDataPoints: [String] = isFirstDataSetLarger ?
             firstHistoricalData.map { $0.date } : secondHistoricalData.map { $0.date }
         let yearValues: [String] = xAxisDataPoints.map({ String(Array($0)[0...3] )})
-        cell.chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: yearValues)
+        chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: yearValues)
         switch searchCriteria.parameterType {
         case .ratio:
-            cell.chartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter: ChartViewModel.multipleFormatter)
+            chartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter: ChartViewModel.multipleFormatter)
         case .percentage:
-            cell.chartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter: ChartViewModel.decimalFormatter)
+            chartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter: ChartViewModel.decimalFormatter)
         case .number:
-            cell.chartView.leftAxis.valueFormatter = chartViewModel
+            chartView.leftAxis.valueFormatter = chartViewModel
         default:
             assertionFailure("Not implemented")
         }
@@ -97,9 +98,11 @@ struct ComparisonLineChartViewModel {
     
     fileprivate static func configureXAxis(_ chartView: LineChartView) {
         chartView.xAxis.granularity = 1
+        chartView.xAxis.spaceMin = 0.5
+        chartView.xAxis.spaceMax = 0.5
         chartView.xAxis.labelPosition = .bottom
         chartView.xAxis.drawGridLinesEnabled = false
-        chartView.xAxis.centerAxisLabelsEnabled = true
+        chartView.xAxis.centerAxisLabelsEnabled = false
     }
     
     fileprivate static func toggleChartConfigs(_ chartView: LineChartView) {
