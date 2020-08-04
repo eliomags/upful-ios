@@ -152,10 +152,12 @@ final class StockComparisonViewController: UIViewController {
             as? MetricSelectionTableViewCell else { return UITableViewCell() }
         if row == 0 {
             cell.iconView.backgroundColor = .appAccent2
-            cell.titleLabel.text = comparisonViewModel.mainTicker
+            let noDataText = comparisonViewModel.mainTickerResults.isEmpty ? " - No Data Found" : ""
+            cell.titleLabel.text = comparisonViewModel.mainTicker + noDataText
         } else {
             cell.iconView.backgroundColor = .appAccent4
-            cell.titleLabel.text = comparisonViewModel.secondTicker ?? "Tap to compare"
+            let noDataText = comparisonViewModel.secondTickerResults.isEmpty ? " - No Data Found" : ""
+            cell.titleLabel.text = (comparisonViewModel.secondTicker ?? "Tap to compare") + noDataText
         }
         return cell
     }
