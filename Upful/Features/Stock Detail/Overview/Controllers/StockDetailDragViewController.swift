@@ -31,8 +31,6 @@ final class StockDetailDragViewController: UIViewController {
     private(set) var coordinator: Coordinator?
     private(set) var metricPreviewViewModels = [MetricPreviewViewModel]()
     
-    let comparisonViewModel: StockComparisonViewModel
-
     // MARK: Views
     
     private lazy var tradeButton: UIButton = {
@@ -92,7 +90,6 @@ final class StockDetailDragViewController: UIViewController {
     
     init(ticker: String) {
         self.ticker = ticker
-        self.comparisonViewModel = StockComparisonViewModel(mainTicker: ticker)
         super.init(nibName: nil, bundle: nil)
         createViewModels()
         dragView.tableView.register(AnalysisChartCell.self, forCellReuseIdentifier: AnalysisChartCell.reuseID)
@@ -106,10 +103,6 @@ final class StockDetailDragViewController: UIViewController {
     }
     
     func createViewModels() {
-        comparisonViewModel.handleLoadCompletion = { [weak self] in
-            self?.dragView.tableView.reloadData()
-        }
-        
         metricPreviewViewModels = [
             MetricPreviewViewModel(ticker: ticker, searchCriteria: .pricetoearnings),
             MetricPreviewViewModel(ticker: ticker, searchCriteria: .ebitmargin)

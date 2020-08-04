@@ -154,6 +154,7 @@
 		3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */; };
 		3D90ADBA2301BE0F00C52455 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90ADB92301BE0F00C52455 /* Double+Extensions.swift */; };
 		3D90E1BB24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90E1BA24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift */; };
+		3D90E1BD24D8F4FC00EF5E37 /* CompletionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D90E1BC24D8F4FC00EF5E37 /* CompletionHandler.swift */; };
 		3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B4322FC84C4001D5E39 /* UIFont+Extensions.swift */; };
 		3D917B4622FD2D7E001D5E39 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D917B4522FD2D7E001D5E39 /* GoogleService-Info.plist */; };
 		3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B4D22FE006D001D5E39 /* ManualSearchModel.swift */; };
@@ -448,6 +449,7 @@
 		3D90ADB72301995600C52455 /* ManualSearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchHeaderView.swift; sourceTree = "<group>"; };
 		3D90ADB92301BE0F00C52455 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		3D90E1BA24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonLineChartViewModel.swift; sourceTree = "<group>"; };
+		3D90E1BC24D8F4FC00EF5E37 /* CompletionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionHandler.swift; sourceTree = "<group>"; };
 		3D917B4322FC84C4001D5E39 /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
 		3D917B4522FD2D7E001D5E39 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3D917B4D22FE006D001D5E39 /* ManualSearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchModel.swift; sourceTree = "<group>"; };
@@ -2430,6 +2432,7 @@
 		3DF92415249FC31F0028EE01 /* Custom APIs */ = {
 			isa = PBXGroup;
 			children = (
+				3D90E1BC24D8F4FC00EF5E37 /* CompletionHandler.swift */,
 				3DF92416249FC3480028EE01 /* Profile */,
 				3D206A01241E8EFA00F7E44C /* Trading Engine */,
 			);
@@ -2839,6 +2842,7 @@
 				3D90E1BB24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift in Sources */,
 				3D206A2A242104BE00F7E44C /* TransactionType.swift in Sources */,
 				3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */,
+				3D90E1BD24D8F4FC00EF5E37 /* CompletionHandler.swift in Sources */,
 				3DF5FBBE2333A48B00856205 /* ChartTypeUpdatable.swift in Sources */,
 				3DF5FBB0232BFCF100856205 /* AnalysisChartCell.swift in Sources */,
 				3DAB3ED1234F9F590008CC18 /* PrefrenceHeaderView.swift in Sources */,

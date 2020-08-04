@@ -34,7 +34,7 @@ final class StockComparisonViewModel {
     private(set) var mainTickerResults = [CompanyHistoricalDatum]()
     private(set) var secondTickerResults = [CompanyHistoricalDatum]()
     
-    var handleLoadCompletion: (() -> Void)?
+    var loadCompletionHandler = CompletionHandler<Any>()
     
     // MARK: Initializer
     
@@ -52,7 +52,7 @@ final class StockComparisonViewModel {
 
         fetchMetric(for: mainTicker) { data in
             self.mainTickerResults = data
-            self.handleLoadCompletion?()
+            self.loadCompletionHandler.notify()
         }
     }
     
@@ -62,7 +62,7 @@ final class StockComparisonViewModel {
 
         fetchMetric(for: secondTicker) { data in
             self.secondTickerResults = data
-            self.handleLoadCompletion?()
+            self.loadCompletionHandler.notify()
         }
     }
     
@@ -79,7 +79,7 @@ final class StockComparisonViewModel {
                 selectedTicker = self.secondTicker
                 self.secondTicker = item.title
             }
-            self.handleLoadCompletion?()
+            self.loadCompletionHandler.notify()
         }
         return savedStockCoordinator
     }

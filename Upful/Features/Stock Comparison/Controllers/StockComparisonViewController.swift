@@ -86,7 +86,7 @@ final class StockComparisonViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        comparisonViewModel.handleLoadCompletion = { [weak self] in
+        comparisonViewModel.loadCompletionHandler.subscribe { [weak self] _ in
             self?.tableView.reloadData()
         }
     }
