@@ -32,7 +32,7 @@ final class StockComparisonViewController: UIViewController {
     let comparisonViewModel: StockComparisonViewModel
     
     lazy var tableView: UITableView = makeTableView()
-    lazy var closeButton: UIButton = makeCloseButton()
+    lazy var closeButton: CancelButton = makeCancelButton()
     lazy var contentContainerView: UIView = createContainerView()
 
     // MARK: - Initializer
@@ -84,13 +84,10 @@ final class StockComparisonViewController: UIViewController {
         return view
     }
     
-    func makeCloseButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.backgroundColor = .clear
-        button.setTitle("Close", for: .normal)
-        button.setTitleColor(.appAccent4, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
-        button.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
+    func makeCancelButton() -> CancelButton {
+        let button = CancelButton()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCancel))
+        button.addGestureRecognizer(tapGesture)
         return button
     }
 
