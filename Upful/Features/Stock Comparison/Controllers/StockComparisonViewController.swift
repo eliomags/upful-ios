@@ -114,10 +114,23 @@ final class StockComparisonViewController: UIViewController {
     
     func createMetricComparisionCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "ValueCell")
-        cell.textLabel?.font = .details3
+        let magnifyingpImg = UIImage(systemName: "magnifyingglass.circle.fill")?
+            .withTintColor(.appAccent4, renderingMode: .alwaysOriginal)
+        let magImgView = UIImageView(image: magnifyingpImg)
+            .setHeightConstraint(constant: 36)
+            .setWidthConstraint(constant: 36)
+        
+        let label = UILabel()
+        label.font = .details3
+        label.text = comparisonViewModel.searchingCriteria.explicit
+        
+        let sv = UIStackView(arrangedSubviews: [magImgView, label])
+        sv.spacing = 12
+        cell.addSubview(sv)
+        sv.setLeadingAnchor(padding: 16).setCenterYAnchor(padding: 0)
+        
         cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = VersionManager.collectionCellColor3()
-        cell.textLabel?.text = comparisonViewModel.searchingCriteria.explicit
         return cell
     }
 

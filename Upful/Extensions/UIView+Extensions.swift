@@ -184,6 +184,20 @@ extension UIView {
         }
         return self
     }
+    
+    @discardableResult
+    func setHeightConstraint(constant: CGFloat) -> UIView {
+        translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(equalToConstant: constant).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    func setWidthConstraint(constant: CGFloat) -> UIView {
+        translatesAutoresizingMaskIntoConstraints = false
+        widthAnchor.constraint(equalToConstant: constant).isActive = true
+        return self
+    }
 }
 
 
