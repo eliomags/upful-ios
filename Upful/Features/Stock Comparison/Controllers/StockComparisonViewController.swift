@@ -143,7 +143,7 @@ final class StockComparisonViewController: UIViewController {
             cell.titleLabel.text = comparisonViewModel.mainTicker
         } else {
             cell.iconView.backgroundColor = .appAccent4
-            cell.titleLabel.text = comparisonViewModel.secondTicker ?? "Select a stock to compare"
+            cell.titleLabel.text = comparisonViewModel.secondTicker ?? "Tap to compare"
         }
         return cell
     }

@@ -119,7 +119,7 @@ extension UIView {
 
 extension UIView {
     @discardableResult
-    func setLeadingAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+    func setLeadingAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat = 0) -> UIView {
         translatesAutoresizingMaskIntoConstraints = false
         if let relativeView = relativeView {
             leadingAnchor.constraint(equalTo: relativeView.trailingAnchor, constant: padding).isActive = true
@@ -130,7 +130,7 @@ extension UIView {
         return self
     }
     @discardableResult
-    func setTrailingAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+    func setTrailingAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat = 0) -> UIView {
         translatesAutoresizingMaskIntoConstraints = false
         if let relativeView = relativeView {
             trailingAnchor.constraint(equalTo: relativeView.leadingAnchor, constant: -padding).isActive = true
@@ -141,7 +141,7 @@ extension UIView {
         return self
     }
     @discardableResult
-    func setTopAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+    func setTopAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat = 0) -> UIView {
         translatesAutoresizingMaskIntoConstraints = false
         if let relativeView = relativeView {
             topAnchor.constraint(equalTo: relativeView.bottomAnchor, constant: padding).isActive = true
@@ -152,7 +152,7 @@ extension UIView {
         return self
     }
     @discardableResult
-    func setBottomAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+    func setBottomAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat = 0) -> UIView {
         translatesAutoresizingMaskIntoConstraints = false
         if let relativeView = relativeView {
             bottomAnchor.constraint(equalTo: relativeView.topAnchor, constant: -padding).isActive = true
@@ -163,7 +163,7 @@ extension UIView {
         return self
     }
     @discardableResult
-    func setCenterYAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+    func setCenterYAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat = 0) -> UIView {
         translatesAutoresizingMaskIntoConstraints = false
         if let relativeView = relativeView {
             centerYAnchor.constraint(equalTo: relativeView.centerYAnchor, constant: -padding).isActive = true
@@ -174,7 +174,7 @@ extension UIView {
         return self
     }
     @discardableResult
-    func setCenterXAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat) -> UIView {
+    func setCenterXAnchor(relativeTo relativeView: UIView? = nil, padding: CGFloat = 0) -> UIView {
         translatesAutoresizingMaskIntoConstraints = false
         if let relativeView = relativeView {
             centerXAnchor.constraint(equalTo: relativeView.centerXAnchor, constant: -padding).isActive = true
