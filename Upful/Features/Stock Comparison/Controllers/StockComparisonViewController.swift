@@ -238,7 +238,7 @@ extension StockComparisonViewController: UITableViewDataSource, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath == Section.Row.lineChart.getIndexPath() { return 260 }
+        if indexPath == Section.Row.lineChart.getIndexPath() { return 240 }
         return UITableView.automaticDimension
     }
     

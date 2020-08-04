@@ -79,6 +79,7 @@ final class StockComparisonViewModel {
                 selectedTicker = self.secondTicker
                 self.secondTicker = item.title
             }
+            AnalyticsLogger.instance.reportEvents(event: .selectedCompareTicker(item.title))
             self.loadCompletionHandler.notify()
         }
         return savedStockCoordinator

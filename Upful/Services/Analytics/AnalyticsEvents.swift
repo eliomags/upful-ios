@@ -38,6 +38,7 @@ enum AnalyticsEventName {
     case selectedNewsArticle
     case screenForStocks(screenType: ScreenType)
     case selectedAnalysis(criteria: SearchCriteria)
+    case selectedCompareTicker(String)
     case selectedStock(selectionType: StockSelectionType)
     case selectedCompanyFiling
     case preferencesSet
@@ -57,6 +58,8 @@ enum AnalyticsEventName {
             return "selected_news_article"
         case .selectedAnalysis:
             return "selected_analysis_parameter"
+        case .selectedCompareTicker(_):
+            return "selected_compare_ticker"
         case .selectedCompanyFiling:
             return "selected_company_filing"
         case .suggestion:
@@ -130,6 +133,8 @@ extension AnalyticsEventName {
             return ["score": "\(score)"]
         case .performedTransaction(let type):
             return ["type": "\(type.rawValue)"]
+        case .selectedCompareTicker(let ticker):
+            return ["ticker": ticker]
         }
     }
 }
