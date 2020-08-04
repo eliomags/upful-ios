@@ -51,7 +51,7 @@ final class StockComparisonViewController: UIViewController {
     override func loadView() {
         super.loadView()
         view.addSubview(contentContainerView)
-        contentContainerView.setCenterXAnchor(padding: 0).setBottomAnchor(padding: 32)
+        contentContainerView.setCenterXAnchor(padding: 0).setBottomAnchor(padding: 48)
         
         contentContainerView.addSubview(tableView)
         tableView.fillSuperview(padding: .init(top: 22, left: 0, bottom: 16, right: 0))
@@ -97,7 +97,7 @@ final class StockComparisonViewController: UIViewController {
         let width = UIScreen.main.bounds.width - 32
         view.anchor(top: nil, leading: nil,
                     bottom: nil, trailing: nil,
-                    size: .init(width: width, height: 545))
+                    size: .init(width: width, height: 575))
         view.backgroundColor = VersionManager.collectionCellColor()
         return view
     }
@@ -174,15 +174,14 @@ extension StockComparisonViewController: UITableViewDataSource, UITableViewDeleg
         case metric
         case compareStock
         
-        var title: String {
-            switch self {
-            case .metric:
+        static func getTitle(at section: Int) -> String? {
+            if section == Section.metric.rawValue {
                 return "Metric"
-            case .compareStock:
-                return "Stocks"
-            default:
-                return ""
             }
+            if section == Section.compareStock.rawValue {
+                return "Stocks"
+            }
+            return nil
         }
         enum Row: Int, CaseIterable {
             case lineChart
@@ -241,6 +240,10 @@ extension StockComparisonViewController: UITableViewDataSource, UITableViewDeleg
             didSelectMetricForComparison(at: row)
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return Section.getTitle(at: section)
     }
 }
 
