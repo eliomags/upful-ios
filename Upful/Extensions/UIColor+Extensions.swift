@@ -46,6 +46,12 @@ private struct Pallete {
 }
 
 extension UIColor {
+    static var dimmedBackground: UIColor {
+        return UIColor.black.withAlphaComponent(0.3)
+    }
+}
+
+extension UIColor {
     static var backgroundColor: UIColor {
         return Pallete.gray
     }

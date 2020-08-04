@@ -75,7 +75,7 @@ final class ManualScreenerItemUpdateViewController: UIViewController {
     
     private lazy var dismissView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        view.backgroundColor = .dimmedBackground
         view.translatesAutoresizingMaskIntoConstraints = false
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleCancel)))
         return view

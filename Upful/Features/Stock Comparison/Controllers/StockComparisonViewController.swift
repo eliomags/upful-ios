@@ -8,26 +8,21 @@
 
 import UIKit
 
-/// Used to abstract dependency injection logic from ViewControllers within Navigation stack.
-protocol NavigationConstructor {
-    var navigationController: UINavigationController { get set }
-    func push()
-}
-
-class StockComparisonConstructor: NavigationConstructor {
+class StockComparisonPresenter {
     
     let tickerToCompare: String
-    var navigationController: UINavigationController
+    var presenting: UIViewController
     
-    init(navigationController: UINavigationController, tickerToCompare: String) {
-        self.tickerToCompare = tickerToCompare
-        self.navigationController = navigationController
+    init(_ presenting: UIViewController, ticker: String) {
+        self.presenting = presenting
+        self.tickerToCompare = ticker
     }
     
-    func push() {
+    func present() {
         let viewModel = StockComparisonViewModel(mainTicker: tickerToCompare)
         let viewController = StockComparisonViewController(comparisonViewModel: viewModel)
-        navigationController.pushViewController(viewController, animated: true)
+        viewController.modalPresentationStyle = .overCurrentContext
+        presenting.present(viewController, animated: true, completion: nil)
     }
 }
 
@@ -36,16 +31,10 @@ final class StockComparisonViewController: UIViewController {
     private(set) var coordinator: Coordinator?
     let comparisonViewModel: StockComparisonViewModel
     
-    lazy var tableView: UITableView = {
-        let view = UITableView()
-        view.delegate = self
-        view.dataSource = self
-        view.layer.cornerRadius = 16
-        view.isScrollEnabled = false
-        view.showsVerticalScrollIndicator = false
-        return view
-    }()
-    
+    lazy var tableView: UITableView = makeTableView()
+    lazy var closeButton: UIButton = makeCloseButton()
+    lazy var contentContainerView: UIView = createContainerView()
+
     // MARK: - Initializer
     
     init(comparisonViewModel: StockComparisonViewModel) {
@@ -61,27 +50,20 @@ final class StockComparisonViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        view.addSubview(tableView)
-        let width = UIScreen.main.bounds.width - 32
-        tableView.setCenterXAnchor(padding: 0).setCenterYAnchor(padding: 0)
-        tableView.anchor(top: nil, leading: nil, bottom: nil, trailing: nil,
-                         size: CGSize(width: width, height: 425))
-        tableView.backgroundColor = .systemBackground
-        view.backgroundColor = UIColor(white: 0.1, alpha: 0.4)
+        view.addSubview(contentContainerView)
+        contentContainerView.setCenterXAnchor(padding: 0).setBottomAnchor(padding: 32)
+        
+        contentContainerView.addSubview(tableView)
+        tableView.fillSuperview(padding: .init(top: 22, left: 0, bottom: 16, right: 0))
+        
+        contentContainerView.addSubview(closeButton)
+        closeButton.setTopAnchor(padding: 16).setLeadingAnchor(padding: 16)
+        
+        tableView.backgroundColor = .clear
+        view.backgroundColor = .dimmedBackground
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ValueCell")
         tableView.register(LineChartTableViewCell.self, forCellReuseIdentifier: LineChartTableViewCell.reuseID)
         tableView.register(MetricSelectionTableViewCell.self, forCellReuseIdentifier: MetricSelectionTableViewCell.reuseID)
-        
-
-//            UIColor.init() { (trait) -> UIColor in
-//                if trait.userInterfaceStyle == .dark {
-//                    self.containerView.setupShadow(intensity: .light, color: VersionManager.collectionCellColor())
-//                }
-//                if trait.userInterfaceStyle == .light {
-//                    self.containerView.setupShadow(intensity: .light, color: .label)
-//                }
-//                return UIColor(white: 0.1, alpha: 0.4)
-//        }
     }
     
     override func viewDidLoad() {
@@ -92,6 +74,36 @@ final class StockComparisonViewController: UIViewController {
     }
     
     // MARK: - View Creation
+    
+    func makeTableView() -> UITableView {
+        let view = UITableView(frame: .zero, style: .grouped)
+        view.delegate = self
+        view.dataSource = self
+        view.isScrollEnabled = false
+        view.showsVerticalScrollIndicator = false
+        return view
+    }
+    
+    func makeCloseButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.backgroundColor = .clear
+        button.setTitle("Close", for: .normal)
+        button.setTitleColor(.appAccent4, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .regular)
+        button.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
+        return button
+    }
+
+    func createContainerView() -> UIView {
+        let view = UIView()
+        view.layer.cornerRadius = 16
+        let width = UIScreen.main.bounds.width - 32
+        view.anchor(top: nil, leading: nil,
+                    bottom: nil, trailing: nil,
+                    size: .init(width: width, height: 465))
+        view.backgroundColor = VersionManager.collectionCellColor3()
+        return view
+    }
         
     func createLineChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: LineChartTableViewCell.reuseID, for: indexPath)
@@ -106,9 +118,9 @@ final class StockComparisonViewController: UIViewController {
     func createMetricComparisionCell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "ValueCell")
         cell.textLabel?.font = .details3
-        cell.textLabel?.text = comparisonViewModel.searchingCriteria.explicit
         cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = VersionManager.collectionCellColor3()
+        cell.textLabel?.text = comparisonViewModel.searchingCriteria.explicit
         return cell
     }
 
@@ -128,11 +140,21 @@ final class StockComparisonViewController: UIViewController {
     
     // MARK: - Actions
     
+    @objc func handleCancel() {
+        view.backgroundColor = .clear
+        dismiss(animated: true, completion: nil)
+    }
+    
     func didSelectMetricForComparison(at row: Int) {
         let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
         searchCriteriaSelectionVC.delegate = self
         searchCriteriaSelectionVC.currentSearchCriteria = comparisonViewModel.searchingCriteria
-        parent?.present(searchCriteriaSelectionVC, animated: true, completion: nil)
+        let presentingViewController = parent ?? self
+        presentingViewController.present(searchCriteriaSelectionVC, animated: true, completion: nil)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        handleCancel()
     }
 }
 
@@ -164,9 +186,7 @@ extension StockComparisonViewController: UITableViewDataSource, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == Section.First.lineChart.rawValue {
-            return 275
-        }
+        if indexPath.row == Section.First.lineChart.rawValue { return 260 }
         return UITableView.automaticDimension
     }
     

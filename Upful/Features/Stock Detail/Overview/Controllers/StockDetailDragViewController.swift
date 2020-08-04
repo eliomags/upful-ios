@@ -123,12 +123,9 @@ final class StockDetailDragViewController: UIViewController {
     }
     
     @objc fileprivate func handleCompareTap() {
-        if let navigationController = self.navigationController {
-            let navigationConstructor = StockComparisonConstructor(
-                                            navigationController: navigationController,
-                                            tickerToCompare: ticker)
-            navigationConstructor.push()
-        }
+        let presentingViewController = parent ?? self
+        let comparePresenter = StockComparisonPresenter(presentingViewController, ticker: ticker)
+        comparePresenter.present()
     }
 }
 
