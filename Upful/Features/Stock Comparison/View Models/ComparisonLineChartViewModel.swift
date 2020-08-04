@@ -113,6 +113,7 @@ struct ComparisonLineChartViewModel {
         chartView.rightAxis.enabled = false
         chartView.doubleTapToZoomEnabled = false
         chartView.chartDescription?.enabled = false
+        chartView.noDataTextColor = .label
         chartView.noDataText = "No data found for this metric"
     }
 }

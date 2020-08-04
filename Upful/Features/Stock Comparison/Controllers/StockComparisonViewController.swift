@@ -156,8 +156,12 @@ final class StockComparisonViewController: UIViewController {
             cell.titleLabel.text = comparisonViewModel.mainTicker + noDataText
         } else {
             cell.iconView.backgroundColor = .appAccent4
-            let noDataText = comparisonViewModel.secondTickerResults.isEmpty ? " - No Data Found" : ""
-            cell.titleLabel.text = (comparisonViewModel.secondTicker ?? "Tap to compare") + noDataText
+            if let secondTicker = comparisonViewModel.secondTicker {
+                let noDataText = comparisonViewModel.secondTickerResults.isEmpty ? " - No Data Found" : ""
+                cell.titleLabel.text = secondTicker + noDataText
+            } else {
+                cell.titleLabel.text = "Tap to compare"
+            }
         }
         return cell
     }
