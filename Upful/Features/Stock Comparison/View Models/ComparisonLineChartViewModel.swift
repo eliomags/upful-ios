@@ -47,8 +47,8 @@ struct ComparisonLineChartViewModel {
             assertionFailure("Not implemented")
         }
         lineChartDataSet.mode = .cubicBezier
-        lineChartDataSet.lineWidth = 2.5
-        lineChartDataSet.circleRadius = 0
+        lineChartDataSet.lineWidth = 3.5
+        lineChartDataSet.circleRadius = 4
         lineChartDataSet.cubicIntensity = 0.3
         lineChartDataSet.highlightEnabled = false
         lineChartDataSet.drawValuesEnabled = true
