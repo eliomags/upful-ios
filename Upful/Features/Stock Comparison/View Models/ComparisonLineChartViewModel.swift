@@ -46,6 +46,7 @@ struct ComparisonLineChartViewModel {
         default:
             assertionFailure("Not implemented")
         }
+        lineChartDataSet.colors = [color]
         lineChartDataSet.mode = .cubicBezier
         lineChartDataSet.lineWidth = 3.5
         lineChartDataSet.circleRadius = 4
@@ -54,7 +55,7 @@ struct ComparisonLineChartViewModel {
         lineChartDataSet.drawValuesEnabled = true
         lineChartDataSet.drawCirclesEnabled = false
         lineChartDataSet.drawHorizontalHighlightIndicatorEnabled = false
-        lineChartDataSet.colors = [color]
+        lineChartDataSet.valueFont = NSUIFont.systemFont(ofSize: 9, weight: .regular)
         return lineChartDataSet
     }
     
