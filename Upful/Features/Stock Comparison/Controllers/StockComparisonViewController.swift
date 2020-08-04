@@ -98,7 +98,7 @@ final class StockComparisonViewController: UIViewController {
         view.anchor(top: nil, leading: nil,
                     bottom: nil, trailing: nil,
                     size: .init(width: width, height: 465))
-        view.backgroundColor = VersionManager.collectionCellColor3()
+        view.backgroundColor = VersionManager.collectionCellColor()
         return view
     }
         
