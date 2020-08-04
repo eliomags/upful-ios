@@ -59,6 +59,10 @@ final class StockComparisonViewController: UIViewController {
         contentContainerView.addSubview(closeButton)
         closeButton.setTopAnchor(padding: 16).setLeadingAnchor(padding: 16)
         
+        let titleLabel = makeTitle()
+        contentContainerView.addSubview(titleLabel)
+        titleLabel.setCenterXAnchor().setCenterYAnchor(relativeTo: closeButton)
+        
         tableView.backgroundColor = .clear
         view.backgroundColor = .dimmedBackground
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ValueCell")
@@ -74,6 +78,14 @@ final class StockComparisonViewController: UIViewController {
     }
     
     // MARK: - View Creation
+    
+    func makeTitle() -> UILabel {
+        let label = UILabel()
+        label.text = "Compare"
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        return label
+    }
     
     func makeTableView() -> UITableView {
         let view = UITableView(frame: .zero, style: .grouped)
