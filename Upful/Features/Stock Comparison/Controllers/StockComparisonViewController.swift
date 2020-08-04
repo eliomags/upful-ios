@@ -97,7 +97,7 @@ final class StockComparisonViewController: UIViewController {
         let width = UIScreen.main.bounds.width - 32
         view.anchor(top: nil, leading: nil,
                     bottom: nil, trailing: nil,
-                    size: .init(width: width, height: 465))
+                    size: .init(width: width, height: 545))
         view.backgroundColor = VersionManager.collectionCellColor()
         return view
     }
@@ -138,7 +138,7 @@ final class StockComparisonViewController: UIViewController {
         let row = indexPath.row
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MetricSelectionTableViewCell.reuseID, for: indexPath)
             as? MetricSelectionTableViewCell else { return UITableViewCell() }
-        if row == 2 {
+        if row == 0 {
             cell.iconView.backgroundColor = .appAccent2
             cell.titleLabel.text = comparisonViewModel.mainTicker
         } else {
@@ -169,44 +169,75 @@ final class StockComparisonViewController: UIViewController {
 }
 
 extension StockComparisonViewController: UITableViewDataSource, UITableViewDelegate {
-    struct Section {
-        enum First: Int, CaseIterable {
+    enum Section: Int, CaseIterable {
+        case lineChart
+        case metric
+        case compareStock
+        
+        var title: String {
+            switch self {
+            case .metric:
+                return "Metric"
+            case .compareStock:
+                return "Stocks"
+            default:
+                return ""
+            }
+        }
+        enum Row: Int, CaseIterable {
             case lineChart
             case metric
             case mainTicker
             case comparingTicker
+            
+            func getIndexPath() -> IndexPath {
+                switch self {
+                case .lineChart:
+                    return IndexPath(row: 0, section: 0)
+                case .metric:
+                    return IndexPath(row: 0, section: Section.metric.rawValue)
+                case .mainTicker:
+                    return IndexPath(row: 0, section: Section.compareStock.rawValue)
+                case .comparingTicker:
+                    return IndexPath(row: 1, section: Section.compareStock.rawValue)
+                }
+            }
         }
     }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return Section.allCases.count
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Section.First.allCases.count
+        if section == Section.compareStock.rawValue { return 2 }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let row = indexPath.row
-        if row == Section.First.lineChart.rawValue {
+        if indexPath == Section.Row.lineChart.getIndexPath() {
             return createLineChartCell(tableView, at: indexPath)
         }
-        if row == Section.First.metric.rawValue {
+        if indexPath == Section.Row.metric.getIndexPath() {
             return createMetricComparisionCell(tableView, at: indexPath)
         }
-        if row == Section.First.mainTicker.rawValue || row == Section.First.comparingTicker.rawValue {
+        if indexPath == Section.Row.mainTicker.getIndexPath() ||
+            indexPath == Section.Row.comparingTicker.getIndexPath() {
             return createStocksToCompareCell(tableView, at: indexPath)
         }
         return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == Section.First.lineChart.rawValue { return 260 }
+        if indexPath == Section.Row.lineChart.getIndexPath() { return 260 }
         return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let row = indexPath.row
-        if row == Section.First.mainTicker.rawValue ||
-            row == Section.First.comparingTicker.rawValue {
+        if indexPath == Section.Row.mainTicker.getIndexPath() ||
+            indexPath == Section.Row.comparingTicker.getIndexPath() {
             let coordinator = comparisonViewModel.createCoordinatorFromTickerCellTap(in: self, at: row)
             coordinator?.start()
-        } else if row == Section.First.metric.rawValue {
+        } else if indexPath == Section.Row.metric.getIndexPath() {
             didSelectMetricForComparison(at: row)
         }
         tableView.deselectRow(at: indexPath, animated: true)

@@ -71,11 +71,11 @@ final class StockComparisonViewModel {
         
         let savedStockCoordinator = SavedStockCoordinator(presenter: viewController, selectedTicker: selectedTicker)
         savedStockCoordinator.presenting.handleCellSelection = { [unowned self] item in
-            if row == 2 {
+            if row == 0 {
                 selectedTicker = self.mainTicker
                 self.mainTicker = item.title
             }
-            else if row == 3 {
+            else if row == 1 {
                 selectedTicker = self.secondTicker
                 self.secondTicker = item.title
             }
