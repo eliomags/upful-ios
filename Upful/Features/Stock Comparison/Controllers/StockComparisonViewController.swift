@@ -88,7 +88,7 @@ final class StockComparisonViewController: UIViewController {
     }
     
     func makeTableView() -> UITableView {
-        let view = UITableView(frame: .zero, style: .grouped)
+        let view = UITableView(frame: .zero, style: .insetGrouped)
         view.delegate = self
         view.dataSource = self
         view.isScrollEnabled = false
@@ -109,7 +109,7 @@ final class StockComparisonViewController: UIViewController {
         let width = UIScreen.main.bounds.width - 32
         view.anchor(top: nil, leading: nil,
                     bottom: nil, trailing: nil,
-                    size: .init(width: width, height: 575))
+                    size: .init(width: width, height: 582))
         view.backgroundColor = VersionManager.collectionCellColor()
         return view
     }
@@ -244,7 +244,7 @@ extension StockComparisonViewController: UITableViewDataSource, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath == Section.Row.lineChart.getIndexPath() { return 240 }
+        if indexPath == Section.Row.lineChart.getIndexPath() { return 250 }
         return UITableView.automaticDimension
     }
     

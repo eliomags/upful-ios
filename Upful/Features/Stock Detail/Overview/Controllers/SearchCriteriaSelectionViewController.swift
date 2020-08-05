@@ -129,14 +129,13 @@ extension SearchCriteriaSelectionViewController: UITableViewDelegate, UITableVie
         handleCrtieriaTap(criteria: data[indexPath.section][indexPath.row].criteria)
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView()
-        let header = SmallSectionHeaderLabel(padding: 16)
-        view.addSubview(header)
-        header.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor,
-                      padding: .init(top: 0, left: 0, bottom: 4, right: 18))
-        let labelText = ["FINANCIAL STATEMENT VALUES", "VALUATION", "FINANCIAL"]
-        header.text = labelText[section].uppercased()
-        return view
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let labelText = [
+            "FINANCIAL STATEMENT VALUES",
+            "VALUATION",
+            "FINANCIAL",
+            "GROWTH"
+        ]
+        return labelText[section]
     }
 }
