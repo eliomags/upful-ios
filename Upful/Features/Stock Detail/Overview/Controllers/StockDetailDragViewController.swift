@@ -286,24 +286,38 @@ final class TableItemDisplayViewController: UITableViewController {
     }
     var handleCellSelection: ((Item) -> Void)?
     
-    
+    override func loadView() {
+        super.loadView()
+        tableView.register(EmptyStockFavoriteCell.self, forCellReuseIdentifier: "EmptyStockFavoriteCell")
+    }
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        if items.isEmpty {
+            return 1
+        } else {
+            return items.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ValueCell")
-        cell.textLabel?.text = items[indexPath.row].title
-        cell.textLabel?.font = .details4
-        
-        cell.detailTextLabel?.text = items[indexPath.row].subtitle
-        cell.detailTextLabel?.font = .details3
-        cell.detailTextLabel?.textColor = .gray
-        
-        return cell
+        if items.isEmpty {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "EmptyStockFavoriteCell",
+                                                     for: indexPath) as? EmptyStockFavoriteCell
+            cell?.descriptionLabel.text = "Start searching for stocks."
+            return cell ?? UITableViewCell()
+        } else {
+            let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "ValueCell")
+            cell.textLabel?.text = items[indexPath.row].title
+            cell.textLabel?.font = .details4
+            cell.detailTextLabel?.text = items[indexPath.row].subtitle
+            cell.detailTextLabel?.font = .details3
+            cell.detailTextLabel?.textColor = .gray
+            return cell
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard !items.isEmpty else { return }
         dismiss(animated: true, completion: { [unowned self] in
             self.handleCellSelection?(self.items[indexPath.item])
         })
