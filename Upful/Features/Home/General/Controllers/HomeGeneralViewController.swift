@@ -381,6 +381,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
                     guard let self = self else { return }
                     
                     DispatchQueue.main.async {
+                        Vibration.success.vibrate()
                         InformationViewPresenter().showGenericSuccess(in: self, description: "Sold Successfully", completion: { [weak self] in
                             self?.handleResfreshing()
                         })
