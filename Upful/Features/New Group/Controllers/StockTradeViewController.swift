@@ -251,7 +251,7 @@ final class StockTradeViewController: UITableViewController {
             return
         }
             
-        if let currentHolding = self.currentHoldings.first(where: { $0.ticker == self.ticker }) {
+        if let currentHolding = currentHoldings.first(where: { $0.ticker == ticker }) {
             
             if numberOfShares <= currentHolding.totalShareCount {
                 self.tradingEngine.sell(transaction: transaction, completion: { [weak self] in
@@ -328,11 +328,11 @@ final class StockTradeViewController: UITableViewController {
     }
     
     fileprivate func handleHoldingsLoadCompletion(_ holdings: [Holding]) {
-        if let currentHolding = holdings.first(where: { $0.ticker == self.ticker }) {
+        if let currentHolding = holdings.first(where: { $0.ticker == ticker }) {
             
-            self.header.descriptionText.text = "You currently own \(currentHolding.totalShareCount.withCommas()) shares of \(self.ticker).\nYour cash balance is $\(self.tradingEngine.balanceManager.currentCashBalance.withCommas())"
+            header.descriptionText.text = "You currently own \(currentHolding.totalShareCount.withCommas()) shares of \(ticker).\nYour cash balance is $\(tradingEngine.balanceManager.currentCashBalance.withCommas())"
         } else {
-            self.header.descriptionText.text = "You do not own any shares of \(self.ticker).\nYour cash balance is $\(self.tradingEngine.balanceManager.currentCashBalance.withCommas())"
+            header.descriptionText.text = "You do not own any shares of \(ticker).\nYour cash balance is $\(tradingEngine.balanceManager.currentCashBalance.withCommas())"
         }
     }
     
@@ -346,7 +346,7 @@ final class StockTradeViewController: UITableViewController {
     }
     
     fileprivate func handleBuyFailure() {
-        presentAlert("Error", "You don't have enough cash to purchase \(self.numberOfShares!) shares of \(self.ticker).",
+        presentAlert("Error", "You don't have enough cash to purchase \(numberOfShares!) shares of \(ticker).",
             OKhandler: {
                 self.buyButton.isEnabled = true
                 self.sellButton.isEnabled = true
@@ -355,6 +355,7 @@ final class StockTradeViewController: UITableViewController {
     
     fileprivate func handleBuySuccess() {
         DispatchQueue.main.async {
+            Vibration.success.vibrate()
             InformationViewPresenter().showGenericSuccess(in: self, description: "Purchased Succesfully",
                                                           completion: { [weak self] in
                 self?.dismiss(animated: true, completion: nil)
