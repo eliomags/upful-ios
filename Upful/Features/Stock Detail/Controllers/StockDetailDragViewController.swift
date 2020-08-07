@@ -232,7 +232,7 @@ extension StockDetailDragViewController: ChartSearchCriteriaSelectionDelegate {
 }
 
 extension StockDetailDragViewController: MetricPreviewViewModelDelegate {
-    func didLoadCellData(cell: MetricPreviewTableViewCell?) {
+    func didLoadCellData(cell: MetricPreviewTableViewCell?, with results: [CompanyHistoricalDatum]) {
         dragView.tableView.reloadData()
     }
 }

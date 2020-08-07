@@ -10,7 +10,7 @@ import UIKit
 import Charts
 
 protocol MetricPreviewViewModelDelegate: class {
-    func didLoadCellData(cell: MetricPreviewTableViewCell?)
+    func didLoadCellData(cell: MetricPreviewTableViewCell?, with results: [CompanyHistoricalDatum])
 }
 
 final class MetricPreviewViewModel {
@@ -28,7 +28,11 @@ final class MetricPreviewViewModel {
     }
     var historicalData = [CompanyHistoricalDatum]()
 
-    private(set) var isLoading = false
+    private(set) var isLoading = false {
+        didSet {
+            handleLoadingState()
+        }
+    }
     
     private(set) var configuringCell: MetricPreviewTableViewCell?
 
@@ -49,15 +53,17 @@ final class MetricPreviewViewModel {
         
         fetchMetricData?(ticker, .fiveYear, searchCriteria) { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .success(let historicalData):
-                self.historicalData = historicalData
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
             DispatchQueue.main.async {
                 self.isLoading = false
-                self.delegate?.didLoadCellData(cell: self.configuringCell)
+
+                switch result {
+                case .success(let historicalData):
+                    self.historicalData = historicalData
+                    self.delegate?.didLoadCellData(cell: self.configuringCell, with: historicalData)
+                case .failure(let err):
+                    print(err.localizedDescription)
+                    self.delegate?.didLoadCellData(cell: self.configuringCell, with: [])
+                }
             }
         }
     }
@@ -75,8 +81,6 @@ final class MetricPreviewViewModel {
         cell.lineChartView.dragEnabled = false
         cell.lineChartView.isUserInteractionEnabled = false
         cell.lineChartView.setDataSet(with: chartDataEntries)
-
-        handleLoadingState()
         
         guard !historicalData.isEmpty else { return }
         let lastValue = historicalData.last!.value
@@ -94,6 +98,7 @@ final class MetricPreviewViewModel {
             activityView.centerInSuperview()
             activityView.startAnimating()
         } else {
+            activityView.stopAnimating()
             activityView.removeFromSuperview()
         }
         
@@ -101,5 +106,4 @@ final class MetricPreviewViewModel {
             configuringCell?.totalChangeLabel.text = "No data"
         }
     }
-    
 }

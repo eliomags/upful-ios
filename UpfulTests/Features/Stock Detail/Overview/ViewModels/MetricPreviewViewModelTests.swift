@@ -22,7 +22,43 @@ class MetricPreviewViewModelTests: XCTestCase {
         
         XCTAssertFalse(sut.isLoading)
         XCTAssertTrue(sut.historicalData.isEmpty)
-        XCTAssertTrue(!sut.activityView.isAnimating)
+        XCTAssertFalse(sut.activityView.isAnimating)
+    }
+    
+    class DelegateTest: MetricPreviewViewModelDelegate {
+        var completion: (([CompanyHistoricalDatum]) -> Void)?
+        func didLoadCellData(cell: MetricPreviewTableViewCell?, with results: [CompanyHistoricalDatum]) {
+            completion?(results)
+        }
+    }
+    
+    func test_loadingState() {
+        sut.fetchMetricData = Self.fetchWithResult
+
+        sut.loadHistoricalData()
+        
+        XCTAssertTrue(sut.isLoading)
+        XCTAssertTrue(sut.historicalData.isEmpty)
+        XCTAssertTrue(sut.activityView.isAnimating)
+    }
+    
+    func test_loadCompletion() {
+        sut.fetchMetricData = Self.fetchWithResult
+        let delegate = DelegateTest()
+        sut.delegate = delegate
+        
+        let exp = expectation(description: #function)
+        
+        sut.loadHistoricalData()
+        
+        delegate.completion = { results in
+            XCTAssertFalse(results.isEmpty)
+            XCTAssertFalse(self.sut.isLoading)
+            XCTAssertFalse(self.sut.activityView.isAnimating)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 0.5)
     }
 
     // MARK: - Helper
@@ -32,7 +68,7 @@ class MetricPreviewViewModelTests: XCTestCase {
         completion(.success([]))
     }
     
-    private static func fetchDataResult(_ ticker: String, _ freq: FinancialsFrequency, _ criteria: SearchCriteria,
+    private static func fetchWithResult(_ ticker: String, _ freq: FinancialsFrequency, _ criteria: SearchCriteria,
                                         _ completion: (Result<[CompanyHistoricalDatum], NetworkError>) -> Void) {
         completion(.success([.init(date: "2020-05-01", value: 10)]))
     }
