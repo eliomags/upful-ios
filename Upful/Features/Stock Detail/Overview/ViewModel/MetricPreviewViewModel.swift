@@ -20,7 +20,7 @@ final class MetricPreviewViewModel {
     let ticker: String
     typealias MetricDataFetch = (String, FinancialsFrequency, SearchCriteria,
         @escaping (Result<[CompanyHistoricalDatum], NetworkError>) -> Void) -> ()
-    var fetchMetricData: MetricDataFetch
+    var fetchMetricData: MetricDataFetch?
     var searchCriteria: SearchCriteria {
         didSet {
             loadHistoricalData()
@@ -47,7 +47,7 @@ final class MetricPreviewViewModel {
     func loadHistoricalData() {
         isLoading = true
         
-        fetchMetricData(ticker, .fiveYear, searchCriteria) { [weak self] result in
+        fetchMetricData?(ticker, .fiveYear, searchCriteria) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let historicalData):

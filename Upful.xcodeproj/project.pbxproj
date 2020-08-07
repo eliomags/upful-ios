@@ -124,6 +124,7 @@
 		3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651B231D777C00495D79 /* TableHeaderView.swift */; };
 		3D58651F231DE67B00495D79 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D58651E231DE67B00495D79 /* Constants.swift */; };
 		3D5865262323024A00495D79 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5865252323024A00495D79 /* PieChartView.swift */; };
+		3D698D2E24DD0C560090CB7B /* MetricPreviewViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D698D2D24DD0C560090CB7B /* MetricPreviewViewModelTests.swift */; };
 		3D6B01CB23D2839A007A2F19 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6B01CA23D2839A007A2F19 /* SubscriptionView.swift */; };
 		3D6B071E2415C97300C55021 /* MultilineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6B071D2415C97300C55021 /* MultilineButton.swift */; };
 		3D6B07202415C99400C55021 /* AuxiliaryActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6B071F2415C99400C55021 /* AuxiliaryActionView.swift */; };
@@ -419,6 +420,7 @@
 		3D58651B231D777C00495D79 /* TableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderView.swift; sourceTree = "<group>"; };
 		3D58651E231DE67B00495D79 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3D5865252323024A00495D79 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
+		3D698D2D24DD0C560090CB7B /* MetricPreviewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricPreviewViewModelTests.swift; sourceTree = "<group>"; };
 		3D6B01CA23D2839A007A2F19 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
 		3D6B071D2415C97300C55021 /* MultilineButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineButton.swift; sourceTree = "<group>"; };
 		3D6B071F2415C99400C55021 /* AuxiliaryActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuxiliaryActionView.swift; sourceTree = "<group>"; };
@@ -2361,6 +2363,7 @@
 			children = (
 				3DF734D324036C1700B297A4 /* StockOverviewViewModelTests.swift */,
 				3D51639524CB118200F86951 /* StockComparisonViewModelTests.swift */,
+				3D698D2D24DD0C560090CB7B /* MetricPreviewViewModelTests.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -2926,6 +2929,7 @@
 				3DF734E12407144800B297A4 /* SearchResultsViewModelTests.swift in Sources */,
 				3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */,
 				3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */,
+				3D698D2E24DD0C560090CB7B /* MetricPreviewViewModelTests.swift in Sources */,
 				3DE2B9CF249283F9008742F3 /* ProfileDataManagerTests.swift in Sources */,
 				3D206A18241F047F00F7E44C /* TransactionLedgerPersistence.swift in Sources */,
 				3DD5218C235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift in Sources */,
