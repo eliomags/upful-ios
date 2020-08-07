@@ -74,31 +74,15 @@ final class StockComparisonViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureismissPanGesture()
         comparisonViewModel.loadCompletionHandler.subscribe { [weak self] _ in
             self?.tableView.reloadData()
         }
-        
-        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDownwardSwipe))
-        view.addGestureRecognizer(panGesture!)
     }
     
-    @objc func handleDownwardSwipe(_ gesture: UIPanGestureRecognizer) {
-        let velocity = gesture.velocity(in: view).y
-        let translation = gesture.translation(in: view).y
-        let viewToAnimate = contentContainerView
-        
-        switch gesture.state {
-        case .changed:
-            if velocity < 0 { return }
-            viewToAnimate.transform = CGAffineTransform(translationX: 0, y: translation)
-            if translation > 75 || velocity > 720 {
-                dismiss(animated: true, completion: nil)
-            }
-        default:
-            if translation < 65 {
-                UIView.animate(withDuration: 0.25) { viewToAnimate.transform = .identity }
-            }
-        }
+    func configureismissPanGesture() {
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDownwardSwipe))
+        view.addGestureRecognizer(panGesture!)
     }
     
     // MARK: - View Creation
@@ -203,6 +187,25 @@ final class StockComparisonViewController: UIViewController {
         searchCriteriaSelectionVC.currentSearchCriteria = comparisonViewModel.searchingCriteria
         let presentingViewController = parent ?? self
         presentingViewController.present(searchCriteriaSelectionVC, animated: true, completion: nil)
+    }
+    
+    @objc func handleDownwardSwipe(_ gesture: UIPanGestureRecognizer) {
+        let velocity = gesture.velocity(in: view).y
+        let translation = gesture.translation(in: view).y
+        let viewToAnimate = contentContainerView
+        
+        switch gesture.state {
+        case .changed:
+            if velocity < 0 { return }
+            viewToAnimate.transform = CGAffineTransform(translationX: 0, y: translation)
+            if translation > 75 || velocity > 720 {
+                dismiss(animated: true, completion: nil)
+            }
+        default:
+            if translation < 65 {
+                UIView.animate(withDuration: 0.25) { viewToAnimate.transform = .identity }
+            }
+        }
     }
 }
 
