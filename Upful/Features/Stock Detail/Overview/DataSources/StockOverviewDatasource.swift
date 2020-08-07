@@ -145,8 +145,8 @@ extension StockOverviewDatasource: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == StockDetailsModuleConstants.Section.allCases.count {
-            return 85
+        if section == StockDetailsModuleConstants.Section.allCases.count-1 {
+            return 80 
         } else {
             return 25
         }
