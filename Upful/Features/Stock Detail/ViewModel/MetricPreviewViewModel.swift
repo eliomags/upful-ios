@@ -85,9 +85,34 @@ final class MetricPreviewViewModel {
         guard !historicalData.isEmpty else { return }
         let lastValue = historicalData.last!.value
         let firstValue = historicalData.first!.value
-        let changeFromFirst: Double = (lastValue / firstValue) - 1
-        let percentChange = changeFromFirst.convertToPercent() + "%"
-        cell.totalChangeLabel.text = percentChange
+        cell.totalChangeLabel.text = calculateTotalChange(firstValue, lastValue)
+    }
+    
+    func calculateTotalChange(_ denominator: Double, _ numerator: Double) -> String {
+        let positiveToPositive = denominator > 0 && numerator > 0
+        let negativeToPositive = denominator < 0 && numerator > 0
+        let positiveToNegative = denominator > 0 && numerator < 0
+        let zeroToPositive = denominator == 0 && numerator > 0
+        let positiveToZero = denominator > 0 && numerator == 0
+        
+        if positiveToPositive {
+            let changeFromFirst: Double = (numerator / denominator) - 1
+            // do 999% if greater than
+            if changeFromFirst > 9.99 { return "999%" }
+            let percentChange = changeFromFirst.convertToPercent() + "%"
+            return percentChange
+            
+        } else if negativeToPositive || zeroToPositive {
+            return "999%"
+            
+        } else if positiveToNegative {
+            return "-999%"
+            
+        } else if positiveToZero {
+            return "-100%"
+        }
+        
+        return ""
     }
     
     let activityView = UIActivityIndicatorView(style: .medium)
