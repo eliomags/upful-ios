@@ -109,7 +109,6 @@ final class StockOverviewViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        tabBarController?.tabBar.isHidden = true
         setupViews()
         setupNavBar()
     }
@@ -118,16 +117,18 @@ final class StockOverviewViewController: UIViewController {
         super.viewDidLoad()
         loadOverviewData()
         performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
-        UserFeedbackPresenter.checkAndAskForReview(checkType: .importantAction, in: self)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        tabBarController?.tabBar.isHidden = false
+        if self.isMovingFromParent {
+            setTabBarVisible(visible: true, animated: true)
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setTabBarVisible(visible: false, animated: true)
     }
     
     // MARK: - Observe Updates
