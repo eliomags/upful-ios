@@ -24,6 +24,7 @@ class StockOverviewViewModel {
 
     // MARK: - Dependencies
     
+    var nameLoader = CompanyNameLoader().loadName
     let stockQuoteLoader: QuoteLoader
     let financialLoader: FinancialLoader
     let batchFinancialLoader: BatchFinancialLoader
@@ -79,7 +80,7 @@ class StockOverviewViewModel {
         if companyName.isEmpty {
             loadingOperations.enter()
 
-            CompanyNameLoader().loadName(for: ticker) { [weak self] result in
+            nameLoader(ticker) { [weak self] result in
                 switch result {
                 case .success(let name):
                     self?.companyName = name

@@ -83,6 +83,6 @@ class LoggingManagerTests: XCTestCase {
             }
         }
         
-        wait(for: [loadExpectation], timeout: 1.5)
+        wait(for: [loadExpectation], timeout: 2)
     }
 }

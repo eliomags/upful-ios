@@ -86,7 +86,7 @@ class MetricPreviewViewModelTests: XCTestCase {
     
     func test_percentChangeCalculation_zeroToNegative() {
         let percentChange = sut.calculateTotalChange(0, 3)
-        XCTAssertEqual(percentChange, "")
+        XCTAssertEqual(percentChange, "999%")
     }
     
     func test_percentChangeCalculation_positiveToZero() {

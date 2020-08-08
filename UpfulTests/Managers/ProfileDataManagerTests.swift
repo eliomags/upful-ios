@@ -236,7 +236,7 @@ class ProfileDataManagerTests: XCTestCase {
         }
         clearUser()
         
-        wait(for: [expectations], timeout: 1)
+        wait(for: [expectations], timeout: 2)
     }
     
     func test_userScoreCalculation_with_weeksSinceFirstTradeGreaterThanZero() {

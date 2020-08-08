@@ -15,6 +15,7 @@ class StockOverviewViewModelTests: XCTestCase {
     
     override func setUp() {
         sut = makeSUT()
+        sut.nameLoader = Self.makeNameLoader
     }
 
     func test_loadData_with_loadingCompletionHandler() {
@@ -27,7 +28,8 @@ class StockOverviewViewModelTests: XCTestCase {
 
         sut.loadData()
         
-        wait(for: [exp], timeout: 1)
+        wait(for: [exp], timeout: 2)
+        XCTAssertEqual(sut.companyName, "TEST Inc.")
         XCTAssertEqual(callCount, 1)
     }
     
@@ -43,11 +45,16 @@ class StockOverviewViewModelTests: XCTestCase {
         sut.loadData()
         sut.loadData()
         
-        wait(for: [exp], timeout: 1)
+        wait(for: [exp], timeout: 2)
+        XCTAssertEqual(sut.companyName, "TEST Inc.")
         XCTAssertEqual(callCount, 2)
     }
 
     // MARK: - Helper Methods
+    
+    fileprivate static func makeNameLoader(_ ticker: String, _ completion: @escaping (Result<String, Error>) -> Void) {
+        completion(.success("TEST Inc."))
+    }
     
     fileprivate func makeSUT() -> StockOverviewViewModel {
         let quoteLoader = MockQuoteLoader()
@@ -55,12 +62,14 @@ class StockOverviewViewModelTests: XCTestCase {
         let batchLoader = MockBatchFinancialLoader()
         let newsLoader = MockStockNewsLoader()
         let descriptionLoader = MockDescriptionLoader()
-        let sut = StockOverviewViewModel(ticker: "FB", companyName: "Facebook",
+        let sut = StockOverviewViewModel(
+                               ticker: "FB", companyName: "",
                                priceLoader: quoteLoader,
                                financialLoader: financialLoader,
                                batchFinancialLoader: batchLoader, 
                                stockNewsLoader: newsLoader,
                                descriptionLoader: descriptionLoader)
+        
         return sut
     }
     

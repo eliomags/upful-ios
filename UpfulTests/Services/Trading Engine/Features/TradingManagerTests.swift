@@ -76,7 +76,7 @@ class TradingEngineTests: XCTestCase {
             loadExpectation.fulfill()
         })
         
-        wait(for: [loadExpectation], timeout: 1)
+        wait(for: [loadExpectation], timeout: 5)
     }
     
     // MARK: - Buy and Sell
@@ -100,7 +100,7 @@ class TradingEngineTests: XCTestCase {
             }
         })
         
-        wait(for: [loadExpectation], timeout: 1.2)
+        wait(for: [loadExpectation], timeout: 5)
     }
     
     func test_buy_sell_withBuyWithLoggerTransaction() {
@@ -161,7 +161,7 @@ class TradingEngineTests: XCTestCase {
             })
         })
 
-        wait(for: [loadExpectation], timeout: 1.5)
+        wait(for: [loadExpectation], timeout: 5)
     }
     
     fileprivate func makeSale(completion: (() -> Void)?) {
