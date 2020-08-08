@@ -346,7 +346,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
                     discoverabilityTitle: nil,
                     attributes: [], state: .off) { (_) in
             let stockViewModel = StockViewModel(stock: Stock(name: "", ticker: dataSource[row].ticker))
-            self.coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: stockViewModel)
+                        self.coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: stockViewModel)
             self.coordinator?.start()
         }
     }

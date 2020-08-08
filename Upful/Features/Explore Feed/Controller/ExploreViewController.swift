@@ -209,7 +209,8 @@ final class ExploreViewController: UIViewController, UISearchControllerDelegate,
                 for: selectedPopularStock.stock.ticker,
                 name: selectedPopularStock.stock.name
             )
-            coordinator = StockDetailsCoordinator(presenter: self, stockViewModel: logicController.stockViewModels[indexPath.row])
+            coordinator = StockDetailsCoordinator(presenter: self,
+                                                  stockViewModel: logicController.stockViewModels[indexPath.row])
             coordinator?.start()
             
         case Section.screeners.rawValue:

@@ -52,12 +52,6 @@ final class StockOverviewViewController: UIViewController {
         return button
     }()
     
-    lazy var cancelButton: CancelButton = {
-        let button = CancelButton()
-        button.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
-        return button
-    }()
-    
     private let quoteView = StockQuoteView(priceLabelFontSize: 21, priceChangeLabelFontSize: 17, priceChangeLabelWidth: 70)
     private let lastUpdatedLabel: UILabel = {
         let label = UILabel()
@@ -115,6 +109,7 @@ final class StockOverviewViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
+        tabBarController?.tabBar.isHidden = true
         setupViews()
         setupNavBar()
     }
@@ -124,6 +119,15 @@ final class StockOverviewViewController: UIViewController {
         loadOverviewData()
         performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
         UserFeedbackPresenter.checkAndAskForReview(checkType: .importantAction, in: self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
     
     // MARK: - Observe Updates
@@ -161,8 +165,6 @@ final class StockOverviewViewController: UIViewController {
         navigationItem.title = ""
         navigationItem.largeTitleDisplayMode = .never
         let save = UIBarButtonItem(customView: saveButton)
-        let cancel = UIBarButtonItem(customView: cancelButton)
-        navigationItem.leftBarButtonItem = cancel
         navigationItem.rightBarButtonItems = [save]
         VersionManager.navigationBarColor(in: navigationController)
         VersionManager.setNavigationBar(in: navigationController)
@@ -238,10 +240,6 @@ final class StockOverviewViewController: UIViewController {
     }
     
     // MARK: - Actions
-    
-    @objc fileprivate func handleDismiss(sender: UIButton) {
-        dismiss(animated: true, completion: nil)
-    }
     
     @objc fileprivate func loadOverviewData() {
         LoadingViewPresenter.show(in: self)

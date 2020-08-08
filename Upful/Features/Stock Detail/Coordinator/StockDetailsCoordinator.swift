@@ -21,9 +21,8 @@ final class StockDetailsCoordinator: Coordinator {
     func start() {
         RemoteStockManager.updateInterest(for: stockViewModel.stock.ticker, name: stockViewModel.stock.name)
         
-        let detailsVC = UINavigationController(rootViewController:
-            StockOverviewViewController(ticker: stockViewModel.stock.ticker, companyName: stockViewModel.stock.name))
-        detailsVC.modalPresentationStyle = .fullScreen
-        presenter.present(detailsVC, animated: true, completion: nil)
+        let detailsVC = StockOverviewViewController(ticker: stockViewModel.stock.ticker,
+                                                    companyName: stockViewModel.stock.name)
+        presenter.navigationController?.pushViewController(detailsVC, animated: true)
     }
 }
