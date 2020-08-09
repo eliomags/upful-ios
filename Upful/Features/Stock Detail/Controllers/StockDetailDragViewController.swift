@@ -83,11 +83,11 @@ final class StockDetailDragViewController: UIViewController {
         let view = DragView(configuration: [firstPosition, secondPosition, thirdPosition])
         
         view.tableViewStyle = .plain
-        view.tableViewPadding = .init(top: 12, left: 16, bottom: -16, right: -16)
-        view.backgroundColor = VersionManager.collectionCellColor()
-        view.tableView.backgroundColor = VersionManager.collectionCellColor()
         view.tableView.separatorStyle = .singleLine
         view.tableView.showsVerticalScrollIndicator = false
+        view.backgroundColor = VersionManager.collectionCellColor()
+        view.tableView.backgroundColor = VersionManager.collectionCellColor()
+        view.tableViewPadding = .init(top: 12, left: 16, bottom: 0, right: -16)
         return view
     }
     
