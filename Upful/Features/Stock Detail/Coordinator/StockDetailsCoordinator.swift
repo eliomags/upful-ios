@@ -49,6 +49,7 @@ extension UIViewController {
         if frame != nil {
             UIView.animate(withDuration: duration) {
                 self.tabBarController?.tabBar.frame = frame!.offsetBy(dx: 0, dy: offsetY!)
+                self.tabBarController?.tabBar.isHidden = !visible
                 return
             }
         }
