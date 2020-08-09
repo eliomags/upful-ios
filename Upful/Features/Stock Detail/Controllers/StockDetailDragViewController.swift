@@ -33,60 +33,16 @@ final class StockDetailDragViewController: UIViewController {
     
     // MARK: Views
     
-    private lazy var tradeButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("TRADE", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .appAccent3
-        button.layer.cornerRadius = 35 / 2
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        button.addTarget(self, action: #selector(handleTradeTap), for: .touchUpInside)
-        return button
-    }()
+    lazy var dragView: DragView = makeDragView()
+
+    private lazy var tradeButton: UIButton = makeTradeButton()
+    private lazy var compareButton: UIButton = createCompareButton()
+
+    private let emptyMetricDataSource = EmptyStockMetricDataSource()
+    private let metricDisplayDataSource = MetricPreviewDataSource()
+    private let metricAnalysisDataSource = MetricAnalysisDataSource()
     
-    private lazy var compareButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("COMPARE", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .appAccent4
-        button.layer.cornerRadius = 35 / 2
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        button.addTarget(self, action: #selector(handleCompareTap), for: .touchUpInside)
-        return button
-    }()
-    
-    let emptyMetricDataSource = EmptyStockMetricDataSource()
-    let metricDisplayDataSource = MetricPreviewDataSource()
-    let metricAnalysisDataSource = MetricAnalysisDataSource()
-    lazy var comparisonDataSource: StockComparisonViewModel = {
-        let ds = StockComparisonViewModel(mainTicker: ticker)
-        return ds
-    }()
-    
-    lazy var dragView: DragView = {
-        emptyMetricDataSource.delegate = self
-        metricDisplayDataSource.delegate = self
-        metricAnalysisDataSource.delegate = self
-        
-        let firstPosition = DragControllerState(dataSource: emptyMetricDataSource, height: 100)
-        let secondPosition = DragControllerState(dataSource: metricDisplayDataSource, height: 235)
-        let thirdPosition = DragControllerState(dataSource: metricAnalysisDataSource, height: 475)
-        let view = DragView(configuration: [firstPosition, secondPosition, thirdPosition])
-        
-        view.tableViewStyle = .plain
-        view.tableViewPadding = .init(top: 12, left: 16, bottom: -16, right: -16)
-        view.backgroundColor = VersionManager.collectionCellColor()
-        view.tableView.backgroundColor = VersionManager.collectionCellColor()
-        view.tableView.separatorStyle = .singleLine
-        view.tableView.showsVerticalScrollIndicator = false
-        return view
-    }()
-    
-    // MARK: Initializer
+    // MARK: - Initializer
     
     init(ticker: String) {
         self.ticker = ticker
@@ -114,7 +70,54 @@ final class StockDetailDragViewController: UIViewController {
         })
     }
     
-    // MARK: Actions
+    // MARK: - View Creation
+    
+    fileprivate func makeDragView() -> DragView {
+        emptyMetricDataSource.delegate = self
+        metricDisplayDataSource.delegate = self
+        metricAnalysisDataSource.delegate = self
+        
+        let firstPosition = DragControllerState(dataSource: emptyMetricDataSource, height: 100)
+        let secondPosition = DragControllerState(dataSource: metricDisplayDataSource, height: 235)
+        let thirdPosition = DragControllerState(dataSource: metricAnalysisDataSource, height: 475)
+        let view = DragView(configuration: [firstPosition, secondPosition, thirdPosition])
+        
+        view.tableViewStyle = .plain
+        view.tableViewPadding = .init(top: 12, left: 16, bottom: -16, right: -16)
+        view.backgroundColor = VersionManager.collectionCellColor()
+        view.tableView.backgroundColor = VersionManager.collectionCellColor()
+        view.tableView.separatorStyle = .singleLine
+        view.tableView.showsVerticalScrollIndicator = false
+        return view
+    }
+    
+    fileprivate func makeTradeButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle("TRADE", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .appAccent3
+        button.layer.cornerRadius = 35 / 2
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        button.addTarget(self, action: #selector(handleTradeTap), for: .touchUpInside)
+        return button
+    }
+    
+    fileprivate func createCompareButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle("COMPARE", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .appAccent4
+        button.layer.cornerRadius = 35 / 2
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        button.addTarget(self, action: #selector(handleCompareTap), for: .touchUpInside)
+        return button
+    }
+    
+    // MARK: - Actions
         
     @objc fileprivate func handleTradeTap() {
         let presentingViewController = parent ?? self
@@ -130,6 +133,7 @@ final class StockDetailDragViewController: UIViewController {
 }
 
 extension StockDetailDragViewController: AnalysisDragContentDelegate {
+    
     func createTradeButtonFooterView(in view: UIView, topPadding: CGFloat) -> UIView? {
         let stackView = UIStackView(arrangedSubviews: [compareButton, tradeButton])
         stackView.spacing = 24
@@ -187,6 +191,7 @@ extension StockDetailDragViewController: AnalysisDragContentDelegate {
 }
 
 extension StockDetailDragViewController: MetricPreviewDataSourceDelegate {
+    
     func didSelectMetricPreviewCell(at row: Int) {
         let searchCriteriaSelectionVC = SearchCriteriaSelectionViewController()
         searchCriteriaSelectionVC.delegate = self
@@ -196,6 +201,7 @@ extension StockDetailDragViewController: MetricPreviewDataSourceDelegate {
 }
 
 extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
+    
     func createAnalysisChartCell(_ tableView: UITableView, at indexPath: IndexPath) -> AnalysisChartCell? {
         let cell = tableView.dequeueReusableCell(withIdentifier: AnalysisChartCell.reuseID, for: indexPath)
             as? AnalysisChartCell
@@ -225,6 +231,7 @@ extension StockDetailDragViewController: AnalysisCompareDataSourceDelegate {
 }
 
 extension StockDetailDragViewController: ChartSearchCriteriaSelectionDelegate {
+    
     func didChangeSearchCriteria(previousSearchCriteria: SearchCriteria, updatedSearchCriteria: SearchCriteria) {
         let viewModel = metricPreviewViewModels.first(where: { $0.searchCriteria == previousSearchCriteria })
         viewModel?.searchCriteria = updatedSearchCriteria
@@ -232,6 +239,7 @@ extension StockDetailDragViewController: ChartSearchCriteriaSelectionDelegate {
 }
 
 extension StockDetailDragViewController: MetricPreviewViewModelDelegate {
+    
     func didLoadCellData(cell: MetricPreviewTableViewCell?, with results: [CompanyHistoricalDatum]) {
         dragView.tableView.reloadData()
     }
