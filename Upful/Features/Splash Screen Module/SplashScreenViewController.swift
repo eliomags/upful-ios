@@ -67,7 +67,7 @@ class SplashScreenViewController: UIViewController {
         }
         
         var relativeStartTime: TimeInterval {
-            let previousAnimations = (0..<self.rawValue).map{ Animation(rawValue: $0)! }
+            let previousAnimations = (0..<self.rawValue).compactMap{ Animation(rawValue: $0) }
             return previousAnimations.map{ $0.duration }.reduce(0, +) / Animation.totalDuration
         }
         var relativeDuration: TimeInterval {
@@ -85,7 +85,6 @@ class SplashScreenViewController: UIViewController {
         let totalDuration = Animation.totalDuration
         
         UIView.animateKeyframes(withDuration: totalDuration, delay: 0.6, options: .calculationModeCubic, animations: {
-            
             Animation.revealText.animate {
                 let horizontalScrollDistance = UIScreen.main.bounds.width
                 self.textCoverView.transform = CGAffineTransform(translationX: horizontalScrollDistance, y: 0)
