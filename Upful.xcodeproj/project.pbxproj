@@ -183,6 +183,8 @@
 		3DB345F423C8A64D00EADFFD /* ExploreLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F323C8A64D00EADFFD /* ExploreLogicController.swift */; };
 		3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F523CAD74400EADFFD /* StockSearchService.swift */; };
 		3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */; };
+		3DB7A4F124E2265A00B9ADAB /* StockSplitHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A4F024E2265A00B9ADAB /* StockSplitHandler.swift */; };
+		3DB7A4F424E226B700B9ADAB /* StockSplitHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A4F324E226B700B9ADAB /* StockSplitHandlerTests.swift */; };
 		3DB891DD24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */; };
 		3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */; };
 		3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */; };
@@ -470,6 +472,8 @@
 		3DB345F323C8A64D00EADFFD /* ExploreLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreLogicController.swift; sourceTree = "<group>"; };
 		3DB345F523CAD74400EADFFD /* StockSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchService.swift; sourceTree = "<group>"; };
 		3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockViewModelTests.swift; sourceTree = "<group>"; };
+		3DB7A4F024E2265A00B9ADAB /* StockSplitHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StockSplitHandler.swift; path = "Upful/Custom APIs/Trading Engine/Features/StockSplitHandler.swift"; sourceTree = SOURCE_ROOT; };
+		3DB7A4F324E226B700B9ADAB /* StockSplitHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSplitHandlerTests.swift; sourceTree = "<group>"; };
 		3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedAuxiliaryActionView.swift; sourceTree = "<group>"; };
 		3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStocksViewController.swift; sourceTree = "<group>"; };
@@ -709,6 +713,7 @@
 		3D206A03241E8F1000F7E44C /* Trading Engine */ = {
 			isa = PBXGroup;
 			children = (
+				3DB7A4F224E226A600B9ADAB /* Stock Split */,
 				3D206A622428544100F7E44C /* Models */,
 				3D206A3C242158AB00F7E44C /* Features */,
 			);
@@ -773,6 +778,7 @@
 		3D206A3B2421589400F7E44C /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				3DB7A4EF24E2264500B9ADAB /* Stock Split */,
 				3D206A47242184BA00F7E44C /* TradingEngine.swift */,
 				3D206A3D242158D200F7E44C /* Balance Manager */,
 				3D206A242421042100F7E44C /* Logging */,
@@ -1831,6 +1837,22 @@
 			path = VIewModels;
 			sourceTree = "<group>";
 		};
+		3DB7A4EF24E2264500B9ADAB /* Stock Split */ = {
+			isa = PBXGroup;
+			children = (
+				3DB7A4F024E2265A00B9ADAB /* StockSplitHandler.swift */,
+			);
+			path = "Stock Split";
+			sourceTree = "<group>";
+		};
+		3DB7A4F224E226A600B9ADAB /* Stock Split */ = {
+			isa = PBXGroup;
+			children = (
+				3DB7A4F324E226B700B9ADAB /* StockSplitHandlerTests.swift */,
+			);
+			path = "Stock Split";
+			sourceTree = "<group>";
+		};
 		3DBEFFBF23A9BD6900BA407E /* General */ = {
 			isa = PBXGroup;
 			children = (
@@ -2701,6 +2723,7 @@
 				3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */,
 				3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */,
 				3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */,
+				3DB7A4F124E2265A00B9ADAB /* StockSplitHandler.swift in Sources */,
 				3DA54089232B364000EE477C /* MenuViewContainer.swift in Sources */,
 				3DB891DD24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift in Sources */,
 				3D206A502422998700F7E44C /* CashBalanceView.swift in Sources */,
@@ -2804,6 +2827,7 @@
 				3D55BD6E23B805F400B4FDF0 /* StockNewsViewModelTest.swift in Sources */,
 				3D206A6B2428EA5100F7E44C /* HoldingTests.swift in Sources */,
 				3D0643CC23D94AE1002AAF28 /* PermissionManagerTests.swift in Sources */,
+				3DB7A4F424E226B700B9ADAB /* StockSplitHandlerTests.swift in Sources */,
 				3DB345E923C3EBE500EADFFD /* PrebuiltScreenerLogicControllerTests.swift in Sources */,
 				3D51639624CB118200F86951 /* StockComparisonViewModelTests.swift in Sources */,
 				3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */,
