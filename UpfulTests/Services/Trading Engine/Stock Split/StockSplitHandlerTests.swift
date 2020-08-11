@@ -33,15 +33,28 @@ class StockSplitHandlerTests: XCTestCase {
         XCTAssertFalse(sut.transactions.isEmpty)
     }
     
-    func test_checkIfTransactionsNeedsApply_withNilLastTransactionDate() {
-        let transDate = Date.buildDate(day: 9, month: 8, year: 2020)
-        let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transDate)")
+    // MARK: - Check Needs Apply Use Case
+    
+    func test_checkIfTransactionsNeedsApply_withNilLastAppliedSplitDate_withTransactionDateBeforeEX() {
+        let transactionDate = Date.buildDate(day: 9, month: 8, year: 2020)
+        let exDate = Date.buildDate(day: 10, month: 8, year: 2020)
+        let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
         sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
         
-        let exDate = Date.buildDate(day: 10, month: 8, year: 2020)
         let needsApply = sut.checkIfTransactionsNeedsApply(transaction, exDate: exDate)
         
         XCTAssertTrue(needsApply)
+    }
+    
+    func test_checkIfTransactionsNeedsApply_withNilLastAppliedSplitDate_withTransactionDateAfterEX() {
+        let transactionDate = Date.buildDate(day: 9, month: 8, year: 2020)
+        let exDate = Date.buildDate(day: 8, month: 8, year: 2020)
+        let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
+        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
+
+        let needsApply = sut.checkIfTransactionsNeedsApply(transaction, exDate: exDate)
+        
+        XCTAssertFalse(needsApply)
     }
     
     // TODO: - Confirm transaction date formats across multiple devices
