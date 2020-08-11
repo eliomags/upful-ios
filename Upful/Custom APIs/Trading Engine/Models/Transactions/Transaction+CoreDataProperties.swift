@@ -23,7 +23,7 @@ class PersistedTransaction: NSManagedObject {
     @NSManaged public var type: String?
     @NSManaged public var transactionDate: String?
     @NSManaged public var id: String
-
+    @NSManaged public var lastAppliedStockSplit: Date?
 }
 extension PersistedTransaction: Transaction {}
 
@@ -42,6 +42,7 @@ class LoggedTransaction: NSManagedObject {
     @NSManaged public var type: String?
     @NSManaged public var transactionDate: String?
     @NSManaged public var id: String
+    @NSManaged public var lastAppliedStockSplit: Date?
 
 }
 extension LoggedTransaction: Transaction {}

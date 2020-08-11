@@ -2,6 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="LoggedTransaction" representedClassName="LoggedTransaction" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="lastAppliedStockSplit" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="numberOfShares" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="ticker" optional="YES" attributeType="String"/>
         <attribute name="tradePrice" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -10,6 +11,7 @@
     </entity>
     <entity name="PersistedTransaction" representedClassName="PersistedTransaction" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="lastAppliedStockSplit" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="numberOfShares" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="ticker" optional="YES" attributeType="String"/>
         <attribute name="tradePrice" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -21,8 +23,8 @@
         <attribute name="id" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="LoggedTransaction" positionX="-9" positionY="81" width="128" height="133"/>
-        <element name="PersistedTransaction" positionX="145.8671875" positionY="81.125" width="128" height="133"/>
+        <element name="LoggedTransaction" positionX="-9" positionY="81" width="128" height="148"/>
+        <element name="PersistedTransaction" positionX="145.8671875" positionY="81.125" width="128" height="148"/>
         <element name="User" positionX="72" positionY="126" width="128" height="73"/>
     </elements>
 </model>

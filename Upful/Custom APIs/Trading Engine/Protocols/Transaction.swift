@@ -15,4 +15,5 @@ protocol Transaction: class {
     var type: String? { get set }
     var transactionDate: String? { get set }
     var id: String { get set }
+    var lastAppliedStockSplit: Date? { get set }
 }
