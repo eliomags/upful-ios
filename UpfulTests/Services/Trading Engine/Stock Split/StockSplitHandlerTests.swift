@@ -33,11 +33,12 @@ class StockSplitHandlerTests: XCTestCase {
         XCTAssertFalse(sut.transactions.isEmpty)
     }
     
-    // MARK: - Check Needs Apply Use Case
+    // MARK: - Check Needs Apply With Nil Last Applied Stock Split Use Case
     
-    func test_checkIfTransactionsNeedsApply_withNilLastAppliedSplitDate_withTransactionDateBeforeEX() {
-        let transactionDate = Date.buildDate(day: 9, month: 8, year: 2020)
+    func test_checkIfTransactionsNeedsApply_nil_withTransactionDateBeforeEX() {
         let exDate = Date.buildDate(day: 10, month: 8, year: 2020)
+        let transactionDate = Date.buildDate(day: 9, month: 8, year: 2020)
+        
         let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
         sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
         
@@ -46,12 +47,29 @@ class StockSplitHandlerTests: XCTestCase {
         XCTAssertTrue(needsApply)
     }
     
-    func test_checkIfTransactionsNeedsApply_withNilLastAppliedSplitDate_withTransactionDateAfterEX() {
-        let transactionDate = Date.buildDate(day: 9, month: 8, year: 2020)
+    func test_checkIfTransactionsNeedsApply_nil_withTransactionDateAfterEX() {
         let exDate = Date.buildDate(day: 8, month: 8, year: 2020)
+        let transactionDate = Date.buildDate(day: 9, month: 8, year: 2020)
+        
         let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
         sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
 
+        let needsApply = sut.checkIfTransactionsNeedsApply(transaction, exDate: exDate)
+        
+        XCTAssertFalse(needsApply)
+    }
+    
+    // MARK: - Check Needs Apply With Valid Last Applied Stock Split Use Case
+    
+    func test_checkIfTransactionsNeedsApply_valid_withTransactionDateAfterEX() {
+        let exDate = Date.buildDate(day: 8, month: 8, year: 2020)
+        let transactionDate = Date.buildDate(day: 6, month: 8, year: 2020)
+        let lastAppliedSplitDate = Date.buildDate(day: 8, month: 8, year: 2020)
+
+        let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
+        transaction.lastAppliedStockSplit = lastAppliedSplitDate
+        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
+        
         let needsApply = sut.checkIfTransactionsNeedsApply(transaction, exDate: exDate)
         
         XCTAssertFalse(needsApply)
