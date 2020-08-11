@@ -33,6 +33,14 @@ extension Date {
     var minute: Int {
         return Calendar.current.component(.minute,  from: self)
     }
+    
+    static func buildDate(day: Int, month: Int, year: Int) -> Date {
+        var components = DateComponents()
+        components.day = day
+        components.month = month
+        components.year = year
+        return Calendar.current.date(from: components)!
+    }
 }
 
 extension DateComponents {

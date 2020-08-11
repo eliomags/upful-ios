@@ -27,7 +27,15 @@ final class StockSplitHandler {
         self.transactions = transactions.filter{ $0.ticker == ticker }
     }
     
-    // MARK: -
+    // MARK: - Methods
     
-    
+    func checkIfTransactionsNeedsApply(_ transaction: Transaction, exDate: Date) -> Bool {
+        let transactionDate = DateTransformer.convertStringToDate(transaction.transactionDate!)
+        
+        let isEXDateAfterTransactionDate = exDate.timeIntervalSince(transactionDate) > 0
+        let isEXDateAfterLastAppliedStockSplitDate =
+            exDate.timeIntervalSince(transaction.lastAppliedStockSplit ?? Date.distantPast) > 0
+        
+        return isEXDateAfterTransactionDate && isEXDateAfterLastAppliedStockSplitDate
+    }
 }
