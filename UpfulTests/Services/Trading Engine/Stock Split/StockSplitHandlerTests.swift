@@ -113,7 +113,7 @@ class StockSplitHandlerTests: XCTestCase {
         let transactionDate = Date.buildDate(day: 6, month: 8, year: 2020)
         let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
         sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
-        sut.fetchSplit = Self.validStockSplit
+        sut.fetchSplit = Self.multipleValidStockSplit
         
         sut.getLatestSplit { latestSplit in
             let expectedDate = Date.buildDate(day: 1, month: 8, year: 2020)
@@ -159,6 +159,28 @@ class StockSplitHandlerTests: XCTestCase {
         XCTAssertTrue(transaction.lastAppliedStockSplit?
             .timeIntervalSince(expectedLastAppliedDate) == 0)
     }
+    
+    // MARK: - Test Start Use Case
+    
+    func test_start_withAppliedStockSplit() {
+        let exp = expectation(description: #function)
+        let transactionDate = Date.buildDate(day: 6, month: 7, year: 2020)
+        let transaction = TransactionAdapter(ticker: "AAPL", shares: 10, tradePrice: 100, transactionDate: "\(transactionDate)")
+        
+        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
+        sut.fetchSplit = Self.validStockSplit
+        
+        let transactions = sut.transactions
+        sut.start { needsApply in
+            XCTAssertTrue(needsApply)
+            XCTAssertEqual(transactions.map{ $0.tradePrice }, [20])
+            XCTAssertEqual(transactions.map{ $0.numberOfShares }, [50])
+           
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 0.5)
+    }
 
     // MARK: - Helper
     
@@ -167,7 +189,7 @@ class StockSplitHandlerTests: XCTestCase {
     }
     
     fileprivate static func validStockSplit(ticker: String, completion:  @escaping (Result<[StockSplit], Error>) -> Void) {
-        let split = StockSplit(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
+        let split = StockSplit(toFactor: 5, fromFactor: 1, exDate: "2020-08-01")
         completion(.success([split]))
     }
     

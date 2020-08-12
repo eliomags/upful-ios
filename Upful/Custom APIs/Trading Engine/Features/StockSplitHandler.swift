@@ -40,6 +40,35 @@ final class StockSplitHandler {
     
     // MARK: - Methods
     
+    func start(_ dispatchGroup: DispatchGroup? = nil, completion: ((Bool) -> Void)? = nil) {
+        dispatchGroup?.enter()
+        let applySplit = apply
+        let needsApply = checkIfTransactionsNeedsApply
+        
+        getLatestSplit { latestSplit in
+            if let latestSplit = latestSplit {
+                let shouldApply = needsApply(latestSplit.exDateAsDate)
+                
+                if shouldApply {
+                    applySplit(latestSplit)
+                }
+                
+                completion?(shouldApply)
+            } else {
+                completion?(false)
+            }
+            dispatchGroup?.leave()
+        }
+    }
+    
+    func getLatestSplit(_ completion: @escaping (StockSplit?) -> Void) {
+        fetchSplit?(ticker) { result in
+            let splits = try? result.get()
+            let latestStockSplit = splits?.getRecent()
+            completion((latestStockSplit))
+        }
+    }
+    
     func checkIfTransactionsNeedsApply(exDate: Date) -> Bool {
         guard let transaction = transactions.getRecentTransaction() else { return false }
         let transactionDate = DateTransformer.convertStringToDate(transaction.transactionDate!)
@@ -49,14 +78,6 @@ final class StockSplitHandler {
             exDate.timeIntervalSince(transaction.lastAppliedStockSplit ?? Date.distantPast) > 0
         
         return isEXDateAfterTransactionDate && isEXDateAfterLastAppliedStockSplitDate
-    }
-    
-    func getLatestSplit(_ completion: @escaping (StockSplit?) -> Void) {
-        fetchSplit?(ticker) { result in
-            let splits = try? result.get()
-            let latestStockSplit = splits?.getRecent()
-            completion((latestStockSplit))
-        }
     }
     
     func apply(_ stockSplitInfo: StockSplit) {
