@@ -8,13 +8,13 @@
 
 import Foundation
 
-struct StockSplitInfo: Decodable {
+struct StockSplit: Decodable {
     let toFactor: Int
     let fromFactor: Int
     let exDate: String
 }
 
-extension StockSplitInfo {
+extension StockSplit {
     var exDateAsDate: Date {
         return DateTransformer.convertStringToDate(exDate)
     }
@@ -29,7 +29,7 @@ final class StockSplitHandler {
     let ticker: String
     private(set) var transactions: [Transaction]
     
-    var fetchSplit: (((String), @escaping (Result<[StockSplitInfo], Error>) -> Void) -> Void)?
+    var fetchSplit: (((String), @escaping (Result<[StockSplit], Error>) -> Void) -> Void)?
     
     // MARK: - Initializer
     
@@ -40,7 +40,8 @@ final class StockSplitHandler {
     
     // MARK: - Methods
     
-    func checkIfTransactionsNeedsApply(_ transaction: Transaction, exDate: Date) -> Bool {
+    func checkIfTransactionsNeedsApply(exDate: Date) -> Bool {
+        guard let transaction = transactions.getRecentTransaction() else { return false }
         let transactionDate = DateTransformer.convertStringToDate(transaction.transactionDate!)
         
         let isEXDateAfterTransactionDate = exDate.timeIntervalSince(transactionDate) > 0
@@ -50,7 +51,7 @@ final class StockSplitHandler {
         return isEXDateAfterTransactionDate && isEXDateAfterLastAppliedStockSplitDate
     }
     
-    func getLatestSplit(_ completion: @escaping (StockSplitInfo?) -> Void) {
+    func getLatestSplit(_ completion: @escaping (StockSplit?) -> Void) {
         fetchSplit?(ticker) { result in
             let splits = try? result.get()
             let latestStockSplit = splits?.getRecent()
@@ -58,7 +59,7 @@ final class StockSplitHandler {
         }
     }
     
-    func apply(_ stockSplitInfo: StockSplitInfo) {
+    func apply(_ stockSplitInfo: StockSplit) {
         for transaction in transactions {
             transaction.tradePrice = Double((Float(transaction.tradePrice) / stockSplitInfo.ratio))
             transaction.numberOfShares = Int32(Float(transaction.numberOfShares) * stockSplitInfo.ratio)
@@ -67,10 +68,9 @@ final class StockSplitHandler {
     }
 }
 
-extension Array where Element == StockSplitInfo {
-    
+extension Array where Element == StockSplit {
     func getRecent() -> Element? {
-        var latestSplit: StockSplitInfo?
+        var latestSplit: StockSplit?
         
         for split in self {
             let currDate = split.exDateAsDate
@@ -79,7 +79,17 @@ extension Array where Element == StockSplitInfo {
                 latestSplit = split
             }
         }
-        
         return latestSplit
+    }
+}
+
+extension Array where Element == Transaction {
+    func getRecentTransaction() -> Transaction? {
+        let transaction = self.sorted(by: {
+            $0.transactionDate ?? "\(Date())" >
+            $1.transactionDate ?? "\(Date())" }
+        ).first
+
+        return transaction
     }
 }

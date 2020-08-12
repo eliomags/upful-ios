@@ -44,7 +44,7 @@ class StockSplitHandlerTests: XCTestCase {
         let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
         sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
         
-        let needsApply = sut.checkIfTransactionsNeedsApply(transaction, exDate: exDate)
+        let needsApply = sut.checkIfTransactionsNeedsApply(exDate: exDate)
         
         XCTAssertTrue(needsApply)
     }
@@ -56,7 +56,7 @@ class StockSplitHandlerTests: XCTestCase {
         let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
         sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
 
-        let needsApply = sut.checkIfTransactionsNeedsApply(transaction, exDate: exDate)
+        let needsApply = sut.checkIfTransactionsNeedsApply(exDate: exDate)
         
         XCTAssertFalse(needsApply)
     }
@@ -72,7 +72,7 @@ class StockSplitHandlerTests: XCTestCase {
         transaction.lastAppliedStockSplit = lastAppliedSplitDate
         sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
         
-        let needsApply = sut.checkIfTransactionsNeedsApply(transaction, exDate: exDate)
+        let needsApply = sut.checkIfTransactionsNeedsApply(exDate: exDate)
         
         XCTAssertFalse(needsApply)
     }
@@ -86,7 +86,7 @@ class StockSplitHandlerTests: XCTestCase {
         transaction.lastAppliedStockSplit = lastAppliedSplitDate
         sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
         
-        let needsApply = sut.checkIfTransactionsNeedsApply(transaction, exDate: exDate)
+        let needsApply = sut.checkIfTransactionsNeedsApply(exDate: exDate)
         
         XCTAssertTrue(needsApply)
     }
@@ -129,7 +129,7 @@ class StockSplitHandlerTests: XCTestCase {
     // MARK: - Apply Stock Split Use Case
     
     func test_applyStockSplit_stocKSplit() {
-        let stockSplit = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
+        let stockSplit = StockSplit(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
 
         let transactionDate = Date.buildDate(day: 6, month: 8, year: 2020)
         let expectedLastAppliedDate = Date.buildDate(day: 1, month: 8, year: 2020)
@@ -145,7 +145,7 @@ class StockSplitHandlerTests: XCTestCase {
     }
     
     func test_applyStockSplit_reverseSplit() {
-        let stockSplit = StockSplitInfo(toFactor: 1, fromFactor: 10, exDate: "2020-08-01")
+        let stockSplit = StockSplit(toFactor: 1, fromFactor: 10, exDate: "2020-08-01")
 
         let transactionDate = Date.buildDate(day: 6, month: 8, year: 2020)
         let expectedLastAppliedDate = Date.buildDate(day: 1, month: 8, year: 2020)
@@ -162,19 +162,19 @@ class StockSplitHandlerTests: XCTestCase {
 
     // MARK: - Helper
     
-    fileprivate static func emptyStockSplit(ticker: String, completion:  @escaping (Result<[StockSplitInfo], Error>) -> Void) {
+    fileprivate static func emptyStockSplit(ticker: String, completion:  @escaping (Result<[StockSplit], Error>) -> Void) {
         completion(.success([]))
     }
     
-    fileprivate static func validStockSplit(ticker: String, completion:  @escaping (Result<[StockSplitInfo], Error>) -> Void) {
-        let split = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
+    fileprivate static func validStockSplit(ticker: String, completion:  @escaping (Result<[StockSplit], Error>) -> Void) {
+        let split = StockSplit(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
         completion(.success([split]))
     }
     
-    fileprivate static func multipleValidStockSplit(ticker: String, completion: @escaping (Result<[StockSplitInfo], Error>) -> Void) {
-        let splitOne = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-02-01")
-        let splitTwo = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-02-01")
-        let splitThree = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
+    fileprivate static func multipleValidStockSplit(ticker: String, completion: @escaping (Result<[StockSplit], Error>) -> Void) {
+        let splitOne = StockSplit(toFactor: 7, fromFactor: 1, exDate: "2020-02-01")
+        let splitTwo = StockSplit(toFactor: 7, fromFactor: 1, exDate: "2020-02-01")
+        let splitThree = StockSplit(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
         completion(.success([splitOne, splitTwo, splitThree]))
     }
 }
