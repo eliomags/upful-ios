@@ -9,8 +9,19 @@
 import Foundation
 
 struct StockSplitInfo: Decodable {
-    let ratio: Float
+    let toFactor: Int
+    let fromFactor: Int
     let exDate: String
+}
+
+extension StockSplitInfo {
+    var exDateAsDate: Date {
+        return DateTransformer.convertStringToDate(exDate)
+    }
+    
+    var ratio: Float {
+        return Float(toFactor)/Float(fromFactor)
+    }
 }
 
 final class StockSplitHandler {
@@ -46,11 +57,13 @@ final class StockSplitHandler {
             completion((latestStockSplit))
         }
     }
-}
-
-extension StockSplitInfo {
-    var exDateAsDate: Date {
-        return DateTransformer.convertStringToDate(exDate)
+    
+    func apply(_ stockSplitInfo: StockSplitInfo) {
+        for transaction in transactions {
+            transaction.tradePrice = Double((Float(transaction.tradePrice) / stockSplitInfo.ratio))
+            transaction.numberOfShares = Int32(Float(transaction.numberOfShares) * stockSplitInfo.ratio)
+            transaction.lastAppliedStockSplit = stockSplitInfo.exDateAsDate
+        }
     }
 }
 

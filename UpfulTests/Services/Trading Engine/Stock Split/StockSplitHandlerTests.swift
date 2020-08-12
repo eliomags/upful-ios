@@ -133,14 +133,14 @@ class StockSplitHandlerTests: XCTestCase {
     }
     
     fileprivate static func validStockSplit(ticker: String, completion:  @escaping (Result<[StockSplitInfo], Error>) -> Void) {
-        let split = StockSplitInfo(ratio: 2, exDate: "2020-08-01")
+        let split = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
         completion(.success([split]))
     }
     
     fileprivate static func multipleValidStockSplit(ticker: String, completion: @escaping (Result<[StockSplitInfo], Error>) -> Void) {
-        let splitOne = StockSplitInfo(ratio: 2, exDate: "2020-02-01")
-        let splitTwo = StockSplitInfo(ratio: 2, exDate: "2020-02-01")
-        let splitThree = StockSplitInfo(ratio: 2, exDate: "2020-08-01")
+        let splitOne = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-02-01")
+        let splitTwo = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-02-01")
+        let splitThree = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
         completion(.success([splitOne, splitTwo, splitThree]))
     }
 }
