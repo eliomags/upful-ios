@@ -91,11 +91,56 @@ class StockSplitHandlerTests: XCTestCase {
         XCTAssertTrue(needsApply)
     }
     
-    // TODO: - Confirm transaction date formats across multiple devices
+    // MARK: - Get Latest Split Use Case
+    
+    func test_getLatestSplit_withEmptyResults() {
+        let exp = expectation(description: #function)
+        let transactionDate = Date.buildDate(day: 6, month: 8, year: 2020)
+        let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
+        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
+        sut.fetchSplit = Self.emptyStockSplit
+        
+        sut.getLatestSplit { latestSplit in
+            XCTAssertNil(latestSplit)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 0.5)
+    }
+    
+    func test_getLatestSplit_withValidResults() {
+        let exp = expectation(description: #function)
+        let transactionDate = Date.buildDate(day: 6, month: 8, year: 2020)
+        let transaction = TransactionAdapter(ticker: "AAPL", transactionDate: "\(transactionDate)")
+        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
+        sut.fetchSplit = Self.validStockSplit
+        
+        sut.getLatestSplit { latestSplit in
+            let expectedDate = Date.buildDate(day: 1, month: 8, year: 2020)
+            let isSameDayAsLatest = expectedDate
+                .timeIntervalSince(latestSplit!.exDateAsDate) == 0
+            XCTAssertTrue(isSameDayAsLatest)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 0.5)
+    }
     
     // MARK: - Helper
     
     fileprivate static func emptyStockSplit(ticker: String, completion:  @escaping (Result<[StockSplitInfo], Error>) -> Void) {
         completion(.success([]))
+    }
+    
+    fileprivate static func validStockSplit(ticker: String, completion:  @escaping (Result<[StockSplitInfo], Error>) -> Void) {
+        let split = StockSplitInfo(ratio: 2, exDate: "2020-08-01")
+        completion(.success([split]))
+    }
+    
+    fileprivate static func multipleValidStockSplit(ticker: String, completion: @escaping (Result<[StockSplitInfo], Error>) -> Void) {
+        let splitOne = StockSplitInfo(ratio: 2, exDate: "2020-02-01")
+        let splitTwo = StockSplitInfo(ratio: 2, exDate: "2020-02-01")
+        let splitThree = StockSplitInfo(ratio: 2, exDate: "2020-08-01")
+        completion(.success([splitOne, splitTwo, splitThree]))
     }
 }

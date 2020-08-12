@@ -38,4 +38,35 @@ final class StockSplitHandler {
         
         return isEXDateAfterTransactionDate && isEXDateAfterLastAppliedStockSplitDate
     }
+    
+    func getLatestSplit(_ completion: @escaping (StockSplitInfo?) -> Void) {
+        fetchSplit?(ticker) { result in
+            let splits = try? result.get()
+            let latestStockSplit = splits?.getRecent()
+            completion((latestStockSplit))
+        }
+    }
+}
+
+extension StockSplitInfo {
+    var exDateAsDate: Date {
+        return DateTransformer.convertStringToDate(exDate)
+    }
+}
+
+extension Array where Element == StockSplitInfo {
+    
+    func getRecent() -> Element? {
+        var latestSplit: StockSplitInfo?
+        
+        for split in self {
+            let currDate = split.exDateAsDate
+            if currDate.timeIntervalSince(latestSplit?.exDateAsDate ??
+                    Date.distantPast) > 0 {
+                latestSplit = split
+            }
+        }
+        
+        return latestSplit
+    }
 }
