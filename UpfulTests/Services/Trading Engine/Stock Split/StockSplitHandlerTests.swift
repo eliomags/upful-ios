@@ -126,6 +126,40 @@ class StockSplitHandlerTests: XCTestCase {
         wait(for: [exp], timeout: 0.5)
     }
     
+    // MARK: - Apply Stock Split Use Case
+    
+    func test_applyStockSplit_stocKSplit() {
+        let stockSplit = StockSplitInfo(toFactor: 7, fromFactor: 1, exDate: "2020-08-01")
+
+        let transactionDate = Date.buildDate(day: 6, month: 8, year: 2020)
+        let expectedLastAppliedDate = Date.buildDate(day: 1, month: 8, year: 2020)
+        let transaction = TransactionAdapter(ticker: "AAPL", shares: 7, tradePrice: 7, transactionDate: "\(transactionDate)")
+        
+        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
+        sut.apply(stockSplit)
+        
+        XCTAssertEqual(transaction.tradePrice, 1)
+        XCTAssertEqual(transaction.numberOfShares, 49)
+        XCTAssertTrue(transaction.lastAppliedStockSplit?
+            .timeIntervalSince(expectedLastAppliedDate) == 0)
+    }
+    
+    func test_applyStockSplit_reverseSplit() {
+        let stockSplit = StockSplitInfo(toFactor: 1, fromFactor: 10, exDate: "2020-08-01")
+
+        let transactionDate = Date.buildDate(day: 6, month: 8, year: 2020)
+        let expectedLastAppliedDate = Date.buildDate(day: 1, month: 8, year: 2020)
+        let transaction = TransactionAdapter(ticker: "AAPL", shares: 10, tradePrice: 100, transactionDate: "\(transactionDate)")
+        
+        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
+        sut.apply(stockSplit)
+        
+        XCTAssertEqual(transaction.tradePrice, 1000)
+        XCTAssertEqual(transaction.numberOfShares, 1)
+        XCTAssertTrue(transaction.lastAppliedStockSplit?
+            .timeIntervalSince(expectedLastAppliedDate) == 0)
+    }
+
     // MARK: - Helper
     
     fileprivate static func emptyStockSplit(ticker: String, completion:  @escaping (Result<[StockSplitInfo], Error>) -> Void) {
