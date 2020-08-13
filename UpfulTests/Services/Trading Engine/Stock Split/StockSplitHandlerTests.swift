@@ -172,10 +172,36 @@ class StockSplitHandlerTests: XCTestCase {
         
         let transactions = sut.transactions
         sut.start { needsApply in
+            let totalNumnberOfShares = transactions
+                .map{ $0.numberOfShares }
+                .reduce(0, +)
             XCTAssertTrue(needsApply)
+            XCTAssertEqual(totalNumnberOfShares, 50)
             XCTAssertEqual(transactions.map{ $0.tradePrice }, [20])
-            XCTAssertEqual(transactions.map{ $0.numberOfShares }, [50])
            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 0.5)
+    }
+    
+    func test_start_withNonAppliedStockSplit() {
+        let exp = expectation(description: #function)
+        let transactionDate = Date.buildDate(day: 6, month: 9, year: 2020)
+        let transaction = TransactionAdapter(ticker: "AAPL", shares: 10, tradePrice: 100, transactionDate: "\(transactionDate)")
+        
+        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
+        sut.fetchSplit = Self.validStockSplit
+        
+        let transactions = sut.transactions
+        sut.start { needsApply in
+            let totalNumnberOfShares = transactions
+                .map{ $0.numberOfShares }
+                .reduce(0, +)
+            XCTAssertFalse(needsApply)
+            XCTAssertEqual(totalNumnberOfShares, 10)
+            XCTAssertEqual(transactions.map{ $0.tradePrice }, [100])
+            
             exp.fulfill()
         }
         
