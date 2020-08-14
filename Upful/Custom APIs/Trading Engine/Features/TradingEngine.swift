@@ -52,7 +52,6 @@ final class TradingEngine {
     
     func sell(transaction: Transaction, completion: (() -> Void)? = nil) {
         DispatchQueue.global().async {
-            
             self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
                 self.ledgerManager.save(transaction, completion: { [unowned self] in
                     AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .sell))
@@ -79,21 +78,21 @@ final class TradingEngine {
     // MARK: - Loading
     private let holdingMapper = HoldingMapper()
     var completionHandler: (([Holding]) -> Void)?
-
+    var syncProfile: (([Holding], Double) -> ())? = ProfileSyncCoordinator.shared.sync
+    
     func loadHoldings() {
         DispatchQueue.global().async {
             self.ledgerManager.loadSavedTransactions { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let ledgerTransactions):
-                    self.holdingMapper.loadingHoldings(from: ledgerTransactions)
                     self.holdingMapper.completionHandler = { [unowned self] holdings in
                         self.updateEquityBalance(with: holdings)
-                        ProfileSyncCoordinator.shared.sync(holdings: holdings,
-                                                           equityBalance: self.balanceManager.totalEquityBalance)
+                        self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
                         self.completionHandler?(holdings)
                     }
-                    
+                    self.holdingMapper.loadingHoldings(from: ledgerTransactions)
+
                 case .failure(_):
                     assertionFailure("Failed to load transactions from Core Data")
                 }
