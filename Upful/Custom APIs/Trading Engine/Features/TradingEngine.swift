@@ -31,19 +31,18 @@ final class TradingEngine {
     // MARK: - Methods
     
     func buy(transaction: Transaction, completion: ((Bool) -> Void)? = nil) {
-        validatePurchaseAttempt(transaction) { (isValid) in
+        validatePurchaseAttempt(transaction) { [unowned self] (isValid) in
             if isValid { 
-                DispatchQueue.global().async {
-                    self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
-                        self.ledgerManager.save(transaction, completion: { [unowned self] in
-                            AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .buy))
-                            
-                            self.balanceManager.handleBuy(for: transaction.tradePrice,
-                                                          shares: Int(transaction.numberOfShares))
-                            completion?(isValid)
-                        })
+                self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
+                    self.ledgerManager.save(transaction, completion: { [unowned self] in
+                        AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .buy))
+                        
+                        self.balanceManager.handleBuy(for: transaction.tradePrice,
+                                                      shares: Int(transaction.numberOfShares))
+                        completion?(isValid)
                     })
-                }
+                })
+                
             } else {
                 completion?(isValid)
             }
@@ -51,17 +50,15 @@ final class TradingEngine {
     }
     
     func sell(transaction: Transaction, completion: (() -> Void)? = nil) {
-        DispatchQueue.global().async {
-            self.loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
-                self.ledgerManager.save(transaction, completion: { [unowned self] in
-                    AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .sell))
-                    
-                    self.balanceManager.handleSell(for: transaction.tradePrice,
-                                                   shares: Int(transaction.numberOfShares))
-                    DispatchQueue.main.async { completion?() }
-                })
+        loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
+            self.ledgerManager.save(transaction, completion: { [unowned self] in
+                AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .sell))
+                
+                self.balanceManager.handleSell(for: transaction.tradePrice,
+                                               shares: Int(transaction.numberOfShares))
+                DispatchQueue.main.async { completion?() }
             })
-        }
+        })
     }
         
     func updateEquityBalance(with holdings: [Holding]) {
@@ -76,30 +73,49 @@ final class TradingEngine {
     }
     
     // MARK: - Loading
+    
     private let holdingMapper = HoldingMapper()
     var completionHandler: (([Holding]) -> Void)?
     var syncProfile: (([Holding], Double) -> ())? = ProfileSyncCoordinator.shared.sync
     
+    var stockSplitGroup: DispatchGroup?
+    
     func loadHoldings() {
-        DispatchQueue.global().async {
-            self.ledgerManager.loadSavedTransactions { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let ledgerTransactions):
-                    self.holdingMapper.completionHandler = { [unowned self] holdings in
-                        self.updateEquityBalance(with: holdings)
-                        self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
-                        self.completionHandler?(holdings)
-                    }
-                    self.holdingMapper.loadingHoldings(from: ledgerTransactions)
-
-                case .failure(_):
-                    assertionFailure("Failed to load transactions from Core Data")
-                }
-            }
+        mapTransactionsToHoldings { [unowned self] holdings in
+            self.updateEquityBalance(with: holdings)
+            self.applyStockSplits(for: holdings)
         }
     }
     
+    func applyStockSplits(for holdings: [Holding]) {
+        var stockSplitHandlers = [StockSplitHandler]()
+        
+        for ticker in holdings.map({ $0.ticker }) {
+            let transactions = ledgerManager.getActiveTransactions(for: ticker)
+            let splitHandler = StockSplitHandler(ticker: ticker, transactions: transactions)
+            stockSplitHandlers.append(splitHandler)
+        }
+        
+        stockSplitGroup = DispatchGroup()
+        stockSplitGroup?.notify(queue: .global(qos: .userInitiated)) {
+            self.mapTransactionsToHoldings { [unowned self] holdings in
+                self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
+                self.completionHandler?(holdings)
+            }
+        }
+        
+        stockSplitHandlers.begin(dispatchGroup: stockSplitGroup)
+    }
+    
+    fileprivate func mapTransactionsToHoldings(_ block: @escaping ([Holding]) -> Void) {
+        ledgerManager.loadSavedTransactions { [unowned self] result in
+            _ = result.map({
+                self.holdingMapper.completionHandler = block
+                self.holdingMapper.createHoldings(from: $0)
+            })
+        }
+    }
+
     func loadLoggedTransactions(completion: @escaping (Result<[Transaction],Error>) -> Void) {
         loggerManager.load(completion: completion)
     }

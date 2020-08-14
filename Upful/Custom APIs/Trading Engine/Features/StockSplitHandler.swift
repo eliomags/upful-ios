@@ -89,6 +89,12 @@ final class StockSplitHandler {
     }
 }
 
+extension Array where Element == StockSplitHandler {
+    func begin(dispatchGroup: DispatchGroup?) {
+        forEach({ $0.start(dispatchGroup, completion: nil)})
+    }
+}
+
 extension Array where Element == StockSplit {
     func getRecent() -> Element? {
         var latestSplit: StockSplit?

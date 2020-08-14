@@ -24,6 +24,10 @@ final class LedgerManager {
     
     // MARK: - Methods
     
+    func getActiveTransactions(for ticker: String) -> [Transaction] {
+        return ledgerLoader.loadFiltering(ticker)
+    }
+    
     func loadSavedTransactions(completion: @escaping (Result<[Transaction], Error>) -> Void) {
         ledgerLoader.load(completion: completion)
     }

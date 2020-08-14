@@ -22,6 +22,13 @@ final class LocalTransactionLedgerLoader: TransactionLoader {
     
     // MARK: - Methods
     
+    func loadFiltering(_ ticker: String) -> [Transaction] {
+        let request = PersistedTransaction.createFetchRequest()
+        request.predicate = NSPredicate(format: "ticker == %@", ticker)
+        let persistedTransactions = try! self.container.persistentContainer.viewContext.fetch(request)
+        return persistedTransactions
+    }
+    
     func load(completion: @escaping (Result<[Transaction], Error>)-> Void) {
         let request = PersistedTransaction.createFetchRequest()
         completion(Result {

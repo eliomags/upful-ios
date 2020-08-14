@@ -17,7 +17,7 @@ class HoldingMapper {
     
     // MARK: - Methods
     
-    func loadingHoldings(from transactions: [Transaction]) {
+    func createHoldings(from transactions: [Transaction]) {
         let activeHoldings = HoldingMapper.map(transactions).filter { $0.totalShareCount > 0 }
         
         activeHoldings.forEach({ loadQuotes(for: $0) })
