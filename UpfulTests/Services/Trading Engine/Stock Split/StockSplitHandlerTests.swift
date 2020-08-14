@@ -165,9 +165,10 @@ class StockSplitHandlerTests: XCTestCase {
     func test_start_withAppliedStockSplit() {
         let exp = expectation(description: #function)
         let transactionDate = Date.buildDate(day: 6, month: 7, year: 2020)
-        let transaction = TransactionAdapter(ticker: "AAPL", shares: 10, tradePrice: 100, transactionDate: "\(transactionDate)")
+        let transactionOne = TransactionAdapter(ticker: "AAPL", shares: 20, tradePrice: 100, transactionDate: "\(transactionDate)")
+        let transactionTwo = TransactionAdapter(ticker: "AAPL", shares: 10, tradePrice: 100, transactionDate: "\(transactionDate)")
         
-        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
+        sut = StockSplitHandler(ticker: "AAPL", transactions: [transactionOne, transactionTwo])
         sut.fetchSplit = Self.validStockSplit
         
         let transactions = sut.transactions
@@ -176,8 +177,8 @@ class StockSplitHandlerTests: XCTestCase {
                 .map{ $0.numberOfShares }
                 .reduce(0, +)
             XCTAssertTrue(needsApply)
-            XCTAssertEqual(totalNumnberOfShares, 50)
-            XCTAssertEqual(transactions.map{ $0.tradePrice }, [20])
+            XCTAssertEqual(totalNumnberOfShares, 150)
+            XCTAssertEqual(transactions.map{ $0.tradePrice }, [20, 20])
            
             exp.fulfill()
         }
@@ -188,10 +189,12 @@ class StockSplitHandlerTests: XCTestCase {
     func test_start_withNonAppliedStockSplit() {
         let exp = expectation(description: #function)
         let transactionDate = Date.buildDate(day: 6, month: 9, year: 2020)
-        let transaction = TransactionAdapter(ticker: "AAPL", shares: 10, tradePrice: 100, transactionDate: "\(transactionDate)")
+        let transactionOne = TransactionAdapter(ticker: "AAPL", shares: 20, tradePrice: 100, transactionDate: "\(transactionDate)")
+        let transactionTwo = TransactionAdapter(ticker: "AAPL", shares: 10, tradePrice: 100, transactionDate: "\(transactionDate)")
         
-        sut = StockSplitHandler(ticker: "AAPL", transactions: [transaction])
-        sut.fetchSplit = Self.validStockSplit
+        sut = StockSplitHandler(ticker: "AAPL",
+                                transactions: [transactionOne, transactionTwo])
+        sut.fetchSplit = Self.validStockSplit // toFactor = 5
         
         let transactions = sut.transactions
         sut.start { needsApply in
@@ -199,8 +202,8 @@ class StockSplitHandlerTests: XCTestCase {
                 .map{ $0.numberOfShares }
                 .reduce(0, +)
             XCTAssertFalse(needsApply)
-            XCTAssertEqual(totalNumnberOfShares, 10)
-            XCTAssertEqual(transactions.map{ $0.tradePrice }, [100])
+            XCTAssertEqual(totalNumnberOfShares, 30)
+            XCTAssertEqual(transactions.map{ $0.tradePrice }, [100, 100])
             
             exp.fulfill()
         }
