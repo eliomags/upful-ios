@@ -12,7 +12,7 @@ final class LedgerManager {
     
     // MARK: - Dependencies
     
-    private let ledgerPersistence: TransactionLedgerPersistence
+    let ledgerPersistence: TransactionLedgerPersistence
     private let ledgerLoader: LocalTransactionLedgerLoader
     
     // MARK: - Initializer

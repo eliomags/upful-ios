@@ -16,14 +16,12 @@ protocol CoreDataModelContainerManager {
 extension CoreDataModelContainerManager {
     func saveContext(completion: (() -> Void)?) {
         let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-                completion?()
-            } catch {
-                let nserror = error as NSError
-                assertionFailure("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
+        do {
+            try context.save()
+            completion?()
+        } catch {
+            let nserror = error as NSError
+            assertionFailure("Unresolved error \(nserror), \(nserror.userInfo)")
         }
     }
 }

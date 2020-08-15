@@ -17,15 +17,17 @@ final class TradingEngine {
     let balanceManager: BalanceManager
     private let loggerManager: TransactionLoggingManager
     private let ledgerManager: LedgerManager
-        
+    
+    var container: CoreDataModelContainerManager = TransactionContainerManager.shared
+    
     // MARK: - Initializer
 
     init(balanceDefaults: UserDefaults = UserDefaults.standard,
-        loggerContainer: CoreDataModelContainerManager = TransactionContainerManager.shared,
-        ledgerContainer: CoreDataModelContainerManager = TransactionContainerManager.shared) {
+         container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
+        self.container = container
         self.balanceManager = BalanceManager(userDefaults: balanceDefaults)
-        self.loggerManager = TransactionLoggingManager(container: loggerContainer)
-        self.ledgerManager = LedgerManager(container: ledgerContainer)
+        self.loggerManager = TransactionLoggingManager(container: container)
+        self.ledgerManager = LedgerManager(container: container)
     }
     
     // MARK: - Methods
@@ -100,7 +102,9 @@ final class TradingEngine {
         stockSplitGroup?.notify(queue: .global(qos: .userInitiated)) {
             self.mapTransactionsToHoldings { [unowned self] holdings in
                 self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
-                self.completionHandler?(holdings)
+                self.container.saveContext { [unowned self] in
+                    self.completionHandler?(holdings)
+                }
             }
         }
         

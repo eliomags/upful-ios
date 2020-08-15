@@ -18,8 +18,7 @@ class TradingEngineTests: XCTestCase {
     override func setUp() {
         sut = TradingEngine(
             balanceDefaults: UserDefaults(suiteName: "TestSuite")!,
-            loggerContainer: mockContainerManager,
-            ledgerContainer: mockContainerManager
+            container: mockContainerManager
         )
     }
     

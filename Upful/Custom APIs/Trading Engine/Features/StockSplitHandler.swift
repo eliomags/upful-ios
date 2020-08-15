@@ -1,11 +1,4 @@
-//
-//  StockSplitHandler.swift
-//  Upful
-//
-//  Created by Yanik Simpson on 8/10/20.
-//  Copyright © 2020 Yanik Simpson. All rights reserved.
-//
-
+import CoreData
 import Foundation
 
 struct StockSplit: Decodable {
@@ -46,17 +39,15 @@ final class StockSplitHandler {
         let needsApply = checkIfTransactionsNeedsApply
         
         getLatestSplit { latestSplit in
-            if let latestSplit = latestSplit {
-                let shouldApply = needsApply(latestSplit.exDateAsDate)
-                
-                if shouldApply {
-                    applySplit(latestSplit)
-                }
-                
-                completion?(shouldApply)
-            } else {
+            guard let latestSplit = latestSplit else {
                 completion?(false)
+                dispatchGroup?.leave()
+                return
             }
+            let shouldApply = needsApply(latestSplit.exDateAsDate)
+            if shouldApply { applySplit(latestSplit) }
+            
+            completion?(shouldApply)
             dispatchGroup?.leave()
         }
     }
