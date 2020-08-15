@@ -108,10 +108,10 @@ final class TradingEngine {
     }
     
     fileprivate func mapTransactionsToHoldings(_ block: @escaping ([Holding]) -> Void) {
-        ledgerManager.loadSavedTransactions { [unowned self] result in
-            _ = result.map({
-                self.holdingMapper.completionHandler = block
-                self.holdingMapper.createHoldings(from: $0)
+        ledgerManager.loadSavedTransactions { [weak self] result in
+            _ = result.map({ savedTransactions in
+                self?.holdingMapper.completionHandler = block
+                self?.holdingMapper.createHoldings(from: savedTransactions)
             })
         }
     }
