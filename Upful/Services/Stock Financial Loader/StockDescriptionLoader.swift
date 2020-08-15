@@ -28,7 +28,7 @@ protocol DescriptionLoader {
 final class StockDescriptionLoader: DescriptionLoader {
     typealias DescriptionLoaderCompletion = (Result<StockDetail,DescriptionLoaderError>) -> Void
     
-    var loadData: ((String, @escaping DownloadCompletionHandler) -> ())? = NetworkService().downloadContentWithCache
+    var loadData: ((String, @escaping DataCompletionHandler) -> ())? = NetworkService().downloadContentWithCache
     
     func parse<T:Codable>(data: Data, completion: (Result<T, NetworkError>) -> Void) {
         do {

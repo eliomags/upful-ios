@@ -47,7 +47,7 @@ final class StockFinancialLoader: FinancialLoader {
     private let historicLookupEnpoint = "https://api-v2.intrinio.com/securities/"
     private let searchType = "/historical_data/"
 
-    var loadData: ((String, @escaping DownloadCompletionHandler) -> ())? = NetworkService().downloadContentWithCache
+    var loadData: ((String, @escaping DataCompletionHandler) -> ())? = NetworkService().downloadContentWithCache
 
     func getStockFinancials(ticker: String,
                       financialFrequency: FinancialsFrequency,

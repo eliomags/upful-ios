@@ -185,6 +185,8 @@
 		3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */; };
 		3DB7A4F124E2265A00B9ADAB /* StockSplitHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A4F024E2265A00B9ADAB /* StockSplitHandler.swift */; };
 		3DB7A4F424E226B700B9ADAB /* StockSplitHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A4F324E226B700B9ADAB /* StockSplitHandlerTests.swift */; };
+		3DB7A4F624E861A600B9ADAB /* StockSplitFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A4F524E861A600B9ADAB /* StockSplitFetcher.swift */; };
+		3DB7A4F824E861C200B9ADAB /* StockSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A4F724E861C200B9ADAB /* StockSplit.swift */; };
 		3DB891DD24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */; };
 		3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */; };
 		3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */; };
@@ -474,6 +476,8 @@
 		3DB345F923CBC5B500EADFFD /* StockViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockViewModelTests.swift; sourceTree = "<group>"; };
 		3DB7A4F024E2265A00B9ADAB /* StockSplitHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StockSplitHandler.swift; path = "Upful/Custom APIs/Trading Engine/Features/StockSplitHandler.swift"; sourceTree = SOURCE_ROOT; };
 		3DB7A4F324E226B700B9ADAB /* StockSplitHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSplitHandlerTests.swift; sourceTree = "<group>"; };
+		3DB7A4F524E861A600B9ADAB /* StockSplitFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSplitFetcher.swift; sourceTree = "<group>"; };
+		3DB7A4F724E861C200B9ADAB /* StockSplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSplit.swift; sourceTree = "<group>"; };
 		3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedAuxiliaryActionView.swift; sourceTree = "<group>"; };
 		3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralViewController.swift; sourceTree = "<group>"; };
 		3DBEFFC723A9CC3800BA407E /* SavedStocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStocksViewController.swift; sourceTree = "<group>"; };
@@ -1841,6 +1845,8 @@
 			isa = PBXGroup;
 			children = (
 				3DB7A4F024E2265A00B9ADAB /* StockSplitHandler.swift */,
+				3DB7A4F524E861A600B9ADAB /* StockSplitFetcher.swift */,
+				3DB7A4F724E861C200B9ADAB /* StockSplit.swift */,
 			);
 			path = "Stock Split";
 			sourceTree = "<group>";
@@ -2644,6 +2650,7 @@
 				3D297A0B23902DD6001D02C3 /* SuggestionLoader.swift in Sources */,
 				3D206A0E241E925100F7E44C /* Transaction+CoreDataProperties.swift in Sources */,
 				3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */,
+				3DB7A4F824E861C200B9ADAB /* StockSplit.swift in Sources */,
 				3D297A072390226A001D02C3 /* SuggestionFeedViewController.swift in Sources */,
 				3DF734DD2406B47500B297A4 /* ScreenResultsViewModel.swift in Sources */,
 				3DD3439824BB59A70081DBE6 /* SearchCriteriaSelectionViewController.swift in Sources */,
@@ -2678,6 +2685,7 @@
 				3D917B5A22FE24C4001D5E39 /* SearchCriteriaTableViewController.swift in Sources */,
 				3DAB3EBB234C13100008CC18 /* PreferenceViewController.swift in Sources */,
 				3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */,
+				3DB7A4F624E861A600B9ADAB /* StockSplitFetcher.swift in Sources */,
 				3D2F965823171F52003811AB /* CompanyNewsCell.swift in Sources */,
 				3D55BD6023B69EAD00B4FDF0 /* NewsLoader.swift in Sources */,
 				3D206A1B241F18A900F7E44C /* CoreDataModelContainerManager.swift in Sources */,

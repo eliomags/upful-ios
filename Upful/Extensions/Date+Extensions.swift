@@ -43,6 +43,17 @@ extension Date {
     }
 }
 
+extension Date {
+    var isToday: Bool {
+        let currentDate = Date()
+        let day = currentDate.day
+        let month = currentDate.month
+        let year = currentDate.year
+        
+        return self.day == day && self.month == month && self.year == year        
+    }
+}
+
 extension DateComponents {
     func toString() -> String {
         return "\(self.month!)/\(self.day!)/\(self.year!)"

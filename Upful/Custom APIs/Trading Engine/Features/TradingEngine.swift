@@ -11,20 +11,37 @@ import Foundation
 final class TradingEngine {
     
     static let shared = TradingEngine()
-    
+    static let lastCheckedForSplitKey: String = "lastCheckedForSplitKey"
+
     // MARK: - Dependencies
+    
+    private let userDefaults: UserDefaults
+    private let container: CoreDataModelContainerManager
     
     let balanceManager: BalanceManager
     private let loggerManager: TransactionLoggingManager
     private let ledgerManager: LedgerManager
+        
+    // MARK: - Properties
     
-    var container: CoreDataModelContainerManager = TransactionContainerManager.shared
+    var lastCheckedForSplit: Date? {
+        get {
+            return userDefaults.object(forKey: TradingEngine.lastCheckedForSplitKey) as? Date
+        }
+        set {
+            userDefaults.setValue(newValue, forKey: TradingEngine.lastCheckedForSplitKey)
+        }
+    }
+    var shouldCheckForStockSplit: Bool {
+        return !(lastCheckedForSplit?.isToday ?? false)
+    }
     
     // MARK: - Initializer
 
-    init(balanceDefaults: UserDefaults = UserDefaults.standard,
+    init(balanceDefaults: UserDefaults = .standard,
          container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
         self.container = container
+        self.userDefaults = balanceDefaults
         self.balanceManager = BalanceManager(userDefaults: balanceDefaults)
         self.loggerManager = TransactionLoggingManager(container: container)
         self.ledgerManager = LedgerManager(container: container)
@@ -77,10 +94,10 @@ final class TradingEngine {
     // MARK: - Loading
     
     private let holdingMapper = HoldingMapper()
+    private var stockSplitGroup: DispatchGroup?
+
     var completionHandler: (([Holding]) -> Void)?
     var syncProfile: (([Holding], Double) -> ())? = ProfileSyncCoordinator.shared.sync
-    
-    var stockSplitGroup: DispatchGroup?
     
     func loadHoldings() {
         mapTransactionsToHoldings { [unowned self] holdings in
@@ -98,17 +115,24 @@ final class TradingEngine {
             stockSplitHandlers.append(splitHandler)
         }
         
+        initializeStockSplitGroup()
+        beginLoading(stockSplitHandlers)
+    }
+    
+    fileprivate func initializeStockSplitGroup() {
         stockSplitGroup = DispatchGroup()
         stockSplitGroup?.notify(queue: .global(qos: .userInitiated)) {
-            self.mapTransactionsToHoldings { [unowned self] holdings in
-                self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
-                self.container.saveContext { [unowned self] in
-                    self.completionHandler?(holdings)
-                }
-            }
+            self.handleLoadCompletion()
         }
-        
-        stockSplitHandlers.begin(dispatchGroup: stockSplitGroup)
+    }
+    
+    fileprivate func beginLoading(_ stockSplitHandlers: [StockSplitHandler]) {
+        if shouldCheckForStockSplit {
+            lastCheckedForSplit = Date()
+            stockSplitHandlers.begin(dispatchGroup: stockSplitGroup)
+        } else {
+            handleLoadCompletion()
+        }
     }
     
     fileprivate func mapTransactionsToHoldings(_ block: @escaping ([Holding]) -> Void) {
@@ -117,6 +141,15 @@ final class TradingEngine {
                 self?.holdingMapper.completionHandler = block
                 self?.holdingMapper.createHoldings(from: savedTransactions)
             })
+        }
+    }
+    
+    fileprivate func handleLoadCompletion() {
+        mapTransactionsToHoldings { [unowned self] holdings in
+            self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
+            self.container.saveContext { [unowned self] in
+                self.completionHandler?(holdings)
+            }
         }
     }
 

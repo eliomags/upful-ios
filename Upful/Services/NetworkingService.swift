@@ -15,7 +15,7 @@ enum NetworkingError: Error {
     case urlError
 }
 
-typealias DownloadCompletionHandler = (Result<Data,Error>) -> ()
+typealias DataCompletionHandler = (Result<Data,Error>) -> ()
 
 final class NetworkService {
     
@@ -24,7 +24,7 @@ final class NetworkService {
         return URLCache(memoryCapacity: 0, diskCapacity: allowedDiskSize, diskPath: "upfulCache")
     }()
 
-    func downloadContentWithCache(fromUrlString: String, completionHandler: @escaping DownloadCompletionHandler) {
+    func downloadContentWithCache(fromUrlString: String, completionHandler: @escaping DataCompletionHandler) {
         guard let downloadUrl = URL(string: fromUrlString) else { return }
         let urlRequest = URLRequest(url: downloadUrl)
 
@@ -39,11 +39,12 @@ final class NetworkService {
                     self.cache.storeCachedResponse(cachedData, for: urlRequest)
                     completionHandler(.success(data!))
                 }
-            }.resume()
+            }
+            .resume()
         }
     }
     
-    func downloadContent(fromUrlString: String, completionHandler: @escaping DownloadCompletionHandler) {
+    func downloadContent(fromUrlString: String, completionHandler: @escaping DataCompletionHandler) {
         guard let downloadUrl = URL(string: fromUrlString) else { return }
         let urlRequest = URLRequest(url: downloadUrl)
         
@@ -51,11 +52,10 @@ final class NetworkService {
             if let error = error {
                 completionHandler(.failure(error))
             } else {
-                let cachedData = CachedURLResponse(response: response!, data: data!)
-                self.cache.storeCachedResponse(cachedData, for: urlRequest)
                 completionHandler(.success(data!))
             }
-        }.resume()
+        }
+        .resume()
     }
     
     private func createAndRetrieveURLSession() -> URLSession {

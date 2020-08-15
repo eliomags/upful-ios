@@ -1,28 +1,12 @@
-import CoreData
 import Foundation
-
-struct StockSplit: Decodable {
-    let toFactor: Int
-    let fromFactor: Int
-    let exDate: String
-}
-
-extension StockSplit {
-    var exDateAsDate: Date {
-        return DateTransformer.convertStringToDate(exDate)
-    }
-    
-    var ratio: Float {
-        return Float(toFactor)/Float(fromFactor)
-    }
-}
 
 final class StockSplitHandler {
     
     let ticker: String
     private(set) var transactions: [Transaction]
     
-    var fetchSplit: (((String), @escaping (Result<[StockSplit], Error>) -> Void) -> Void)?
+    typealias StockSplitDownloader = ((String), @escaping (Result<[StockSplit], Error>) -> Void) -> ()
+    var fetchSplit: StockSplitDownloader? = StockSplitFetcher().getStockSplit
     
     // MARK: - Initializer
     

@@ -63,14 +63,17 @@ class StockOverviewViewModelTests: XCTestCase {
         let newsLoader = MockStockNewsLoader()
         let descriptionLoader = MockDescriptionLoader()
         let sut = StockOverviewViewModel(
-                               ticker: "FB", companyName: "",
+                               ticker: "TEST", companyName: "",
                                priceLoader: quoteLoader,
                                financialLoader: financialLoader,
                                batchFinancialLoader: batchLoader, 
                                stockNewsLoader: newsLoader,
                                descriptionLoader: descriptionLoader)
-        
         return sut
+    }
+    
+    fileprivate static func getName(ticker: String,_ completion: @escaping (Result<String, Error>) -> Void) {
+        completion(.success("TEST Inc."))
     }
     
     fileprivate final class MockQuoteLoader: QuoteLoader {
