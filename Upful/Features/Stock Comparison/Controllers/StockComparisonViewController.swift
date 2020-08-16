@@ -195,15 +195,18 @@ final class StockComparisonViewController: UIViewController {
         let viewToAnimate = contentContainerView
         
         let velocityThreshold: CGFloat = 1000
-        let translationThreshold: CGFloat = 150
+        let translationThreshold: CGFloat = 160
         
         switch gesture.state {
         case .changed:
-            if velocity < 0 { return }
+            if translation <= -translationThreshold {
+                break
+            }
             viewToAnimate.transform = CGAffineTransform(translationX: 0, y: translation)
             if translation > translationThreshold || velocity > velocityThreshold {
                 dismiss(animated: true, completion: nil)
             }
+            
         default:
             if translation < translationThreshold {
                 UIView.animate(withDuration: 0.25) { viewToAnimate.transform = .identity }
