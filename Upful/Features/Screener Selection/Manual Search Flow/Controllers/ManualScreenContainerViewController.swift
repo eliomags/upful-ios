@@ -25,7 +25,7 @@ final class ManualScreenContainerViewController: UIViewController {
     private lazy var headerView: ManualScreenContainerHeaderView = {
         let view = ManualScreenContainerHeaderView()
         view.clearButton.addTarget(self, action: #selector(handleClearTap), for: .touchUpInside)
-        view.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 70).isActive = true
         return view
     }()
     
