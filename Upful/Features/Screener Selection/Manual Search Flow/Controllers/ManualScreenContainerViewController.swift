@@ -53,8 +53,8 @@ final class ManualScreenContainerViewController: UIViewController {
         button.backgroundColor = .appAccent3
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
-        button.setTitle("Build", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        button.setTitle("BUILD", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -89,6 +89,7 @@ final class ManualScreenContainerViewController: UIViewController {
         super.loadView()
         view.addSubview(tableView)
         tableView.fillSuperview()
+        addBuildView()
     }
     
     override func viewDidLayoutSubviews() {
@@ -102,14 +103,21 @@ final class ManualScreenContainerViewController: UIViewController {
     
     // MARK: - View Configuration
     
-    fileprivate func toggleBuildButtonDisplay() {
+    fileprivate func addBuildView() {
+        updateScreenButtonState()
+        view.addSubview(buttonBackgroundView)
+        buttonBackgroundView.anchor(top: nil, leading: view.leadingAnchor,
+                                    bottom: view.layoutMarginsGuide.bottomAnchor,
+                                    trailing: view.trailingAnchor)
+    }
+    
+    fileprivate func updateScreenButtonState() {
         if selectedScreenItems.isEmpty {
-             buttonBackgroundView.removeFromSuperview()
+            runScreenButton.isEnabled = false
+            runScreenButton.backgroundColor = .lightGray
         } else {
-            view.addSubview(buttonBackgroundView)
-            buttonBackgroundView.anchor(top: nil, leading: view.leadingAnchor,
-                                        bottom: view.layoutMarginsGuide.bottomAnchor,
-                                        trailing: view.trailingAnchor)
+            runScreenButton.isEnabled = true
+            runScreenButton.backgroundColor = .appAccent3
         }
     }
     
@@ -147,9 +155,7 @@ final class ManualScreenContainerViewController: UIViewController {
             $0.viewModels.forEach({ $0.resetParameter()})
             $0.collectionView.reloadData()
         })
-        
-        buttonBackgroundView.removeFromSuperview()
-        
+        updateScreenButtonState()
         Vibration.success.vibrate()
     }
     
@@ -241,13 +247,14 @@ extension ManualScreenContainerViewController: UITableViewDelegate, UITableViewD
 extension ManualScreenContainerViewController: ManualScreenerItemUpdatable {
     func didDelete(at indexPath: IndexPath) {
         Vibration.light.vibrate()
-        toggleBuildButtonDisplay()
+        updateScreenButtonState()
     }
     
     func didUpdate(manualScreenItemViewModel: ManualScreenItemViewModel, at indexPath: IndexPath) {
         Vibration.selection.vibrate()
-        toggleBuildButtonDisplay()
+        updateScreenButtonState()
     }
+    
 }
 
 extension ManualScreenContainerViewController: SubscriptionViewControllerDelegate {
