@@ -47,7 +47,7 @@ final class TradingEngine {
         self.ledgerManager = LedgerManager(container: container)
     }
     
-    // MARK: - Methods
+    // MARK: - Trading Methods
     
     func buy(transaction: Transaction, completion: ((Bool) -> Void)? = nil) {
         validatePurchaseAttempt(transaction) { [unowned self] (isValid) in
@@ -79,6 +79,22 @@ final class TradingEngine {
             })
         })
     }
+    
+    // MARK: - Trade Validation
+    
+    func validatePurchaseAttempt(_ transaction: Transaction, completion: ((Bool) -> Void)) {
+        let attemptedPurchase = transaction.tradePrice * Double(transaction.numberOfShares)
+        let isLessThanCashHolding = attemptedPurchase <= balanceManager.currentCashBalance
+        
+        completion(isLessThanCashHolding)
+    }
+    
+    func validateSaleAttempt(transaction: Transaction, holding: Holding, completion: ((Bool) -> Void)) {
+        let isLessThanCurrentShares = transaction.numberOfShares < holding.totalShareCount
+        completion(isLessThanCurrentShares)
+    }
+    
+    // MARK: - Balance Updates
         
     func updateEquityBalance(with holdings: [Holding]) {
         // total movement + total value of shares
@@ -93,40 +109,29 @@ final class TradingEngine {
     
     // MARK: - Loading
     
-    private let holdingMapper = HoldingMapper()
-    private var stockSplitGroup: DispatchGroup?
-
     var completionHandler: (([Holding]) -> Void)?
     var syncProfile: (([Holding], Double) -> ())? = ProfileSyncCoordinator.shared.sync
     
     func loadHoldings() {
         mapTransactionsToHoldings { [unowned self] holdings in
             self.updateEquityBalance(with: holdings)
-            self.applyStockSplits(for: holdings)
+            self.loadStockSplits(for: holdings)
         }
     }
     
-    func applyStockSplits(for holdings: [Holding]) {
+    fileprivate func loadStockSplits(for holdings: [Holding]) {
         var stockSplitHandlers = [StockSplitHandler]()
-        
         for ticker in holdings.map({ $0.ticker }) {
             let transactions = ledgerManager.getActiveTransactions(for: ticker)
             let splitHandler = StockSplitHandler(ticker: ticker, transactions: transactions)
             stockSplitHandlers.append(splitHandler)
         }
         
-        initializeStockSplitGroup()
-        beginLoading(stockSplitHandlers)
-    }
-    
-    fileprivate func initializeStockSplitGroup() {
-        stockSplitGroup = DispatchGroup()
-        stockSplitGroup?.notify(queue: .global(qos: .userInitiated)) {
+        let stockSplitGroup = DispatchGroup()
+        stockSplitGroup.notify(queue: .global(qos: .userInitiated)) {
             self.handleLoadCompletion()
         }
-    }
-    
-    fileprivate func beginLoading(_ stockSplitHandlers: [StockSplitHandler]) {
+        
         if shouldCheckForStockSplit {
             lastCheckedForSplit = Date()
             stockSplitHandlers.begin(dispatchGroup: stockSplitGroup)
@@ -136,10 +141,12 @@ final class TradingEngine {
     }
     
     fileprivate func mapTransactionsToHoldings(_ block: @escaping ([Holding]) -> Void) {
-        ledgerManager.loadSavedTransactions { [weak self] result in
+        let holdingMapper = HoldingMapper()
+
+        ledgerManager.loadSavedTransactions { result in
             _ = result.map({ savedTransactions in
-                self?.holdingMapper.completionHandler = block
-                self?.holdingMapper.createHoldings(from: savedTransactions)
+                holdingMapper.completionHandler = block
+                holdingMapper.createHoldings(from: savedTransactions)
             })
         }
     }
@@ -159,19 +166,5 @@ final class TradingEngine {
     
     func loadLedgerTransactions(completion: @escaping (Result<[Transaction],Error>) -> Void) {
         ledgerManager.loadSavedTransactions(completion: completion)
-    }
-    
-    // MARK: - Validation
-    
-    func validatePurchaseAttempt(_ transaction: Transaction, completion: ((Bool) -> Void)) {
-        let attemptedPurchase = transaction.tradePrice * Double(transaction.numberOfShares)
-        let isLessThanCashHolding = attemptedPurchase <= balanceManager.currentCashBalance
-        
-        completion(isLessThanCashHolding)
-    }
-    
-    func validateSaleAttempt(transaction: Transaction, holding: Holding, completion: ((Bool) -> Void)) {
-        let isLessThanCurrentShares = transaction.numberOfShares < holding.totalShareCount
-        completion(isLessThanCurrentShares)
     }
 }

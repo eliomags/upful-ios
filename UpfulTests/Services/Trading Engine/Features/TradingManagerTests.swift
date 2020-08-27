@@ -20,6 +20,7 @@ class TradingEngineTests: XCTestCase {
             balanceDefaults: UserDefaults(suiteName: "TestSuite")!,
             container: mockContainerManager
         )
+        sut.syncProfile = nil
     }
     
     override func tearDown() {
