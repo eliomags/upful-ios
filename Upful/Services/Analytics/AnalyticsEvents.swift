@@ -30,6 +30,7 @@ enum ScreenType: String {
 // MARK: - Analytics Events
 
 enum AnalyticsEventName {
+    case performServerUpdate(lastUpdate: Date)
     case signUpForPremiumPresented(trigger: String)
     case signUpAttempt
     case selectedPremium
@@ -52,6 +53,8 @@ enum AnalyticsEventName {
     
     func getName() -> String {
         switch self {
+        case .performServerUpdate:
+            return "perform_server_update"
         case .screenForStocks:
             return "screen_for_stocks"
         case .selectedNewsArticle:
@@ -97,6 +100,8 @@ enum AnalyticsEventName {
 extension AnalyticsEventName {
     var metaData: [String: String] {
         switch self {
+        case .performServerUpdate(let lastUpdate):
+            return ["lastRefresh": "\(lastUpdate)"]
         case .screenForStocks(let screenType):
             return ["screen_type": screenType.rawValue]
         case .selectedNewsArticle:

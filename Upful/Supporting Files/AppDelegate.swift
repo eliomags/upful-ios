@@ -5,7 +5,6 @@
 //  Created by Yanik Simpson on 8/7/19.
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
-
 import Firebase
 import Mixpanel
 import UIKit
@@ -29,6 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Mixpanel.initialize(token: Constants.MixPanel.token)
         Mixpanel.mainInstance().userId = UserProfile.instance.profileID
+        
+        let serverSyncManager = ServerSyncManager()
+        serverSyncManager.setupBackgroundTasks()
+        serverSyncManager.scheduleServerSync()
         
         IAPService().completeTransactions()
         
