@@ -10,6 +10,7 @@ import XCTest
 @testable import Upful
 
     // MARK: - DayPerformance Protocol
+
 protocol DayPerformance {
     var cashBalance: Double { get set }
     var holdingBalance: Double { get set }
@@ -40,6 +41,7 @@ final class HistoricPerformanceSaver {
     struct TransactionBucket {
         let date: Date
         var transactions: [Transaction]
+        var holdings: [Holding] = []
     }
     
     func calculate() {
@@ -88,23 +90,9 @@ final class HistoricPerformanceSaver {
         while curr < historicTransactions.count {
             let currentTransaction = historicTransactions[curr]
             let currentTransactionDate = DateTransformer.convertStringToDate(currentTransaction.transactionDate!)
-            var currentBucket = TransactionBucket(date: currentTransactionDate,
-                                                  transactions: [currentTransaction])
-            for y in curr+1..<historicTransactions.count {
-                let nextTransaction = historicTransactions[y]
-                let transactionDate = DateTransformer.convertStringToDate(nextTransaction.transactionDate!)
-                
-                if Calendar.current.isDate(transactionDate, inSameDayAs: currentBucket.date) {
-                    currentBucket.transactions.append(nextTransaction)
-                } else {
-                    break
-                }
-                curr = y
-            }
-            buckets.append(currentBucket)
-            curr += 1
+            var currentBucket = TransactionBucket(date: currentTransactionDate, transactions: [currentTransaction])
+            createTransactionBuckets(&curr, historicTransactions, &currentBucket, &buckets)
         }
-        
         createBucketsForDaysInBetween(&buckets)
         
         return buckets
@@ -127,6 +115,29 @@ final class HistoricPerformanceSaver {
         }
         
         buckets = bucketCopy
+    }
+    
+    fileprivate func createTransactionBuckets(_ curr: inout Int,
+                                              _ historicTransactions: [Transaction],
+                                              _ currentBucket: inout HistoricPerformanceSaver.TransactionBucket,
+                                              _ buckets: inout [HistoricPerformanceSaver.TransactionBucket]) {
+        for y in curr+1..<historicTransactions.count {
+            let nextTransaction = historicTransactions[y]
+            let transactionDate = DateTransformer.convertStringToDate(nextTransaction.transactionDate!)
+            
+            if Calendar.current.isDate(transactionDate, inSameDayAs: currentBucket.date) {
+                currentBucket.transactions.append(nextTransaction)
+            } else {
+                break
+            }
+            curr = y
+        }
+        let transactionsTillNow = Array(historicTransactions[0...curr])
+        let holdings = HoldingMapper.map(transactionsTillNow).filter{ $0.totalShareCount > 0 }
+        currentBucket.holdings = holdings
+        
+        buckets.append(currentBucket)
+        curr += 1
     }
 }
 
@@ -166,7 +177,8 @@ class HistoricPerformanceSaverTests: XCTestCase {
         let totalNumberOfTransactions = transactionBuckets.map{ $0.transactions.count }.reduce(0, +)
 
         XCTAssertEqual(transactionBuckets.count, 2)
-        XCTAssertEqual(totalNumberOfTransactions, 5, "We know there are 5 total transactions since 4 were injected above.")
+        XCTAssertEqual(transactionBuckets.last!.holdings.last!.totalShareCount, 1)
+        XCTAssertEqual(totalNumberOfTransactions, 5, "We know there are 5 total transactions since 5 were injected above.")
     }
     
     func testCreateTransactionBucketsWith2DaysInBetween() {
@@ -178,7 +190,8 @@ class HistoricPerformanceSaverTests: XCTestCase {
             ]
             let transactionDayTwo: [Transaction] = [
                 TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-05", type: "buy"),
-                TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 15, transactionDate: "2020-01-05", type: "sell")
+                TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 15, transactionDate: "2020-01-05", type: "sell"),
+                TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 15, transactionDate: "2020-01-05", type: "buy")
             ]
             return transactionDayOne + transactionDayTwo
         }
@@ -187,7 +200,7 @@ class HistoricPerformanceSaverTests: XCTestCase {
         let totalNumberOfTransactions = transactionBuckets.map{ $0.transactions.count }.reduce(0, +)
         
         XCTAssertEqual(transactionBuckets.count, 4, "we should have buckets for 2, 3, 4, 5")
-        XCTAssertEqual(totalNumberOfTransactions, 5, "We know there are 5 total transactions since 4 were injected above.")
+        XCTAssertEqual(transactionBuckets.last!.holdings.count, 2, "We should have holdiings for TEST and FB in the last bucket.")
+        XCTAssertEqual(totalNumberOfTransactions, 6, "We know there are 5 total transactions since 6 were injected above.")
     }
-    
 }
