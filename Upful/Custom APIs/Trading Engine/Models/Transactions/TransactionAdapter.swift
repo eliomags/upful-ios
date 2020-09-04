@@ -17,12 +17,13 @@ class TransactionAdapter {
     var id: String
     var lastAppliedStockSplit: Date?
     
-    init(ticker: String, shares: Int32 = 1, tradePrice: Double = 1, transactionDate: String = "\(Date())") {
+    init(ticker: String, shares: Int32 = 1, tradePrice: Double = 1, transactionDate: String = "\(Date())", type: String = "buy") {
         self.ticker = ticker
         self.numberOfShares = shares
         self.tradePrice = tradePrice
         self.id = UUID().uuidString
         self.transactionDate = transactionDate
+        self.type = type
     }
     
     init(transaction: Transaction) {

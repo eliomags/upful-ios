@@ -70,6 +70,7 @@
 		3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0D23902EDA001D02C3 /* ViewSuggestionsVCTest.swift */; };
 		3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0F23904BFE001D02C3 /* SuggestionViewCell.swift */; };
 		3D297A1223908FC9001D02C3 /* SelectionTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A1123908FC9001D02C3 /* SelectionTableHeader.swift */; };
+		3D2D18EC2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D18EB2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift */; };
 		3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F963B230F4922003811AB /* StockOverviewViewController.swift */; };
 		3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96402312B036003811AB /* AnalyticsEvents.swift */; };
 		3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96422312D44B003811AB /* AnalyticsTrackers.swift */; };
@@ -359,6 +360,7 @@
 		3D297A0D23902EDA001D02C3 /* ViewSuggestionsVCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSuggestionsVCTest.swift; sourceTree = "<group>"; };
 		3D297A0F23904BFE001D02C3 /* SuggestionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionViewCell.swift; sourceTree = "<group>"; };
 		3D297A1123908FC9001D02C3 /* SelectionTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionTableHeader.swift; sourceTree = "<group>"; };
+		3D2D18EB2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricPerformanceSaverTests.swift; sourceTree = "<group>"; };
 		3D2E37D72303942100DE8D12 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleMobileAds.framework"; sourceTree = "<group>"; };
 		3D2E37D92303946800DE8D12 /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleUtilities.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleUtilities.framework"; sourceTree = "<group>"; };
 		3D2E37DA2303946800DE8D12 /* GoogleAppMeasurement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAppMeasurement.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleAppMeasurement.framework"; sourceTree = "<group>"; };
@@ -1120,6 +1122,14 @@
 				3D297A0D23902EDA001D02C3 /* ViewSuggestionsVCTest.swift */,
 			);
 			path = Suggestions;
+			sourceTree = "<group>";
+		};
+		3D2D18EA2501DF5C002F92BE /* Historic Performance */ = {
+			isa = PBXGroup;
+			children = (
+				3D2D18EB2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift */,
+			);
+			path = "Historic Performance";
 			sourceTree = "<group>";
 		};
 		3D2F963A230F490A003811AB /* Stock Detail */ = {
@@ -1943,6 +1953,7 @@
 			isa = PBXGroup;
 			children = (
 				3DF4D8CA244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift */,
+				3D2D18EA2501DF5C002F92BE /* Historic Performance */,
 				3D206A03241E8F1000F7E44C /* Trading Engine */,
 				3DBF0C5823D94A2C003023D7 /* Permissions */,
 			);
@@ -2852,6 +2863,7 @@
 				3D206A6B2428EA5100F7E44C /* HoldingTests.swift in Sources */,
 				3D0643CC23D94AE1002AAF28 /* PermissionManagerTests.swift in Sources */,
 				3DB7A4F424E226B700B9ADAB /* StockSplitHandlerTests.swift in Sources */,
+				3D2D18EC2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift in Sources */,
 				3DB345E923C3EBE500EADFFD /* PrebuiltScreenerLogicControllerTests.swift in Sources */,
 				3D51639624CB118200F86951 /* StockComparisonViewModelTests.swift in Sources */,
 				3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */,

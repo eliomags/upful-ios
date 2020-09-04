@@ -272,8 +272,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             tradingBalanceView.setNeutral()
         }
         
-        let dollarDiff = (equity - 25_000).withCommas()
-        let percentDiff = (((equity / 25_000) - 1) * 100).withCommas()
+        let dollarDiff = (equity - BalanceConstants.initialCash).withCommas()
+        let percentDiff = (((equity / BalanceConstants.initialCash) - 1) * 100).withCommas()
         
         UIView.transition(with: tradingBalanceView.totalEquityView, duration: 0.5,
                           options: .transitionCrossDissolve, animations: {
