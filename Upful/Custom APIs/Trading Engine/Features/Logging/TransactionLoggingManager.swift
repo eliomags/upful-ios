@@ -43,11 +43,11 @@ extension Date {
         return formatter.string(from: self)
     }
     
-    func convertToEST() -> Date? {
+    func convertToEST() -> Date {
         let string = self.asString
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"
         formatter.timeZone = TimeZone(abbreviation: "EST")
-        return formatter.date(from: string)
+        return formatter.date(from: string) ?? self
     }
 }

@@ -18,6 +18,9 @@ extension Date {
     var dayBefore: Date {
         return Calendar.current.date(byAdding: .day, value: -1, to: self)!
     }
+    var nextDay: Date {
+        return Calendar.current.date(byAdding: .day, value: 1, to: self)!
+    }
     var month: Int {
         return Calendar.current.component(.month,  from: self)
     }

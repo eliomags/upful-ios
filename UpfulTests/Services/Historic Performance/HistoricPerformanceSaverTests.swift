@@ -30,6 +30,7 @@ struct MockDayPerformance: DayPerformance {
 // MARK: - System Under Test
 
 final class HistoricPerformanceSaver {
+    // MARK: - Loaders
     var previouslySavedPerformance: (() -> DayPerformance)?
         
     var loadTransactions: (() -> [Transaction])?
@@ -39,35 +40,6 @@ final class HistoricPerformanceSaver {
     struct TransactionBucket {
         let date: Date
         var transactions: [Transaction]
-    }
-    
-    func createTransactionBuckets() -> [TransactionBucket] {
-        let historicTransactions = loadTransactions?() ?? []
-        var buckets = [TransactionBucket]()
-        
-        var curr = 0
-        while curr < historicTransactions.count {
-            let currentTransaction = historicTransactions[curr]
-            let currentTransactionDate = DateTransformer.convertStringToDate(currentTransaction.transactionDate!)
-            var currentBucket = TransactionBucket(date: currentTransactionDate,
-                                                  transactions: [currentTransaction])
-            
-            for y in curr+1..<historicTransactions.count {
-                let nextTransaction = historicTransactions[y]
-                let transactionDate = DateTransformer.convertStringToDate(nextTransaction.transactionDate!)
-                
-                if Calendar.current.isDate(transactionDate, inSameDayAs: currentBucket.date) {
-                    currentBucket.transactions.append(nextTransaction)
-                } else {
-                    break
-                }
-                curr = y
-            }
-            buckets.append(currentBucket)
-            curr += 1
-        }
-        
-        return buckets
     }
     
     func calculate() {
@@ -104,6 +76,57 @@ final class HistoricPerformanceSaver {
             holdingsMapper.createHoldings(from: todaysTransactions)
         }
 
+    }
+    
+    // MARK: - Create Transaction Buckets
+    
+    func createTransactionBuckets() -> [TransactionBucket] {
+        let historicTransactions = loadTransactions?() ?? []
+        var buckets = [TransactionBucket]()
+        
+        var curr = 0
+        while curr < historicTransactions.count {
+            let currentTransaction = historicTransactions[curr]
+            let currentTransactionDate = DateTransformer.convertStringToDate(currentTransaction.transactionDate!)
+            var currentBucket = TransactionBucket(date: currentTransactionDate,
+                                                  transactions: [currentTransaction])
+            for y in curr+1..<historicTransactions.count {
+                let nextTransaction = historicTransactions[y]
+                let transactionDate = DateTransformer.convertStringToDate(nextTransaction.transactionDate!)
+                
+                if Calendar.current.isDate(transactionDate, inSameDayAs: currentBucket.date) {
+                    currentBucket.transactions.append(nextTransaction)
+                } else {
+                    break
+                }
+                curr = y
+            }
+            buckets.append(currentBucket)
+            curr += 1
+        }
+        
+        createBucketsForDaysInBetween(&buckets)
+        
+        return buckets
+    }
+    
+    fileprivate func createBucketsForDaysInBetween(_ buckets: inout [TransactionBucket]) {
+        guard !buckets.isEmpty else { return }
+        var bucketCopy: [TransactionBucket] = [buckets.first!]
+        
+        for i in 1..<buckets.count {
+            let currentDate = buckets[i].date
+            let dateBeforeCurrentDate = currentDate.dayBefore
+            
+            while !Calendar.current.isDate(dateBeforeCurrentDate, inSameDayAs: bucketCopy.last!.date) {
+                let nextDay = bucketCopy.last!.date.nextDay
+                bucketCopy.append(TransactionBucket(date: nextDay, transactions: []))
+            }
+            
+            bucketCopy.append(buckets[i])
+        }
+        
+        buckets = bucketCopy
     }
 }
 
@@ -143,6 +166,27 @@ class HistoricPerformanceSaverTests: XCTestCase {
         let totalNumberOfTransactions = transactionBuckets.map{ $0.transactions.count }.reduce(0, +)
 
         XCTAssertEqual(transactionBuckets.count, 2)
+        XCTAssertEqual(totalNumberOfTransactions, 5, "We know there are 5 total transactions since 4 were injected above.")
+    }
+    
+    func testCreateTransactionBucketsWith2DaysInBetween() {
+        sut.loadTransactions = {
+            let transactionDayOne: [Transaction] = [
+                TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02", type: "buy"),
+                TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 11, transactionDate: "2020-01-02", type: "sell"),
+                TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02", type: "buy")
+            ]
+            let transactionDayTwo: [Transaction] = [
+                TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-05", type: "buy"),
+                TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 15, transactionDate: "2020-01-05", type: "sell")
+            ]
+            return transactionDayOne + transactionDayTwo
+        }
+        
+        let transactionBuckets = sut.createTransactionBuckets()
+        let totalNumberOfTransactions = transactionBuckets.map{ $0.transactions.count }.reduce(0, +)
+        
+        XCTAssertEqual(transactionBuckets.count, 4, "we should have buckets for 2, 3, 4, 5")
         XCTAssertEqual(totalNumberOfTransactions, 5, "We know there are 5 total transactions since 4 were injected above.")
     }
     
