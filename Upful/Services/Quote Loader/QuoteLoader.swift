@@ -40,4 +40,8 @@ final class StockPriceLoader: QuoteLoader {
         }
         task.resume()
     }
+    
+    func loadEndOfDayPriceOnDate(for ticker: String, date: String, completion: @escaping (Result<Double,NetworkError>) -> Void) {
+        
+    }
 }

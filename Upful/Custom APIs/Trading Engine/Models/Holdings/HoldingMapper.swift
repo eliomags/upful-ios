@@ -20,13 +20,17 @@ class HoldingMapper {
     func createHoldings(from transactions: [Transaction]) {
         holdingsLoadGroup = DispatchGroup()
         
-        let activeHoldings = HoldingMapper.map(transactions).filter { $0.totalShareCount > 0 }
+        let activeHoldings = HoldingMapper.mapActiveHoldings(transactions)
         
         activeHoldings.forEach({ loadQuotes(for: $0) })
 
         holdingsLoadGroup?.notify(queue: .main) {
             self.completionHandler?(activeHoldings)
         }
+    }
+    
+    static func mapActiveHoldings(_ transactions: [Transaction]) -> [Holding] {
+        return HoldingMapper.map(transactions).filter { $0.totalShareCount > 0 }
     }
     
     static func map(_ transactions: [Transaction]) -> [Holding] {
