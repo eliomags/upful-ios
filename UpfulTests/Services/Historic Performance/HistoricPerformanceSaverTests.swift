@@ -44,38 +44,38 @@ final class HistoricPerformanceSaver {
         var holdings: [Holding] = []
     }
     
+    // MARK: - Day Performance
+    
     var overallPerformance: [DayPerformance] = []
+    
+    func getLastPerformanceDataPoint() -> DayPerformance? {
+        return overallPerformance.last
+    }
     
     // MARK: - Create Day Performance
     
-    func getPerformances() {
+    func createDayPerformanceDataPoints() {
         // pre-work) Create date buckets
+        let df = DateFormatter()
+        df.dateFormat = "yyyyMMdd"
         let transactionBuckets = createTransactionBuckets()
-        
+
         for bucket in transactionBuckets {
-//            let previousDayPerformance = previouslySavedPerformance
-            
-            // 1,2) get previosu day's transactions, get transactions for current date
-            let previousDayCashBalance = overallPerformance.last?.cashBalance ?? BalanceConstants.initialCash
+            // 1) Contruct Cash Balance
+            let previousDayCashBalance = getLastPerformanceDataPoint()?.cashBalance ?? BalanceConstants.initialCash
             let todaysTransactions = bucket.transactions
-            
-            // 3,4) group sells and buys, 5) Update cash balance
             let todaysCashChange = calculateNetCashChangeInDay(in: todaysTransactions)
             let newCashBalance = previousDayCashBalance + todaysCashChange
             
-            // 6) Map end of day holdings from transactions
+            // 2) Contruct holdings Balance
             let todaysHoldings = bucket.holdings
-            
-            // 7) Get end of day values for holdings
-            let df = DateFormatter()
-            df.dateFormat = "yyyyMMdd"
             var holdingBalance: Double = 0
             
             todaysHoldings.forEach { holding in
                 let semaphore = DispatchSemaphore(value: 1)
                 semaphore.signal()
+                
                 // TODO: Put Semaphore on Background Thread to prevent blocking the main thread
-
                 loadPrice(holding.ticker, df.string(from: bucket.date), { result in
                     if let endOfDayPrice = try? result.get() {
                         holdingBalance += endOfDayPrice * Double(holding.totalShareCount)
@@ -84,11 +84,8 @@ final class HistoricPerformanceSaver {
                     semaphore.wait()
                 })
             }
-                        
-            // 8) Total Equity = Cash Balance + Holdings End of Day Value
-            let performance = MockDayPerformance(holdingBalance: holdingBalance, cashBalance: newCashBalance, date: bucket.date)
             
-            // 9) Save equity Balance
+            let performance = MockDayPerformance(holdingBalance: holdingBalance, cashBalance: newCashBalance, date: bucket.date)
             overallPerformance.append(performance)
         }
     }
@@ -111,6 +108,7 @@ final class HistoricPerformanceSaver {
     // MARK: - Create Transaction Buckets
     
     func createTransactionBuckets() -> [TransactionBucket] {
+        let lastSavedPerformanceDataPoint = getLastPerformanceDataPoint()
         let historicTransactions = loadTransactions
         var buckets = [TransactionBucket]()
         
@@ -118,11 +116,20 @@ final class HistoricPerformanceSaver {
         while curr < historicTransactions.count {
             let currentTransaction = historicTransactions[curr]
             let currentTransactionDate = DateTransformer.convertStringToDate(currentTransaction.transactionDate!)
+            
+            // Do not create bucket if date is on or before the last saved Data Point timestamp
+            if let lastSavedPerformanceDataPoint = lastSavedPerformanceDataPoint {
+                if currentTransactionDate <= lastSavedPerformanceDataPoint.date {
+                    curr += 1
+                    continue
+                }
+            }
+            
             var currentBucket = TransactionBucket(date: currentTransactionDate, transactions: [currentTransaction])
             createTransactionBuckets(&curr, historicTransactions, &currentBucket, &buckets)
         }
         createBucketsForDaysInBetween(&buckets)
-        
+                
         return buckets
     }
     
@@ -183,15 +190,15 @@ class HistoricPerformanceSaverTests: XCTestCase {
     
     override func setUp() {
         sut = HistoricPerformanceSaver()
+        sut.loadPrice = mockPriceLoader
     }
     
-    // MARK: - Create Overall Performance
+    // MARK: - Create Overall Performance Data Points
     
     func test1DayPerformanceLoad() {
         sut.loadTransactions = mockTransactionLoader()
-        sut.loadPrice = mockPriceLoader
         
-        sut.getPerformances()
+        sut.createDayPerformanceDataPoints()
         
         assert(sut.overallPerformance.count == 2)
         // Check first day performance
@@ -207,9 +214,8 @@ class HistoricPerformanceSaverTests: XCTestCase {
     
     func test4DaysPerformanceLoad() {
         sut.loadTransactions = mockTransactionLoaderWith4DaysAnd6Transactions()
-        sut.loadPrice = mockPriceLoader
 
-        sut.getPerformances()
+        sut.createDayPerformanceDataPoints()
         
         assert(sut.overallPerformance.count == 4)
         // Day 1
@@ -245,6 +251,18 @@ class HistoricPerformanceSaverTests: XCTestCase {
         XCTAssertEqual(totalNumberOfTransactions, 5, "We know there are 5 total transactions since 5 were injected above.")
     }
     
+    func testGetDayPerformanceBasedFromLastDate() {
+        sut.loadTransactions = mockTransactionLoader()
+        
+        let date = Date.buildDate(day: 2, month: 1, year: 2020)
+        sut.overallPerformance.append(MockDayPerformance(holdingBalance: 11, cashBalance: 24991, date: date))
+        let transactionBuckets = sut.createTransactionBuckets()
+        let totalNumberOfTransactions = transactionBuckets.map{ $0.transactions.count }.reduce(0, +)
+
+        XCTAssertEqual(transactionBuckets.count, 1)
+        XCTAssertEqual(totalNumberOfTransactions, 2, "Only the transactions from the last day should be present.")
+    }
+    
     func testCreateTransactionBucketsWith2DaysInBetween() {
         sut.loadTransactions = mockTransactionLoaderWith4DaysAnd6Transactions()
         
@@ -255,6 +273,16 @@ class HistoricPerformanceSaverTests: XCTestCase {
         XCTAssertEqual(transactionBuckets[1].holdings.count, 1, "We should have one net holding on the second day")
         XCTAssertEqual(transactionBuckets.last!.holdings.count, 2, "We should have holdiings for TEST and FB in the last bucket.")
         XCTAssertEqual(totalNumberOfTransactions, 6, "We know there are 6 total transactions since 6 were injected above.")
+    }
+    
+    func testGet4DayPerformanceBasedFromLastDate() {
+        sut.loadTransactions = mockTransactionLoader()
+        let date = Date.buildDate(day: 5, month: 1, year: 2020)
+        
+        sut.overallPerformance.append(MockDayPerformance(holdingBalance: 11, cashBalance: 24991, date: date))
+        let transactionBuckets = sut.createTransactionBuckets()
+        
+        XCTAssertTrue(transactionBuckets.isEmpty)
     }
     
     // MARK: - Helpers
