@@ -71,6 +71,8 @@
 		3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A0F23904BFE001D02C3 /* SuggestionViewCell.swift */; };
 		3D297A1223908FC9001D02C3 /* SelectionTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D297A1123908FC9001D02C3 /* SelectionTableHeader.swift */; };
 		3D2D18EC2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D18EB2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift */; };
+		3D2D18F12506FFEA002F92BE /* HistoricPerformanceMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D18F02506FFEA002F92BE /* HistoricPerformanceMapper.swift */; };
+		3D2D18F3250708C0002F92BE /* PerformanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D18F2250708C0002F92BE /* PerformanceManager.swift */; };
 		3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F963B230F4922003811AB /* StockOverviewViewController.swift */; };
 		3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96402312B036003811AB /* AnalyticsEvents.swift */; };
 		3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96422312D44B003811AB /* AnalyticsTrackers.swift */; };
@@ -361,6 +363,8 @@
 		3D297A0F23904BFE001D02C3 /* SuggestionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionViewCell.swift; sourceTree = "<group>"; };
 		3D297A1123908FC9001D02C3 /* SelectionTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionTableHeader.swift; sourceTree = "<group>"; };
 		3D2D18EB2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricPerformanceSaverTests.swift; sourceTree = "<group>"; };
+		3D2D18F02506FFEA002F92BE /* HistoricPerformanceMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricPerformanceMapper.swift; sourceTree = "<group>"; };
+		3D2D18F2250708C0002F92BE /* PerformanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceManager.swift; sourceTree = "<group>"; };
 		3D2E37D72303942100DE8D12 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleMobileAds.framework"; sourceTree = "<group>"; };
 		3D2E37D92303946800DE8D12 /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleUtilities.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleUtilities.framework"; sourceTree = "<group>"; };
 		3D2E37DA2303946800DE8D12 /* GoogleAppMeasurement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAppMeasurement.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleAppMeasurement.framework"; sourceTree = "<group>"; };
@@ -1036,6 +1040,7 @@
 			isa = PBXGroup;
 			children = (
 				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
+				3D2D18ED2506FF59002F92BE /* Historic Performance Manager */,
 				3D34039124F4861900AC244F /* Background Tasks */,
 				3DF92413249FC2DA0028EE01 /* Historical Price Loader */,
 				3D31AA84242FCB2000326D7E /* CompanyNameLoader */,
@@ -1130,6 +1135,15 @@
 				3D2D18EB2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift */,
 			);
 			path = "Historic Performance";
+			sourceTree = "<group>";
+		};
+		3D2D18ED2506FF59002F92BE /* Historic Performance Manager */ = {
+			isa = PBXGroup;
+			children = (
+				3D2D18F02506FFEA002F92BE /* HistoricPerformanceMapper.swift */,
+				3D2D18F2250708C0002F92BE /* PerformanceManager.swift */,
+			);
+			path = "Historic Performance Manager";
 			sourceTree = "<group>";
 		};
 		3D2F963A230F490A003811AB /* Stock Detail */ = {
@@ -2670,6 +2684,7 @@
 				3D0C5F8C23423B7100F4A5FC /* SubscriptionItem.swift in Sources */,
 				3D55BD6A23B8052200B4FDF0 /* StockNewsViewModel.swift in Sources */,
 				3D2F965A2318C6E7003811AB /* ValuationSectionView.swift in Sources */,
+				3D2D18F3250708C0002F92BE /* PerformanceManager.swift in Sources */,
 				3DB345E323C3AA9500EADFFD /* PrebuiltScreenerLogicController.swift in Sources */,
 				3DF92412249D68470028EE01 /* PerformanceCell.swift in Sources */,
 				3D0C5F85234199BD00F4A5FC /* SubcriptionFooterView.swift in Sources */,
@@ -2720,6 +2735,7 @@
 				3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */,
 				3D55BD7023B847EC00B4FDF0 /* TableSectionHeaderView.swift in Sources */,
 				3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */,
+				3D2D18F12506FFEA002F92BE /* HistoricPerformanceMapper.swift in Sources */,
 				3D297A0923902D70001D02C3 /* Suggestions.swift in Sources */,
 				3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */,
 				3DCE8DBB243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift in Sources */,

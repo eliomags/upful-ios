@@ -36,4 +36,10 @@ final class LocalTransactionLedgerLoader: TransactionLoader {
             return persistedTransactions
         })
     }
+    
+    func loadAllPersistedTransactions() -> [Transaction] {
+        let request = PersistedTransaction.createFetchRequest()
+        let persistedTransactions = try? self.container.persistentContainer.viewContext.fetch(request)
+        return persistedTransactions ?? []
+    }
 }
