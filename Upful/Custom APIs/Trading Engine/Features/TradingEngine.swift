@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 final class TradingEngine {
     
@@ -16,7 +17,7 @@ final class TradingEngine {
     // MARK: - Dependencies
     
     private let userDefaults: UserDefaults
-    private let container: CoreDataModelContainerManager
+    private let context: NSManagedObjectContext
     
     let balanceManager: BalanceManager
     private let loggerManager: TransactionLoggingManager
@@ -39,12 +40,12 @@ final class TradingEngine {
     // MARK: - Initializer
 
     init(balanceDefaults: UserDefaults = .standard,
-         container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.container = container
+         context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.context = context
         self.userDefaults = balanceDefaults
         self.balanceManager = BalanceManager(userDefaults: balanceDefaults)
-        self.loggerManager = TransactionLoggingManager(container: container)
-        self.ledgerManager = LedgerManager(container: container)
+        self.loggerManager = TransactionLoggingManager(context: context)
+        self.ledgerManager = LedgerManager(context: context)
     }
     
     // MARK: - Trading Methods
@@ -154,9 +155,8 @@ final class TradingEngine {
     fileprivate func handleLoadCompletion() {
         mapTransactionsToHoldings { [unowned self] holdings in
             self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
-            self.container.saveContext { [unowned self] in
-                self.completionHandler?(holdings)
-            }
+            self.context.saveOrRollBackIfNeeded()
+            self.completionHandler?(holdings)
         }
     }
 

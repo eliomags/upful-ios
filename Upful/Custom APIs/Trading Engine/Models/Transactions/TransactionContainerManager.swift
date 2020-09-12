@@ -25,4 +25,11 @@ final class TransactionContainerManager: CoreDataModelContainerManager {
         })
         return container
     }()
+    
+    var managedObjectContext: NSManagedObjectContext {
+        return persistentContainer.viewContext
+    }
+    
+    lazy var backgroundContext: NSManagedObjectContext = persistentContainer.newBackgroundContext()
 }
+

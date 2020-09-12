@@ -7,23 +7,24 @@
 //
 
 import Foundation
+import CoreData
 
 final class TransactionLedgerPersistence {
     
     // MARK: - Dependencies
     
-    let container: CoreDataModelContainerManager
+    let context: NSManagedObjectContext
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.container = container
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.context = context
     }
     
     // MARK: - Methods
         
     func save(_ transaction: Transaction, completion: (() -> Void)?) {
-        let savingTransaction = PersistedTransaction(context: container.persistentContainer.viewContext)
+        let savingTransaction = PersistedTransaction(context: context)
         savingTransaction.id = transaction.id
         savingTransaction.type = transaction.type
         savingTransaction.ticker = transaction.ticker
@@ -31,16 +32,18 @@ final class TransactionLedgerPersistence {
         savingTransaction.numberOfShares = transaction.numberOfShares
         savingTransaction.transactionDate = transaction.transactionDate
         savingTransaction.lastAppliedStockSplit = transaction.lastAppliedStockSplit
-        container.saveContext(completion: completion)
+        
+        context.saveOrRollBackIfNeeded()
+        completion?()
     }
     
     func delete(_ transaction: Transaction, completion: (() -> Void)?) {
         let fetchRequest = PersistedTransaction.createFetchRequest()
-        let context = container.persistentContainer.viewContext
         let persistedTransactions = (try? context.fetch(fetchRequest)) ?? []
         for persistedTransaction in persistedTransactions {
             context.delete(persistedTransaction)
         }
-        container.saveContext(completion: completion)
+        context.saveOrRollBackIfNeeded()
+        completion?()
     }
 }

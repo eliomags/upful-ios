@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 final class LedgerManager {
     
@@ -17,9 +18,9 @@ final class LedgerManager {
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.ledgerPersistence = TransactionLedgerPersistence(container: container)
-        self.ledgerLoader = LocalTransactionLedgerLoader(container: container)
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.ledgerPersistence = TransactionLedgerPersistence(context: context)
+        self.ledgerLoader = LocalTransactionLedgerLoader(context: context)
     }
     
     // MARK: - Methods

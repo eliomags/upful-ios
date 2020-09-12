@@ -9,16 +9,15 @@
 import XCTest
 @testable import Upful
 
-class TradingEngineTests: XCTestCase {
+class TradingEngineTests: CoreDataUseCase {
 
     var sut: TradingEngine!
-    let mockContainerManager = MockTransactionContainerManager()
     
     // MARK: - Lifecycle
     override func setUp() {
         sut = TradingEngine(
             balanceDefaults: UserDefaults(suiteName: "TestSuite")!,
-            container: mockContainerManager
+            context: transactionViewContext
         )
         sut.syncProfile = nil
     }
@@ -77,6 +76,10 @@ class TradingEngineTests: XCTestCase {
         })
         
         wait(for: [loadExpectation], timeout: 5)
+        
+        addTeardownBlock {
+            self.transactionViewContext.reset()
+        }
     }
     
     // MARK: - Buy and Sell
@@ -101,6 +104,9 @@ class TradingEngineTests: XCTestCase {
         })
         
         wait(for: [loadExpectation], timeout: 5)
+        addTeardownBlock {
+            self.transactionViewContext.reset()
+        }
     }
     
     func test_buy_sell_withBuyWithLoggerTransaction() {
@@ -162,6 +168,9 @@ class TradingEngineTests: XCTestCase {
         })
 
         wait(for: [loadExpectation], timeout: 5)
+        addTeardownBlock {
+            self.transactionViewContext.reset()
+        }
     }
     
     fileprivate func makeSale(completion: (() -> Void)?) {
@@ -174,5 +183,8 @@ class TradingEngineTests: XCTestCase {
                         
             completion?()
         })
+        addTeardownBlock {
+            self.transactionViewContext.reset()
+        }
     }
 }

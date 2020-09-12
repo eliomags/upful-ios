@@ -9,7 +9,7 @@
 import XCTest
 @testable import Upful
 
-class TransactionLedgerPersistenceTests: XCTestCase {
+class TransactionLedgerPersistenceTests: CoreDataUseCase {
 
     var ledgerPersistence: TransactionLedgerPersistence!
     var ledgerLoader: LocalTransactionLedgerLoader!
@@ -74,9 +74,11 @@ class TransactionLedgerPersistenceTests: XCTestCase {
     // MARK: - Fileprivate Methods
     
     fileprivate func makeSUT() {
-        let mockContainerManager = MockTransactionContainerManager()
-
-        ledgerPersistence = TransactionLedgerPersistence(container: mockContainerManager)
-        ledgerLoader = LocalTransactionLedgerLoader(container: mockContainerManager)
+        ledgerPersistence = TransactionLedgerPersistence(context: transactionViewContext)
+        ledgerLoader = LocalTransactionLedgerLoader(context: transactionViewContext)
+        
+        addTeardownBlock {
+            self.transactionViewContext.reset()
+        }
     }
 }

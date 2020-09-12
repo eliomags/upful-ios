@@ -23,11 +23,12 @@ class PerformanceManager: PerformanceSaver, PerformanceLoader {
     
     let managedObjectContext: NSManagedObjectContext
     
-    init(context: NSManagedObjectContext) {
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
         self.managedObjectContext = context
     }
     
     func load() -> DayPerformance? {
+//        let request = PersistedPerformanceDataPoint.fetchRequest()
         return overallPerformance.last
     }
     

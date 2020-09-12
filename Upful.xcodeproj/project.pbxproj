@@ -74,6 +74,7 @@
 		3D2D18F12506FFEA002F92BE /* HistoricPerformanceMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D18F02506FFEA002F92BE /* HistoricPerformanceMapper.swift */; };
 		3D2D18F3250708C0002F92BE /* PerformanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D18F2250708C0002F92BE /* PerformanceManager.swift */; };
 		3D2D1981250D4211002F92BE /* PersistedPerformanceDataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D197F250D4211002F92BE /* PersistedPerformanceDataPoint.swift */; };
+		3D2D1984250D52DC002F92BE /* CoreDataUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D1983250D52DC002F92BE /* CoreDataUseCase.swift */; };
 		3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F963B230F4922003811AB /* StockOverviewViewController.swift */; };
 		3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96402312B036003811AB /* AnalyticsEvents.swift */; };
 		3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96422312D44B003811AB /* AnalyticsTrackers.swift */; };
@@ -367,6 +368,7 @@
 		3D2D18F02506FFEA002F92BE /* HistoricPerformanceMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricPerformanceMapper.swift; sourceTree = "<group>"; };
 		3D2D18F2250708C0002F92BE /* PerformanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceManager.swift; sourceTree = "<group>"; };
 		3D2D197F250D4211002F92BE /* PersistedPerformanceDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedPerformanceDataPoint.swift; sourceTree = SOURCE_ROOT; };
+		3D2D1983250D52DC002F92BE /* CoreDataUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataUseCase.swift; sourceTree = "<group>"; };
 		3D2E37D72303942100DE8D12 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleMobileAds.framework"; sourceTree = "<group>"; };
 		3D2E37D92303946800DE8D12 /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleUtilities.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleUtilities.framework"; sourceTree = "<group>"; };
 		3D2E37DA2303946800DE8D12 /* GoogleAppMeasurement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAppMeasurement.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleAppMeasurement.framework"; sourceTree = "<group>"; };
@@ -990,6 +992,7 @@
 		3D20FB3C22FB1F0A007836DD /* UpfulTests */ = {
 			isa = PBXGroup;
 			children = (
+				3D2D1983250D52DC002F92BE /* CoreDataUseCase.swift */,
 				3DE2B9CD249283E8008742F3 /* Managers */,
 				3DBF0C5723D94A24003023D7 /* Services */,
 				3DB345FB23CBFAF200EADFFD /* VIewModels */,
@@ -2874,6 +2877,7 @@
 				3DF734D424036C1700B297A4 /* StockOverviewViewModelTests.swift in Sources */,
 				3DF734E12407144800B297A4 /* SearchResultsViewModelTests.swift in Sources */,
 				3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */,
+				3D2D1984250D52DC002F92BE /* CoreDataUseCase.swift in Sources */,
 				3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */,
 				3D698D2E24DD0C560090CB7B /* MetricPreviewViewModelTests.swift in Sources */,
 				3DE2B9CF249283F9008742F3 /* ProfileDataManagerTests.swift in Sources */,

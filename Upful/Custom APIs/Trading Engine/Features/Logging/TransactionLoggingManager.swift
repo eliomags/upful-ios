@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 class TransactionLoggingManager {
     private let transactionLogLoader: TransactionLogLoader
@@ -15,9 +16,9 @@ class TransactionLoggingManager {
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.transactionLogLoader = TransactionLogLoader(container: container)
-        self.localTransactionLogger = LocalTransactionLogger(container: container)
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.transactionLogLoader = TransactionLogLoader(context: context)
+        self.localTransactionLogger = LocalTransactionLogger(context: context)
         self.remoteTransactionLogger = RemoteTransactionLogger()
     }
     
