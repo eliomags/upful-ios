@@ -17,8 +17,7 @@ enum NetworkingError: Error {
 
 typealias DataCompletionHandler = (Result<Data,Error>) -> ()
 
-final class NetworkService {
-    
+final class HTTPClient {
     private let allowedDiskSize = 100 * 1024 * 1024
     private lazy var cache: URLCache = {
         return URLCache(memoryCapacity: 0, diskCapacity: allowedDiskSize, diskPath: "upfulCache")

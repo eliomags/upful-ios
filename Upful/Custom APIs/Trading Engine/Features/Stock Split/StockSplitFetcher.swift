@@ -11,7 +11,7 @@ import Foundation
 final class StockSplitFetcher {
     
     typealias DataDownloader = (String, @escaping DataCompletionHandler) -> ()
-    var dataDownloader: DataDownloader = NetworkService().downloadContent
+    var dataDownloader: DataDownloader = HTTPClient().downloadContent
     
     func createEndpoint(_ ticker: String) -> String {
         let endpoint = Constants.IEXTrading.EndPoints.production

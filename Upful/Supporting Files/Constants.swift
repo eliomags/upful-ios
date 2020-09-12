@@ -20,6 +20,7 @@ public struct Constants {
     struct IEXTrading {
         static let productionKey = "?token=pk_93380460343741859a000b3c6414fedc"
         static let sandboxKey = "?token=Tsk_67f3ff405c8446c9ade835c726935141"
+        static let appendingProductionKey = "&token=pk_93380460343741859a000b3c6414fedc"
         
         struct EndPoints {
             static let sandbox = "https://sandbox.iexapis.com/stable/stock/"

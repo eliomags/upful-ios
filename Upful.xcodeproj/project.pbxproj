@@ -73,6 +73,7 @@
 		3D2D18EC2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D18EB2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift */; };
 		3D2D18F12506FFEA002F92BE /* HistoricPerformanceMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D18F02506FFEA002F92BE /* HistoricPerformanceMapper.swift */; };
 		3D2D18F3250708C0002F92BE /* PerformanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D18F2250708C0002F92BE /* PerformanceManager.swift */; };
+		3D2D1981250D4211002F92BE /* PersistedPerformanceDataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D197F250D4211002F92BE /* PersistedPerformanceDataPoint.swift */; };
 		3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F963B230F4922003811AB /* StockOverviewViewController.swift */; };
 		3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96402312B036003811AB /* AnalyticsEvents.swift */; };
 		3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F96422312D44B003811AB /* AnalyticsTrackers.swift */; };
@@ -365,6 +366,7 @@
 		3D2D18EB2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricPerformanceSaverTests.swift; sourceTree = "<group>"; };
 		3D2D18F02506FFEA002F92BE /* HistoricPerformanceMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricPerformanceMapper.swift; sourceTree = "<group>"; };
 		3D2D18F2250708C0002F92BE /* PerformanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceManager.swift; sourceTree = "<group>"; };
+		3D2D197F250D4211002F92BE /* PersistedPerformanceDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedPerformanceDataPoint.swift; sourceTree = SOURCE_ROOT; };
 		3D2E37D72303942100DE8D12 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleMobileAds.framework"; sourceTree = "<group>"; };
 		3D2E37D92303946800DE8D12 /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleUtilities.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleUtilities.framework"; sourceTree = "<group>"; };
 		3D2E37DA2303946800DE8D12 /* GoogleAppMeasurement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAppMeasurement.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleAppMeasurement.framework"; sourceTree = "<group>"; };
@@ -1140,6 +1142,7 @@
 		3D2D18ED2506FF59002F92BE /* Historic Performance Manager */ = {
 			isa = PBXGroup;
 			children = (
+				3D2D197F250D4211002F92BE /* PersistedPerformanceDataPoint.swift */,
 				3D2D18F02506FFEA002F92BE /* HistoricPerformanceMapper.swift */,
 				3D2D18F2250708C0002F92BE /* PerformanceManager.swift */,
 			);
@@ -2757,6 +2760,7 @@
 				3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */,
 				3DF92418249FC3D00028EE01 /* HistoricalPriceLoader.swift in Sources */,
 				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
+				3D2D1981250D4211002F92BE /* PersistedPerformanceDataPoint.swift in Sources */,
 				3D206A272421046600F7E44C /* TransactionLogger.swift in Sources */,
 				3D6B071E2415C97300C55021 /* MultilineButton.swift in Sources */,
 				3DCE8DC5244282EB0007F9EB /* ManualScreenContainerHeaderView.swift in Sources */,

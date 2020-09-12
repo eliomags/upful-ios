@@ -7,17 +7,25 @@
 //
 
 import Foundation
+import CoreData
 
-protocol PerformanceSaver: class {
+protocol PerformanceSaver {
     func save(holdingBalance: Double, cashBalance: Double, date: Date)
 }
 
-protocol PerformanceLoader: class {
+protocol PerformanceLoader {
+    var overallPerformance: [DayPerformance] { get set }
     func load() -> DayPerformance?
 }
 
 class PerformanceManager: PerformanceSaver, PerformanceLoader {
     var overallPerformance: [DayPerformance] = []
+    
+    let managedObjectContext: NSManagedObjectContext
+    
+    init(context: NSManagedObjectContext) {
+        self.managedObjectContext = context
+    }
     
     func load() -> DayPerformance? {
         return overallPerformance.last

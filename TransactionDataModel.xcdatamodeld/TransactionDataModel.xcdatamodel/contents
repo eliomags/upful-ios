@@ -9,6 +9,16 @@
         <attribute name="transactionDate" optional="YES" attributeType="String"/>
         <attribute name="type" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="PersistedPerformanceDataPoint" representedClassName="PersistedPerformanceDataPoint" syncable="YES">
+        <attribute name="cashBalance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="holdingBalance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="date"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <entity name="PersistedTransaction" representedClassName="PersistedTransaction" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="lastAppliedStockSplit" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -26,5 +36,6 @@
         <element name="LoggedTransaction" positionX="-9" positionY="81" width="128" height="148"/>
         <element name="PersistedTransaction" positionX="145.8671875" positionY="81.125" width="128" height="148"/>
         <element name="User" positionX="72" positionY="126" width="128" height="73"/>
+        <element name="PersistedPerformanceDataPoint" positionX="72" positionY="135" width="128" height="88"/>
     </elements>
 </model>

@@ -15,6 +15,7 @@ class HistoricPerformanceMapperTests: XCTestCase {
     
     override func setUp() {
         sut = HistoricPerformanceMapper()
+        sut.performanceManager = MockPerformanceManager()
         sut.loadPrice = mockPriceLoader
     }
     
@@ -118,6 +119,19 @@ class HistoricPerformanceMapperTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+   private class MockPerformanceManager: PerformanceSaver, PerformanceLoader {
+        var overallPerformance: [DayPerformance] = []
+        
+        func load() -> DayPerformance? {
+            return overallPerformance.last
+        }
+        
+        func save(holdingBalance: Double, cashBalance: Double, date: Date) {
+            let performance = DailyPerformance(holdingBalance: holdingBalance, cashBalance: cashBalance, date: date)
+            overallPerformance.append(performance)
+        }
+    }
     
     struct MockDayPerformance: DayPerformance {
         var holdingBalance: Double

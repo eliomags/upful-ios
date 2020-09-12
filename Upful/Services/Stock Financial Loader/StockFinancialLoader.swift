@@ -8,10 +8,19 @@
 
 import Foundation
 
-enum NetworkError: Error {
+enum NetworkError: LocalizedError {
     case invalidData
     case connection
     case parsing
+    
+    var localizedDescription: String {
+        switch self {
+        case .invalidData, .parsing:
+            return "Encountered an issue with your data. Please contact support."
+        case .connection:
+            return "Error connecting to Upful servers."
+        }
+    }
 }
 
 enum FinancialsFrequency: Equatable {
@@ -47,7 +56,7 @@ final class StockFinancialLoader: FinancialLoader {
     private let historicLookupEnpoint = "https://api-v2.intrinio.com/securities/"
     private let searchType = "/historical_data/"
 
-    var loadData: ((String, @escaping DataCompletionHandler) -> ())? = NetworkService().downloadContentWithCache
+    var loadData: ((String, @escaping DataCompletionHandler) -> ())? = HTTPClient().downloadContentWithCache
 
     func getStockFinancials(ticker: String,
                       financialFrequency: FinancialsFrequency,
