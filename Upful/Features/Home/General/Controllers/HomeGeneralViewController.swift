@@ -547,11 +547,11 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.breakdown.rawValue:
             let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.breakdownHeaderID) as? HoldingBreakdownHeaderView
             header?.addButton.isSelected = !shouldDisplayBreakDownCell
-            
             header?.buttonAction = { [weak self] in
                 guard let self = self else { return }
                 Vibration.light.vibrate()
                 self.shouldDisplayBreakDownCell = !self.shouldDisplayBreakDownCell
+                header?.addButton.isSelected = !self.shouldDisplayBreakDownCell
             }
             return header
             
