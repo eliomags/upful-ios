@@ -29,11 +29,11 @@ struct DailyPerformance: DayPerformance {
 
 final class HistoricPerformanceMapper {
     typealias EndOfDayPriceLoader = (String, String, @escaping (Result<Double, NetworkError>) -> Void) -> ()
-    typealias TransactionLoader = () -> [Transaction]
+    typealias TransactionLoader = (Date) -> [Transaction]
     
     // MARK: - Loaders
     
-    var loadTransactions: TransactionLoader = LocalTransactionLedgerLoader().loadAllPersistedTransactions
+    var loadTransactions: TransactionLoader = LocalTransactionLedgerLoader().loadTransactions
     var loadPrice: EndOfDayPriceLoader = StockPriceLoader().loadEndOfDayPriceOnDate
     
     /// Holds transactions for given date for processing.
@@ -84,18 +84,20 @@ final class HistoricPerformanceMapper {
                     })
                     semaphore.wait()
                 }
+                
+                // 3) Save the data point
                 self.performanceManager.save(holdingBalance: holdingBalance,
                                              cashBalance: newCashBalance,
                                              date: bucket.date)
             }
             self.loadHandler.notify()
-//            print(self.performanceManager.overallPerformance.map{$0.totalEquity})
+            print(self.performanceManager.overallPerformance.map{$0.date})
         }
     }
     
     func createTransactionBuckets() -> [TransactionBucket] {
         let lastSavedPerformanceDataPoint = performanceManager.load()
-        let historicTransactions = loadTransactions()
+        let historicTransactions = loadTransactions(lastSavedPerformanceDataPoint?.date ?? Date())
         var buckets = [TransactionBucket]()
         
         var curr = 0
@@ -165,7 +167,7 @@ final class HistoricPerformanceMapper {
                                               _ buckets: inout [HistoricPerformanceMapper.TransactionBucket]) {
         for y in curr+1..<historicTransactions.count {
             let nextTransaction = historicTransactions[y]
-            let transactionDate = DateTransformer.convertStringToDate(nextTransaction.transactionDate!)
+            let transactionDate = nextTransaction.transactionDateAsDate
             
             if Calendar.current.isDate(transactionDate, inSameDayAs: currentBucket.date) {
                 currentBucket.transactions.append(nextTransaction)

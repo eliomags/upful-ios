@@ -17,3 +17,13 @@ protocol Transaction: class {
     var id: String { get set }
     var lastAppliedStockSplit: Date? { get set }
 }
+
+extension Transaction {
+    
+    /// The transformed transactionDate as 'Date'.
+    var transactionDateAsDate: Date {
+        guard let transactionDate = transactionDate else { return Date() }
+        let transformedDate = DateTransformer.convertStringToDate(transactionDate)
+        return transformedDate
+    }
+}

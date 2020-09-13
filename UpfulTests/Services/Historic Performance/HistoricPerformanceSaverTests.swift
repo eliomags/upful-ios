@@ -75,7 +75,7 @@ class HistoricPerformanceMapperTests: XCTestCase {
     // MARK: - Create Transaction Buckets
     
     func testCreateEmptyTransactionBuckets() {
-        sut.loadTransactions = {
+        sut.loadTransactions = { _ in
             return []
         }
         let transactionBuckets = sut.createTransactionBuckets()
@@ -150,29 +150,29 @@ class HistoricPerformanceMapperTests: XCTestCase {
         var date: Date
     }
     
-    fileprivate func mockTransactionLoader() -> [Transaction] {
+    fileprivate func mockTransactionLoader(_ date: Date) -> [Transaction] {
         let transactionDayOne: [Transaction] = [
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02", type: "buy"),
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 11, transactionDate: "2020-01-02", type: "sell"),
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02", type: "buy")
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02 07:53:38 +0000", type: "buy"),
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 11, transactionDate: "2020-01-02 02:53:38 +0000", type: "sell"),
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02 05:53:38 +0000", type: "buy")
         ]
         let transactionDayTwo: [Transaction] = [
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-03", type: "buy"),
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 15, transactionDate: "2020-01-03", type: "sell")
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-03 02:53:38 +0000", type: "buy"),
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 15, transactionDate: "2020-01-03 05:53:38 +0000", type: "sell")
         ]
         return transactionDayOne + transactionDayTwo
     }
     
-    fileprivate func mockTransactionLoaderWith4DaysAnd6Transactions() -> [Transaction] {
+    fileprivate func mockTransactionLoaderWith4DaysAnd6Transactions(_ date: Date) -> [Transaction] {
         let transactionDayOne: [Transaction] = [
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02", type: "buy"),
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 11, transactionDate: "2020-01-02", type: "sell"),
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02", type: "buy")
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02 07:53:38 +0000", type: "buy"),
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 11, transactionDate: "2020-01-02 02:53:38 +0000", type: "sell"),
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-02 05:53:38 +0000", type: "buy")
         ]
         let transactionDayTwo: [Transaction] = [
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-05", type: "buy"),
-            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 15, transactionDate: "2020-01-05", type: "sell"),
-            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 15, transactionDate: "2020-01-05", type: "buy")
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 10, transactionDate: "2020-01-05 07:53:38 +0000", type: "buy"),
+            TransactionAdapter(ticker: "TEST", shares: 1, tradePrice: 15, transactionDate: "2020-01-05 02:53:38 +0000", type: "sell"),
+            TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 15, transactionDate: "2020-01-05 05:53:38 +0000", type: "buy")
         ]
         return transactionDayOne + transactionDayTwo
     }

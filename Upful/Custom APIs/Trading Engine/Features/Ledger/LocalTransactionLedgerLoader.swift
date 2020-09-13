@@ -43,4 +43,14 @@ final class LocalTransactionLedgerLoader: TransactionLoader {
         let persistedTransactions = try? self.context.fetch(request)
         return persistedTransactions ?? []
     }
+    
+    func loadTransactions(startingFrom date: Date) -> [Transaction] {
+        let dateAsString = date.asString
+        let request = PersistedTransaction.createFetchRequest()
+        let predicate = NSPredicate(format: "transactionDate > %@", dateAsString)
+        request.predicate = predicate
+        let persistedTransactions = try? self.context.fetch(request)
+
+        return persistedTransactions ?? []
+    }
 }
