@@ -11,8 +11,8 @@ import UIKit
 final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             
     private enum Section: Int, CaseIterable {
-        case breakdown = 0
-        case holdings = 1
+        case holdings = 0
+        case breakdown = 1
         case preference = 2
     }
     
@@ -305,18 +305,16 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     // MARK: Breakdown Section
     
     fileprivate func reloadBreakdownSectionHeader() {
-        if !shouldDisplayBreakDownCell {
-            tableView.deleteRows(at: [[0,0]], with: .fade)
-        }
         let breakdownSection = Section.breakdown.rawValue
-//        let holdingsSection = Section.holdings.rawValue
+
+        if !shouldDisplayBreakDownCell {
+            tableView.deleteRows(at: [[breakdownSection,0]], with: .fade)
+        }
 
         tableView.reloadSections([breakdownSection], with: .automatic)
         
         if shouldDisplayBreakDownCell {
-//            tableView.scrollToRow(at: [breakdownSection,0], at: .top, animated: true)
         } else {
-//            tableView.scrollToRow(at: [holdingsSection,0], at: .bottom, animated: true)
             navigationItem.title = ""
         }
         

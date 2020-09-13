@@ -154,8 +154,10 @@ final class TradingEngine {
     
     fileprivate func handleLoadCompletion() {
         mapTransactionsToHoldings { [unowned self] holdings in
+            self.context.perform {
+                self.context.saveOrRollBackIfNeeded()
+            }
             self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
-            self.context.saveOrRollBackIfNeeded()
             self.completionHandler?(holdings)
         }
     }

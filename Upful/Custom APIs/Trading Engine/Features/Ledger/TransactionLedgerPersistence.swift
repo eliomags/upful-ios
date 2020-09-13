@@ -24,26 +24,30 @@ final class TransactionLedgerPersistence {
     // MARK: - Methods
         
     func save(_ transaction: Transaction, completion: (() -> Void)?) {
-        let savingTransaction = PersistedTransaction(context: context)
-        savingTransaction.id = transaction.id
-        savingTransaction.type = transaction.type
-        savingTransaction.ticker = transaction.ticker
-        savingTransaction.tradePrice = transaction.tradePrice
-        savingTransaction.numberOfShares = transaction.numberOfShares
-        savingTransaction.transactionDate = transaction.transactionDate
-        savingTransaction.lastAppliedStockSplit = transaction.lastAppliedStockSplit
-        
-        context.saveOrRollBackIfNeeded()
-        completion?()
+        context.perform {
+            let savingTransaction = PersistedTransaction(context: self.context)
+            savingTransaction.id = transaction.id
+            savingTransaction.type = transaction.type
+            savingTransaction.ticker = transaction.ticker
+            savingTransaction.tradePrice = transaction.tradePrice
+            savingTransaction.numberOfShares = transaction.numberOfShares
+            savingTransaction.transactionDate = transaction.transactionDate
+            savingTransaction.lastAppliedStockSplit = transaction.lastAppliedStockSplit
+            
+            self.context.saveOrRollBackIfNeeded()
+            completion?()
+        }
     }
     
     func delete(_ transaction: Transaction, completion: (() -> Void)?) {
-        let fetchRequest = PersistedTransaction.createFetchRequest()
-        let persistedTransactions = (try? context.fetch(fetchRequest)) ?? []
-        for persistedTransaction in persistedTransactions {
-            context.delete(persistedTransaction)
+        context.perform {
+            let fetchRequest = PersistedTransaction.createFetchRequest()
+            let persistedTransactions = (try? self.context.fetch(fetchRequest)) ?? []
+            for persistedTransaction in persistedTransactions {
+                self.context.delete(persistedTransaction)
+            }
+            self.context.saveOrRollBackIfNeeded()
+            completion?()
         }
-        context.saveOrRollBackIfNeeded()
-        completion?()
     }
 }
