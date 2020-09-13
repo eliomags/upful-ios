@@ -52,7 +52,7 @@ final class StockPriceLoader: QuoteLoader {
     func loadEndOfDayPriceOnDate(for ticker: String, date: String,
                                  completion: @escaping (Result<Double,NetworkError>) -> Void) {
         let urlString = Constants.IEXTrading.EndPoints.production +
-            ticker + "chart/" +
+            ticker + "/chart/" +
             "date/\(date)" + "?" +
             "chartByDay=true&" +
             Constants.IEXTrading.appendingProductionKey
@@ -63,16 +63,24 @@ final class StockPriceLoader: QuoteLoader {
                 completion(.failure(.connection))
             case .success(let data):
                 do {
-                    let response = try JSONDecoder().decode([QuoteClose].self, from: data)
-                    if let entry = response.first {
-                        completion(.success(entry.uClose))
+                    if let response = try self.parseEndOfDayPrice(data) {
+                        completion(.success(response.uClose))
                     } else {
                         completion(.failure(.invalidData))
                     }
                 } catch {
+                    print(error.localizedDescription)
                     completion(.failure(.invalidData))
                 }
             }
         }
+    }
+    
+    func parseEndOfDayPrice(_ data: Data) throws -> QuoteClose? {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let response = try decoder.decode([QuoteClose].self, from: data)
+        
+        return response.first
     }
 }
