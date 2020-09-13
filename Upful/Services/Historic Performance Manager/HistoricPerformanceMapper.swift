@@ -47,38 +47,49 @@ final class HistoricPerformanceMapper {
     
     // MARK: - Create Day Performance
     
+    var loadHandler = CompletionHandler<Any?>()
+    var errorHandler = CompletionHandler<Error>()
+
     func createDayPerformanceDataPoints() {
         // pre-work) Create date buckets
         let df = DateFormatter()
         df.dateFormat = "yyyyMMdd"
         let transactionBuckets = createTransactionBuckets()
         
-        for bucket in transactionBuckets {
-            // 1) Contruct Cash Balance
-            let lastPeformanceDataPoint = performanceManager.load()
-            let previousDayCashBalance = lastPeformanceDataPoint?.cashBalance ?? BalanceConstants.initialCash
-            let todaysTransactions = bucket.transactions
-            let todaysCashChange = calculateNetCashChangeInDay(in: todaysTransactions)
-            let newCashBalance = previousDayCashBalance + todaysCashChange
-            
-            // 2) Contruct holdings Balance
-            let todaysHoldings = bucket.holdings
-            var holdingBalance: Double = 0
-            
-            todaysHoldings.forEach { holding in
-                let semaphore = DispatchSemaphore(value: 1)
-                semaphore.signal()
+        let queue = DispatchQueue(label: "com.upful.performanceLoadQueue", qos: .background, attributes: .concurrent)
+        let semaphore = DispatchSemaphore(value: 1)
+
+        queue.async {
+            for bucket in transactionBuckets {
+                // 1) Contruct Cash Balance
+                let lastPeformanceDataPoint = self.performanceManager.load()
+                let previousDayCashBalance = lastPeformanceDataPoint?.cashBalance ?? BalanceConstants.initialCash
+                let todaysTransactions = bucket.transactions
+                let todaysCashChange = self.calculateNetCashChangeInDay(in: todaysTransactions)
+                let newCashBalance = previousDayCashBalance + todaysCashChange
                 
-                // TODO: Put Semaphore on Background Thread to prevent blocking the main thread
-                loadPrice(holding.ticker, df.string(from: bucket.date), { result in
-                    if let endOfDayPrice = try? result.get() {
-                        holdingBalance += endOfDayPrice * Double(holding.totalShareCount)
-                    }
-                    // TODO: Properly Handle Failure
+                // 2) Contruct holdings Balance
+                let todaysHoldings = bucket.holdings
+                var holdingBalance: Double = 0
+                
+                todaysHoldings.forEach { holding in
+                    self.loadPrice(holding.ticker, df.string(from: bucket.date), { [weak self] result in
+                        switch result {
+                        case .success(let endOfDayPrice):
+                            holdingBalance += endOfDayPrice * Double(holding.totalShareCount)
+                        case .failure(let error):
+                            self?.errorHandler.notify(error)
+                        }
+                        semaphore.signal()
+                    })
                     semaphore.wait()
-                })
+                }
+                self.performanceManager.save(holdingBalance: holdingBalance,
+                                             cashBalance: newCashBalance,
+                                             date: bucket.date)
             }
-            performanceManager.save(holdingBalance: holdingBalance, cashBalance: newCashBalance, date: bucket.date)
+            self.loadHandler.notify()
+//            print(self.performanceManager.overallPerformance.map{$0.totalEquity})
         }
     }
     

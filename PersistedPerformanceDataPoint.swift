@@ -12,7 +12,7 @@ import CoreData
 
 @objc(PersistedPerformanceDataPoint)
 public class PersistedPerformanceDataPoint: NSManagedObject {
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<PersistedPerformanceDataPoint> {
+    @nonobjc public class func createFetchRequest() -> NSFetchRequest<PersistedPerformanceDataPoint> {
         return NSFetchRequest<PersistedPerformanceDataPoint>(entityName: "PersistedPerformanceDataPoint")
     }
     

@@ -23,42 +23,53 @@ class HistoricPerformanceMapperTests: XCTestCase {
     
     func test1DayPerformanceLoad() {
         sut.loadTransactions = mockTransactionLoader
-        
+        let exp = expectation(description: #function)
+
+        sut.loadHandler.subscribe { _ in
+            let overallPerformance = self.sut.performanceManager.overallPerformance
+            assert(overallPerformance.count == 2)
+            // Check first day performance
+            XCTAssertEqual(overallPerformance[0].cashBalance, 24991)
+            XCTAssertEqual(overallPerformance[0].holdingBalance, 11)
+            XCTAssertEqual(overallPerformance[0].totalEquity, 25002)
+            
+            // Check last day perforormance
+            XCTAssertEqual(overallPerformance[1].cashBalance, 24996)
+            XCTAssertEqual(overallPerformance[1].holdingBalance, 12)
+            XCTAssertEqual(overallPerformance[1].totalEquity, 25008)
+            
+            exp.fulfill()
+        }
         sut.createDayPerformanceDataPoints()
         
-        let overallPerformance = sut.performanceManager.overallPerformance
-        assert(overallPerformance.count == 2)
-    
-        // Check first day performance
-        XCTAssertEqual(overallPerformance[0].cashBalance, 24991)
-        XCTAssertEqual(overallPerformance[0].holdingBalance, 11)
-        XCTAssertEqual(overallPerformance[0].totalEquity, 25002)
-        
-        // Check last day perforormance
-        XCTAssertEqual(overallPerformance[1].cashBalance, 24996)
-        XCTAssertEqual(overallPerformance[1].holdingBalance, 12)
-        XCTAssertEqual(overallPerformance[1].totalEquity, 25008)
+        wait(for: [exp], timeout: 1)
     }
     
     func test4DaysPerformanceLoad() {
         sut.loadTransactions = mockTransactionLoaderWith4DaysAnd6Transactions
-
+        let exp = expectation(description: #function)
+        
+        sut.loadHandler.subscribe { _ in
+            let overallPerformance = self.sut.performanceManager.overallPerformance
+            assert(overallPerformance.count == 4)
+            // Day 1
+            XCTAssertEqual(overallPerformance[0].cashBalance, 24991)
+            XCTAssertEqual(overallPerformance[0].holdingBalance, 11)
+            // Day 2
+            XCTAssertEqual(overallPerformance[1].cashBalance, 24991)
+            XCTAssertEqual(overallPerformance[1].holdingBalance, 12)
+            // Day 3
+            XCTAssertEqual(overallPerformance[2].cashBalance, 24991)
+            XCTAssertEqual(overallPerformance[2].holdingBalance, 11)
+            // Day 4
+            XCTAssertEqual(overallPerformance[3].cashBalance, 24981)
+            XCTAssertEqual(overallPerformance[3].holdingBalance, 30)
+            
+            exp.fulfill()
+        }
         sut.createDayPerformanceDataPoints()
         
-        let overallPerformance = sut.performanceManager.overallPerformance
-        assert(overallPerformance.count == 4)
-        // Day 1
-        XCTAssertEqual(overallPerformance[0].cashBalance, 24991)
-        XCTAssertEqual(overallPerformance[0].holdingBalance, 11)
-        // Day 2
-        XCTAssertEqual(overallPerformance[1].cashBalance, 24991)
-        XCTAssertEqual(overallPerformance[1].holdingBalance, 12)
-        // Day 3
-        XCTAssertEqual(overallPerformance[2].cashBalance, 24991)
-        XCTAssertEqual(overallPerformance[2].holdingBalance, 11)
-        // Day 4
-        XCTAssertEqual(overallPerformance[3].cashBalance, 24981)
-        XCTAssertEqual(overallPerformance[3].holdingBalance, 30)
+        wait(for: [exp], timeout: 1)
     }
     
     // MARK: - Create Transaction Buckets
