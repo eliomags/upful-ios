@@ -27,13 +27,25 @@ class PerformanceManager: PerformanceSaver, PerformanceLoader {
         self.managedObjectContext = context
     }
     
+    @discardableResult
     func load() -> DayPerformance? {
-//        let request = PersistedPerformanceDataPoint.fetchRequest()
+        managedObjectContext.performAndWait {
+            let fetchRequest = PersistedPerformanceDataPoint.createFetchRequest()
+            let performance = try! managedObjectContext.fetch(fetchRequest)
+            overallPerformance = performance
+        }
         return overallPerformance.last
     }
     
     func save(holdingBalance: Double, cashBalance: Double, date: Date) {
-        let performance = DailyPerformance(holdingBalance: holdingBalance, cashBalance: cashBalance, date: date)
-        overallPerformance.append(performance)
+        managedObjectContext.performAndWait {
+            let dataPoint = PersistedPerformanceDataPoint(context: managedObjectContext)
+            dataPoint.date = date
+            dataPoint.cashBalance = cashBalance
+            dataPoint.holdingBalance = holdingBalance
+            
+            managedObjectContext.saveOrRollBackIfNeeded()
+            overallPerformance.append(dataPoint)
+        }
     }
 }
