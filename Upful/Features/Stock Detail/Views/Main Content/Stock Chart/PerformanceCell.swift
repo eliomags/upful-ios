@@ -294,6 +294,7 @@ class PerformanceLineChartView: LineChartView {
 }
 
 class PerformanceCell: UITableViewCell {
+    static let id = "PerformanceCellID"
     
     // MARK: Views
     

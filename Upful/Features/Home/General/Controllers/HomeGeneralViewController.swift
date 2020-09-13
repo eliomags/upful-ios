@@ -11,9 +11,10 @@ import UIKit
 final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             
     private enum Section: Int, CaseIterable {
-        case holdings = 0
-        case breakdown = 1
-        case preference = 2
+        case performance = 0
+        case holdings = 1
+        case breakdown = 2
+        case preference = 3
     }
     
     private enum Constants {
@@ -180,6 +181,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func setupTableViewCells() {
+        tableView.register(PerformanceCell.self,
+                           forCellReuseIdentifier: PerformanceCell.id)
         tableView.register(HoldingsBreakdownTableViewCell.self,
                            forCellReuseIdentifier: Constants.breakdownCellID)
         tableView.register(SmallNewsCell.self,
@@ -306,18 +309,12 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     fileprivate func reloadBreakdownSectionHeader() {
         let breakdownSection = Section.breakdown.rawValue
-
-        if !shouldDisplayBreakDownCell {
+        if shouldDisplayBreakDownCell {
+            navigationItem.title = ""
+        } else {
             tableView.deleteRows(at: [[breakdownSection,0]], with: .fade)
         }
-
         tableView.reloadSections([breakdownSection], with: .automatic)
-        
-        if shouldDisplayBreakDownCell {
-        } else {
-            navigationItem.title = ""
-        }
-        
         let headerView = tableView.headerView(forSection: breakdownSection) as? HoldingBreakdownHeaderView
         headerView?.toggleButtonState()
     }
@@ -393,6 +390,24 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     // MARK: TableViewCell Configuration
+    
+    @objc fileprivate func handlePerformanceDurationTap(_ sender: UISegmentedControl) {
+        logicController.performanceViewModel.selectedIndex = sender.selectedSegmentIndex
+    }
+    
+    fileprivate func makePerformanceCell(at indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: PerformanceCell.id, for: indexPath) as? PerformanceCell
+        if cell?.chartTimeControl.numberOfSegments == 0 {
+            let performanceTimePeriods = logicController.performanceViewModel.getAllSelections()
+            for selection in performanceTimePeriods.enumerated() {
+                cell?.chartTimeControl.insertSegment(withTitle: selection.element,
+                                                     at: selection.offset, animated: false)
+            }
+        }
+        cell?.chartTimeControl.addTarget(self, action: #selector(handlePerformanceDurationTap), for: .valueChanged)
+        cell?.chartTimeControl.selectedSegmentIndex = logicController.performanceViewModel.selectedIndex
+        return cell ?? UITableViewCell()
+    }
     
     fileprivate func makeBreakdownCell(at indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.breakdownCellID,
@@ -512,6 +527,9 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         switch section {
+        case Section.performance.rawValue:
+            return makePerformanceCell(at: indexPath)
+            
         case Section.breakdown.rawValue:
             return (logicController.holdingsState == .loading) ?
                 makeLoadingCell(at: indexPath) : makeBreakdownCell(at: indexPath)
@@ -536,7 +554,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             return (logicController.holdingsState == .loading) ?
 //                UITableView.automaticDimension : (UIScreen.main.bounds.height / 2) - 130
                 UITableView.automaticDimension : 280
-
+        case Section.performance.rawValue:
+            return 200
         default:
             return UITableView.automaticDimension
         }
@@ -546,12 +565,12 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         switch section {
         case Section.breakdown.rawValue:
             let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.breakdownHeaderID) as? HoldingBreakdownHeaderView
-            header?.addButton.isSelected = !shouldDisplayBreakDownCell
+            header?.addButton.isSelected = shouldDisplayBreakDownCell
             header?.buttonAction = { [weak self] in
                 guard let self = self else { return }
                 Vibration.light.vibrate()
                 self.shouldDisplayBreakDownCell = !self.shouldDisplayBreakDownCell
-                header?.addButton.isSelected = !self.shouldDisplayBreakDownCell
+//                header?.addButton.isSelected = !self.shouldDisplayBreakDownCell
             }
             return header
             

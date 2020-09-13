@@ -61,6 +61,10 @@ class HomeGeneralLogicController {
         startPreferenceLoad()
     }
     
+    // MARK: - Performance
+    
+    var performanceViewModel = HomePerformanceViewModel()
+    
     // MARK: - Holdings Loading
     
     private var holdingsLoader: Timer?

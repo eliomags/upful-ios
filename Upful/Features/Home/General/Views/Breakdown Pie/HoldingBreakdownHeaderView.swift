@@ -62,7 +62,7 @@ class HoldingBreakdownHeaderView: TableSectionHeaderView {
     
     // MARK: - Actions
     @objc override func handleTap(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
+//        sender.isSelected = !sender.isSelected
 
         buttonAction?()
         toggleButtonState()
