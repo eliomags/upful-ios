@@ -31,11 +31,13 @@ final class LocalTransactionLedgerLoader: TransactionLoader {
     }
     
     func load(completion: @escaping (Result<[Transaction], Error>)-> Void) {
-        let request = PersistedTransaction.createFetchRequest()
-        completion(Result {
-            let persistedTransactions = try self.context.fetch(request)
-            return persistedTransactions
-        })
+        context.perform {
+            let request = PersistedTransaction.createFetchRequest()
+            completion(Result {
+                let persistedTransactions = try self.context.fetch(request)
+                return persistedTransactions
+            })
+        }
     }
     
     func loadAllPersistedTransactions() -> [Transaction] {
