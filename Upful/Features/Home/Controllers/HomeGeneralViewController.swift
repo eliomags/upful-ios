@@ -11,10 +11,10 @@ import UIKit
 final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             
     private enum Section: Int, CaseIterable {
-        case performance = 0
-        case holdings = 1
-        case breakdown = 2
-        case preference = 3
+//        case performance = 0
+        case holdings = 0
+        case breakdown = 1
+        case preference = 2
     }
     
     private enum Constants {
@@ -93,6 +93,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         logicController.loadHoldings()
         configureTransactionHeaderSuccess()
         checkIfNeedsShowTitle()
+        tableView.reloadSections([Section.holdings.rawValue, Section.breakdown.rawValue], with: .automatic)
     }
     
     override func viewDidLayoutSubviews() {
@@ -132,13 +133,10 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func observeViewModelPreferenceUpdates() {
         logicController.sendPreferenceStateUpdates = { [weak self] (state) in
             guard let self = self else { return }
+            self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
             switch state {
             case .loaded, .new:
-                self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
                 self.refreshControl.endRefreshing()
-                
-            case .loading:
-                self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
             default:
                 break
             }
@@ -173,9 +171,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     fileprivate func setupTableView() {
         tableView.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.separatorStyle = .none
         tableView.setTableHeaderView(headerView: tradingBalanceView)
-
+        tableView.separatorStyle = .none
         view.addSubview(tableView)
         tableView.fillSuperview()
     }
@@ -372,7 +369,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
                 let tradePrice = holding.currentPrice
 
                 let transaction = TransactionAdapter(ticker: holding.ticker, shares: Int32(holding.totalShareCount), tradePrice: tradePrice!)
-                TradingEngine.shared.sell(transaction: transaction) { [weak self] in
+                self.logicController.tradingEngine.sell(transaction: transaction) { [weak self] in
                     guard let self = self else { return }
                     
                     DispatchQueue.main.async {
@@ -527,8 +524,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         switch section {
-        case Section.performance.rawValue:
-            return makePerformanceCell(at: indexPath)
+//        case Section.performance.rawValue:
+//            return makePerformanceCell(at: indexPath)
             
         case Section.breakdown.rawValue:
             return (logicController.holdingsState == .loading) ?
@@ -554,8 +551,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             return (logicController.holdingsState == .loading) ?
 //                UITableView.automaticDimension : (UIScreen.main.bounds.height / 2) - 130
                 UITableView.automaticDimension : 280
-        case Section.performance.rawValue:
-            return 200
+//        case Section.performance.rawValue:
+//            return 200
         default:
             return UITableView.automaticDimension
         }

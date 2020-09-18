@@ -1458,14 +1458,6 @@
 			path = "Saved Stocks";
 			sourceTree = "<group>";
 		};
-		3D6BD0C323B5079900FBC1ED /* Reusabile Views */ = {
-			isa = PBXGroup;
-			children = (
-				3D0C5F6C233A451600F4A5FC /* GenericHomeEmptyCell.swift */,
-			);
-			path = "Reusabile Views";
-			sourceTree = "<group>";
-		};
 		3D6BFE6223B50C0E00E76253 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -1905,18 +1897,6 @@
 			path = "Stock Split";
 			sourceTree = "<group>";
 		};
-		3DBEFFBF23A9BD6900BA407E /* General */ = {
-			isa = PBXGroup;
-			children = (
-				3D7013DC23ECF43000102E9C /* Coordinator */,
-				3DBEFFD323AACE6A00BA407E /* Views */,
-				3DBEFFCD23A9D06400BA407E /* Models */,
-				3DBEFFCC23A9CD4000BA407E /* Controllers */,
-				3DBEFFCE23A9D09700BA407E /* Logic Controllers */,
-			);
-			path = General;
-			sourceTree = "<group>";
-		};
 		3DBEFFCC23A9CD4000BA407E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1949,6 +1929,7 @@
 		3DBEFFD323AACE6A00BA407E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3D0C5F6C233A451600F4A5FC /* GenericHomeEmptyCell.swift */,
 				3D206A5E242702BB00F7E44C /* EmptyHomeTableViewCell.swift */,
 				3DB891DC24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift */,
 				3DAF279B2449F94E00CD001B /* Breakdown Pie */,
@@ -2226,8 +2207,11 @@
 		3DF5FBBF23341EC500856205 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				3D6BD0C323B5079900FBC1ED /* Reusabile Views */,
-				3DBEFFBF23A9BD6900BA407E /* General */,
+				3D7013DC23ECF43000102E9C /* Coordinator */,
+				3DBEFFD323AACE6A00BA407E /* Views */,
+				3DBEFFCD23A9D06400BA407E /* Models */,
+				3DBEFFCC23A9CD4000BA407E /* Controllers */,
+				3DBEFFCE23A9D09700BA407E /* Logic Controllers */,
 			);
 			path = Home;
 			sourceTree = "<group>";

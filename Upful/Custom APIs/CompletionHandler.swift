@@ -9,6 +9,8 @@
 import Foundation
 
 struct CompletionHandler<T> {
+    private var id = UUID().uuidString
+    
     private(set) var block: ((T?) -> Void)
     
     init(_ block: @escaping ((T?) -> Void) = { _ in }) {
@@ -25,5 +27,15 @@ struct CompletionHandler<T> {
     
     func notify(_ sender: T? = nil) {
         self.block(sender)
+    }
+}
+
+extension CompletionHandler: Hashable {
+    static func == (lhs: CompletionHandler<T>, rhs: CompletionHandler<T>) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

@@ -12,13 +12,13 @@ class HomeGeneralLogicController {
     
     // MARK: - Dependencies
     
+    let tradingEngine = TradingEngine.shared
     private let preferenceDataManager: PreferenceDataManager
     private let stockScreeningService: StockScreener
     private let savedStockDataManager: LocalStockDataLoaderProtocol
     private let stockNewsLoader: NewsLoaderProtocol
-    
+
     // MARK: - State
-    
     enum SectionState {
         case new
         case empty
@@ -27,13 +27,40 @@ class HomeGeneralLogicController {
         case error
     }
     
+    private(set) var holdingsState: SectionState = .loading {
+        didSet {
+            holdingsLoadCompletion?(nil)
+        }
+    }
     private(set) var preferenceState: SectionState = .loading {
         didSet {
             sendPreferenceStateUpdates?(preferenceState)
         }
     }
+    
+    // MARK: - Submodels
+    var performanceViewModel = HomePerformanceViewModel()
+
+    private var holdingsLoader: Timer?
+    private(set) var totalEquity: Double?
+    private(set) var holdings = [Holding]()
+
     private(set) var stockNews: [StockNewsViewModel] = []
+    
     private(set) var stocksYouMayLike: [StockViewModel] = []
+    
+    // MARK: - Properties
+    lazy var loadCompletionHandler: CompletionHandler<[Holding]> = {
+        var handler = CompletionHandler<[Holding]>()
+        handler.subscribe { [weak self] (holdings) in
+            if let holdings = holdings {
+                self?.holdings = holdings
+                self?.totalEquity = self?.tradingEngine.balanceManager.totalEquityBalance
+                self?.holdingsState = holdings.isEmpty ? .empty : .loaded
+            }
+        }
+        return handler
+    }()
 
     // MARK: - Configuration
     
@@ -53,30 +80,13 @@ class HomeGeneralLogicController {
         self.stockScreeningService = stockScreeningService
         self.stockNewsLoader = stockNewsLoader
     }
-    
-    // MARK: - API Methods
-    
+        
     func fetchTableData() {
         holdingsState = .loading
         startPreferenceLoad()
     }
-    
-    // MARK: - Performance
-    
-    var performanceViewModel = HomePerformanceViewModel()
-    
+        
     // MARK: - Holdings Loading
-    
-    private var holdingsLoader: Timer?
-    private(set) var totalEquity: Double?
-    private(set) var holdings = [Holding]()
-    let tradingEngine = TradingEngine.shared
-    
-    private(set) var holdingsState: SectionState = .loading {
-        didSet {
-            holdingsLoadCompletion?(nil)
-        }
-    }
 
     func loadHoldings() {
         holdingsLoader?.invalidate()
@@ -92,13 +102,7 @@ class HomeGeneralLogicController {
     }
     
     fileprivate func startHoldingsLoad() {
-        self.tradingEngine.completionHandler = { [weak self] holdings in
-            guard let self = self else { return }
-            self.holdings = holdings
-            self.totalEquity = self.tradingEngine.balanceManager.totalEquityBalance
-            self.holdingsState = holdings.isEmpty ? .empty : .loaded
-        }
-        
+        tradingEngine.loadHandlerObservers.insert(loadCompletionHandler)
         tradingEngine.loadHoldings()
     }
         

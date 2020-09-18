@@ -110,7 +110,9 @@ final class TradingEngine {
     
     // MARK: - Loading
     
-    var completionHandler: (([Holding]) -> Void)?
+    /// An unordered set of listeners awaiting execution.
+    var loadHandlerObservers: Set<CompletionHandler<[Holding]>?> = []
+
     var syncProfile: (([Holding], Double) -> ())? = ProfileSyncCoordinator.shared.sync
     
     func loadHoldings() {
@@ -118,6 +120,10 @@ final class TradingEngine {
             self.updateEquityBalance(with: holdings)
             self.loadStockSplits(for: holdings)
         }
+    }
+    
+    private func updateListeners(with holdings: [Holding]) {
+        loadHandlerObservers.compactMap{ $0 }.forEach{ $0.notify(holdings) }
     }
     
     fileprivate func loadStockSplits(for holdings: [Holding]) {
@@ -158,7 +164,7 @@ final class TradingEngine {
                 self.context.saveOrRollBackIfNeeded()
             }
             self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
-            self.completionHandler?(holdings)
+            self.updateListeners(with: holdings)
         }
     }
 

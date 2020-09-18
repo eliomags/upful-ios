@@ -56,42 +56,44 @@ final class HistoricPerformanceMapper {
         df.dateFormat = "yyyyMMdd"
         let transactionBuckets = createTransactionBuckets()
         
-        let queue = DispatchQueue(label: "com.upful.performanceLoadQueue", qos: .background, attributes: .concurrent)
-        let semaphore = DispatchSemaphore(value: 1)
-
+        let queue = DispatchQueue(label: "com.upful.performanceLoadQueue", attributes: .concurrent)
+        let semaphore = DispatchSemaphore(value: 0)
+        
         queue.async {
-            for bucket in transactionBuckets {
-                // 1) Contruct Cash Balance
-                let lastPeformanceDataPoint = self.performanceManager.load()
-                let previousDayCashBalance = lastPeformanceDataPoint?.cashBalance ?? BalanceConstants.initialCash
-                let todaysTransactions = bucket.transactions
-                let todaysCashChange = self.calculateNetCashChangeInDay(in: todaysTransactions)
-                let newCashBalance = previousDayCashBalance + todaysCashChange
-                
-                // 2) Contruct holdings Balance
-                let todaysHoldings = bucket.holdings
-                var holdingBalance: Double = 0
-                
-                todaysHoldings.forEach { holding in
-                    self.loadPrice(holding.ticker, df.string(from: bucket.date), { [weak self] result in
-                        switch result {
-                        case .success(let endOfDayPrice):
-                            holdingBalance += endOfDayPrice * Double(holding.totalShareCount)
-                        case .failure(let error):
-                            self?.errorHandler.notify(error)
-                        }
-                        semaphore.signal()
-                    })
-                    semaphore.wait()
+            DispatchQueue(label: "com.upful.sync").sync(flags: .barrier) {
+                for bucket in transactionBuckets {
+                    // 1) Contruct Cash Balance
+                    let lastPeformanceDataPoint = self.performanceManager.load()
+                    let previousDayCashBalance = lastPeformanceDataPoint?.cashBalance ?? BalanceConstants.initialCash
+                    let todaysTransactions = bucket.transactions
+                    let todaysCashChange = self.calculateNetCashChangeInDay(in: todaysTransactions)
+                    let newCashBalance = previousDayCashBalance + todaysCashChange
+                    
+                    // 2) Contruct holdings Balance
+                    let todaysHoldings = bucket.holdings
+                    var holdingBalance: Double = 0
+                    
+                    todaysHoldings.forEach { holding in
+                        self.loadPrice(holding.ticker, df.string(from: bucket.date), { [weak self] result in
+                            switch result {
+                            case .success(let endOfDayPrice):
+                                holdingBalance += endOfDayPrice * Double(holding.totalShareCount)
+                            case .failure(let error):
+                                self?.errorHandler.notify(error)
+                            }
+                            semaphore.signal()
+                        })
+                        semaphore.wait()
+                    }
+                    
+                    // 3) Save the data point
+                    self.performanceManager.save(holdingBalance: holdingBalance,
+                                                 cashBalance: newCashBalance,
+                                                 date: bucket.date)
                 }
-                
-                // 3) Save the data point
-                self.performanceManager.save(holdingBalance: holdingBalance,
-                                             cashBalance: newCashBalance,
-                                             date: bucket.date)
+                self.loadHandler.notify()
+                print(self.performanceManager.overallPerformance.map{$0.totalEquity})
             }
-            self.loadHandler.notify()
-            print(self.performanceManager.overallPerformance.map{$0.date})
         }
     }
     
