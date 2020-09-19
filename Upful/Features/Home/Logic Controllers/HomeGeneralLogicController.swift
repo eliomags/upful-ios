@@ -60,7 +60,7 @@ class HomeGeneralLogicController {
             if let holdings = holdings {
                 self?.holdings = holdings
                 self?.totalEquity = self?.tradingEngine.balanceManager.totalEquityBalance
-                
+                self?.loadPieChartViewModels()
                 DispatchQueue.main.async {
                     self?.holdingsState = holdings.isEmpty ? .empty : .loaded
                 }
@@ -104,7 +104,7 @@ class HomeGeneralLogicController {
         tradingEngine.loadHoldings()
     }
     
-    func loadPieChartViewModels() {
+    private func loadPieChartViewModels() {
         let vmLoader = PieChartViewModelLoader()
         let cash = tradingEngine.balanceManager.currentCashBalance
         pieChartViewModels = vmLoader.makeViewModels(from: holdings, cash: cash)

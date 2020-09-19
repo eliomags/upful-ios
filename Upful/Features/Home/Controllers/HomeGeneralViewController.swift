@@ -112,19 +112,20 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func observeViewModelHoldingsUpdates() {
         logicController.holdingsLoadCompletion = { [weak self] error in
             guard let self = self else { return }
+            self.tableView.beginUpdates()
             if let _ = error {
                 self.configureTransactionHeaderError()
                 self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
                 self.tableView.reloadSections([Section.breakdown.rawValue], with: .none)
                 self.refreshControl.endRefreshing()
+                self.tableView.endUpdates()
                 return
             }
-            self.logicController.loadPieChartViewModels()
             self.configureTransactionHeaderSuccess()
             
-//            self.tableView.reloadData()
             self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
             self.tableView.reloadSections([Section.breakdown.rawValue], with: .none)
+            self.tableView.endUpdates()
             self.refreshControl.endRefreshing()
         }
     }
@@ -132,12 +133,12 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func observeViewModelPreferenceUpdates() {
         logicController.sendPreferenceStateUpdates = { [weak self] (state) in
             guard let self = self else { return }
+            self.tableView.beginUpdates()
             self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
-            switch state {
-            case .loaded, .new:
+            self.tableView.endUpdates()
+            
+            if state == .loaded || state == .new {
                 self.refreshControl.endRefreshing()
-            default:
-                break
             }
         }
     }
