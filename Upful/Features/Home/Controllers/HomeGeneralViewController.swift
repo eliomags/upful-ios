@@ -91,7 +91,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         beginOperationUpdates()
         configureTransactionHeaderSuccess()
         checkIfNeedsShowTitle()
-//        tableView.reloadSections([Section.holdings.rawValue, Section.breakdown.rawValue], with: .automatic)
     }
     
     override func viewDidLayoutSubviews() {
@@ -113,6 +112,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         logicController.holdingsLoadCompletion = { [weak self] error in
             guard let self = self else { return }
             self.tableView.beginUpdates()
+            
             if let _ = error {
                 self.configureTransactionHeaderError()
                 self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
@@ -123,7 +123,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             }
             self.configureTransactionHeaderSuccess()
             
-            self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
+            self.tableView.reloadSections([Section.holdings.rawValue], with: .none)
             self.tableView.reloadSections([Section.breakdown.rawValue], with: .none)
             self.tableView.endUpdates()
             self.refreshControl.endRefreshing()
@@ -134,7 +134,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         logicController.sendPreferenceStateUpdates = { [weak self] (state) in
             guard let self = self else { return }
             self.tableView.beginUpdates()
-            self.tableView.reloadSections([Section.preference.rawValue], with: .automatic)
+            self.tableView.reloadSections([Section.preference.rawValue], with: .none)
             self.tableView.endUpdates()
             
             if state == .loaded || state == .new {
