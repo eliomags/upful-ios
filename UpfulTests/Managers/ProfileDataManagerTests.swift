@@ -308,15 +308,15 @@ extension ProfileDataManagerTests {
             })
         })
         
-        addTeardownBlock {
-            let fetchRequest = PersistedTransaction.fetchRequest()
-            let transactions = try! self.transactionViewContext.fetch(fetchRequest)
-            
-            for transaction in transactions {
-                guard let transaction = transaction as? NSManagedObject else { continue }
-                self.transactionViewContext.delete(transaction)
-            }
-        }
+//        addTeardownBlock {
+//            let fetchRequest = PersistedTransaction.fetchRequest()
+//            let transactions = try! self.transactionViewContext.fetch(fetchRequest)
+//            
+//            for transaction in transactions {
+//                guard let transaction = transaction as? NSManagedObject else { continue }
+//                self.transactionViewContext.delete(transaction)
+//            }
+//        }
     }
     
     fileprivate func clearUser() {

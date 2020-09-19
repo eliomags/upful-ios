@@ -9,9 +9,7 @@
 import Foundation
 
 class HomeGeneralLogicController {
-    
     // MARK: - Dependencies
-    
     let tradingEngine = TradingEngine.shared
     private let preferenceDataManager: PreferenceDataManager
     private let stockScreeningService: StockScreener
@@ -24,24 +22,31 @@ class HomeGeneralLogicController {
         case loaded
         case error
     }
-    
     private(set) var holdingsState: SectionState = .loading {
         didSet {
-            DispatchQueue.main.async {
-                self.holdingsLoadCompletion?(nil)
+            switch holdingsState {
+            case .loading:
+                self.startHoldingsLoad()
+            default:
+                break
             }
+            self.holdingsLoadCompletion?(nil)
         }
     }
     private(set) var preferenceState: SectionState = .loading {
         didSet {
-            DispatchQueue.main.async {
-                self.sendPreferenceStateUpdates?(self.preferenceState)
+            switch preferenceState {
+            case .loading:
+                self.startPreferenceLoad()
+            default:
+                break
             }
+            self.sendPreferenceStateUpdates?(self.preferenceState)
         }
     }
     
     // MARK: - Submodels
-    var performanceViewModel = HomePerformanceViewModel()
+    private(set) var performanceViewModel = HomePerformanceViewModel()
 
     private var holdingsLoader: Timer?
     private(set) var totalEquity: Double?
@@ -55,7 +60,10 @@ class HomeGeneralLogicController {
             if let holdings = holdings {
                 self?.holdings = holdings
                 self?.totalEquity = self?.tradingEngine.balanceManager.totalEquityBalance
-                self?.holdingsState = holdings.isEmpty ? .empty : .loaded
+                
+                DispatchQueue.main.async {
+                    self?.holdingsState = holdings.isEmpty ? .empty : .loaded
+                }
             }
         })
         return handler
@@ -64,26 +72,23 @@ class HomeGeneralLogicController {
     // MARK: - Configuration
     var holdingsLoadCompletion: ((Error?) -> Void)?
     var sendPreferenceStateUpdates: ((SectionState) -> Void)?
-    var newsLoadCompletion: (() -> Void)?
     
     // MARK: - Initializer
     init(preferenceDataManager: PreferenceDataManager = .init(),
-         stockScreeningService: StockScreener = StockScreeningService()
-    ) {
+         stockScreeningService: StockScreener = StockScreeningService()) {
         self.preferenceDataManager = preferenceDataManager
         self.stockScreeningService = stockScreeningService
     }
         
     func fetchTableData() {
         holdingsState = .loading
-        startPreferenceLoad()
+        preferenceState = .loading
     }
         
     // MARK: - Holdings Loading
 
     func loadHoldings() {
         holdingsLoader?.invalidate()
-        
         holdingsLoader = Timer.scheduledTimer(withTimeInterval: 15, repeats: true, block: {  (_) in
             self.startHoldingsLoad()
         })
@@ -106,10 +111,6 @@ class HomeGeneralLogicController {
     }
     
     // MARK: - Stock Preference Loading
-
-    /*
-     Gets a random combination of search parameters to perform search for Show More
-     */
     func getRandomPreferenceGroup() -> [String] {
         let groupedPreferences = preferenceDataManager.getGroupedPreferences()
         if groupedPreferences.isEmpty { return [] }
@@ -121,7 +122,6 @@ class HomeGeneralLogicController {
     func startPreferenceLoad() {
         let preferenceFetchGroup = DispatchGroup()
 
-        preferenceState = .loading
         let groupedPreferences = preferenceDataManager.getGroupedPreferences()
         if groupedPreferences.isEmpty {
             preferenceState = .new

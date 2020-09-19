@@ -76,8 +76,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        beginOperationUpdates()
-        
         guard self.tabBarController != nil else {
             return
         }
@@ -90,10 +88,10 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        logicController.loadHoldings()
+        beginOperationUpdates()
         configureTransactionHeaderSuccess()
         checkIfNeedsShowTitle()
-        tableView.reloadSections([Section.holdings.rawValue, Section.breakdown.rawValue], with: .automatic)
+//        tableView.reloadSections([Section.holdings.rawValue, Section.breakdown.rawValue], with: .automatic)
     }
     
     override func viewDidLayoutSubviews() {
@@ -111,7 +109,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     // MARK: - View Model Binding
-
     fileprivate func observeViewModelHoldingsUpdates() {
         logicController.holdingsLoadCompletion = { [weak self] error in
             guard let self = self else { return }
@@ -125,7 +122,9 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             self.logicController.loadPieChartViewModels()
             self.configureTransactionHeaderSuccess()
             
-            self.tableView.reloadSections([Section.holdings.rawValue, Section.breakdown.rawValue], with: .fade)
+//            self.tableView.reloadData()
+            self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
+            self.tableView.reloadSections([Section.breakdown.rawValue], with: .none)
             self.refreshControl.endRefreshing()
         }
     }
@@ -228,7 +227,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     // MARK: - Preference Delegate Methods
         
     func didCompleteSaving() {
-        logicController.startPreferenceLoad()
+//        logicController.startPreferenceLoad()
     }
     
     // MARK: - ScrollView Delegate Methods

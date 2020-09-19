@@ -134,14 +134,13 @@ final class TradingEngine {
             stockSplitHandlers.append(splitHandler)
         }
         
-        let stockSplitGroup = DispatchGroup()
-        stockSplitGroup.notify(queue: .global(qos: .userInitiated)) {
-            self.handleLoadCompletion()
-        }
-        
         if shouldCheckForStockSplit {
             lastCheckedForSplit = Date()
+            let stockSplitGroup = DispatchGroup()
             stockSplitHandlers.begin(dispatchGroup: stockSplitGroup)
+            stockSplitGroup.notify(queue: .global(qos: .userInitiated)) {
+                self.handleLoadCompletion()
+            }
         } else {
             handleLoadCompletion()
         }
