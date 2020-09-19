@@ -122,7 +122,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
                 self.refreshControl.endRefreshing()
                 return
             }
-            self.loadPieChartViewModels()
+            self.logicController.loadPieChartViewModels()
             self.configureTransactionHeaderSuccess()
             
             self.tableView.reloadSections([Section.holdings.rawValue, Section.breakdown.rawValue], with: .fade)
@@ -316,17 +316,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         headerView?.toggleButtonState()
     }
     
-    // TODO: - Move to LogicController
-    var pieChartViewModels: [PieChartConfigurable] = []
-    
-    fileprivate func loadPieChartViewModels() {
-        let vmLoader = PieChartViewModelLoader()
-        let holdings = logicController.holdings
-        let cash = logicController.tradingEngine.balanceManager.currentCashBalance
-        
-        pieChartViewModels = vmLoader.makeViewModels(from: holdings, cash: cash)
-    }
-    
     // MARK: Create Context Menus
     
     fileprivate func makeStockViewAction(for dataSource: [StockViewable], at row: Int) -> UIAction {
@@ -409,7 +398,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func makeBreakdownCell(at indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.breakdownCellID,
                                                  for: indexPath) as? HoldingsBreakdownTableViewCell
-        cell?.chartView.setupPieChart(chartConfigurables: pieChartViewModels)
+        cell?.chartView.setupPieChart(chartConfigurables: logicController.pieChartViewModels)
         
         return cell ?? UITableViewCell()
     }

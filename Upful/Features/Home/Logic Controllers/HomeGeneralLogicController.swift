@@ -46,7 +46,7 @@ class HomeGeneralLogicController {
     private var holdingsLoader: Timer?
     private(set) var totalEquity: Double?
     private(set) var holdings = [Holding]()
-    
+    private(set) var pieChartViewModels: [PieChartConfigurable] = []
     private(set) var stocksYouMayLike: [StockViewModel] = []
     
     // MARK: - Properties
@@ -97,6 +97,12 @@ class HomeGeneralLogicController {
     fileprivate func startHoldingsLoad() {
         tradingEngine.loadHandlerObservers.addHandler(loadCompletionHandler)
         tradingEngine.loadHoldings()
+    }
+    
+    func loadPieChartViewModels() {
+        let vmLoader = PieChartViewModelLoader()
+        let cash = tradingEngine.balanceManager.currentCashBalance
+        pieChartViewModels = vmLoader.makeViewModels(from: holdings, cash: cash)
     }
     
     // MARK: - Stock Preference Loading
