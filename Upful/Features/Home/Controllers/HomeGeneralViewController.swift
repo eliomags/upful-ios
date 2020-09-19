@@ -208,7 +208,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     @objc fileprivate func handleResfreshing() {
         refreshControl.endRefreshing()
         logicController.fetchTableData()
-        logicController.loadHoldings()
     }
     
     fileprivate func handleStockSuggestionCellSelection(for indexPath: IndexPath) {
