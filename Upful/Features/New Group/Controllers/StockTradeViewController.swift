@@ -24,9 +24,8 @@ final class StockTradeViewController: UITableViewController {
     
     private var estimate: Double?
     
-    lazy var holdingsLoadCompletion: CompletionHandler<[Holding]> = {
-        var handler = CompletionHandler<[Holding]>()
-        handler.subscribe { [weak self] holdings in
+    lazy var holdingsLoadCompletion: Handler<[Holding]> = {
+        var handler = Handler<[Holding]> { [weak self] holdings in
             if let holdings = holdings {
                 self?.currentHoldings = holdings
                 self?.handleHoldingsLoadCompletion(holdings)
@@ -200,7 +199,7 @@ final class StockTradeViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tradingEngine.loadHandlerObservers.insert(holdingsLoadCompletion)
+        tradingEngine.loadHandlerObservers.addHandler(holdingsLoadCompletion)
         tradingEngine.loadHoldings()
         loadRecentPrice()
         
@@ -223,7 +222,7 @@ final class StockTradeViewController: UITableViewController {
     }
     
     @objc fileprivate func handleCancelTap() {
-        tradingEngine.loadHandlerObservers.remove(holdingsLoadCompletion)
+        tradingEngine.loadHandlerObservers.unsubscribe(handler: holdingsLoadCompletion)
         dismiss(animated: true, completion: nil)
     }
     

@@ -111,7 +111,7 @@ final class TradingEngine {
     // MARK: - Loading
     
     /// An unordered set of listeners awaiting execution.
-    var loadHandlerObservers: Set<CompletionHandler<[Holding]>?> = []
+    var loadHandlerObservers = CompletionHandler<[Holding]>()
 
     var syncProfile: (([Holding], Double) -> ())? = ProfileSyncCoordinator.shared.sync
     
@@ -123,7 +123,7 @@ final class TradingEngine {
     }
     
     private func updateListeners(with holdings: [Holding]) {
-        loadHandlerObservers.compactMap{ $0 }.forEach{ $0.notify(holdings) }
+        loadHandlerObservers.notify(holdings)
     }
     
     fileprivate func loadStockSplits(for holdings: [Holding]) {

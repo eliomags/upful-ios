@@ -96,13 +96,13 @@ class StockScreeningService: StockScreener {
                 return
             }
             if let data = data {
-                    do {
-                        let screeningResponse = try JSONDecoder().decode(ScreeningResponse.self, from: data)
-                        self.screenerPage += 1
-                        completion(.success(screeningResponse.data))
-                    } catch {
-                        completion(.failure(NetworkError.invalidData))
-                    }
+                do {
+                    let screeningResponse = try JSONDecoder().decode(ScreeningResponse.self, from: data)
+                    self.screenerPage += 1
+                    completion(.success(screeningResponse.data))
+                } catch {
+                    completion(.failure(NetworkError.invalidData))
+                }
             } else {
                 completion(.failure(NetworkError.invalidData))
             }

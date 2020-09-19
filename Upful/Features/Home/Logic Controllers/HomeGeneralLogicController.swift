@@ -15,8 +15,6 @@ class HomeGeneralLogicController {
     let tradingEngine = TradingEngine.shared
     private let preferenceDataManager: PreferenceDataManager
     private let stockScreeningService: StockScreener
-    private let savedStockDataManager: LocalStockDataLoaderProtocol
-    private let stockNewsLoader: NewsLoaderProtocol
 
     // MARK: - State
     enum SectionState {
@@ -29,12 +27,16 @@ class HomeGeneralLogicController {
     
     private(set) var holdingsState: SectionState = .loading {
         didSet {
-            holdingsLoadCompletion?(nil)
+            DispatchQueue.main.async {
+                self.holdingsLoadCompletion?(nil)
+            }
         }
     }
     private(set) var preferenceState: SectionState = .loading {
         didSet {
-            sendPreferenceStateUpdates?(preferenceState)
+            DispatchQueue.main.async {
+                self.sendPreferenceStateUpdates?(self.preferenceState)
+            }
         }
     }
     
@@ -44,41 +46,32 @@ class HomeGeneralLogicController {
     private var holdingsLoader: Timer?
     private(set) var totalEquity: Double?
     private(set) var holdings = [Holding]()
-
-    private(set) var stockNews: [StockNewsViewModel] = []
     
     private(set) var stocksYouMayLike: [StockViewModel] = []
     
     // MARK: - Properties
-    lazy var loadCompletionHandler: CompletionHandler<[Holding]> = {
-        var handler = CompletionHandler<[Holding]>()
-        handler.subscribe { [weak self] (holdings) in
+    lazy var loadCompletionHandler: Handler<[Holding]> = {
+        var handler = Handler<[Holding]>(block: { [weak self] holdings in
             if let holdings = holdings {
                 self?.holdings = holdings
                 self?.totalEquity = self?.tradingEngine.balanceManager.totalEquityBalance
                 self?.holdingsState = holdings.isEmpty ? .empty : .loaded
             }
-        }
+        })
         return handler
     }()
 
     // MARK: - Configuration
-    
     var holdingsLoadCompletion: ((Error?) -> Void)?
     var sendPreferenceStateUpdates: ((SectionState) -> Void)?
     var newsLoadCompletion: (() -> Void)?
     
     // MARK: - Initializer
-    
-    init(savedStockDataManager: LocalStockDataLoaderProtocol = LocalStockLoader(),
-         preferenceDataManager: PreferenceDataManager = .init(),
-         stockScreeningService: StockScreener = StockScreeningService(),
-         stockNewsLoader: NewsLoaderProtocol = NewsLoader()
+    init(preferenceDataManager: PreferenceDataManager = .init(),
+         stockScreeningService: StockScreener = StockScreeningService()
     ) {
         self.preferenceDataManager = preferenceDataManager
-        self.savedStockDataManager = savedStockDataManager
         self.stockScreeningService = stockScreeningService
-        self.stockNewsLoader = stockNewsLoader
     }
         
     func fetchTableData() {
@@ -102,61 +95,8 @@ class HomeGeneralLogicController {
     }
     
     fileprivate func startHoldingsLoad() {
-        tradingEngine.loadHandlerObservers.insert(loadCompletionHandler)
+        tradingEngine.loadHandlerObservers.addHandler(loadCompletionHandler)
         tradingEngine.loadHoldings()
-    }
-        
-    // MARK: - News Loading
-        
-    func startNewsLoad() {
-        savedStockDataManager.loadSavedStocks { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let savedStocks):
-                self.loadNews(savedStocks)
-                
-            case .failure(_):
-                self.getGeneralMarketNews()
-            }
-        }
-    }
-        
-    fileprivate func loadNews(_ savedStocks: [Stock]) {
-        if !savedStocks.isEmpty { getNewsForTickers(savedStocks)  }
-        if savedStocks.isEmpty { getGeneralMarketNews() }
-    }
-    
-    fileprivate func getGeneralMarketNews() {
-        stockNewsLoader.get(router: .getMarketNews) { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case.success(let news):
-                self.handleNewsFetchCompletion(news: news)
-                
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
-        }
-    }
-    
-    fileprivate func getNewsForTickers(_ savedStocks: [Stock])  {
-        let stocks = savedStocks.map({ $0.ticker }).joined(separator: ",")
-        stockNewsLoader.get(router: .getTickerNews(tickers: stocks)) { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let news):
-                self.handleNewsFetchCompletion(news: news)
-                
-            case .failure(let err):
-                print(err.localizedDescription)
-            }
-        }
-    }
-    
-    fileprivate func handleNewsFetchCompletion(news: [StockNews]) {
-        let mappedNews = news.map { StockNewsViewModel(stockNews: $0) }
-        self.stockNews = mappedNews
-        newsLoadCompletion?()
     }
     
     // MARK: - Stock Preference Loading
@@ -172,9 +112,9 @@ class HomeGeneralLogicController {
         return groupedPreferences[randomElement]
     }
         
-    let preferenceFetchGroup = DispatchGroup()
-    
     func startPreferenceLoad() {
+        let preferenceFetchGroup = DispatchGroup()
+
         preferenceState = .loading
         let groupedPreferences = preferenceDataManager.getGroupedPreferences()
         if groupedPreferences.isEmpty {
@@ -183,7 +123,7 @@ class HomeGeneralLogicController {
         }
         groupedPreferences.forEach { (preferenceArray) in
             let preferenceParameters = preferenceArray.joined(separator: ",")
-            fetchSuggestedStocks(parameters: preferenceParameters)
+            fetchSuggestedStocks(parameters: preferenceParameters, dispatchGroup: preferenceFetchGroup)
         }
         
         preferenceFetchGroup.notify(queue: .main) {
@@ -200,8 +140,8 @@ class HomeGeneralLogicController {
         }
     }
     
-    fileprivate func fetchSuggestedStocks(parameters: String) {
-        preferenceFetchGroup.enter()
+    fileprivate func fetchSuggestedStocks(parameters: String, dispatchGroup: DispatchGroup? = nil) {
+        dispatchGroup?.enter()
         
         stockScreeningService.get(router: .getScreeningResults(parameters: parameters,
                                                                numberOfResults: 8), completion: {
@@ -213,7 +153,7 @@ class HomeGeneralLogicController {
             case .failure(_):
                 self.preferenceState = .error
             }
-            self.preferenceFetchGroup.leave()
+            dispatchGroup?.leave()
         })
     }
     
