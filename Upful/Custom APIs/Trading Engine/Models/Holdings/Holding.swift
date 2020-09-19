@@ -83,3 +83,13 @@ extension Holding {
 }
 
 extension Holding: StockViewable {}
+
+extension Holding: Comparable {
+    static func < (lhs: Holding, rhs: Holding) -> Bool {
+        return lhs.currentTotalValue < rhs.currentTotalValue
+    }
+    
+    static func == (lhs: Holding, rhs: Holding) -> Bool {
+        return lhs.currentTotalValue == rhs.currentTotalValue
+    }
+}

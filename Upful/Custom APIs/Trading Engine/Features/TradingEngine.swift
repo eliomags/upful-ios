@@ -122,10 +122,6 @@ final class TradingEngine {
         }
     }
     
-    private func updateListeners(with holdings: [Holding]) {
-        loadHandlerObservers.notify(holdings)
-    }
-    
     fileprivate func loadStockSplits(for holdings: [Holding]) {
         var stockSplitHandlers = [StockSplitHandler]()
         for ticker in holdings.map({ $0.ticker }) {
@@ -163,7 +159,7 @@ final class TradingEngine {
                 self.context.saveOrRollBackIfNeeded()
             }
             self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
-            self.updateListeners(with: holdings)
+            self.loadHandlerObservers.notify(holdings)
         }
     }
 

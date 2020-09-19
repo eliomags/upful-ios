@@ -21,11 +21,10 @@ class HoldingMapper {
         holdingsLoadGroup = DispatchGroup()
         
         let activeHoldings = HoldingMapper.mapActiveHoldings(transactions)
-        
         activeHoldings.forEach({ loadQuotes(for: $0) })
-
         holdingsLoadGroup?.notify(queue: .main) {
-            self.completionHandler?(activeHoldings)
+            let holdingsCopy: [Holding] = activeHoldings.sorted().reversed()
+            self.completionHandler?(holdingsCopy)
         }
     }
     
