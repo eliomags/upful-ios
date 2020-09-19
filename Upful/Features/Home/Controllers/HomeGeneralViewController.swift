@@ -76,6 +76,8 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.estimatedRowHeight = 60
+        
         guard self.tabBarController != nil else {
             return
         }
@@ -111,31 +113,35 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func observeViewModelHoldingsUpdates() {
         logicController.holdingsLoadCompletion = { [weak self] error in
             guard let self = self else { return }
-            self.tableView.beginUpdates()
-            
+            self.refreshControl.endRefreshing()
+
             if let _ = error {
+                self.tableView.beginUpdates()
                 self.configureTransactionHeaderError()
                 self.tableView.reloadSections([Section.holdings.rawValue], with: .fade)
                 self.tableView.reloadSections([Section.breakdown.rawValue], with: .none)
-                self.refreshControl.endRefreshing()
                 self.tableView.endUpdates()
                 return
             }
             self.configureTransactionHeaderSuccess()
             
-            self.tableView.reloadSections([Section.holdings.rawValue], with: .none)
-            self.tableView.reloadSections([Section.breakdown.rawValue], with: .none)
-            self.tableView.endUpdates()
-            self.refreshControl.endRefreshing()
+            UIView.performWithoutAnimation {
+                self.tableView.beginUpdates()
+                self.tableView.reloadSections([Section.holdings.rawValue], with: .none)
+                self.tableView.reloadSections([Section.breakdown.rawValue], with: .none)
+                self.tableView.endUpdates()
+            }
         }
     }
     
     fileprivate func observeViewModelPreferenceUpdates() {
         logicController.sendPreferenceStateUpdates = { [weak self] (state) in
             guard let self = self else { return }
-            self.tableView.beginUpdates()
-            self.tableView.reloadSections([Section.preference.rawValue], with: .none)
-            self.tableView.endUpdates()
+            UIView.performWithoutAnimation {
+                self.tableView.beginUpdates()
+                self.tableView.reloadSections([Section.preference.rawValue], with: .none)
+                self.tableView.endUpdates()
+            }
             
             if state == .loaded || state == .new {
                 self.refreshControl.endRefreshing()
