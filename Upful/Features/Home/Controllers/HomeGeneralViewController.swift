@@ -318,8 +318,6 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
             tableView.deleteRows(at: [[breakdownSection,0]], with: .fade)
         }
         tableView.reloadSections([breakdownSection], with: .automatic)
-        let headerView = tableView.headerView(forSection: breakdownSection) as? HoldingBreakdownHeaderView
-        headerView?.toggleButtonState()
     }
     
     // MARK: Create Context Menus

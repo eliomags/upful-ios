@@ -37,7 +37,7 @@ class HoldingBreakdownHeaderView: TableSectionHeaderView {
         addButton.setTitle("", for: .normal)
         addButton.setTitle("", for: .selected)
         
-        let openImage = UIImage(systemName: "chevron.up")?
+        let openImage = UIImage(systemName: "chevron.down")?
             .withTintColor(.label, renderingMode: .alwaysOriginal)
         let closeImage = UIImage(systemName: "chevron.up")?
             .withTintColor(.label, renderingMode: .alwaysOriginal)
@@ -46,25 +46,10 @@ class HoldingBreakdownHeaderView: TableSectionHeaderView {
         addButton.setImage(closeImage, for: .selected)
     }
     
-    // MARK: - Animations
-    func toggleButtonState() {
-        if addButton.isSelected {
-            UIView.animate(withDuration: 0.25) {
-                self.addButton.imageView?.transform = CGAffineTransform(rotationAngle: -CGFloat.pi)
-            }
-            
-        } else {
-            UIView.animate(withDuration: 0.25) {
-                self.addButton.imageView?.transform = .identity
-            }
-        }
-    }
-    
     // MARK: - Actions
     @objc override func handleTap(_ sender: UIButton) {
-//        sender.isSelected = !sender.isSelected
+        sender.isSelected = !sender.isSelected
 
         buttonAction?()
-        toggleButtonState()
     }
 }
