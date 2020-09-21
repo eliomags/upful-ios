@@ -27,11 +27,11 @@ class StockPerformanceChartViewModel {
     
     // MARK: Callbacks
     
-    var loadCompletion: (() -> Void)?
+    var cellRefreshHandler: (() -> Void)?
     
     // MARK: Views
     
-    private(set) var tableView: UITableView?
+    weak var tableView: UITableView?
     private var performanceCell: PerformanceCell?
     private let performanceChartHelperView = PerformanceChartHelperView()
         
@@ -65,10 +65,11 @@ class StockPerformanceChartViewModel {
         
         tableView?.isScrollEnabled = true
         currentSelectedIndex = control.selectedSegmentIndex
+        cellRefreshHandler?()
         
         let selectedTimePeriod = timePeriods[currentSelectedIndex]
         loadChartDataPoints(at: selectedTimePeriod) { [weak self] in
-            DispatchQueue.main.async { self?.loadCompletion?() }
+            self?.cellRefreshHandler?()
         }
     }
     

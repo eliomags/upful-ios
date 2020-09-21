@@ -155,7 +155,7 @@ final class StockOverviewViewController: UIViewController {
     }
     
     fileprivate func priceLoadHandler() {
-        datasource.stockPerformanceViewModel.loadCompletion = { [weak self] in
+        datasource.stockPerformanceViewModel.cellRefreshHandler = { [weak self] in
             self?.tableView.reloadSections([StockDetailsModuleConstants.Section.price.rawValue], with: .none)
         }
     }
