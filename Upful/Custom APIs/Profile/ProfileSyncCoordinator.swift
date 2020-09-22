@@ -44,7 +44,7 @@ class ProfileSyncCoordinator {
                         "holdings": mappableHoldings,
                         "firstTradeDate": "\(user.firstTransactionDate ?? Date.distantPast)",
                         "score": score ?? Int32.min
-                    ])
+                    ], merge: true)
                 })
             }
         }

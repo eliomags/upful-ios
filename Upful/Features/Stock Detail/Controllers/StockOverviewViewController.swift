@@ -119,16 +119,22 @@ final class StockOverviewViewController: UIViewController {
         performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
     }
     
+    lazy var engagementService = StockEngagementRecorder(ticker: ticker)
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if self.isMovingFromParent {
             setTabBarVisible(visible: true, animated: true)
         }
+        
+        engagementService.end()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setTabBarVisible(visible: false, animated: true)
+        
+        engagementService.start()
     }
     
     // MARK: - Observe Updates
