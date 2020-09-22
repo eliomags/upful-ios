@@ -90,6 +90,10 @@ struct ComparisonLineChartViewModel {
     }
     
     fileprivate static func configureLeftAxis(_ chartView: LineChartView) {
+        chartView.xAxis.drawGridLinesEnabled = false
+        chartView.xAxis.drawAxisLineEnabled = false
+        chartView.leftAxis.drawGridLinesEnabled = false
+        chartView.leftAxis.enabled = false
         chartView.leftAxis.spaceTop = 0.35
         chartView.leftAxis.spaceBottom = 0.2
         chartView.leftAxis.gridColor = .lightGray

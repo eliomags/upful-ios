@@ -15,7 +15,11 @@ class StockPerformanceChartViewModel {
     
     // MARK: Properties
     
-    private(set)var currentSelectedIndex = 0
+    private(set)var currentSelectedIndex = 0 {
+        didSet {
+            cellRefreshHandler?()
+        }
+    }
     private var datapoints: [ChartDataPoint] = []
     
     private let ticker: String
@@ -65,7 +69,6 @@ class StockPerformanceChartViewModel {
         
         tableView?.isScrollEnabled = true
         currentSelectedIndex = control.selectedSegmentIndex
-        cellRefreshHandler?()
         
         let selectedTimePeriod = timePeriods[currentSelectedIndex]
         loadChartDataPoints(at: selectedTimePeriod) { [weak self] in
