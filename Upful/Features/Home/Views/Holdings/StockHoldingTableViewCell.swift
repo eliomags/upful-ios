@@ -15,8 +15,8 @@ class StockHoldingTableViewCell: UITableViewCell {
     let tickerLabel: UILabel = {
         let label = UILabel()
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.callout).pointSize
-        label.font = UIFont.systemFont(ofSize: size, weight: .regular)
-        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        label.textAlignment = .left
         return label
     }()
     
@@ -25,7 +25,7 @@ class StockHoldingTableViewCell: UITableViewCell {
         let size = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1).pointSize
         label.font = UIFont.systemFont(ofSize: size, weight: .bold)
         label.textColor = .gray
-        label.textAlignment = .center
+        label.textAlignment = .left
         return label
     }()
     
