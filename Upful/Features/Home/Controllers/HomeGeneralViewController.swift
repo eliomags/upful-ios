@@ -558,14 +558,18 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
                 guard let self = self else { return }
                 Vibration.light.vibrate()
                 self.shouldDisplayBreakDownCell = !self.shouldDisplayBreakDownCell
-//                header?.addButton.isSelected = !self.shouldDisplayBreakDownCell
             }
             return header
             
         case Section.holdings.rawValue:
             let holdingsHeader = TableSectionHeaderView()
             holdingsHeader.headerTextLabel.text = "Holdings"
-            holdingsHeader.addButton.setTitle("", for: .normal)
+            holdingsHeader.addButton.setTitle("History", for: .normal)
+            holdingsHeader.buttonAction = { [weak self] in
+                let transactionHistoryVC = TransactionHistoryViewController(style: .insetGrouped)
+                let navVC = UINavigationController(rootViewController: transactionHistoryVC)
+                self?.present(navVC, animated: true, completion: nil)
+            }
             return holdingsHeader
             
         case Section.preference.rawValue:
