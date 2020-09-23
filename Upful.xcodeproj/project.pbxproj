@@ -145,6 +145,7 @@
 		3D7014A123F438DC00102E9C /* ResultsDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7014A023F438DC00102E9C /* ResultsDescriptionView.swift */; };
 		3D70DC9123E32E5100097323 /* RecommendationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D70DC9023E32E5100097323 /* RecommendationViewController.swift */; };
 		3D71504E245BC4320053E45D /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D71504D245BC4320053E45D /* SplashScreenViewController.swift */; };
+		3D75B2AA251C01F500678802 /* TransactionHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D75B2A9251C01F500678802 /* TransactionHistoryViewController.swift */; };
 		3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C85462337344300A2E63E /* InformationViewPresenter.swift */; };
 		3D7C854C2337479300A2E63E /* CustomSizeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C854B2337479300A2E63E /* CustomSizeImageView.swift */; };
 		3D7C854E233747A800A2E63E /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7C854D233747A800A2E63E /* InformationView.swift */; };
@@ -445,6 +446,7 @@
 		3D7014A023F438DC00102E9C /* ResultsDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsDescriptionView.swift; sourceTree = "<group>"; };
 		3D70DC9023E32E5100097323 /* RecommendationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationViewController.swift; sourceTree = "<group>"; };
 		3D71504D245BC4320053E45D /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
+		3D75B2A9251C01F500678802 /* TransactionHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryViewController.swift; sourceTree = "<group>"; };
 		3D7C85462337344300A2E63E /* InformationViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewPresenter.swift; sourceTree = "<group>"; };
 		3D7C854B2337479300A2E63E /* CustomSizeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSizeImageView.swift; sourceTree = "<group>"; };
 		3D7C854D233747A800A2E63E /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
@@ -1913,6 +1915,7 @@
 			children = (
 				3DBEFFC423A9CC0000BA407E /* HomeGeneralViewController.swift */,
 				3D3749AB23B9B40A000D0597 /* NewsViewController.swift */,
+				3D75B2A9251C01F500678802 /* TransactionHistoryViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2697,6 +2700,7 @@
 				3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */,
 				3DB7A4F824E861C200B9ADAB /* StockSplit.swift in Sources */,
 				3D297A072390226A001D02C3 /* SuggestionFeedViewController.swift in Sources */,
+				3D75B2AA251C01F500678802 /* TransactionHistoryViewController.swift in Sources */,
 				3DF734DD2406B47500B297A4 /* ScreenResultsViewModel.swift in Sources */,
 				3DD3439824BB59A70081DBE6 /* SearchCriteriaSelectionViewController.swift in Sources */,
 				3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */,

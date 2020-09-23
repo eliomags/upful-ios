@@ -46,7 +46,7 @@ final class StockSplitHandler {
     
     func checkIfTransactionsNeedsApply(exDate: Date) -> Bool {
         guard let transaction = transactions.getRecentTransaction() else { return false }
-        let transactionDate = DateTransformer.convertStringToDate(transaction.transactionDate!)
+        let transactionDate = DateTransformer.convertStringToDate(transaction.transactionDate)
         
         let isEXDateAfterTransactionDate = exDate.timeIntervalSince(transactionDate) > 0
         let isEXDateAfterLastAppliedStockSplitDate =

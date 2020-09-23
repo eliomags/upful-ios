@@ -105,7 +105,7 @@ final class HistoricPerformanceMapper {
         var curr = 0
         while curr < historicTransactions.count {
             let currentTransaction = historicTransactions[curr]
-            let currentTransactionDate = DateTransformer.convertStringToDate(currentTransaction.transactionDate!)
+            let currentTransactionDate = DateTransformer.convertStringToDate(currentTransaction.transactionDate)
             
             // Do not create bucket if date is on or before the last saved Data Point timestamp
             if let lastSavedPerformanceDataPoint = lastSavedPerformanceDataPoint {

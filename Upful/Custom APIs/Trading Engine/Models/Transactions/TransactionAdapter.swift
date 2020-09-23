@@ -12,8 +12,8 @@ class TransactionAdapter {
     var ticker: String
     var numberOfShares: Int32
     var tradePrice: Double
-    var type: String?
-    var transactionDate: String?
+    var type: String
+    var transactionDate: String
     var id: String
     var lastAppliedStockSplit: Date?
     

@@ -225,8 +225,8 @@ class ProfileDataManager {
                     switch result {
                     case .success(let transactions):
                         
-                        if let firstTransactionDate = transactions.sorted(by: { self.convertToDate(from: $0.transactionDate!) <
-                            self.convertToDate(from: $1.transactionDate!) }).first?.transactionDate {
+                        if let firstTransactionDate = transactions.sorted(by: { self.convertToDate(from: $0.transactionDate) <
+                            self.convertToDate(from: $1.transactionDate)}).first?.transactionDate {
                             completion(.success(self.convertToDate(from: firstTransactionDate)))
                         } else {
                             completion(.success(nil))
