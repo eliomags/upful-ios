@@ -33,6 +33,7 @@ final class StockOverviewViewController: UIViewController {
     let ticker: String
     let companyName: String
     
+    lazy var engagementService = StockEngagementRecorder(ticker: ticker)
     let savedStockDataManager: LocalStockDataLoaderProtocol = LocalStockLoader()
 
     lazy var datasource: StockOverviewDatasource = {
@@ -118,9 +119,7 @@ final class StockOverviewViewController: UIViewController {
         loadOverviewData()
         performSelector(inBackground: #selector(checkIfCurrentlySaved), with: nil)
     }
-    
-    lazy var engagementService = StockEngagementRecorder(ticker: ticker)
-    
+        
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if self.isMovingFromParent {

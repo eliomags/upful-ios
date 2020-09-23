@@ -8,21 +8,29 @@
 
 import UIKit
 
+class SectionStackView: UIStackView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        axis = .vertical
+        distribution = .fillEqually
+        spacing = 22
+    }
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 final class DetailsCalculationCell: UITableViewCell {
-    
     private let valuationView = ValuationSectionView()
     private let financialView = FinancialSectionView()
     private let growthView = GrowthSectionView()
     
     lazy var calcSV: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [
+        let sv = SectionStackView(arrangedSubviews: [
             valuationView,
             financialView,
             growthView
             ])
-        sv.axis = .vertical
-        sv.distribution = .fill
-        sv.spacing = 15
         return sv
     }()
     
@@ -108,11 +116,3 @@ final class DetailsCalculationCell: UITableViewCell {
     }
     
 }
-
-
-
-
-
-
-
-

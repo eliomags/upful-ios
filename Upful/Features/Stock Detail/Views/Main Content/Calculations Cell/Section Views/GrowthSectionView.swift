@@ -62,14 +62,11 @@ final class GrowthSectionView: UIView {
     
     
     private lazy var valuationSV: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [
+        let sv = SectionStackView(arrangedSubviews: [
             row1SV,
 //            row2SV,
             row3SV,
             ])
-        sv.axis = .vertical
-        sv.distribution = .fillEqually
-        sv.spacing = 15
         return sv
     }()
     
