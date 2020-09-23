@@ -524,8 +524,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
                 makeLoadingCell(at: indexPath) : makeBreakdownCell(at: indexPath)
             
         case Section.holdings.rawValue:
-            return (logicController.holdingsState == .loading) ?
-                makeLoadingCell(at: indexPath) : makeHoldingsCell(at: indexPath)
+            return makeHoldingsCell(at: indexPath)
 
         case Section.preference.rawValue:
             if logicController.preferenceState == .loaded { return makeStockCells(indexPath) }
