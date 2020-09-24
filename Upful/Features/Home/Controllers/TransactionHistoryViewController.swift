@@ -11,12 +11,8 @@ import UIKit
 struct TransactionViewModel {
     let transaction: Transaction
     
-    var description: String {
-        let type = TransactionType(rawValue: transaction.type)!
-        var action = ""
-        if type == .buy { action = "\nBUY" }
-        if type == .sell { action = "\nSELL" }
-        return transaction.ticker + action + "\n\(transaction.numberOfShares) shares\n\(transaction.tradePrice)"
+    var title: String {
+        return transaction.ticker + " \(transaction.numberOfShares) shares"
     }
     
     var dateString: String {
@@ -24,6 +20,12 @@ struct TransactionViewModel {
         dateFormatter.dateFormat = "MMM d, yyyy"
         dateFormatter.timeZone = TimeZone(abbreviation: "EST")
         return dateFormatter.string(from: transaction.transactionDateAsDate)
+    }
+    var price: String {
+        return "$\(viewModel.transaction.tradePrice.roundToTwoDecimal())"
+    }
+    var transactionType: String {
+        return transaction.type
     }
 }
 
@@ -109,7 +111,7 @@ final class TransactionHistoryViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(TransactionListCell.self, forCellReuseIdentifier: TransactionListCell.id)
-        navigationItem.title = "Historic Trades"
+        navigationItem.title = "Previous Trades"
         configureViewModels()
     }
     
@@ -142,10 +144,10 @@ final class TransactionHistoryViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TransactionListCell.id, for: indexPath) as? TransactionListCell
         let viewModel = sectionedViewModels[indexPath.section].viewModels[indexPath.row]
-        cell?.tickerLabel.text = viewModel.transaction.ticker + " \(viewModel.transaction.numberOfShares) shares"
+        cell?.tickerLabel.text = viewModel.title
+        cell?.tradePriceLabel.text = viewModel.price
         cell?.descriptionLabel.text = viewModel.dateString
-        cell?.tradePriceLabel.text = "$\(viewModel.transaction.tradePrice.roundToTwoDecimal())"
-        cell?.transactionTypeLabel.text = "\(viewModel.transaction.type)"
+        cell?.transactionTypeLabel.text = viewModel.transactionType
         
         return cell ?? TransactionListCell()
     }

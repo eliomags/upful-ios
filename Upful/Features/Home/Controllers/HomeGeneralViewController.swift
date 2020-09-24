@@ -567,8 +567,7 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
             holdingsHeader.addButton.setTitle("See History", for: .normal)
             holdingsHeader.buttonAction = { [weak self] in
                 let transactionHistoryVC = TransactionHistoryViewController(style: .grouped)
-                let navVC = UINavigationController(rootViewController: transactionHistoryVC)
-                self?.present(navVC, animated: true, completion: nil)
+                self?.navigationController?.pushViewController(transactionHistoryVC, animated: true)
             }
             return holdingsHeader
             
