@@ -22,7 +22,7 @@ struct TransactionViewModel {
         return dateFormatter.string(from: transaction.transactionDateAsDate)
     }
     var price: String {
-        return "$\(viewModel.transaction.tradePrice.roundToTwoDecimal())"
+        return "$\(transaction.tradePrice.roundToTwoDecimal())"
     }
     var transactionType: String {
         return transaction.type
