@@ -27,28 +27,88 @@ struct TransactionViewModel {
     }
 }
 
+final class TransactionListCell: UITableViewCell {
+    static let id = "TransactionListCellID"
+    
+    let tickerLabel: UILabel = {
+        let label = UILabel()
+        let size = UIFont.preferredFont(forTextStyle: .body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .regular)
+        return label
+    }()
+    let descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray
+        let size = UIFont.preferredFont(forTextStyle: .caption1).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        return label
+    }()
+    
+    let transactionTypeLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .right
+        let size = UIFont.preferredFont(forTextStyle: .body).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .semibold)
+        return label
+    }()
+    let tradePriceLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .right
+        let size = UIFont.preferredFont(forTextStyle: .callout).pointSize
+        label.font = UIFont.systemFont(ofSize: size, weight: .regular)
+        return label
+    }()
+    
+    private lazy var contentStackView: UIStackView = {
+        let descriptionStackView = makeSectionStackView(with: tickerLabel, descriptionLabel)
+        let tradeInfoStackView = makeSectionStackView(with: tradePriceLabel, transactionTypeLabel)
+        let stackView = UIStackView(arrangedSubviews: [descriptionStackView, tradeInfoStackView])
+        stackView.axis = .horizontal
+        return stackView
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        addSubview(contentStackView)
+        contentStackView.fillSuperview(padding: .init(top: 16, left: 16, bottom: 16, right: 16))
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func makeSectionStackView(with views: UIView...) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: views)
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        return stackView
+    }
+}
+
 final class TransactionHistoryViewController: UITableViewController {
     struct SectionedViewModel {
         let description: String
         var viewModels: [TransactionViewModel]
     }
+    
+    // SubModels
     var sectionedViewModels = [SectionedViewModel]() {
         didSet {
             tableView.reloadData()
         }
     }
     
+    // MARK: Initializer
     override init(style: UITableView.Style) {
-        super.init(style: style)
+        super.init(style: .insetGrouped)
     }
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
-    // MARK: - Lifecycle Methods
+    // MARK: Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.allowsSelection = false
+        tableView.register(TransactionListCell.self, forCellReuseIdentifier: TransactionListCell.id)
         navigationItem.title = "Historic Trades"
         configureViewModels()
     }
@@ -70,7 +130,7 @@ final class TransactionHistoryViewController: UITableViewController {
         sectionedViewModels.append(otherTransactions)
     }
     
-    // MARK: - TableView Delegate Methods
+    // MARK: TableView Delegate Methods
     override func numberOfSections(in tableView: UITableView) -> Int {
         return sectionedViewModels.count
     }
@@ -80,16 +140,26 @@ final class TransactionHistoryViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "transactionCell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: TransactionListCell.id, for: indexPath) as? TransactionListCell
         let viewModel = sectionedViewModels[indexPath.section].viewModels[indexPath.row]
-        cell.textLabel?.text = viewModel.description
-        cell.textLabel?.numberOfLines = 0
-        cell.detailTextLabel?.text = viewModel.dateString
-        return cell
+        cell?.tickerLabel.text = viewModel.transaction.ticker + " \(viewModel.transaction.numberOfShares) shares"
+        cell?.descriptionLabel.text = viewModel.dateString
+        cell?.tradePriceLabel.text = "$\(viewModel.transaction.tradePrice.roundToTwoDecimal())"
+        cell?.transactionTypeLabel.text = "\(viewModel.transaction.type)"
+        
+        return cell ?? TransactionListCell()
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let headerTitle = sectionedViewModels[section].description
         return headerTitle
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewModel = sectionedViewModels[indexPath.section].viewModels[indexPath.row]
+        let stock = Stock(name: "", ticker: viewModel.transaction.ticker)
+        let presenter = StockDetailsCoordinator(presenter: self, stockViewModel: .init(stock: stock))
+        
+        presenter.start()
     }
 }
