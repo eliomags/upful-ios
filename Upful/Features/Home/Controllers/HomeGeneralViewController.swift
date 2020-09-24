@@ -564,9 +564,9 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
         case Section.holdings.rawValue:
             let holdingsHeader = TableSectionHeaderView()
             holdingsHeader.headerTextLabel.text = "Holdings"
-            holdingsHeader.addButton.setTitle("History", for: .normal)
+            holdingsHeader.addButton.setTitle("See History", for: .normal)
             holdingsHeader.buttonAction = { [weak self] in
-                let transactionHistoryVC = TransactionHistoryViewController(style: .insetGrouped)
+                let transactionHistoryVC = TransactionHistoryViewController(style: .grouped)
                 let navVC = UINavigationController(rootViewController: transactionHistoryVC)
                 self?.present(navVC, animated: true, completion: nil)
             }

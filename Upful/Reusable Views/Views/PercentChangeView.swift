@@ -33,6 +33,6 @@ class PercentChangeView: UIView {
         percentChangeLabel.textColor = .systemGreen
     }
     func showNeutral() {
-        percentChangeLabel.textColor = .black
+        percentChangeLabel.textColor = .systemGray
     }
 }
