@@ -99,6 +99,11 @@ final class TransactionHistoryViewController: UITableViewController {
         }
     }
     
+    // State
+    var noTransactionsExist: Bool {
+        return sectionedViewModels.flatMap{ $0.viewModels }.isEmpty
+    }
+    
     // MARK: Initializer
     override init(style: UITableView.Style) {
         super.init(style: .insetGrouped)
@@ -134,22 +139,27 @@ final class TransactionHistoryViewController: UITableViewController {
     
     // MARK: TableView Delegate Methods
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionedViewModels.count
+        return noTransactionsExist ? 1 : sectionedViewModels.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sectionedViewModels[section].viewModels.count
+        return noTransactionsExist ? 1 : sectionedViewModels[section].viewModels.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TransactionListCell.id, for: indexPath) as? TransactionListCell
-        let viewModel = sectionedViewModels[indexPath.section].viewModels[indexPath.row]
-        cell?.tickerLabel.text = viewModel.title
-        cell?.tradePriceLabel.text = viewModel.price
-        cell?.descriptionLabel.text = viewModel.dateString
-        cell?.transactionTypeLabel.text = viewModel.transactionType
-        
-        return cell ?? TransactionListCell()
+        if noTransactionsExist {
+            let cell = UITableViewCell(style: .default, reuseIdentifier: "EmptyID")
+            cell.textLabel?.text = "No trades performed during this period."
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: TransactionListCell.id, for: indexPath) as? TransactionListCell
+            let viewModel = sectionedViewModels[indexPath.section].viewModels[indexPath.row]
+            cell?.tickerLabel.text = viewModel.title
+            cell?.tradePriceLabel.text = viewModel.price
+            cell?.descriptionLabel.text = viewModel.dateString
+            cell?.transactionTypeLabel.text = viewModel.transactionType
+            return cell ?? TransactionListCell()
+        }
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -158,6 +168,7 @@ final class TransactionHistoryViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if noTransactionsExist { return }
         let viewModel = sectionedViewModels[indexPath.section].viewModels[indexPath.row]
         let stock = Stock(name: "", ticker: viewModel.transaction.ticker)
         let presenter = StockDetailsCoordinator(presenter: self, stockViewModel: .init(stock: stock))
