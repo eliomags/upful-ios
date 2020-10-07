@@ -28,7 +28,7 @@ class AnalysisChartCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = VersionManager.collectionCellColor3()
         selectionStyle = .none
-        addSubview(containerView)
+        contentView.addSubview(containerView)
         containerView.fillSuperview()
     }
     

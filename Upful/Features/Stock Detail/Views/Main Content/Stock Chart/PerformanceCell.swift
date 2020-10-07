@@ -330,17 +330,17 @@ class PerformanceCell: UITableViewCell {
         selectionStyle = .none
         backgroundColor = .clear
         
-        let contentView = UIStackView(arrangedSubviews: [chartView, chartTimeControl])
-        contentView.axis = .vertical
-        contentView.spacing = 0
-        contentView.translatesAutoresizingMaskIntoConstraints = false
+        let contentStackView = UIStackView(arrangedSubviews: [chartView, chartTimeControl])
+        contentStackView.axis = .vertical
+        contentStackView.spacing = 0
+        contentStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        addSubview(contentView)
+        contentView.addSubview(contentStackView)
         NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: 0),
-            contentView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, constant: 0),
-            contentView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 0),
-            contentView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: 0)
+            contentStackView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor, constant: 0),
+            contentStackView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor, constant: 0),
+            contentStackView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor, constant: 0),
+            contentStackView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor, constant: 0)
         ])
     }
 }

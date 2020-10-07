@@ -134,7 +134,7 @@ final class LineChartTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        addSubview(chartView)
+        contentView.addSubview(chartView)
         chartView.fillSuperview(padding: .init(top: 16, left: 16, bottom: 16, right: 16))
     }
     

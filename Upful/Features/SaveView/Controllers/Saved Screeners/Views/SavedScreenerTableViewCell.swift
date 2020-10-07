@@ -64,8 +64,8 @@ class SavedScreenerTableViewCell: UITableViewCell {
     // MARK: - View Setup
     
     func setupViews() {
-        addSubview(textStackView)
-        textStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor,
+        contentView.addSubview(textStackView)
+        textStackView.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor,
                              padding: .init(top: 12, left: 16, bottom: 8, right: 16))
     }
     

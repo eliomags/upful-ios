@@ -106,9 +106,10 @@ class EmptyHomeTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         backgroundColor = .clear
-        addSubview(contentBackground)
-        contentBackground.anchor(top: layoutMarginsGuide.topAnchor, leading: layoutMarginsGuide.leadingAnchor,
-                                 bottom: layoutMarginsGuide.bottomAnchor, trailing: layoutMarginsGuide.trailingAnchor,
+        contentView.addSubview(contentBackground)
+        contentBackground.translatesAutoresizingMaskIntoConstraints = false
+        contentBackground.anchor(top: contentView.layoutMarginsGuide.topAnchor, leading: contentView.layoutMarginsGuide.leadingAnchor,
+                                 bottom: contentView.layoutMarginsGuide.bottomAnchor, trailing: contentView.layoutMarginsGuide.trailingAnchor,
                                  padding: .init(top: 8, left: 8, bottom: 8, right: 8))
     }
     

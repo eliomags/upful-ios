@@ -198,7 +198,7 @@ extension ManualScreenContainerViewController: UITableViewDelegate, UITableViewD
         let collectionView = collectionViews[indexPath.section]
         collectionView.section = indexPath.section
         
-        display(contentController: collectionView, on: cell)
+        display(contentController: collectionView, on: cell.contentView)
         
         return cell
     }
