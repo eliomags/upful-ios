@@ -19,7 +19,6 @@ extension Double {
 }
 
 class UpfulProductViewModel {
-    private static let oneMonthPricing = 2.99
     private let priceFormatter: NumberFormatter = {
       let formatter = NumberFormatter()
       formatter.formatterBehavior = .behavior10_4
@@ -47,7 +46,7 @@ class UpfulProductViewModel {
         switch UpfulProducts.ProductID(rawValue: (product.productIdentifier)) {
         case .oneMonth:
             subscriptionDuration = "1"
-            setMonthlyCost(from: product.price.doubleValue, duration: 1)
+//            setMonthlyCost(from: product.price.doubleValue, duration: 1)
         default:
             fatalError("No Product with that Identifier found")
         }
@@ -55,19 +54,19 @@ class UpfulProductViewModel {
 
     private func setMonthlyCost(from totalPricing: Double, duration: Int) {
         let subscriptionMonthlyCost = totalPricing / Double(duration)
-        self.monthlyPricing = "Then $\(subscriptionMonthlyCost.roundToTwoDecimal())" + "/mo."
+        self.monthlyPricing = "$\(subscriptionMonthlyCost.roundToTwoDecimal())" + "/mo."
     }
-    
-    private func setSavingsPercentage(from pricing: Double, duration: Int) {
-        let standardMonthlyCost = UpfulProductViewModel.oneMonthPricing
-        let savings = "\(Int((1-((pricing / Double(duration))/standardMonthlyCost))*100))%"
-        self.savingPercentage = savings
-    }
+//
+//    private func setSavingsPercentage(from pricing: Double, duration: Int) {
+//        let standardMonthlyCost = UpfulProductViewModel.oneMonthPricing
+//        let savings = "\(Int((1-((pricing / Double(duration))/standardMonthlyCost))*100))%"
+//        self.savingPercentage = savings
+//    }
 }
 
 extension UpfulProductViewModel {
     var description: String {
-        return "1 Month Free. \(monthlyPricing ?? "")"
+        return "\(monthlyPricing ?? "")"
     }
 }
 
