@@ -46,15 +46,17 @@ class UpfulProductViewModel {
         switch UpfulProducts.ProductID(rawValue: (product.productIdentifier)) {
         case .oneMonth:
             subscriptionDuration = "1"
-//            setMonthlyCost(from: product.price.doubleValue, duration: 1)
+            setMonthlyCost(from: product.price.doubleValue, duration: 1)
         default:
             fatalError("No Product with that Identifier found")
         }
     }
-
+    
     private func setMonthlyCost(from totalPricing: Double, duration: Int) {
+        let locale = Locale.current
+        let currencySymbol = locale.currencySymbol!
         let subscriptionMonthlyCost = totalPricing / Double(duration)
-        self.monthlyPricing = "$\(subscriptionMonthlyCost.roundToTwoDecimal())" + "/mo."
+        self.monthlyPricing = "\(currencySymbol)\(subscriptionMonthlyCost.roundToTwoDecimal())" + "/mo."
     }
 //
 //    private func setSavingsPercentage(from pricing: Double, duration: Int) {
