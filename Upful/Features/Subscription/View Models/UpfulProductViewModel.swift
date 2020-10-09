@@ -52,20 +52,14 @@ class UpfulProductViewModel {
         }
     }
     
-    private func setMonthlyCost(from totalPricing: Double, duration: Int) {
-        let locale = Locale.current
-        let currencySymbol = locale.currencySymbol!
-        let subscriptionMonthlyCost = totalPricing / Double(duration)
-        self.monthlyPricing = "\(currencySymbol)\(subscriptionMonthlyCost.roundToTwoDecimal())" + "/mo."
+    var price: String {
+        return product.localizedPrice ?? "$\(product.price.doubleValue)"
     }
-//
-//    private func setSavingsPercentage(from pricing: Double, duration: Int) {
-//        let standardMonthlyCost = UpfulProductViewModel.oneMonthPricing
-//        let savings = "\(Int((1-((pricing / Double(duration))/standardMonthlyCost))*100))%"
-//        self.savingPercentage = savings
-//    }
+    
+    private func setMonthlyCost(from totalPricing: Double, duration: Int) {
+        self.monthlyPricing = "Subscribe for \(price)" + "/mo"
+    }
 }
-
 extension UpfulProductViewModel {
     var description: String {
         return "\(monthlyPricing ?? "")"
