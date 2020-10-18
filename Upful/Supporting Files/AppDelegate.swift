@@ -35,4 +35,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        print("URL", url.absoluteString)
+        print("Host", url.host)
+        print("Path", url.query)
+        
+        let navigationController = UINavigationController()
+        coordinator = MainCoordinator(presenter: navigationController)
+        coordinator?.start()
+        
+        window = UIWindow()
+        window?.rootViewController = coordinator?.presenter
+        window?.backgroundColor = .systemBackground
+        
+        Mixpanel.initialize(token: Constants.MixPanel.token)
+        Mixpanel.mainInstance().userId = UserProfile.instance.profileID
+        
+        IAPService().completeTransactions()
+        
+        window?.makeKeyAndVisible()
+        
+        return true
+    }
 }
