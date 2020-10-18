@@ -93,7 +93,6 @@
 		3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F9662231A16B7003811AB /* CompanyNewsModel.swift */; };
 		3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F9664231B7488003811AB /* String+Extensions.swift */; };
 		3D31AA86242FCB3100326D7E /* CompanyNameLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D31AA85242FCB3100326D7E /* CompanyNameLoader.swift */; };
-		3D34039324F4862300AC244F /* BackgroundRefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D34039224F4862300AC244F /* BackgroundRefreshManager.swift */; };
 		3D3749AC23B9B40A000D0597 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AB23B9B40A000D0597 /* NewsViewController.swift */; };
 		3D3749B023B9BA66000D0597 /* NewsLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749AF23B9BA66000D0597 /* NewsLogicController.swift */; };
 		3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3749B123BA830D000D0597 /* StockScreeningService.swift */; };
@@ -394,7 +393,6 @@
 		3D2F9662231A16B7003811AB /* CompanyNewsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyNewsModel.swift; sourceTree = "<group>"; };
 		3D2F9664231B7488003811AB /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		3D31AA85242FCB3100326D7E /* CompanyNameLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyNameLoader.swift; sourceTree = "<group>"; };
-		3D34039224F4862300AC244F /* BackgroundRefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BackgroundRefreshManager.swift; path = ../../../../DSAlgoPractice/DSAlgoPractice/Solutions/Medium/BackgroundRefreshManager.swift; sourceTree = "<group>"; };
 		3D3749AB23B9B40A000D0597 /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
 		3D3749AF23B9BA66000D0597 /* NewsLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsLogicController.swift; sourceTree = "<group>"; };
 		3D3749B123BA830D000D0597 /* StockScreeningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockScreeningService.swift; sourceTree = "<group>"; };
@@ -1257,7 +1255,6 @@
 		3D34039124F4861900AC244F /* Background Tasks */ = {
 			isa = PBXGroup;
 			children = (
-				3D34039224F4862300AC244F /* BackgroundRefreshManager.swift */,
 			);
 			path = "Background Tasks";
 			sourceTree = "<group>";
@@ -2678,7 +2675,6 @@
 				3DE2B9D724945767008742F3 /* User+CoreData.swift in Sources */,
 				3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */,
 				3DCE8DB4243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift in Sources */,
-				3D34039324F4862300AC244F /* BackgroundRefreshManager.swift in Sources */,
 				3D562C8D235F248E00837B2F /* SubscriptionController.swift in Sources */,
 				3D206A6124284E8000F7E44C /* Holding.swift in Sources */,
 				3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */,

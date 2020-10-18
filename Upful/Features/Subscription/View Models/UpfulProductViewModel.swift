@@ -57,7 +57,7 @@ class UpfulProductViewModel {
     }
     
     private func setMonthlyCost(from totalPricing: Double, duration: Int) {
-        self.monthlyPricing = "Subscribe for \(price)" + "/mo"
+        self.monthlyPricing = "1 month free. Then \(price)" + "/mo."
     }
 }
 extension UpfulProductViewModel {
