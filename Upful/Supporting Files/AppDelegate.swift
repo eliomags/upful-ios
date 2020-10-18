@@ -29,10 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Mixpanel.initialize(token: Constants.MixPanel.token)
         Mixpanel.mainInstance().userId = UserProfile.instance.profileID
         
-        let serverSyncManager = ServerSyncManager()
-        serverSyncManager.setupBackgroundTasks()
-        serverSyncManager.scheduleServerSync()
-        
         IAPService().completeTransactions()
         
         window?.makeKeyAndVisible()
