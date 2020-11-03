@@ -90,6 +90,7 @@ class StockScreeningService: StockScreener {
             completion(.failure(NetworkError.invalidData))
             return
         }
+        
         let task = URLSession.shared.dataTask(with: url) { (data, _, err) in
             if let _ = err {
                 completion(.failure(NetworkError.connection))

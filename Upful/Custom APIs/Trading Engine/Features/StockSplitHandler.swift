@@ -87,11 +87,7 @@ extension Array where Element == StockSplit {
 
 extension Array where Element == Transaction {
     func getRecentTransaction() -> Transaction? {
-        let transaction = self.sorted(by: {
-            $0.transactionDate ?? "\(Date())" >
-            $1.transactionDate ?? "\(Date())" }
-        ).first
-
+        let transaction = self.sorted(by: { $0.transactionDate > $1.transactionDate }).first
         return transaction
     }
 }

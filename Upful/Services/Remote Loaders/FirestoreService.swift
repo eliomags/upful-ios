@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 protocol FirestoreService {
     associatedtype T

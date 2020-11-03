@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27032F75A4A68BC9781A8407 /* Pods_UpfulTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B61F07FF020ACE6CF9DC87C5 /* Pods_UpfulTests.framework */; };
 		3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D061D1F23C273F500B8FB14 /* ScreenerSelectionDelegate.swift */; };
 		3D0643CC23D94AE1002AAF28 /* PermissionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0643CB23D94AE1002AAF28 /* PermissionManagerTests.swift */; };
 		3D0C5F6423395CD500F4A5FC /* Notes+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C5F6223395CD500F4A5FC /* Notes+CoreDataClass.swift */; };
@@ -166,6 +167,7 @@
 		3D917B5222FE0542001D5E39 /* ManualSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B5122FE0542001D5E39 /* ManualSearchViewController.swift */; };
 		3D917B5622FE088F001D5E39 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B5522FE088F001D5E39 /* UIViewController+Extensions.swift */; };
 		3D917B5A22FE24C4001D5E39 /* SearchCriteriaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D917B5922FE24C4001D5E39 /* SearchCriteriaTableViewController.swift */; };
+		3D94588C2543E642000DECD1 /* UpfulDeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D94588B2543E642000DECD1 /* UpfulDeepLinkManager.swift */; };
 		3DA54086232B361B00EE477C /* MenuViewProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA54085232B361B00EE477C /* MenuViewProtocols.swift */; };
 		3DA54089232B364000EE477C /* MenuViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA54088232B364000EE477C /* MenuViewContainer.swift */; };
 		3DA5408C232B366F00EE477C /* MenuViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA5408B232B366F00EE477C /* MenuViewHeader.swift */; };
@@ -271,8 +273,7 @@
 		3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */; };
 		3DFD240023B672950027F5CF /* SentimentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FF23B672950027F5CF /* SentimentView.swift */; };
 		3DFD240223B67BE50027F5CF /* HomeGeneralLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD240123B67BE50027F5CF /* HomeGeneralLogicController.swift */; };
-		99AE37F894086773050F9CAC /* Pods_UpfulTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEA96FD6945406FFFE44A674 /* Pods_UpfulTests.framework */; };
-		EAEF460882B5484C56369BA3 /* Pods_Upful.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 843DD427FB88EC2CA48C03B2 /* Pods_Upful.framework */; };
+		F91F4A863CF471A9A8FDC244 /* Pods_Upful.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 921A8E4DF5EA5525F7B2027A /* Pods_Upful.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -299,6 +300,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0428EE71EAB69616B5CEA891 /* Pods-Upful.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Upful.debug.xcconfig"; path = "Target Support Files/Pods-Upful/Pods-Upful.debug.xcconfig"; sourceTree = "<group>"; };
 		3D061D1F23C273F500B8FB14 /* ScreenerSelectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenerSelectionDelegate.swift; sourceTree = "<group>"; };
 		3D0643CB23D94AE1002AAF28 /* PermissionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManagerTests.swift; sourceTree = "<group>"; };
 		3D0C5F6223395CD500F4A5FC /* Notes+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notes+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -432,8 +434,10 @@
 		3D6B01CA23D2839A007A2F19 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
 		3D6B071D2415C97300C55021 /* MultilineButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineButton.swift; sourceTree = "<group>"; };
 		3D6B071F2415C99400C55021 /* AuxiliaryActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuxiliaryActionView.swift; sourceTree = "<group>"; };
+		3D6B420B2E080881EC1F326D /* Pods-UpfulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.debug.xcconfig"; path = "Target Support Files/Pods-UpfulTests/Pods-UpfulTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3D6BD0BA23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreenersViewModelTest.swift; sourceTree = "<group>"; };
 		3D6BD0C423B507DE00FBC1ED /* EmptyScreenerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyScreenerCell.swift; sourceTree = "<group>"; };
+		3D6E6C6C253CF7050052A4BD /* Upful.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Upful.entitlements; sourceTree = "<group>"; };
 		3D6EFA452457FA2D00457121 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		3D6F46B6246DF5BB00844C5E /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		3D7013DA23EC9B3800102E9C /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
@@ -466,6 +470,7 @@
 		3D917B5122FE0542001D5E39 /* ManualSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSearchViewController.swift; sourceTree = "<group>"; };
 		3D917B5522FE088F001D5E39 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		3D917B5922FE24C4001D5E39 /* SearchCriteriaTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCriteriaTableViewController.swift; sourceTree = "<group>"; };
+		3D94588B2543E642000DECD1 /* UpfulDeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpfulDeepLinkManager.swift; sourceTree = "<group>"; };
 		3DA54085232B361B00EE477C /* MenuViewProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewProtocols.swift; sourceTree = "<group>"; };
 		3DA54088232B364000EE477C /* MenuViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewContainer.swift; sourceTree = "<group>"; };
 		3DA5408B232B366F00EE477C /* MenuViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewHeader.swift; sourceTree = "<group>"; };
@@ -569,12 +574,10 @@
 		3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsHeaderTableCell.swift; sourceTree = "<group>"; };
 		3DFD23FF23B672950027F5CF /* SentimentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentimentView.swift; sourceTree = "<group>"; };
 		3DFD240123B67BE50027F5CF /* HomeGeneralLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralLogicController.swift; sourceTree = "<group>"; };
-		4998D29207C4E0D63D77A099 /* Pods-UpfulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.debug.xcconfig"; path = "Target Support Files/Pods-UpfulTests/Pods-UpfulTests.debug.xcconfig"; sourceTree = "<group>"; };
-		6E9B888C4051F08AD543F4C4 /* Pods-Upful.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Upful.release.xcconfig"; path = "Target Support Files/Pods-Upful/Pods-Upful.release.xcconfig"; sourceTree = "<group>"; };
-		843DD427FB88EC2CA48C03B2 /* Pods_Upful.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Upful.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E4BB70E7106C29BD8BFD904 /* Pods-UpfulTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.release.xcconfig"; path = "Target Support Files/Pods-UpfulTests/Pods-UpfulTests.release.xcconfig"; sourceTree = "<group>"; };
-		EEA96FD6945406FFFE44A674 /* Pods_UpfulTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UpfulTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EFA5F68B6639CE5EE8CC31A8 /* Pods-Upful.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Upful.debug.xcconfig"; path = "Target Support Files/Pods-Upful/Pods-Upful.debug.xcconfig"; sourceTree = "<group>"; };
+		921A8E4DF5EA5525F7B2027A /* Pods_Upful.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Upful.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B61F07FF020ACE6CF9DC87C5 /* Pods_UpfulTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UpfulTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C5715E0C6E9182DFE20AA96B /* Pods-Upful.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Upful.release.xcconfig"; path = "Target Support Files/Pods-Upful/Pods-Upful.release.xcconfig"; sourceTree = "<group>"; };
+		D0FD0803C451AA2720B27444 /* Pods-UpfulTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UpfulTests.release.xcconfig"; path = "Target Support Files/Pods-UpfulTests/Pods-UpfulTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -583,8 +586,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DBF0C5523D61E45003023D7 /* Kingfisher in Frameworks */,
-				EAEF460882B5484C56369BA3 /* Pods_Upful.framework in Frameworks */,
 				3DD0D27E24C4B7530087928C /* YSDraggy in Frameworks */,
+				F91F4A863CF471A9A8FDC244 /* Pods_Upful.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -592,7 +595,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				99AE37F894086773050F9CAC /* Pods_UpfulTests.framework in Frameworks */,
+				27032F75A4A68BC9781A8407 /* Pods_UpfulTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -978,8 +981,9 @@
 		3D20FB2722FB1F08007836DD /* Upful */ = {
 			isa = PBXGroup;
 			children = (
-				3DF92414249FC2F60028EE01 /* Presenters */,
+				3D6E6C6C253CF7050052A4BD /* Upful.entitlements */,
 				3D20FB4822FB2086007836DD /* Supporting Files */,
+				3DF92414249FC2F60028EE01 /* Presenters */,
 				3D20FB4A22FB211C007836DD /* Extensions */,
 				3DF92415249FC31F0028EE01 /* Custom APIs */,
 				3D20FB4D22FB258A007836DD /* Services */,
@@ -1049,21 +1053,22 @@
 			isa = PBXGroup;
 			children = (
 				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
-				3D3BAB92251AAC9E002C09A6 /* Recorders */,
-				3D2D18ED2506FF59002F92BE /* Historic Performance Manager */,
-				3D34039124F4861900AC244F /* Background Tasks */,
-				3DF92413249FC2DA0028EE01 /* Historical Price Loader */,
-				3D31AA84242FCB2000326D7E /* CompanyNameLoader */,
-				3D583BB92413209E0001EEA5 /* Quote Loader */,
-				3D583BB82413207D0001EEA5 /* Stock Financial Loader */,
-				3DBF0C5623D94690003023D7 /* Remote Loaders */,
-				3D42BE462309A56F00806AFF /* Intrinio */,
 				3D2F963F2312B025003811AB /* Analytics */,
+				3D34039124F4861900AC244F /* Background Tasks */,
+				3D31AA84242FCB2000326D7E /* CompanyNameLoader */,
+				3D2D18ED2506FF59002F92BE /* Historic Performance Manager */,
+				3DF92413249FC2DA0028EE01 /* Historical Price Loader */,
+				3D42BE462309A56F00806AFF /* Intrinio */,
 				3DB004FB2360F5C0002F704D /* Permissions */,
 				3DFB62B8235E3B140026D3DC /* Payment */,
 				3DF5FC0423342BDF00856205 /* Persistence */,
+				3D583BB92413209E0001EEA5 /* Quote Loader */,
+				3D3BAB92251AAC9E002C09A6 /* Recorders */,
+				3DBF0C5623D94690003023D7 /* Remote Loaders */,
+				3D583BB82413207D0001EEA5 /* Stock Financial Loader */,
 				3DD75A2F236BAF6700C298B9 /* ColorManager.swift */,
 				3DD4291C2347EC530079DA18 /* Vibration.swift */,
+				3D94588B2543E642000DECD1 /* UpfulDeepLinkManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -2430,10 +2435,10 @@
 		9990AE1E68FE996002D8568F /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				EFA5F68B6639CE5EE8CC31A8 /* Pods-Upful.debug.xcconfig */,
-				6E9B888C4051F08AD543F4C4 /* Pods-Upful.release.xcconfig */,
-				4998D29207C4E0D63D77A099 /* Pods-UpfulTests.debug.xcconfig */,
-				9E4BB70E7106C29BD8BFD904 /* Pods-UpfulTests.release.xcconfig */,
+				0428EE71EAB69616B5CEA891 /* Pods-Upful.debug.xcconfig */,
+				C5715E0C6E9182DFE20AA96B /* Pods-Upful.release.xcconfig */,
+				3D6B420B2E080881EC1F326D /* Pods-UpfulTests.debug.xcconfig */,
+				D0FD0803C451AA2720B27444 /* Pods-UpfulTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -2445,8 +2450,8 @@
 				3D2E37D92303946800DE8D12 /* GoogleUtilities.framework */,
 				3D2E37DB2303946800DE8D12 /* nanopb.framework */,
 				3D2E37D72303942100DE8D12 /* GoogleMobileAds.framework */,
-				843DD427FB88EC2CA48C03B2 /* Pods_Upful.framework */,
-				EEA96FD6945406FFFE44A674 /* Pods_UpfulTests.framework */,
+				921A8E4DF5EA5525F7B2027A /* Pods_Upful.framework */,
+				B61F07FF020ACE6CF9DC87C5 /* Pods_UpfulTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2458,12 +2463,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D20FB4222FB1F0A007836DD /* Build configuration list for PBXNativeTarget "Upful" */;
 			buildPhases = (
-				65D2210DA672E826B20238EF /* [CP] Check Pods Manifest.lock */,
+				C3344C5422E41EB2D7E312A7 /* [CP] Check Pods Manifest.lock */,
 				3D20FB2122FB1F08007836DD /* Sources */,
 				3D20FB2222FB1F08007836DD /* Frameworks */,
 				3D20FB2322FB1F08007836DD /* Resources */,
 				3DA37C3223453049008832AB /* Embed Frameworks */,
-				9D50F2BACB3B0BA31DDA9C13 /* [CP] Embed Pods Frameworks */,
+				2CB080D99403D87B5F37C12D /* [CP] Embed Pods Frameworks */,
+				3D58526025513D430053FBDE /* Crashlytics Run Script */,
 			);
 			buildRules = (
 			);
@@ -2482,7 +2488,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D20FB4522FB1F0A007836DD /* Build configuration list for PBXNativeTarget "UpfulTests" */;
 			buildPhases = (
-				4A428690E08E3B2A561C3F08 /* [CP] Check Pods Manifest.lock */,
+				347C36A80A872BCB2AAAE5B5 /* [CP] Check Pods Manifest.lock */,
 				3D20FB3522FB1F0A007836DD /* Sources */,
 				3D20FB3622FB1F0A007836DD /* Frameworks */,
 				3D20FB3722FB1F0A007836DD /* Resources */,
@@ -2560,7 +2566,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4A428690E08E3B2A561C3F08 /* [CP] Check Pods Manifest.lock */ = {
+		2CB080D99403D87B5F37C12D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		347C36A80A872BCB2AAAE5B5 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2582,7 +2605,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		65D2210DA672E826B20238EF /* [CP] Check Pods Manifest.lock */ = {
+		3D58526025513D430053FBDE /* Crashlytics Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Crashlytics Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
+		};
+		C3344C5422E41EB2D7E312A7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2602,23 +2643,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9D50F2BACB3B0BA31DDA9C13 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Upful/Pods-Upful-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2741,6 +2765,7 @@
 				3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */,
 				3D2D18F12506FFEA002F92BE /* HistoricPerformanceMapper.swift in Sources */,
 				3D297A0923902D70001D02C3 /* Suggestions.swift in Sources */,
+				3D94588C2543E642000DECD1 /* UpfulDeepLinkManager.swift in Sources */,
 				3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */,
 				3DCE8DBB243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift in Sources */,
 				3D297A1223908FC9001D02C3 /* SelectionTableHeader.swift in Sources */,
@@ -3026,19 +3051,22 @@
 		};
 		3D20FB4322FB1F0A007836DD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EFA5F68B6639CE5EE8CC31A8 /* Pods-Upful.debug.xcconfig */;
+			baseConfigurationReference = 0428EE71EAB69616B5CEA891 /* Pods-Upful.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Upful/Upful.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 03;
+				CURRENT_PROJECT_VERSION = 01;
 				DEVELOPMENT_TEAM = DNPC864748;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.7.8;
+				MARKETING_VERSION = 4.7.9;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -3048,21 +3076,25 @@
 		};
 		3D20FB4422FB1F0A007836DD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6E9B888C4051F08AD543F4C4 /* Pods-Upful.release.xcconfig */;
+			baseConfigurationReference = C5715E0C6E9182DFE20AA96B /* Pods-Upful.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Upful/Upful.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 03;
+				CURRENT_PROJECT_VERSION = 01;
 				DEVELOPMENT_TEAM = DNPC864748;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.7.8;
+				MARKETING_VERSION = 4.7.9;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.syanik.Upful;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -3070,7 +3102,7 @@
 		};
 		3D20FB4622FB1F0A007836DD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4998D29207C4E0D63D77A099 /* Pods-UpfulTests.debug.xcconfig */;
+			baseConfigurationReference = 3D6B420B2E080881EC1F326D /* Pods-UpfulTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -3092,7 +3124,7 @@
 		};
 		3D20FB4722FB1F0A007836DD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9E4BB70E7106C29BD8BFD904 /* Pods-UpfulTests.release.xcconfig */;
+			baseConfigurationReference = D0FD0803C451AA2720B27444 /* Pods-UpfulTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";

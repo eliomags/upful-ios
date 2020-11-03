@@ -8,10 +8,15 @@
 
 import Foundation
 
+let https = "https"
+
 public struct Constants {
     struct MixPanel {
-//        static let token = "90dafb0f4cbcc21d7a9bddb6611a8b30"
-        static let token = ""
+        #if RELEASE
+            static let token = "90dafb0f4cbcc21d7a9bddb6611a8b30"
+        #else
+            static let token = ""
+        #endif
     }
     
     struct Intrinio {
@@ -26,7 +31,6 @@ public struct Constants {
             static let sandbox = "https://sandbox.iexapis.com/stable/stock/"
             static let production = "https://cloud.iexapis.com/stable/stock/"
         }
-        
     }
     
     struct Legal {

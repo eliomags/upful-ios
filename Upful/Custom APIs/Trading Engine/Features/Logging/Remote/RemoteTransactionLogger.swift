@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 final class RemoteTransactionLogger {
     private static let db = Firestore.firestore()

@@ -6,6 +6,7 @@
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
 import Firebase
+import FirebaseDynamicLinks
 import Mixpanel
 import UIKit
 
@@ -35,4 +36,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+//    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+//        if let incomingURL = userActivity.webpageURL {
+//            print("incoming URL ::", incomingURL)
+//            DynamicLinks.dynamicLinks().handleUniversalLink(incomingURL) { (dynamicLink, error) in
+//                if let error = error {
+//                    print("link handling error:", error.localizedDescription)
+//                }
+//
+//                if let dynamicLink = dynamicLink {
+//                    print("dynamic link", dynamicLink.url)
+//                    UpfulDeepLinkManager.route(from: self.coordinator?.homeVC, incomingURL: dynamicLink.url!)
+//                } else {
+//                    UpfulDeepLinkManager.route(from: self.coordinator?.homeVC, incomingURL: incomingURL)
+//                }
+//            }
+//
+//            return true
+//        }
+//
+//        return false
+//    }
+//
+//    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+//        if let dynamicLink = DynamicLinks.dynamicLinks().dynamicLink(fromCustomSchemeURL: url),
+//           let dynamicLinkURL = dynamicLink.url {
+//            print("dynamic link URL", dynamicLink.url)
+//            UpfulDeepLinkManager.route(from: self.coordinator?.homeVC, incomingURL: dynamicLinkURL)
+//        }
+//
+//        return true
+//    }
 }

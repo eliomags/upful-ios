@@ -19,7 +19,7 @@ final class StockDetailsCoordinator: Coordinator {
     }
     
     func start() {
-        RemoteStockManager.updateInterest(for: stockViewModel.stock.ticker, name: stockViewModel.stock.name)
+        RemoteStockManager.updateInterest(for: stockViewModel.stock.ticker.uppercased(), name: stockViewModel.stock.name)
         
         let detailsVC = StockOverviewViewController(ticker: stockViewModel.stock.ticker,
                                                     companyName: stockViewModel.stock.name)
