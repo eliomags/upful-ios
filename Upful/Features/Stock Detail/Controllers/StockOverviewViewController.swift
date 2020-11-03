@@ -176,21 +176,22 @@ final class StockOverviewViewController: UIViewController {
             style: .plain, target: self,
             action: #selector(handleShare)
         )
-        navigationItem.rightBarButtonItems = [share, save]
+        navigationItem.rightBarButtonItems = [save]
         VersionManager.navigationBarColor(in: navigationController)
         VersionManager.setNavigationBar(in: navigationController)
     }
     
     @objc fileprivate func handleShare() {
-        let message = "Check out \(ticker) on Upful."
-        let shareURL = URL(string: "upful://detail&ticker=\(ticker)")!
-        let image = UIImage(named: "icons8-nothing-found-48")!
-        let vc = UIActivityViewController(activityItems: [message, shareURL, image], applicationActivities: [])
-        vc.excludedActivityTypes = [.addToReadingList, .assignToContact, .saveToCameraRoll]
-        vc.completionWithItemsHandler = { (activityType, didComplete, content, error) in
-            print(activityType, didComplete, content, error)
+        let message = "Check out \(datasource.viewModel.companyName), (\(ticker)) on Upful!"
+        
+        UpfulDeepLinkManager.create(companyname: datasource.viewModel.companyName, ticker: ticker) { url in
+            let vc = UIActivityViewController(activityItems: [message, url], applicationActivities: [])
+            vc.completionWithItemsHandler = { (activityType, didComplete, content, error) in
+                // TODO: - Send analytics event
+                print(activityType, didComplete, content, error)
+            }
+            self.present(vc, animated: true)
         }
-        present(vc, animated: true)
     }
     
     private func setupViews() {

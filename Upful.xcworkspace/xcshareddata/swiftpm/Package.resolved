@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Kingfisher",
+        "repositoryURL": "https://github.com/onevcat/Kingfisher.git",
+        "state": {
+          "branch": null,
+          "revision": "1339ebea9498ef6c3fc75cc195d7163d7c7167f9",
+          "version": "5.14.1"
+        }
+      },
+      {
+        "package": "YSDraggy",
+        "repositoryURL": "https://github.com/syanik94/YSDraggy.git",
+        "state": {
+          "branch": "master",
+          "revision": "12789d2db43f04371adb9be10fed1dab637c236e",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
