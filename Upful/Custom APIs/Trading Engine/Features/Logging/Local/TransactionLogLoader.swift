@@ -7,17 +7,18 @@
 //
 
 import Foundation
+import CoreData
 
 final class TransactionLogLoader {
     
     // MARK: - Dependencies
     
-    private let container: CoreDataModelContainerManager
+    private let context: NSManagedObjectContext
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.container = container
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.context = context
     }
 }
 
@@ -28,7 +29,7 @@ extension TransactionLogLoader: TransactionLoader {
         request.sortDescriptors = [sortDescriptor]
         
         completion(Result {
-            let persistedTransactions = try self.container.persistentContainer.viewContext.fetch(request)
+            let persistedTransactions = try self.context.fetch(request)
             return persistedTransactions
         })
     }

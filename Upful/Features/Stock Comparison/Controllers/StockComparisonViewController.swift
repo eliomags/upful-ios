@@ -34,6 +34,8 @@ final class StockComparisonViewController: UIViewController {
     lazy var tableView: UITableView = makeTableView()
     lazy var closeButton: CancelButton = makeCancelButton()
     lazy var contentContainerView: UIView = createContainerView()
+    
+    private var panGesture: UIPanGestureRecognizer?
 
     // MARK: - Initializer
     
@@ -72,9 +74,15 @@ final class StockComparisonViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureismissPanGesture()
         comparisonViewModel.loadCompletionHandler.subscribe { [weak self] _ in
             self?.tableView.reloadData()
         }
+    }
+    
+    func configureismissPanGesture() {
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDownwardSwipe))
+        view.addGestureRecognizer(panGesture!)
     }
     
     // MARK: - View Creation
@@ -181,8 +189,29 @@ final class StockComparisonViewController: UIViewController {
         presentingViewController.present(searchCriteriaSelectionVC, animated: true, completion: nil)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        handleCancel()
+    @objc func handleDownwardSwipe(_ gesture: UIPanGestureRecognizer) {
+        let velocity = gesture.velocity(in: view).y
+        let translation = gesture.translation(in: view).y
+        let viewToAnimate = contentContainerView
+        
+        let velocityThreshold: CGFloat = 1000
+        let translationThreshold: CGFloat = 160
+        
+        switch gesture.state {
+        case .changed:
+            if translation <= -translationThreshold {
+                break
+            }
+            viewToAnimate.transform = CGAffineTransform(translationX: 0, y: translation)
+            if translation > translationThreshold || velocity > velocityThreshold {
+                dismiss(animated: true, completion: nil)
+            }
+            
+        default:
+            if translation < translationThreshold {
+                UIView.animate(withDuration: 0.25) { viewToAnimate.transform = .identity }
+            }
+        }
     }
 }
 

@@ -53,11 +53,11 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     }
         
     override func setupViews() {
-        addSubview(iconImageViewBackground)
+        contentView.addSubview(iconImageViewBackground)
         iconImageViewBackground
             .setLeadingAnchor(padding: 16)
             .setCenterYAnchor(padding: 0)
-        addSubview(textStackView)
+        contentView.addSubview(textStackView)
         textStackView
             .setTopAnchor(padding: 12)
             .setLeadingAnchor(relativeTo: iconImageViewBackground, padding: 16)

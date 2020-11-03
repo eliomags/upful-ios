@@ -178,7 +178,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
                 self?.didUpdateDefaultConstraint = true
             }
         }
-        display(contentController: preferenceCollectionView, on: cell)
+        display(contentController: preferenceCollectionView, on: cell.contentView)
         preferenceCollectionView.preferenceSelected = { [weak self] (selection) in
             self?.dataManager.update(selection)
         }

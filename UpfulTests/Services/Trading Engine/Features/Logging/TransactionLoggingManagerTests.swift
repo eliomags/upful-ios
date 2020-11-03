@@ -9,15 +9,14 @@
 import XCTest
 @testable import Upful
 
-class LoggingManagerTests: XCTestCase {
+class LoggingManagerTests: CoreDataUseCase {
         
     var sut: TransactionLoggingManager!
-    let mockContainerManager = MockTransactionContainerManager()
 
     // MARK: - Lifecycle
     
     override func setUp() {
-        sut = TransactionLoggingManager(container: mockContainerManager)
+        sut = TransactionLoggingManager(context: transactionViewContext)
     }
     
     // MARK: - Methods
@@ -83,6 +82,6 @@ class LoggingManagerTests: XCTestCase {
             }
         }
         
-        wait(for: [loadExpectation], timeout: 1.5)
+        wait(for: [loadExpectation], timeout: 2)
     }
 }

@@ -134,16 +134,23 @@ extension ManualScreenViewController {
 }
 
 extension ManualScreenViewController: UICollectionViewDelegateFlowLayout {
+    private var cellPadding: CGFloat {
+        return 12
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 120, height: 100)
+        let numberOfCellsPerRow: CGFloat = 3
+        let screenWidth = UIScreen.main.bounds.width
+        let cellWidth = (screenWidth / numberOfCellsPerRow) - (cellPadding * 2)
+        return CGSize(width: cellWidth, height: 100)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
+        return 12
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        return UIEdgeInsets(top: 16, left: cellPadding, bottom: 16, right: cellPadding)
     }
 }
 

@@ -10,17 +10,16 @@ import XCTest
 import CoreData
 @testable import Upful
 
-class ProfileDataManagerTests: XCTestCase {
+class ProfileDataManagerTests: CoreDataUseCase {
     
     var sut: ProfileDataManager!
-    let ledgerManager = LedgerManager(container: MockTransactionContainerManager.shared)
-    let localTransactionLoader = LocalTransactionLedgerLoader(container: MockTransactionContainerManager.shared)
     
     override func setUpWithError() throws {
-        let viewContext = MockTransactionContainerManager.shared.persistentContainer.viewContext
+        let localTransactionLoader = LocalTransactionLedgerLoader(context: transactionViewContext)
+        
         sut = ProfileDataManager(
             ledgerLoader: localTransactionLoader,
-            managedObjectContext: viewContext)
+            managedObjectContext: transactionViewContext)
     }
     
     // MARK: Date Loading
@@ -236,7 +235,7 @@ class ProfileDataManagerTests: XCTestCase {
         }
         clearUser()
         
-        wait(for: [expectations], timeout: 1)
+        wait(for: [expectations], timeout: 2)
     }
     
     func test_userScoreCalculation_with_weeksSinceFirstTradeGreaterThanZero() {
@@ -297,39 +296,38 @@ class ProfileDataManagerTests: XCTestCase {
 extension ProfileDataManagerTests {
     
     fileprivate func makeTransactions(firstTradeDateAsString: String, completion: @escaping (() -> Void)) {
-        ledgerManager.save(TransactionAdapter(ticker: "AAPL", shares: 1, tradePrice: 100, transactionDate: firstTradeDateAsString), completion: { [unowned self] in
+        let ledgerManager = LedgerManager(context: transactionViewContext)
+        ledgerManager.save(TransactionAdapter(ticker: "AAPL", shares: 1, tradePrice: 100, transactionDate: firstTradeDateAsString), completion: {
             
-            self.ledgerManager.save(TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100), completion: { [unowned self] in
+            ledgerManager.save(TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 100), completion: {
                 
-                self.ledgerManager.save(TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 120), completion: { [unowned self] in
+                ledgerManager.save(TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 120), completion: {
                     
-                    self.ledgerManager.save(TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 150), completion: completion)
+                    ledgerManager.save(TransactionAdapter(ticker: "FB", shares: 1, tradePrice: 150), completion: completion)
                 })
             })
         })
         
-        addTeardownBlock {
-            let fetchRequest = PersistedTransaction.fetchRequest()
-            let transactions = try! MockTransactionContainerManager.shared.persistentContainer.viewContext.fetch(fetchRequest)
-            
-            for transaction in transactions {
-                guard let transaction = transaction as? NSManagedObject else { continue }
-                MockTransactionContainerManager.shared.persistentContainer.viewContext.delete(transaction)
-            }
-        }
+//        addTeardownBlock {
+//            let fetchRequest = PersistedTransaction.fetchRequest()
+//            let transactions = try! self.transactionViewContext.fetch(fetchRequest)
+//            
+//            for transaction in transactions {
+//                guard let transaction = transaction as? NSManagedObject else { continue }
+//                self.transactionViewContext.delete(transaction)
+//            }
+//        }
     }
     
     fileprivate func clearUser() {
-        let viewContext = MockTransactionContainerManager.shared.persistentContainer.viewContext
-        
         addTeardownBlock {
             let fetchRequest = User.createFetchRequest()
-            let users = try! viewContext.fetch(fetchRequest)
+            let users = try! self.transactionViewContext.fetch(fetchRequest)
             
             guard let user = users.first else { return }
             
-            viewContext.performAndWait {
-                viewContext.delete(user)
+            self.transactionViewContext.performAndWait {
+                self.transactionViewContext.delete(user)
             }
         }
     }

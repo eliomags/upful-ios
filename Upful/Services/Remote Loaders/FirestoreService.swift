@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 protocol FirestoreService {
     associatedtype T
@@ -23,6 +23,8 @@ public class FirestoreAPI: FirestoreService {
         case savedCompanies
         case suggestions
         case screeners
+        case engagement
+        case users
     }
     
     // MARK: - API

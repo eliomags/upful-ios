@@ -7,41 +7,47 @@
 //
 
 import Foundation
+import CoreData
 
 final class TransactionLedgerPersistence {
     
     // MARK: - Dependencies
     
-    private let container: CoreDataModelContainerManager
+    let context: NSManagedObjectContext
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.container = container
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.context = context
     }
     
     // MARK: - Methods
-    
-    func save(_ transaction: Transaction, completion: (() -> Void)?) {
-        let savingTransaction = PersistedTransaction(context: container.persistentContainer.viewContext)
-        savingTransaction.tradePrice = transaction.tradePrice
-        savingTransaction.ticker = transaction.ticker
-        savingTransaction.numberOfShares = transaction.numberOfShares
-        savingTransaction.transactionDate = transaction.transactionDate
-        savingTransaction.type = transaction.type
         
-        container.saveContext(completion: completion)
+    func save(_ transaction: Transaction, completion: (() -> Void)?) {
+        context.perform {
+            let savingTransaction = PersistedTransaction(context: self.context)
+            savingTransaction.id = transaction.id
+            savingTransaction.type = transaction.type
+            savingTransaction.ticker = transaction.ticker
+            savingTransaction.tradePrice = transaction.tradePrice
+            savingTransaction.numberOfShares = transaction.numberOfShares
+            savingTransaction.transactionDate = transaction.transactionDate
+            savingTransaction.lastAppliedStockSplit = transaction.lastAppliedStockSplit
+            
+            self.context.saveOrRollBackIfNeeded()
+            completion?()
+        }
     }
     
     func delete(_ transaction: Transaction, completion: (() -> Void)?) {
-        let fetchRequest = PersistedTransaction.createFetchRequest()
-        let context = container.persistentContainer.viewContext
-        
-        
-        let persistedTransactions = (try? context.fetch(fetchRequest)) ?? []
-        for persistedTransaction in persistedTransactions {
-            context.delete(persistedTransaction)
+        context.perform {
+            let fetchRequest = PersistedTransaction.createFetchRequest()
+            let persistedTransactions = (try? self.context.fetch(fetchRequest)) ?? []
+            for persistedTransaction in persistedTransactions {
+                self.context.delete(persistedTransaction)
+            }
+            self.context.saveOrRollBackIfNeeded()
+            completion?()
         }
-        container.saveContext(completion: completion)
     }
 }

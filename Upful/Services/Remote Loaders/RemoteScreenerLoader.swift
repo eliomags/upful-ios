@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseFirestore
 
 protocol RemoteScreenerLoaderProtocol {
     typealias ScreenerLoadCompletion = (Result<[ScreenerViewModel],Error>) -> Void

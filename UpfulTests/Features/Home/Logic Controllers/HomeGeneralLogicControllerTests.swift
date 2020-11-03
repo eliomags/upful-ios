@@ -27,8 +27,7 @@ class HomeGeneralLogicControllerTests: XCTestCase {
         preferenceManager = PreferenceDataManager(userDefaults: UserDefaults(suiteName: userDefaultsSuiteName)!,
                                                   dataLoader: .init())
         preferenceManager.savedPreferences.removeAll()
-        return HomeGeneralLogicController(savedStockDataManager: MockSavedStockDataManagerWithData(),
-                                          preferenceDataManager: preferenceManager)
+        return HomeGeneralLogicController(preferenceDataManager: preferenceManager)
     }
 }
 

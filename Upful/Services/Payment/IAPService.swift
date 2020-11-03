@@ -31,17 +31,16 @@ protocol IAPServiceProtocol {
 
 final class IAPService: IAPServiceProtocol {
     
-    private let productIdentifiers: Set<String>
+    private let productIdentifiers: Set<String> = UpfulProducts.productIds
     private let secret = "0f2f374e72fa4144b1842dd7158f6ebf"
     
-    private(set) var isPremium = UserDefaults.standard.bool(forKey: PermissionManager.Constants.UserDefaults.isPremium) {
-        didSet {
-            UserDefaults.standard.set(isPremium, forKey: PermissionManager.Constants.UserDefaults.isPremium)
+    var isPremium: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: PermissionManager.Constants.UserDefaults.isPremium)
         }
-    }
-        
-    init() {
-        self.productIdentifiers = UpfulProducts.productIds
+        set {
+            UserDefaults.standard.set(newValue, forKey: PermissionManager.Constants.UserDefaults.isPremium)
+        }
     }
     
     // MARK: - API

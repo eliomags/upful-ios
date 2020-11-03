@@ -11,20 +11,25 @@ import Foundation
 class HoldingMapper {
     
     private let quoteLoader = StockPriceLoader()
-    private let holdingsLoadGroup = DispatchGroup()
+    private var holdingsLoadGroup: DispatchGroup?
     
     var completionHandler: (([Holding]) -> Void)?
     
     // MARK: - Methods
     
-    func loadingHoldings(from transactions: [Transaction]) {
-        let activeHoldings = HoldingMapper.map(transactions).filter { $0.totalShareCount > 0 }
+    func createHoldings(from transactions: [Transaction]) {
+        holdingsLoadGroup = DispatchGroup()
         
+        let activeHoldings = HoldingMapper.mapActiveHoldings(transactions)
         activeHoldings.forEach({ loadQuotes(for: $0) })
-
-        holdingsLoadGroup.notify(queue: .main) {
-            self.completionHandler?(activeHoldings)
+        holdingsLoadGroup?.notify(queue: .main) {
+            let holdingsCopy: [Holding] = activeHoldings.sorted().reversed()
+            self.completionHandler?(holdingsCopy)
         }
+    }
+    
+    static func mapActiveHoldings(_ transactions: [Transaction]) -> [Holding] {
+        return HoldingMapper.map(transactions).filter { $0.totalShareCount > 0 }
     }
     
     static func map(_ transactions: [Transaction]) -> [Holding] {
@@ -44,10 +49,9 @@ class HoldingMapper {
     }
     
     fileprivate func loadQuotes(for holding: Holding) {
-        holdingsLoadGroup.enter()
+        holdingsLoadGroup?.enter()
+        
         quoteLoader.load(for: holding.ticker) { [weak self] (result) in
-            guard let self = self else { return }
-            
             switch result {
             case .success(let quote):
                 holding.currentPrice = quote.latestPrice
@@ -56,7 +60,7 @@ class HoldingMapper {
                 print("Error Loading quotes for:", holding.ticker)
             }
 
-            self.holdingsLoadGroup.leave()
+            self?.holdingsLoadGroup?.leave()
         }
     }
     

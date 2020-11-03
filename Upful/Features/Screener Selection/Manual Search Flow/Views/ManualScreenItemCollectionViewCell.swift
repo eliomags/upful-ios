@@ -75,7 +75,7 @@ class ManualScreenItemCollectionViewCell: UICollectionViewCell {
     fileprivate func setupViews() {
         layer.cornerRadius = 8
         layer.masksToBounds = true
-        addSubview(contentStackView)
+        contentView.addSubview(contentStackView)
         contentStackView
             .setTopAnchor(padding: 16)
             .setLeadingAnchor(padding: 16)
@@ -89,12 +89,12 @@ class ManualScreenItemCollectionViewCell: UICollectionViewCell {
     fileprivate func handleSelectedState() {
         let size: CGFloat = 20
         
-        addSubview(removeButton)
+        contentView.addSubview(removeButton)
         NSLayoutConstraint.activate([
             removeButton.heightAnchor.constraint(equalToConstant: size),
             removeButton.widthAnchor.constraint(equalToConstant: size),
-            removeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-            removeButton.topAnchor.constraint(equalTo: topAnchor, constant: 1)
+            removeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
+            removeButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 1)
         ])
     }
     

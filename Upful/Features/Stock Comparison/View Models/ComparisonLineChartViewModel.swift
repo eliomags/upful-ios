@@ -90,6 +90,10 @@ struct ComparisonLineChartViewModel {
     }
     
     fileprivate static func configureLeftAxis(_ chartView: LineChartView) {
+        chartView.xAxis.drawGridLinesEnabled = false
+        chartView.xAxis.drawAxisLineEnabled = false
+        chartView.leftAxis.drawGridLinesEnabled = false
+        chartView.leftAxis.enabled = false
         chartView.leftAxis.spaceTop = 0.35
         chartView.leftAxis.spaceBottom = 0.2
         chartView.leftAxis.gridColor = .lightGray
@@ -130,7 +134,7 @@ final class LineChartTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        addSubview(chartView)
+        contentView.addSubview(chartView)
         chartView.fillSuperview(padding: .init(top: 16, left: 16, bottom: 16, right: 16))
     }
     

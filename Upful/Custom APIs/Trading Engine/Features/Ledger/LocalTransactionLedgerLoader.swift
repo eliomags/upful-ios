@@ -7,26 +7,52 @@
 //
 
 import Foundation
+import CoreData
 
 final class LocalTransactionLedgerLoader: TransactionLoader {
     
     // MARK: - Dependencies
 
-    private let container: CoreDataModelContainerManager
+    private let context: NSManagedObjectContext
 
     // MARK: - Initializer
 
-    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.container = container
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.context = context
     }
     
     // MARK: - Methods
     
-    func load(completion: @escaping (Result<[Transaction], Error>)-> Void) {
+    func loadFiltering(_ ticker: String) -> [Transaction] {
         let request = PersistedTransaction.createFetchRequest()
-        completion(Result {
-            let persistedTransactions = try self.container.persistentContainer.viewContext.fetch(request)
-            return persistedTransactions
-        })
+        request.predicate = NSPredicate(format: "ticker == %@", ticker)
+        let persistedTransactions = try! self.context.fetch(request)
+        return persistedTransactions
+    }
+    
+    func load(completion: @escaping (Result<[Transaction], Error>)-> Void) {
+        context.perform {
+            let request = PersistedTransaction.createFetchRequest()
+            completion(Result {
+                let persistedTransactions = try self.context.fetch(request)
+                return persistedTransactions
+            })
+        }
+    }
+    
+    func loadAllPersistedTransactions() -> [Transaction] {
+        let request = PersistedTransaction.createFetchRequest()
+        let persistedTransactions = try? self.context.fetch(request)
+        return persistedTransactions ?? []
+    }
+    
+    func loadTransactions(startingFrom date: Date) -> [Transaction] {
+        let dateAsString = date.asString
+        let request = PersistedTransaction.createFetchRequest()
+        let predicate = NSPredicate(format: "transactionDate > %@", dateAsString)
+        request.predicate = predicate
+        let persistedTransactions = try? self.context.fetch(request)
+
+        return persistedTransactions ?? []
     }
 }

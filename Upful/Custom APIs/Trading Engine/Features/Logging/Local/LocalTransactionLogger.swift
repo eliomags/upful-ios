@@ -7,29 +7,33 @@
 //
 
 import Foundation
+import CoreData
 
 final class LocalTransactionLogger {
         
     // MARK: - Dependencies
     
-    private let container: CoreDataModelContainerManager
+    private let context: NSManagedObjectContext
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.container = container
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.context = context
     }
 }
 
 extension LocalTransactionLogger: TransactionLogger {
     func log(_ transaction: Transaction, of type: TransactionType, completion: (() -> Void)?) {
-        let savingTransaction = LoggedTransaction(context: container.persistentContainer.viewContext)
-        savingTransaction.ticker = transaction.ticker
-        savingTransaction.tradePrice = transaction.tradePrice
-        savingTransaction.numberOfShares = transaction.numberOfShares
-        savingTransaction.transactionDate = transaction.transactionDate
-        savingTransaction.type = transaction.type
-        
-        container.saveContext(completion: completion)
+        context.perform {
+            let savingTransaction = LoggedTransaction(context: self.context)
+            savingTransaction.ticker = transaction.ticker
+            savingTransaction.tradePrice = transaction.tradePrice
+            savingTransaction.numberOfShares = transaction.numberOfShares
+            savingTransaction.transactionDate = transaction.transactionDate
+            savingTransaction.type = transaction.type
+            
+            self.context.saveOrRollBackIfNeeded()
+            completion?()
+        }
     }
 }

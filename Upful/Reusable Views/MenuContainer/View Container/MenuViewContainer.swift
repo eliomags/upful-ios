@@ -128,7 +128,7 @@ extension MenuContainerViewController {
         let displayableCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cell1, for: indexPath)
         for i in 0..<menubarControllers.count {
             if i == indexPath.row {
-                display(contentController: menubarControllers[pageIndex], on: displayableCell)
+                display(contentController: menubarControllers[pageIndex], on: displayableCell.contentView)
                 return displayableCell
             }
         }

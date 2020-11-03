@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 final class RemoteTransactionLogger {
     private static let db = Firestore.firestore()
@@ -19,8 +19,8 @@ extension RemoteTransactionLogger: TransactionLogger {
             "ticker": transaction.ticker,
             "price": transaction.tradePrice,
             "shares": transaction.numberOfShares,
-            "date": transaction.transactionDate ?? "undetermined",
-            "type": transaction.type ?? "undetermined",
+            "date": transaction.transactionDate ,
+            "type": transaction.type ,
             "user": UserProfile.instance.profileID
         ]) { err in
             if let err = err {

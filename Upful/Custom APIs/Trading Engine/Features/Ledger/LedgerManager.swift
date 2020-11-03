@@ -7,22 +7,27 @@
 //
 
 import Foundation
+import CoreData
 
 final class LedgerManager {
     
     // MARK: - Dependencies
     
-    private let ledgerPersistence: TransactionLedgerPersistence
+    let ledgerPersistence: TransactionLedgerPersistence
     private let ledgerLoader: LocalTransactionLedgerLoader
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.ledgerPersistence = TransactionLedgerPersistence(container: container)
-        self.ledgerLoader = LocalTransactionLedgerLoader(container: container)
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.ledgerPersistence = TransactionLedgerPersistence(context: context)
+        self.ledgerLoader = LocalTransactionLedgerLoader(context: context)
     }
     
     // MARK: - Methods
+    
+    func getActiveTransactions(for ticker: String) -> [Transaction] {
+        return ledgerLoader.loadFiltering(ticker)
+    }
     
     func loadSavedTransactions(completion: @escaping (Result<[Transaction], Error>) -> Void) {
         ledgerLoader.load(completion: completion)

@@ -24,6 +24,16 @@ final class StockTradeViewController: UITableViewController {
     
     private var estimate: Double?
     
+    lazy var holdingsLoadCompletion: Handler<[Holding]> = {
+        var handler = Handler<[Holding]> { [weak self] holdings in
+            if let holdings = holdings {
+                self?.currentHoldings = holdings
+                self?.handleHoldingsLoadCompletion(holdings)
+            }
+        }
+        return handler
+    }()
+    
     // MARK: - Views
     
     private lazy var cancelButton: CancelButton = {
@@ -189,14 +199,10 @@ final class StockTradeViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tradingEngine.loadHandlerObservers.addHandler(holdingsLoadCompletion)
         tradingEngine.loadHoldings()
         loadRecentPrice()
         
-        tradingEngine.completionHandler = { [weak self] (holdings) in
-            guard let self = self else { return }
-            self.handleHoldingsLoadCompletion(holdings)
-            self.currentHoldings = holdings
-        }
         numberOfSharesTextField.becomeFirstResponder()
     }
     
@@ -216,6 +222,7 @@ final class StockTradeViewController: UITableViewController {
     }
     
     @objc fileprivate func handleCancelTap() {
+        tradingEngine.loadHandlerObservers.unsubscribe(handler: holdingsLoadCompletion)
         dismiss(animated: true, completion: nil)
     }
     
@@ -259,7 +266,7 @@ final class StockTradeViewController: UITableViewController {
                     DispatchQueue.main.async {
                         guard let self = self else { return }
                         InformationViewPresenter().showGenericSuccess(in: self, description: "Sold Successfully", completion: { [weak self] in
-                            self?.dismiss(animated: true, completion: nil)
+                            self?.handleCancelTap()
                         })
                     }
                 })
@@ -309,7 +316,7 @@ final class StockTradeViewController: UITableViewController {
                 self.handlePriceLoadCompletion(quote)
             case .failure(_):
                 self.presentAlert("Error Loading Quote.", "") {
-                    self.dismiss(animated: true, completion: nil)
+                    self.handleCancelTap()
                 }
             }
         }
@@ -358,7 +365,7 @@ final class StockTradeViewController: UITableViewController {
             Vibration.success.vibrate()
             InformationViewPresenter().showGenericSuccess(in: self, description: "Purchased Succesfully",
                                                           completion: { [weak self] in
-                self?.dismiss(animated: true, completion: nil)
+                self?.handleCancelTap()
             })
         }
     }

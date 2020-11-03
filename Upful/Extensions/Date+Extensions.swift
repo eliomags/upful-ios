@@ -18,6 +18,9 @@ extension Date {
     var dayBefore: Date {
         return Calendar.current.date(byAdding: .day, value: -1, to: self)!
     }
+    var nextDay: Date {
+        return Calendar.current.date(byAdding: .day, value: 1, to: self)!
+    }
     var month: Int {
         return Calendar.current.component(.month,  from: self)
     }
@@ -32,6 +35,25 @@ extension Date {
     }
     var minute: Int {
         return Calendar.current.component(.minute,  from: self)
+    }
+    
+    static func buildDate(day: Int, month: Int, year: Int) -> Date {
+        var components = DateComponents()
+        components.day = day
+        components.month = month
+        components.year = year
+        return Calendar.current.date(from: components)!
+    }
+}
+
+extension Date {
+    var isToday: Bool {
+        let currentDate = Date()
+        let day = currentDate.day
+        let month = currentDate.month
+        let year = currentDate.year
+        
+        return self.day == day && self.month == month && self.year == year        
     }
 }
 

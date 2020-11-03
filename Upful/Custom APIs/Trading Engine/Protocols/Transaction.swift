@@ -12,7 +12,17 @@ protocol Transaction: class {
     var ticker: String { get set }
     var numberOfShares: Int32 { get set }
     var tradePrice: Double { get set }
-    var type: String? { get set }
-    var transactionDate: String? { get set }
+    var type: String { get set }
+    var transactionDate: String { get set }
     var id: String { get set }
+    var lastAppliedStockSplit: Date? { get set }
+}
+
+extension Transaction {
+    
+    /// The transformed transactionDate as 'Date'.
+    var transactionDateAsDate: Date {
+        let transformedDate = DateTransformer.convertStringToDate(transactionDate)
+        return transformedDate
+    }
 }

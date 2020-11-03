@@ -25,4 +25,15 @@ final class TransactionContainerManager: CoreDataModelContainerManager {
         })
         return container
     }()
+    
+    var managedObjectContext: NSManagedObjectContext {
+        return persistentContainer.viewContext
+    }
+    
+    lazy var backgroundContext: NSManagedObjectContext = {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.parent = managedObjectContext
+        return context
+    }()
 }
+

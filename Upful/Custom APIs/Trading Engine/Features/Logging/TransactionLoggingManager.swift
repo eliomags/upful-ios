@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 class TransactionLoggingManager {
     private let transactionLogLoader: TransactionLogLoader
@@ -15,9 +16,9 @@ class TransactionLoggingManager {
     
     // MARK: - Initializer
     
-    init(container: CoreDataModelContainerManager = TransactionContainerManager.shared) {
-        self.transactionLogLoader = TransactionLogLoader(container: container)
-        self.localTransactionLogger = LocalTransactionLogger(container: container)
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+        self.transactionLogLoader = TransactionLogLoader(context: context)
+        self.localTransactionLogger = LocalTransactionLogger(context: context)
         self.remoteTransactionLogger = RemoteTransactionLogger()
     }
     
@@ -36,10 +37,18 @@ class TransactionLoggingManager {
 }
 
 extension Date {
-    fileprivate var asString: String {
+    var asString: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"
         formatter.timeZone = TimeZone(abbreviation: "EST")
         return formatter.string(from: self)
+    }
+    
+    func convertToEST() -> Date {
+        let string = self.asString
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"
+        formatter.timeZone = TimeZone(abbreviation: "EST")
+        return formatter.date(from: string) ?? self
     }
 }

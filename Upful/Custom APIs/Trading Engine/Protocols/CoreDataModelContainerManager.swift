@@ -13,16 +13,13 @@ protocol CoreDataModelContainerManager {
     var persistentContainer: NSPersistentContainer { get set }
 }
 
-extension CoreDataModelContainerManager {
-    func saveContext(completion: (() -> Void)?) {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
+extension NSManagedObjectContext {
+    func saveOrRollBackIfNeeded() {
+        if hasChanges {
             do {
-                try context.save()
-                completion?()
+                try save()
             } catch {
-                let nserror = error as NSError
-                assertionFailure("Unresolved error \(nserror), \(nserror.userInfo)")
+                rollback()
             }
         }
     }

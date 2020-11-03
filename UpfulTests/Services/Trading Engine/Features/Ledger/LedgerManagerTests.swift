@@ -9,13 +9,12 @@
 import XCTest
 @testable import Upful
 
-class LedgerManagerTests: XCTestCase {
+class LedgerManagerTests: CoreDataUseCase {
     
     var sut: LedgerManager!
-    let mockContainerManager = MockTransactionContainerManager()
 
     override func setUp() {
-        sut = LedgerManager(container: mockContainerManager)
+        sut = LedgerManager(context: transactionViewContext)
     }
 
     // MARK: - Loading
@@ -124,26 +123,3 @@ class LedgerManagerTests: XCTestCase {
     }
 }
 
-
-import CoreData
-
-class MockTransactionContainerManager: CoreDataModelContainerManager {
-    static let shared = MockTransactionContainerManager()
-    
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "TransactionDataModel")
-        let description = NSPersistentStoreDescription()
-        
-        description.type = NSInMemoryStoreType
-        description.shouldAddStoreAsynchronously = false
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        container.persistentStoreDescriptions = [description]
-
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                assertionFailure("Failed to load persistent store: \(error.localizedDescription)")
-            }
-        })
-        return container
-    }()
-}

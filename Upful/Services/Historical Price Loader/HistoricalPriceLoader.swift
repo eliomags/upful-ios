@@ -130,17 +130,19 @@ class HistoricalPriceLoader {
         let session = URLSession.shared
         let request = constructRequest(for: period, ticker: ticker)
         
-        session.dataTask(with: request) { (data, _, error) in
+        session.dataTask(with: request) { [weak self] (data, _, error) in
             if let _ = error {
                 completion(.failure(.connection))
             }
             
             if let data = data {
                 do {
-                    let datapoints = try self.parse(data: data, timePeriod: period)
-                    self.cache[period] = datapoints
+                    let datapoints = try self?.parse(data: data, timePeriod: period)
+                    if period != .oneDay {
+                        self?.cache[period] = datapoints
+                    }
                     
-                    completion(.success(datapoints))
+                    completion(.success(datapoints ?? []))
                 } catch {
                     completion(.failure(.parsing))
                 }

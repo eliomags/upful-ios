@@ -8,6 +8,10 @@
 
 import Foundation
 
+struct BalanceConstants {
+    static let initialCash: Double = 25_000.0
+}
+
 class BalanceManager {
     
     // MARK: - Dependencies
@@ -24,7 +28,7 @@ class BalanceManager {
         if let _ = userDefaults.object(forKey: BalanceType.cash.rawValue) {
             return userDefaults.double(forKey: BalanceType.cash.rawValue)
         } else {
-            userDefaults.set(25_000.0, forKey: BalanceType.cash.rawValue)
+            userDefaults.set(BalanceConstants.initialCash, forKey: BalanceType.cash.rawValue)
             return userDefaults.double(forKey: BalanceType.cash.rawValue)
         }
     }()
@@ -33,7 +37,7 @@ class BalanceManager {
         if let _ = userDefaults.object(forKey: BalanceType.equity.rawValue) {
             return userDefaults.double(forKey: BalanceType.equity.rawValue)
         } else {
-            userDefaults.set(25_000.0, forKey: BalanceType.equity.rawValue)
+            userDefaults.set(BalanceConstants.initialCash, forKey: BalanceType.equity.rawValue)
             return userDefaults.double(forKey: BalanceType.equity.rawValue)
         }
     }()

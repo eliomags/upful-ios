@@ -17,6 +17,11 @@ protocol Coordinator: AnyObject {
 final class MainCoordinator: Coordinator {
     var presenter: UIViewController
     
+    let homeVC = HomeGeneralViewController()
+    let exploreVC = ExploreViewController()
+    let saveVC = SavedViewController()
+    let settingsVC = SettingsViewController()
+    
     init(presenter: UIViewController) {
         self.presenter = presenter
     }
@@ -26,11 +31,6 @@ final class MainCoordinator: Coordinator {
     }
     
     private func initializeVC() -> UIViewController {
-        let homeVC = HomeGeneralViewController()
-        let exploreVC = ExploreViewController()
-        let saveVC = SavedViewController()
-        let settingsVC = SettingsViewController()
-        
         let controllers = [homeVC,exploreVC,saveVC,settingsVC]
             
         homeVC.tabBarItem = UITabBarItem(
