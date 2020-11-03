@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 class RemoteStockManager {
     private static let backendService = FirestoreAPI().db

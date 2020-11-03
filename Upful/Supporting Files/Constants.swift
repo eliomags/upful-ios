@@ -12,7 +12,11 @@ let https = "https"
 
 public struct Constants {
     struct MixPanel {
-        static let token = "90dafb0f4cbcc21d7a9bddb6611a8b30"
+        #if RELEASE
+            static let token = "90dafb0f4cbcc21d7a9bddb6611a8b30"
+        #else
+            static let token = ""
+        #endif
     }
     
     struct Intrinio {

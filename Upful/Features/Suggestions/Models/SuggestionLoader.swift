@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseFirestore
 
 protocol SuggestionsLoaderProtocol {
     typealias SuggestionLoaderCompletion = (Result<[Suggestion],Error>) -> Void
