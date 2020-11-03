@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+# platform :ios, '13.0'
 
 target 'Upful' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
@@ -12,14 +12,13 @@ target 'Upful' do
   pod 'SwiftyStoreKit'
   pod 'Firebase/Analytics'
   pod 'Firebase/Core'
+  pod 'Firebase/Crashlytics'
   pod 'Firebase/DynamicLinks'
   pod 'Firebase/Firestore'
   pod 'Mixpanel-swift'
   pod 'Charts'
 
   #pod 'Google-Mobile-Ads-SDK'
-  #pod 'Firebase/Crashlytics'
-
   target 'UpfulTests' do
     inherit! :search_paths
     # Pods for testing
