@@ -81,6 +81,7 @@ class HomeGeneralLogicController {
     }
         
     func fetchTableData() {
+        performanceViewModel.selectedIndex = performanceViewModel.selectedIndex
         holdingsState = .loading
         preferenceState = .loading
     }

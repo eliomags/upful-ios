@@ -22,4 +22,4 @@ public class PersistedPerformanceDataPoint: NSManagedObject {
 }
 
 
-extension PersistedPerformanceDataPoint: DayPerformance {}
+//extension PersistedPerformanceDataPoint: DayPerformance {}

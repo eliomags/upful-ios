@@ -7,16 +7,15 @@
 //
 
 import UIKit
+import Charts
 
 final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
-            
     private enum Section: Int, CaseIterable {
-//        case performance = 0
-        case holdings = 0
-        case breakdown = 1
-        case preference = 2
+        case performance
+        case holdings
+        case breakdown
+        case preference
     }
-    
     private enum Constants {
         static let newsCellID = "newsCellID"
         static let resultsCellID = "resultsCellID"
@@ -387,12 +386,22 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     fileprivate func makePerformanceCell(at indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PerformanceCell.id, for: indexPath) as? PerformanceCell
         if cell?.chartTimeControl.numberOfSegments == 0 {
-            let performanceTimePeriods = logicController.performanceViewModel.getAllSelections()
+            let performanceTimePeriods = logicController.performanceViewModel.getAllSelections
             for selection in performanceTimePeriods.enumerated() {
                 cell?.chartTimeControl.insertSegment(withTitle: selection.element,
                                                      at: selection.offset, animated: false)
             }
         }
+        
+        logicController.performanceViewModel.loadCompletionHandler = {
+            var chartDataEntries = [ChartDataEntry]()
+            for val in self.logicController.performanceViewModel.performanceValues.enumerated() {
+                chartDataEntries.append(ChartDataEntry(x: Double(val.offset), y: val.element.value))
+            }
+            cell?.chartView.setDataSet(with: chartDataEntries)
+            self.tableView.reloadData()
+        }
+        
         cell?.chartTimeControl.addTarget(self, action: #selector(handlePerformanceDurationTap), for: .valueChanged)
         cell?.chartTimeControl.selectedSegmentIndex = logicController.performanceViewModel.selectedIndex
         return cell ?? UITableViewCell()
@@ -516,8 +525,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         switch section {
-//        case Section.performance.rawValue:
-//            return makePerformanceCell(at: indexPath)
+        case Section.performance.rawValue:
+            return makePerformanceCell(at: indexPath)
             
         case Section.breakdown.rawValue:
             return (logicController.holdingsState == .loading) ?
@@ -538,6 +547,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case Section.performance.rawValue:
+            return (tableView.frame.height / 3) - 100
         case Section.breakdown.rawValue:
             return (logicController.holdingsState == .loading) ?
 //                UITableView.automaticDimension : (UIScreen.main.bounds.height / 2) - 130
