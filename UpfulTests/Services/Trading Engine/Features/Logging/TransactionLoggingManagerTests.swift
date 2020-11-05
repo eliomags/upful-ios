@@ -59,7 +59,7 @@ class LoggingManagerTests: CoreDataUseCase {
                 self.sut.load { (result) in
                     switch result {
                     case .success(let storedLogs):
-                        XCTAssertEqual(storedLogs.map { $0.type! }, ["sell", "buy"])
+                        XCTAssertEqual(storedLogs.map { $0.type }, ["sell", "buy"])
                     case .failure(_):
                         break
                     }
@@ -71,7 +71,7 @@ class LoggingManagerTests: CoreDataUseCase {
                         self.sut.load { (result) in
                             switch result {
                             case .success(let storedLogs):
-                                XCTAssertEqual(storedLogs.map { $0.type! }, ["buy", "sell", "buy"])
+                                XCTAssertEqual(storedLogs.map { $0.type }, ["buy", "sell", "buy"])
                             case .failure(_):
                                 break
                             }

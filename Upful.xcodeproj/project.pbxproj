@@ -1054,7 +1054,6 @@
 			children = (
 				3D20FB4E22FB259D007836DD /* NetworkingService.swift */,
 				3D2F963F2312B025003811AB /* Analytics */,
-				3D34039124F4861900AC244F /* Background Tasks */,
 				3D31AA84242FCB2000326D7E /* CompanyNameLoader */,
 				3D2D18ED2506FF59002F92BE /* Historic Performance Manager */,
 				3DF92413249FC2DA0028EE01 /* Historical Price Loader */,
@@ -1255,13 +1254,6 @@
 				3D31AA85242FCB3100326D7E /* CompanyNameLoader.swift */,
 			);
 			path = CompanyNameLoader;
-			sourceTree = "<group>";
-		};
-		3D34039124F4861900AC244F /* Background Tasks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Background Tasks";
 			sourceTree = "<group>";
 		};
 		3D3749B323BBAD8A000D0597 /* Preference */ = {
@@ -3056,7 +3048,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Upful/Upful.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 01;
+				CURRENT_PROJECT_VERSION = 02;
 				DEVELOPMENT_TEAM = DNPC864748;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = Upful/Info.plist;
@@ -3081,7 +3073,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Upful/Upful.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 01;
+				CURRENT_PROJECT_VERSION = 02;
 				DEVELOPMENT_TEAM = DNPC864748;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = Upful/Info.plist;
