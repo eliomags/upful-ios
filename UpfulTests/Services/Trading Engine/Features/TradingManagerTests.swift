@@ -95,7 +95,7 @@ class TradingEngineTests: CoreDataUseCase {
             self.sut.loadLedgerTransactions { (result) in
                 switch result {
                 case .success(let storedTransactions):
-                    XCTAssertEqual(storedTransactions.map { TransactionType(rawValue: $0.type!)!.rawValue }.sorted(), [TransactionType.buy.rawValue, "sell"])
+                    XCTAssertEqual(storedTransactions.map { TransactionType(rawValue: $0.type)!.rawValue }.sorted(), [TransactionType.buy.rawValue, "sell"])
                 case .failure(let err):
                     assertionFailure("Failed to load with on \(#line), \(#file), \(err.localizedDescription)")
                 }
@@ -116,7 +116,7 @@ class TradingEngineTests: CoreDataUseCase {
             self.sut.loadLoggedTransactions { (result) in
                 switch result {
                 case .success(let storedTransactions):
-                    XCTAssertEqual(storedTransactions.map { TransactionType(rawValue: $0.type!) }, [TransactionType.sell, .buy])
+                    XCTAssertEqual(storedTransactions.map { TransactionType(rawValue: $0.type) }, [TransactionType.sell, .buy])
                     loadExpectation.fulfill()
                 case .failure(let err):
                     assertionFailure("Failed to load with on \(#line), \(#file), \(err.localizedDescription)")
@@ -159,7 +159,7 @@ class TradingEngineTests: CoreDataUseCase {
             XCTAssertEqual(self.sut.balanceManager.currentCashBalance, 24_000)
 
             self.sut.sell(transaction: sellTransaction, completion: {
-                XCTAssertEqual(TransactionType(rawValue: sellTransaction.type!) , TransactionType.sell)
+                XCTAssertEqual(TransactionType(rawValue: sellTransaction.type) , TransactionType.sell)
                 XCTAssertEqual(self.sut.balanceManager.currentCashBalance, 26_000)
                             
                 completion?()
@@ -177,7 +177,7 @@ class TradingEngineTests: CoreDataUseCase {
         let sellTransaction = TransactionAdapter(ticker: "FB", shares: 10, tradePrice: 200)
 
         sut.sell(transaction: sellTransaction, completion: {
-            XCTAssertEqual(TransactionType(rawValue: sellTransaction.type!) , TransactionType.sell)
+            XCTAssertEqual(TransactionType(rawValue: sellTransaction.type) , TransactionType.sell)
             XCTAssertEqual(self.sut.balanceManager.totalEquityBalance, 26_000)
             XCTAssertEqual(self.sut.balanceManager.currentCashBalance, 26_000)
                         

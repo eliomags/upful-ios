@@ -1,0 +1,6 @@
+framework module Pods_UpfulTests {
+  umbrella header "Pods-UpfulTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

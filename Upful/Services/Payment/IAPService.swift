@@ -42,9 +42,7 @@ final class IAPService: IAPServiceProtocol {
             UserDefaults.standard.set(newValue, forKey: PermissionManager.Constants.UserDefaults.isPremium)
         }
     }
-    
-    // MARK: - API
-    
+        
     // MARK:  Product DataLoader
     
     func retreiveProducts(completion: @escaping (Result<[SKProduct],Error>) -> Void) {
