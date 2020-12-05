@@ -123,9 +123,10 @@ final class TradingEngine {
     var syncProfile: (([Holding], Double) -> ())? = ProfileSyncCoordinator.shared.sync
     
     func loadHoldings() {
-        mapTransactionsToHoldings { [unowned self] holdings in
+        mapTransactionsToHoldings { holdings in
             self.updateEquityBalance(with: holdings)
             self.loadStockSplits(for: holdings)
+            self.loadHandlerObservers.notify(holdings)
         }
     }
     

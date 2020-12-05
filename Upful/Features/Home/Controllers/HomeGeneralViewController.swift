@@ -11,7 +11,7 @@ import Charts
 
 final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     private enum Section: Int, CaseIterable {
-        case performance
+//        case performance
         case holdings
         case breakdown
         case preference
@@ -525,8 +525,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         switch section {
-        case Section.performance.rawValue:
-            return makePerformanceCell(at: indexPath)
+//        case Section.performance.rawValue:
+//            return makePerformanceCell(at: indexPath)
             
         case Section.breakdown.rawValue:
             return (logicController.holdingsState == .loading) ?
@@ -547,8 +547,8 @@ extension HomeGeneralViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case Section.performance.rawValue:
-            return (tableView.frame.height / 3) - 100
+//        case Section.performance.rawValue:
+//            return (tableView.frame.height / 3) - 100
         case Section.breakdown.rawValue:
             return (logicController.holdingsState == .loading) ?
 //                UITableView.automaticDimension : (UIScreen.main.bounds.height / 2) - 130
