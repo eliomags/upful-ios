@@ -30,10 +30,10 @@ final class TransactionContainerManager: CoreDataModelContainerManager {
         return persistentContainer.viewContext
     }
     
-    lazy var backgroundContext: NSManagedObjectContext = {
-        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        context.parent = managedObjectContext
-        return context
-    }()
+//    lazy var backgroundContext: NSManagedObjectContext = {
+//        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+//        context.parent = managedObjectContext
+//        return context
+//    }()
 }
 

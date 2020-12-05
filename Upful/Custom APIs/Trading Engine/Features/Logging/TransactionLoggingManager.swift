@@ -16,7 +16,7 @@ class TransactionLoggingManager {
     
     // MARK: - Initializer
     
-    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.managedObjectContext) {
         self.transactionLogLoader = TransactionLogLoader(context: context)
         self.localTransactionLogger = LocalTransactionLogger(context: context)
         self.remoteTransactionLogger = RemoteTransactionLogger()
@@ -26,11 +26,11 @@ class TransactionLoggingManager {
         transactionLogLoader.load(completion: completion)
     }
     
-    func log(_ transaction: Transaction, of type: TransactionType, completion: (() -> Void)?) {
+    func log(_ transaction: Transaction, of type: TransactionType, completion: @escaping ((Error?) -> Void)) {
         transaction.type = type.rawValue
         transaction.transactionDate = Date().asString
         
-        remoteTransactionLogger.log(transaction, of: type, completion: { [unowned self] in
+        remoteTransactionLogger.log(transaction, of: type, completion: { _ in
             self.localTransactionLogger.log(transaction, of: type, completion: completion)
         })
     }

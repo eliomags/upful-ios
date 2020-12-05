@@ -17,13 +17,13 @@ final class LocalTransactionLogger {
     
     // MARK: - Initializer
     
-    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.managedObjectContext) {
         self.context = context
     }
 }
 
 extension LocalTransactionLogger: TransactionLogger {
-    func log(_ transaction: Transaction, of type: TransactionType, completion: (() -> Void)?) {
+    func log(_ transaction: Transaction, of type: TransactionType, completion: @escaping (Error?) -> Void) {
         context.perform {
             let savingTransaction = LoggedTransaction(context: self.context)
             savingTransaction.ticker = transaction.ticker
@@ -32,8 +32,7 @@ extension LocalTransactionLogger: TransactionLogger {
             savingTransaction.transactionDate = transaction.transactionDate
             savingTransaction.type = transaction.type
             
-            self.context.saveOrRollBackIfNeeded()
-            completion?()
+            self.context.saveOrRollBackIfNeeded(completion: completion)
         }
     }
 }

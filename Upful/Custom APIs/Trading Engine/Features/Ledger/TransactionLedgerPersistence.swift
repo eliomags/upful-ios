@@ -17,13 +17,13 @@ final class TransactionLedgerPersistence {
     
     // MARK: - Initializer
     
-    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.managedObjectContext) {
         self.context = context
     }
     
     // MARK: - Methods
         
-    func save(_ transaction: Transaction, completion: (() -> Void)?) {
+    func save(_ transaction: Transaction, completion: @escaping ((Error?) -> Void)) {
         context.perform {
             let savingTransaction = PersistedTransaction(context: self.context)
             savingTransaction.id = transaction.id
@@ -34,20 +34,18 @@ final class TransactionLedgerPersistence {
             savingTransaction.transactionDate = transaction.transactionDate
             savingTransaction.lastAppliedStockSplit = transaction.lastAppliedStockSplit
             
-            self.context.saveOrRollBackIfNeeded()
-            completion?()
+            self.context.saveOrRollBackIfNeeded(completion: completion)
         }
     }
     
-    func delete(_ transaction: Transaction, completion: (() -> Void)?) {
+    func delete(_ transaction: Transaction, completion: @escaping ((Error?) -> Void)) {
         context.perform {
             let fetchRequest = PersistedTransaction.createFetchRequest()
             let persistedTransactions = (try? self.context.fetch(fetchRequest)) ?? []
             for persistedTransaction in persistedTransactions {
                 self.context.delete(persistedTransaction)
             }
-            self.context.saveOrRollBackIfNeeded()
-            completion?()
+            self.context.saveOrRollBackIfNeeded(completion: completion)
         }
     }
 }

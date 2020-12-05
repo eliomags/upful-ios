@@ -18,7 +18,7 @@ final class LedgerManager {
     
     // MARK: - Initializer
     
-    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.managedObjectContext) {
         self.ledgerPersistence = TransactionLedgerPersistence(context: context)
         self.ledgerLoader = LocalTransactionLedgerLoader(context: context)
     }
@@ -33,7 +33,7 @@ final class LedgerManager {
         ledgerLoader.load(completion: completion)
     }
     
-    func save(_ transaction: Transaction, completion: (() -> Void)?) {
+    func save(_ transaction: Transaction, completion: @escaping ((Error?) -> Void)) {
         ledgerPersistence.save(transaction, completion: completion)
     }
     

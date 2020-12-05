@@ -14,7 +14,7 @@ final class RemoteTransactionLogger {
 }
 
 extension RemoteTransactionLogger: TransactionLogger {
-    func log(_ transaction: Transaction, of type: TransactionType, completion: (() -> Void)?) {
+    func log(_ transaction: Transaction, of type: TransactionType, completion: @escaping (Error?) -> Void) {
         RemoteTransactionLogger.db.collection("transactions").document(UUID().uuidString).setData([
             "ticker": transaction.ticker,
             "price": transaction.tradePrice,
@@ -25,10 +25,11 @@ extension RemoteTransactionLogger: TransactionLogger {
         ]) { err in
             if let err = err {
                 print("Error writing document: \(err)")
+                completion(err)
             } else {
                 print("Document successfully written!")
+                completion(nil)
             }
-            completion?()
         }
     }
 }

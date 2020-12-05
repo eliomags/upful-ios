@@ -40,7 +40,7 @@ final class TradingEngine {
     // MARK: - Initializer
 
     init(balanceDefaults: UserDefaults = .standard,
-         context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+         context: NSManagedObjectContext = TransactionContainerManager.shared.managedObjectContext) {
         self.context = context
         self.userDefaults = balanceDefaults
         self.balanceManager = BalanceManager(userDefaults: balanceDefaults)
@@ -50,33 +50,40 @@ final class TradingEngine {
     
     // MARK: - Trading Methods
     
-    func buy(transaction: Transaction, completion: ((Bool) -> Void)? = nil) {
-        validatePurchaseAttempt(transaction) { [unowned self] (isValid) in
+    func buy(transaction: Transaction, completion: @escaping ((Bool) -> Void)) {
+        validatePurchaseAttempt(transaction) { isValid in
             if isValid { 
-                self.loggerManager.log(transaction, of: .buy, completion: { [unowned self] in
-                    self.ledgerManager.save(transaction, completion: { [unowned self] in
-                        AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .buy))
-                        
-                        self.balanceManager.handleBuy(for: transaction.tradePrice,
-                                                      shares: Int(transaction.numberOfShares))
-                        completion?(isValid)
+                self.loggerManager.log(transaction, of: .buy, completion: { _ in
+                    self.ledgerManager.save(transaction, completion: { error in
+                        if let _ = error {
+                            completion(false)
+                        } else {
+                            AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .buy))
+                            self.balanceManager.handleBuy(for: transaction.tradePrice,
+                                                          shares: Int(transaction.numberOfShares))
+                            completion(isValid)
+                        }
                     })
                 })
                 
             } else {
-                completion?(isValid)
+                completion(isValid)
             }
         }
     }
     
-    func sell(transaction: Transaction, completion: (() -> Void)? = nil) {
-        loggerManager.log(transaction, of: .sell, completion: { [unowned self] in
-            self.ledgerManager.save(transaction, completion: { [unowned self] in
-                AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .sell))
-                
-                self.balanceManager.handleSell(for: transaction.tradePrice,
-                                               shares: Int(transaction.numberOfShares))
-                DispatchQueue.main.async { completion?() }
+    func sell(transaction: Transaction, completion: @escaping (() -> Void)) {
+        loggerManager.log(transaction, of: .sell, completion: { _ in
+            self.ledgerManager.save(transaction, completion: { error in
+                if let _ = error {
+                    completion()
+                } else {
+                    AnalyticsLogger.instance.reportEvents(event: .performedTransaction(type: .sell))
+                    
+                    self.balanceManager.handleSell(for: transaction.tradePrice,
+                                                   shares: Int(transaction.numberOfShares))
+                    DispatchQueue.main.async { completion() }
+                }
             })
         })
     }
@@ -154,12 +161,13 @@ final class TradingEngine {
     }
     
     fileprivate func handleLoadCompletion() {
-        mapTransactionsToHoldings { [unowned self] holdings in
+        mapTransactionsToHoldings { holdings in
             self.context.perform {
-                self.context.saveOrRollBackIfNeeded()
+                self.context.saveOrRollBackIfNeeded { _ in
+                    self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
+                    self.loadHandlerObservers.notify(holdings)
+                }
             }
-            self.syncProfile?(holdings, self.balanceManager.totalEquityBalance)
-            self.loadHandlerObservers.notify(holdings)
         }
     }
 

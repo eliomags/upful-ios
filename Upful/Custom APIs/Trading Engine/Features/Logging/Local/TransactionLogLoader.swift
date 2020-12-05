@@ -17,7 +17,7 @@ final class TransactionLogLoader {
     
     // MARK: - Initializer
     
-    init(context: NSManagedObjectContext = TransactionContainerManager.shared.backgroundContext) {
+    init(context: NSManagedObjectContext = TransactionContainerManager.shared.managedObjectContext) {
         self.context = context
     }
 }

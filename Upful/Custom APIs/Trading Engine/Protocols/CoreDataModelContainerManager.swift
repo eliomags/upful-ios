@@ -14,12 +14,13 @@ protocol CoreDataModelContainerManager {
 }
 
 extension NSManagedObjectContext {
-    func saveOrRollBackIfNeeded() {
+    func saveOrRollBackIfNeeded(completion: ((Error?) -> Void)) {
         if hasChanges {
             do {
                 try save()
-            } catch {
-                rollback()
+                completion(nil)
+            } catch let error {
+                completion(error)
             }
         }
     }

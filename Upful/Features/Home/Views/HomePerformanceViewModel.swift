@@ -105,10 +105,14 @@ class HomePerformanceViewModel {
         })
         
         let numberOfDaysNeeded = Selection.allCases[selectedIndex].days
-        
         var lowerThreshold: Int = performances.count-1-numberOfDaysNeeded
         if lowerThreshold < 0 { lowerThreshold = 0 }
-        performanceValues = Array(performances[lowerThreshold...(performances.count-1)])
+        
+        performanceValues = stride(from: performances.count-1, through: 0, by: -7)
+            .map({ (val) -> DayPerformanceResponse in
+                return performances[val]
+            })
+//        performanceValues = Array(performances[lowerThreshold...(performances.count-1)])
         print(performanceValues.count)
     }
 }
