@@ -148,7 +148,7 @@ class SuggestionFeedViewController: UIViewController {
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
-            mail.setToRecipients(["simpsony94@gmail.com"])
+            mail.setToRecipients(["elio@jyanik.com"])
             mail.setSubject("Suggestion - ")
 
             present(mail, animated: true)
