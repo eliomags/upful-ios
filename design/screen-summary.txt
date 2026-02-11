@@ -1,0 +1,123 @@
+Upful iOS App - Figma Design Summary
+======================================
+Source: https://www.figma.com/design/iMceNmkVwyu8lsYQSZhbXK/upful-%7C-eliomags?node-id=0-1&t=uNggjbP4hKTwmFZB-1
+
+Theme
+-----
+- Primary color: Teal/dark (#008080-ish)
+- Backgrounds: White
+- Navigation: Bottom tab bar with 5 icons (Home, Search, Heart/Favorites, Chart, Settings)
+- Device frame: 375x812 (iPhone X/11/12 standard)
+
+
+Screens
+-------
+
+1. Subscribe & Win (Step 1)
+   - Subscription pitch at $6.99/week
+   - Benefits listed: daily/weekly/monthly competitions, unlimited stock screeners, save unlimited stocks and screeners, grow with platform
+   - "Subscribe" CTA button (teal)
+
+2. Subscribe & Win (Step 2)
+   - Username input field (prefilled: johndoe)
+   - Email input field (prefilled: johndoe@gmail.com)
+   - Purpose: PayPal prize payout info
+   - "Submit" CTA button (teal)
+
+3. Thank You
+   - Confirmation after subscribing
+   - Thumbs-up graphic
+   - "See Leaderboard" CTA button (teal)
+
+4. Welcome / $25,000 Virtual Money
+   - User receives $25,000 virtual money
+   - "New month starts with 25K virtual money"
+   - Option to "Build New Portfolio" or "Keep Old Ratios"
+   - "See Leaderboard" CTA button
+
+5. Leaderboard
+   - Tabs: Top / Selected / Best
+   - Ranked list of users with avatars
+   - Shows portfolio values (e.g., $30,035, $18,412, $16,832, etc.)
+   - Percentage changes shown
+
+6. My History
+   - Tabs: Selected / Best
+   - User's past ranking history by time period
+   - Shows rank position and percentage changes
+
+7. Portfolio
+   - Total balance display: $26,134.8
+   - Change indicator: +$134.8, +0.65%
+   - "See History" link
+   - Holdings list:
+     * MKO - $50.67, 8.44%
+     * TSLA - $802.22, 19.62%
+     * AAPL - $138.78, 10.05%
+     * KROC - $86.01, 8.62%
+     * BLFS - $41.35, 3.06%
+   - Equity Breakdown section
+
+8. Notifications
+   - Win notifications: "You won $100" (multiple entries)
+   - "Selected for withdrawal" entries with +$100 amounts
+   - Teal accent for amounts
+
+9. Chat
+   - Stock ticker displayed at top (AAPL)
+   - Real-time chat messages
+   - Text input field at bottom: "Type message here"
+   - Send button (teal arrow)
+
+10. Screeners
+    - Tabs: Pre-built / Custom
+    - Popular Screeners section
+    - Screener categories:
+      * Money Makers - Companies with growing revenue, profits and free cash flow
+      * Grow Baby Grow - Small cap companies with growing revenue
+      * Dividend Growth - Companies with room to grow their dividend
+      * Software - Software companies with high operating margins
+      * Wash Your Hands - Healthcare/pandemic related stocks
+
+11. Profile
+    - User avatar/photo
+    - Username field: johndoe
+    - Email field: johndoe@gmail.com
+    - "Available Screeners" section with toggleable list
+    - "Save Changes" button (teal)
+
+12. Portfolio Donut Chart
+    - Visual donut chart showing portfolio allocation
+    - Total balance: $26,134.8
+    - Color-coded segments for each holding
+    - "Stocks You May Like" section below:
+      * BBUX - Market Cap $1000, Price/Earnings 166.6, $106.48, +2.24%
+      * STZ - Market Cap $49.09, Price/Earnings 24.5, $227.93, +1.08%
+      * WOLJ - Market Cap $19.86, Price/Earnings 33.5, $68.21, -0.38%
+    - Add button (+) for adding stocks
+
+13. Out of Budget
+    - Modal/overlay on portfolio screen
+    - "You are now Out of budget"
+    - "You have used all your $25k in investing"
+    - Upsell: "Buy $25K Now" for $2.99/month
+    - "In Just $2.99/mth"
+
+14. Buy $25K (Payment)
+    - Title: "Buy $25K"
+    - "Via Card" section:
+      * Card Number input
+      * MM/YY input
+      * CVV input
+    - "Pay Now" button (teal)
+    - "Or" divider
+    - Alternative payment options: Apple Pay, Google Pay, PayPal
+
+
+Tab Bar Icons (Bottom Navigation)
+----------------------------------
+1. Home (house icon)
+2. Search (magnifying glass)
+3. Favorites (heart)
+4. Charts/Analytics (bar chart)
+5. Settings (gear)

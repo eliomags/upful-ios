@@ -1,0 +1,675 @@
+Now I have read all 71 files. Here is the comprehensive feature-by-feature analysis of the Upful iOS application.
+
+---
+
+# Upful iOS App -- Comprehensive Feature-by-Feature Analysis
+
+## Application Overview
+
+Upful is a stock screening, analysis, and simulated trading iOS application. It provides users with tools to screen stocks by financial criteria, view detailed stock data (quotes, financials, charts), manage a simulated portfolio with a $25,000 starting balance, save stocks and screeners, read market news, and compare stocks on various metrics. The app monetizes through a single monthly subscription ("Premium") that gates access to advanced features like unlimited screening and five-year historical data.
+
+---
+
+## 1. HOME (Portfolio Dashboard)
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Controllers/HomeGeneralViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Controllers/NewsViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Controllers/TransactionHistoryViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Coordinators/NewsCoordinator.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Logic Controllers/HomeGeneralLogicController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Logic Controllers/NewsLogicController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/View Models/StockNewsViewModel.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Models/NewsLoader.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Models/StockNews.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Models/StockScreeningService.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/Breakdown Pie/PieChartView.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/HoldingsBreakdownTableViewCell.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/HoldingBreakdownHeaderView.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/StockHoldingTableViewCell.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/CashBalanceView.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/TotalEquityView.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/TradingBalanceView.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/View Models/HomePerformanceViewModel.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/HomeFeedAuxiliaryActionView.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/News Cells/GenericNewsCell.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/News Cells/SmallNewsCell.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/News Cells/NewsHeaderTableCell.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Home/Views/SentimentView.swift`
+
+### Screen Purpose
+The Home screen is the portfolio dashboard. It serves as the main landing screen after the splash animation. It shows the user's simulated trading portfolio: total equity, cash balance, individual holdings with per-stock profit/loss, a pie chart breakdown of the portfolio, and preference-based stock suggestions.
+
+### User Stories and Flows
+1. **View portfolio summary**: User sees total equity vs. the $25,000 initial balance at the top, along with current cash balance and a "last updated" timestamp.
+2. **View individual holdings**: Each holding row shows ticker, number of shares, current price, average cost basis, dollar change, and percentage change. Color-coded green/red for gain/loss.
+3. **Interact with holdings**: Long-press a holding to get a context menu with "View" (navigate to stock detail), "Trade" (open trade screen), or "Sell All" (sell entire position).
+4. **View portfolio breakdown**: A collapsible pie chart section shows the distribution of holdings plus cash balance using a donut chart.
+5. **Receive stock suggestions**: Based on user preferences (industry, growth, profitability, dividend), the app screens stocks and shows up to 3 random suggestions per preference group.
+6. **Pull to refresh**: Holdings auto-refresh on a 15-second timer, and the user can also pull to refresh.
+7. **Navigate to screener**: A "Screener" button in the nav bar pushes to the screener selection screen.
+8. **First-time experience**: On first launch, the splash screen plays, then a subscription prompt appears.
+
+### UI Components
+- **UITableView** (grouped style) with 3 sections: Holdings, Breakdown (pie chart), Suggestions
+- **TradingBalanceView** as table header: contains TotalEquityView and CashBalanceView in a horizontal stack
+- **StockHoldingTableViewCell**: Custom cell with ticker label, shares label, current/average price labels, dollar/percent change labels
+- **HoldingsBreakdownTableViewCell**: Contains GenericPieChartView (Charts library, donut style with 62% hole radius)
+- **HoldingBreakdownHeaderView**: Collapsible section header with chevron toggle animation
+- **HomeFeedAuxiliaryActionView**: Horizontal row of action buttons (Preferences, Suggestions, Upgrade)
+- **SentimentView**: Pill-shaped view showing Positive/Negative/Neutral sentiment for news
+
+### View Hierarchy and Layout
+100% programmatic UIKit. No storyboards. All views use Auto Layout constraints via a custom `anchor(top:leading:bottom:trailing:padding:size:)` extension method. The table view fills the safe area.
+
+### Navigation Patterns
+- **Coordinator pattern**: `NewsCoordinator` pushes `NewsViewController` onto the navigation stack.
+- **Direct navigation**: The home VC directly pushes the screener selection or stock detail screens.
+- **Modal presentation**: Subscription and preferences are presented modally via their respective Presenter classes.
+- Context menus use `UIContextMenuConfiguration` for inline actions.
+
+### Data Flow
+- `HomeGeneralLogicController` owns the business logic. It uses `TradingEngine.shared` (singleton) to load holdings via a completion handler.
+- Holdings auto-refresh on a 15-second `Timer`.
+- Preferences are loaded via `PreferenceDataManager.getGroupedPreferences()`, which returns Core Data-persisted preferences.
+- For each preference group, `StockScreeningService` is called to fetch matching stocks from the Intrinio API.
+- News is loaded via `NewsLoader` from stocknewsapi.com.
+- State management uses a `SectionState` enum (`new`, `empty`, `loading`, `loaded`, `error`) per section, with closure callbacks (`holdingsStateChanged`, `suggestionsStateChanged`).
+
+### Trading Engine
+- `TradingEngine.shared` is a singleton managing the simulated portfolio.
+- `BalanceManager` tracks cash balance (starting at `BalanceConstants.initialCash` = $25,000).
+- Holdings are loaded asynchronously; the home screen compares total equity against the initial $25,000 to show net gain/loss.
+- "Sell All" creates a transaction and calls `tradingEngine.sell()`.
+
+### Current State
+- The "Performance" section (time-period chart 1W/1M/3M/6M/1Y/ALL from `HomePerformanceViewModel`) is defined in the enum but the section is commented out -- it is not displayed.
+- The pie chart is functional with cycling colors from a predefined palette.
+- The suggestions feature works but is limited to 3 randomized results, which may feel sparse.
+
+### UX Issues / Gaps
+- **No empty state for holdings**: When the user has no holdings, the holdings section just shows 0 rows with no guidance.
+- **Hardcoded API key** in `StockScreeningService.swift` (`OjNiMzRkZmFlNDBkYjIzYTgyMTNhNjcyZGNlZmYzMjE1`). This is a security concern -- API keys should be stored server-side or in a secure configuration.
+- **15-second auto-refresh timer** could drain battery unnecessarily. No throttling or background-awareness.
+- **Performance section commented out**: The 1W-ALL chart is prepared but not rendered.
+- **Force-unwrap** on `priceFormatter.string(from: product.price)!` in UpfulProductViewModel could crash.
+
+---
+
+## 2. STOCK DETAIL
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Detail/Controllers/StockOverviewViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Detail/Controllers/StockDetailDragViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Detail/Controllers/SearchCriteriaSelectionViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Detail/Coordinator/StockDetailsCoordinator.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Detail/ViewModel/StockOverviewViewModel.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Detail/ViewModel/MetricPreviewViewModel.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Detail/Datasource/StockOverviewDatasource.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Detail/Datasource/DragViewDataSources.swift`
+
+### Screen Purpose
+The Stock Detail screen provides a deep dive into a single stock: price chart, financial bar graphs (revenue/earnings), fundamental calculations (P/E, P/B, market cap, etc.), related news, company description, and a bottom drag-up panel for trading and comparison.
+
+### User Stories and Flows
+1. **View stock price performance**: Top section shows a price chart.
+2. **View financials**: Bar chart section shows revenue and earnings over time.
+3. **View calculations/metrics**: Rows of fundamental metrics (P/E, P/B, P/R, dividend yield, market cap, EBIT margin, etc.).
+4. **Read related news**: News section shows articles related to the stock.
+5. **Read company description**: Bottom section shows a text description.
+6. **Save/unsave a stock**: Toggle a save button in the nav bar to persist/remove via Core Data (`LocalStockLoader`).
+7. **Share a stock**: Share button creates a deep link via `UpfulDeepLinkManager.create()` and presents a `UIActivityViewController`.
+8. **Trade the stock**: Drag the bottom panel up to reveal a TRADE button that opens the trading screen.
+9. **Compare the stock**: Drag the bottom panel up to reveal a COMPARE button that opens the comparison modal.
+10. **View metric previews**: In the middle drag position, two default metrics (P/E ratio and EBIT margin) are shown with 5-year historical line charts.
+11. **Change comparison metric**: Full drag position reveals a metric selector to change which financial metric to chart.
+
+### UI Components
+- **UITableView** with 5 sections: Price Performance, Bar Graph (financials), Calculations, News, Description
+- **StockDetailDragViewController**: Child view controller using `YSDraggy.DragView` with 3 positions (collapsed, preview, full)
+- **SearchCriteriaSelectionViewController**: Modal picker for selecting financial metrics
+- **Line charts** (from Charts library) for metric preview
+- **Bar charts** for revenue/earnings
+- **CancelButton**: Reusable X close button
+
+### View Hierarchy and Layout
+The main view is a table view filling the safe area. The drag view controller is added as a child VC anchored at the bottom. The drag view has three configuration states managed by `DragControllerState` objects with different heights and datasources.
+
+### Navigation Patterns
+- **StockDetailsCoordinator**: Pushes `StockOverviewViewController` onto the nav stack, hiding the tab bar.
+- **StockTradeCoordinator**: Presents `StockTradeViewController` modally in full screen.
+- **StockComparisonPresenter**: Presents `StockComparisonViewController` modally over current context.
+- **StockEngagementRecorder**: Tracks the duration the user spends viewing a stock.
+
+### Data Flow
+- `StockOverviewViewModel` loads all data in parallel using a `DispatchGroup`: company name, quote, historical revenue, historical earnings, calculations (market cap, P/E, P/B, P/R, dividend yield), additional calculations, news, and description.
+- Dependencies are injected: `QuoteLoader`, `FinancialLoader`, `BatchFinancialLoader`, `NewsLoaderProtocol`, `DescriptionLoader`.
+- `MetricPreviewViewModel` loads 5-year historical data for the selected metric and configures line charts.
+- Three separate datasource objects (`EmptyDragViewDataSource`, `MetricPreviewDragDataSource`, `AnalysisDragDataSource`) manage the drag view's table view content.
+
+### Current State
+The stock detail screen is feature-rich. All five sections are functional. The drag view interaction provides a layered information disclosure pattern.
+
+### UX Issues / Gaps
+- **Tab bar hiding**: The tab bar is manually hidden/shown in `viewWillAppear`/`viewWillDisappear`. This can cause visual glitches if navigation is interrupted.
+- **No loading indicators**: While data loads in parallel via DispatchGroup, there is no skeleton/shimmer loading state visible.
+- **Hardcoded default metrics**: P/E and EBIT margin are hardcoded as default drag view metrics, with no way for users to set preferences.
+- **fatalError in UpfulProductViewModel**: The `setValues()` method calls `fatalError("No Product with that Identifier found")` for any unrecognized product ID, which would crash in production.
+
+---
+
+## 3. SCREENER SELECTION
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Screener Selection/Prebuilt/Controllers/PrebuiltScreenerViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Screener Selection/Prebuilt/Logic Controller/PrebuiltScreenerLogicController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Screener Selection/Manual Search Flow/Controllers/ManualScreenViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Screener Selection/Manual Search Flow/Controllers/ManualScreenContainerViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Screener Selection/Manual Search Flow/Controllers/ManualScreenItemUpdaterViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Screener Selection/Manual Search Flow/Controllers/ScreenerDescriptionViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Screener Selection/Manual Search Flow/View Models/ManualScreenItemViewModel.swift`
+
+### Screen Purpose
+The screener feature allows users to filter stocks by financial criteria. There are two modes: prebuilt screeners (curated from a remote source) and manual/custom screeners where the user selects criteria, operators, and values.
+
+### User Stories and Flows
+1. **Browse prebuilt screeners**: User sees two sections -- "Popular Screeners" (top 3 by interest count) and "Available Screeners" (remaining, shuffled). Each screener has a title, description, and associated color.
+2. **Run a prebuilt screener**: Tapping a screener navigates to the search results with that screener's parameters.
+3. **Build a custom screener**: Navigate to the manual screen tab. Three sections of criteria (Valuation, Financial, Performance) are displayed as a collection view grid (3 items per row).
+4. **Adjust criteria values**: Tap a criteria item to open a bottom-sheet modal (`ManualScreenItemUpdaterViewController`) with a slider and a greater-than/less-than segmented control.
+5. **View metric definitions**: Long-press a criteria item or tap an info button to see a description popup (`ScreenerDescriptionViewController`).
+6. **Execute the screen**: Tap the BUILD button (enabled only when at least one criterion is selected) to navigate to results.
+7. **Permission gating**: Navigation to results is gated by `PermissionManager.shared.verifyScreenerNavigationPermission`. Non-premium users are shown the subscription screen after a certain number of screenings.
+
+### UI Components
+- **UITableView** (grouped) for prebuilt screeners with 2 sections
+- **UICollectionView** (3-column grid, `UICollectionViewFlowLayout`) for manual criteria items, embedded in a container table view
+- **ManualScreenItemUpdaterViewController**: Modal with `UISlider`, `UISegmentedControl` (gt/lt), presented `.overCurrentContext` with dimmed background
+- **ScreenerDescriptionViewController**: Small modal popup showing metric definition and equation
+
+### Navigation Patterns
+- Prebuilt and manual screener tabs are within a `MenuContainerViewController` (tab-like container).
+- Results screen is pushed via `SearchResultsCoordinator`.
+- Permission-gated: if limit reached, `SubscriptionPresenter(type: .screeningLimit)` is presented.
+
+### Data Flow
+- Prebuilt screeners loaded from a remote source via `PrebuiltScreenerLogicController`, which calls `RemoteScreenerLoader`.
+- Screeners are sorted by interest count (most popular first) and then shuffled for the "Available" section.
+- Interest is tracked: `RemoteScreenerLoader.incrementScreenerInterest(documentID:)` fires each time a prebuilt screener is tapped.
+- Manual criteria values are stored in `ManualScreenItemViewModel` objects with ranges, step sizes, and formatting logic.
+- Step values vary: $100M for absolute numbers, 5 for ratios, 0.05 for percentages.
+
+### Current State
+Both prebuilt and manual screener flows are functional. The permission gating is in place.
+
+### UX Issues / Gaps
+- **No search/filter within prebuilt screeners**: If the list grows, there is no way to search.
+- **Slider UX**: The slider for criteria values has very different step sizes depending on the metric type, which may confuse users.
+- **No undo**: After adjusting criteria, there is no way to reset to defaults other than manually setting values back.
+
+---
+
+## 4. SEARCH RESULTS
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Search Results/Controllers/ScreenResultsVC.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Search Results/View Models/ScreenResultsViewModel.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Search Results/Coordinators/SearchResultsCoordinator.swift`
+
+### Screen Purpose
+Displays the results of a stock screening operation (manual or prebuilt). Shows matching stocks in a scrollable list with infinite scrolling/pagination.
+
+### User Stories and Flows
+1. **View screened stocks**: Results appear as rows in a table view, each showing company name, ticker, and preview financial data.
+2. **Sort results**: Action sheet lets the user sort by Market Cap Ascending or Descending.
+3. **Infinite scroll**: When the user scrolls near the end (second-to-last row), the next page of results is loaded.
+4. **Navigate to stock detail**: Tapping a result pushes the stock detail screen.
+5. **Save the screener**: A save button in the nav bar persists the screener. If the title is "Custom", the user is prompted with an alert to enter a name.
+6. **Check if saved**: The screener save state is checked and the nav bar icon reflects whether the screener is already saved.
+
+### UI Components
+- **UITableView** with stock result cells
+- **Action sheet** for sort options
+- **UIAlertController** with text field for custom screener naming
+
+### Navigation Patterns
+- `SearchResultsCoordinator` has three initializer paths: manual screener, prebuilt screener, or saved screener.
+- Stock detail navigation uses `StockDetailsCoordinator`.
+
+### Data Flow
+- `ScreenResultsViewModel` manages the screening service (`StockScreener` protocol), pagination, and stock view model creation.
+- Each result stock loads its own preview data (quote) independently.
+- Screener save/delete uses Core Data via `LocalScreenerLoader`.
+- Permission check: `PermissionManager.shared.hasExceededSavedScreenerLimit` gates saving.
+
+### Current State
+Functional with pagination, sorting, and save/delete. The infinite scroll triggers one row before the last item.
+
+### UX Issues / Gaps
+- **No pull-to-refresh**: Users must navigate away and back to re-run the screen.
+- **No empty state guidance**: When zero results are found, there is no helpful message or suggestion to adjust criteria.
+- **Each result loads quote independently**: This could result in many simultaneous network requests. A batch API would be more efficient.
+
+---
+
+## 5. SAVED (Stocks and Screeners)
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/SaveView/Controllers/SavedViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/SaveView/Controllers/Saved Stocks/Controllers/SavedStocksViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/SaveView/Controllers/Saved Stocks/Models/LocalStockLoader.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/SaveView/Controllers/Saved Stocks/Logic Controller/SavedStockLogicController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/SaveView/Controllers/Saved Screeners/Controllers/SavedScreenersViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/SaveView/Controllers/Saved Screeners/Models/LocalScreenerLoader.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/SaveView/Controllers/Saved Screeners/Models/Screener.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/SaveView/Controllers/Saved Screeners/View Models/SavedScreenersViewModel.swift`
+
+### Screen Purpose
+The Saved tab provides two sub-tabs: "Saved Stocks" (watchlist) and "Saved Screeners" (saved screening criteria). Both support reordering and deletion.
+
+### User Stories and Flows
+1. **View saved stocks**: List of saved tickers with live quote data (price, change).
+2. **Reorder saved stocks**: Drag-and-drop reordering using `UITableViewDragDelegate` and `UITableViewDropDelegate`.
+3. **Delete a saved stock**: Swipe to delete removes the stock from Core Data.
+4. **Navigate to stock detail**: Tap a saved stock to push the stock detail screen.
+5. **View saved screeners**: List of saved screeners with titles and color-coded indicators.
+6. **Reorder saved screeners**: Same drag-and-drop as stocks.
+7. **Delete a saved screener**: Swipe to delete.
+8. **Run a saved screener**: Tap to navigate to search results with that screener's parameters.
+9. **Add new screeners**: Plus button in the nav bar navigates to the screener selection flow.
+
+### UI Components
+- **MenuContainerViewController**: Tab container with two tabs at the top
+- **UITableView** for both stocks and screeners
+- Drag-and-drop via native UIKit drag/drop APIs
+- Swipe-to-delete via `UITableViewDelegate.trailingSwipeActionsConfigurationForRowAt`
+
+### Data Flow
+- **Saved Stocks**: `LocalStockLoader` performs Core Data CRUD on `SavedStock` entities (ticker, order). `SavedStockLogicController` manages state (`new`, `loading`, `loaded`, `empty`, `error`) and creates view models.
+- **Saved Screeners**: `LocalScreenerLoader` performs Core Data CRUD on `SavedScreener` entities. `SavedScreenersViewModel` manages analogous state machine.
+- **Reorder persistence**: Reorder is saved by deleting all entries and re-saving in the new order. This is not transactional and could lead to data loss if interrupted.
+- **Quote loading**: Each saved stock independently loads its current quote from the API.
+
+### Current State
+Both sub-tabs are functional. Drag-and-drop works. Permission gating applies to save limits for non-premium users.
+
+### UX Issues / Gaps
+- **Destructive reorder persistence**: Deleting all and re-saving is risky. If the app crashes mid-operation, data could be lost. An `order` field with batch updates would be safer.
+- **No batch quote loading**: Each saved stock makes an individual API call. A batch endpoint would reduce network overhead.
+- **No confirmation on delete**: Swipe-to-delete immediately removes without confirmation.
+
+---
+
+## 6. SUBSCRIPTION
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Subscription/Controllers/SubscriptionViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Subscription/Models/SubscriptionItem.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Subscription/Presenter/SubscriptionPresenter.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Subscription/View Models/SubscriptionController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Subscription/View Models/UpfulProductViewModel.swift`
+
+### Screen Purpose
+The subscription screen promotes and processes "Premium" in-app purchases. It presents product options, handles purchase/restore flows, and displays legal links (privacy policy, terms of use).
+
+### User Stories and Flows
+1. **View premium offering**: User sees subscription product(s) with pricing.
+2. **Purchase subscription**: Tap a product row to initiate purchase via StoreKit.
+3. **Restore purchase**: Tap the Restore button in the footer to restore previous purchases.
+4. **View legal documents**: Privacy Policy and Terms of Use buttons open URLs in Safari.
+5. **Dismiss**: Cancel/Skip button closes the modal.
+
+### Subscription Triggers (PresenterType)
+- `firstAppOpen`: Shown once on first launch
+- `savedStockLimit`: When saved stock limit is exceeded
+- `savedScreenerLimit`: When saved screener limit is exceeded
+- `screeningLimit`: When screening navigation limit is exceeded
+- `settings`: When tapped from Settings
+- `fiveYearDataInterest`: When requesting 5-year historical data
+
+### UI Components
+- **UITableView** (grouped) with product cells
+- **SubscriptionView** as table header (marketing content)
+- **SubscriptionFooterView** with Restore, Privacy, and Terms buttons
+- **SubscriptionTableViewCell**: Product display cells
+
+### Data Flow
+- `SubscriptionController` uses `IAPServiceProtocol` to interact with StoreKit.
+- Products are fetched via `iAPService.retreiveProducts()`, sorted by price ascending.
+- Purchase flow: `iAPService.purchaseProduct()` -> `purchaseCompletionHandler` callback.
+- Restore flow: `iAPService.restorePurchases()`.
+- State machine: `awaiting` -> `loading` -> `loaded(products)` or `error` / `paymentError` / `paymentSuccess`.
+
+### Current State
+Only one product is supported: a 1-month subscription. The pricing display reads "1 month free. Then $X/mo." The UpfulProductViewModel switch statement has a `default: fatalError()` which is dangerous.
+
+### UX Issues / Gaps
+- **fatalError on unknown product**: If a new product ID is added in App Store Connect but the app is not updated, it will crash.
+- **Single product only**: The switch in `UpfulProductViewModel.setValues()` only handles `.oneMonth`. Adding annual or other tiers requires code changes.
+- **No loading indicator during purchase**: The purchase flow disables further selection but shows no spinner.
+- **Error messages**: Generic error messages like "An error has occured" (typo: "occured" should be "occurred").
+- **Notification setup on deinit**: The `deinit` of `SubscriptionViewController` calls `delegate?.showNotificationSetupView()` if not premium and presenter type is `.screeningLimit`. Relying on `deinit` for UI logic is fragile.
+
+---
+
+## 7. EXPLORE (Discovery Feed)
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Explore Feed/Controller/ExploreViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Explore Feed/Logic Controller/ExploreLogicController.swift`
+
+### Screen Purpose
+The Explore tab is the discovery/search screen. It shows curated content (market news, popular stocks, popular screeners) and provides a search bar for finding companies.
+
+### User Stories and Flows
+1. **Browse market news**: Top section shows 3 market news articles.
+2. **Browse popular stocks**: Second section shows 4 popular stocks loaded from a remote source.
+3. **Browse popular screeners**: Third section shows 3 popular screeners.
+4. **Search for companies**: Using the UISearchController, the user can type a company name or ticker. Search is debounced at 250ms. Results replace the three sections.
+5. **Navigate to stock detail**: Tap a stock result.
+6. **Navigate to screener results**: Tap a screener (permission-gated).
+7. **Read news**: Tap a news article to open it in Safari.
+
+### UI Components
+- **UITableView** with 3 sections in normal mode, 1 section in search mode
+- **UISearchController** with search bar
+- Section headers with titles
+
+### Data Flow
+- `ExploreLogicController` loads from remote sources: market news via `NewsLoader`, popular stocks via a remote stock list, popular screeners via `RemoteScreenerLoader`.
+- Search uses `StockSearchService` with a debounced `DispatchWorkItem` (250ms delay).
+- Three state callbacks: `newsStateChanged`, `stocksStateChanged`, `screenersStateChanged`.
+
+### Current State
+Functional. The three-section discovery layout provides a good entry point for new users.
+
+### UX Issues / Gaps
+- **Fixed item counts**: Hardcoded to show 3 news, 4 stocks, 3 screeners. No "See All" option.
+- **No error handling UI**: If any section fails to load, the section simply shows 0 rows.
+- **Search only by company name**: No ticker-based or sector-based search filtering.
+
+---
+
+## 8. STOCK COMPARISON
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Comparison/Controllers/StockComparisonViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Stock Comparison/View Models/StockComparisonViewModel.swift`
+
+### Screen Purpose
+Allows users to compare two stocks side-by-side on a selected financial metric with a 5-year historical line chart.
+
+### User Stories and Flows
+1. **Open comparison**: Triggered from the stock detail drag view's COMPARE button.
+2. **View line chart**: A line chart shows 5-year historical data for the primary stock on the selected metric (default: P/E ratio).
+3. **Select second stock**: Tap the "Tap to compare" row to open a saved stock picker and select a second ticker.
+4. **Change metric**: Tap the metric row to open the `SearchCriteriaSelectionViewController` and pick a different financial metric.
+5. **Dismiss**: Close button or downward swipe gesture dismisses the modal.
+
+### UI Components
+- **Card-style modal**: Rounded container view (16px corner radius) centered on screen with dimmed background
+- **UITableView** (insetGrouped) with 3 sections: Line Chart, Metric, Stocks
+- **LineChartTableViewCell**: Renders the comparison line chart
+- **MetricSelectionTableViewCell**: Shows the two stock tickers with colored dot indicators
+- **Pan gesture**: Downward swipe dismissal with velocity/translation thresholds
+
+### Data Flow
+- `StockComparisonViewModel` fetches 5-year historical data for each ticker via a configurable `MetricDataFetch` closure (defaults to `StockFinancialLoader().getStockFinancials`).
+- When `mainTicker`, `secondTicker`, or `searchingCriteria` changes (via `didSet`), data is re-fetched.
+- `CompletionHandler<Any>` notifies the VC to reload the table.
+- Second ticker selection uses `SavedStockCoordinator` to present a stock picker.
+
+### Current State
+Functional with line chart and metric selection. Supports changing both the metric and the comparison ticker.
+
+### UX Issues / Gaps
+- **Only saved stocks for comparison**: The second ticker must come from saved stocks, limiting comparison to the user's watchlist.
+- **No loading state in chart**: Chart area is empty while data loads, with no indicator.
+- **"No Data Found" text**: Appended directly to the ticker label, which is functional but visually rough.
+
+---
+
+## 9. STOCK TRADE
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/StockTrade/Coordinator/StockTradeCoordinator.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/New Group/Controllers/StockTradeViewController.swift`
+
+### Screen Purpose
+A simulated trading screen where users can buy or sell shares of a stock using the simulated $25,000 portfolio.
+
+### User Stories and Flows
+1. **Enter share count**: The number pad keyboard appears immediately. The user types the number of shares.
+2. **View current price**: The latest stock price is fetched and displayed.
+3. **View trade estimate**: `shares x price` is calculated and updated in real-time as the user types.
+4. **View current position**: Header text shows how many shares the user currently owns and their cash balance.
+5. **Buy shares**: Tap the BUY button. If sufficient cash, the purchase succeeds with a success animation and haptic feedback. If insufficient cash, an error alert appears.
+6. **Sell shares**: Tap the SELL button. If the user owns enough shares, the sale succeeds. Otherwise, an error alert ("You can't sell what you don't have.").
+7. **Dismiss**: Cancel button unsubscribes from trading engine handlers and dismisses.
+
+### UI Components
+- **UITableViewController** (insetGrouped style) with 3 rows: Shares (text field), Last Price (label), Trade Estimate (label)
+- **PreferenceHeaderView** as section header showing current holdings info
+- **Buy/Sell button stack**: Positioned above the keyboard using keyboard notification frame
+- Haptic feedback on success (`Vibration.success.vibrate()`)
+
+### Data Flow
+- Uses `TradingEngine.shared` singleton for all trading operations.
+- Quote loaded via `StockPriceLoader()` implementing `QuoteLoader` protocol.
+- `Transaction` object created via `TransactionAdapter` with ticker, shares, and trade price.
+- Buy: `tradingEngine.buy(transaction:completion:)` returns a boolean.
+- Sell: `tradingEngine.sell(transaction:completion:)` executes the sale.
+- Holdings loaded via handler subscription: `tradingEngine.loadHandlerObservers.addHandler()`.
+
+### Current State
+Fully functional simulated trading. Buy and sell flows work with proper validation (insufficient cash, insufficient shares).
+
+### UX Issues / Gaps
+- **No fractional shares**: Only whole integer share counts are supported.
+- **No order types**: Only market orders. No limit, stop, or other order types.
+- **No confirmation step**: Tapping Buy/Sell immediately executes without a confirmation dialog.
+- **File location**: `StockTradeViewController.swift` is inside a folder called "New Group" -- this is a default Xcode folder name that was never renamed.
+- **Keyboard-based button positioning**: The trade buttons are positioned relative to the keyboard frame, which could behave unexpectedly on different devices or with external keyboards.
+
+---
+
+## 10. RECOMMENDATIONS (NPS Survey)
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Recommendations/Controllers/RecommendationViewController.swift`
+
+### Screen Purpose
+An NPS (Net Promoter Score) survey screen asking users to rate how likely they are to recommend Upful on a 0-10 scale.
+
+### User Stories and Flows
+1. **View the prompt**: "How likely are you to recommend Upful to your friends, family or colleagues?"
+2. **Select a rating**: 0-10 segmented control with "Not Likely" and "Extremely Likely" labels.
+3. **Submit**: Submit button (enabled only after selection) sends the score via analytics and triggers the native App Store review prompt.
+4. **Dismiss**: "Not Right Now" button or cancel button dismisses and also triggers the App Store review prompt.
+
+### UI Components
+- **UISegmentedControl** with 11 segments (0-10)
+- **Submit button**: Disabled (gray) until selection, then enabled (appAccent3 color)
+- **"Not Right Now" button**: Text-only secondary action
+- App icon image in the nav bar title
+
+### Data Flow
+- `AnalyticsLogger.instance.reportEvents(event: .submitPromotorScore(score:))` records the NPS score.
+- `UserDefaults` records that the user has submitted a review (`hasSubmittedReview`).
+- `SKStoreReviewController.requestReview()` triggers the native App Store review dialog on dismiss.
+
+### Current State
+Functional. Simple one-screen survey flow.
+
+### UX Issues / Gaps
+- **App Store review always triggered**: Whether the user submits or cancels, the App Store review prompt fires. This may annoy users who explicitly chose "Not Right Now".
+- **No conditional logic**: Low NPS scores (0-6) still trigger the App Store review, which is counter-productive -- detractors should not be sent to the App Store to leave reviews.
+
+---
+
+## 11. REPORTS and SUGGESTIONS (Feedback)
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Reports/Controllers/ReportViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Reports/Presenter/ReportPresenter.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Suggestions/Controllers/SuggestionFeedViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Suggestions/Models/Suggestions.swift`
+
+### Screen Purpose
+Two related features: (1) a feedback form for reporting issues or submitting suggestions, and (2) a community suggestion feed where users can view and vote on feature suggestions.
+
+### Report/Issue Screen
+- `ReportViewController` is a base class with a text view and submit button.
+- `SuggestionViewController` extends it for suggestions, `IssueViewController` for bug reports.
+- Both submit via `AnalyticsLogger` (suggestion or issue events).
+- `ReportPresenter` creates and presents the appropriate subclass modally.
+
+### Suggestion Feed Screen
+- `SuggestionFeedViewController` shows a list of community suggestions loaded from a remote data source (`SuggestionDataLoader`).
+- Each suggestion has a title, description, and vote count.
+- **Double-tap to vote**: Users can vote as many times as they wish (no rate limiting).
+- Votes are tracked locally and committed on `deinit` via `suggestionDataLoader?.commitVotes()`.
+- "Add Suggestion" button opens an email compose sheet (to `elio@jyanik.com`) or falls back to the in-app `ReportPresenter` if email is unavailable.
+
+### Data Flow
+- `Suggestion` model: class (not struct) with title, description, votes, id. Initialized from a dictionary (likely Firestore).
+- `SuggestionsLoaderProtocol` with `load()`, `updateVote()`, `commitVotes()`.
+- State machine: `pending`, `loading`, `loaded`, `error`.
+
+### UX Issues / Gaps
+- **Unlimited voting**: No per-user rate limiting on votes. A user can spam votes.
+- **Vote commit on deinit**: If the app crashes before the VC is deallocated, votes are lost.
+- **Email hardcoded**: Support email `elio@jyanik.com` is hardcoded in the view controller.
+- **Suggestion class is mutable**: Using a class (reference type) with a mutable `votes` property can lead to unexpected behavior.
+
+---
+
+## 12. SETTINGS
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Settings/SettingsViewController.swift`
+
+### Screen Purpose
+The Settings screen provides access to preferences, subscription upgrade, support features, and app rating.
+
+### Sections
+1. **Preferences**: Navigate to `PreferenceViewController` to set industry, growth, profitability, and dividend preferences.
+2. **Purchase**: "Upgrade to Premium" row opens the subscription screen via `SubscriptionPresenter(type: .settings)`.
+3. **Support**: 
+   - "Suggestions" navigates to `SuggestionFeedViewController`.
+   - "Report Issue" opens `MFMailComposeViewController` (to `elio@jyanik.com`) or falls back to `ReportPresenter`.
+   - "Allow Tracking" toggle -- only enabled for premium users.
+4. **Review**: "Leave a Rating" opens the `RecommendationViewController` (NPS survey).
+
+### UX Issues / Gaps
+- **Tracking toggle premium-gated**: The tracking opt-out is only available to premium users, which may conflict with privacy expectations and App Store guidelines.
+- **Hardcoded email**: Same `elio@jyanik.com` pattern.
+
+---
+
+## 13. PREFERENCES
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Preferences/Controller/PreferenceViewController.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Preferences/Models/Preference.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Preferences/Presenter/FeaturePresenter.swift`
+
+### Screen Purpose
+Multi-section preference picker that lets the user define their investment interests. These preferences drive the stock suggestions on the Home screen.
+
+### Preference Categories
+1. **Industry** (up to 3 selections): Retail, Financial Services, Banking, Real Estate, Healthcare, Technology, Food & Beverages, Autos, Industrial Products, Hospitality, Telecommunications, E-Commerce, Apparel, Gaming, Consumer Electronics, Utilities, Energy, Chemicals, Insurance, Media, Metals & Mining, Airlines, REIT, Biotechnology
+2. **Growth**: Any, High Growth, Medium Growth, Low Growth, Negative Growth
+3. **Profitability**: Any, Highly Profitable, Medium Profitability, Low Profitability, Not Profitable
+4. **Dividend**: Any, No Dividends, High Yield, Medium Yield, Low Yield
+
+### UI Components
+- **UITableView** with sections, each containing an embedded `GenericPreferenceCollectionViewController` (collection view)
+- Industry limited to 3 selections with alert if exceeded
+- Saved via `PreferenceDataManager`
+
+### Data Flow
+- `Preference.swift` defines `PreferenceID` enum with raw string values mapping to API query parameters.
+- `FeaturePresenter` wraps `PreferenceViewController` in `UINavigationController` and presents full screen.
+
+---
+
+## 14. SPLASH SCREEN
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Splash Screen Module/SplashScreenViewController.swift`
+
+### Screen Purpose
+Animated splash screen displaying the "UPFUL" brand text with a reveal animation sequence.
+
+### Animation Sequence
+1. Text reveal (mask animation)
+2. Scale up
+3. Scale down
+4. Fade out
+Total duration: approximately 1.1 seconds with a 0.6-second initial delay.
+
+### Implementation
+- Added as a child view controller of the tab bar controller.
+- Uses `UIView.animateKeyframes` with relative start times and durations.
+- After completion, removes itself from the parent via `removeFromParent()` and `view.removeFromSuperview()`.
+
+---
+
+## 15. WEB NAVIGATION
+
+### Files Analyzed
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/WebNavigation/SafariPresenter.swift`
+
+### Screen Purpose
+Utility coordinator that opens URLs in `SFSafariViewController` for viewing news articles and other web content within the app.
+
+### Implementation
+- `SafariPresenter` implements the `Coordinator` protocol.
+- Logs `selectedNewsArticle` analytics event on start.
+- Creates an `SFSafariViewController` with the given URL and presents it modally.
+
+---
+
+## Cross-Cutting Architecture Summary
+
+### Architectural Patterns
+| Pattern | Usage |
+|---------|-------|
+| **MVVM-like with Logic Controllers** | Logic controllers act as view models with state machines and closure-based callbacks |
+| **Coordinator** | Navigation encapsulated in coordinator classes (StockDetailsCoordinator, SearchResultsCoordinator, etc.) |
+| **Presenter** | Modal presentation logic encapsulated in presenter structs (SubscriptionPresenter, ReportPresenter, FeaturePresenter, StockComparisonPresenter) |
+| **Singleton** | TradingEngine.shared, PermissionManager.shared, AnalyticsLogger.instance, PersistenceService |
+| **Protocol-oriented** | Service protocols (IAPServiceProtocol, QuoteLoader, StockScreener, SuggestionsLoaderProtocol, etc.) for dependency injection |
+| **State machine** | Enum-based states (new/loading/loaded/empty/error) with didSet observers |
+
+### Technology Stack
+| Technology | Purpose |
+|------------|---------|
+| UIKit (programmatic) | All UI -- no storyboards |
+| Core Data | Persistence for SavedStock, SavedScreener entities |
+| StoreKit (v1) | In-app purchases |
+| Charts (danielgindi) | Pie, bar, and line charts |
+| YSDraggy | Bottom-sheet drag interaction |
+| Kingfisher | Image loading/caching |
+| SFSafariViewController | In-app web browsing |
+| MessageUI | Email composition |
+
+### API Dependencies
+| API | Endpoint | Purpose |
+|-----|----------|---------|
+| Intrinio | api.intrinio.com | Stock screening, financial data, descriptions |
+| StockNewsAPI | stocknewsapi.com | Market and ticker news |
+| Remote Screener/Suggestion Source | (likely Firebase/Firestore) | Prebuilt screeners, popular stocks, suggestions |
+
+### Global UX Issues Summary
+1. **Hardcoded API key** in StockScreeningService -- security vulnerability.
+2. **Force-unwraps and fatalError** in production code paths.
+3. **No offline mode** -- the app is entirely dependent on network connectivity with minimal error recovery.
+4. **Inconsistent error handling** -- some screens show alerts, others silently fail.
+5. **No accessibility** considerations observed (no VoiceOver labels, dynamic type limited).
+6. **Reorder persistence is destructive** (delete-all-and-re-save pattern).
+7. **Singleton-heavy architecture** makes unit testing difficult.
+8. **NPS survey triggers App Store review for detractors** (scores 0-6).
+9. **Tracking opt-out gated behind paywall** -- potential privacy/compliance concern.
+10. **"New Group" folder name** for StockTrade indicates incomplete project organization.

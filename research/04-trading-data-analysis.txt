@@ -1,0 +1,524 @@
+I now have a complete picture of all the files. Here is the comprehensive analysis.
+
+---
+
+# Comprehensive Analysis: Upful iOS App -- Trading Engine, Data Models, CoreData, Extensions, and Reusable Views
+
+---
+
+## 1. TRADING ENGINE ARCHITECTURE
+
+### 1.1 High-Level Overview
+
+The trading engine is located under `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/` and implements a **paper-trading / simulated-trading system**. It is not connected to a real brokerage. Users start with a virtual cash balance of $25,000 and can execute simulated buy and sell operations against real-time stock price data fetched from the IEX Cloud API.
+
+The engine is organized into four subsystems: **Balance Management**, **Transaction Logging**, **Transaction Ledger**, and **Stock Split Handling**.
+
+### 1.2 Core Orchestrator: `TradingEngine`
+
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/TradingEngine.swift`
+
+`TradingEngine` is a singleton (`TradingEngine.shared`) that serves as the central coordinator. It holds references to:
+
+- `BalanceManager` -- manages cash and equity totals
+- `TransactionLoggingManager` -- writes transaction logs (local CoreData + remote Firestore)
+- `LedgerManager` -- maintains the canonical ledger of active positions
+
+**Buy Flow:**
+1. `buy(transaction:completion:)` is called.
+2. `validatePurchaseAttempt` checks whether `tradePrice * numberOfShares <= currentCashBalance`.
+3. If valid, `TransactionLoggingManager.log()` fires, which first writes to Firestore (remote), then to the local CoreData `LoggedTransaction` entity.
+4. `LedgerManager.save()` persists the transaction as a `PersistedTransaction` in CoreData.
+5. `BalanceManager.handleBuy()` debits the cash balance.
+6. An analytics event is reported.
+
+**Sell Flow:**
+1. `sell(transaction:completion:)` is called.
+2. There is NO validation gate in the sell method itself (unlike buy). Validation exists as a separate method `validateSaleAttempt` but it must be called externally before invoking `sell`.
+3. The same logging and ledger persistence occurs.
+4. `BalanceManager.handleSell()` credits the cash balance.
+
+**Holdings Loading Flow:**
+1. `loadHoldings()` calls `mapTransactionsToHoldings` which fetches all `PersistedTransaction` records from CoreData.
+2. `HoldingMapper` groups transactions by ticker, creates `Holding` objects, and fetches current prices from the network (`StockPriceLoader`).
+3. Equity balance is updated.
+4. Stock split checks execute (once per day).
+5. Results are propagated through `CompletionHandler<[Holding]>` (a custom observer/notification pattern).
+6. `ProfileSyncCoordinator.sync()` pushes holdings + performance data to Firestore.
+
+### 1.3 Balance Management
+
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Balance Manager/BalanceManager.swift`
+
+`BalanceManager` stores two values using `UserDefaults`:
+- `cash` -- initialized to $25,000 (`BalanceConstants.initialCash`)
+- `equity` -- total portfolio value (cash + stock holdings value)
+
+Key observations:
+- Balances are persisted in **UserDefaults only**, not CoreData. This means they are not recoverable from transaction history alone if UserDefaults is cleared. There is no reconciliation mechanism.
+- `currentCashBalance` and `totalEquityBalance` are `lazy var` properties that read from UserDefaults on first access and are then cached in memory. Subsequent mutations modify the in-memory value AND save to UserDefaults.
+- `handleEquityUpdate(with:)` recalculates total equity as `stockHoldingValue + currentCashBalance`.
+
+### 1.4 Ledger Subsystem
+
+**Files:**
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Ledger/LedgerManager.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Ledger/LocalTransactionLedgerLoader.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Ledger/TransactionLedgerPersistence.swift`
+
+The ledger stores canonical transaction records as `PersistedTransaction` CoreData entities. `LedgerManager` is a facade over:
+- `LocalTransactionLedgerLoader` -- reads from CoreData (supports filtering by ticker, date-based filtering, full load)
+- `TransactionLedgerPersistence` -- writes new records; deletion is implemented but the `LedgerManager.delete()` method has an **empty body** (dead code / incomplete implementation)
+
+Notable issue in `LocalTransactionLedgerLoader.loadFiltering(_:)`: It uses `try!` which will crash on any CoreData error.
+
+### 1.5 Logging Subsystem
+
+**Files:**
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Logging/TransactionLoggingManager.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Logging/Local/LocalTransactionLogger.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Logging/Local/TransactionLogLoader.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Logging/Protocols/TransactionLogger.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Logging/Remote/RemoteTransactionLogger.swift`
+
+The logging system follows the **Strategy pattern** via the `TransactionLogger` protocol. Two implementations exist:
+
+1. **`LocalTransactionLogger`** -- persists to the `LoggedTransaction` CoreData entity.
+2. **`RemoteTransactionLogger`** -- writes to Firestore under the `"transactions"` collection, keyed by random UUID. Includes the user's profile ID.
+
+`TransactionLoggingManager` orchestrates: remote fires first, then local on completion. The log is separate from the ledger -- the log is an audit trail (sorted by date descending), while the ledger is the active position set.
+
+### 1.6 Stock Split Handling
+
+**Files:**
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Stock Split/StockSplit.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/Stock Split/StockSplitFetcher.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Features/StockSplitHandler.swift`
+
+`StockSplit` is a `Decodable` struct with `toFactor`, `fromFactor`, and `exDate`. The ratio is `toFactor / fromFactor`.
+
+`StockSplitFetcher` hits IEX Cloud's `/splits/1yr` endpoint for each ticker.
+
+`StockSplitHandler` applies splits to existing transactions by:
+1. Checking if the split's ex-date is after the most recent transaction date AND after the last applied split date.
+2. Adjusting `tradePrice = tradePrice / ratio` and `numberOfShares = numberOfShares * ratio`.
+3. Setting `lastAppliedStockSplit` to the ex-date.
+
+The check runs once per calendar day (`shouldCheckForStockSplit` uses a UserDefaults-stored date). Multiple handlers execute in a `DispatchGroup` for all held tickers.
+
+### 1.7 Transaction Protocol and Models
+
+**Protocol:** `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Protocols/Transaction.swift`
+
+```swift
+protocol Transaction: class {
+    var ticker: String { get set }
+    var numberOfShares: Int32 { get set }
+    var tradePrice: Double { get set }
+    var type: String { get set }
+    var transactionDate: String { get set }
+    var id: String { get set }
+    var lastAppliedStockSplit: Date? { get set }
+}
+```
+
+Three concrete conforming types:
+1. **`PersistedTransaction`** (NSManagedObject) -- ledger entity
+2. **`LoggedTransaction`** (NSManagedObject) -- log entity
+3. **`TransactionAdapter`** (plain class) -- in-memory adapter for creating transactions outside CoreData context
+
+`TransactionType` is a simple enum: `.buy` or `.sell`, with string raw values.
+
+### 1.8 Holdings Model
+
+**Files:**
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Models/Holdings/Holding.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Trading Engine/Models/Holdings/HoldingMapper.swift`
+
+`Holding` is a plain class (not CoreData) that aggregates transactions for a single ticker. It computes:
+- `totalShareCount` = sum of buy shares minus sum of sell shares
+- `currentTotalValue` = currentPrice * totalShareCount
+- `averagePrice` = weighted average of buy prices
+- `totalPriceMovementDollar` and `totalPriceMovementPercent` -- P/L calculations
+
+`HoldingMapper` performs the aggregation: it takes all ledger transactions, groups by ticker using an imperative loop, filters out positions with zero shares, and fetches live quotes via `StockPriceLoader` in a `DispatchGroup`.
+
+---
+
+## 2. COREDATA ENTITIES AND SCHEMAS
+
+The app uses **two separate CoreData persistent stores** (two separate `NSPersistentContainer` instances):
+
+### 2.1 StockDataModel (`PersistenceService`)
+
+**Container:** `StockDataModel` via `PersistenceService.shared`
+
+**File:** `/Users/elshanmagsudov/upful-ios/StockDataModel.xcdatamodeld/StockDataModel.xcdatamodel/contents`
+
+| Entity | Attributes | Uniqueness |
+|--------|-----------|------------|
+| **Notes** | `content: String`, `id: String?` | Unique on `id` |
+| **SavedScreener** | `title: String`, `screenDescription: String?`, `symbol: String?`, `searchParameters: String?`, `colorMap: String?`, `id: String?` | Unique on `id`, indexed by `id` |
+| **SavedStock** | `ticker: String?`, `companyName: String?`, `notes: String?` | Unique on `ticker` |
+
+There are **no relationships** defined in this schema. `SavedScreener` has a `savedScreenerParameter: NSSet` relationship defined in code (via `SavedScreenerParameter+CoreDataProperties.swift`) but this relationship is NOT present in the `StockDataModel.xcdatamodel` schema. This is a schema/code mismatch that could cause runtime issues.
+
+### 2.2 TransactionDataModel (`TransactionContainerManager`)
+
+**Container:** `TransactionDataModel` via `TransactionContainerManager.shared`
+
+**File:** `/Users/elshanmagsudov/upful-ios/TransactionDataModel.xcdatamodeld/TransactionDataModel.xcdatamodel/contents`
+
+| Entity | Attributes | Uniqueness |
+|--------|-----------|------------|
+| **PersistedTransaction** | `id: String?`, `ticker: String?`, `numberOfShares: Int32`, `tradePrice: Double`, `transactionDate: String?`, `type: String?`, `lastAppliedStockSplit: Date?` | None |
+| **LoggedTransaction** | Same schema as PersistedTransaction | None |
+| **User** | `id: String?`, `firstTransactionDate: Date?` | None |
+| **PersistedPerformanceDataPoint** | `cashBalance: Double`, `holdingBalance: Double`, `date: Date?` | Unique on `date` |
+
+No relationships between entities. PersistedTransaction and LoggedTransaction are structurally identical but stored as separate entities (dual-write pattern for audit vs. active positions).
+
+### 2.3 TransactionLog Model (Legacy/Outdated)
+
+**File:** `/Users/elshanmagsudov/upful-ios/TransactionLog.xcdatamodeld/TransactionLog.xcdatamodel/contents`
+
+This appears to be an **older version** of the transaction schema. It has `LoggedTransaction` and `PersistedTransaction` with `averagePrice` and `currentPrice` attributes but lacks `id`, `lastAppliedStockSplit`, and `tradePrice` (has `currentPrice` instead). Both entities have `representedClassName="PersistedTransaction"` which is incorrect for `LoggedTransaction`. This model appears to be superseded by `TransactionDataModel` and may be unused/orphaned.
+
+### 2.4 CoreData Context Management
+
+`TransactionContainerManager` uses a parent-child context pattern:
+- `managedObjectContext` = viewContext (main queue)
+- `backgroundContext` = private queue context with parent = viewContext
+
+`PersistenceService` for StockDataModel uses a simpler approach with just the viewContext. The `saveContext()` method calls `fatalError` on save failure, which is a crash-on-error strategy.
+
+Both containers use `NSMergeByPropertyObjectTrumpMergePolicy`.
+
+---
+
+## 3. DATA MODELS (API/Codable)
+
+### 3.1 Company Fundamentals
+
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Models/CompanyFundamentals.swift`
+
+A family of `Decodable` structs modeling responses from the Intrinio API:
+- `HistoricalDataSearch` containing `[CompanyHistoricalDatum]` (date + value pairs)
+- `CompanyFundamentals` with `standardizedFinancials` and `fundamental` (financial statement data)
+- `StandardizedFinancial` containing a `DataTag` (metric name) and `value`
+- `Fundamental` with fiscal period metadata and a nested `Company`
+- `Company` with `id`, `ticker`, `name`, `lei`, `cik`
+
+### 3.2 Company News and Screening
+
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Models/CompanyNewsModel.swift`
+
+- `CompanyNewsModel` -- news articles with title, date, URL, summary
+- `StockData` -- combines financials and news for a stock
+- `ScreeningResponse` -- paged results containing `[Stock]`
+- `Stock` -- a class (not struct) with name, ticker, optional fundamentals, and a `StockQuote` reference. Conforms to `Hashable` (hashed by ticker). Has a static `NSCache` for caching.
+
+### 3.3 Search Criteria
+
+**Files:**
+- `/Users/elshanmagsudov/upful-ios/Upful/Models/SearchCriteria.swift`
+- `/Users/elshanmagsudov/upful-ios/Upful/Models/ManualSearchModel.swift`
+
+`SearchCriteria` is an extensive enum (24 cases) representing stock screening parameters like `pricetoearnings`, `marketcap`, `dividendyield`, etc. Each case has:
+- An `explicit` display name
+- A `parameterType` (ratio, percentage, number, other)
+- A `classification` (valuation, financial, performance, other)
+- `definition` and `equation` strings for educational display
+- `valueBounds` providing min/max ranges
+
+`SearchParameter` enum represents comparison operators: `lt` (~lt), `gt` (~gt), `contains` (~contains), `none`.
+
+`ManualScreenItem` and `ParameterItem` are lightweight structs combining criteria with parameters and values.
+
+### 3.4 AsyncOperation
+
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Models/AsyncOperation.swift`
+
+A thread-safe `Operation` subclass for managing asynchronous work with proper KVO notifications for `isExecuting` and `isFinished` states. Uses a concurrent dispatch queue with barrier writes for thread safety. Subclasses must override `main()`.
+
+---
+
+## 4. PROFILE / USER MANAGEMENT SYSTEM
+
+### 4.1 UserProfile
+
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Profile/UserProfile.swift`
+
+`UserProfile` is a singleton (`UserProfile.instance`) that manages the user's identity:
+- `profileID` is lazily generated (UUID) on first access for new users and persisted in `UserDefaults`.
+- `isNewUser` is tracked via a `UserDefaults` boolean flag.
+- The constructor is `init()` (public), which is inconsistent with singleton usage.
+
+### 4.2 ProfileDataManager
+
+Lives in the same file. Handles the CoreData `User` entity:
+- **CRUD operations** for the User entity (create, read, update)
+- **First transaction date** calculation by sorting all ledger transactions
+- **User score** calculation using a logarithmic formula based on performance percentage and weeks since first trade: `logBase10(|performance| / weeksSinceFirstTrade * (weeksSinceFirstTrade/3)^2) + 3`
+- `weeksFromFirstTradeDate` calculates a fractional week difference including day, hour, and minute components
+
+### 4.3 ProfileSyncCoordinator
+
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/Profile/ProfileSyncCoordinator.swift`
+
+A singleton that syncs portfolio data to Firestore:
+- Runs on a dedicated background concurrent queue
+- Writes to `users/{userID}` document with: holdings array, performance percent, score, first trade date, last sync timestamp
+- Performance is calculated as `((equityBalance / 25000) - 1) * 100`
+
+### 4.4 CompletionHandler (Observer Pattern)
+
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Custom APIs/CompletionHandler.swift`
+
+A generic pub/sub mechanism using a `Set<Handler<T>>`. `Handler` wraps a closure with a UUID for identity/hashability. `CompletionHandler` supports `subscribe`, `unsubscribe`, and `notify`. Used by `TradingEngine.loadHandlerObservers` to broadcast holding updates to multiple listeners.
+
+### 4.5 DateTransformer
+
+Embedded in `UserProfile.swift`. Handles multiple date format strings:
+- `"yyyy-MM-dd HH:mm:ss Z"` (with timezone offset)
+- `"yyyy-MM-dd HH:mm:ss.SSS"` (with milliseconds)
+- `"yyyy-MM-dd"` (date only)
+
+Force-unwraps the result, which will crash on malformed date strings.
+
+---
+
+## 5. EXTENSIONS
+
+### 5.1 Array+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/Array+Extensions.swift`
+- `moveItem(from:to:)` -- reorders elements
+- `removeDuplicates()` -- deduplicates using Set (loses order)
+
+### 5.2 Date+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/Date+Extensions.swift`
+- Calendar component accessors: `month`, `day`, `year`, `minute`, `noon`, `dayBefore`, `nextDay`
+- `getPreviousDate(days:)` -- subtracts N days
+- `buildDate(day:month:year:)` -- constructs date from components
+- `isToday` -- compares day/month/year components
+- `DateComponents.toString()` -- formats as "M/D/YYYY" (force-unwraps)
+
+Note: `Date.asString` is also defined in `TransactionLoggingManager.swift` (separate extension on Date) using EST timezone and "yyyy-MM-dd hh:mm:ss.SSSS" format. This uses 12-hour time (`hh`) which can cause ambiguity (losing AM/PM).
+
+### 5.3 Double+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/Double+Extensions.swift`
+- `convertToPercent()` -- multiplies by 100, formats to 2 decimal places
+- `twoDecimal()` -- formats to 1 decimal place (misnamed; says "two" but uses 1 fraction digit)
+- `withCommas()` -- decimal-style number formatting
+
+Also in `UserProfile.swift`: `Double.logC(val:forBase:)` -- custom log-base function.
+
+### 5.4 Int+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/Int+Extensions.swift`
+- `formatUsingAbbreviation()` -- converts to K/M/B/T suffixed string
+- `withCommas()` -- decimal-style formatting
+
+### 5.5 String+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/String+Extensions.swift`
+- `formatDate()` -- parses "yyyy-MM-dd" and returns just the year
+
+### 5.6 UIColor+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/UIColor+Extensions.swift`
+Defines a private `Pallete` struct and exposes semantic color names:
+- `backgroundColor`, `secondaryBackground`, `positive` (green), `negative` (red)
+- `secondaryText`, `tertiaryText`, `appAccent` (yellow), `appAccent3`-`appAccent5` (greens)
+- `dimmedBackground`, `darkGreen`
+
+### 5.7 UIFont+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/UIFont+Extensions.swift`
+Semantic font styles: `sectionHeader` (12pt bold), `viewHeader` (15pt bold), `details1` through `details4` (13-15pt, regular to semibold).
+
+### 5.8 UIImage+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/UIImage+Extensions.swift`
+- `UIImageView.loadImage(from:resize:placeHolder:)` -- async image loading with NSCache (note: cache is local to each call, defeating the purpose)
+- `UIImage.loadImage(from:resize:completion:)` -- static method with a class-level cache (works correctly)
+- `UIImage.resizeImage(_:opaque:contentMode:)` -- aspect-fit resize using UIGraphics context
+
+### 5.9 UITableView+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/UITableView+Extensions.swift`
+- `contentHeight()` -- sums section heights
+- `setEmptyView(state:)` / `restore()` -- shows/hides empty state views
+- `TableViewState` enum with `.errorState` and `.emptyState(title:message:)`
+- `setTableHeaderView(headerView:)` / `setTableFooterView(footerView:)` -- auto-layout-based header/footer management with `shouldUpdateHeaderViewFrame()`
+
+### 5.10 UITableViewCell+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/UITableViewCell+Extensions.swift`
+- `addBottomSeparator()` -- adds a `SpacerView` as a bottom divider line
+
+### 5.11 UIView+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/UIView+Extensions.swift`
+The most extensive extension file. Provides:
+- `isDarkMode` -- trait collection check
+- `setupShadow(intensity:height:color:)` -- configurable shadow
+- `AnchoredConstraints` struct for constraint management
+- `anchor(top:leading:bottom:trailing:padding:size:)` -- comprehensive auto-layout helper
+- `fillSuperview(padding:)` -- fills parent with optional insets
+- `centerInSuperview(size:)` -- centers with optional size
+- Chainable individual anchoring methods: `setLeadingAnchor`, `setTrailingAnchor`, `setTopAnchor`, `setBottomAnchor`, `setCenterYAnchor`, `setCenterXAnchor`, `setHeightConstraint`, `setWidthConstraint`
+- `roundCorners(corners:radius:)` -- selective corner rounding via CAShapeLayer mask
+
+### 5.12 UIViewController+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/UIViewController+Extensions.swift`
+- `add(_:)` / `remove()` -- child view controller containment
+- `hideKeyboardWhenTappedAround()` / `dismissKeyboard()` -- keyboard dismissal gesture
+- `display(contentController:on:)` -- embeds child VC into a target view with auto-layout
+
+### 5.13 UserDefaults+Extensions
+**File:** `/Users/elshanmagsudov/upful-ios/Upful/Extensions/UserDefaults+Extensions.swift`
+- `Consts` enum with `firstAppOpen` key
+- `firstAppOpen: Bool` -- inverted boolean check
+- `toggleBool(_:)` -- flips a boolean value
+
+---
+
+## 6. REUSABLE UI COMPONENT LIBRARY
+
+### 6.1 Buttons
+
+**`CustomButton` (CustomLargeButton.swift)**
+A styled `UIButton` subclass with 40pt intrinsic height, rounded corners (16pt radius), heavy font, and teal (`appAccent3`) text color.
+
+**`CustomRoundButton` (CustomRoundButton.swift)**
+A 50x50 circular `UIView` (not UIButton) with a system image icon. Uses `appAccent3` background, white tinted icon, shadow, and touch-down/up scale animations (0.92x scale). Takes an SF Symbol name in its initializer.
+
+**`SmallRoundButton`** -- 20x20 variant of CustomButton with `appAccent3` background.
+
+**`MultilineButton` (MultilineButton.swift)**
+A 55x55 `UIView` containing a vertical stack of a circular image background and a caption-sized label. Used for action buttons with icon + text (like "Buy", "Sell", etc.).
+
+### 6.2 Views
+
+**`AuxiliaryActionView`**
+A container view with a horizontal stack for action buttons. Adaptive dark/light mode backgrounds using `UIColor.init { trait in ... }`.
+
+**`PercentChangeView`**
+A simple view wrapping a label with methods to color it red (negative), green (positive), or gray (neutral).
+
+**`NavigationHeaderView`**
+A 44pt-height view with a large heading label (30pt heavy font) on the left and a button stack on the right. Used as a custom navigation header across screens.
+
+### 6.3 Loading
+
+**`LoadingViewController`**
+A minimal view controller with a centered 200x200 `UIActivityIndicatorView` (.medium style). Intended to be added as a child VC during loading states.
+
+### 6.4 Animator
+
+**`Animator`**
+A struct providing a "pop-in then fade-out" animation sequence: scales up to 1.05x, springs back, waits 0.85s, then fades alpha to 0 and removes from superview. Used for temporary notification/feedback views.
+
+### 6.5 MenuViewContainer
+
+**`MenuContainerViewController`**
+A `UICollectionViewController` subclass implementing a horizontal-paging tab interface:
+- Conforms to `MenubarContainerProtocol` -- subclasses provide `menubarControllers`
+- Integrates with a `MenuBarView` (segmented control-like tab bar) at the top
+- Each collection view cell hosts a full child view controller
+- Supports scroll-driven tab indicator animation and programmatic tab selection
+- Has hide/show menu bar logic (animated off-screen on scroll)
+
+---
+
+## 7. DATA FLOW: API to CoreData to UI
+
+```
+[IEX Cloud API / Intrinio API]
+          |
+    HTTP Response (JSON)
+          |
+    Decodable Structs (StockSplit, StockQuote, CompanyFundamentals, etc.)
+          |
+    TradingEngine / HoldingMapper / StockSplitHandler
+          |
+    +----- Transaction protocol -----+
+    |                                |
+    v                                v
+PersistedTransaction           LoggedTransaction
+(CoreData - Ledger)            (CoreData - Audit Log)
+    |                                |
+    +--->  HoldingMapper groups by ticker
+              |
+              v
+          Holding (in-memory)
+              |
+    +-------- StockPriceLoader fetches currentPrice
+    |
+    v
+BalanceManager (UserDefaults)  <-->  UI ViewControllers
+    |
+    v
+ProfileSyncCoordinator  --->  Firestore (users/{id})
+                         --->  Firestore (transactions/{uuid})
+```
+
+Key observations:
+- CoreData serves as the local source of truth for transactions
+- UserDefaults stores the balance state (not derived from transactions)
+- `Holding` objects are transient and reconstructed on every load cycle
+- Firestore serves as a remote backup/sync layer
+- The `CompletionHandler` observer pattern distributes holdings to subscribed view controllers
+
+---
+
+## 8. DATABASE SCHEMA ISSUES AND LIMITATIONS
+
+### 8.1 Critical Issues
+
+1. **Orphaned xcdatamodel**: `TransactionLog.xcdatamodeld` has `representedClassName="PersistedTransaction"` for the `LoggedTransaction` entity, which is incorrect. This model appears outdated and may conflict if loaded.
+
+2. **Missing relationship in StockDataModel**: The code for `SavedScreener` declares a `savedScreenerParameter: NSSet` relationship to `SavedScreenerParameter`, but neither entity nor relationship exists in `StockDataModel.xcdatamodel`. The `SavedScreenerParameter` entity and its inverse relationship are defined only in Swift code, with no backing schema.
+
+3. **Balance not backed by transactions**: The cash balance in UserDefaults can drift out of sync with actual transaction history. If UserDefaults is cleared or corrupted, the balance cannot be reconstructed.
+
+4. **No uniqueness constraints on transactions**: Both `PersistedTransaction` and `LoggedTransaction` lack uniqueness constraints. A crash during the buy/sell flow could result in duplicate entries.
+
+5. **transactionDate stored as String**: Dates are stored as strings in varying formats. The `DateTransformer` uses force-unwraps that will crash on unexpected formats. String-based date storage also prevents efficient date-range queries using CoreData predicates (the `loadTransactions(startingFrom:)` method performs a string comparison on the formatted date, which only works correctly because the format is year-first).
+
+6. **12-hour time format bug**: `Date.asString` uses `hh` (12-hour) instead of `HH` (24-hour) and does not include AM/PM. Transactions at 1 PM and 1 AM will produce identical date strings.
+
+### 8.2 Moderate Issues
+
+7. **Two separate NSPersistentContainers**: `PersistenceService` and `TransactionContainerManager` manage separate SQLite databases. The `User` entity lives in `TransactionDataModel` while user-related screeners and saved stocks live in `StockDataModel`. There is no cross-store reference mechanism.
+
+8. **No migration strategy**: Both data models lack versioning beyond the initial version. Any schema changes would require manual migration handling.
+
+9. **Force-unwraps in date parsing**: `DateTransformer.convertStringToDate` and `ProfileDataManager.convertToDate(from:)` force-unwrap, creating crash vectors for any malformed date string.
+
+10. **`LedgerManager.delete()` is a no-op**: The method body is empty, meaning transaction deletion is not functional.
+
+11. **`TransactionLedgerPersistence.delete()` deletes ALL records**: The delete method fetches ALL `PersistedTransaction` records (no predicate filter) and deletes them all, rather than deleting the specific transaction passed as parameter.
+
+---
+
+## 9. STORYBOARD VS PROGRAMMATIC UI USAGE
+
+The project is **overwhelmingly programmatic UI**. The only storyboard found is:
+
+- `/Users/elshanmagsudov/upful-ios/Upful/Features/Splash Screen Module/Launch Screen.storyboard` -- the launch/splash screen (required by iOS)
+
+No `.xib` files exist within the app target (the xib files found are from the Mixpanel CocoaPod dependency).
+
+All reusable views (`CustomButton`, `CustomRoundButton`, `MultilineButton`, `AuxiliaryActionView`, `PercentChangeView`, `NavigationHeaderView`, `LoadingViewController`, `MenuContainerViewController`) are built entirely in code using the auto-layout helpers defined in `UIView+Extensions.swift`.
+
+The `UIView+Extensions` file provides a comprehensive programmatic layout DSL that serves as the foundation for all UI construction, with methods like `anchor()`, `fillSuperview()`, `centerInSuperview()`, and the chainable individual anchor methods.
+
+---
+
+## 10. SUMMARY OF KEY ARCHITECTURAL PATTERNS
+
+| Pattern | Where Used |
+|---------|-----------|
+| **Singleton** | `TradingEngine.shared`, `TransactionContainerManager.shared`, `PersistenceService.shared`, `ProfileSyncCoordinator.shared`, `UserProfile.instance` |
+| **Protocol-Oriented Abstraction** | `Transaction`, `TransactionLoader`, `TransactionLogger`, `CoreDataModelContainerManager`, `StockViewable`, `MenubarContainerProtocol` |
+| **Strategy Pattern** | `TransactionLogger` with `LocalTransactionLogger` and `RemoteTransactionLogger` |
+| **Adapter Pattern** | `TransactionAdapter` bridges plain objects to the `Transaction` protocol |
+| **Observer Pattern** | `CompletionHandler<T>` with subscribe/unsubscribe/notify |
+| **Facade Pattern** | `TradingEngine` facades balance, logging, and ledger subsystems |
+| **Parent-Child CoreData Contexts** | `TransactionContainerManager` background context with viewContext parent |
+| **Dispatch Groups** | Holdings loading (price fetching) and stock split checking |
+| **Programmatic UI** | All UI construction via code with auto-layout helper extensions |

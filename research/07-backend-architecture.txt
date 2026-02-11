@@ -1,0 +1,2548 @@
+================================================================================
+UPFUL / JYANIK -- COMPLETE BACKEND ARCHITECTURE
+Cloudflare Ecosystem + iOS-First API Design
+================================================================================
+Date: February 2026
+Version: 1.0
+
+This document defines the complete backend architecture for the Upful/Jyanik
+paper trading competition platform. Every component uses the Cloudflare
+ecosystem (Workers, D1, KV, R2, Durable Objects, Queues) with Resend for
+email, Twilio for SMS, and free financial APIs for market data.
+
+TABLE OF CONTENTS
+-----------------
+  1.  System Overview
+  2.  Cloudflare Worker Organization
+  3.  D1 Database Schema (Complete SQL)
+  4.  API Endpoint Definitions
+  5.  Authentication Flow
+  6.  KV Namespace Strategy
+  7.  R2 Bucket Organization
+  8.  Durable Objects Design
+  9.  Queue Design for Async Tasks
+  10. Market Data Service
+  11. Competition Engine
+  12. Leaderboard System
+  13. Chat System
+  14. Notification System
+  15. Payment System
+  16. Rate Limiting
+  17. Error Handling Strategy
+  18. Cron Job Schedule
+  19. Environment & Secrets
+  20. Deployment Architecture
+
+
+================================================================================
+1. SYSTEM OVERVIEW
+================================================================================
+
+                    +------------------+
+                    |   iOS App        |
+                    |   (StoreKit 2)   |
+                    +--------+---------+
+                             |
+                             | HTTPS (REST JSON)
+                             |
+                    +--------v---------+
+                    | Cloudflare CDN   |
+                    | (Edge Network)   |
+                    +--------+---------+
+                             |
+              +--------------+--------------+
+              |              |              |
+     +--------v---+  +------v------+  +----v--------+
+     | API Worker |  | Auth Worker |  | Chat DO     |
+     | (main)     |  | (auth)      |  | (Durable    |
+     +-----+------+  +------+------+  |  Object)    |
+           |                |          +----+--------+
+     +-----v------+  +------v------+       |
+     | D1 SQLite  |  | KV Sessions |  +---v--------+
+     | (primary   |  | KV Cache    |  | R2 Storage  |
+     |  database) |  +-------------+  | (avatars,   |
+     +------------+                   |  chat imgs) |
+           |                          +-------------+
+     +-----v------+
+     | Queues     |      +-------------+    +-------------+
+     | (async     |----->| Resend      |    | Twilio      |
+     |  tasks)    |      | (email)     |    | (SMS)       |
+     +------------+      +-------------+    +-------------+
+           |
+     +-----v------+
+     | Cron       |      +-------------------+
+     | Triggers   |----->| Free Finance APIs |
+     +------------+      | (Yahoo, Alpha     |
+                          |  Vantage, etc.)   |
+                          +-------------------+
+
+
+Key Design Decisions:
+- Single primary API Worker handles most routes (keeps wrangler.toml simple)
+- Auth is a separate Worker for isolation and independent scaling
+- Chat uses Durable Objects for stateful WebSocket connections
+- D1 is the single source of truth for all structured data
+- KV caches hot data (leaderboards, market quotes, sessions)
+- R2 stores binary objects (avatars, chat images)
+- Queues handle all async work (notifications, emails, payouts, ranking)
+- Cron Triggers run on schedule for market data refresh and competition cycles
+
+
+================================================================================
+2. CLOUDFLARE WORKER ORGANIZATION
+================================================================================
+
+Workers are organized by domain responsibility. Each is independently
+deployable but shares D1 bindings.
+
+WORKER 1: api-main
+-------------------
+  Purpose: Primary REST API for all app features
+  Routes:
+    /api/v1/portfolio/*
+    /api/v1/trade/*
+    /api/v1/competition/*
+    /api/v1/leaderboard/*
+    /api/v1/notifications/*
+    /api/v1/market/*
+    /api/v1/admin/*
+    /api/v1/user/profile*
+    /api/v1/payments/*
+  Bindings: D1 (primary), KV (cache, sessions), R2 (uploads), Queue (tasks)
+  Size: Largest worker, organized internally with router pattern
+
+WORKER 2: api-auth
+-------------------
+  Purpose: Authentication, registration, token management
+  Routes:
+    /api/v1/auth/*
+  Bindings: D1 (primary), KV (sessions, rate-limit), R2 (none)
+  Why separate: Auth logic is security-critical, benefits from isolation.
+  Handles: Sign in with Apple, email/password, JWT issuance/refresh,
+           SMS verification via Twilio, email verification via Resend
+
+WORKER 3: api-chat
+-------------------
+  Purpose: Chat WebSocket upgrade and REST fallback
+  Routes:
+    /api/v1/chat/*
+  Bindings: Durable Object (ChatRoom), D1 (message persistence),
+            KV (user presence), R2 (image uploads)
+  Why separate: WebSocket connections require Durable Objects which
+  have different scaling characteristics.
+
+WORKER 4: cron-worker
+----------------------
+  Purpose: Scheduled tasks (no external routes)
+  Triggers:
+    - Every 5 min:  Refresh market quotes for active tickers
+    - Every 15 min: Recalculate leaderboard rankings
+    - Every 1 hour: Clean expired KV cache entries
+    - Daily 00:00 UTC: Roll daily competition, calculate daily winners
+    - Monday 00:00 UTC: Roll weekly competition, calculate weekly winners
+    - 1st of month 00:00 UTC: Roll monthly competition, monthly winners
+    - Daily 06:00 UTC: Fetch market data bulk update (pre-market)
+    - Daily 22:00 UTC: Snapshot portfolio values for all active users
+  Bindings: D1 (primary), KV (cache), Queue (tasks)
+
+Internal Router Pattern (for api-main):
+  Uses itty-router or Hono framework for route matching.
+  Middleware chain: CORS -> RateLimit -> Auth -> Handler -> ErrorHandler
+
+wrangler.toml bindings (shared):
+  [[d1_databases]]
+  binding = "DB"
+  database_name = "upful-primary"
+  database_id = "<auto>"
+
+  [[kv_namespaces]]
+  binding = "CACHE"
+  id = "<auto>"
+
+  [[kv_namespaces]]
+  binding = "SESSIONS"
+  id = "<auto>"
+
+  [[r2_buckets]]
+  binding = "STORAGE"
+  bucket_name = "upful-storage"
+
+  [[queues.producers]]
+  binding = "TASK_QUEUE"
+  queue = "upful-tasks"
+
+  [[queues.consumers]]
+  queue = "upful-tasks"
+  max_batch_size = 10
+  max_batch_timeout = 30
+
+
+================================================================================
+3. D1 DATABASE SCHEMA (COMPLETE SQL)
+================================================================================
+
+-- ============================================================
+-- USERS & AUTHENTICATION
+-- ============================================================
+
+CREATE TABLE users (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    email           TEXT UNIQUE NOT NULL,
+    username        TEXT UNIQUE NOT NULL,
+    display_name    TEXT,
+    password_hash   TEXT,                   -- NULL if Sign-in-with-Apple only
+    apple_user_id   TEXT UNIQUE,            -- Sign in with Apple subject ID
+    avatar_key      TEXT,                   -- R2 object key for avatar
+    paypal_email    TEXT,                   -- For prize payouts
+    phone           TEXT,                   -- For SMS verification
+    phone_verified  INTEGER DEFAULT 0,      -- 0=no, 1=yes
+    email_verified  INTEGER DEFAULT 0,      -- 0=no, 1=yes
+    subscription_tier TEXT DEFAULT 'free',  -- 'free' | 'premium'
+    subscription_expires_at TEXT,           -- ISO8601, NULL if free
+    apple_original_transaction_id TEXT,     -- StoreKit 2 original txn ID
+    role            TEXT DEFAULT 'user',    -- 'user' | 'admin' | 'moderator'
+    is_banned       INTEGER DEFAULT 0,
+    ban_reason      TEXT,
+    created_at      TEXT DEFAULT (datetime('now')),
+    updated_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_users_apple_user_id ON users(apple_user_id);
+CREATE INDEX idx_users_subscription_tier ON users(subscription_tier);
+
+-- ============================================================
+-- DEVICE TOKENS (for APNs push notifications)
+-- ============================================================
+
+CREATE TABLE device_tokens (
+    id          TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id     TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token       TEXT NOT NULL,
+    platform    TEXT DEFAULT 'ios',         -- 'ios' only for now
+    is_active   INTEGER DEFAULT 1,
+    created_at  TEXT DEFAULT (datetime('now')),
+    updated_at  TEXT DEFAULT (datetime('now')),
+    UNIQUE(user_id, token)
+);
+
+CREATE INDEX idx_device_tokens_user ON device_tokens(user_id);
+
+-- ============================================================
+-- REFRESH TOKENS
+-- ============================================================
+
+CREATE TABLE refresh_tokens (
+    id          TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id     TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token_hash  TEXT NOT NULL UNIQUE,       -- SHA-256 of the refresh token
+    device_id   TEXT,                       -- Identifies the device
+    expires_at  TEXT NOT NULL,
+    created_at  TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_refresh_tokens_user ON refresh_tokens(user_id);
+CREATE INDEX idx_refresh_tokens_hash ON refresh_tokens(token_hash);
+
+-- ============================================================
+-- PORTFOLIOS
+-- ============================================================
+
+CREATE TABLE portfolios (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    cash_balance    REAL NOT NULL DEFAULT 25000.00,
+    total_equity    REAL NOT NULL DEFAULT 25000.00,
+    is_active       INTEGER DEFAULT 1,      -- Only 1 active portfolio per user
+    competition_month TEXT,                  -- '2026-02' format, ties portfolio to competition period
+    created_at      TEXT DEFAULT (datetime('now')),
+    updated_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_portfolios_user ON portfolios(user_id);
+CREATE INDEX idx_portfolios_active ON portfolios(user_id, is_active);
+CREATE INDEX idx_portfolios_month ON portfolios(competition_month);
+
+-- ============================================================
+-- POSITIONS (current holdings, derived from trades)
+-- ============================================================
+
+CREATE TABLE positions (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    portfolio_id    TEXT NOT NULL REFERENCES portfolios(id) ON DELETE CASCADE,
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    ticker          TEXT NOT NULL,
+    asset_type      TEXT NOT NULL DEFAULT 'stock',  -- 'stock'|'crypto'|'etf'|'bond'|'option'|'future'|'forex'
+    quantity        REAL NOT NULL DEFAULT 0,         -- REAL to support fractional/forex
+    average_cost    REAL NOT NULL DEFAULT 0,
+    current_price   REAL DEFAULT 0,
+    market_value    REAL DEFAULT 0,                  -- quantity * current_price
+    unrealized_pnl  REAL DEFAULT 0,
+    updated_at      TEXT DEFAULT (datetime('now')),
+    UNIQUE(portfolio_id, ticker)
+);
+
+CREATE INDEX idx_positions_portfolio ON positions(portfolio_id);
+CREATE INDEX idx_positions_user ON positions(user_id);
+CREATE INDEX idx_positions_ticker ON positions(ticker);
+
+-- ============================================================
+-- TRADES (immutable transaction log)
+-- ============================================================
+
+CREATE TABLE trades (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    portfolio_id    TEXT NOT NULL REFERENCES portfolios(id) ON DELETE CASCADE,
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    ticker          TEXT NOT NULL,
+    asset_type      TEXT NOT NULL DEFAULT 'stock',
+    side            TEXT NOT NULL,           -- 'buy' | 'sell'
+    quantity        REAL NOT NULL,
+    price           REAL NOT NULL,           -- Execution price
+    total_value     REAL NOT NULL,           -- quantity * price
+    order_type      TEXT DEFAULT 'market',   -- 'market' | 'limit' (future)
+    status          TEXT DEFAULT 'filled',   -- 'filled' | 'cancelled'
+    executed_at     TEXT DEFAULT (datetime('now')),
+    created_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_trades_portfolio ON trades(portfolio_id);
+CREATE INDEX idx_trades_user ON trades(user_id);
+CREATE INDEX idx_trades_ticker ON trades(ticker);
+CREATE INDEX idx_trades_executed ON trades(executed_at);
+
+-- ============================================================
+-- PORTFOLIO SNAPSHOTS (daily performance tracking)
+-- ============================================================
+
+CREATE TABLE portfolio_snapshots (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    portfolio_id    TEXT NOT NULL REFERENCES portfolios(id) ON DELETE CASCADE,
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    snapshot_date   TEXT NOT NULL,            -- 'YYYY-MM-DD'
+    cash_balance    REAL NOT NULL,
+    holdings_value  REAL NOT NULL,
+    total_equity    REAL NOT NULL,
+    daily_pnl       REAL DEFAULT 0,          -- Change from previous day
+    daily_pnl_pct   REAL DEFAULT 0,
+    total_pnl       REAL DEFAULT 0,          -- Change from starting 25K
+    total_pnl_pct   REAL DEFAULT 0,
+    created_at      TEXT DEFAULT (datetime('now')),
+    UNIQUE(portfolio_id, snapshot_date)
+);
+
+CREATE INDEX idx_snapshots_user_date ON portfolio_snapshots(user_id, snapshot_date);
+CREATE INDEX idx_snapshots_date ON portfolio_snapshots(snapshot_date);
+CREATE INDEX idx_snapshots_portfolio ON portfolio_snapshots(portfolio_id);
+
+-- ============================================================
+-- COMPETITIONS
+-- ============================================================
+
+CREATE TABLE competitions (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    type            TEXT NOT NULL,            -- 'daily' | 'weekly' | 'monthly'
+    status          TEXT DEFAULT 'active',    -- 'active' | 'calculating' | 'completed' | 'paid_out'
+    start_date      TEXT NOT NULL,            -- ISO8601
+    end_date        TEXT NOT NULL,            -- ISO8601
+    total_prize_pool REAL DEFAULT 0,
+    participant_count INTEGER DEFAULT 0,
+    created_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_competitions_type_status ON competitions(type, status);
+CREATE INDEX idx_competitions_dates ON competitions(start_date, end_date);
+
+-- ============================================================
+-- COMPETITION ENTRIES (one per user per competition)
+-- ============================================================
+
+CREATE TABLE competition_entries (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    competition_id  TEXT NOT NULL REFERENCES competitions(id) ON DELETE CASCADE,
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    portfolio_id    TEXT NOT NULL REFERENCES portfolios(id),
+    starting_equity REAL NOT NULL DEFAULT 25000.00,
+    ending_equity   REAL,
+    growth_pct      REAL DEFAULT 0,          -- ((ending - starting) / starting) * 100
+    rank            INTEGER,                 -- Final rank (NULL until competition ends)
+    prize_amount    REAL DEFAULT 0,
+    prize_status    TEXT DEFAULT 'none',      -- 'none' | 'pending' | 'approved' | 'paid' | 'failed'
+    created_at      TEXT DEFAULT (datetime('now')),
+    updated_at      TEXT DEFAULT (datetime('now')),
+    UNIQUE(competition_id, user_id)
+);
+
+CREATE INDEX idx_comp_entries_competition ON competition_entries(competition_id);
+CREATE INDEX idx_comp_entries_user ON competition_entries(user_id);
+CREATE INDEX idx_comp_entries_rank ON competition_entries(competition_id, rank);
+CREATE INDEX idx_comp_entries_growth ON competition_entries(competition_id, growth_pct DESC);
+
+-- ============================================================
+-- LEADERBOARD CACHE (materialized view, rebuilt every 15 min)
+-- ============================================================
+
+CREATE TABLE leaderboard_cache (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    competition_id  TEXT NOT NULL REFERENCES competitions(id) ON DELETE CASCADE,
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    rank            INTEGER NOT NULL,
+    username        TEXT NOT NULL,
+    display_name    TEXT,
+    avatar_key      TEXT,
+    total_equity    REAL NOT NULL,
+    growth_pct      REAL NOT NULL,
+    subscription_tier TEXT NOT NULL,          -- For filtering subscribed vs free
+    updated_at      TEXT DEFAULT (datetime('now')),
+    UNIQUE(competition_id, user_id)
+);
+
+CREATE INDEX idx_leaderboard_comp_rank ON leaderboard_cache(competition_id, rank);
+CREATE INDEX idx_leaderboard_comp_tier ON leaderboard_cache(competition_id, subscription_tier, rank);
+
+-- ============================================================
+-- CHAT MESSAGES
+-- ============================================================
+
+CREATE TABLE chat_messages (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    username        TEXT NOT NULL,
+    content         TEXT,                    -- Text content (NULL if image-only)
+    image_key       TEXT,                    -- R2 object key for attached image
+    tickers         TEXT,                    -- JSON array of mentioned tickers, e.g. '["AAPL","TSLA"]'
+    is_deleted      INTEGER DEFAULT 0,       -- Soft delete for moderation
+    created_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_chat_created ON chat_messages(created_at);
+CREATE INDEX idx_chat_user ON chat_messages(user_id);
+-- Note: ticker-based filtering uses JSON functions or application-level parsing
+
+-- ============================================================
+-- NOTIFICATIONS
+-- ============================================================
+
+CREATE TABLE notifications (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    type            TEXT NOT NULL,            -- 'prize_won' | 'rank_change' | 'competition_start'
+                                             -- | 'competition_end' | 'withdrawal_processed'
+                                             -- | 'monthly_reset' | 'system'
+    title           TEXT NOT NULL,
+    body            TEXT NOT NULL,
+    amount          REAL,                    -- Dollar amount if applicable
+    metadata        TEXT,                    -- JSON for extra data
+    is_read         INTEGER DEFAULT 0,
+    created_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_notifications_user ON notifications(user_id, is_read);
+CREATE INDEX idx_notifications_created ON notifications(user_id, created_at);
+
+-- ============================================================
+-- PAYOUTS
+-- ============================================================
+
+CREATE TABLE payouts (
+    id                  TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id             TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    competition_entry_id TEXT REFERENCES competition_entries(id),
+    amount              REAL NOT NULL,
+    method              TEXT NOT NULL,        -- 'paypal' | 'stripe'
+    paypal_email        TEXT,                 -- Destination PayPal email
+    stripe_transfer_id  TEXT,                 -- Stripe transfer ID if applicable
+    status              TEXT DEFAULT 'pending',  -- 'pending' | 'approved' | 'processing' | 'completed' | 'failed'
+    admin_approved_by   TEXT,                 -- Admin user ID who approved
+    approved_at         TEXT,
+    processed_at        TEXT,
+    failure_reason      TEXT,
+    created_at          TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_payouts_user ON payouts(user_id);
+CREATE INDEX idx_payouts_status ON payouts(status);
+
+-- ============================================================
+-- PURCHASES (in-app purchases & virtual cash buys)
+-- ============================================================
+
+CREATE TABLE purchases (
+    id                      TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id                 TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    product_id              TEXT NOT NULL,        -- 'com.jyanik.subscription.monthly' | 'com.jyanik.virtualcash.25k'
+    type                    TEXT NOT NULL,        -- 'subscription' | 'consumable'
+    apple_transaction_id    TEXT UNIQUE,          -- StoreKit 2 transaction ID
+    apple_original_txn_id   TEXT,                 -- For subscription tracking
+    price                   REAL NOT NULL,
+    currency                TEXT DEFAULT 'USD',
+    status                  TEXT DEFAULT 'active', -- 'active' | 'expired' | 'refunded' | 'revoked'
+    purchased_at            TEXT DEFAULT (datetime('now')),
+    expires_at              TEXT                   -- For subscriptions
+);
+
+CREATE INDEX idx_purchases_user ON purchases(user_id);
+CREATE INDEX idx_purchases_apple_txn ON purchases(apple_transaction_id);
+
+-- ============================================================
+-- WATCHLIST
+-- ============================================================
+
+CREATE TABLE watchlist (
+    id          TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id     TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    ticker      TEXT NOT NULL,
+    sort_order  INTEGER DEFAULT 0,
+    notes       TEXT,
+    created_at  TEXT DEFAULT (datetime('now')),
+    UNIQUE(user_id, ticker)
+);
+
+CREATE INDEX idx_watchlist_user ON watchlist(user_id, sort_order);
+
+-- ============================================================
+-- SAVED SCREENERS
+-- ============================================================
+
+CREATE TABLE saved_screeners (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title           TEXT NOT NULL,
+    description     TEXT,
+    parameters      TEXT NOT NULL,            -- JSON of screening criteria
+    color           TEXT DEFAULT '#008080',   -- Display color hex
+    sort_order      INTEGER DEFAULT 0,
+    is_prebuilt     INTEGER DEFAULT 0,        -- 1 if from curated collection
+    usage_count     INTEGER DEFAULT 0,
+    created_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_screeners_user ON saved_screeners(user_id, sort_order);
+
+-- ============================================================
+-- USER PREFERENCES
+-- ============================================================
+
+CREATE TABLE user_preferences (
+    id          TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id     TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    category    TEXT NOT NULL,               -- 'industry' | 'growth' | 'profitability' | 'dividend'
+    value       TEXT NOT NULL,               -- e.g., 'Technology', 'High Growth'
+    created_at  TEXT DEFAULT (datetime('now')),
+    UNIQUE(user_id, category, value)
+);
+
+CREATE INDEX idx_prefs_user ON user_preferences(user_id);
+
+-- ============================================================
+-- MONTHLY RESETS
+-- ============================================================
+
+CREATE TABLE monthly_resets (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    user_id         TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    competition_month TEXT NOT NULL,          -- '2026-02'
+    choice          TEXT NOT NULL,            -- 'new' | 'keep'
+    previous_portfolio_id TEXT REFERENCES portfolios(id),
+    new_portfolio_id TEXT REFERENCES portfolios(id),
+    previous_equity REAL,
+    processed_at    TEXT DEFAULT (datetime('now')),
+    UNIQUE(user_id, competition_month)
+);
+
+-- ============================================================
+-- MARKET DATA CACHE (D1 for historical, KV for real-time)
+-- ============================================================
+
+CREATE TABLE market_quotes (
+    ticker          TEXT PRIMARY KEY,
+    asset_type      TEXT NOT NULL DEFAULT 'stock',
+    company_name    TEXT,
+    current_price   REAL,
+    previous_close  REAL,
+    open_price      REAL,
+    day_high        REAL,
+    day_low         REAL,
+    volume          INTEGER,
+    market_cap      REAL,
+    pe_ratio        REAL,
+    dividend_yield  REAL,
+    change_dollar   REAL,
+    change_percent  REAL,
+    updated_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE market_history (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    ticker          TEXT NOT NULL,
+    date            TEXT NOT NULL,            -- 'YYYY-MM-DD'
+    open_price      REAL,
+    high_price      REAL,
+    low_price       REAL,
+    close_price     REAL NOT NULL,
+    volume          INTEGER,
+    created_at      TEXT DEFAULT (datetime('now')),
+    UNIQUE(ticker, date)
+);
+
+CREATE INDEX idx_history_ticker_date ON market_history(ticker, date);
+
+CREATE TABLE market_news (
+    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    ticker          TEXT,                     -- NULL for general market news
+    title           TEXT NOT NULL,
+    summary         TEXT,
+    source          TEXT,
+    url             TEXT NOT NULL,
+    image_url       TEXT,
+    published_at    TEXT NOT NULL,
+    created_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_news_ticker ON market_news(ticker, published_at);
+CREATE INDEX idx_news_published ON market_news(published_at);
+
+-- ============================================================
+-- ADMIN AUDIT LOG
+-- ============================================================
+
+CREATE TABLE admin_audit_log (
+    id          TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    admin_id    TEXT NOT NULL REFERENCES users(id),
+    action      TEXT NOT NULL,               -- 'approve_payout' | 'ban_user' | 'delete_message' | etc.
+    target_type TEXT,                        -- 'user' | 'payout' | 'message' | 'competition'
+    target_id   TEXT,
+    details     TEXT,                        -- JSON details
+    created_at  TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_audit_admin ON admin_audit_log(admin_id);
+CREATE INDEX idx_audit_created ON admin_audit_log(created_at);
+
+
+================================================================================
+4. API ENDPOINT DEFINITIONS
+================================================================================
+
+Base URL: https://api.jyanik.com/api/v1
+All responses: JSON with envelope { "ok": true, "data": {...} }
+                                or { "ok": false, "error": {...} }
+All timestamps: ISO8601 UTC
+Auth: Bearer JWT in Authorization header (except public endpoints)
+
+------------------------------------------------------------
+4.1 AUTHENTICATION (api-auth worker)
+------------------------------------------------------------
+
+POST   /auth/register
+  Body: { email, username, password }
+  Response: { user, access_token, refresh_token }
+  Notes: Sends verification email via Resend. Password hashed with bcrypt.
+
+POST   /auth/login
+  Body: { email, password }
+  Response: { user, access_token, refresh_token }
+
+POST   /auth/apple
+  Body: { identity_token, authorization_code, full_name? }
+  Response: { user, access_token, refresh_token }
+  Notes: Validates Apple identity token. Creates user if first sign-in.
+
+POST   /auth/refresh
+  Body: { refresh_token }
+  Response: { access_token, refresh_token }
+  Notes: Rotates refresh token on each use.
+
+POST   /auth/logout
+  Auth: Required
+  Body: { refresh_token }
+  Notes: Invalidates refresh token, removes from D1.
+
+POST   /auth/verify-email
+  Body: { token }
+  Notes: Token from email verification link.
+
+POST   /auth/forgot-password
+  Body: { email }
+  Notes: Sends password reset email via Resend.
+
+POST   /auth/reset-password
+  Body: { token, new_password }
+
+POST   /auth/send-sms-code
+  Auth: Required
+  Body: { phone }
+  Notes: Sends 6-digit code via Twilio.
+
+POST   /auth/verify-sms
+  Auth: Required
+  Body: { phone, code }
+
+DELETE /auth/account
+  Auth: Required
+  Notes: Soft-deletes user account. Data retained 30 days per legal requirements.
+
+------------------------------------------------------------
+4.2 USER PROFILE
+------------------------------------------------------------
+
+GET    /user/profile
+  Auth: Required
+  Response: Full user profile including subscription status.
+
+PUT    /user/profile
+  Auth: Required
+  Body: { display_name?, paypal_email?, username? }
+
+POST   /user/avatar
+  Auth: Required
+  Body: multipart/form-data with image file
+  Notes: Uploads to R2. Resizes to 256x256 on worker. Returns avatar URL.
+
+DELETE /user/avatar
+  Auth: Required
+  Notes: Removes avatar from R2.
+
+GET    /user/preferences
+  Auth: Required
+  Response: { preferences: [{ category, value }] }
+
+PUT    /user/preferences
+  Auth: Required
+  Body: { preferences: [{ category, value }] }
+  Notes: Replaces all preferences for the user.
+
+PUT    /user/device-token
+  Auth: Required
+  Body: { token, platform }
+  Notes: Registers APNs device token.
+
+DELETE /user/device-token
+  Auth: Required
+  Body: { token }
+
+------------------------------------------------------------
+4.3 PORTFOLIO & TRADING
+------------------------------------------------------------
+
+GET    /portfolio
+  Auth: Required
+  Response: Active portfolio with positions, cash balance, total equity.
+
+GET    /portfolio/positions
+  Auth: Required
+  Response: All current positions with live prices.
+
+GET    /portfolio/history
+  Auth: Required
+  Query: ?period=1W|1M|3M|6M|1Y|ALL
+  Response: Array of daily snapshots for chart data.
+
+GET    /portfolio/performance
+  Auth: Required
+  Response: { total_pnl, total_pnl_pct, daily_pnl, daily_pnl_pct,
+              starting_balance, current_equity }
+
+POST   /trade/buy
+  Auth: Required
+  Body: { ticker, quantity, asset_type? }
+  Response: { trade, updated_position, updated_portfolio }
+  Validation:
+    - quantity > 0
+    - quantity * current_price <= cash_balance
+    - Market is open (or asset is 24/7 like crypto)
+    - User is not banned
+
+POST   /trade/sell
+  Auth: Required
+  Body: { ticker, quantity }
+  Response: { trade, updated_position, updated_portfolio }
+  Validation:
+    - quantity > 0
+    - quantity <= position.quantity
+    - Position exists
+
+GET    /trade/history
+  Auth: Required
+  Query: ?page=1&limit=50&ticker=AAPL
+  Response: Paginated trade history.
+
+GET    /trade/estimate
+  Auth: Required
+  Query: ?ticker=AAPL&quantity=10&side=buy
+  Response: { ticker, quantity, estimated_price, estimated_total, cash_available }
+
+------------------------------------------------------------
+4.4 MARKET DATA
+------------------------------------------------------------
+
+GET    /market/quote/:ticker
+  Auth: Required
+  Response: { ticker, price, change, change_pct, volume, market_cap, ... }
+  Cache: KV, 5-minute TTL
+
+GET    /market/quotes
+  Auth: Required
+  Query: ?tickers=AAPL,TSLA,GOOGL (max 50)
+  Response: Array of quotes. Batch endpoint to reduce requests.
+
+GET    /market/search
+  Auth: Required
+  Query: ?q=apple&limit=10
+  Response: Array of { ticker, name, asset_type }
+
+GET    /market/chart/:ticker
+  Auth: Required
+  Query: ?range=1D|5D|1M|3M|6M|1Y|5Y
+  Response: Array of { date, open, high, low, close, volume }
+  Cache: KV, range-dependent TTL (1D=5min, 1M+=1hr)
+
+GET    /market/news
+  Auth: Required
+  Query: ?ticker=AAPL&limit=20
+  Response: Array of news articles.
+
+GET    /market/company/:ticker
+  Auth: Required
+  Response: { name, description, sector, industry, employees, website, ... }
+  Cache: KV, 24-hour TTL
+
+GET    /market/screener
+  Auth: Required
+  Query: ?pe_lt=20&market_cap_gt=1000000000&page=1&limit=20&sort=market_cap_desc
+  Response: Paginated array of matching stocks.
+  Free tier: 6 screener runs per day.
+
+------------------------------------------------------------
+4.5 COMPETITIONS
+------------------------------------------------------------
+
+GET    /competition/current
+  Auth: Required
+  Response: { daily, weekly, monthly } -- current active competitions
+            with user's entry status and current rank for each.
+
+GET    /competition/:id
+  Auth: Required
+  Response: Competition details with user's entry.
+
+POST   /competition/monthly-reset
+  Auth: Required
+  Body: { choice: 'new' | 'keep' }
+  Notes: Only valid during reset window (first day of month).
+  - 'new': Creates fresh portfolio with $25K
+  - 'keep': Carries over positions, resets growth % tracking
+
+GET    /competition/history
+  Auth: Required
+  Query: ?type=daily|weekly|monthly&page=1&limit=20
+  Response: Past competition results for this user.
+
+------------------------------------------------------------
+4.6 LEADERBOARD
+------------------------------------------------------------
+
+GET    /leaderboard
+  Auth: Required
+  Query: ?type=daily|weekly|monthly&tier=subscribed|free|all&page=1&limit=50
+  Response: {
+    entries: [{ rank, username, display_name, avatar_url, total_equity,
+                growth_pct, prize_amount }],
+    total_count, page, limit,
+    user_position: { rank, growth_pct, total_equity }
+  }
+  Cache: KV, 5-minute TTL (rebuilt every 15 minutes by cron)
+
+GET    /leaderboard/my-history
+  Auth: Required
+  Query: ?type=daily|weekly|monthly&page=1&limit=30
+  Response: Array of { date, rank, growth_pct, total_equity }
+
+GET    /leaderboard/my-position
+  Auth: Required
+  Query: ?type=daily|weekly|monthly
+  Response: { daily: { rank, growth_pct }, weekly: {...}, monthly: {...} }
+
+------------------------------------------------------------
+4.7 CHAT (api-chat worker)
+------------------------------------------------------------
+
+GET    /chat/messages
+  Auth: Required (premium only)
+  Query: ?before=<timestamp>&limit=50&ticker=AAPL
+  Response: Paginated messages, newest first.
+
+POST   /chat/messages
+  Auth: Required (premium only)
+  Body: { content?, image? (base64 or multipart) }
+  Notes: Extracts ticker mentions (e.g., $AAPL or AAPL) and stores in tickers field.
+
+POST   /chat/messages/:id/report
+  Auth: Required
+  Body: { reason }
+
+WS     /chat/ws
+  Auth: Required (premium only, token in query param for WS handshake)
+  Protocol: JSON frames
+  Client -> Server: { type: 'message', content: '...', image?: '...' }
+  Server -> Client: { type: 'message', id, user_id, username, content, tickers, created_at }
+  Server -> Client: { type: 'presence', online_count: N }
+  Notes: Upgraded to Durable Object for stateful connections.
+
+------------------------------------------------------------
+4.8 NOTIFICATIONS
+------------------------------------------------------------
+
+GET    /notifications
+  Auth: Required
+  Query: ?page=1&limit=30&unread_only=true
+  Response: Paginated notifications.
+
+GET    /notifications/unread-count
+  Auth: Required
+  Response: { count: N }
+
+PUT    /notifications/:id/read
+  Auth: Required
+
+PUT    /notifications/read-all
+  Auth: Required
+
+------------------------------------------------------------
+4.9 WATCHLIST & SCREENERS
+------------------------------------------------------------
+
+GET    /watchlist
+  Auth: Required
+  Response: Ordered array of watchlist items with live quotes.
+
+POST   /watchlist
+  Auth: Required
+  Body: { ticker }
+  Free tier limit: 5 tickers. Premium: unlimited.
+
+DELETE /watchlist/:ticker
+  Auth: Required
+
+PUT    /watchlist/reorder
+  Auth: Required
+  Body: { tickers: ['AAPL', 'TSLA', 'GOOGL'] }  -- ordered array
+
+GET    /screeners
+  Auth: Required
+  Response: User's saved screeners + prebuilt screeners.
+
+POST   /screeners
+  Auth: Required
+  Body: { title, description?, parameters, color? }
+  Free tier limit: 2 screeners. Premium: unlimited.
+
+PUT    /screeners/:id
+  Auth: Required
+  Body: { title?, description?, parameters?, color? }
+
+DELETE /screeners/:id
+  Auth: Required
+
+------------------------------------------------------------
+4.10 PAYMENTS
+------------------------------------------------------------
+
+POST   /payments/apple/webhook
+  Auth: App Store Server Notification V2 (signed JWS)
+  Notes: Receives subscription lifecycle events from Apple.
+         Updates user subscription status in D1.
+
+POST   /payments/apple/verify
+  Auth: Required
+  Body: { transaction_id, product_id }
+  Notes: Verifies StoreKit 2 transaction with App Store Server API.
+         Records purchase. Updates subscription or adds virtual cash.
+
+GET    /payments/purchase-history
+  Auth: Required
+  Response: Array of purchases.
+
+GET    /payments/payout-history
+  Auth: Required
+  Response: Array of payout records.
+
+POST   /payments/request-withdrawal
+  Auth: Required
+  Body: { amount, method: 'paypal' }
+  Notes: Queues payout for admin approval. Amount <= available_winnings.
+
+------------------------------------------------------------
+4.11 ADMIN
+------------------------------------------------------------
+
+GET    /admin/users
+  Auth: Required (admin role)
+  Query: ?page=1&search=&tier=&banned=
+
+GET    /admin/users/:id
+  Auth: Required (admin role)
+
+PUT    /admin/users/:id/ban
+  Auth: Required (admin role)
+  Body: { reason }
+
+PUT    /admin/users/:id/unban
+  Auth: Required (admin role)
+
+GET    /admin/payouts
+  Auth: Required (admin role)
+  Query: ?status=pending|approved|processing|completed|failed
+
+PUT    /admin/payouts/:id/approve
+  Auth: Required (admin role)
+  Notes: Queues payout for processing.
+
+PUT    /admin/payouts/:id/reject
+  Auth: Required (admin role)
+  Body: { reason }
+
+GET    /admin/competitions
+  Auth: Required (admin role)
+
+POST   /admin/competitions
+  Auth: Required (admin role)
+  Body: { type, start_date, end_date, prize_pool }
+
+GET    /admin/chat/reported
+  Auth: Required (admin/moderator role)
+
+DELETE /admin/chat/messages/:id
+  Auth: Required (admin/moderator role)
+  Notes: Soft-deletes message.
+
+GET    /admin/stats
+  Auth: Required (admin role)
+  Response: { total_users, active_today, subscribed_count,
+              total_trades_today, total_prize_pool, ... }
+
+
+================================================================================
+5. AUTHENTICATION FLOW
+================================================================================
+
+Two auth methods supported. Both produce the same JWT token pair.
+
+------------------------------------------------------------
+5.1 SIGN IN WITH APPLE
+------------------------------------------------------------
+
+  iOS App                    api-auth Worker             Apple Servers
+  --------                   ---------------             -------------
+    |                             |                           |
+    |  ASAuthorizationController  |                           |
+    |  (native prompt)           |                           |
+    |                             |                           |
+    |--- POST /auth/apple ------->|                           |
+    |    { identity_token,        |                           |
+    |      authorization_code,    |                           |
+    |      full_name }            |                           |
+    |                             |--- Fetch Apple JWKS ----->|
+    |                             |<-- Public keys -----------|
+    |                             |                           |
+    |                             |  Verify identity_token:   |
+    |                             |  - Decode JWT             |
+    |                             |  - Verify signature       |
+    |                             |  - Check iss, aud, exp    |
+    |                             |  - Extract subject (sub)  |
+    |                             |                           |
+    |                             |  Lookup user by apple_user_id
+    |                             |  If not found: create new user
+    |                             |    (generate username from full_name
+    |                             |     or "user_" + random suffix)
+    |                             |                           |
+    |                             |  Generate JWT pair:       |
+    |                             |  - access_token (15 min)  |
+    |                             |  - refresh_token (30 days)|
+    |                             |  Store refresh_token_hash |
+    |                             |  in D1 refresh_tokens     |
+    |                             |                           |
+    |<-- { user, tokens } --------|                           |
+
+  Apple JWKS are cached in KV for 24 hours.
+
+------------------------------------------------------------
+5.2 EMAIL + PASSWORD
+------------------------------------------------------------
+
+  Registration:
+    1. POST /auth/register { email, username, password }
+    2. Worker hashes password with bcrypt (via wasm bcrypt lib)
+    3. Insert user into D1 with email_verified=0
+    4. Queue email verification via Resend
+    5. Return user + tokens (limited access until verified)
+    6. User taps link in email -> POST /auth/verify-email
+
+  Login:
+    1. POST /auth/login { email, password }
+    2. Lookup user by email
+    3. Compare bcrypt hash
+    4. If match: generate JWT pair, return tokens
+    5. If fail: 401 with "Invalid credentials" (no info leakage)
+
+------------------------------------------------------------
+5.3 JWT TOKEN STRUCTURE
+------------------------------------------------------------
+
+  Access Token (short-lived, 15 minutes):
+    Header: { alg: "HS256", typ: "JWT" }
+    Payload: {
+      sub: "<user_id>",
+      email: "user@example.com",
+      username: "johndoe",
+      tier: "premium",       -- "free" | "premium"
+      role: "user",          -- "user" | "admin" | "moderator"
+      iat: 1708000000,
+      exp: 1708000900        -- 15 min
+    }
+    Signed with: HMAC-SHA256 using JWT_SECRET env var
+
+  Refresh Token (long-lived, 30 days):
+    Opaque random string (64 bytes, hex-encoded).
+    SHA-256 hash stored in D1 refresh_tokens table.
+    Rotated on each use (old token invalidated, new one issued).
+
+------------------------------------------------------------
+5.4 AUTH MIDDLEWARE
+------------------------------------------------------------
+
+  Every authenticated request goes through:
+    1. Extract Bearer token from Authorization header
+    2. Verify JWT signature and expiration
+    3. Extract user claims from payload
+    4. Attach user to request context (env.user)
+    5. If token expired: return 401 with code "TOKEN_EXPIRED"
+       (iOS app catches this, calls /auth/refresh, retries original request)
+
+  Premium-only middleware (additional):
+    1. Check env.user.tier === 'premium'
+    2. If not: return 403 with code "PREMIUM_REQUIRED"
+
+
+================================================================================
+6. KV NAMESPACE STRATEGY
+================================================================================
+
+Two KV namespaces are used. KV is eventually consistent but extremely fast
+for reads, making it ideal for caching and session data.
+
+------------------------------------------------------------
+NAMESPACE: SESSIONS
+------------------------------------------------------------
+
+Purpose: Refresh token validation, rate limiting counters, SMS codes
+
+Key Pattern                          Value                    TTL
+-----------                          -----                    ---
+session:<token_hash>                 { user_id, device_id }   30 days
+rate:<ip>:<endpoint>                 <count>                  1 minute
+sms:<phone>:<code>                   { code, attempts }       10 minutes
+email_verify:<token>                 { user_id }              24 hours
+password_reset:<token>               { user_id }              1 hour
+apple_jwks                           { keys: [...] }          24 hours
+
+------------------------------------------------------------
+NAMESPACE: CACHE
+------------------------------------------------------------
+
+Purpose: Market data, leaderboard, user data caching
+
+Key Pattern                          Value                    TTL
+-----------                          -----                    ---
+quote:<ticker>                       { price, change, ... }   5 minutes
+quotes:batch:<hash>                  [{ ticker, price, ... }] 5 minutes
+chart:<ticker>:<range>               [{ date, ohlcv }]        varies*
+company:<ticker>                     { name, desc, ... }      24 hours
+news:general                         [{ title, url, ... }]    15 minutes
+news:<ticker>                        [{ title, url, ... }]    15 minutes
+search:<query>                       [{ ticker, name }]       1 hour
+screener:<param_hash>                [{ ticker, ... }]        15 minutes
+leaderboard:<comp_id>:<tier>:<page>  [{ rank, user, ... }]    5 minutes
+user:position:<user_id>:<type>       { rank, growth_pct }     5 minutes
+portfolio:summary:<user_id>          { equity, cash, ... }    2 minutes
+
+* Chart TTLs by range:
+  1D  -> 5 minutes
+  5D  -> 15 minutes
+  1M  -> 1 hour
+  3M  -> 6 hours
+  6M+ -> 24 hours
+
+Cache invalidation strategy:
+  - TTL-based expiration (primary mechanism)
+  - Write-through for user-specific data (update cache on write)
+  - Stale-while-revalidate pattern for market data
+    (return cached data immediately, refresh async via queue)
+
+
+================================================================================
+7. R2 BUCKET ORGANIZATION
+================================================================================
+
+Single bucket: upful-storage
+
+Directory structure (key prefixes):
+
+  avatars/
+    avatars/<user_id>.jpg              -- User profile avatars (256x256 JPEG)
+    avatars/<user_id>_thumb.jpg        -- Thumbnail (64x64) for leaderboard
+
+  chat/
+    chat/<year>/<month>/<message_id>.jpg   -- Chat image attachments
+    Max size: 5MB per image
+    Retention: 3 months (cleaned by cron)
+
+  exports/
+    exports/<user_id>/<timestamp>.csv  -- Portfolio export files (future)
+
+Access patterns:
+  - Avatars: Public read via R2 custom domain (avatars.jyanik.com)
+    or signed URLs with 1-hour expiry for private access
+  - Chat images: Signed URLs only (premium content)
+  - Upload: Presigned PUT URLs generated by API worker
+
+R2 custom domain configuration:
+  avatars.jyanik.com -> upful-storage bucket (avatars/ prefix)
+  Served via Cloudflare CDN with Cache-Control: public, max-age=86400
+
+Image processing on upload (in worker):
+  - Validate file type (JPEG, PNG, WebP only)
+  - Validate file size (< 5MB)
+  - Resize avatars to 256x256 and 64x64 using @cf/image/resize
+    (Cloudflare Image Resizing, available on Pro plan)
+  - Strip EXIF data
+  - Convert to JPEG at 80% quality
+
+
+================================================================================
+8. DURABLE OBJECTS DESIGN
+================================================================================
+
+Durable Objects provide single-threaded, stateful execution. Used for chat
+because WebSocket connections need persistent server-side state.
+
+------------------------------------------------------------
+8.1 ChatRoom Durable Object
+------------------------------------------------------------
+
+One global ChatRoom instance handles all connected users. If scaling
+requires it, this can be sharded by ticker/topic in the future.
+
+class ChatRoom {
+  state: DurableObjectState
+  sessions: Map<WebSocket, { user_id, username, tier }>
+  lastBroadcast: number
+
+  // HTTP handler (for REST fallback)
+  async fetch(request) {
+    if (request.headers.get("Upgrade") === "websocket") {
+      return this.handleWebSocket(request)
+    }
+    return this.handleHTTP(request)
+  }
+
+  // WebSocket lifecycle
+  async handleWebSocket(request) {
+    // 1. Validate auth token from query params
+    // 2. Check premium status
+    // 3. Accept WebSocket upgrade
+    // 4. Add to sessions map
+    // 5. Send recent messages (last 50) as initial payload
+    // 6. Broadcast presence update
+  }
+
+  // Incoming message handler
+  async webSocketMessage(ws, message) {
+    // 1. Parse JSON message
+    // 2. Validate content (length, content policy)
+    // 3. Extract ticker mentions ($AAPL, $TSLA)
+    // 4. Handle image if present (upload to R2)
+    // 5. Persist to D1 via fetch to api-main
+    // 6. Broadcast to all connected sessions
+  }
+
+  // Disconnection
+  async webSocketClose(ws) {
+    // 1. Remove from sessions
+    // 2. Broadcast updated presence count
+  }
+
+  // Periodic cleanup (alarm)
+  async alarm() {
+    // Clean up stale sessions (no heartbeat in 5 min)
+  }
+}
+
+Scaling considerations:
+  - Single DO can handle ~100-200 concurrent WebSockets comfortably
+  - If >500 users online simultaneously, shard by first letter of username
+    or create "rooms" (General, Stocks, Crypto, etc.)
+  - Each DO runs in a single Cloudflare location, close to the first
+    requester. Global users may experience ~100ms latency, acceptable for chat.
+
+------------------------------------------------------------
+8.2 DO vs Alternative Approaches
+------------------------------------------------------------
+
+Why Durable Objects for chat (not polling or KV):
+  - Real-time delivery: WebSocket push is instant vs. polling delay
+  - Connection state: Track who is online
+  - Ordered broadcast: Single-threaded guarantees message ordering
+  - Cost: DO is cheaper than polling KV every second for N users
+
+Why NOT Durable Objects for leaderboard:
+  - Leaderboard is read-heavy, write-infrequent (every 15 min)
+  - KV cache with cron rebuild is simpler and cheaper
+  - No real-time requirement (5-minute staleness is acceptable)
+
+
+================================================================================
+9. QUEUE DESIGN FOR ASYNC TASKS
+================================================================================
+
+Single Cloudflare Queue: upful-tasks
+Consumer: cron-worker (or dedicated queue-consumer worker)
+
+Message format: { type: string, payload: object, priority?: number }
+
+------------------------------------------------------------
+9.1 TASK TYPES
+------------------------------------------------------------
+
+NOTIFICATION TASKS
+  { type: "send_push", payload: { user_id, title, body, data } }
+    -> Fetch device token from D1
+    -> Send via APNs (HTTP/2 to api.push.apple.com)
+    -> APNs auth via JWT signed with Apple P8 key
+
+  { type: "send_push_batch", payload: { user_ids: [], title, body, data } }
+    -> Batch push for competition events (start, end)
+
+  { type: "send_email", payload: { to, subject, template, variables } }
+    -> Send via Resend API
+    -> Templates: welcome, verify_email, reset_password,
+       prize_won, monthly_summary
+
+  { type: "send_sms", payload: { phone, message } }
+    -> Send via Twilio API
+    -> Used only for phone verification
+
+COMPETITION TASKS
+  { type: "calculate_rankings", payload: { competition_id } }
+    -> Fetch all entries for competition
+    -> Calculate growth_pct for each
+    -> Sort and assign ranks
+    -> Update leaderboard_cache table
+    -> Invalidate KV leaderboard cache
+
+  { type: "roll_competition", payload: { type: 'daily'|'weekly'|'monthly' } }
+    -> End current competition of this type
+    -> Calculate final rankings and prizes
+    -> Create new competition
+    -> Auto-enroll active users
+    -> Queue prize notifications
+
+  { type: "assign_prizes", payload: { competition_id } }
+    -> Apply prize structure based on competition type
+    -> Create payout records with status 'pending'
+    -> Queue notifications to winners
+
+  { type: "snapshot_portfolios" }
+    -> For each active user: calculate total equity
+    -> Insert portfolio_snapshot record
+    -> Used by daily cron at 22:00 UTC
+
+PAYOUT TASKS
+  { type: "process_payout", payload: { payout_id } }
+    -> Fetch payout record
+    -> If PayPal: send via PayPal Payouts API
+    -> If Stripe: create Stripe Transfer
+    -> Update payout status
+    -> Queue notification to user
+
+MARKET DATA TASKS
+  { type: "refresh_quotes", payload: { tickers: [] } }
+    -> Fetch from free financial APIs
+    -> Update market_quotes in D1
+    -> Update KV cache
+
+  { type: "refresh_positions", payload: { user_id } }
+    -> Fetch latest prices for user's positions
+    -> Update positions table
+    -> Recalculate portfolio equity
+
+CLEANUP TASKS
+  { type: "cleanup_chat", payload: {} }
+    -> Delete chat messages older than 3 months
+    -> Delete associated R2 images
+
+  { type: "cleanup_sessions", payload: {} }
+    -> Delete expired refresh tokens from D1
+
+------------------------------------------------------------
+9.2 QUEUE CONFIGURATION
+------------------------------------------------------------
+
+  max_batch_size: 10       -- Process up to 10 messages at a time
+  max_batch_timeout: 30    -- Wait up to 30s to fill a batch
+  max_retries: 3           -- Retry failed messages up to 3 times
+  dead_letter_queue: upful-tasks-dlq  -- Dead letter for inspection
+
+  Consumer concurrency: handled by Cloudflare (auto-scales)
+
+  Error handling in consumer:
+    - Each message processed in try/catch
+    - On failure: log error, message auto-retried by queue
+    - After max_retries: message goes to DLQ
+    - DLQ monitored via Cloudflare dashboard
+
+
+================================================================================
+10. MARKET DATA SERVICE
+================================================================================
+
+Strategy: Aggregate from multiple free APIs, cache aggressively, serve
+from cache. The app does not need real-time data -- delayed quotes
+(15-20 minutes) are acceptable for paper trading.
+
+------------------------------------------------------------
+10.1 FREE DATA SOURCES
+------------------------------------------------------------
+
+SOURCE 1: Yahoo Finance (unofficial, via yfinance-style scraping)
+  Base: https://query1.finance.yahoo.com/v8/finance/chart/
+  Data: Real-time-ish quotes, historical OHLCV, company info
+  Rate limit: ~2000 requests/hour (unauthed)
+  Reliability: Good but can change without notice
+  Fallback: Always have a second source
+
+SOURCE 2: Alpha Vantage (free tier)
+  Base: https://www.alphavantage.co/query
+  Key: Free API key (25 requests/day premium, 5/min free)
+  Data: Quotes, historical, fundamentals, company overview
+  Good for: Company fundamentals, financial statements
+
+SOURCE 3: Finnhub (free tier)
+  Base: https://finnhub.io/api/v1
+  Key: Free API key (60 calls/minute)
+  Data: Quotes, company profile, market news, stock symbols
+  Good for: Search, company profiles, news
+
+SOURCE 4: Twelve Data (free tier)
+  Base: https://api.twelvedata.com
+  Key: Free (800 credits/day, 8 per minute)
+  Data: Time series, quote, crypto
+  Good for: Chart data, crypto prices
+
+SOURCE 5: CoinGecko (free tier)
+  Base: https://api.coingecko.com/api/v3
+  Data: Crypto prices, market data
+  Rate limit: 10-50 calls/minute
+  Good for: All crypto data
+
+SOURCE 6: Exchange Rates API / Frankfurter
+  Base: https://api.frankfurter.app
+  Data: Forex rates
+  Rate limit: Generous
+  Good for: Forex trading pairs
+
+------------------------------------------------------------
+10.2 DATA AGGREGATION STRATEGY
+------------------------------------------------------------
+
+  Priority waterfall per data type:
+
+  STOCK QUOTES:
+    1. Yahoo Finance (primary, fastest)
+    2. Finnhub (fallback)
+    3. Alpha Vantage (last resort, strict rate limits)
+
+  HISTORICAL CHARTS:
+    1. Yahoo Finance (best OHLCV data)
+    2. Twelve Data (good time series)
+    3. Alpha Vantage (daily only on free tier)
+
+  COMPANY INFO:
+    1. Finnhub (company profile)
+    2. Alpha Vantage (company overview)
+    3. Yahoo Finance (summary detail)
+
+  MARKET NEWS:
+    1. Finnhub (market news endpoint)
+    2. Yahoo Finance (news feed)
+
+  CRYPTO:
+    1. CoinGecko (comprehensive crypto data)
+    2. Twelve Data (crypto time series)
+
+  FOREX:
+    1. Frankfurter (ECB rates)
+    2. Twelve Data (forex pairs)
+
+  STOCK SEARCH:
+    1. Finnhub (symbol lookup)
+    2. Yahoo Finance (search/autosuggest)
+
+------------------------------------------------------------
+10.3 CACHING LAYERS
+------------------------------------------------------------
+
+  Layer 1: KV Cache (fast reads, TTL-based)
+    quote:<ticker> -> 5 min TTL
+    chart:<ticker>:<range> -> 5 min to 24 hr depending on range
+
+  Layer 2: D1 market_quotes table (persistent cache)
+    Updated by cron every 5 minutes for tracked tickers
+    "Tracked tickers" = union of all user positions + watchlists
+
+  Layer 3: D1 market_history table (permanent storage)
+    Historical OHLCV data, never expires
+    Backfilled on first request, then updated daily by cron
+
+  Read flow for GET /market/quote/AAPL:
+    1. Check KV cache -> if hit and fresh, return
+    2. Check D1 market_quotes -> if updated within 5 min, return + update KV
+    3. Fetch from Yahoo Finance -> update D1 + KV -> return
+    4. If Yahoo fails, try Finnhub -> same update flow
+    5. If all fail, return stale D1 data with "stale: true" flag
+
+------------------------------------------------------------
+10.4 TRACKED TICKERS MANAGEMENT
+------------------------------------------------------------
+
+  The cron worker maintains a list of "active tickers" that need
+  regular price updates. This set is the union of:
+
+  SELECT DISTINCT ticker FROM positions
+  UNION
+  SELECT DISTINCT ticker FROM watchlist
+  UNION
+  SELECT DISTINCT ticker FROM (
+    SELECT ticker FROM trades
+    WHERE executed_at > datetime('now', '-7 days')
+  )
+
+  This query runs once per cron cycle. Result cached in KV as
+  "active_tickers" with 1-hour TTL.
+
+  Tickers are refreshed in batches of 10 to stay within rate limits.
+  At 2000 req/hr from Yahoo, we can track ~600 unique tickers
+  with 5-minute refresh cycles (600 * 12 cycles/hr = 7200 reads,
+  but batching means ~60 API calls per cycle = 720/hr).
+
+
+================================================================================
+11. COMPETITION ENGINE
+================================================================================
+
+------------------------------------------------------------
+11.1 COMPETITION LIFECYCLE
+------------------------------------------------------------
+
+  CREATE -> ACTIVE -> CALCULATING -> COMPLETED -> PAID_OUT
+
+  Daily:
+    Start: 00:00 UTC each day
+    End: 23:59 UTC same day
+    Roll: cron at 00:00 UTC closes previous, opens new
+
+  Weekly:
+    Start: Monday 00:00 UTC
+    End: Sunday 23:59 UTC
+    Roll: cron on Monday 00:00 UTC
+
+  Monthly:
+    Start: 1st of month 00:00 UTC
+    End: Last day of month 23:59 UTC
+    Roll: cron on 1st 00:00 UTC
+
+------------------------------------------------------------
+11.2 RANKING CALCULATION
+------------------------------------------------------------
+
+  Runs every 15 minutes via cron:
+
+  1. For each active competition:
+     a. Get all entries (competition_entries table)
+     b. For each entry:
+        - Fetch user's current portfolio total_equity
+        - Calculate growth_pct = ((total_equity - starting_equity) / starting_equity) * 100
+        - Update competition_entries.growth_pct
+     c. Sort entries by growth_pct DESC
+     d. Assign ranks (1, 2, 3, ...)
+        Handle ties: same rank, next rank skips (1, 2, 2, 4)
+     e. Write top 100 to leaderboard_cache table
+     f. Invalidate KV leaderboard cache keys
+
+  2. Performance optimization:
+     - Only recalculate if any portfolio has changed since last calc
+       (track via updated_at on portfolios table)
+     - Use D1 batch operations for bulk updates
+     - Process in chunks of 100 users at a time
+
+------------------------------------------------------------
+11.3 PRIZE STRUCTURE (from pitch deck)
+------------------------------------------------------------
+
+  DAILY PRIZES (Total: $109/day):
+    Rank 1:     $5
+    Rank 2:     $4
+    Rank 3:     $3
+    Rank 4-100: $1 each ($97)
+
+  WEEKLY PRIZES (Total: $217/week):
+    Rank 1:     $10
+    Rank 2:     $8
+    Rank 3:     $5
+    Rank 4-100: $2 each ($194)
+
+  MONTHLY PRIZES (Total: $10,965/month):
+    Rank 1:       $2,000
+    Rank 2:       $1,500
+    Rank 3:       $1,000
+    Rank 4-10:    $200 each ($1,400)
+    Rank 11-20:   $150 each ($1,500)
+    Rank 21-50:   $75 each ($2,250)
+    Rank 51-80:   $50 each ($1,500)
+    Rank 81-100:  $10 each ($200)
+    (Subtotal with rounding adjustments per pitch deck: ~$10,965)
+
+  Prize assignment algorithm (runs when competition ends):
+    1. Get final rankings
+    2. Apply prize table based on competition type
+    3. Only PREMIUM users receive prizes (free users see "what you missed")
+    4. Create payout records with status='pending'
+    5. Queue notification for each winner
+    6. Queue batch notification for "competition ended" to all participants
+
+------------------------------------------------------------
+11.4 MONTHLY RESET FLOW
+------------------------------------------------------------
+
+  Triggered: 1st of each month at 00:01 UTC
+
+  For each active user:
+    1. Close previous month's monthly competition
+    2. Archive current portfolio (set is_active=0)
+    3. Present reset choice screen in app (next app open):
+       - Until user chooses, they cannot trade
+       - Default to 'new' after 48 hours if no choice made
+
+  When user chooses 'new':
+    1. Create new portfolio with cash_balance=25000, total_equity=25000
+    2. Set new portfolio as active
+    3. Auto-enroll in current month's competitions
+
+  When user chooses 'keep':
+    1. Create new portfolio with:
+       - Same positions as previous portfolio
+       - Same cash balance
+       - Same total equity
+    2. Copy all positions to new portfolio
+    3. growth_pct tracking starts from current equity (not 25K)
+    4. Auto-enroll in current month's competitions
+
+  Edge case: User who lost all money
+    If total_equity < $100 when choosing 'keep', force 'new' portfolio.
+
+------------------------------------------------------------
+11.5 COMPETITION AUTO-ENROLLMENT
+------------------------------------------------------------
+
+  When a new competition is created (daily/weekly/monthly):
+    - All active users with is_active portfolio are auto-enrolled
+    - Entry's starting_equity = portfolio's current total_equity
+    - No manual enrollment needed
+    - Users who joined mid-competition start from enrollment time
+
+
+================================================================================
+12. LEADERBOARD SYSTEM
+================================================================================
+
+------------------------------------------------------------
+12.1 DATA FLOW
+------------------------------------------------------------
+
+  Every 15 minutes (cron):
+    1. Calculate rankings for all active competitions
+    2. Write top 100 per competition to leaderboard_cache table
+    3. Write serialized leaderboard JSON to KV cache
+    4. Each KV entry holds one page (50 entries) of one competition+tier combo
+
+  On API request GET /leaderboard:
+    1. Check KV: leaderboard:<comp_id>:<tier>:<page>
+    2. If KV hit: return directly (fastest path, ~1ms)
+    3. If KV miss: read from leaderboard_cache table in D1
+    4. Compute user's own position:
+       - Check KV: user:position:<user_id>:<type>
+       - If miss: query competition_entries for user's rank
+    5. Return combined response
+
+------------------------------------------------------------
+12.2 LEADERBOARD VIEWS
+------------------------------------------------------------
+
+  View: "Subscribed" (tier=premium)
+    Shows only premium subscribers ranked against each other.
+    Prizes shown next to qualifying ranks.
+
+  View: "Free" (tier=free)
+    Shows free users ranked against each other.
+    Instead of prizes, shows "You could have won $X" message.
+    Conversion upsell mechanism.
+
+  View: "All" (tier=all)
+    Combined ranking. Default view option.
+
+------------------------------------------------------------
+12.3 PERFORMANCE OPTIMIZATIONS
+------------------------------------------------------------
+
+  Problem: With 10K+ users, ranking calculation is expensive.
+
+  Solution 1: Incremental ranking
+    - Only re-rank users whose portfolios changed since last calculation
+    - Use portfolios.updated_at > last_calculation_timestamp
+    - Most users' portfolios change only when they trade (sparse updates)
+
+  Solution 2: Materialized leaderboard
+    - leaderboard_cache table serves as materialized view
+    - Only top 100 are stored (not all users)
+    - Rebuild from competition_entries when needed
+
+  Solution 3: KV layering
+    - KV serves ~99% of leaderboard reads
+    - D1 only hit when KV expires or misses
+    - KV TTL (5 min) << cron interval (15 min), so most reads are cached
+
+  Solution 4: Partition by time period
+    - Daily, weekly, monthly are independent calculations
+    - Can run in parallel (separate queue messages)
+
+
+================================================================================
+13. CHAT SYSTEM
+================================================================================
+
+------------------------------------------------------------
+13.1 ARCHITECTURE
+------------------------------------------------------------
+
+                   +-------------------+
+                   |  iOS App          |
+                   |  (WebSocket)      |
+                   +--------+----------+
+                            |
+                   +--------v----------+
+                   | api-chat Worker   |
+                   | (upgrade handler) |
+                   +--------+----------+
+                            |
+                   +--------v----------+
+                   | ChatRoom          |
+                   | Durable Object    |
+                   |                   |
+                   | - sessions Map    |
+                   | - message queue   |
+                   | - presence count  |
+                   +--------+----------+
+                            |
+              +-------------+-------------+
+              |                           |
+     +--------v------+          +--------v------+
+     | D1             |          | R2             |
+     | chat_messages  |          | chat/<imgs>    |
+     +----------------+          +----------------+
+
+------------------------------------------------------------
+13.2 MESSAGE FLOW
+------------------------------------------------------------
+
+  Send:
+    1. User sends message via WebSocket frame
+    2. ChatRoom DO receives in webSocketMessage handler
+    3. Validate: user is premium, content length < 2000 chars
+    4. Extract ticker mentions: regex /\$?([A-Z]{1,5})/g
+       - Filter against known ticker list in KV
+    5. If image attached:
+       - Validate size (< 5MB) and type
+       - Upload to R2: chat/<year>/<month>/<msg_id>.jpg
+    6. Persist to D1 chat_messages table
+    7. Broadcast to all connected sessions:
+       {
+         type: "message",
+         id: "<msg_id>",
+         user_id: "<user_id>",
+         username: "johndoe",
+         avatar_url: "https://avatars.jyanik.com/<user_id>.jpg",
+         content: "AAPL is looking good today!",
+         image_url: null,
+         tickers: ["AAPL"],
+         created_at: "2026-02-11T15:30:00Z"
+       }
+
+  Receive (REST fallback for loading history):
+    GET /chat/messages?before=<timestamp>&limit=50&ticker=AAPL
+    - Queries D1 with optional ticker filter
+    - Ticker filter: WHERE tickers LIKE '%"AAPL"%'
+      (JSON array contains check)
+    - Returns newest-first, paginated
+
+------------------------------------------------------------
+13.3 TICKER FILTERING
+------------------------------------------------------------
+
+  When user selects a ticker filter in the UI:
+    - Historical: GET /chat/messages?ticker=AAPL loads filtered history
+    - Live: Client-side filter on incoming WebSocket messages
+      (check if message.tickers includes selected ticker)
+    - This avoids needing separate WebSocket channels per ticker
+
+------------------------------------------------------------
+13.4 RETENTION & CLEANUP
+------------------------------------------------------------
+
+  Messages older than 3 months are deleted by daily cron:
+    DELETE FROM chat_messages WHERE created_at < datetime('now', '-90 days')
+
+  Associated R2 images are also deleted:
+    List R2 objects with prefix chat/<year>/<month>/
+    Delete objects where month is > 3 months ago
+
+------------------------------------------------------------
+13.5 MODERATION
+------------------------------------------------------------
+
+  User reports: POST /chat/messages/:id/report
+    - Stores report in a simple moderation queue (or flags the message)
+    - Admin can view reported messages and soft-delete
+
+  Content filtering:
+    - Basic profanity filter on message content (word list in KV)
+    - No automated blocking; flag for human review
+    - Admin/moderator can delete any message
+
+  Rate limiting per user:
+    - Max 10 messages per minute
+    - Enforced in ChatRoom DO (per-session counter with 1-min window)
+
+
+================================================================================
+14. NOTIFICATION SYSTEM
+================================================================================
+
+------------------------------------------------------------
+14.1 NOTIFICATION TYPES
+------------------------------------------------------------
+
+  Type                    Trigger                           Push?  In-App?
+  ----                    -------                           -----  -------
+  prize_won               Competition ends, user is winner  Yes    Yes
+  rank_change             Ranking recalculation             No     Yes*
+  competition_start       New competition begins            Yes    Yes
+  competition_end         Competition closes                Yes    Yes
+  withdrawal_processed    Payout completed                  Yes    Yes
+  monthly_reset           Monthly reset prompt              Yes    Yes
+  subscription_expiring   3 days before sub expires         Yes    Yes
+  welcome                 New user registration             No     Yes
+  system                  Admin announcements               Yes    Yes
+
+  * rank_change only creates in-app notification if rank moved
+    significantly (entered top 100 or dropped out).
+
+------------------------------------------------------------
+14.2 PUSH NOTIFICATION FLOW (APNs)
+------------------------------------------------------------
+
+  1. Trade or competition event triggers notification
+  2. Queue message: { type: "send_push", payload: { user_id, title, body, data } }
+  3. Queue consumer:
+     a. Fetch device tokens for user from D1
+     b. For each token:
+        - Build APNs payload:
+          {
+            "aps": {
+              "alert": { "title": "<title>", "body": "<body>" },
+              "badge": <unread_count>,
+              "sound": "default"
+            },
+            "data": { "type": "<notification_type>", "id": "<ref_id>" }
+          }
+        - Sign JWT with Apple P8 key (ES256 algorithm):
+          Header: { alg: "ES256", kid: "<KEY_ID>" }
+          Payload: { iss: "<TEAM_ID>", iat: <now> }
+        - POST to https://api.push.apple.com/3/device/<token>
+          Authorization: bearer <jwt>
+          apns-topic: com.jyanik.app
+        - Handle response:
+          200: delivered
+          410: token invalid -> mark device_token inactive
+          Other: log error, retry via queue
+
+  Apple P8 key stored as Cloudflare Worker secret (APNS_KEY).
+
+------------------------------------------------------------
+14.3 IN-APP NOTIFICATION FEED
+------------------------------------------------------------
+
+  Storage: notifications table in D1
+  Read: GET /notifications?page=1&limit=30
+  Mark read: PUT /notifications/:id/read
+  Badge count: GET /notifications/unread-count
+    - Also included in portfolio response for efficiency
+
+  Feed display grouping:
+    - "Today" section
+    - "This Week" section
+    - "Earlier" section
+
+------------------------------------------------------------
+14.4 RESEND EMAIL TEMPLATES
+------------------------------------------------------------
+
+  Template: welcome
+    Subject: "Welcome to Jyanik!"
+    Content: Welcome message, getting started guide
+
+  Template: verify_email
+    Subject: "Verify your email"
+    Content: Verification link (24-hour expiry)
+
+  Template: reset_password
+    Subject: "Reset your password"
+    Content: Reset link (1-hour expiry)
+
+  Template: prize_won
+    Subject: "You won $X in the {daily/weekly/monthly} competition!"
+    Content: Prize details, current standings
+
+  Template: monthly_summary
+    Subject: "Your February trading summary"
+    Content: Performance recap, P/L, rank history
+
+
+================================================================================
+15. PAYMENT SYSTEM
+================================================================================
+
+------------------------------------------------------------
+15.1 SUBSCRIPTION (Apple IAP via StoreKit 2)
+------------------------------------------------------------
+
+  Product: com.jyanik.subscription.monthly ($6.99/month)
+
+  Purchase flow:
+    1. iOS app uses StoreKit 2 to present subscription
+    2. User completes purchase in Apple's payment sheet
+    3. iOS app receives Transaction from StoreKit 2
+    4. iOS app sends transaction to backend:
+       POST /payments/apple/verify
+       { transaction_id: "...", product_id: "com.jyanik.subscription.monthly" }
+    5. Backend verifies with App Store Server API:
+       GET https://api.storekit.itunes.apple.com/inApps/v1/transactions/{transactionId}
+       Authorization: Bearer <signed_jwt>
+    6. On valid: update user subscription_tier='premium', subscription_expires_at
+    7. Record in purchases table
+
+  Server notifications (App Store Server Notifications V2):
+    POST /payments/apple/webhook
+    - Apple sends signed JWS notifications for:
+      - SUBSCRIBED: new subscription
+      - DID_RENEW: renewal success
+      - EXPIRED: subscription expired
+      - DID_FAIL_TO_RENEW: billing issue
+      - REFUND: user got refund
+      - REVOKE: family sharing revocation
+    - Backend verifies JWS signature using Apple's public key
+    - Updates user subscription status accordingly
+
+  Subscription status check (on each API request):
+    - JWT contains tier claim
+    - If tier='premium' and subscription_expires_at < now:
+      - Refresh subscription status from App Store Server API
+      - If expired: update user to tier='free'
+      - Issue new JWT with updated claims
+
+------------------------------------------------------------
+15.2 VIRTUAL CASH PURCHASE (Apple IAP Consumable)
+------------------------------------------------------------
+
+  Product: com.jyanik.virtualcash.25k ($2.99)
+  Type: Consumable (one-time purchase, can buy multiple times)
+
+  Purchase flow:
+    1. iOS app presents purchase via StoreKit 2
+    2. On completion, verify with backend (same as subscription)
+    3. Backend adds $25,000 to user's active portfolio cash_balance
+    4. Record in purchases table with type='consumable'
+    5. Finish transaction in StoreKit 2 (mark as consumed)
+
+  Trigger: Portfolio total_equity drops below $10,000
+    -> App shows "Out of Budget" screen with purchase option
+
+------------------------------------------------------------
+15.3 PRIZE PAYOUTS
+------------------------------------------------------------
+
+  Flow:
+    1. Competition ends -> prizes assigned -> payout records created (status: pending)
+    2. Admin reviews pending payouts in admin dashboard
+    3. Admin approves: PUT /admin/payouts/:id/approve
+       -> Status changes to 'approved'
+       -> Queue message: { type: "process_payout", payload: { payout_id } }
+    4. Queue consumer processes payout:
+
+       PayPal (primary):
+         - Use PayPal Payouts API (https://api.paypal.com/v1/payments/payouts)
+         - Send to user's registered paypal_email
+         - Batch payouts to reduce API calls
+         - On success: status='completed', processed_at=now
+         - On failure: status='failed', failure_reason='...'
+
+       Stripe (alternative):
+         - Use Stripe Connect with Express accounts (future)
+         - Or Stripe Transfers to user's connected account
+         - More complex setup but better for compliance
+
+    5. Notification sent to user on completion
+
+  Minimum payout: $1.00
+  Payout schedule: Weekly batch processing (Mondays)
+  Holdback period: 7 days after competition end before payout eligible
+    (fraud prevention, allows for challenge/review period)
+
+------------------------------------------------------------
+15.4 APP STORE SERVER API AUTHENTICATION
+------------------------------------------------------------
+
+  For verifying transactions and checking subscription status:
+
+  1. Generate signed JWT:
+     Header: { alg: "ES256", kid: "<KEY_ID>", typ: "JWT" }
+     Payload: {
+       iss: "<ISSUER_ID>",    -- From App Store Connect
+       iat: <now>,
+       exp: <now + 20 min>,
+       aud: "appstoreconnect-v1",
+       bid: "com.jyanik.app"
+     }
+     Signed with: App Store Connect API private key (P8 format)
+
+  2. Use JWT as Bearer token for App Store Server API endpoints
+
+  Keys stored as Worker secrets:
+    APPSTORE_KEY_ID
+    APPSTORE_ISSUER_ID
+    APPSTORE_PRIVATE_KEY (P8 content, base64-encoded)
+
+
+================================================================================
+16. RATE LIMITING
+================================================================================
+
+Implemented via KV counters with TTL-based windows.
+
+------------------------------------------------------------
+16.1 RATE LIMIT TIERS
+------------------------------------------------------------
+
+  Endpoint Group          Free Tier        Premium Tier     Window
+  --------------          ---------        ------------     ------
+  Auth endpoints          10 req           10 req           1 min
+  Market data (quotes)    60 req           300 req          1 min
+  Market search           20 req           100 req          1 min
+  Screener runs           6 per day        unlimited        24 hr
+  Trade execution         30 req           120 req          1 min
+  Portfolio reads         60 req           300 req          1 min
+  Leaderboard             30 req           120 req          1 min
+  Chat messages           -                10 msg           1 min
+  Chat reads              -                60 req           1 min
+  Notifications           60 req           60 req           1 min
+  Avatar upload           5 req            5 req            1 hr
+  General (catch-all)     100 req          500 req          1 min
+
+  Screener daily limit for free tier: tracked separately in D1
+  (user_id + date compound key in a screener_usage table or via
+   a counter in user_preferences).
+
+------------------------------------------------------------
+16.2 IMPLEMENTATION
+------------------------------------------------------------
+
+  KV key: rate:<user_id_or_ip>:<endpoint_group>
+  Value: integer count
+  TTL: window duration (60s for 1-minute windows)
+
+  Middleware (runs before handler):
+    async function rateLimit(request, env, ctx) {
+      const key = `rate:${userId}:${endpointGroup}`
+      const current = await env.CACHE.get(key, "text")
+      const count = current ? parseInt(current) : 0
+
+      if (count >= limit) {
+        return Response.json(
+          { ok: false, error: { code: "RATE_LIMITED", retry_after: ttl } },
+          { status: 429, headers: { "Retry-After": ttl } }
+        )
+      }
+
+      // Increment (fire-and-forget since KV is eventually consistent)
+      ctx.waitUntil(env.CACHE.put(key, String(count + 1), { expirationTtl: ttl }))
+      // Continue to handler
+    }
+
+  Note: KV-based rate limiting is approximate due to eventual consistency.
+  For auth endpoints (where precision matters), use D1 or Durable Object
+  for strict counting. For everything else, approximate is fine.
+
+------------------------------------------------------------
+16.3 GLOBAL RATE LIMITING
+------------------------------------------------------------
+
+  In addition to per-user limits, apply per-IP rate limiting
+  at the Cloudflare level using Cloudflare WAF rate limiting rules:
+    - 1000 requests per minute per IP (global)
+    - Challenge (CAPTCHA) after 500 requests in 10 seconds (DDoS protection)
+
+
+================================================================================
+17. ERROR HANDLING STRATEGY
+================================================================================
+
+------------------------------------------------------------
+17.1 ERROR RESPONSE FORMAT
+------------------------------------------------------------
+
+  All errors follow a consistent envelope:
+
+  {
+    "ok": false,
+    "error": {
+      "code": "INSUFFICIENT_BALANCE",
+      "message": "Not enough cash to complete this trade.",
+      "details": {                          -- Optional, only in development
+        "required": 15000.00,
+        "available": 12345.67
+      },
+      "request_id": "req_abc123def456"      -- For support/debugging
+    }
+  }
+
+  HTTP status codes used:
+    200 - Success
+    201 - Created (new resource)
+    204 - No Content (successful delete)
+    400 - Bad Request (validation errors)
+    401 - Unauthorized (missing/invalid token)
+    403 - Forbidden (insufficient permissions or tier)
+    404 - Not Found
+    409 - Conflict (duplicate resource)
+    422 - Unprocessable Entity (business logic rejection)
+    429 - Too Many Requests (rate limited)
+    500 - Internal Server Error
+
+------------------------------------------------------------
+17.2 ERROR CODES (iOS app uses these for localized messages)
+------------------------------------------------------------
+
+  Auth errors:
+    INVALID_CREDENTIALS       -- Wrong email/password
+    TOKEN_EXPIRED             -- Access token expired (refresh needed)
+    TOKEN_INVALID             -- Token malformed or tampered
+    REFRESH_TOKEN_EXPIRED     -- Must re-login
+    EMAIL_NOT_VERIFIED        -- Action requires verified email
+    PHONE_NOT_VERIFIED        -- Action requires verified phone
+    ACCOUNT_BANNED            -- User is banned
+    USERNAME_TAKEN            -- Registration conflict
+    EMAIL_TAKEN               -- Registration conflict
+
+  Trading errors:
+    INSUFFICIENT_BALANCE      -- Not enough cash for buy
+    INSUFFICIENT_SHARES       -- Not enough shares for sell
+    INVALID_QUANTITY          -- Quantity <= 0
+    TICKER_NOT_FOUND          -- Unknown ticker symbol
+    MARKET_CLOSED             -- Market is not open (future use)
+    PORTFOLIO_LOCKED          -- Monthly reset choice not yet made
+    TRADE_FAILED              -- Unexpected error during trade
+
+  Subscription errors:
+    PREMIUM_REQUIRED          -- Feature requires premium
+    WATCHLIST_LIMIT           -- Free tier watchlist limit (5)
+    SCREENER_LIMIT            -- Free tier screener limit (2)
+    SCREENER_DAILY_LIMIT      -- Free tier daily screener runs (6)
+
+  Payment errors:
+    INVALID_RECEIPT           -- Apple receipt verification failed
+    PAYOUT_MINIMUM            -- Below minimum payout amount
+    PAYOUT_NO_PAYPAL          -- No PayPal email configured
+    PAYOUT_INSUFFICIENT       -- Not enough prize money
+
+  General errors:
+    VALIDATION_ERROR          -- Request body validation failed
+    NOT_FOUND                 -- Resource not found
+    RATE_LIMITED              -- Too many requests
+    INTERNAL_ERROR            -- Unexpected server error
+
+------------------------------------------------------------
+17.3 REQUEST ID TRACKING
+------------------------------------------------------------
+
+  Every request gets a unique request_id:
+    Generated: crypto.randomUUID() in worker
+    Returned: In response headers (X-Request-Id) and error body
+    Logged: Along with error details for debugging
+    Purpose: iOS app includes this in bug reports for tracing
+
+------------------------------------------------------------
+17.4 LOGGING
+------------------------------------------------------------
+
+  Cloudflare Workers have limited logging. Strategy:
+
+  Production:
+    - Errors logged to console.error (visible in Workers Logs)
+    - Structured JSON format: { request_id, error, stack, user_id, path }
+    - Optionally pipe to external service via Logpush (if needed later)
+
+  Development:
+    - Full request/response logging
+    - Query execution logging
+    - Cache hit/miss logging
+
+
+================================================================================
+18. CRON JOB SCHEDULE
+================================================================================
+
+All cron triggers run in the cron-worker.
+
+  Schedule              Task                            Priority
+  --------              ----                            --------
+  */5 * * * *           Refresh market quotes            High
+                        (for tracked tickers)
+
+  */15 * * * *          Recalculate leaderboard           High
+                        rankings for active competitions
+
+  0 * * * *             Clean expired KV entries          Low
+                        Clean expired refresh tokens
+
+  0 6 * * *             Bulk market data update           Medium
+                        (pre-market preparation)
+
+  0 22 * * *            Snapshot all active portfolios    High
+                        (end-of-day performance record)
+
+  0 0 * * *             Roll daily competition            Critical
+                        Calculate daily winners
+                        Clean chat messages > 90 days
+
+  0 0 * * 1             Roll weekly competition           Critical
+                        Calculate weekly winners
+
+  0 0 1 * *             Roll monthly competition          Critical
+                        Calculate monthly winners
+                        Trigger monthly reset flow
+
+  0 3 * * *             Process approved payouts          Medium
+                        (batch PayPal/Stripe transfers)
+
+  0 12 * * *            Send subscription expiry          Low
+                        reminders (3 days before expiry)
+
+Implementation:
+  Each cron trigger maps to a function in the cron-worker.
+  Multiple tasks at the same schedule run sequentially within
+  a single Worker invocation.
+
+  wrangler.toml:
+    [triggers]
+    crons = [
+      "*/5 * * * *",
+      "*/15 * * * *",
+      "0 * * * *",
+      "0 0 * * *",
+      "0 0 * * 1",
+      "0 0 1 * *",
+      "0 3 * * *",
+      "0 6 * * *",
+      "0 12 * * *",
+      "0 22 * * *"
+    ]
+
+  The scheduled() handler dispatches to the correct function(s)
+  based on which cron pattern triggered the event.
+
+
+================================================================================
+19. ENVIRONMENT & SECRETS
+================================================================================
+
+Cloudflare Worker environment variables (set via wrangler secret):
+
+  Secret Name                 Purpose
+  -----------                 -------
+  JWT_SECRET                  HMAC key for signing JWTs (HS256)
+  BCRYPT_SALT_ROUNDS          Number of bcrypt rounds (12)
+
+  APPLE_TEAM_ID               Apple Developer team ID
+  APPLE_CLIENT_ID             Sign in with Apple service ID
+  APPLE_KEY_ID                Sign in with Apple private key ID
+  APPLE_PRIVATE_KEY           Sign in with Apple P8 key (base64)
+
+  APNS_KEY_ID                 APNs auth key ID
+  APNS_TEAM_ID                APNs team ID
+  APNS_PRIVATE_KEY            APNs P8 key (base64)
+  APNS_BUNDLE_ID              App bundle ID (com.jyanik.app)
+
+  APPSTORE_KEY_ID             App Store Server API key ID
+  APPSTORE_ISSUER_ID          App Store Connect issuer ID
+  APPSTORE_PRIVATE_KEY        App Store Connect P8 key (base64)
+
+  RESEND_API_KEY              Resend email API key
+  TWILIO_ACCOUNT_SID          Twilio account SID
+  TWILIO_AUTH_TOKEN           Twilio auth token
+  TWILIO_PHONE_NUMBER         Twilio sender phone number
+
+  PAYPAL_CLIENT_ID            PayPal REST API client ID
+  PAYPAL_CLIENT_SECRET        PayPal REST API secret
+  PAYPAL_API_BASE             https://api.paypal.com (production)
+
+  STRIPE_SECRET_KEY           Stripe secret key (for transfers)
+
+  ALPHA_VANTAGE_KEY           Alpha Vantage free API key
+  FINNHUB_KEY                 Finnhub free API key
+  TWELVE_DATA_KEY             Twelve Data free API key
+
+Non-secret environment variables (wrangler.toml [vars]):
+
+  ENVIRONMENT                 "production" | "staging"
+  API_VERSION                 "v1"
+  CORS_ORIGIN                 "https://admin.jyanik.com"
+  LOG_LEVEL                   "error" | "warn" | "info" | "debug"
+
+
+================================================================================
+20. DEPLOYMENT ARCHITECTURE
+================================================================================
+
+------------------------------------------------------------
+20.1 ENVIRONMENTS
+------------------------------------------------------------
+
+  Production:
+    API: api.jyanik.com (Cloudflare Workers custom domain)
+    Admin: admin.jyanik.com (Cloudflare Pages)
+    Assets: avatars.jyanik.com (R2 custom domain)
+    D1: upful-primary
+    KV: upful-cache-prod, upful-sessions-prod
+    R2: upful-storage-prod
+
+  Staging:
+    API: api-staging.jyanik.com
+    D1: upful-staging
+    KV: upful-cache-staging, upful-sessions-staging
+    R2: upful-storage-staging
+
+------------------------------------------------------------
+20.2 CI/CD PIPELINE
+------------------------------------------------------------
+
+  Repository: GitHub
+  CI: GitHub Actions
+
+  Workflow:
+    1. PR opened -> run tests, lint, type check
+    2. PR merged to main -> deploy to staging
+    3. Manual approval -> deploy to production
+    4. Rollback: wrangler rollback (instant, previous version)
+
+  Deployment commands:
+    wrangler deploy --env staging    # Deploy to staging
+    wrangler deploy --env production # Deploy to production
+    wrangler d1 migrations apply     # Run D1 migrations
+
+------------------------------------------------------------
+20.3 D1 MIGRATION STRATEGY
+------------------------------------------------------------
+
+  Migrations stored in: migrations/ directory
+  Naming: 0001_initial_schema.sql, 0002_add_competitions.sql, etc.
+  Applied via: wrangler d1 migrations apply --database upful-primary
+
+  Each migration file contains:
+    -- Migration: 0001_initial_schema
+    -- Created: 2026-02-11
+    CREATE TABLE IF NOT EXISTS ...
+
+  Rollback: manual (write reverse migration and apply)
+  D1 does not support ALTER TABLE ... DROP COLUMN, so migrations
+  must be additive. Use new columns + application-level migration.
+
+------------------------------------------------------------
+20.4 ADMIN DASHBOARD
+------------------------------------------------------------
+
+  Built with: Cloudflare Pages (static SPA)
+  Framework: React or vanilla JS (minimal, no SSR needed)
+  Auth: Same JWT system, restricted to role='admin'
+
+  Pages:
+    - Dashboard: User stats, revenue metrics, active competitions
+    - Users: Search, view, ban/unban
+    - Competitions: Create, view, roll
+    - Payouts: Review pending, approve/reject, view history
+    - Chat Moderation: View reported messages, delete
+    - System: API health, error rates, cron status
+
+  Deployed separately from API workers.
+  Communicates with api-main via /admin/* endpoints.
+
+------------------------------------------------------------
+20.5 CLOUDFLARE PLAN REQUIREMENTS
+------------------------------------------------------------
+
+  Feature                     Plan Required    Notes
+  -------                     -------------    -----
+  Workers                     Free (100K/day)  Upgrade to Paid ($5/mo) for 10M req
+  D1                          Free (5M rows)   Sufficient for early stage
+  KV                          Free (100K/day)  Upgrade with Workers Paid
+  R2                          Free (10GB)      Sufficient for early stage
+  Durable Objects             Workers Paid     $5/mo minimum for DO access
+  Queues                      Workers Paid     Included in Workers Paid
+  Cron Triggers               Free             Up to 3 per worker (free), more on Paid
+  Pages                       Free             For admin dashboard
+  Custom Domains              Free             Included with Cloudflare DNS
+
+  Total cost for MVP: ~$5/month (Workers Paid plan)
+  This covers Workers, D1, KV, R2, DO, Queues, and Cron.
+
+  Scaling costs:
+    Workers: $0.50 per million requests beyond 10M
+    D1: $0.75 per million rows read beyond 5M
+    KV: $0.50 per million reads beyond 10M
+    R2: $0.015 per GB stored beyond 10GB
+    DO: $0.15 per million requests
+
+  At 10K users with moderate activity, estimated monthly cost: ~$15-30
+  At 100K users: ~$100-300/month
+
+------------------------------------------------------------
+20.6 WORKER SIZE LIMITS
+------------------------------------------------------------
+
+  Free plan: 1MB per worker (after gzip)
+  Paid plan: 10MB per worker (after gzip)
+
+  api-main worker is the largest. To stay within limits:
+    - Use tree-shaking and minification (esbuild, default with Wrangler)
+    - Lazy-load heavy modules (e.g., bcrypt WASM only in auth worker)
+    - Keep route handlers lean, delegate to shared utility functions
+    - External heavy processing to queues
+
+  If api-main grows too large, split into:
+    - api-portfolio (portfolio + trade routes)
+    - api-social (leaderboard + notifications)
+    - api-market (market data routes)
+    - api-admin (admin routes)
+  But start with a single worker for simplicity.
+
+
+================================================================================
+APPENDIX A: PRIZE CONFIGURATION TABLE (stored in KV or as const)
+================================================================================
+
+  const PRIZE_TABLES = {
+    daily: [
+      { rank_start: 1, rank_end: 1, amount: 5 },
+      { rank_start: 2, rank_end: 2, amount: 4 },
+      { rank_start: 3, rank_end: 3, amount: 3 },
+      { rank_start: 4, rank_end: 100, amount: 1 }
+    ],
+    weekly: [
+      { rank_start: 1, rank_end: 1, amount: 10 },
+      { rank_start: 2, rank_end: 2, amount: 8 },
+      { rank_start: 3, rank_end: 3, amount: 5 },
+      { rank_start: 4, rank_end: 100, amount: 2 }
+    ],
+    monthly: [
+      { rank_start: 1, rank_end: 1, amount: 2000 },
+      { rank_start: 2, rank_end: 2, amount: 1500 },
+      { rank_start: 3, rank_end: 3, amount: 1000 },
+      { rank_start: 4, rank_end: 10, amount: 200 },
+      { rank_start: 11, rank_end: 20, amount: 150 },
+      { rank_start: 21, rank_end: 50, amount: 75 },
+      { rank_start: 51, rank_end: 80, amount: 50 },
+      { rank_start: 81, rank_end: 100, amount: 10 }
+    ]
+  }
+
+
+================================================================================
+APPENDIX B: iOS APP API CLIENT RECOMMENDATIONS
+================================================================================
+
+  The iOS app should implement:
+
+  1. APIClient singleton with:
+     - Base URL configuration (staging vs production)
+     - Automatic JWT attachment via URLSession interceptor
+     - Automatic token refresh on 401 with TOKEN_EXPIRED code
+     - Request retry after successful refresh
+     - Request ID generation and attachment
+
+  2. Request/Response types:
+     - Codable request bodies
+     - Generic APIResponse<T: Decodable> envelope decoder
+     - Typed error handling matching server error codes
+
+  3. WebSocket manager for chat:
+     - Auto-reconnect with exponential backoff
+     - Heartbeat ping every 30 seconds
+     - Message queue for offline-to-online transition
+
+  4. Offline support:
+     - Cache portfolio data locally (CoreData or SwiftData)
+     - Queue trades when offline, execute when online
+     - Show stale data with "offline" indicator
+
+  5. Background refresh:
+     - BGAppRefreshTask for portfolio updates
+     - Silent push notifications for critical updates
+
+
+================================================================================
+APPENDIX C: SECURITY CHECKLIST
+================================================================================
+
+  [x] All secrets in Cloudflare Worker secrets (not in code)
+  [x] JWT tokens with short expiry (15 min access, 30 day refresh)
+  [x] Refresh token rotation (single-use)
+  [x] bcrypt password hashing (12 rounds)
+  [x] Rate limiting on all endpoints
+  [x] Input validation on all request bodies
+  [x] SQL parameterized queries (D1 prepared statements)
+  [x] CORS restricted to app bundle and admin domain
+  [x] App Store Server Notification signature verification
+  [x] Sign in with Apple token verification
+  [x] Admin endpoints restricted by role
+  [x] Payout requires admin approval
+  [x] 7-day holdback on prize payouts
+  [x] Soft-delete for user accounts (data retention)
+  [x] Request ID tracking for audit trail
+  [x] Chat content moderation and reporting
+  [x] EXIF stripping on image uploads
+  [x] File type and size validation on uploads
+  [x] Subscription status server-side verification (not client-only)
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================

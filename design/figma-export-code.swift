@@ -1,0 +1,50 @@
+// Figma Export Code - Raw UIView frames from Figma design
+// Source: https://www.figma.com/design/iMceNmkVwyu8lsYQSZhbXK/upful-%7C-eliomags
+
+var view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 811.91)
+let image0 = UIImage(named: "IMG-20210207-WA0057.jpg")?.cgImage
+let layer0 = CALayer()
+layer0.contents = image0
+layer0.bounds = view.bounds
+layer0.position = view.center
+view.layer.addSublayer(layer0)
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+view = UIView()
+view.frame = CGRect(x: 0, y: 0, width: 375, height: 812)
+view.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor

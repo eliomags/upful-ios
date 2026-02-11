@@ -1,0 +1,662 @@
+================================================================================
+BRANCH ANALYSIS - UPFUL iOS REPOSITORY
+Repository: /Users/elshanmagsudov/upful-ios
+Analysis Date: 2026-02-11
+================================================================================
+
+TABLE OF CONTENTS
+-----------------
+1. Repository Overview
+2. Branch-by-Branch Analysis
+   2.1 origin/prod (default branch)
+   2.2 origin/develop
+   2.3 origin/feature-share-deeplinking
+   2.4 origin/feature/historical-performance
+   2.5 origin/feature/pastPrices
+   2.6 origin/claude/rebuild-nextjs-mobile-first-5WiKP
+   2.7 origin/claude/upful-web-only-5WiKP
+3. Cross-Branch Comparison Matrix
+4. Stale Branch Assessment
+5. Web Version Analysis
+6. Feature Alignment with Jyanik Vision
+7. Recommendations
+
+================================================================================
+1. REPOSITORY OVERVIEW
+================================================================================
+
+Total branches: 7 (1 local: prod, 7 remote)
+Contributors: 4 (Yanik Simpson, Yanik, Elshan Magsudov, Claude)
+Repository age: Active iOS development from ~2019 to late 2020 (Yanik),
+                then sporadic updates through 2022 (Elshan),
+                then web rebuild attempts in January 2026 (Claude).
+
+The repository primarily contains a native iOS stock portfolio tracking app
+called "Upful" built in Swift with UIKit. Two recent branches contain
+Next.js web app implementations created by Claude AI.
+
+================================================================================
+2. BRANCH-BY-BRANCH ANALYSIS
+================================================================================
+
+--------------------------------------------------------------------------------
+2.1 BRANCH: origin/prod (DEFAULT / CURRENT)
+--------------------------------------------------------------------------------
+
+Technology/Platform: iOS (Swift, UIKit)
+Last Commit Date:   2022-12-20 01:14:10 -0500
+Last Commit Author: Elshan Magsudov
+Status:             Default branch, most recent iOS release
+
+Recent Commits (20):
+  4a3c7c1f Update SuggestionFeedViewController.swift
+  3c5409cf Update SettingsViewController.swift
+  55512a1b Merge pull request #5 from syanik94/feature-share-deeplinking
+  d2fed8a8 Trigger analytics event based on build configuration
+  f7f93e47 Merge pull request #3 from syanik94/feature-share-deeplinking
+  e15fd82c dependency updates
+  d4082b30 add release and debug build phases for analytics
+  888d494f feature reset for 4.7.9 release
+  050ef4b5 initial attempt without Firebase deeplink
+  a1d1b113 remove server sync background task
+  9de6502c update
+  f9b032d0 Product page fix
+  6038aff1 Subscription View updates...
+  299506eb More fixes
+  9d28edf5 4.7.8 release
+  1eb773e4 Bug fixes related to iOS 14 new tableView layout
+  17671e14 Update pricing view model (no free trial text)
+  58d824c9 Release for 4.7.6 (02)
+  b932aa69 4.7.6 Release
+  9adbde8d Handle transaction empty state
+
+Summary:
+  This is the main production branch containing the full iOS app at version
+  ~4.7.9. Elshan's last commits (Dec 2022) updated the support email from
+  simpsony94@gmail.com to elio@jyanik.com in SettingsViewController and
+  SuggestionFeedViewController, indicating a branding/ownership transition
+  from Yanik to the Jyanik entity.
+
+Key Features in Prod:
+  - Stock portfolio tracking with holdings management
+  - Trading engine with buy/sell transactions
+  - Pie chart asset allocation view
+  - Stock suggestions/recommendations feed
+  - Subscription/IAP (In-App Purchase) system
+  - Firebase analytics and deep linking
+  - MixPanel analytics (conditional on build config)
+  - Settings with mail compose for support
+  - Intrinio API integration for stock data
+  - Core Data persistence for transactions
+  - Stock split handling
+  - User profile sync via Firebase Firestore
+
+--------------------------------------------------------------------------------
+2.2 BRANCH: origin/develop
+--------------------------------------------------------------------------------
+
+Technology/Platform: iOS (Swift, UIKit)
+Last Commit Date:   2020-11-03 09:58:14 -0500
+Last Commit Author: Yanik Simpson
+Commits ahead of prod: 1
+Commits behind prod:   5
+
+Unique commits not in prod:
+  cc292fed Merge pull request #4 from syanik94/feature-share-deeplinking
+
+Diff vs prod (summary):
+  3991 files changed, 26 insertions(+), 1,008,158 deletions(-)
+  NOTE: The massive deletions are mostly duplicate Pod files (BoringSSL-GRPC
+  duplicates with " 3" suffix, and build cache files). The actual app code
+  differences are minimal.
+
+Actual Swift Code Differences:
+  - SettingsViewController.swift: Email set to simpsony94@gmail.com (prod has
+    elio@jyanik.com) -- indicates develop predates Elshan's ownership update
+  - SuggestionFeedViewController.swift: Same email difference
+  - IAPService.swift: Minor whitespace/comment formatting
+  - Constants.swift: MixPanel token is unconditional (prod has #if RELEASE guard)
+
+Summary:
+  The develop branch is essentially a slightly older version of prod, missing
+  the last 5 commits (Elshan's email updates, merge of PR #5, and the
+  SuggestionFeed/Settings updates). It has one unique commit: Merge PR #4
+  (an earlier merge of the share-deeplinking feature). The large file count
+  difference is from duplicate Pod cache files, not meaningful code changes.
+
+Features NOT in prod: None (develop is behind prod)
+
+Should be preserved: NO -- develop is stale and behind prod.
+
+--------------------------------------------------------------------------------
+2.3 BRANCH: origin/feature-share-deeplinking
+--------------------------------------------------------------------------------
+
+Technology/Platform: iOS (Swift, UIKit)
+Last Commit Date:   2020-11-04 19:04:32 -0500
+Last Commit Author: Yanik
+Commits ahead of prod: 0
+Commits behind prod:   4
+
+Unique commits not in prod: NONE (all commits already merged)
+
+Diff vs prod (2 files, 2 insertions, 2 deletions):
+  - SettingsViewController.swift: email is simpsony94@gmail.com vs elio@jyanik.com
+  - SuggestionFeedViewController.swift: same email difference
+
+Summary:
+  This feature branch implemented share/deep linking functionality using
+  Firebase Dynamic Links. The feature was FULLY MERGED into prod via PR #5.
+  The only remaining diff is the email address change that happened after
+  the merge. This branch has zero unique code.
+
+Features NOT in prod: None (fully merged)
+
+Should be preserved: NO -- fully merged, stale for 5+ years.
+
+--------------------------------------------------------------------------------
+2.4 BRANCH: origin/feature/historical-performance
+--------------------------------------------------------------------------------
+
+Technology/Platform: iOS (Swift, UIKit)
+Last Commit Date:   2020-09-19 18:41:35 -0500
+Last Commit Author: Yanik
+Commits ahead of prod: 0
+Commits behind prod:   36
+
+Unique commits not in prod: NONE
+  The merge-base with prod is 1ec1cd2b (the tip of this branch), meaning
+  prod has 36 MORE commits on top of what this branch has. All of this
+  branch's commits are already ancestors of prod.
+
+Diff vs prod (8339 files, massive):
+  This branch is 36 commits BEHIND prod. The diff is primarily showing
+  what prod added after this branch diverged, not new features here.
+
+Key Code Present (but also in prod):
+  - HomeGeneralLogicController.swift with HomePerformanceViewModel integration
+  - PerformanceCell and ViewModel within HomeViewController
+  - Completion handler patterns for async trading engine operations
+  - Core Data thread safety fixes (managedObjectContext on designated thread)
+  - Load completion handlers collection pattern
+  - Pie chart view model creation in home feed logic controller
+  - TableView performance improvements (estimated row heights)
+  - Holdings sorted in reverse order
+
+Summary:
+  This branch represents an OLDER state of the codebase during the 4.7.5
+  release cycle. It focused on:
+  1. Historical performance display on the home screen
+  2. Core Data thread safety improvements
+  3. TableView performance optimizations
+  4. Completion handler architecture for async operations
+
+  However, ALL of these commits are already in prod (this branch was merged
+  or its changes were incorporated). The branch is 36 commits behind prod.
+
+Features NOT in prod: None
+
+Useful Code Patterns Worth Noting:
+  - Handler<T> pattern for completion callbacks
+  - HomePerformanceViewModel with time range selections (1W, 1M, 3M, 6M, YTD, 1Y, ALL)
+  - DayPerformanceResponse model for end-of-day portfolio values
+  - This PerformanceViewModel pattern is relevant for the new rebuild
+
+Should be preserved: NO -- all code is in prod, branch is 36 commits behind.
+
+--------------------------------------------------------------------------------
+2.5 BRANCH: origin/feature/pastPrices
+--------------------------------------------------------------------------------
+
+Technology/Platform: iOS (Swift, UIKit)
+Last Commit Date:   2020-12-05 17:25:00 -0500
+Last Commit Author: Yanik
+Commits ahead of prod: 3
+Commits behind prod:   2
+
+Unique commits not in prod:
+  3466573e bug for for transaction trade manager load completion
+  3ebffb53 fix for loading and fetching previous transactions
+  405b66b8 create view model for homescreen historc data fetching and configuration
+
+Key Files Modified (25 Swift files):
+  - LedgerManager.swift: Changed from backgroundContext to managedObjectContext,
+    updated save/delete completion handlers to return Error
+  - LocalTransactionLedgerLoader.swift: Same context change
+  - TransactionLedgerPersistence.swift: Updated to use error-returning completions,
+    context.saveOrRollBackIfNeeded(completion:) pattern
+  - LocalTransactionLogger.swift: Updated completion handler signatures
+  - TransactionLogger.swift protocol: Updated signature
+  - RemoteTransactionLogger.swift: Added proper error forwarding
+  - TransactionLoggingManager.swift: Updated completion signatures
+  - TradingEngine.swift: Updated to work with new completion patterns
+  - TransactionContainerManager.swift: Context management changes
+  - CoreDataModelContainerManager.swift: Updated protocol
+  - HomeGeneralViewController.swift: Integration of past prices
+  - HomeGeneralLogicController.swift: Historical data fetching
+  - HomePerformanceViewModel.swift: NEW -- ViewModel for historical
+    performance data with time range selection (1W, 1M, 3M, 6M, YTD, 1Y, ALL)
+
+New Files Added:
+  - HomePerformanceViewModel.swift (performance time range selection model)
+  - StockSplit 2.swift (duplicate, likely accidental)
+  - TransactionHistoryViewController 2.swift (duplicate)
+  - DragController 3.swift, DragView 3.swift (duplicates)
+  - StockEngagementRecorder 2.swift (duplicate)
+  - UpfulDeepLinkManager 2.swift (duplicate)
+
+Summary:
+  This branch has 3 UNIQUE commits not in prod that implement:
+  1. HomePerformanceViewModel for historical portfolio performance display
+  2. Refactored Core Data completion handlers to properly return errors
+  3. Bug fixes for transaction trade manager load completion
+  4. Loading and fetching previous transaction history
+
+  The branch also contains several duplicate files (with " 2" and " 3"
+  suffixes) which are likely git merge artifacts.
+
+  IMPORTANT: This is the ONLY iOS feature branch with unique unmerged code.
+
+Features NOT in prod:
+  - HomePerformanceViewModel with time range selection for historical data
+  - Improved error handling in Core Data persistence layer
+  - Past transaction price fetching and display
+  - Historical portfolio value tracking
+
+Useful Code Patterns:
+  - HomePerformanceViewModel.Selection enum with time ranges and step values
+  - DayPerformanceResponse struct for EOD portfolio values
+  - Error-returning completion handler pattern throughout persistence layer
+  - The saveOrRollBackIfNeeded(completion:) pattern
+
+Should be preserved: PARTIALLY -- The HomePerformanceViewModel concept and
+  error handling patterns are valuable for the rebuild. The actual Swift code
+  will not be reused (rebuilding in web tech) but the DESIGN PATTERNS and
+  DATA MODELS should inform the new implementation.
+
+--------------------------------------------------------------------------------
+2.6 BRANCH: origin/claude/rebuild-nextjs-mobile-first-5WiKP
+--------------------------------------------------------------------------------
+
+Technology/Platform: Web (Next.js 16.1.4, React 19, TypeScript, Tailwind CSS 4)
+Last Commit Date:   2026-01-21 22:11:56 +0000
+Last Commit Author: Claude (AI-generated)
+Commits ahead of prod: 1
+Commits behind prod:   0
+
+Unique commit:
+  85409262 Add Next.js web app with mobile-first UI/UX
+
+Structure: All web code lives in upful-web/ subdirectory (coexists with iOS code)
+Total new files: 39 files, 10,658 lines added
+
+Tech Stack:
+  - Next.js 16.1.4 (App Router)
+  - React 19.2.3
+  - TypeScript 5
+  - Tailwind CSS 4 (with @tailwindcss/postcss)
+  - Zustand 5.0.10 (state management)
+  - Framer Motion 12.28.1 (animations)
+  - Recharts 3.7.0 (charts)
+  - Lucide React 0.562.0 (icons)
+  - date-fns 4.1.0
+  - clsx + tailwind-merge (utility classes)
+
+Pages/Routes:
+  /                    - Home (portfolio summary, holdings, allocation, recommended, activity, news)
+  /explore             - Stock exploration with search, filters, sectors, screeners
+  /saved               - Watchlist and saved screeners with tabs
+  /settings            - User preferences, appearance, notifications
+  /stock/[ticker]      - Stock detail with charts, stats, trade modal, news
+
+Components:
+  Cards: HoldingCard, NewsCard, StockCard, TransactionCard
+  Charts: PortfolioChart (donut + allocation list), StockChart
+  Layout: BottomNav (mobile tab bar), Header
+  UI: Badge, Button, Card, Input, Tabs
+
+State Management (Zustand store):
+  - Portfolio: holdings, cashBalance, transactions
+  - Watchlist: watchlist items, saved screeners
+  - UI: isLoading, searchQuery
+  - Actions: trade execution, watchlist management, screener management
+  - Computed: usePortfolioValue() hook for portfolio calculations
+
+Type System (TypeScript):
+  - Stock, Holding, Transaction, Portfolio interfaces
+  - WatchlistItem, SavedScreener, ScreenerFilters
+  - ChartDataPoint, NewsArticle, UserPreferences
+  - TimeRange type ('1D' | '1W' | '1M' | '3M' | '1Y' | '5Y' | 'ALL')
+
+Data: Uses mock data only (no real API integration)
+
+PWA Support:
+  - manifest.json with standalone display mode
+  - Apple web app meta tags
+  - Portrait orientation
+  - Theme color: indigo (#6366f1)
+
+Design:
+  - Mobile-first responsive layout
+  - Dark mode support via CSS prefers-color-scheme
+  - Bottom navigation bar (iOS-style tab bar pattern)
+  - Indigo/purple gradient theme
+  - Framer Motion page transitions and micro-animations
+  - Safe area bottom padding for notched devices
+
+Key Observations:
+  - This is a COMPLETE mobile-first web app prototype
+  - All data is mocked (no backend/API)
+  - The UI closely mirrors the iOS app's feature set
+  - Good component architecture with separation of concerns
+  - Professional-quality TypeScript types
+  - State management is well-structured with Zustand
+  - The app is essentially a web-based clone of the iOS app features
+
+Should be preserved: YES -- This is the most valuable branch for the rebuild.
+  The component architecture, TypeScript types, state management patterns,
+  and UI structure provide an excellent starting point. However:
+  - Mock data needs to be replaced with real API integration
+  - Additional features from the Jyanik vision need to be added
+  - The branding needs updating (still says "Upful")
+  - No authentication or user management
+  - No real-time data streaming
+  - No backend services
+
+--------------------------------------------------------------------------------
+2.7 BRANCH: origin/claude/upful-web-only-5WiKP
+--------------------------------------------------------------------------------
+
+Technology/Platform: Web (Next.js 16.1.4, React 19, TypeScript, Tailwind CSS 4)
+Last Commit Date:   2026-01-22 00:20:32 +0000
+Last Commit Author: Claude (AI-generated)
+Commits ahead of prod: 1
+Commits behind prod:   581
+
+Unique commit:
+  997039e4 Initial commit: Upful stock portfolio tracker
+
+Structure: Web code at the ROOT level (replaces iOS code entirely)
+  IMPORTANT: This branch has DELETED all iOS source code and replaced
+  the entire repository with just the Next.js web app.
+
+Diff vs prod: 8579 files changed, 10,658 insertions(+), 2,076,179 deletions(-)
+  The massive deletions are the entire iOS codebase being removed.
+
+Tech Stack: IDENTICAL to rebuild-nextjs-mobile-first branch
+  - Same package.json, same dependencies, same versions
+
+Code Content: IDENTICAL web app code as rebuild-nextjs-mobile-first
+  The exact same 29 source files with identical content, just placed at
+  the root level instead of in upful-web/ subdirectory.
+
+Pages/Components: Same as section 2.6 above
+
+Key Difference from rebuild-nextjs-mobile-first:
+  - rebuild-nextjs puts web code in upful-web/ (PRESERVES iOS code)
+  - upful-web-only puts web code at root (DESTROYS iOS code)
+  - The web application code itself is identical
+
+Should be preserved: NO -- This is a destructive version of the same code
+  in rebuild-nextjs-mobile-first. It deletes all iOS history. The non-
+  destructive version (2.6) is preferable as a reference.
+
+
+================================================================================
+3. CROSS-BRANCH COMPARISON MATRIX
+================================================================================
+
+Branch                              | Platform | Last Active  | Ahead | Behind | Unique Code | Status
+------------------------------------|----------|--------------|-------|--------|-------------|--------
+origin/prod                         | iOS      | 2022-12-20   | --    | --     | Baseline    | Active (default)
+origin/develop                      | iOS      | 2020-11-03   | 1     | 5      | None        | STALE
+origin/feature-share-deeplinking    | iOS      | 2020-11-04   | 0     | 4      | None        | STALE (merged)
+origin/feature/historical-performance| iOS     | 2020-09-19   | 0     | 36     | None        | STALE (merged)
+origin/feature/pastPrices           | iOS      | 2020-12-05   | 3     | 2      | YES (3 commits) | STALE (unmerged)
+origin/claude/rebuild-nextjs-mobile | Web      | 2026-01-21   | 1     | 0      | YES (full app) | RECENT
+origin/claude/upful-web-only        | Web      | 2026-01-22   | 1     | 581    | Same as above  | RECENT (destructive)
+
+
+================================================================================
+4. STALE BRANCH ASSESSMENT
+================================================================================
+
+Branches Recommended for Deletion:
+-------------------------------------
+
+1. origin/develop
+   Reason: 5+ years stale, 5 commits behind prod, 0 unique features.
+   Only unique commit is a merge commit for an already-merged feature.
+   Risk of deletion: NONE
+
+2. origin/feature-share-deeplinking
+   Reason: 5+ years stale, fully merged into prod via PR #5. Zero unique
+   code remains. The feature (Firebase deep linking) is in prod.
+   Risk of deletion: NONE
+
+3. origin/feature/historical-performance
+   Reason: 5+ years stale, 36 commits behind prod, zero unique commits.
+   All code is already in prod as an ancestor.
+   Risk of deletion: NONE
+
+4. origin/claude/upful-web-only-5WiKP
+   Reason: Destructive branch that deletes all iOS code. Contains identical
+   web code to rebuild-nextjs-mobile-first. No unique value.
+   Risk of deletion: NONE (rebuild-nextjs has same code preserved safely)
+
+Branches to Keep:
+-------------------------------------
+
+1. origin/prod -- Obviously keep (default branch)
+
+2. origin/feature/pastPrices -- KEEP FOR REFERENCE
+   Has 3 unmerged commits with useful patterns:
+   - HomePerformanceViewModel design for historical portfolio data
+   - Improved error handling in Core Data persistence
+   - Past transaction price fetching logic
+   While this Swift code won't be used directly in the rebuild, the
+   DESIGN PATTERNS are valuable reference material.
+
+3. origin/claude/rebuild-nextjs-mobile-first-5WiKP -- KEEP
+   Contains the complete Next.js web prototype. This is the most relevant
+   branch for the new Jyanik rebuild effort.
+
+
+================================================================================
+5. WEB VERSION ANALYSIS
+================================================================================
+
+YES -- There IS an existing web version of the app, found in two branches:
+
+Primary: origin/claude/rebuild-nextjs-mobile-first-5WiKP
+  Location: /upful-web/ subdirectory (coexists with iOS code)
+  Status: Complete prototype with mock data
+  Created: January 21, 2026 by Claude AI
+
+Secondary: origin/claude/upful-web-only-5WiKP
+  Location: Root level (iOS code deleted)
+  Status: Identical code, destructive approach
+  Created: January 22, 2026 by Claude AI
+
+Web App Feature Inventory:
+  [x] Portfolio summary dashboard
+  [x] Holdings list with gain/loss display
+  [x] Asset allocation pie chart
+  [x] Stock exploration/search
+  [x] Sector-based filtering
+  [x] Stock detail pages with charts
+  [x] Buy/sell trade execution (mock)
+  [x] Watchlist management
+  [x] Saved screeners
+  [x] Transaction history
+  [x] Market news feed
+  [x] Settings page (appearance, preferences)
+  [x] Dark mode support
+  [x] Mobile-responsive bottom navigation
+  [x] PWA manifest (installable)
+  [x] Framer Motion animations
+
+  [ ] Real API integration (uses mock data)
+  [ ] User authentication
+  [ ] Real-time price streaming
+  [ ] Backend/database
+  [ ] Push notifications
+  [ ] Social features
+  [ ] AI-powered insights
+  [ ] Options trading
+  [ ] Crypto support
+
+Web App Architecture Assessment:
+  Strengths:
+  - Clean component architecture
+  - Comprehensive TypeScript types
+  - Well-structured Zustand state management
+  - Mobile-first responsive design
+  - Modern tech stack (Next.js 16, React 19, TW4)
+  - Good separation of concerns
+  - PWA-ready with manifest
+
+  Weaknesses:
+  - 100% mock data, no real backend
+  - No authentication system
+  - No error handling for network requests
+  - No loading states for real data
+  - No caching strategy
+  - No testing
+  - Branding still says "Upful" not "Jyanik"
+  - Simple Recharts implementation (not production-grade financial charts)
+
+
+================================================================================
+6. FEATURE ALIGNMENT WITH JYANIK VISION
+================================================================================
+
+Based on the existing codebase across all branches, here is how existing
+features align with a potential Jyanik rebuild:
+
+FEATURES THAT CAN BE DIRECTLY LEVERAGED:
+-----------------------------------------
+1. Portfolio Dashboard Structure (from web prototype)
+   - The home page layout with portfolio value, daily change, holdings
+   - Asset allocation visualization
+   - Quick action buttons
+
+2. Stock Detail Page (from web prototype)
+   - Price display with change indicators
+   - Chart with time range selection
+   - Key statistics display
+   - Buy/sell trade modal
+
+3. TypeScript Type System (from web prototype)
+   - Stock, Holding, Transaction, Portfolio interfaces
+   - These types closely mirror the iOS models and can be extended
+
+4. State Management Pattern (from web prototype)
+   - Zustand store with computed portfolio values
+   - Trade execution logic
+   - Watchlist management
+
+5. Time Range Selection Pattern (from iOS pastPrices branch)
+   - HomePerformanceViewModel.Selection enum (1W, 1M, 3M, 6M, YTD, 1Y, ALL)
+   - Step-based data point reduction for different ranges
+   - DayPerformanceResponse model for historical portfolio values
+
+6. Trading Engine Concepts (from iOS codebase)
+   - Transaction ledger with persistence
+   - Transaction logging (local + remote)
+   - Balance management (cash + equity)
+   - Stock split handling
+
+FEATURES FROM iOS THAT NEED WEB EQUIVALENTS:
+---------------------------------------------
+1. Intrinio API integration for real stock data
+   - iOS code has IntrinioService for prices, fundamentals
+   - Need web equivalent (likely a different API like Alpha Vantage,
+     Polygon, or Financial Modeling Prep)
+
+2. Firebase Integration
+   - iOS uses Firebase for: analytics, deep linking, Firestore (user profiles)
+   - Web rebuild may use different services or Firebase Web SDK
+
+3. IAP/Subscription System
+   - iOS has StoreKit-based IAP with premium features
+   - Web needs Stripe or similar payment processor
+
+4. Push Notifications
+   - iOS has APNs-based notifications
+   - Web needs Web Push API or service worker notifications
+
+5. Stock Suggestions/Recommendations
+   - iOS has SuggestionFeedViewController with stock recommendations
+   - Web prototype has basic "Recommended" section but no algorithm
+
+COMPLETELY NEW FEATURES NEEDED FOR JYANIK:
+--------------------------------------------
+1. User authentication and account management
+2. Real-time data streaming (WebSocket for live prices)
+3. AI-powered insights and analysis
+4. Social features (sharing, following)
+5. Advanced charting (candlestick, technical indicators)
+6. Options and derivatives support
+7. Crypto portfolio tracking
+8. Tax lot tracking and reporting
+9. Performance analytics and benchmarking
+10. News aggregation with sentiment analysis
+
+
+================================================================================
+7. RECOMMENDATIONS
+================================================================================
+
+IMMEDIATE ACTIONS:
+------------------
+1. DELETE stale branches:
+   - origin/develop (5+ years old, behind prod, no unique code)
+   - origin/feature-share-deeplinking (fully merged, no unique code)
+   - origin/feature/historical-performance (all in prod, 36 behind)
+   - origin/claude/upful-web-only-5WiKP (destructive copy, no unique value)
+
+2. KEEP for reference:
+   - origin/prod (iOS baseline)
+   - origin/feature/pastPrices (unmerged historical performance patterns)
+   - origin/claude/rebuild-nextjs-mobile-first-5WiKP (web prototype)
+
+FOR THE JYANIK REBUILD:
+-----------------------
+3. USE the web prototype from rebuild-nextjs-mobile-first as a STARTING POINT:
+   - The component architecture is solid
+   - The TypeScript types are comprehensive
+   - The Zustand state management is well-structured
+   - BUT: needs real API integration, auth, and branding updates
+
+4. REFERENCE the iOS codebase for business logic:
+   - Trading engine patterns (buy/sell/split handling)
+   - Portfolio calculation logic
+   - Historical performance data modeling (from pastPrices branch)
+   - Stock screening and filtering algorithms
+
+5. REFERENCE the pastPrices branch specifically for:
+   - HomePerformanceViewModel design (time range enum with day counts)
+   - Error-returning completion handler pattern (translate to async/await)
+   - DayPerformanceResponse model (translate to TypeScript)
+
+CODE PATTERNS WORTH PRESERVING:
+-------------------------------
+From iOS (translate to TypeScript/React):
+  - TradingEngine singleton with balance management
+  - Transaction ledger with local + remote sync
+  - Stock split adjustment calculations
+  - Preference-based stock screening
+  - Pie chart allocation calculation logic
+
+From Web Prototype (keep and extend):
+  - Zustand store pattern with computed hooks
+  - cn() utility for conditional Tailwind classes
+  - Format utilities (currency, percent, compact numbers)
+  - Mobile-first bottom navigation pattern
+  - Card/Badge/Button component variants
+  - Framer Motion animation patterns
+
+================================================================================
+END OF ANALYSIS
+================================================================================

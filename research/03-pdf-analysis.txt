@@ -1,0 +1,736 @@
+
+
+Here is the complete, detailed extraction of all content from both documents.
+
+---
+
+## DOCUMENT 1: UPFUL FEATURES GUIDE
+
+**File:** `/Users/elshanmagsudov/upful-ios/design/Upful Features Guide.pdf`
+**Pages:** 4 pages
+**Nature:** A detailed product specification and UI mockup guide for the Upful app's feature set
+
+---
+
+### Feature 1: User Registration / Onboarding
+
+**Required fields:**
+- Username
+- Profile Picture
+- PayPal email (for prize payouts)
+- Password (account security)
+
+**Tier selection at signup:**
+- Free version: Does not allow monthly payouts
+- Paid version: $6.99/month subscription
+
+**Payout structure:** All payouts are monthly. They are an aggregate of the user's daily positions, weekly positions, and monthly positions.
+
+**Subscription prompt:** If the user selects the subscription, a "Thank You for Subscribing, we wish you happy trading" confirmation screen appears. Subscribing also gives the user a chance to win $100 every month. If the user selects the free version, they go directly to the home page (portfolio view).
+
+**Mockup details (Registration screen):**
+- Header: "Subscribe & win"
+- Subtext: "Subscribed now and get a chance to win $100 every month"
+- Thumbs-up emoji icon
+- Fields: Username (example: "johndoe"), PayPal email (example: "johndoe@gmail.com")
+- Checkbox: "I have read and agree to the T&Cs and Privacy Policy"
+- Green "Submit" button
+
+---
+
+### Feature 2: Home Page / Portfolio View
+
+**This is the main screen after login. Displays:**
+- TOTAL BALANCE (example: $26,134.8)
+- Dollar change and percentage change (example: $1,134.8 / +4.539%)
+- Last Updated timestamp (example: Feb 7, 11:01 PM EST)
+- CASH BALANCE (example: $10,726.2)
+
+**Holdings section showing individual stocks:**
+- Stock ticker, share count, current price, cost basis price, percentage gain/loss, dollar gain/loss
+- Example holdings:
+  - NIO: 150 shares, $56.67, cost $53.24, +6.44%, +$514.50
+  - TSLA: 5 shares, $852.23, cost $729.91, +16.82%, +$613.60
+  - AAPL: 10 shares, $136.76, cost $136.76, 0.00%, $0.00
+  - IDCC: 10 shares, $65.91, cost $60.68, +8.62%, +$52.30
+  - BLFS: 15 shares, $41.35, cost $39.89, +3.66%, +$21.90
+
+- "See History" link
+- "Equity Breakdown" section (pie chart)
+- Green "+" button (for adding trades)
+
+**Bottom navigation bar (5 tabs):**
+- Home (house icon)
+- Search (magnifying glass)
+- Favorites/Watchlist (heart icon)
+- Leaderboard (bar chart icon)
+- Profile/Settings (person icon)
+
+---
+
+### Feature 3: Leaderboard
+
+**Access:** Both FREE and PAID users can view the leaderboard.
+
+**Privacy:** Users cannot see each other's exact portfolio holdings -- only percentage growth from the initial $25,000 and total portfolio value.
+
+**Displayed information per user:**
+- Username
+- Profile picture
+- Position/rank number
+- Percentage growth (e.g., +09%)
+- Current portfolio value
+- Prize amount (displayed next to top winners, e.g., $100, $75, $50)
+
+**Time filters:** Daily, Weekly, Monthly, Quarterly (3 months), and 6 months. Top 100 users shown for each timeframe.
+
+**Line graph:** Reflects the user's portfolio percentage fluctuation over time.
+
+**Two tabs on the leaderboard:**
+- "Subscribed" tab: Shows all paying subscribers ranked
+- "Free" tab: Shows only free users ranked
+
+**Free user feature:** The Free tab displays a special feature showing how much a free user COULD have made if they had paid for the subscription. It mirrors the subscribed leaderboard structure but only includes free users and shows what their payout would have been (a conversion/upsell mechanism).
+
+**Mockup details (Leaderboard screen):**
+- Header: "Leaderboard"
+- Top user shown: Nina Ho., +2,980, $20,635, +09%
+- "Your Position: 26"
+- Ranked list: Mitchell Henry ($20,635, $100 prize), Eleanor Pena ($19,412, $75 prize), Cameron Williamson ($16,832, $50 prize), Kathryn Murphy ($15,739), Bessie Cooper ($12,528), Brooklyn Simmons ($11,528)
+
+---
+
+### Feature 4: My History (Position History)
+
+**Access:** Top right corner filter with two options: "Leaderboard" and "My History"
+- "Leaderboard" displays Feature 3
+- "My History" displays the user's historic record of positions in each competition
+
+**Time filters:** Daily, Weekly, Monthly, Quarterly, and 6-month standings
+
+**Displayed metrics (same as leaderboard but for that individual user):**
+- Percentage growth
+- Portfolio value
+- Position/rank for each day
+
+**Date format:** Uses recorded calendar dates (e.g., "Jan 12, 2021" and "Feb 20, 2021") instead of day names like "Monday, Tuesday" for better trackability.
+
+**Two sub-tabs:** Free and Subscribed
+
+**Mockup details (My History screen):**
+- Header: "My History"
+- Top: Nina Ho., +2,960, $20,635, +09%
+- Your Position: 26
+- Daily entries showing: Day name, Your Position number, percentage change, dollar value
+  - Monday: Position 19, +09%, $231
+  - Tuesday: Position 26, -7%, $231
+  - Wednesday: Position 17, +7%, $331
+  - Thursday: Position 13, +7%, $231
+  - Friday: Position 17, -7%, $331
+  - Saturday: Position 15, +7%, $237
+
+---
+
+### Feature 5: Updated Home Page
+
+**Changes from original home page:**
+- Current monthly position displayed (shown in red marker on mockup, example: position #26)
+- Messages icon added to top right corner (green marker)
+- Notifications icon added to top right corner (green marker)
+- Notification badge: Orange mark to notify user of positions in daily, weekly, and monthly competitions
+
+**Retained elements:**
+- Total Balance, percentage growth, dollar growth
+- Cash Balance
+- Holdings list with all stock details
+- Equity Breakdown
+- "Last Updated" timestamp (already in current app)
+
+**Availability:** Both free and paid versions display current standings.
+
+---
+
+### Feature 6: Notifications Page
+
+**Access:** From the home tab, top right corner (green marker in Feature 5)
+
+**Displays:** Current payouts for every competition the user participates in.
+
+**Time filters:** Day, Week, Month, 3 months, 6 months
+
+**Aggregated payout view:** Shows everything that will be paid for the current month, including all daily and weekly competition winnings aggregated together.
+
+**Important note:** 3-month and 6-month payouts will NOT be available at initial launch.
+
+**Free user version:** Instead of showing actual payouts, displays "What you missed out on" -- showing how much the free user could have won if they had subscribed. This serves as an upsell mechanism.
+
+**Mockup details (Notifications screen):**
+- Header: "Notifications"
+- "Today" section:
+  - "You won $100 for making most profit in Feb" (+$100)
+- "Last week" section:
+  - "Selected for withdrawal 21/02/2023" (-$100)
+  - "You won $100 for making most profit in Feb" (+$100)
+- "Total" section with time filters (Day, Week, Month, 3 months, 6 months):
+  - Multiple entries showing withdrawals (-$100) and winnings (+$100)
+
+---
+
+### Feature 7: Chat / Social Hub (Premium Only)
+
+**Access:** From home page, top right corner (green marker on Feature 5)
+
+**Availability:** PAID SUBSCRIBERS ONLY -- this is a premium feature.
+
+**Functionality:**
+- Group conversation with ALL traders on the platform
+- Text messages and photo attachments supported
+- Chat history available dating back 3 months
+
+**Ticker-based filtering:**
+- Users reference ticker symbols (e.g., AAPL) in their messages
+- Filter in top right corner allows filtering conversations by ticker symbol
+- The system uses ticker symbols mentioned in chat as filter tags
+
+**Mockup details (Chat screen):**
+- Header: "Chat" with ticker "AAPL" shown in top right
+- Multiple chat bubbles with user messages
+- Stock chart/data visible in conversation
+- Bottom: "Type message here" input field with attachment (paperclip) and send buttons
+
+---
+
+### Feature 8: Monthly Competition Reset
+
+**Reset mechanics:**
+- Competition resets at the end of each month
+- User carries over their current funds (dollar amount)
+- Portfolio percentage growth resets to 0%
+- User chooses between two options:
+  1. **"Build New Portfolio"** -- Start fresh with $25,000 regardless of prior month's portfolio value
+  2. **"Keep Old Portfolio"** (note: mockup incorrectly says "Keep Old Ratios" -- document specifies it should be "Keep Old Portfolio")
+
+**Mockup details (Reset screen):**
+- "You Received $25,000"
+- "New month starts with 25K virtual money."
+- "Do you want to build a new portfolio or want to keep stocks in your current ratios."
+- Note: "If you lost all 25K within month (any day between start and end of the month) you can purchase another 25K for $1.5"
+- Two green buttons: "Build New Portfolio" and "Keep Old Ratios" (should be "Keep Old Portfolio")
+- "See Leaderboard" link at bottom
+
+---
+
+### Feature 9: Out of Budget / Buy More Cash
+
+**Trigger:** When user's portfolio value drops below $10,000.00
+
+**Feature:** Option to purchase additional $25,000 in virtual cash
+
+**Price:** $2.99 (one-time in-app purchase)
+
+**Mockup details (Out of Budget screen):**
+- "You are now Out of budget"
+- "You have used all your $25k in investing."
+- "Do you want to buy it again and use it for your future trades?"
+- "In Just $2.99 only"
+- Green "Buy $25K Now" button
+- "Equity Breakdown" section below
+
+---
+
+### Feature 10: Payment for Virtual Cash Purchase
+
+**Payment methods:**
+- Credit/Debit card via direct entry (Card Number, MM/YY, CVV)
+- Green "Pay Now" button
+- Alternative payment methods: Apple Pay, Google Pay, and one other method shown
+
+**Mockup details (Buy $25K screen):**
+- Header: "Buy $25K"
+- "Via Card" section
+- Card Number field
+- MM/YY and CVV fields
+- "Pay Now" button
+- "Or" separator
+- Three alternative payment method icons
+
+---
+
+### Technical Requirements Extracted from Features Guide
+
+1. **APIs needed:** Real-time stock market data (iEXTrading and Intrinio mentioned in pitch deck)
+2. **Payment integration:** PayPal (for payouts), Stripe (mentioned in pitch deck for transfers), Apple Pay/Google Pay (for in-app purchases), credit card processing
+3. **User authentication:** Username/password system
+4. **Data tracking:** Daily position tracking, portfolio value calculations, percentage growth calculations
+5. **Starting virtual balance:** $25,000 per user
+6. **Leaderboard system:** Top 100 users across 5 time periods
+7. **Chat system:** Real-time messaging with ticker-based filtering, photo attachments, 3-month history retention
+8. **Notification system:** Push notifications for competition positions and payouts
+9. **Subscription management:** Free vs. $6.99/month tier
+10. **In-app purchase:** $2.99 for additional $25K virtual cash
+11. **Monthly reset logic:** Automated competition reset with portfolio carry-over or fresh start options
+
+---
+
+---
+
+## DOCUMENT 2: JYANIK PITCH DECK (Feb 1)
+
+**File:** `/Users/elshanmagsudov/upful-ios/design/Jyanik Pitch Deck Feb 1.pdf`
+**Pages:** 18 pages
+**Nature:** Investor pitch deck for Jyanik (the rebranded version of Upful)
+
+---
+
+### Page 1: Title / Cover
+
+- **Brand:** JYANIK
+- **Tagline:** "Learn and compete with virtual money to win real money."
+- Image: Woman using smartphone
+
+---
+
+### Page 2: The Team
+
+**Co-Founders:**
+
+1. **Caelahn Bullen** -- Co-Founder
+   - Cornell University Alum
+   - Management Consultant
+   - Stock trading enthusiast
+
+2. **Laman Mags** -- Co-Founder
+   - Business Analytics Student at University of Calgary (UofC)
+   - Stock trading enthusiast
+
+---
+
+### Page 3: Advisory Board
+
+1. **Elio Mags** -- Advisor
+   - Sales Professional with over 20 years of experience
+   - Seasoned stock trader
+
+2. **Andrii Chaika** -- Advisor
+   - Co-Founder at 4Enjoy
+   - InsurTech platform called GoodSurance
+   - Stock trading enthusiast
+
+3. **Trent Danielson** -- Advisor
+   - Investment Advisor at BMO Nesbitt Burns
+   - Seasoned stock trader
+
+4. **Jade Alberts** -- Advisor
+   - Founder of Peer Guidance
+   - Seasoned stock trader
+
+---
+
+### Page 4: Mission Statement
+
+**Mission:** "Democratization of Wealth Management"
+
+---
+
+### Page 5: The Problem
+
+Three core problems identified:
+
+1. **Youth (ages 18-21) don't learn how to plan and invest wisely** -- Lack of financial education
+2. **Low income is a barrier to entry to invest in the stock market** -- Financial barrier
+3. **Passive income streams are limited** -- Limited wealth-building options
+
+---
+
+### Page 6: The Solution
+
+Three solution pillars:
+
+1. **Real Money Prizes** through virtual daily/weekly/monthly/quarterly competitions
+2. **Skill Development** -- Practice strategies (short-term or long-term) without financial risk
+3. **Mentorship** -- Allow young investors to track successful portfolios and offer 1-on-1 coaching
+
+---
+
+### Page 7: How It Works (User Flow)
+
+10-step user journey:
+
+1. Download Jyanik from App Store
+2. Sign up with $6.99/month subscription fee
+3. Learn with $25,000 virtual cash
+4. Trade (buy and sell stocks)
+5. Track KPIs (key performance indicators)
+6. Enter competition prize pool
+7. Track portfolio growth
+8. Win real prize money if you place in the top 100 in daily, weekly, monthly, and quarterly contests
+9. Directly transferred through Stripe (payment processor)
+10. Start over for new competition of your choosing
+
+**Note:** Quarterly contests will not be applicable to first year operations.
+
+---
+
+### Page 8: How It Works Continued -- Prize Structure
+
+**Detailed prize breakdown table:**
+
+**Daily Prizes:**
+| Place | # of Winners | Prize/Person | Total Prize Money |
+|-------|-------------|-------------|-------------------|
+| 1 | 1 | $5 | $5 |
+| 2 | 1 | $4 | $4 |
+| 3 | 1 | $3 | $3 |
+| 4-100 | 97 | $1 | $97 |
+
+**Weekly Prizes:**
+| Place | # of Winners | Prize/Person | Total Prize Money |
+|-------|-------------|-------------|-------------------|
+| 1 | 1 | $10 | $10 |
+| 2 | 1 | $8 | $8 |
+| 3 | 1 | $5 | $5 |
+| 4-100 | 97 | $2 | $194 |
+
+**Monthly Prizes:**
+| Place | # of Winners | Prize/Person | Total Prize Money |
+|-------|-------------|-------------|-------------------|
+| 1 | 1 | $2,000 | $2,000 |
+| 2 | 1 | $1,500 | $1,500 |
+| 3 | 1 | $1,000 | $1,000 |
+| 4-10 | 6 | $200 | $1,200 |
+| 11-20 | 9 | $150 | $1,350 |
+| 21-50 | 29 | $75 | $2,175 |
+| 51-80 | 29 | $50 | $1,450 |
+| 71-100 | 29 | $10 | $290 |
+
+**Total monthly payout: $15,103**
+
+**3 Current Competition Pools:**
+- Daily: $1-$5 per winner
+- Weekly: $2-$10 per winner
+- Monthly: $10-$2,000 per winner
+
+**Core philosophy (Venn diagram):** Learn, Grow, Win -- three intersecting circles
+
+---
+
+### Page 9: Current Product
+
+**Name:** Upful: Simple Paper Trading
+**Platform:** iOS App Store
+**Features:** $25,000 virtual cash to invest in real-time stocks linked to the current market via iEXTrading and Intrinio APIs
+
+**Five app screens shown:**
+
+1. **Portfolio screen** -- Build your paper trading portfolio
+   - Total Balance: $29,016.46 (+$4,016.46, +15.066%)
+   - Cash Balance: $877.5
+   - Equity Breakdown pie chart (showing holdings like JPR, Cash, GOOGL)
+   - Bottom navigation bar
+
+2. **Explore / Stock Detail screen** -- Experience insightful financial metrics
+   - AAPL (Apple Inc) at $459.63, -0.09%
+   - Stock chart with timeframe selectors (1D, 5D, 1M, 3M, 6M, YTD, 1Y, 5Y)
+   - Financials section with Revenue and Earnings bar chart
+   - Compare and Trade buttons
+
+3. **Compare screen** -- Compare companies based on their financial metrics
+   - Metric selector: "Price to Sales"
+   - Stocks: AAPL, FB listed
+   - Bar chart comparison visualization
+
+4. **Trade screen** -- An intuitive trading experience
+   - Trade GOOGL
+   - "You currently own 17 shares of GOOGL. Your cash balance is $877.5"
+   - Shares input field
+   - Last Price: $1,504.63
+   - Trade Estimate: $3,009.26
+   - Buy and Sell buttons
+   - Numeric keypad
+
+5. **Dark Mode screen** -- Turn off the lights with Dark Mode
+   - Same Explore/AAPL view in dark color scheme
+
+---
+
+### Page 10: Current vs. Future Product (Transformation Roadmap)
+
+Four transformation vectors from "Today" to "Tomorrow":
+
+1. **Game Implementation:**
+   - Today: 3,000 user downloads with no game implemented
+   - Tomorrow: Millions of users competing for cash prizes and learning how to create a valuable portfolio in real trading apps
+
+2. **Data Collection:**
+   - Today: Fully running virtual stock app with linked APIs
+   - Tomorrow: Virtual stock app that assists brokerage firms and independent brokers through machine learning (AI)
+
+3. **Interface Rollout:**
+   - Today: Basic UI with simple trading functions
+   - Tomorrow: Advanced UI that allows users to trade ETFs, Crypto, IPOs, and short trades
+
+4. **Sell Real-Life Portfolios:**
+   - Today: Jyanik traders competing for top performing portfolios
+   - Tomorrow: Offer traders to purchase portfolios curated by the platform's top performers
+
+---
+
+### Page 11: Competitive Landscape
+
+**Competitive Advantages:**
+
+1. Priority on learning with risk-averse virtual money to win REAL money in multi-banded competitions (daily, weekly, monthly, and quarterly)
+2. Social hub implemented in the app to connect beginners to professional 1-on-1 coaching for day trading and position trading
+3. Ability to tap into both the US and Canadian market -- and more
+4. Groups can form for either educational use or create a money pool
+
+**Direct Competition (9 competitors):**
+- eToro
+- 8 (logo -- appears to be a trading platform)
+- Investfly
+- Aluna
+- allofus
+- Robinhood-style app (green icon)
+- Public
+- Vestly
+- bitget
+- CommonStock
+- nextmarkets
+
+**Indirect Competition (7 competitors):**
+- A writing/journaling app (green feather icon)
+- Sentiment Strategies
+- Plus500
+- BUX
+- Coinrule
+- A trading platform (infinity-style logo)
+- tastytrade
+- Another platform (circular logo)
+
+---
+
+### Page 12: Market Metrics -- Target Market: Risk-Averse Populations
+
+**Segment 1: Millennials and Gen-Z**
+- 32% of 18-29 year olds invest in the stock market (US)
+- 170% increase in new investment accounts in Q1 2020
+- 38% of millennials use no-fee trading apps (e.g., Robinhood)
+- +278.1M views on TikTok with the hashtag "#investing"
+
+**Segment 2: Lower Income**
+- 22% of individuals earning less than $40,000/year invest in the stock market (US)
+
+---
+
+### Page 13: Market Metrics -- Cornell E-List Feedback
+
+**Survey of 64 Cornell Entrepreneurs**
+
+**Millennials and Gen-Z finding:**
+- 95.7% of 17-29 year olds at Cornell would partake in this game
+
+**Survey results:**
+- "In Favor to Compete/Learn for $3000? (Ages 17-79)" -- Total Market:
+  - Yes: 78.1%
+  - No: 21.9%
+- "In Favor to Compete/Learn for $3000? (Ages 17-29)" -- Target Market:
+  - Yes: 95.7%
+  - No: 4.3%
+
+**Lower Income finding:**
+- 87% of target market does not trade due to lack of funds but are interested to learn through cash rewards
+
+---
+
+### Page 14: Total Addressable Market (Geographic)
+
+**Total Addressable Market: $1.025 Billion**
+
+**By country:**
+
+1. **USA:**
+   - 37% of those younger than 35 own stocks (2018)
+   - Market Size: 72.8M people
+
+2. **Canada:**
+   - 1 in 10 Canadians feel comfortable investing on their own (Ages 18-44)
+   - Market Size: 1.38M people
+
+3. **UK:**
+   - 20% of UK citizens entered the market in 2020 during COVID
+   - Market Size: 5.36M people
+
+4. **China:**
+   - 12% of China's Gen-Z and Millennial generations are retail investors
+   - Market Size: 67.1M people
+
+5. **Japan:**
+   - 820,000 brokerage accounts opened between Feb-Apr 2020
+   - (Market size not explicitly stated)
+
+---
+
+### Page 15: Total Addressable Market (Bar Chart)
+
+**Value at $6.99 subscription: $1.025 Billion**
+
+**Bar chart showing Gen-Z ('000) and Millennial ('000) populations by country:**
+- USA: ~45M Gen-Z, ~26M Millennial
+- China: ~32M Gen-Z, ~35M Millennial
+- Canada: ~3M Gen-Z, ~10M Millennial
+- UK: ~2M Gen-Z, ~3M Millennial
+
+---
+
+### Page 16: Projected 3-Year P&L (Profit & Loss)
+
+**Revenue streams:**
+- Subscription Revenue (primary): $6.99/month
+- Group Revenue: $20 group fee
+- Ad Revenue
+
+**Conversion rates:**
+- CR (Free): 10%
+- CR (Paid): 5%
+
+**YEAR 1 (2021) Projections:**
+- Total Revenue: $290,101
+  - Subscription Revenue: $276,111
+  - Group Revenue: $2,140
+  - Ad Revenue: $11,850
+- Total Expenses: $637,939
+  - Monthly Payout: $135,927
+  - Salary: $180,000
+  - Development: (not shown for 2021)
+  - Accounting: $60,000
+  - Marketing: $242,012
+  - Legal: $10,000
+  - API & Cloud Storage: $10,000
+- Gross Margin: -120% (negative)
+- Net Income: -($347,838)
+- Net Margin: -120%
+
+**Growth Factor progression (2021):** Starts at 0.05 (Feb), ramping to 3.00 (Dec)
+
+**YEARS 2-3 (2022 & 2023) Projections:**
+- Total Revenue: $3,784,089
+  - Subscription Revenue: $3,344,442
+  - Group Revenue: $25,800
+  - Ad Revenue: $414,746
+- Total Expenses: $1,907,598
+- Gross Margin: 50%
+- Tax (8.7%): $163,333
+- Net Income: $1,714,058
+- Net Margin: 45%
+
+**Growth Factor (2022-2023):** Starts at 6.00 (Q1 2022), ramping to 11.50 (Q4 2023)
+
+**Monthly expense breakdown (steady state):**
+- Monthly Payout: $75,150/month (in 2022-2023)
+- Salary: $180,000/month (in 2022-2023)
+- Marketing: varies significantly (from $95K to $255K quarterly)
+- Accounting: $60,000 (appears periodically)
+- Legal: $60,000 (appears periodically)
+- API & Cloud Storage: $2,500/month (in 2022-2023)
+
+---
+
+### Page 17: Fundraising Round Details
+
+**Total Raise: $555,000**
+
+**Allocation breakdown:**
+| Category | Amount |
+|----------|--------|
+| API & Cloud | $29,500 |
+| Legal | $10,000 |
+| Marketing | $158,560 |
+| Accounting | $60,000 |
+| Salary | $180,000 |
+| Monthly Payout | $136,000 |
+| **Total** | **$555,000** |
+
+Shown as a donut chart with Salary and Monthly Payout being the two largest segments, followed by Marketing.
+
+---
+
+### Page 18: Timeline (Product Roadmap)
+
+**January:**
+- Upful App Acquired
+- Raising Funds
+- Launching Beta
+
+**February-March:**
+- Goal: Proof of concept
+- First full month of Beta
+- Prioritize marketing
+- Goal: Gain +260 users
+- Rebrand Upful to Jyanik
+
+**April-May:**
+- Goal: Integrate social hub into app
+- Launch Jyanik (official brand launch)
+- More marketing
+
+**May-June:**
+- Goal: Scale app to +500 users
+- More marketing
+
+**July-August:**
+- Goal: Scale app to +1,000 users
+- More marketing
+
+**August-September:**
+- Goal: Continue scaling through intensive marketing
+- Gain +2,000 users
+
+**September-October (Series A Round):**
+- Revenue: $200,000/month
+- Valuation: $24M
+- Raising: $5M
+
+**October-December:**
+- Real trading (transition from virtual to real)
+- AI/ML Introduction
+- Blockchain implementation
+- Algorithm building tool introduction to Traders
+
+---
+
+### SUMMARY OF KEY STRATEGIC INSIGHTS ACROSS BOTH DOCUMENTS
+
+**Transformation Journey:**
+- The app was originally called "Upful: Simple Paper Trading" -- a basic virtual stock trading app
+- It is being rebranded to "Jyanik"
+- The core transformation is from a simple paper trading simulator into a gamified competition platform where users trade with virtual money but win real cash prizes
+
+**Business Model (4 Revenue Streams):**
+1. Subscription: $6.99/month (primary revenue driver)
+2. Group fees: $20 per group
+3. Advertising revenue
+4. In-app purchases: $2.99 for additional $25K virtual cash (from Features Guide)
+
+**Monetization Strategy:**
+- Freemium model with aggressive upsell tactics (showing free users what they "missed out on")
+- Premium features gated behind subscription (chat/social hub, actual payouts)
+- In-app purchases for budget replenishment
+- Future: selling curated portfolios from top performers, AI/ML data products for brokerage firms
+
+**Key Metrics/KPIs:**
+- Total Addressable Market: $1.025B
+- Current users at time of deck: 3,000 downloads
+- Year 1 target revenue: $290K
+- Year 2-3 cumulative target: $3.78M
+- Monthly prize payout budget: ~$15,103
+- Series A targets: $24M valuation, $5M raise, $200K/month revenue
+- Target conversion rates: 10% free, 5% paid
+
+**Technical Stack (inferred):**
+- iOS native app (App Store)
+- iEXTrading API (real-time stock data)
+- Intrinio API (financial data/metrics)
+- PayPal (user payouts)
+- Stripe (direct transfers)
+- Cloud storage for API data
+- Future: AI/ML, blockchain

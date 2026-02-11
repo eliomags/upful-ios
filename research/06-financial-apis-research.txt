@@ -1,0 +1,1765 @@
+================================================================================
+FINANCIAL DATA APIs RESEARCH - FREE & FREEMIUM TIERS
+For Paper Trading Competition App (Upful iOS)
+================================================================================
+Research Date: February 2026
+Requirement: Delayed data acceptable (15-60 min delay OK)
+Goal: Maximum global coverage at zero or minimal cost
+
+NOTE: Rate limits and pricing are based on the latest available information
+as of early 2026. Always verify current terms on each provider's website
+before integration, as free tiers change frequently.
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+1.  ALPHA VANTAGE
+2.  FINNHUB
+3.  POLYGON.IO
+4.  YAHOO FINANCE (Unofficial)
+5.  TWELVE DATA
+6.  COINGECKO
+7.  FINANCIAL MODELING PREP (FMP)
+8.  MARKETSTACK
+9.  IEX CLOUD
+10. TIINGO
+11. EODHD (EOD Historical Data)
+12. QUANDL / NASDAQ DATA LINK
+13. OPENFIGI
+14. STOOQ
+15. FRED (Federal Reserve Economic Data)
+16. ECB API (European Central Bank)
+17. WORLD BANK API
+18. EXCHANGE RATES API / OPEN EXCHANGE RATES
+19. BINANCE API
+20. COINMARKETCAP
+21. TREASURY.GOV API
+22. SEC EDGAR
+23. YAHOO FINANCE v2 (yfinance Python library)
+24. ADDITIONAL FREE SOURCES
+25. COVERAGE MATRIX
+26. RECOMMENDED API COMBINATION
+27. IMPLEMENTATION STRATEGY
+
+================================================================================
+1. ALPHA VANTAGE
+================================================================================
+
+Website:        https://www.alphavantage.co
+Documentation:  https://www.alphavantage.co/documentation/
+
+FREE TIER LIMITS:
+  - 25 requests/day (reduced from previous 500/day, changed ~2023-2024)
+  - 5 requests/minute
+  - Single API key per user
+  - No credit card required
+
+PREMIUM TIERS:
+  - 30 requests/minute / 100+ requests/day: starts at $49.99/month
+  - Higher tiers available up to enterprise level
+
+DATA COVERAGE:
+  [x] US Stocks (NYSE, NASDAQ, AMEX)       - 15-min delay or adjusted close
+  [x] International Stocks                  - Limited (some global equities)
+  [x] Forex                                 - Real-time and historical
+  [x] Cryptocurrency                        - Real-time and historical
+  [x] ETFs                                  - Same as stocks
+  [x] Company Fundamentals                  - Income statement, balance sheet,
+                                              cash flow, earnings, overview
+  [x] Technical Indicators                  - 50+ technical indicators (SMA,
+                                              EMA, RSI, MACD, Bollinger, etc.)
+  [x] Economic Indicators                   - GDP, inflation, interest rates,
+                                              unemployment, CPI, retail sales
+  [ ] Options                               - NOT available
+  [ ] Futures                               - NOT available
+  [ ] Bonds                                 - NOT available
+  [ ] Mutual Funds                          - NOT available
+  [ ] Market News                           - Limited (news sentiment API)
+
+DATA DELAY:
+  - US Stocks: 15-minute delayed (intraday), end-of-day (daily/weekly/monthly)
+  - Forex: Near real-time
+  - Crypto: Near real-time
+  - Fundamentals: Quarterly updates
+
+AUTHENTICATION: API key (free registration, no credit card)
+
+API QUALITY: HIGH
+  - Well-documented REST API
+  - JSON and CSV output formats
+  - Stable and reliable
+  - Good for historical data
+
+INTERNATIONAL COVERAGE:
+  - Supports some international exchanges but coverage is inconsistent
+  - Global equity search function available
+  - Not all international exchanges have full data
+
+GOTCHAS & LIMITATIONS:
+  - 25 requests/day on free tier is VERY restrictive (was 500/day before)
+  - This makes it nearly unusable as a primary data source on free tier
+  - No WebSocket/streaming support
+  - Rate limit errors return empty JSON (no explicit error code)
+  - Historical intraday data limited to last 1-2 months on free tier
+  - International data gaps are common
+  - No options, futures, or bonds data
+
+VERDICT FOR PAPER TRADING APP:
+  - USEFUL FOR: Fundamentals, economic data, technical indicators
+  - NOT USEFUL AS: Primary price data source (too few free requests)
+  - RECOMMENDATION: Use sparingly for fundamentals/economic data only
+
+================================================================================
+2. FINNHUB
+================================================================================
+
+Website:        https://finnhub.io
+Documentation:  https://finnhub.io/docs/api
+
+FREE TIER LIMITS:
+  - 60 requests/minute
+  - No explicit daily limit (but 60/min effectively ~86,400/day)
+  - WebSocket: 1 connection, limited symbols
+  - Single API key
+
+PREMIUM TIERS:
+  - Starter: $0 (free)
+  - Growth: $49/month (300 req/min)
+  - Business: $199/month (custom)
+
+DATA COVERAGE:
+  [x] US Stocks (NYSE, NASDAQ, AMEX)       - Real-time quotes (limited on free)
+  [x] International Stocks                  - 60+ global exchanges
+  [x] Forex                                 - Major and minor pairs
+  [x] Cryptocurrency                        - Major exchanges (Binance, etc.)
+  [x] ETFs                                  - US and some international
+  [x] Company Fundamentals                  - Financials, metrics, peers,
+                                              SEC filings, earnings calendar
+  [x] Market News                           - General and company-specific news
+  [x] Economic Data                         - Economic calendar, country data
+  [x] Options (basic)                       - COMING SOON / limited
+  [x] IPO Calendar                          - Upcoming and past IPOs
+  [x] Insider Transactions                  - SEC insider trading data
+  [x] ESG Data                              - ESG scores and reports
+  [x] Technical Indicators                  - Pattern recognition, support/
+                                              resistance
+  [ ] Futures                               - NOT on free tier
+  [ ] Bonds                                 - NOT available
+  [ ] Mutual Funds                          - NOT available
+
+DATA DELAY:
+  - US Stocks: Free tier gets 15-min delayed quotes
+  - WebSocket: Real-time for limited symbols on free tier
+  - International: Varies by exchange (15min to EOD)
+  - Crypto: Near real-time
+  - News: Real-time
+
+AUTHENTICATION: API key (free registration)
+
+API QUALITY: VERY HIGH
+  - Excellent documentation
+  - RESTful API + WebSocket support
+  - JSON output
+  - Reliable uptime
+  - Active development and updates
+
+INTERNATIONAL COVERAGE: EXCELLENT
+  - 60+ stock exchanges worldwide
+  - Covers: US, UK, Germany, France, Japan, Hong Kong, China,
+    India, Australia, Canada, Brazil, and many more
+  - Exchange-specific symbols and data
+
+GOTCHAS & LIMITATIONS:
+  - Some endpoints are premium-only (marked in docs)
+  - WebSocket free tier limited to ~50 symbols simultaneously
+  - US real-time data requires paid subscription
+  - Some international exchanges have EOD data only on free tier
+  - Crypto exchange coverage varies
+  - Rate limit of 60/min is generous but can be hit with bulk requests
+
+VERDICT FOR PAPER TRADING APP:
+  - EXCELLENT primary API for stock data
+  - Best free international coverage
+  - Great for news, fundamentals, and market calendars
+  - RECOMMENDATION: Use as PRIMARY data source for stocks and news
+
+================================================================================
+3. POLYGON.IO
+================================================================================
+
+Website:        https://polygon.io
+Documentation:  https://polygon.io/docs
+
+FREE TIER LIMITS:
+  - Basic plan: Free
+  - 5 API calls/minute
+  - End-of-day data only (no intraday on free)
+  - 2 years of historical data
+  - Delayed data (15-min for real-time, but free tier is EOD only)
+
+PREMIUM TIERS:
+  - Starter: $29/month (unlimited API calls, delayed data)
+  - Developer: $79/month (unlimited, real-time)
+  - Advanced: $199/month (all features)
+  - Enterprise: Custom
+
+DATA COVERAGE:
+  [x] US Stocks (NYSE, NASDAQ, AMEX)       - EOD on free, intraday on paid
+  [x] Options                               - Available (paid tiers primarily)
+  [x] Forex                                 - Available
+  [x] Cryptocurrency                        - Available
+  [x] ETFs                                  - Treated as stocks
+  [x] Company Fundamentals                  - Basic (reference data, financials)
+  [x] Market News                           - Ticker news
+  [x] Indices                               - Major indices
+  [ ] International Stocks                  - US-focused only
+  [ ] Bonds                                 - NOT available on free
+  [ ] Futures                               - NOT on free tier
+  [ ] Mutual Funds                          - NOT available
+  [ ] Economic Data                         - NOT available
+
+DATA DELAY:
+  - Free tier: End-of-day only
+  - Starter: 15-minute delayed
+  - Developer+: Real-time
+
+AUTHENTICATION: API key (free registration)
+
+API QUALITY: VERY HIGH
+  - Excellent documentation
+  - RESTful API + WebSocket
+  - Fast response times
+  - Aggregated data endpoints
+  - Highly reliable infrastructure
+
+INTERNATIONAL COVERAGE: POOR (US only on free tier)
+
+GOTCHAS & LIMITATIONS:
+  - Free tier is SEVERELY limited: 5 calls/min, EOD only
+  - No international markets on free tier
+  - US-centric platform
+  - Options data primarily on paid tiers
+  - Historical data limited to 2 years on free
+  - No economic or macro data
+
+VERDICT FOR PAPER TRADING APP:
+  - Limited value on free tier (5 calls/min, EOD only)
+  - Good data quality but too restricted for free use
+  - RECOMMENDATION: Skip unless willing to pay for Starter tier
+
+================================================================================
+4. YAHOO FINANCE (Unofficial APIs & Libraries)
+================================================================================
+
+Website:        https://finance.yahoo.com
+Libraries:      yfinance (Python), yahoo-finance-api (Node.js)
+NPM Package:    yahoo-finance2 (Node.js/TypeScript)
+Swift Package:  YahooFinanceAPI (community)
+
+RATE LIMITS (Unofficial - no formal API):
+  - No official API or rate limits
+  - Community consensus: ~2,000 requests/hour before throttling
+  - IP-based rate limiting (no API key)
+  - Can be more aggressive with rotating user agents
+  - Yahoo may block aggressive scraping
+
+DATA COVERAGE:
+  [x] US Stocks (NYSE, NASDAQ, AMEX)       - 15-min delayed quotes
+  [x] International Stocks                  - 70+ global exchanges
+  [x] Forex                                 - Major and minor pairs
+  [x] Cryptocurrency                        - Major coins
+  [x] ETFs                                  - Comprehensive US and intl
+  [x] Mutual Funds                          - NAV data, holdings, performance
+  [x] Bonds                                 - Treasury yields, some corporate
+  [x] Options                               - Full options chains
+  [x] Futures                               - Commodity and financial futures
+  [x] Company Fundamentals                  - Full financials, balance sheet,
+                                              income statement, cash flow,
+                                              key statistics, analyst estimates
+  [x] Market News                           - Via yahoo news feed
+  [x] Indices                               - All major global indices
+  [x] Historical Data                       - Full history (decades)
+  [ ] Economic Data                         - Limited
+  [ ] Real-time streaming                   - NOT available (unofficial)
+
+DATA DELAY:
+  - US Stocks: 15-minute delayed
+  - International: Varies (15min to EOD depending on exchange)
+  - Crypto: Near real-time
+  - Options: 15-minute delayed
+
+AUTHENTICATION: None (no API key needed)
+  - However, some endpoints require cookies/crumb tokens
+  - yahoo-finance2 npm package handles this automatically
+
+API QUALITY: MODERATE
+  - Unofficial and can break without notice
+  - No SLA or support
+  - Libraries handle most complexity
+  - Data quality is generally good (sourced from exchanges)
+  - Endpoints change occasionally
+
+INTERNATIONAL COVERAGE: EXCELLENT
+  - One of the best free sources for international data
+  - Covers virtually every major exchange globally
+  - Supports exchange-specific suffixes (e.g., .L for London,
+    .T for Tokyo, .HK for Hong Kong, .SS for Shanghai)
+
+EXCHANGE SUFFIXES:
+  - .L    = London Stock Exchange (LSE)
+  - .T    = Tokyo Stock Exchange (TSE)
+  - .HK   = Hong Kong Stock Exchange (HKEX)
+  - .SS   = Shanghai Stock Exchange (SSE)
+  - .SZ   = Shenzhen Stock Exchange (SZSE)
+  - .TO   = Toronto Stock Exchange (TSX)
+  - .DE   = Frankfurt/XETRA
+  - .BO   = Bombay Stock Exchange (BSE)
+  - .NS   = National Stock Exchange India (NSE)
+  - .AX   = Australian Securities Exchange (ASX)
+  - .PA   = Euronext Paris
+  - .AS   = Euronext Amsterdam
+  - .MI   = Milan/Borsa Italiana
+  - .KS   = Korea Stock Exchange
+  - .TW   = Taiwan Stock Exchange
+  - .SA   = Sao Paulo (B3)
+  - .MX   = Mexican Stock Exchange
+  - .JK   = Jakarta Stock Exchange
+  - And many more...
+
+GOTCHAS & LIMITATIONS:
+  - UNOFFICIAL: Can break at any time without notice
+  - Yahoo has deprecated official APIs multiple times
+  - Aggressive scraping may lead to IP blocking
+  - Need to handle cookie/crumb authentication
+  - No guaranteed uptime or data accuracy SLA
+  - Some endpoints require additional headers
+  - Rate limits are enforced per-IP, not per-key
+  - Mobile app may use different endpoints than web
+
+AVAILABLE LIBRARIES (for iOS/Swift integration):
+  - yahoo-finance2 (Node.js): Most maintained, TypeScript support
+  - yfinance (Python): Most popular, well-maintained
+  - YahooFinanceAPI (Swift): Community package, less maintained
+  - Can also hit Yahoo Finance endpoints directly via URLSession
+
+VERDICT FOR PAPER TRADING APP:
+  - BEST overall free data source for breadth of coverage
+  - Covers nearly every asset type and exchange globally
+  - Only free source with options chains and mutual funds
+  - Risk: unofficial, could break
+  - RECOMMENDATION: Use as PRIMARY data source, with fallbacks
+
+================================================================================
+5. TWELVE DATA
+================================================================================
+
+Website:        https://twelvedata.com
+Documentation:  https://twelvedata.com/docs
+
+FREE TIER LIMITS:
+  - 8 requests/minute
+  - 800 requests/day
+  - End-of-day data for most endpoints
+  - Limited number of API credits per day
+
+PREMIUM TIERS:
+  - Grow: $29/month (12 req/min, 5000 req/day)
+  - Pro: $159/month (120 req/min, unlimited)
+  - Enterprise: Custom
+
+DATA COVERAGE:
+  [x] US Stocks (NYSE, NASDAQ, AMEX)       - Real-time and historical
+  [x] International Stocks                  - 50+ exchanges
+  [x] Forex                                 - 120+ currency pairs
+  [x] Cryptocurrency                        - 200+ crypto pairs
+  [x] ETFs                                  - US and international
+  [x] Mutual Funds                          - NAV data
+  [x] Bonds                                 - Government bonds
+  [x] Indices                               - Major global indices
+  [x] Technical Indicators                  - 100+ indicators
+  [x] Company Fundamentals                  - Basic financials
+  [ ] Options                               - NOT available on free
+  [ ] Futures                               - Limited
+  [ ] Market News                           - NOT available
+  [ ] Economic Data                         - NOT available
+
+DATA DELAY:
+  - Free tier: End-of-day for most; some 15-min delayed
+  - Paid: Real-time available
+  - Historical: Full history available
+
+AUTHENTICATION: API key (free registration)
+
+API QUALITY: HIGH
+  - Clean, well-documented REST API
+  - WebSocket available (paid)
+  - JSON output
+  - Good error handling
+  - Batch requests supported
+
+INTERNATIONAL COVERAGE: GOOD
+  - 50+ global exchanges
+  - Major markets well covered
+  - Some emerging market gaps
+
+GOTCHAS & LIMITATIONS:
+  - 800 requests/day is limiting for a full app
+  - 8 requests/minute means slow data fetching
+  - Some endpoints consume multiple API credits
+  - WebSocket only on paid plans
+  - Complex data (fundamentals) may consume more credits
+  - Free tier lacks some data types
+
+VERDICT FOR PAPER TRADING APP:
+  - Good supplementary API for technical indicators
+  - International coverage is decent
+  - Rate limits make it a secondary source
+  - RECOMMENDATION: Use for technical indicators and forex data
+
+================================================================================
+6. COINGECKO
+================================================================================
+
+Website:        https://www.coingecko.com
+Documentation:  https://docs.coingecko.com/reference/introduction
+API URL:        https://api.coingecko.com/api/v3/
+
+FREE TIER LIMITS (Public API - no key):
+  - 10-30 calls/minute (varies, recently tightened)
+  - No daily limit specified but throttled aggressively
+  - No API key required for public API
+  - IP-based rate limiting
+
+DEMO API KEY (Free registered):
+  - 30 calls/minute
+  - 10,000 calls/month
+  - API key required (free registration)
+
+PREMIUM TIERS:
+  - Analyst: $129/month (500 calls/min)
+  - Lite: $499/month (500 calls/min, more data)
+  - Pro: $999/month (1000 calls/min)
+
+DATA COVERAGE:
+  [x] Cryptocurrency                        - 13,000+ coins, 600+ exchanges
+  [x] Crypto Market Data                    - Price, volume, market cap
+  [x] Crypto Historical Data               - OHLCV, full history
+  [x] Crypto Exchange Data                  - Exchange volumes, tickers
+  [x] DeFi Data                             - TVL, protocols
+  [x] NFT Data                              - Collections, floor prices
+  [x] Trending Coins                        - Trending and gainers/losers
+  [x] Global Crypto Stats                   - Total market cap, dominance
+  [x] Categories                            - Sector/category performance
+  [ ] Stocks                                - NOT available
+  [ ] Forex                                 - NOT available
+  [ ] Options/Futures                       - NOT available
+  [ ] Bonds                                 - NOT available
+
+DATA DELAY:
+  - Price data: Real-time to near-real-time
+  - Market data: Updates every 1-5 minutes
+  - Historical: End-of-day candles
+
+AUTHENTICATION:
+  - Public API: No key needed (lower rate limits)
+  - Demo API: Free API key (higher rate limits)
+
+API QUALITY: VERY HIGH
+  - Excellent documentation
+  - RESTful API
+  - JSON output
+  - Very reliable
+  - Industry standard for crypto data
+
+INTERNATIONAL COVERAGE: N/A (crypto is global by nature)
+
+GOTCHAS & LIMITATIONS:
+  - Rate limits have been tightened significantly in 2024-2025
+  - Free public API increasingly unreliable under heavy load
+  - Some endpoints moved to paid-only
+  - 10,000 calls/month on free key may not be enough for active app
+  - No WebSocket on free tier
+  - NFT and DeFi data may be paid-only for detailed endpoints
+  - Attribution required on free tier
+
+VERDICT FOR PAPER TRADING APP:
+  - BEST free cryptocurrency data source
+  - Comprehensive coin coverage
+  - Good for crypto portion of trading app
+  - RECOMMENDATION: Use as PRIMARY crypto data source
+
+================================================================================
+7. FINANCIAL MODELING PREP (FMP)
+================================================================================
+
+Website:        https://financialmodelingprep.com
+Documentation:  https://site.financialmodelingprep.com/developer/docs
+
+FREE TIER LIMITS:
+  - 250 requests/day
+  - 5 requests/second
+  - Limited to some endpoints
+  - API key required
+
+PREMIUM TIERS:
+  - Starter: $14/month (300 req/min, all endpoints)
+  - Professional: $29/month
+  - Ultimate: $49/month
+  - Enterprise: Custom
+
+DATA COVERAGE:
+  [x] US Stocks (NYSE, NASDAQ, AMEX)       - Full coverage
+  [x] International Stocks                  - Major exchanges
+  [x] ETFs                                  - US and international
+  [x] Mutual Funds                          - NAV and holdings
+  [x] Forex                                 - Major pairs
+  [x] Cryptocurrency                        - Major coins
+  [x] Company Fundamentals                  - VERY comprehensive:
+                                              Income statement, balance sheet,
+                                              cash flow, ratios, key metrics,
+                                              financial growth, DCF, ratings
+  [x] Market News                           - Stock and general news
+  [x] Economic Data                         - Economic calendar, indicators
+  [x] Options (limited)                     - Some options data
+  [x] SEC Filings                           - 10-K, 10-Q, 8-K filings
+  [x] Analyst Estimates                     - Consensus estimates
+  [x] Insider Trading                       - SEC insider transactions
+  [x] IPO Calendar                          - Upcoming IPOs
+  [x] Stock Screener                        - Advanced screening
+  [x] Company Profiles                      - Detailed company info
+  [ ] Bonds                                 - LIMITED
+  [ ] Futures                               - NOT available
+
+DATA DELAY:
+  - Real-time quotes available on paid plans
+  - Free tier: 15-minute delayed or EOD
+  - Fundamentals: Quarterly/annual updates
+  - News: Near real-time
+
+AUTHENTICATION: API key (free registration)
+
+API QUALITY: HIGH
+  - Good documentation
+  - RESTful API
+  - JSON output
+  - Generally reliable
+
+INTERNATIONAL COVERAGE: MODERATE TO GOOD
+  - Major global exchanges covered
+  - Best for US markets
+  - Growing international coverage
+
+GOTCHAS & LIMITATIONS:
+  - 250 requests/day on free tier is quite restrictive
+  - Some popular endpoints are paid-only
+  - International data less comprehensive than US
+  - Free tier may have data gaps
+  - Rate limit is per-day, not just per-minute
+
+VERDICT FOR PAPER TRADING APP:
+  - BEST free source for company fundamentals
+  - Very comprehensive financial statement data
+  - 250/day limit is manageable for fundamentals
+  - RECOMMENDATION: Use for fundamentals and financial ratios
+
+================================================================================
+8. MARKETSTACK
+================================================================================
+
+Website:        https://marketstack.com
+Documentation:  https://marketstack.com/documentation
+
+FREE TIER LIMITS:
+  - 100 requests/month (VERY limited)
+  - End-of-day data only
+  - HTTP only (no HTTPS on free!)
+  - 1 year historical data
+  - No intraday
+
+PREMIUM TIERS:
+  - Basic: $9.99/month (10,000 req/month, HTTPS, intraday)
+  - Standard: $49.99/month (50,000 req/month)
+  - Business: $149.99/month (unlimited)
+
+DATA COVERAGE:
+  [x] US Stocks                             - NYSE, NASDAQ, AMEX
+  [x] International Stocks                  - 72 exchanges, 50 countries
+  [x] ETFs                                  - As stocks
+  [x] Indices                               - Major global indices
+  [ ] Forex                                 - NOT on free
+  [ ] Cryptocurrency                        - NOT on free
+  [ ] Options                               - NOT available
+  [ ] Futures                               - NOT available
+  [ ] Bonds                                 - NOT available
+  [ ] Mutual Funds                          - NOT available
+  [ ] Fundamentals                          - NOT available
+  [ ] News                                  - NOT available
+  [ ] Economic Data                         - NOT available
+
+DATA DELAY:
+  - Free: End-of-day only
+  - Paid: Intraday available
+
+AUTHENTICATION: API key (free registration)
+
+API QUALITY: MODERATE
+  - Simple REST API
+  - JSON output
+  - Documentation is adequate
+
+INTERNATIONAL COVERAGE: GOOD (72 exchanges)
+
+GOTCHAS & LIMITATIONS:
+  - 100 requests/MONTH is practically useless
+  - No HTTPS on free tier (security issue!)
+  - Very limited data types
+  - No fundamentals, news, or economic data
+  - Essentially a paid service with a token free tier
+
+VERDICT FOR PAPER TRADING APP:
+  - NOT recommended for free tier usage
+  - 100 requests/month is insufficient
+  - No HTTPS on free tier is a dealbreaker
+  - RECOMMENDATION: Skip entirely
+
+================================================================================
+9. IEX CLOUD
+================================================================================
+
+Website:        https://iexcloud.io
+Documentation:  https://iexcloud.io/docs/
+
+NOTE: IEX Cloud underwent significant changes in 2023-2024. The platform
+was acquired and restructured. The free tier has been modified several times.
+
+FREE TIER LIMITS (as of latest known info):
+  - Limited free credits (~50,000 messages/month)
+  - Credit-based pricing (different endpoints cost different credits)
+  - Some endpoints no longer available on free tier
+  - Core data access with limitations
+
+PREMIUM TIERS:
+  - Launch: $9/month
+  - Grow: $49/month
+  - Scale: Custom pricing
+
+DATA COVERAGE:
+  [x] US Stocks                             - NYSE, NASDAQ
+  [x] ETFs                                  - US ETFs
+  [x] Company Fundamentals                  - Basic financials
+  [x] Market News                           - Company and market news
+  [x] Crypto (limited)                      - Some crypto pairs
+  [ ] International Stocks                  - LIMITED on free
+  [ ] Forex                                 - Paid only
+  [ ] Options                               - Paid only
+  [ ] Futures                               - NOT available
+  [ ] Bonds                                 - NOT available
+  [ ] Mutual Funds                          - Limited
+  [ ] Economic Data                         - Paid only
+
+DATA DELAY:
+  - 15-minute delayed on free tier
+  - Real-time on paid tiers
+
+AUTHENTICATION: API token (free registration)
+
+API QUALITY: HIGH (historically)
+  - Well-documented API
+  - JSON output
+  - Good reliability
+
+GOTCHAS & LIMITATIONS:
+  - Platform underwent major changes; check current status
+  - Credit system can be confusing
+  - Free credits can run out quickly with heavy use
+  - Some previously free endpoints now paid
+  - US-centric
+  - Company changes may affect long-term reliability
+
+VERDICT FOR PAPER TRADING APP:
+  - Was excellent, now less reliable as free source
+  - Credit system makes budgeting difficult
+  - RECOMMENDATION: Use cautiously; verify current free tier status
+
+================================================================================
+10. TIINGO
+================================================================================
+
+Website:        https://www.tiingo.com
+Documentation:  https://api.tiingo.com/documentation
+
+FREE TIER LIMITS:
+  - 1,000 requests/hour
+  - 500 unique symbols/month
+  - End-of-day and some intraday data
+  - 20,000 requests/day (some sources say 50,000)
+  - Limited IEX real-time data
+
+PREMIUM TIERS:
+  - Power: $10/month (more symbols, more requests)
+  - Commercial: $75/month
+
+DATA COVERAGE:
+  [x] US Stocks                             - Full US coverage via IEX
+  [x] ETFs                                  - US ETFs
+  [x] Mutual Funds                          - NAV data
+  [x] Forex                                 - Major and some minor pairs
+  [x] Cryptocurrency                        - Major coins (BTC, ETH, etc.)
+  [x] Company Fundamentals                  - Basic company info and
+                                              fundamental data
+  [x] Market News                           - News feed via IEX
+  [ ] International Stocks                  - VERY LIMITED on free
+  [ ] Options                               - NOT available
+  [ ] Futures                               - NOT available
+  [ ] Bonds                                 - NOT available
+  [ ] Economic Data                         - NOT available
+
+DATA DELAY:
+  - IEX real-time data available (some)
+  - End-of-day historical data (comprehensive)
+  - Intraday available for some endpoints
+
+AUTHENTICATION: API token (free registration)
+
+API QUALITY: HIGH
+  - Clean API design
+  - Good documentation
+  - Reliable uptime
+  - WebSocket support for IEX data
+
+INTERNATIONAL COVERAGE: POOR (US-focused)
+
+GOTCHAS & LIMITATIONS:
+  - 500 unique symbols/month on free tier is restrictive
+  - International coverage is minimal
+  - Limited to US markets essentially
+  - Some endpoints require paid plan
+  - WebSocket only for IEX-sourced data
+
+VERDICT FOR PAPER TRADING APP:
+  - Good for US EOD data and mutual funds
+  - 500 symbol limit is manageable for paper trading
+  - Poor for international markets
+  - RECOMMENDATION: Good supplementary US data source
+
+================================================================================
+11. EODHD (EOD Historical Data)
+================================================================================
+
+Website:        https://eodhistoricaldata.com
+Documentation:  https://eodhistoricaldata.com/financial-apis/
+
+FREE TIER LIMITS:
+  - 20 requests/day (VERY limited)
+  - Limited to US market data
+  - End-of-day only
+  - 1 year of historical data
+
+PREMIUM TIERS:
+  - Fundamentals: $19.99/month (100,000 req/day)
+  - All-World: $29.99/month
+  - All-in-One: $79.99/month
+
+DATA COVERAGE (PAID - listed to show potential):
+  [x] US Stocks                             - Full US coverage
+  [x] International Stocks                  - 60+ exchanges, 70+ countries
+  [x] ETFs                                  - Global ETFs
+  [x] Mutual Funds                          - Global mutual funds
+  [x] Bonds                                 - Government and corporate
+  [x] Options                               - Options chains
+  [x] Forex                                 - Currency pairs
+  [x] Cryptocurrency                        - Major coins
+  [x] Company Fundamentals                  - Comprehensive financials
+  [x] Economic Data                         - Macro indicators
+  [x] Market News                           - Financial news
+
+FREE TIER COVERS:
+  [x] US Stocks (EOD only, 20 req/day)
+  [ ] Everything else requires paid plan
+
+DATA DELAY:
+  - End-of-day on all tiers (name says it all)
+  - Some intraday on paid plans
+
+AUTHENTICATION: API key (free registration)
+
+API QUALITY: HIGH
+  - Comprehensive documentation
+  - Well-structured API
+  - Reliable data quality
+
+GOTCHAS & LIMITATIONS:
+  - 20 requests/day on free tier is nearly useless
+  - "EOD" in the name - primarily end-of-day data
+  - Free tier is essentially a trial
+  - Need paid plan for any meaningful use
+
+VERDICT FOR PAPER TRADING APP:
+  - Amazing data coverage but NOT on free tier
+  - 20 requests/day is insufficient
+  - Consider if budget allows $19.99-29.99/month
+  - RECOMMENDATION: Skip free tier; consider paid if budget allows
+
+================================================================================
+12. QUANDL / NASDAQ DATA LINK
+================================================================================
+
+Website:        https://data.nasdaq.com (formerly quandl.com)
+Documentation:  https://docs.data.nasdaq.com/
+
+FREE TIER LIMITS:
+  - 300 requests/10 seconds
+  - 50,000 requests/day
+  - Limited to FREE datasets only
+  - Many premium datasets require subscription
+
+DATA COVERAGE (FREE datasets):
+  [x] US Stock Prices (WIKI dataset - DISCONTINUED, but some remain)
+  [x] Economic Data                         - FRED data mirror
+  [x] Futures (some)                        - CHRIS dataset (continuous futures)
+  [x] Government Bond Yields                - Various countries
+  [x] Some Commodity Prices                 - Via free datasets
+  [x] Bitcoin Prices                        - Via free datasets
+  [ ] Real-time Stock Quotes                - NOT available free
+  [ ] International Stocks                  - Mostly paid
+  [ ] Options                               - Paid only
+  [ ] Company Fundamentals                  - Paid (Zacks, Sharadar)
+  [ ] Forex (comprehensive)                 - Limited free
+  [ ] Market News                           - NOT available
+
+DATA DELAY:
+  - Most free data is end-of-day or less frequent
+  - Some datasets update daily, others quarterly
+
+AUTHENTICATION: API key (free registration)
+
+API QUALITY: HIGH
+  - Well-designed API
+  - Multiple output formats (JSON, CSV, XML)
+  - Bulk download capability
+  - Time-series optimized
+
+GOTCHAS & LIMITATIONS:
+  - The WIKI free US stock dataset was discontinued
+  - Most valuable datasets are premium/paid
+  - Free datasets are scattered and may have gaps
+  - Navigation between free and paid can be confusing
+  - Data freshness varies by dataset
+  - Owned by Nasdaq, so focused on institutional
+
+VERDICT FOR PAPER TRADING APP:
+  - Good for futures data (CHRIS dataset)
+  - Good for economic data (mirrors FRED)
+  - Limited for real-time or stock price data
+  - RECOMMENDATION: Use for futures and bond yield data
+
+================================================================================
+13. OPENFIGI
+================================================================================
+
+Website:        https://www.openfigi.com
+Documentation:  https://www.openfigi.com/api
+
+FREE TIER LIMITS:
+  - 25 requests/minute (without API key)
+  - 250 requests/minute (with free API key)
+  - 100 identifiers per request
+  - No daily limit
+
+DATA COVERAGE:
+  [x] Security Identification               - Map between identifiers:
+                                              FIGI, ISIN, CUSIP, SEDOL,
+                                              ticker, composite FIGI
+  [x] Global Securities                     - All asset types globally
+  [x] Bonds                                 - Bond identifiers
+  [x] Options                               - Options identifiers
+  [x] Futures                               - Futures identifiers
+  [ ] Price Data                            - NOT a price data API
+  [ ] Fundamentals                          - NOT available
+  [ ] News                                  - NOT available
+
+DATA DELAY: N/A (reference data, not time-series)
+
+AUTHENTICATION: Optional API key (free registration for higher limits)
+
+API QUALITY: HIGH
+  - Well-documented
+  - Simple mapping API
+  - Bloomberg-backed (FIGI standard)
+
+GOTCHAS & LIMITATIONS:
+  - NOT a price data API - only for identifier mapping
+  - Useful for cross-referencing securities across systems
+  - Does not provide quotes, fundamentals, or market data
+
+VERDICT FOR PAPER TRADING APP:
+  - Useful UTILITY for mapping security identifiers
+  - Essential if dealing with multiple data sources
+  - RECOMMENDATION: Use for symbol/identifier resolution
+
+================================================================================
+14. STOOQ
+================================================================================
+
+Website:        https://stooq.com
+Data URL:       https://stooq.com/q/d/l/?s={symbol}&d1={date1}&d2={date2}&i=d
+
+FREE TIER LIMITS:
+  - No formal API (web scraping / CSV download)
+  - No rate limit documentation
+  - Community consensus: ~100 requests/hour before issues
+  - No API key required
+
+DATA COVERAGE:
+  [x] US Stocks                             - NYSE, NASDAQ
+  [x] International Stocks                  - Polish, European markets
+  [x] Forex                                 - Major pairs
+  [x] Indices                               - Major global indices
+  [x] Commodities                           - Gold, silver, oil, etc.
+  [x] ETFs                                  - Some coverage
+  [x] Historical Data                       - Very long history available
+  [ ] Options                               - NOT available
+  [ ] Futures                               - NOT available (except via index)
+  [ ] Bonds                                 - NOT directly
+  [ ] Fundamentals                          - NOT available
+  [ ] News                                  - NOT available
+  [ ] Crypto                                - NOT available
+
+DATA DELAY: End-of-day
+
+AUTHENTICATION: None
+
+API QUALITY: LOW
+  - Not a formal API
+  - CSV download links
+  - No documentation
+  - Can break without notice
+
+GOTCHAS & LIMITATIONS:
+  - Unofficial data source (scraping)
+  - Can be blocked
+  - Limited asset coverage
+  - No JSON output (CSV only)
+  - Polish-focused with some global data
+
+VERDICT FOR PAPER TRADING APP:
+  - Backup source for historical data
+  - Not reliable enough as primary source
+  - RECOMMENDATION: Use as last-resort fallback only
+
+================================================================================
+15. FRED (Federal Reserve Economic Data)
+================================================================================
+
+Website:        https://fred.stlouisfed.org
+API:            https://fred.stlouisfed.org/docs/api/fred/
+Documentation:  https://fred.stlouisfed.org/docs/api/
+
+FREE TIER LIMITS:
+  - 120 requests/minute
+  - No daily limit
+  - ALL data is free
+  - API key required (free registration)
+
+DATA COVERAGE:
+  [x] Economic Data (COMPREHENSIVE)        - 800,000+ data series:
+      - GDP (US and international)
+      - Inflation (CPI, PCE, PPI)
+      - Interest Rates (Fed Funds, Treasury yields)
+      - Unemployment rates
+      - Housing data
+      - Consumer confidence
+      - Manufacturing indices
+      - Trade balances
+      - Money supply (M1, M2)
+      - Exchange rates
+      - Commodity prices (some)
+      - International economic data
+      - Regional economic data
+  [x] Treasury Yields                       - Full yield curve
+  [x] Exchange Rates                        - Major currency pairs
+  [ ] Stock Prices                          - NOT available
+  [ ] Company Data                          - NOT available
+  [ ] Options/Futures                       - NOT available
+  [ ] News                                  - NOT available
+
+DATA DELAY:
+  - Varies by series (daily, weekly, monthly, quarterly)
+  - Most data is released on government schedule
+  - Some daily series (interest rates, exchange rates)
+
+AUTHENTICATION: API key (free, no credit card)
+
+API QUALITY: VERY HIGH
+  - Excellent documentation
+  - RESTful API
+  - JSON, XML, text output
+  - Very reliable (government-backed)
+  - Well-maintained
+
+INTERNATIONAL COVERAGE:
+  - US-focused but includes international economic data
+  - World Bank data mirrors
+  - International interest rates and exchange rates
+
+GOTCHAS & LIMITATIONS:
+  - ONLY economic/macro data - no securities data
+  - No stock prices, company data, etc.
+  - Some series have significant publication lag
+  - Historical revisions can change past data
+
+VERDICT FOR PAPER TRADING APP:
+  - ESSENTIAL for economic data and indicators
+  - Best free source for macro data by far
+  - RECOMMENDATION: Use as PRIMARY economic data source
+
+================================================================================
+16. ECB API (European Central Bank)
+================================================================================
+
+Website:        https://data.ecb.europa.eu
+API:            https://data-api.ecb.europa.eu/service/
+
+FREE TIER LIMITS:
+  - Fully free, no rate limits documented
+  - No API key required
+  - All data publicly available
+
+DATA COVERAGE:
+  [x] Euro Exchange Rates                   - All ECB reference rates
+  [x] European Economic Data               - Eurozone statistics
+  [x] Interest Rates                        - ECB policy rates, EURIBOR
+  [x] Monetary Statistics                   - Money supply, credit
+  [x] Balance of Payments                   - EU trade data
+  [x] Government Finance                    - EU fiscal data
+  [x] Securities Statistics                 - Issuance data
+  [ ] Stock Prices                          - NOT available
+  [ ] Company Data                          - NOT available
+
+DATA DELAY: Published on ECB schedule (daily/monthly/quarterly)
+
+AUTHENTICATION: None required
+
+API QUALITY: HIGH
+  - SDMX standard (Statistical Data and Metadata eXchange)
+  - XML and JSON output
+  - Well-structured but complex query format
+
+GOTCHAS & LIMITATIONS:
+  - SDMX query format has a learning curve
+  - Euro-centric data
+  - No securities market data
+  - Complex data structure
+
+VERDICT FOR PAPER TRADING APP:
+  - Good for European economic data and EUR exchange rates
+  - Complements FRED for international economic data
+  - RECOMMENDATION: Use for EUR exchange rates and EU economic data
+
+================================================================================
+17. WORLD BANK API
+================================================================================
+
+Website:        https://data.worldbank.org
+API:            https://api.worldbank.org/v2/
+
+FREE TIER LIMITS:
+  - Fully free, no rate limits documented
+  - No API key required
+  - All data publicly available
+
+DATA COVERAGE:
+  [x] Global Economic Indicators           - GDP, GNI, inflation for 200+
+                                              countries
+  [x] Development Indicators               - Poverty, education, health
+  [x] Trade Data                            - Import/export statistics
+  [x] Financial Sector Data                 - Banking, credit
+  [x] Population Data                       - Demographics
+  [ ] Stock/Securities Data                 - NOT available
+  [ ] Company Data                          - NOT available
+
+DATA DELAY: Annual and quarterly (significant lag for some indicators)
+
+AUTHENTICATION: None required
+
+API QUALITY: MODERATE
+  - REST API
+  - JSON, XML output
+  - Good country coverage
+  - Data can be slow to update
+
+VERDICT FOR PAPER TRADING APP:
+  - Useful for country-level economic context
+  - RECOMMENDATION: Optional; use for country economic profiles
+
+================================================================================
+18. EXCHANGE RATES APIs
+================================================================================
+
+--- EXCHANGERATE.HOST ---
+Website:        https://exchangerate.host
+FREE TIER:
+  - 100 requests/month (reduced significantly)
+  - Historical and latest rates
+  - 170+ currencies
+  - No API key needed (but recommended)
+
+--- OPEN EXCHANGE RATES ---
+Website:        https://openexchangerates.org
+FREE TIER:
+  - 1,000 requests/month
+  - Hourly updates
+  - 170+ currencies
+  - USD base only on free tier
+  - API key required
+
+--- EXCHANGERATE-API ---
+Website:        https://www.exchangerate-api.com
+FREE TIER:
+  - 1,500 requests/month
+  - Daily updates on free
+  - 160+ currencies
+  - No API key needed for open plan
+
+--- FIXER.IO ---
+Website:        https://fixer.io (now apilayer)
+FREE TIER:
+  - 100 requests/month
+  - EUR base only on free
+  - 170+ currencies
+  - API key required
+
+VERDICT FOR PAPER TRADING APP:
+  - For forex data, Yahoo Finance and Finnhub are better
+  - These are good for currency conversion in the app
+  - RECOMMENDATION: Use ExchangeRate-API as backup forex source
+
+================================================================================
+19. BINANCE API
+================================================================================
+
+Website:        https://www.binance.com/en/binance-api
+Documentation:  https://binance-docs.github.io/apidocs/
+
+FREE TIER LIMITS:
+  - 1,200 requests/minute (weight-based)
+  - WebSocket: Unlimited connections (practical limit ~300)
+  - No API key needed for public market data
+  - API key needed for trading (not relevant for paper trading data)
+
+DATA COVERAGE:
+  [x] Cryptocurrency                        - 600+ trading pairs
+  [x] Crypto Order Books                    - Full depth
+  [x] Crypto Historical Data               - Klines/candlesticks
+  [x] Crypto 24h Statistics                 - Volume, price changes
+  [x] Crypto WebSocket Streams             - Real-time price updates
+  [ ] Stocks                                - NOT available
+  [ ] Forex                                 - NOT available
+  [ ] Any non-crypto                        - NOT available
+
+DATA DELAY: Real-time
+
+AUTHENTICATION:
+  - Public endpoints: No key needed
+  - Account endpoints: API key + secret
+
+API QUALITY: VERY HIGH
+  - Excellent documentation
+  - REST + WebSocket
+  - Very reliable
+  - High throughput
+
+GOTCHAS & LIMITATIONS:
+  - Crypto only
+  - IP-based rate limiting
+  - Some regions may be geo-blocked
+  - Weight-based rate limiting can be complex
+
+VERDICT FOR PAPER TRADING APP:
+  - Excellent supplement to CoinGecko for crypto
+  - Real-time WebSocket data is a major advantage
+  - RECOMMENDATION: Use for real-time crypto price feeds
+
+================================================================================
+20. COINMARKETCAP
+================================================================================
+
+Website:        https://coinmarketcap.com
+API:            https://coinmarketcap.com/api/
+
+FREE TIER LIMITS:
+  - 10,000 calls/month
+  - 30 calls/minute
+  - Basic endpoints only
+  - API key required
+
+DATA COVERAGE:
+  [x] Cryptocurrency                        - 9,000+ coins
+  [x] Crypto Market Data                    - Price, volume, market cap
+  [x] Global Crypto Metrics                 - Market dominance, total cap
+  [x] Crypto Categories                     - Sector classifications
+  [x] Exchange Data                         - Exchange listings
+  [ ] Historical OHLCV                      - Paid only
+  [ ] Non-crypto assets                     - NOT available
+
+DATA DELAY: Near real-time (updates every minute)
+
+AUTHENTICATION: API key (free registration)
+
+API QUALITY: HIGH
+
+GOTCHAS & LIMITATIONS:
+  - Historical data requires paid plan
+  - 10,000 calls/month can be limiting
+  - Basic plan missing some endpoints
+  - Crypto only
+
+VERDICT FOR PAPER TRADING APP:
+  - Good supplement to CoinGecko
+  - Better for crypto global stats and categories
+  - RECOMMENDATION: Secondary crypto source
+
+================================================================================
+21. US TREASURY API
+================================================================================
+
+Website:        https://api.fiscaldata.treasury.gov
+Documentation:  https://fiscaldata.treasury.gov/api-documentation/
+
+FREE TIER LIMITS:
+  - Fully free, no rate limits documented
+  - No API key required
+  - Government public data
+
+DATA COVERAGE:
+  [x] Treasury Yields                       - Daily yield curve rates
+  [x] Treasury Auctions                     - Auction results
+  [x] Federal Debt                          - National debt data
+  [x] Government Revenue/Spending           - Fiscal data
+  [x] Treasury Bills/Notes/Bonds            - Issuance data
+  [ ] Corporate Bonds                       - NOT available
+  [ ] Stock Data                            - NOT available
+
+VERDICT FOR PAPER TRADING APP:
+  - Essential for bond/treasury yield data
+  - RECOMMENDATION: Use for government bond yields
+
+================================================================================
+22. SEC EDGAR
+================================================================================
+
+Website:        https://www.sec.gov/edgar
+API:            https://efts.sec.gov/LATEST/
+Full-Text:      https://efts.sec.gov/LATEST/search-index?q=
+
+FREE TIER LIMITS:
+  - 10 requests/second
+  - No daily limit
+  - All data publicly available
+  - User-Agent header required (identify yourself)
+
+DATA COVERAGE:
+  [x] SEC Filings                           - All 10-K, 10-Q, 8-K, etc.
+  [x] Company Facts (XBRL)                  - Structured financial data
+  [x] Company Submissions                   - Filing history
+  [x] Insider Trading                       - Forms 3, 4, 5
+  [x] Mutual Fund Holdings                  - 13F filings
+  [x] Company CIK Lookup                    - Identifier mapping
+
+AUTHENTICATION: User-Agent header with email (no API key)
+
+VERDICT FOR PAPER TRADING APP:
+  - Excellent free source for US company fundamentals
+  - XBRL company facts are machine-readable financials
+  - RECOMMENDATION: Use for detailed US company filings/fundamentals
+
+================================================================================
+23. YAHOO FINANCE v2 (yfinance & yahoo-finance2)
+================================================================================
+
+Since this is an iOS app, the most relevant library access patterns:
+
+--- FOR iOS (Swift) ---
+
+Direct HTTP Access:
+  URL Pattern: https://query1.finance.yahoo.com/v8/finance/chart/{symbol}
+  URL Pattern: https://query2.finance.yahoo.com/v10/finance/quoteSummary/{symbol}
+
+  These endpoints require:
+  - A valid "crumb" token (obtained from cookie)
+  - Cookie header from initial yahoo.com visit
+
+  Parameters:
+  - range: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+  - interval: 1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 1d, 5d, 1wk, 1mo, 3mo
+  - modules: assetProfile, incomeStatementHistory, balanceSheetHistory,
+             cashflowStatementHistory, defaultKeyStatistics, financialData,
+             calendarEvents, recommendationTrend, upgradeDowngradeHistory,
+             institutionalOwnership, earningsHistory, earningsTrend,
+             industryTrend, price, summaryDetail, summaryProfile
+
+--- FOR BACKEND (Node.js) ---
+
+npm package: yahoo-finance2
+  - Handles crumb/cookie automatically
+  - TypeScript support
+  - Methods: quote(), quoteSummary(), historical(), search(),
+             options(), insights(), recommendations()
+
+--- FOR BACKEND (Python) ---
+
+pip package: yfinance
+  - Most popular Yahoo Finance library
+  - Handles authentication automatically
+  - Methods: download(), Ticker(), info, history, options,
+             financials, balance_sheet, cashflow
+
+RATE LIMITS (all unofficial):
+  - ~2,000 requests/hour per IP
+  - Throttling increases with volume
+  - No official documentation
+  - Rotating IPs or adding delays helps
+
+VERDICT FOR PAPER TRADING APP:
+  - Build a thin backend service that uses yahoo-finance2 (Node.js)
+  - Cache responses aggressively (data is delayed anyway)
+  - iOS app hits your backend, not Yahoo directly
+  - RECOMMENDATION: Use via backend proxy with aggressive caching
+
+================================================================================
+24. ADDITIONAL FREE DATA SOURCES
+================================================================================
+
+--- ALPHAVANTAGE RAPID API ---
+Available on RapidAPI with different rate limits
+May have different terms than direct API
+
+--- MORNINGSTAR (unofficial) ---
+  - No public API
+  - Web scraping possible but against TOS
+  - Good for mutual fund data if scraped carefully
+  - NOT recommended
+
+--- GOOGLE FINANCE ---
+  - No public API (discontinued in 2012)
+  - Limited data available via Google Sheets GOOGLEFINANCE() function
+  - Can be accessed programmatically via Google Sheets API
+  - Free within Google Sheets API limits (500 requests/100 seconds)
+
+--- BARCHART onDemand ---
+Website: https://www.barchart.com/ondemand
+  - Free tier: 25 requests/day
+  - Good for futures and commodities
+  - Paid plans start at $19.95/month
+
+--- FCSAPI ---
+Website: https://fcsapi.com
+  - Free: 500 requests/day
+  - Forex, crypto, commodities
+  - Basic stock data
+  - Good for forex pivot points
+
+--- CURRENCYBEACON ---
+Website: https://currencybeacon.com
+  - Free: 5,000 requests/month
+  - 170+ currencies
+  - Historical rates
+  - Good for forex conversion
+
+--- METALS-API ---
+Website: https://metals-api.com
+  - Free: 50 requests/month
+  - Precious metals prices
+  - Historical data
+
+--- ALTERNATIVE.ME CRYPTO API ---
+Website: https://alternative.me/crypto/api/
+  - Free, no key needed
+  - Fear & Greed Index
+  - Crypto listings
+  - Limited but useful sentiment data
+
+--- MESSARI (Crypto) ---
+Website: https://messari.io/api
+  - Free tier: 20 requests/minute
+  - Crypto asset data, metrics, profiles
+  - Good for crypto fundamentals
+
+--- DUKASCOPY (Forex) ---
+Website: https://www.dukascopy.com
+  - Free historical forex tick data
+  - Download via their data feed
+  - Very granular historical data
+
+--- INVESTING.COM (unofficial) ---
+  - No public API
+  - Scraping possible but against TOS
+  - investpy Python library (may be deprecated)
+
+================================================================================
+25. COVERAGE MATRIX
+================================================================================
+
+Rating: +++ = Excellent | ++ = Good | + = Limited | - = Not Available
+
+                    AV   FH   PG   YF   TD   CG   FMP  TS   TI   FRED BIN  EDT
+                    ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+US Stocks           ++   +++  ++   +++  ++   -    ++   +    ++   -    -    +
+Intl Stocks         +    +++  -    +++  ++   -    +    +    -    -    -    +
+Forex               ++   ++   +    ++   +++  -    +    -    +    +    -    +
+Crypto              ++   ++   +    +    ++   +++  +    -    ++   -    +++  +
+ETFs                ++   ++   ++   +++  ++   -    ++   +    ++   -    -    +
+Options             -    -    +    +++  -    -    +    -    -    -    -    +
+Futures             -    -    -    ++   +    -    -    -    -    -    -    -
+Bonds               -    -    -    +    +    -    -    -    -    ++   -    ++
+Mutual Funds        -    -    -    +++  +    -    +    -    ++   -    -    -
+Fundamentals        ++   ++   +    +++  +    -    +++  -    +    -    -    -
+News                +    +++  +    ++   -    -    ++   -    +    -    -    -
+Economic Data       ++   +    -    -    -    -    +    -    -    +++  -    -
+Tech Indicators     +++  +    -    -    +++  -    -    -    -    -    -    -
+
+LEGEND:
+  AV = Alpha Vantage       FH = Finnhub        PG = Polygon.io
+  YF = Yahoo Finance       TD = Twelve Data     CG = CoinGecko
+  FMP = Fin.Model.Prep     TS = Marketstack     TI = Tiingo
+  FRED = Federal Reserve   BIN = Binance        EDT = EODHD
+
+FREE TIER USABILITY (requests/day):
+  AV:   25/day          (Barely usable)
+  FH:   ~86,400/day     (Excellent - 60/min)
+  PG:   ~7,200/day      (Limited - 5/min, EOD only)
+  YF:   ~48,000/day     (Good - unofficial, ~2000/hr)
+  TD:   800/day          (Moderate)
+  CG:   ~43,200/day     (Good - 30/min with key, 10K/month cap)
+  FMP:  250/day          (Limited)
+  TS:   ~3/day           (Useless - 100/month)
+  TI:   ~20,000/day     (Good)
+  FRED: ~172,800/day    (Excellent - 120/min)
+  BIN:  ~unlimited      (Excellent - crypto only)
+  EDT:  20/day           (Useless)
+
+================================================================================
+26. RECOMMENDED API COMBINATION
+================================================================================
+
+For a paper trading competition app requiring MAXIMUM coverage at ZERO cost,
+the following combination provides the best balance:
+
++============================================================================+
+|                    RECOMMENDED FREE-TIER API STACK                          |
++============================================================================+
+
+TIER 1 - PRIMARY DATA SOURCES (use these for core functionality):
+-------------------------------------------------------------------------
+
+1. YAHOO FINANCE (via yahoo-finance2 backend)          [PRIMARY PRICE DATA]
+   Coverage: US stocks, international stocks, ETFs, options, futures,
+             mutual funds, forex, crypto, fundamentals, indices
+   Why: Broadest free coverage of any single source
+   Strategy: Run a Node.js backend that proxies yahoo-finance2 calls
+             with aggressive caching (cache 15min+ since data is delayed)
+   Handles: ~70% of all data needs
+
+2. FINNHUB                                             [SUPPLEMENTARY STOCKS]
+   Coverage: 60+ international exchanges, news, fundamentals,
+             economic calendar, insider trading, IPOs
+   Why: Best legitimate free API for stocks, 60 req/min
+   Strategy: Use for market news, company news, economic calendars,
+             and as backup for international stocks
+   Handles: News, calendars, international stock gaps
+
+3. COINGECKO (Demo API key)                            [PRIMARY CRYPTO]
+   Coverage: 13,000+ cryptocurrencies, exchanges, DeFi, NFTs
+   Why: Most comprehensive free crypto data
+   Strategy: Use for all crypto market data, rankings, categories
+   Handles: All cryptocurrency data needs
+
+4. FRED                                                [PRIMARY ECONOMIC]
+   Coverage: 800,000+ economic data series, GDP, inflation,
+             interest rates, treasury yields, exchange rates
+   Why: Most comprehensive free economic data, generous limits
+   Strategy: Use for all macro/economic data and treasury yields
+   Handles: All economic data needs
+
+TIER 2 - SUPPLEMENTARY SOURCES (fill gaps in Tier 1):
+-------------------------------------------------------------------------
+
+5. BINANCE API                                         [REAL-TIME CRYPTO]
+   Coverage: 600+ crypto pairs, real-time WebSocket
+   Why: Real-time crypto streaming, no API key needed
+   Strategy: Use WebSocket for live crypto price updates
+             CoinGecko for broader data, Binance for streaming
+   Handles: Real-time crypto price feeds
+
+6. FINANCIAL MODELING PREP                             [FUNDAMENTALS]
+   Coverage: Comprehensive financial statements, ratios, DCF,
+             analyst estimates, stock screener
+   Why: Best free fundamental data, 250 req/day is enough
+   Strategy: Use for detailed company financials, cache aggressively
+   Handles: Deep company fundamental analysis
+
+7. SEC EDGAR                                           [US COMPANY FILINGS]
+   Coverage: All SEC filings, XBRL financial data, insider trading
+   Why: Completely free, comprehensive US company data
+   Strategy: Use company facts API for structured financial data
+   Handles: US regulatory filings and structured financials
+
+8. US TREASURY API                                     [BOND DATA]
+   Coverage: Treasury yields, auction results, federal debt
+   Why: Free government bond data, no rate limits
+   Strategy: Use for yield curve and treasury data
+   Handles: Government bond/treasury data
+
+TIER 3 - OPTIONAL ENHANCEMENTS:
+-------------------------------------------------------------------------
+
+9.  ALPHA VANTAGE                                      [TECH INDICATORS]
+    Why: 50+ technical indicators, economic indicators
+    Limit: Only 25 req/day - use very sparingly
+    Strategy: Pre-compute and cache indicators; or compute locally
+    Alternative: Compute technical indicators locally from price data
+
+10. TWELVE DATA                                        [FOREX SUPPLEMENT]
+    Why: Good forex coverage, technical indicators
+    Limit: 800 req/day, 8 req/min
+    Strategy: Supplement Yahoo Finance forex data
+
+11. NASDAQ DATA LINK (Quandl)                          [FUTURES DATA]
+    Why: Continuous futures contracts (CHRIS dataset)
+    Strategy: Use for commodity and financial futures historical data
+
+12. ECB API                                            [EUR RATES]
+    Why: Official EUR exchange rates, EU economic data
+    Strategy: Use for EUR-denominated forex data
+
+13. EXCHANGERATE-API                                   [CURRENCY CONVERSION]
+    Why: 1,500 req/month free, good for in-app conversion
+    Strategy: Use for displaying portfolio values in local currencies
+
+14. OPENFIGI                                           [IDENTIFIER MAPPING]
+    Why: Map between FIGI, ISIN, CUSIP, ticker symbols
+    Strategy: Use for cross-referencing securities across APIs
+
+
++============================================================================+
+|                         COVERAGE SUMMARY                                    |
++============================================================================+
+
+ASSET TYPE          PRIMARY SOURCE      BACKUP SOURCE       COVERAGE
+-----------         ----------------    ----------------    ----------
+US Stocks           Yahoo Finance       Finnhub             COMPLETE
+NYSE                Yahoo Finance       Finnhub             COMPLETE
+NASDAQ              Yahoo Finance       Finnhub             COMPLETE
+AMEX                Yahoo Finance       Finnhub             COMPLETE
+
+Intl - London       Yahoo Finance (.L)  Finnhub             COMPLETE
+Intl - Tokyo        Yahoo Finance (.T)  Finnhub             COMPLETE
+Intl - Hong Kong    Yahoo Finance (.HK) Finnhub             COMPLETE
+Intl - Shanghai     Yahoo Finance (.SS) Finnhub             COMPLETE
+Intl - Toronto      Yahoo Finance (.TO) Finnhub             COMPLETE
+Intl - Frankfurt    Yahoo Finance (.DE) Finnhub             COMPLETE
+Intl - Mumbai BSE   Yahoo Finance (.BO) Finnhub             COMPLETE
+Intl - Mumbai NSE   Yahoo Finance (.NS) Finnhub             COMPLETE
+Intl - Sydney       Yahoo Finance (.AX) Finnhub             COMPLETE
+Intl - Other        Yahoo Finance       Finnhub             GOOD
+
+Cryptocurrency      CoinGecko           Binance API         COMPLETE
+Crypto Streaming    Binance WebSocket   CoinGecko           COMPLETE
+
+ETFs (US)           Yahoo Finance       Finnhub             COMPLETE
+ETFs (Intl)         Yahoo Finance       Finnhub             GOOD
+
+Options             Yahoo Finance       (no free backup)    GOOD
+Futures             Yahoo Finance       Quandl/CHRIS        MODERATE
+Bonds (Govt)        FRED + Treasury     Yahoo Finance       GOOD
+Bonds (Corporate)   Yahoo Finance       (limited)           MODERATE
+Mutual Funds        Yahoo Finance       Tiingo              GOOD
+
+Forex               Yahoo Finance       Twelve Data         COMPLETE
+Currency Conv.      ExchangeRate-API    ECB API             COMPLETE
+
+Fundamentals        FMP + SEC EDGAR     Yahoo Finance       COMPLETE
+Financial Stmts     FMP + SEC EDGAR     Yahoo Finance       COMPLETE
+Analyst Estimates   FMP                 Finnhub             GOOD
+Insider Trading     Finnhub             SEC EDGAR           COMPLETE
+
+Market News         Finnhub             FMP                 COMPLETE
+Economic Data       FRED                ECB + World Bank    COMPLETE
+Econ Calendar       Finnhub             FMP                 COMPLETE
+Treasury Yields     FRED + Treasury     Yahoo Finance       COMPLETE
+Tech Indicators     Compute locally     Alpha Vantage       COMPLETE
+
+OVERALL COVERAGE: ~95%+ of all asset types and exchanges
+
+GAPS (minor):
+  - Corporate bond pricing: Limited free coverage
+  - Some exotic futures contracts
+  - Real-time US stock data (15-min delay acceptable per requirements)
+  - Some emerging market exchanges may have limited data
+
+================================================================================
+27. IMPLEMENTATION STRATEGY
+================================================================================
+
+ARCHITECTURE:
+  iOS App <-> Backend API (Node.js) <-> Multiple Data APIs
+                                    <-> Cache Layer (Redis/SQLite)
+
+WHY A BACKEND:
+  1. Yahoo Finance requires cookie/crumb handling (hard in iOS)
+  2. Aggregate multiple API sources into unified response
+  3. Cache data aggressively (15-60 min delay is acceptable)
+  4. Manage API keys server-side (security)
+  5. Rate limit management and request queuing
+  6. Transform data into consistent format
+
+CACHING STRATEGY (critical for staying within free limits):
+  - Stock quotes: Cache 15 minutes
+  - Fundamentals: Cache 24 hours
+  - Economic data: Cache 6-12 hours
+  - News: Cache 30 minutes
+  - Historical data: Cache indefinitely (immutable)
+  - Crypto: Cache 5-10 minutes
+  - Options chains: Cache 15 minutes
+  - Exchange rates: Cache 1 hour
+
+REQUEST BUDGET (daily, with caching):
+  +-----------------+--------+--------+----------------------------+
+  | API             | Budget | Limit  | Usage Strategy             |
+  +-----------------+--------+--------+----------------------------+
+  | Yahoo Finance   | ~5,000 | ~48K   | Primary, cached heavily    |
+  | Finnhub         | ~10,000| ~86K   | News, calendars, intl      |
+  | CoinGecko       | ~300   | ~330   | Crypto data (10K/month)    |
+  | FRED            | ~1,000 | ~173K  | Economic data, on-demand   |
+  | FMP             | ~200   | 250    | Fundamentals, cached 24h   |
+  | Binance         | ~5,000 | huge   | Crypto streaming           |
+  | SEC EDGAR       | ~500   | huge   | Company filings            |
+  | US Treasury     | ~100   | huge   | Bond yields                |
+  | Twelve Data     | ~500   | 800    | Forex supplement           |
+  | Alpha Vantage   | ~20    | 25     | Tech indicators (sparse)   |
+  | ExchangeRate    | ~50    | ~50    | Currency conversion         |
+  | Quandl          | ~200   | 50K    | Futures data               |
+  +-----------------+--------+--------+----------------------------+
+
+API KEY MANAGEMENT:
+  - Store all API keys in server environment variables
+  - Never expose keys to iOS client
+  - Use separate keys for development and production
+  - Monitor usage per key
+
+ERROR HANDLING & FALLBACK CHAIN:
+  For stock quotes:
+    1. Try Yahoo Finance
+    2. Fall back to Finnhub
+    3. Fall back to Twelve Data
+    4. Return cached data with staleness indicator
+
+  For crypto:
+    1. Try Binance (real-time)
+    2. Fall back to CoinGecko
+    3. Fall back to CoinMarketCap
+    4. Return cached data
+
+  For economic data:
+    1. Try FRED
+    2. Fall back to ECB (for EU data)
+    3. Fall back to cached data
+
+DATA NORMALIZATION:
+  All APIs return data in different formats. The backend should
+  normalize into a consistent schema:
+
+  {
+    "symbol": "AAPL",
+    "exchange": "NASDAQ",
+    "price": 185.50,
+    "change": 2.30,
+    "changePercent": 1.25,
+    "volume": 52000000,
+    "timestamp": "2026-02-11T16:00:00Z",
+    "delayed": true,
+    "delayMinutes": 15,
+    "source": "yahoo-finance",
+    "cached": false,
+    "cacheAge": 0
+  }
+
+ESTIMATED MONTHLY COST: $0
+  All recommended APIs have free tiers sufficient for a paper
+  trading app with proper caching. If the app scales significantly
+  (1000+ daily active users), consider:
+  - Finnhub Growth: $49/month (300 req/min)
+  - CoinGecko Analyst: $129/month (500 req/min)
+  - FMP Starter: $14/month (unlimited fundamentals)
+  Total scaling cost: ~$192/month for significant scale
+
+================================================================================
+API QUICK REFERENCE - ALL FREE TIERS
+================================================================================
+
++--------------------+------------------+----------+-------------+------------+
+| API                | Free Limit       | Key?     | Best For    | Int'l?     |
++--------------------+------------------+----------+-------------+------------+
+| Alpha Vantage      | 25/day, 5/min    | Yes      | Indicators  | Limited    |
+| Finnhub            | 60/min           | Yes      | Stocks/News | Excellent  |
+| Polygon.io         | 5/min, EOD only  | Yes      | US stocks   | No         |
+| Yahoo Finance      | ~2000/hr (unoff) | No       | Everything  | Excellent  |
+| Twelve Data        | 800/day, 8/min   | Yes      | Forex/Ind.  | Good       |
+| CoinGecko          | 30/min, 10K/mo   | Yes(demo)| Crypto      | N/A        |
+| FMP                | 250/day          | Yes      | Fundament.  | Moderate   |
+| Marketstack        | 100/month        | Yes      | SKIP        | Good       |
+| IEX Cloud          | ~50K msgs/mo     | Yes      | US stocks   | No         |
+| Tiingo             | 1000/hr          | Yes      | US EOD      | No         |
+| EODHD              | 20/day           | Yes      | SKIP free   | Good(paid) |
+| Quandl/Nasdaq      | 50K/day          | Yes      | Futures     | Limited    |
+| OpenFIGI           | 250/min          | Optional | ID mapping  | Global     |
+| Stooq              | Unofficial       | No       | Backup      | Limited    |
+| FRED               | 120/min          | Yes      | Economic    | US+some    |
+| ECB API            | Unlimited        | No       | EUR rates   | EU         |
+| World Bank         | Unlimited        | No       | Macro data  | Global     |
+| ExchangeRate-API   | 1500/month       | No       | FX convert  | Global     |
+| Binance            | 1200/min         | No*      | Crypto RT   | N/A        |
+| CoinMarketCap      | 10K/month        | Yes      | Crypto ref  | N/A        |
+| US Treasury        | Unlimited        | No       | Bonds       | US         |
+| SEC EDGAR          | 10/sec           | No**     | Filings     | US         |
++--------------------+------------------+----------+-------------+------------+
+
+* No key needed for public market data endpoints
+** Requires User-Agent header with email address
+
+================================================================================
+RISK ASSESSMENT
+================================================================================
+
+HIGH RISK (may break or change terms):
+  - Yahoo Finance: Unofficial, can break anytime
+  - Stooq: Unofficial scraping source
+
+MEDIUM RISK (free tier may be reduced):
+  - Alpha Vantage: Already reduced from 500 to 25/day
+  - CoinGecko: Tightened limits in 2024-2025
+  - IEX Cloud: Underwent ownership changes
+  - Marketstack: Free tier nearly useless already
+
+LOW RISK (stable free tiers):
+  - Finnhub: Consistently generous free tier
+  - FRED: Government-funded, always free
+  - ECB API: Government-funded, always free
+  - US Treasury: Government-funded, always free
+  - SEC EDGAR: Government-funded, always free
+  - Binance: Public data always free
+  - OpenFIGI: Bloomberg-backed standard
+  - World Bank: Always free
+
+MITIGATION STRATEGY:
+  1. Always have 2+ data sources for critical data types
+  2. Cache aggressively to reduce API dependency
+  3. Design backend with provider abstraction layer
+  4. Monitor API changes via provider blogs/changelogs
+  5. Keep Yahoo Finance as primary but prepare for it breaking
+  6. Government APIs (FRED, SEC, Treasury) are the most reliable
+
+================================================================================
+END OF RESEARCH
+================================================================================

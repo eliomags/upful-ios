@@ -1,0 +1,1379 @@
+# UPFUL iOS APP -- TECH STACK RESEARCH (February 2026)
+
+**Current Environment**: Xcode 15.4 / Swift 5.10 / macOS arm64
+**Research Date**: February 11, 2026
+**Purpose**: Evaluate technologies for full rebuild of Upful paper-trading app
+
+---
+
+## 1. SWIFT VERSION
+
+### Latest Stable: Swift 6.1 (shipped with Xcode 16.3)
+### Previous: Swift 6.0 (shipped with Xcode 16.0, September 2024)
+
+**Swift 6 Key Features:**
+- **Complete Concurrency Checking (enforced)**: Swift 6.0 made the full Swift Concurrency
+  model mandatory rather than optional. The compiler now enforces data-race safety at
+  compile time. All `Sendable` violations that were warnings in Swift 5.10 are now errors
+  in Swift 6 mode. This is the single biggest migration challenge.
+- **Typed throws**: Functions can now specify the exact error type they throw
+  (`func load() throws(NetworkError)`), enabling exhaustive error handling without
+  type erasure.
+- **Noncopyable types (move-only types)**: Fully stabilized. Types marked `~Copyable`
+  cannot be implicitly copied, enabling zero-cost unique ownership patterns.
+- **`count(where:)` on Sequence**: Convenience method added to the standard library.
+- **Pack iteration**: Variadic generics (parameter packs) now support `for-in` iteration.
+- **128-bit integer types**: `Int128` and `UInt128` added to the standard library.
+- **Embedded Swift**: Subset of Swift for microcontrollers and embedded systems.
+- **Improved C++ interop**: Better bridging with C++ standard library types.
+- **Synchronization module**: New `Mutex` and `Atomic` types for low-level concurrency.
+
+**Swift 6.1 (Xcode 16.3) additions:**
+- Concurrency improvements and bug fixes.
+- Incremental adoption features for migrating to strict concurrency.
+- `@retroactive` conformance improvements.
+- Various compiler performance improvements.
+
+**Migration Considerations (Swift 5.10 -> 6.x):**
+- The biggest hurdle is strict concurrency. All global mutable state must be actor-isolated
+  or marked `@MainActor`. Completion handler patterns must be audited.
+- Swift 6 can be adopted incrementally: you can enable strict concurrency per-module or
+  even per-file, and the compiler flag `-swift-version 6` controls this.
+- For a full rewrite (not incremental migration), starting fresh in Swift 6 mode is
+  recommended. Design all types with Sendable conformance from the start.
+- Current Upful codebase uses many singletons (TradingEngine.shared, BalanceManager, etc.)
+  and completion handlers, which would all need Sendable/actor treatment.
+
+**Recommendation for Upful**: Use Swift 6.1 (latest) with strict concurrency enabled from
+day one. Since this is a rewrite, there is no migration cost -- design all types correctly
+from the start using actors, async/await, and Sendable protocols.
+
+---
+
+## 2. XCODE VERSION
+
+### Latest Stable: Xcode 16.3 (February 2026)
+### Previous Stable: Xcode 16.2 (December 2025)
+
+**Xcode 16 Key Features (introduced September 2024):**
+- Swift 6 language support with full concurrency checking.
+- Predictive code completion powered by on-device machine learning.
+- Completely rewritten build system with improved parallelism and incremental builds.
+- Swift Testing framework integration (alongside XCTest).
+- Unified logging and crash analysis console.
+- Xcode Cloud enhancements for CI/CD.
+- Enhanced Instruments with new Swift Concurrency instrument.
+
+**Minimum Deployment Targets (Xcode 16.3):**
+- iOS 16.0 minimum (cannot target below iOS 16)
+- iOS 18.0 for latest SwiftUI/SwiftData features
+- iOS 17.0 for SwiftData, interactive widgets, StoreKit 2 views
+- iOS 16.0 for SwiftUI Charts, NavigationStack, Lock Screen widgets
+
+**Recommended Deployment Target for Upful:**
+- **iOS 17.0** -- This balances feature availability with market reach:
+  - As of early 2026, iOS 17+ covers approximately 90-95% of active iPhones
+  - iOS 16 devices are increasingly rare (iPhone 8 and SE 2nd gen running iOS 16)
+  - iOS 17.0 unlocks: SwiftData, interactive widgets, StoreKit views,
+    TipKit, improved SwiftUI Navigation, #Preview macro, Observation framework
+  - iOS 18.0 features (mesh gradients, SF Symbol animations, custom containers)
+    can be used with `@available(iOS 18.0, *)` checks
+
+**Current Upful situation**: The Podfile references platform `:ios, '13.0'` (commented out),
+and the codebase likely targets iOS 13-14 range. Moving to iOS 17 is a significant jump
+but entirely appropriate for a 2026 rewrite.
+
+**Upgrade Path**: User currently has Xcode 15.4 / Swift 5.10. Must upgrade to Xcode 16.3
+from the Mac App Store or developer.apple.com. Requires macOS 15 (Sequoia) or later.
+If still on macOS 14 (Sonoma), an OS upgrade is needed first.
+
+---
+
+## 3. SWIFTUI vs UIKit
+
+### Current State of SwiftUI (as of iOS 18 / Xcode 16.3)
+
+**SwiftUI Maturity Assessment: PRODUCTION READY for most apps**
+
+SwiftUI has reached a level of maturity where building a full production app is viable
+and recommended for new projects. Here is the breakdown:
+
+**Fully Mature (Production Ready):**
+- Navigation: `NavigationStack`, `NavigationSplitView`, programmatic navigation with
+  `NavigationPath` (iOS 16+). Fully replaces UINavigationController.
+- Lists and grids: `List`, `LazyVGrid`, `LazyHGrid` with excellent performance.
+  Section headers, swipe actions, pull-to-refresh all work well.
+- Forms and input: `TextField`, `SecureField`, `Picker`, `DatePicker`, `Toggle`,
+  `Stepper`, `Slider` -- all production ready.
+- Sheets, alerts, confirmations: Fully featured modal presentation system.
+- Tab bars: `TabView` with programmatic tab selection and badges.
+- Search: `.searchable()` modifier with suggestions and scopes.
+- Charts: Swift Charts framework (iOS 16+) -- discussed in detail below.
+- Animations: Excellent animation system, better than UIKit for most use cases.
+- Gestures: Comprehensive gesture system including drag, tap, long press, rotation.
+- Accessibility: First-class VoiceOver support built into the framework.
+- Observation framework (iOS 17+): `@Observable` macro replaces `ObservableObject`,
+  with automatic, fine-grained UI updates. Major performance improvement.
+- Async image loading: `AsyncImage` built-in.
+
+**Improved but with Caveats:**
+- Complex custom layouts: `Layout` protocol (iOS 16+) enables custom layout containers.
+  Works well but requires understanding of the layout protocol.
+- Rich text / attributed strings: Improved but still not as flexible as UIKit's
+  NSAttributedString + UITextView combination.
+- `ScrollView` programmatic control: `ScrollViewReader` and `.scrollPosition()` (iOS 17+)
+  work but are less flexible than UIScrollView. Scroll to specific items is reliable;
+  arbitrary offset control improved in iOS 18.
+- Collection views with complex layouts: No direct equivalent to UICollectionView's
+  compositional layout. Can be approximated with LazyVGrid + custom Layout, but
+  for truly complex layouts (like the App Store's mixed-size featured sections),
+  UIKit collections may still be needed.
+
+**Still Requires UIKit (via UIViewControllerRepresentable):**
+- WebView / WKWebView: Must wrap in UIViewRepresentable.
+- Safari view controller (SFSafariViewController): Must wrap.
+- MapKit has SwiftUI-native Map (iOS 17+), but some advanced annotations may
+  still need UIKit wrapping.
+- Camera / image picker: PhotosPicker (SwiftUI native, iOS 16+) works for photo
+  selection. Custom camera UI still needs UIKit wrapping.
+- Very complex text editing (code editors, rich markdown editors): UITextView wrapping
+  is still recommended.
+
+**Recommendation for Upful:**
+SwiftUI is the correct choice for the Upful rewrite. The app's UI consists of:
+- Lists of stocks, holdings, watchlists (perfect for SwiftUI List/LazyVStack)
+- Stock detail screens with data presentation (ideal for SwiftUI)
+- Trading forms (buy/sell) (SwiftUI forms excel here)
+- Charts (Swift Charts framework is native SwiftUI)
+- Settings/preferences (SwiftUI's natural strength)
+- Tab-based navigation (TabView)
+- Search functionality (.searchable)
+- News feed (List with AsyncImage)
+
+The only UIKit wrapping needed would be for web views (legal docs, potentially news
+article detail) via SFSafariViewController or WKWebView wrapped in
+UIViewControllerRepresentable.
+
+Use the **Observation framework** (`@Observable`) targeting iOS 17+ for clean,
+performant state management.
+
+---
+
+## 4. SWIFTDATA vs COREDATA
+
+### SwiftData Status (as of iOS 18.x)
+
+**SwiftData is production-ready for most use cases but has known limitations.**
+
+**What SwiftData Does Well:**
+- Simple CRUD operations with `@Model` macro -- dramatically less boilerplate than CoreData
+- Automatic schema migration for simple additive changes
+- `@Query` property wrapper for declarative fetching in SwiftUI views
+- Built on top of CoreData internally (same SQLite backend)
+- Supports predicates with `#Predicate` macro (type-safe, composable)
+- ModelContainer and ModelContext for clean dependency injection
+- CloudKit sync (via underlying CoreData stack)
+- Automatic relationship management
+
+**Known Limitations / Issues (as of iOS 18):**
+- **Complex migrations**: Custom migration plans (MigrationPlan, MigrationStage) exist
+  but are less battle-tested than CoreData's mapping models. For complex schema
+  migrations (renaming properties, splitting entities, data transformations), proceed
+  with caution and test thoroughly.
+- **Background contexts**: `ModelActor` protocol enables background processing, but
+  it is less mature than CoreData's `performBackgroundTask` pattern. Some developers
+  report occasional concurrency issues with complex background operations.
+- **Performance at scale**: For datasets with 100K+ records, CoreData with NSFetchedResultsController
+  and batch operations may still have an edge. For Upful's scale (hundreds to low
+  thousands of transactions/holdings), SwiftData is more than sufficient.
+- **Unique constraints**: Supported via `#Unique` macro (iOS 17+).
+- **Compound predicates**: Fully supported with `#Predicate`.
+- **Transformable types**: Supported but requires `@Attribute(.transformable(by:))`.
+- **NSFetchedResultsController equivalent**: Not directly available. `@Query` serves
+  a similar purpose in SwiftUI views, but for non-SwiftUI contexts, you need to
+  manually observe changes.
+- **Sectioned fetch results**: Not as straightforward as CoreData's sectionNameKeyPath.
+  Must be handled with custom grouping logic.
+
+**Upful Data Model Complexity:**
+Based on the existing CoreData model analysis:
+- `PersistedTransaction` (ticker, shares, price, date, type)
+- `LoggedTransaction` (similar to above with remote sync ID)
+- `SavedCompany` (ticker, company name)
+- `SavedScreener` (screener configuration)
+These are relatively simple entities with straightforward relationships.
+
+**Recommendation for Upful:**
+**Use SwiftData.** The Upful data model is not complex. It involves simple entities
+(transactions, holdings, saved companies, screeners) with straightforward CRUD operations
+and basic querying (filter by ticker, sort by date). SwiftData handles this easily.
+
+Benefits for Upful specifically:
+- `@Query` in SwiftUI views for live-updating portfolio/watchlist screens
+- Dramatically less code than CoreData (no .xcdatamodeld file, no NSManagedObject
+  subclasses, no fetch request boilerplate)
+- Type-safe predicates eliminate runtime crashes from string-based predicates
+- Works beautifully with SwiftUI's Observation framework
+
+Fallback plan: If any SwiftData limitation is encountered during development (e.g.,
+complex migration between v1 and v2 of the app), it is possible to drop down to
+CoreData for specific entities since SwiftData is built on top of it.
+
+---
+
+## 5. STOREKIT 2
+
+### Current State: Fully Mature, Recommended for All New Projects
+
+StoreKit 2 was introduced at WWDC 2021 (iOS 15) and has been significantly enhanced
+through iOS 16, 17, and 18. It is now the recommended approach for all in-app purchases.
+
+**StoreKit 2 Key Features:**
+- **Swift-native async/await API**: No more delegates and callback-based flows.
+  `Product.products(for:)`, `product.purchase()`, `Transaction.updates` are all async.
+- **Server-side receipt verification built-in**: JWS (JSON Web Signature) signed
+  transactions verified by Apple. No need for local receipt validation (bye SwiftyStoreKit).
+- **Transaction.currentEntitlements**: Async sequence that provides all currently
+  entitled transactions. Simple to check subscription status.
+- **Transaction.updates**: Async sequence for real-time transaction updates.
+  Handles renewals, refunds, revocations automatically.
+- **Product.SubscriptionInfo**: Easy access to subscription group, renewal state,
+  expiration date, grace period status.
+- **StoreKit Testing in Xcode**: .storekit configuration files for local testing
+  without App Store Connect. Test renewals, refunds, offer codes locally.
+- **SubscriptionStoreView (iOS 17+)**: Pre-built SwiftUI paywall/subscription UI.
+  Automatically displays subscription options, handles purchase flow, shows
+  current subscription status. Customizable with `SubscriptionStoreView` modifiers.
+- **App Transaction**: Verify app purchase/download for anti-piracy.
+- **Offer codes and promotional offers**: Fully supported.
+- **Price formatting**: `product.displayPrice` with automatic locale formatting.
+
+**StoreKit 2 SwiftUI Views (iOS 17+):**
+- `SubscriptionStoreView` -- Full paywall UI (very customizable)
+- `ProductView` -- Individual product purchase button
+- `StoreView` -- Product listing with purchase capability
+These views handle the entire purchase flow including loading, error states,
+and confirmation.
+
+**Migration from SwiftyStoreKit:**
+The current Upful app uses SwiftyStoreKit (a CocoaPod) for IAP management. SwiftyStoreKit
+was last meaningfully updated in 2022 and wraps the original StoreKit 1 APIs. It is
+effectively deprecated by the community in favor of StoreKit 2.
+
+Migration mapping:
+- SwiftyStoreKit.retrieveProductsInfo -> Product.products(for:)
+- SwiftyStoreKit.purchaseProduct -> product.purchase()
+- SwiftyStoreKit.verifyReceipt -> Transaction.currentEntitlements (automatic)
+- SwiftyStoreKit.verifySubscription -> Product.SubscriptionInfo
+
+**Recommendation for Upful:**
+Use StoreKit 2 exclusively. Drop SwiftyStoreKit entirely. For the paywall UI, consider
+using `SubscriptionStoreView` (iOS 17+) as a starting point -- it provides a polished
+UI out of the box that can be customized. For more control over the paywall design,
+build a custom SwiftUI view backed by StoreKit 2 APIs.
+
+For server-side verification, use Apple's App Store Server API v2 (called from your
+Cloudflare Worker backend) to verify transactions and manage subscriptions.
+
+---
+
+## 6. SWIFT CHARTS
+
+### Current State: Mature, Expanding (iOS 16+)
+
+Swift Charts is Apple's native charting framework, introduced at WWDC 2022.
+
+**Built-in Chart Types:**
+- **BarMark** -- Bar charts (vertical, horizontal, stacked, grouped)
+- **LineMark** -- Line charts with customizable interpolation
+- **PointMark** -- Scatter plots
+- **AreaMark** -- Area/filled charts
+- **RuleMark** -- Reference lines (horizontal, vertical)
+- **RectangleMark** -- Heatmaps and Gantt-style charts
+- **SectorMark (iOS 17+)** -- Pie charts and donut charts
+
+**Capabilities Relevant to Upful:**
+
+1. **Line Charts (stock price history)**: Excellent support. LineMark with date axis,
+   custom point annotations, gradient fills (AreaMark underneath), interactive tooltip
+   on hover/touch via `.chartOverlay`. Interpolation options include linear, monotone,
+   catmullRom, cardinal, stepStart, stepEnd.
+
+2. **Bar Charts (volume, comparison)**: Fully supported with BarMark. Grouped and
+   stacked bars for comparing metrics.
+
+3. **Pie/Donut Charts (portfolio allocation)**: Fully supported via SectorMark (iOS 17+).
+   Donut charts with custom inner labels, segment selection, animation.
+
+4. **Candlestick Charts**: NOT NATIVELY SUPPORTED by Swift Charts. There is no built-in
+   CandlestickMark. However, candlestick charts can be constructed by combining:
+   - `RuleMark` for the wick (high-to-low line)
+   - `RectangleMark` for the body (open-to-close box)
+   - Color coding for up/down days
+   This approach works and multiple developers have published implementations, but it
+   requires custom work. Performance with large datasets (1000+ candles) needs testing.
+
+5. **Interactive selection**: `.chartOverlay` and `.chartGesture` modifiers allow
+   touch-based data point selection, crosshairs, and tooltips.
+
+6. **Animations**: Chart transitions and animations are built-in.
+
+7. **Axis customization**: Full control over axis labels, gridlines, formatting.
+
+8. **Scrolling charts**: `.chartScrollableAxes()` (iOS 17+) enables horizontally
+   scrollable charts -- essential for stock price history.
+
+**Comparison with Current Charts Pod (danielgindi/Charts):**
+The current Upful app uses the `Charts` CocoaPod (danielgindi/Charts, also known as
+DGCharts), which is a port of MPAndroidChart. It provides CandlestickChartView natively.
+However:
+- danielgindi/Charts is a UIKit library requiring wrapping for SwiftUI
+- It has a large API surface and can be complex to customize
+- Maintenance has slowed (renamed to DGCharts, sporadic updates)
+- Swift Charts is Apple's first-party solution with guaranteed platform support
+
+**Recommendation for Upful:**
+Use Swift Charts for all chart types except possibly candlestick. For candlestick charts:
+- **Option A (recommended)**: Build custom candlestick using RuleMark + RectangleMark
+  in Swift Charts. This keeps the entire charting stack unified and native. Several
+  open-source implementations exist as reference. Good enough for a paper trading app
+  where the candlestick chart is informational, not a professional trading tool.
+- **Option B**: Use a focused third-party library (like the SwiftUI-native
+  `SwiftUICharts` package or a dedicated candlestick package) only for that one chart
+  type, if custom implementation proves too complex.
+- **Avoid**: Keeping danielgindi/Charts for the entire app. It is UIKit-based and adds
+  unnecessary weight.
+
+---
+
+## 7. NETWORKING
+
+### Approaches Evaluated
+
+**Option A: URLSession with async/await (RECOMMENDED)**
+
+Since Swift 5.5+ (and now fully mature in Swift 6), URLSession supports native async/await:
+
+```swift
+let (data, response) = try await URLSession.shared.data(from: url)
+let decoded = try JSONDecoder().decode(StockQuote.self, from: data)
+```
+
+Advantages:
+- Zero dependencies, ships with the platform
+- Full async/await support with structured concurrency
+- Automatic retry, caching, and HTTP/2-3 via the underlying system
+- URLSession handles certificate pinning, background downloads, adaptive connectivity
+- `URLSession.shared` is thread-safe and optimized by Apple
+- `AsyncBytes` for streaming responses
+- In Swift 6, URLSession is fully Sendable-safe
+
+For Upful's needs (REST API calls for stock quotes, financial data, search):
+- Simple request/response pattern -- URLSession handles this perfectly
+- No need for complex interceptors or adapters
+- Custom API client wrapper (~100-200 lines) provides clean abstraction
+
+**Option B: Alamofire**
+
+Alamofire is the most popular iOS networking library. In 2025-2026:
+- Version 5.x is stable and supports async/await via `AF.request().serializingDecodable()`
+- Adds interceptors, retry policies, response validation, event monitors
+- 55,000+ GitHub stars, actively maintained
+
+Assessment: Alamofire adds convenience but not essential capability. For a new project
+using async/await, the gap between raw URLSession and Alamofire has narrowed significantly.
+The primary remaining benefits are request interceptors (for auth token injection) and
+structured error handling. Both can be built with a thin custom wrapper over URLSession.
+
+**Option C: Custom Networking Layer**
+
+Build a thin APIClient protocol-based abstraction over URLSession:
+- `APIClient` protocol with `func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T`
+- `Endpoint` enum or struct for type-safe URL construction
+- Interceptor chain for auth token injection
+- Centralized error mapping
+
+This is the most common approach in modern iOS development and provides the best
+balance of simplicity, testability, and control.
+
+**Recommendation for Upful:**
+Use **URLSession with async/await** wrapped in a thin custom `APIClient` layer.
+No need for Alamofire. The custom wrapper provides:
+1. Type-safe endpoint definitions for each API (Alpha Vantage, Finnhub, etc.)
+2. Automatic auth token injection per API provider
+3. Rate limiting awareness (important given free tier API limits)
+4. Caching layer for frequently accessed data (stock quotes, company info)
+5. Easy mocking for unit tests via protocol-based abstraction
+
+---
+
+## 8. ARCHITECTURE PATTERNS
+
+### Current iOS Community Consensus (2025-2026)
+
+**MVVM with Observation Framework (Dominant Pattern)**
+
+The most widely adopted pattern in the SwiftUI era. With the `@Observable` macro
+(iOS 17+), MVVM becomes extremely clean:
+
+```swift
+@Observable
+class StockDetailViewModel {
+    var stock: Stock?
+    var isLoading = false
+    var error: Error?
+
+    func loadStock(ticker: String) async {
+        isLoading = true
+        defer { isLoading = false }
+        stock = try? await apiClient.fetchStock(ticker)
+    }
+}
+```
+
+Pros: Simple, well-understood, maps naturally to SwiftUI's data flow.
+Cons: Can become "massive view model" if not decomposed properly.
+
+**The Composable Architecture (TCA) by Point-Free**
+
+TCA provides a Redux-like unidirectional data flow:
+- State: All screen state in a struct
+- Action: All possible events as an enum
+- Reducer: Pure function (State, Action) -> Effect
+- Store: Holds state and dispatches actions
+
+Pros: Extremely testable, predictable state management, great for complex apps.
+Cons: Steep learning curve, significant boilerplate, can be overkill for simple screens.
+Current version (1.x) is mature and production-tested in large apps.
+
+**Clean Architecture / VIPER**
+
+Multi-layered architecture with Interactors, Presenters, Routers.
+Still used in large enterprise apps but considered overly complex for most iOS apps
+in the SwiftUI era. The community has largely moved away from this pattern for new
+projects.
+
+**MV (Model-View) / "SwiftUI Way"**
+
+Apple's own recommendation leans toward simpler patterns where SwiftUI views directly
+observe model objects. With `@Observable`, the "view model" layer can sometimes be
+eliminated for simple screens, with business logic living in model/service objects.
+
+**Recommendation for Upful:**
+Use **MVVM with the Observation framework** as the primary pattern:
+
+1. **Views**: Pure SwiftUI views, no business logic
+2. **ViewModels**: `@Observable` classes, one per screen/feature
+3. **Services**: Protocol-based service layer (APIClient, TradingEngine, etc.)
+4. **Models**: Plain Swift structs for data transfer, SwiftData @Model for persistence
+5. **Navigation**: Coordinator pattern using NavigationStack with NavigationPath
+
+This gives:
+- Clean separation of concerns without TCA's boilerplate
+- Easy testing (mock services injected into view models)
+- Natural SwiftUI integration via @Observable
+- Familiar pattern for any iOS developer joining the project
+
+Use dependency injection via environment or constructor injection, not singletons.
+The current Upful app uses many singletons (TradingEngine.shared, etc.) which should
+be replaced with injected dependencies.
+
+---
+
+## 9. DEPENDENCY MANAGEMENT
+
+### SPM (Swift Package Manager) vs CocoaPods in 2026
+
+**SPM is the clear winner. CocoaPods is in maintenance mode.**
+
+**Swift Package Manager (SPM):**
+- First-party tool integrated into Xcode (no separate installation)
+- Supports binary frameworks (XCFrameworks)
+- Supports package plugins (build tools, linters, code generators)
+- All major libraries support SPM (Firebase, Stripe, Alamofire, Kingfisher, etc.)
+- Apple explicitly recommends SPM for all new projects
+- No Podfile, no `pod install`, no workspace file management
+- Resolved versions in Package.resolved (checked into git)
+- Better build caching and incremental compilation vs CocoaPods
+
+**CocoaPods:**
+- Still functional but the project is in maintenance mode
+- Core team has reduced activity; community-driven maintenance
+- Some niche/legacy pods still only support CocoaPods
+- Generates Xcode workspace files, can cause merge conflicts
+- Slower build times due to less efficient integration
+
+**Current Upful situation**: Uses CocoaPods with 7 pods (SwiftyStoreKit, Firebase x5,
+Mixpanel, Charts). Every one of these either has an SPM equivalent or is being replaced:
+- SwiftyStoreKit -> StoreKit 2 (no library needed)
+- Firebase -> Available via SPM (firebase-ios-sdk)
+- Mixpanel -> Available via SPM
+- Charts (DGCharts) -> Swift Charts (no library needed)
+
+**Recommendation for Upful:**
+Use **SPM exclusively**. Zero CocoaPods. For the rewrite, the only external dependency
+that might remain is Firebase (for analytics/crashlytics), and Firebase fully supports
+SPM via https://github.com/firebase/firebase-ios-sdk.
+
+---
+
+## 10. FREE STOCK MARKET APIs
+
+### Comprehensive Analysis of Free/Freemium Financial Data APIs
+
+---
+
+### 10.1 Alpha Vantage
+
+**Website**: https://www.alphavantage.co
+**Free Tier**: 25 requests per day (was 5/min previously, reduced in 2024)
+**Premium**: Starts at $49.99/month (75 requests/min)
+
+**Data Available (Free Tier):**
+- US stock quotes (real-time, 15-min delayed for free)
+- Historical daily/weekly/monthly prices (full history, 20+ years)
+- Intraday prices (1, 5, 15, 30, 60 min intervals)
+- Company overview/fundamentals (sector, market cap, PE ratio, etc.)
+- Income statement, balance sheet, cash flow (annual + quarterly)
+- Earnings data (EPS, surprises)
+- Forex rates
+- Crypto prices (BTC, ETH, etc.)
+- Technical indicators (SMA, EMA, RSI, MACD, Bollinger Bands, etc.)
+- Commodities (crude oil, natural gas, gold, etc.)
+- Economic indicators (GDP, inflation, unemployment)
+
+**Limitations:**
+- 25 requests/day on free tier is very restrictive for a mobile app
+- No WebSocket/real-time streaming
+- No options or futures data
+- No international exchange data beyond forex
+- Rate limits are strictly enforced
+
+**Assessment**: Excellent data breadth but the 25 requests/day free limit makes it
+impractical as a primary data source. Useful as a supplementary source for fundamentals,
+historical data, or technical indicators that can be cached aggressively. The premium
+tier at $49.99/month is reasonable for a production app.
+
+**Reliability**: HIGH. Has been operating since 2017. Stable API. Good documentation.
+
+---
+
+### 10.2 Finnhub
+
+**Website**: https://finnhub.io
+**Free Tier**: 60 API calls/minute
+**Premium**: Starts at $49/month
+
+**Data Available (Free Tier):**
+- US stock quotes (real-time for US stocks)
+- Company profiles and fundamentals
+- Financial statements (income, balance sheet, cash flow)
+- Stock candles (OHLCV) -- historical price data
+- Crypto candles (OHLCV) for major exchanges
+- Forex rates
+- Company news and market news
+- SEC filings
+- Insider transactions
+- Earnings calendar and estimates
+- IPO calendar
+- Stock recommendations/analyst ratings
+- Technical indicators (basic)
+- ETF holdings and profiles
+- WebSocket streaming (real-time trades and quotes -- FREE)
+- Economic calendar
+
+**International Coverage (Free):**
+- US exchanges (NYSE, NASDAQ)
+- Some international exchanges with delayed data
+- Forex pairs (global)
+
+**Limitations:**
+- 60 calls/minute is generous but still limited for heavy use
+- Some endpoints return limited data on free tier
+- Options data requires premium
+- International stock data is less comprehensive than US
+
+**Assessment**: One of the best free-tier offerings. The 60 calls/minute rate limit is
+workable for a mobile app. The FREE WebSocket streaming for real-time US stock trades
+is exceptionally valuable -- very few services offer this for free. Excellent for
+real-time quotes without polling.
+
+**Reliability**: HIGH. Well-maintained, good uptime, responsive support.
+
+---
+
+### 10.3 Polygon.io
+
+**Website**: https://polygon.io
+**Free Tier**: 5 API calls/minute, limited endpoints
+**Premium**: Starts at $29/month (Starter), $79/month (Developer)
+
+**Data Available (Free Tier):**
+- Stock aggregates (daily bars, 2 years history)
+- Stock details (company info)
+- Stock previous close
+- Market status/holidays
+- Reference data (tickers, exchanges)
+- Limited crypto data
+
+**Premium Adds:**
+- Real-time WebSocket streaming
+- Full historical data (all history)
+- Options data (quotes, chains, Greeks)
+- Forex data
+- Intraday data (1-min bars)
+- Unlimited API calls (on higher tiers)
+
+**Limitations (Free):**
+- 5 calls/minute is very restrictive
+- No real-time data
+- No options, futures
+- Limited historical depth
+- Delayed data only
+
+**Assessment**: Excellent data quality and API design, but the free tier is too
+restrictive for a production app. Worth considering for premium tier ($29/month Starter
+gives 1000 calls/day and real-time data). Their options data is among the best available.
+
+**Reliability**: VERY HIGH. Used by major fintech companies. Excellent documentation.
+Official data provider for many exchanges.
+
+---
+
+### 10.4 Yahoo Finance (Unofficial)
+
+**Website**: No official API. Community-maintained wrappers.
+**Cost**: Free (unofficial), no guarantees
+**Libraries**: yfinance (Python), various community Swift wrappers
+
+**Data Available:**
+- Real-time quotes (15-min delayed for some exchanges)
+- Historical daily/weekly/monthly prices (full history)
+- Company fundamentals and financial statements
+- Options chains
+- Analyst recommendations
+- Institutional holdings
+- ESG scores
+- International exchanges (LSE, TSE, HKEX, BSE, ASX, etc.)
+- Crypto, ETFs, mutual funds, bonds, indices
+- Currency exchange rates
+
+**Limitations:**
+- NO OFFICIAL API. Yahoo shut down the official API in 2017
+- Community wrappers scrape or use undocumented endpoints
+- Can break at any time without notice
+- Rate limits are undocumented and enforced unpredictably
+- Terms of service technically prohibit commercial use
+- IP blocking occurs with heavy usage
+
+**Assessment**: The most comprehensive free data source available, but with zero
+reliability guarantees. Using it as a PRIMARY data source for a production app is
+risky. Acceptable for supplementary data, personal projects, or as a fallback.
+Many indie finance apps use it successfully but accept the risk.
+
+**Reliability**: LOW-MEDIUM. Works well until it doesn't. No SLA, no support.
+
+---
+
+### 10.5 Twelve Data
+
+**Website**: https://twelvedata.com
+**Free Tier**: 800 requests/day, 8 API calls/minute
+**Premium**: Starts at $29/month (Basic)
+
+**Data Available (Free Tier):**
+- Real-time stock quotes (US exchanges)
+- Historical time series (daily, weekly, monthly -- limited history)
+- Intraday data (1, 5, 15, 30, 60 min)
+- Forex rates (real-time)
+- Crypto prices (real-time, 1800+ cryptocurrencies)
+- ETF data
+- Technical indicators (100+ indicators: SMA, EMA, RSI, MACD, etc.)
+- Company fundamentals (basic)
+- WebSocket streaming (limited on free tier)
+
+**International Coverage:**
+- US (NYSE, NASDAQ, AMEX)
+- UK (LSE)
+- Japan (TSE)
+- Germany (XETRA)
+- Canada (TSX)
+- India (BSE, NSE)
+- Hong Kong (HKEX)
+- And ~50+ more exchanges
+
+**Limitations (Free):**
+- 800 requests/day may be tight for active users
+- Historical data depth limited on free tier
+- WebSocket connections limited
+- Some endpoints restricted
+
+**Assessment**: Strong free tier with 800 req/day and 8/min -- among the most generous.
+Excellent international coverage. Good technical indicators. WebSocket availability
+(even limited) is a plus. Well-suited as a primary data source for a paper trading app
+that needs international coverage.
+
+**Reliability**: HIGH. Operates since 2019, good documentation, responsive team.
+
+---
+
+### 10.6 CoinGecko
+
+**Website**: https://www.coingecko.com/en/api
+**Free Tier**: 30 calls/minute, no API key required (Demo), or 10,000 calls/month with free API key
+**Premium**: Starts at $129/month (Analyst)
+
+**Data Available (Free Tier):**
+- 15,000+ cryptocurrency prices and market data
+- Historical price data (OHLC)
+- Market cap rankings
+- Exchange data (500+ exchanges)
+- Trading volume
+- Coin details (description, links, categories)
+- Trending coins
+- NFT data
+- DeFi data (TVL, etc.)
+- Global market data
+- Exchange rates vs fiat currencies
+
+**Limitations (Free):**
+- 30 calls/min (Demo, no key) or 10K/month (free key)
+- Some endpoints restricted (e.g., exchange-specific data)
+- Historical OHLC limited to certain intervals
+- No WebSocket on free tier
+
+**Assessment**: THE standard for crypto data. Comprehensive coverage of all
+cryptocurrencies and exchanges. The free tier is sufficient for a paper trading app's
+crypto section. Data quality is high and widely trusted.
+
+**Reliability**: VERY HIGH. Industry standard for crypto data. Has been operating
+since 2014.
+
+---
+
+### 10.7 Financial Modeling Prep (FMP)
+
+**Website**: https://financialmodelingprep.com
+**Free Tier**: 250 requests/day
+**Premium**: Starts at $14/month (Starter)
+
+**Data Available (Free Tier):**
+- US stock quotes (real-time)
+- Company profiles
+- Financial statements (income, balance sheet, cash flow)
+- Stock screener (filter by market cap, PE, sector, etc.)
+- Historical daily prices (limited history on free)
+- Key metrics and ratios
+- Earnings calendar
+- Analyst estimates
+- SEC filings (10-K, 10-Q)
+- ETF data
+- Crypto quotes
+- Forex quotes
+- IPO calendar
+- Stock news
+
+**International Coverage (Free):**
+- US exchanges primarily
+- Some international exchanges with premium
+
+**Limitations (Free):**
+- 250 requests/day
+- Limited historical data depth
+- International exchanges mostly premium
+- Some advanced endpoints restricted
+
+**Assessment**: Excellent for fundamental analysis data. The stock screener endpoint
+is particularly valuable for Upful's screener feature. 250 requests/day is moderate
+but workable with caching. The $14/month Starter tier is very affordable and removes
+most limitations.
+
+**Reliability**: HIGH. Well-documented API, active development, good community.
+
+---
+
+### 10.8 Marketstack
+
+**Website**: https://marketstack.com
+**Free Tier**: 100 requests/month (severely limited)
+**Premium**: Starts at $9.99/month (Basic, 10K requests)
+
+**Data Available:**
+- End-of-day stock prices
+- Historical data
+- Intraday data (premium)
+- 72 global exchanges
+- Company tickers and details
+
+**Limitations (Free):**
+- 100 requests/MONTH is essentially unusable for an app
+- HTTP only (no HTTPS on free tier)
+- No intraday data
+- Very basic data set
+
+**Assessment**: Free tier is unusable for any real application. Premium tiers are
+affordable but data depth does not match competitors like Twelve Data or Finnhub.
+Not recommended.
+
+**Reliability**: MEDIUM. Part of APILayer. Adequate uptime but not exceptional.
+
+---
+
+### 10.9 IEX Cloud
+
+**Website**: https://iexcloud.io
+**Current Status**: SIGNIFICANT CHANGES in 2024-2025
+
+**Important Note**: IEX Cloud underwent major restructuring in 2023-2024. They
+discontinued their legacy free tier and moved to a credit-based pricing model.
+The original free "Launch" plan (50,000 messages/month) no longer exists.
+
+**Current Pricing (as of 2025):**
+- No free tier (pay-as-you-go model)
+- Credit-based system, starting around $9/month
+- Core data products sold separately from premium data
+
+**Data Available:**
+- US stock quotes (real-time)
+- Historical prices
+- Company fundamentals
+- Financial statements
+- News
+- Options data (premium add-on)
+- Crypto (limited)
+
+**Assessment**: IEX Cloud was the go-to free API for years (and is what the current
+Upful app uses). However, the elimination of the free tier and restructuring to
+credit-based pricing makes it less attractive for a freemium app trying to minimize
+costs. The data quality remains excellent, but alternatives like Finnhub and Twelve Data
+now offer comparable data with free tiers.
+
+**Recommendation**: Migrate away from IEX Cloud as the primary data source. Use
+Finnhub or Twelve Data as the replacement.
+
+---
+
+### 10.10 Tiingo
+
+**Website**: https://www.tiingo.com/
+**Free Tier**: 1,000 requests/hour, 500 unique symbols/month
+**Premium**: Starts at $10/month (Power)
+
+**Data Available (Free Tier):**
+- End-of-day US stock prices (30+ years history)
+- Real-time IEX prices (top-of-book from IEX exchange)
+- Crypto prices (top-of-book, 6000+ coins)
+- News (limited)
+- Fundamentals (basic)
+- WebSocket for IEX quotes (free)
+
+**Limitations (Free):**
+- 500 unique symbols/month -- can be restrictive for a search/explore feature
+- Data limited to IEX exchange for real-time (not consolidated US data)
+- No international exchanges
+- No options/futures
+
+**Assessment**: Good free tier with generous rate limits (1000/hr). The 500 unique
+symbols/month limit is the main concern -- if users explore many stocks, this could
+be hit. Historical data depth (30+ years) is excellent. WebSocket support is a plus.
+
+**Reliability**: HIGH. Run by a small dedicated team. Respected in quant/fintech community.
+
+---
+
+### 10.11 RECOMMENDED API STRATEGY FOR UPFUL
+
+Given the above analysis, here is the recommended multi-provider strategy:
+
+**Primary Stock Data: Finnhub (Free Tier)**
+- 60 calls/min is generous
+- Real-time US stock quotes
+- FREE WebSocket streaming for live prices
+- Company profiles and fundamentals
+- News and analyst ratings
+- Earnings calendar
+
+**Supplementary / International: Twelve Data (Free Tier)**
+- 800 calls/day for international exchanges
+- Technical indicators (for screener feature)
+- Broader exchange coverage (LSE, TSE, HKEX, BSE)
+- Historical data for markets Finnhub does not cover
+
+**Crypto Data: CoinGecko (Free Tier)**
+- Industry standard for crypto
+- 15,000+ coins
+- Comprehensive exchange and market data
+- 10,000 calls/month with free API key
+
+**Fundamentals / Screener: FMP (Free Tier or $14/month Starter)**
+- Stock screener endpoint (maps directly to Upful's screener feature)
+- Financial statements
+- Key metrics and ratios
+- 250 calls/day (free) or 10K/day ($14/month)
+
+**Fallback / Supplementary: Alpha Vantage (Free Tier)**
+- Technical indicators
+- Economic data
+- Cached/supplementary data (25 calls/day)
+
+**Architecture:**
+- Build an abstraction layer (protocol-based) so the app does not depend on any
+  single API provider
+- Implement aggressive caching: stock quotes cached for 60 seconds, fundamentals
+  cached for 24 hours, historical data cached for 1 week
+- Rate limit management: distribute calls across providers to stay within free tiers
+- Provider fallback: if Finnhub fails or rate limits, fall back to Twelve Data
+
+**What is NOT available for free (requires paid API or premium tier):**
+- Real-time consolidated US stock data (NBBO) -- always paid
+- Options chains with Greeks -- Polygon.io paid tier or similar
+- Futures data -- generally requires paid data vendors
+- Level 2 market data -- requires exchange agreements
+- Bond data -- limited free availability, mostly from FRED (Federal Reserve)
+- Real-time ETF NAV -- generally paid
+
+For a paper trading app, real-time price data from Finnhub's WebSocket (which provides
+IEX-sourced trades) is sufficient. Users are not executing real trades, so consolidated
+NBBO pricing is not a regulatory requirement.
+
+---
+
+## 11. CLOUDFLARE SERVICES
+
+### Backend Infrastructure Recommendations
+
+**Cloudflare Workers**
+- Serverless JavaScript/TypeScript runtime at the edge
+- Free tier: 100,000 requests/day, 10ms CPU time per request
+- Paid ($5/month): 10 million requests/month, 50ms CPU time
+- Perfect for: API proxy (rate limiting, key management), authentication endpoints,
+  subscription verification, data aggregation/caching
+- Supports: Fetch API, WebSocket, Cron Triggers, Durable Objects
+
+**Cloudflare KV (Key-Value Store)**
+- Global, eventually consistent key-value store
+- Free tier: 100,000 reads/day, 1,000 writes/day, 1 GB storage
+- Perfect for: Caching API responses (stock quotes, company data), session tokens,
+  feature flags, user preferences
+- Read latency: <10ms globally (cached at edge)
+- Limitation: Eventually consistent (not suitable for real-time counters)
+
+**Cloudflare R2 (Object Storage)**
+- S3-compatible object storage with zero egress fees
+- Free tier: 10 GB storage, 1 million reads/month, 1 million writes/month
+- Perfect for: User profile images, app assets, cached financial reports/PDFs,
+  export files
+- Zero egress charges (major cost advantage over AWS S3)
+
+**Cloudflare D1 (SQLite Database)**
+- Serverless SQLite database at the edge
+- Free tier: 5 GB storage, 5 million reads/day, 100,000 writes/day
+- Perfect for: User accounts, subscription records, watchlists (server-side backup),
+  leaderboard data, screener configurations
+- Supports: SQL queries, migrations, backups
+- Limitation: SQLite-based (single-writer), not suitable for high-write-throughput
+  scenarios. Fine for Upful's scale.
+
+**Cloudflare Pages**
+- Static site hosting with CI/CD from Git
+- Free tier: Unlimited sites, 500 builds/month, unlimited bandwidth
+- Perfect for: Landing page (upful.io), legal pages (privacy policy, terms),
+  marketing site, web-based dashboard
+
+**Recommended Cloudflare Architecture for Upful:**
+
+```
+iOS App <-> Cloudflare Worker (API Gateway)
+                |
+                +-> KV (API response cache, rate limit counters)
+                +-> D1 (User accounts, subscriptions, watchlists)
+                +-> R2 (User avatars, exported reports)
+                +-> External APIs (Finnhub, Twelve Data, CoinGecko, FMP)
+```
+
+The Worker serves as an API gateway that:
+1. Authenticates requests (JWT validation)
+2. Checks subscription status
+3. Proxies financial data requests (hiding API keys from the client)
+4. Caches responses in KV to reduce external API calls
+5. Manages rate limiting per user
+6. Handles Apple App Store Server notifications (subscription events)
+
+---
+
+## 12. RESEND (Email Service)
+
+**Website**: https://resend.com
+**Free Tier**: 100 emails/day, 3,000 emails/month, 1 domain
+**Pricing**: Starts at $20/month (5,000 emails/month)
+
+**Key Features:**
+- Modern REST API designed for developers
+- Built on top of Amazon SES (reliable deliverability)
+- React-based email templates (via react.email)
+- TypeScript/JavaScript SDK (perfect for Cloudflare Workers)
+- Supports custom domains, DKIM, SPF
+- Webhooks for delivery status, opens, clicks, bounces
+- Batch sending support
+
+**Best Practices for Upful:**
+- Use for: Welcome emails, subscription confirmations, password resets,
+  weekly portfolio summaries, price alert notifications
+- Integrate with Cloudflare Workers (Resend has a REST API callable from Workers)
+- Use react.email for templating beautiful, responsive emails
+- Set up webhooks to track delivery and engagement
+- The 100 emails/day free tier is sufficient for a startup phase
+
+**Reliability**: HIGH. Backed by YC, growing rapidly, excellent developer experience.
+
+---
+
+## 13. TWILIO
+
+**Website**: https://www.twilio.com
+**Free Trial**: $15 credit (limited), then pay-as-you-go
+**SMS Pricing**: ~$0.0079/message (US), varies by country
+**Voice Pricing**: ~$0.0085/min (US)
+
+**Key Features:**
+- SMS/MMS sending and receiving
+- Voice calls (programmable)
+- Verify API (phone number verification via SMS/voice/email)
+- WhatsApp Business API
+- Twilio Conversations (chat SDK)
+- Push notification integration
+
+**Best Practices for Upful:**
+- **Phone Verification**: Use Twilio Verify API for SMS-based phone verification
+  during signup. $0.05/verification. Handles OTP generation, delivery, and validation.
+- **Price Alerts**: Send SMS for critical price alerts (configurable by user).
+  Note: Push notifications are free and should be the primary notification channel.
+  SMS is a premium add-on for users who want it.
+- **Two-Factor Authentication**: Twilio Verify supports 2FA via SMS, voice, or TOTP.
+
+**Alternative to Consider**: For just phone verification, **Firebase Phone Auth** is
+simpler and cheaper (10,000 free verifications/month). Twilio makes sense if Upful
+needs broader messaging capabilities.
+
+**Reliability**: VERY HIGH. Industry standard for communications APIs.
+
+---
+
+## 14. REAL-TIME COMMUNICATION (WebSocket Libraries for iOS)
+
+### For Chat Feature and Live Market Data
+
+**Option A: URLSessionWebSocketTask (Native, RECOMMENDED)**
+
+Since iOS 13, Foundation includes native WebSocket support:
+
+```swift
+let task = URLSession.shared.webSocketTask(with: url)
+task.resume()
+task.receive { result in ... }
+```
+
+With async/await (iOS 15+):
+```swift
+for try await message in webSocket.messages {
+    // Handle message
+}
+```
+
+Pros: Zero dependencies, built into the platform, works with async/await.
+Cons: Lower-level API, no automatic reconnection (must implement).
+
+**Option B: Starscream**
+
+Popular third-party WebSocket library for iOS.
+- SPM support
+- Automatic reconnection
+- SSL/TLS support
+- Compression (permessage-deflate)
+- Well-tested, mature library
+
+**Option C: Socket.IO Client (swift)**
+
+If the backend uses Socket.IO (which adds a protocol layer on top of WebSocket):
+- socket.io-client-swift package
+- Auto-reconnection, multiplexing, rooms
+- Falls back to long-polling if WebSocket fails
+
+**For Finnhub WebSocket (Market Data):**
+Finnhub's WebSocket is a standard WebSocket (not Socket.IO). Use native
+URLSessionWebSocketTask or Starscream.
+
+**For Chat Feature:**
+Depends on backend choice:
+- If using Cloudflare Durable Objects for chat: Standard WebSocket (native)
+- If using a third-party chat SDK: Consider Stream Chat, Sendbird, or
+  Firebase Realtime Database
+
+**Recommendation for Upful:**
+1. **Market data streaming**: Use native URLSessionWebSocketTask for Finnhub WebSocket.
+   Build a reconnection wrapper (~50 lines) with exponential backoff.
+2. **Chat feature**: If building custom chat, use Cloudflare Durable Objects + native
+   WebSocket. If using a managed solution, Stream Chat SDK for iOS (SwiftUI native)
+   has a generous free tier (25 MAU, 100 concurrent connections).
+
+---
+
+## 15. AUTHENTICATION
+
+### Approaches Evaluated
+
+**Option A: Sign in with Apple + Custom JWT (RECOMMENDED)**
+
+Apple requires apps that offer third-party sign-in (Google, Facebook) to also offer
+Sign in with Apple. Since Upful is an Apple-only app, Sign in with Apple can be the
+primary (or only) authentication method.
+
+How it works:
+1. User taps "Sign in with Apple" on iOS
+2. Apple returns a signed identity token (JWT) with user ID and (optionally) email
+3. App sends this token to your backend (Cloudflare Worker)
+4. Backend verifies the token with Apple's public keys
+5. Backend creates/finds user in D1 database
+6. Backend issues your own JWT (access token + refresh token)
+7. iOS app stores tokens in Keychain
+8. Subsequent requests include the access token in Authorization header
+
+Advantages:
+- No password management (no hashing, no breaches)
+- No email verification needed (Apple verifies)
+- Privacy-preserving (Apple's "Hide My Email" relay)
+- Native iOS integration (Face ID/Touch ID for re-authentication)
+- Free, no third-party service needed
+- Users trust Apple's authentication
+- Required by App Store if any social login is offered
+
+**Option B: Firebase Auth**
+
+- Supports: Email/password, Google, Apple, phone, anonymous
+- Free tier: Unlimited authentication (Firebase Auth itself is free)
+- Provides: User management, token refresh, multi-factor auth
+- SDK available for iOS (Swift)
+- Already used in current Upful app (Firebase is a dependency)
+
+Pros: Full-featured, battle-tested, free, managed service.
+Cons: Vendor lock-in to Google/Firebase, SDK adds binary size, requires Google
+account/project management.
+
+**Option C: Supabase Auth**
+
+- Open-source alternative to Firebase Auth
+- Supports: Email/password, magic link, OAuth (Google, Apple, etc.), phone
+- Free tier: 50,000 MAU
+- PostgreSQL-based (with Supabase hosting)
+- Row-level security based on auth state
+
+Pros: Open-source, generous free tier, PostgreSQL as source of truth.
+Cons: Less native iOS SDK (community-maintained supabase-swift package),
+adds another service to manage, less mature than Firebase Auth.
+
+**Option D: Custom JWT (from scratch)**
+
+Build authentication entirely in Cloudflare Workers:
+- Email/password with bcrypt hashing in Worker
+- JWT issuance and refresh token rotation
+- Password reset flow via email (Resend)
+- Store users in D1
+
+Pros: Full control, no vendor dependency.
+Cons: Must implement everything (rate limiting, brute force protection,
+password policies, MFA), security responsibility is entirely yours.
+
+**Recommendation for Upful:**
+
+**Primary: Sign in with Apple**
+- Make it the default and most prominent option
+- Handles 90%+ of iOS users elegantly
+- Zero password-related customer support issues
+- Privacy-forward (aligns with Apple's direction)
+
+**Secondary: Email + Magic Link (via Resend)**
+- For users who prefer not to use Apple ID
+- No password to manage -- user enters email, receives a link, clicks to sign in
+- Token generated on click, sent to backend for verification
+- Simple to implement with Resend + Cloudflare Workers
+
+**Backend Token Management:**
+- Cloudflare Worker issues short-lived access tokens (15 min) + refresh tokens (30 days)
+- Access tokens stored in iOS Keychain
+- Refresh token rotation on each use (prevents token theft)
+- Token verification on every API request in the Worker
+
+**Why NOT Firebase Auth for the rewrite:**
+The current Upful app uses Firebase heavily. For the rewrite, reducing Firebase
+dependency is recommended because:
+- Cloudflare Workers + D1 can handle auth, reducing the number of services
+- Firebase SDK adds significant binary size
+- Firebase Auth's value is primarily in managing passwords -- but with Sign in with
+  Apple + Magic Link, there are no passwords to manage
+- One less vendor to depend on
+
+However, Firebase Analytics and Crashlytics can still be kept as standalone SDKs
+if desired (they do not require Firebase Auth).
+
+---
+
+## 16. SUMMARY: RECOMMENDED TECH STACK
+
+### Core Platform
+| Component | Choice | Version/Details |
+|-----------|--------|-----------------|
+| Language | Swift | 6.1 (strict concurrency) |
+| IDE | Xcode | 16.3 |
+| Min Target | iOS | 17.0 |
+| UI Framework | SwiftUI | with Observation (@Observable) |
+| Persistence | SwiftData | iOS 17+ |
+| Charts | Swift Charts | iOS 16+ (custom candlestick) |
+| IAP | StoreKit 2 | iOS 15+ (StoreKit Views iOS 17+) |
+| Networking | URLSession | async/await with custom APIClient |
+| Architecture | MVVM | + Coordinators + Observation |
+| Dep Management | SPM | Exclusive (no CocoaPods) |
+
+### Backend (Cloudflare)
+| Component | Choice | Free Tier |
+|-----------|--------|-----------|
+| API Gateway | Workers | 100K req/day |
+| Cache | KV | 100K reads/day |
+| Database | D1 | 5 GB, 5M reads/day |
+| Storage | R2 | 10 GB, 1M reads/month |
+| Web Hosting | Pages | Unlimited |
+
+### External Services
+| Service | Purpose | Free Tier |
+|---------|---------|-----------|
+| Finnhub | Primary stock data | 60 calls/min + WebSocket |
+| Twelve Data | International stocks | 800 calls/day |
+| CoinGecko | Crypto data | 10K calls/month |
+| FMP | Fundamentals/screener | 250 calls/day |
+| Resend | Email | 100/day, 3K/month |
+| Twilio | SMS verification | $15 trial credit |
+
+### Authentication
+| Method | Purpose |
+|--------|---------|
+| Sign in with Apple | Primary authentication |
+| Email + Magic Link | Secondary authentication |
+| Custom JWT | Token management (Cloudflare Worker) |
+
+### Third-Party SDKs (via SPM)
+| Package | Purpose | Notes |
+|---------|---------|-------|
+| firebase-ios-sdk | Analytics + Crashlytics | Optional, can be replaced |
+| (none else required) | -- | Minimize dependencies |
+
+---
+
+## 17. UPGRADE PATH FROM CURRENT ENVIRONMENT
+
+### Step 1: Upgrade macOS (if needed)
+- Xcode 16.3 requires macOS 15 (Sequoia) or later
+- Current macOS 14 (Sonoma) supports Xcode 15.4 but NOT 16.x
+- Download macOS Sequoia from System Settings > General > Software Update
+
+### Step 2: Install Xcode 16.3
+- Download from Mac App Store or developer.apple.com/download
+- Size: approximately 12-15 GB
+- This will install Swift 6.1 automatically
+
+### Step 3: Create New Xcode Project
+- Since this is a full rewrite, create a fresh project with SwiftUI lifecycle
+- App template with SwiftUI, SwiftData, and iOS 17.0 deployment target
+- Configure signing with existing Apple Developer account
+- Reuse bundle ID (com.syanik.Upful) or create new one
+
+### Step 4: Set Up SPM Dependencies
+- Add firebase-ios-sdk package if keeping analytics/crashlytics
+- No other external dependencies needed initially
+
+### Step 5: Set Up Cloudflare Backend
+- Create Cloudflare account (free)
+- Set up Workers project with Wrangler CLI
+- Create D1 database for user data
+- Create KV namespace for API caching
+- Configure R2 bucket for object storage
+
+### Step 6: Register for API Keys
+- Finnhub: https://finnhub.io/register (free, instant)
+- Twelve Data: https://twelvedata.com/register (free, instant)
+- CoinGecko: https://www.coingecko.com/en/api (free, instant)
+- FMP: https://financialmodelingprep.com/developer/docs (free, instant)
+- Alpha Vantage: https://www.alphavantage.co/support/#api-key (free, instant)
+- Resend: https://resend.com/signup (free, instant)
+
+---
+
+## 18. RISK ASSESSMENT
+
+### Low Risk
+- SwiftUI for UI (mature, well-documented, Apple's strategic direction)
+- Swift Charts for line/bar/pie/donut charts (fully stable)
+- StoreKit 2 (mature, Apple's recommended approach)
+- URLSession async/await (stable, first-party)
+- SPM (stable, first-party, all major libraries support it)
+- Sign in with Apple (stable, required by App Store guidelines)
+- Cloudflare Workers/KV/Pages (mature, widely adopted)
+
+### Medium Risk
+- SwiftData for persistence (production-ready but younger than CoreData; complex
+  migration scenarios may need extra attention; fallback to CoreData is possible
+  since SwiftData is built on top of it)
+- Cloudflare D1 (still technically in open beta as of early 2025; generally stable
+  but less battle-tested than traditional databases for high-value data)
+- Custom candlestick charts in Swift Charts (requires custom implementation;
+  performance with large datasets needs testing)
+- Free API tiers sustainability (providers may change terms; mitigated by
+  multi-provider architecture and caching)
+
+### High Risk (Mitigated)
+- Reliance on free API tiers for financial data: Mitigated by using multiple
+  providers, aggressive caching, and designing the backend to swap providers
+  via configuration. Budget for at least one paid provider ($14-49/month) as
+  the user base grows.
+- Yahoo Finance unofficial API: Do NOT use as a primary source. Undocumented,
+  can break at any time. Acceptable only as supplementary/fallback.
+
+---
+
+## 19. COST PROJECTION (Monthly, at Launch)
+
+### Scenario: 0-1,000 users (Launch Phase)
+
+| Service | Plan | Monthly Cost |
+|---------|------|-------------|
+| Apple Developer | Required | $99/year ($8.25/mo) |
+| Cloudflare Workers | Free | $0 |
+| Cloudflare KV | Free | $0 |
+| Cloudflare D1 | Free | $0 |
+| Cloudflare R2 | Free | $0 |
+| Cloudflare Pages | Free | $0 |
+| Finnhub | Free | $0 |
+| Twelve Data | Free | $0 |
+| CoinGecko | Free | $0 |
+| FMP | Free | $0 |
+| Resend | Free | $0 |
+| **Total** | | **~$8/month** |
+
+### Scenario: 1,000-10,000 users (Growth Phase)
+
+| Service | Plan | Monthly Cost |
+|---------|------|-------------|
+| Apple Developer | Required | $8.25/mo |
+| Cloudflare Workers | Paid | $5/mo |
+| Cloudflare KV | Included | $0 |
+| Cloudflare D1 | Free tier likely sufficient | $0 |
+| Cloudflare R2 | Free tier likely sufficient | $0 |
+| Finnhub | Free (or $49 if needed) | $0-49/mo |
+| FMP | Starter | $14/mo |
+| Resend | Pro | $20/mo |
+| **Total** | | **~$47-96/month** |
+
+This is remarkably low infrastructure cost for a financial app, enabled primarily by
+Cloudflare's generous free tiers and the multi-provider API strategy.
+
+---
+
+END OF TECH STACK RESEARCH
