@@ -40,7 +40,7 @@ final class StockDescriptionLoader: DescriptionLoader {
     }
     
     func loadDescription(for ticker: String, completion: @escaping DescriptionLoaderCompletion) {
-        let endpoint = "https://cloud.iexapis.com/stable/stock/\(ticker)/company?token=pk_93380460343741859a000b3c6414fedc"
+        let endpoint = "https://cloud.iexapis.com/stable/stock/\(ticker)/company\(Constants.IEXTrading.productionKey)"
         
         loadData?(endpoint, { result in
             switch result {

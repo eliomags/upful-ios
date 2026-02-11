@@ -177,8 +177,8 @@ final class StockOverviewViewController: UIViewController {
             action: #selector(handleShare)
         )
         navigationItem.rightBarButtonItems = [save]
-        VersionManager.navigationBarColor(in: navigationController)
-        VersionManager.setNavigationBar(in: navigationController)
+        ThemeManager.navigationBarColor(in: navigationController)
+        ThemeManager.setNavigationBar(in: navigationController)
     }
     
     @objc fileprivate func handleShare() {
@@ -195,7 +195,7 @@ final class StockOverviewViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
 
         tableView.register(BarGraphTableViewCell.self, forCellReuseIdentifier: StockDetailsModuleConstants.ReuseID.graphCell)
         tableView.register(PerformanceCell.self, forCellReuseIdentifier: StockDetailsModuleConstants.ReuseID.performanceCell)

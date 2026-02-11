@@ -30,8 +30,8 @@ class SavedViewController: MenuContainerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.isScrollEnabled = false
-        view.backgroundColor = VersionManager.mainContainerBackground()
-        collectionView.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
+        collectionView.backgroundColor = ThemeManager.mainContainerBackground()
         configureNavBar()
         setUpViews()
     }

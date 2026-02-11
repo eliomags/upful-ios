@@ -66,8 +66,8 @@ class ScreenerPreviewTableViewCell: SavedScreenerTableViewCell {
     }
 
     private func showLoading() {
-        titleLabel.backgroundColor = VersionManager.loadingLabelColor()
-        descriptionLabel.backgroundColor = VersionManager.loadingLabelColor()
+        titleLabel.backgroundColor = ThemeManager.loadingLabelColor()
+        descriptionLabel.backgroundColor = ThemeManager.loadingLabelColor()
     }
     
     func showLoaded() {

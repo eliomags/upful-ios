@@ -32,7 +32,7 @@ protocol IAPServiceProtocol {
 final class IAPService: IAPServiceProtocol {
     
     private let productIdentifiers: Set<String> = UpfulProducts.productIds
-    private let secret = "0f2f374e72fa4144b1842dd7158f6ebf"
+    private let secret = Secrets.iapSharedSecret
     
     var isPremium: Bool {
         get {

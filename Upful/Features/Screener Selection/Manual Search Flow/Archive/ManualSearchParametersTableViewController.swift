@@ -39,7 +39,7 @@ class ManualSearchParametersTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
         initializeData()
         configureNavBar()
     }

@@ -15,7 +15,7 @@ class NotificationSetupViewController: UIViewController {
     private let containerView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = VersionManager.collectionCellColor()
+        v.backgroundColor = ThemeManager.collectionCellColor()
         v.layer.masksToBounds = false
         v.layer.cornerRadius = 16
         v.heightAnchor.constraint(equalToConstant: 175).isActive = true
@@ -84,7 +84,7 @@ class NotificationSetupViewController: UIViewController {
         view.backgroundColor =
             UIColor.init() { (trait) -> UIColor in
                if trait.userInterfaceStyle == .dark {
-                    self.containerView.setupShadow(intensity: .light, color: VersionManager.collectionCellColor())
+                    self.containerView.setupShadow(intensity: .light, color: ThemeManager.collectionCellColor())
                }
                if trait.userInterfaceStyle == .light {
                    self.containerView.setupShadow(intensity: .light, color: .label)

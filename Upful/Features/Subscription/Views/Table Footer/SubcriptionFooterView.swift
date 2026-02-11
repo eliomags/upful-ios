@@ -95,7 +95,7 @@ class SubscriptionFooterView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = VersionManager.mainContainerBackground()
+        backgroundColor = ThemeManager.mainContainerBackground()
         addSubview(contentStackView)
         contentStackView.anchor(top: topAnchor, leading: leadingAnchor,
                                 bottom: nil, trailing: trailingAnchor,

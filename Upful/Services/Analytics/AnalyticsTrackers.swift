@@ -22,7 +22,7 @@ struct MixPanelAnalytics: AnalyticsTracker {
     }
 }
 
-struct FirebaseAnayltics: AnalyticsTracker {
+struct FirebaseAnalytics: AnalyticsTracker {
     func log(event: AnalyticsEventName) {
         Analytics.logEvent(event.getName(),
                            parameters: event.metaData)

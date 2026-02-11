@@ -24,33 +24,35 @@
 - [x] 0.3.2 Create MASTER-PLAN.md
 - [x] 0.3.3 Create TASKS.md (this file)
 - [x] 0.3.4 Refine plan after research agents complete — updated API stack, confirmed versions, added research summary
-- [~] 0.3.5 Create initial branch and push plan
+- [x] 0.3.5 Create initial branch (feature/jyanik-rebuild) and push plan — 16 files, 12,097 lines committed
 
 ---
 
 ## Phase 1: Project Foundation (Weeks 1-2)
 
 ### 1.1 Repository Cleanup
-- [ ] 1.1.1 Create feature/jyanik-rebuild branch from prod
-- [ ] 1.1.2 Remove duplicate: Upful/Models/CompanyCalculations.swift (identical to IntrinioLookup.swift)
-- [ ] 1.1.3 Remove "2" and "3" copy files from Stock Detail feature
-- [ ] 1.1.4 Remove corrupted BackgroundRefreshManager.swift (binary bookmark file)
-- [ ] 1.1.5 Remove orphaned TransactionLog.xcdatamodeld
-- [ ] 1.1.6 Rename "Upful/Features/New Group/" to "Upful/Features/StockTrade/Controllers/"
-- [ ] 1.1.7 Fix ColorManager.swift: rename VersionManager to ThemeManager
-- [ ] 1.1.8 Move SavedStocksViewModelTest.swift from Extensions/ to UpfulTests/
-- [ ] 1.1.9 Remove all hardcoded API keys from Constants.swift
-- [ ] 1.1.10 Remove hardcoded IEX key from StockDescriptionLoader.swift URL
-- [ ] 1.1.11 Remove IAP shared secret from IAPService.swift
-- [ ] 1.1.12 Remove Mixpanel token from Constants.swift
-- [ ] 1.1.13 Create Secrets.example.swift with placeholder values
-- [ ] 1.1.14 Update .gitignore: add Secrets.swift, .env, *.xcuserdata, DerivedData/
-- [ ] 1.1.15 Remove stale hardcoded date ranges in API queries (2020-01-01)
-- [ ] 1.1.16 Fix 12-hour time format bug (hh -> HH in Date.asString)
-- [ ] 1.1.17 Fix Double.twoDecimal() to actually use 2 decimals
-- [ ] 1.1.18 Fix typo: FirebaseAnayltics -> FirebaseAnalytics
-- [ ] 1.1.19 Fix typo: sign_up_attempty -> sign_up_attempt
-- [ ] 1.1.20 **COMMIT**: "chore: cleanup codebase - remove duplicates, fix bugs, extract secrets"
+- [x] 1.1.1 Create feature/jyanik-rebuild branch from prod
+- [x] 1.1.2 Remove duplicate: Upful/Models/CompanyCalculations.swift (identical to IntrinioLookup.swift)
+- [x] 1.1.3 Remove "2" and "3" copy files from Stock Detail feature (21 files removed)
+- [x] 1.1.4 Remove corrupted BackgroundRefreshManager.swift (binary bookmark file)
+- [x] 1.1.5 Remove orphaned TransactionLog.xcdatamodeld
+- [x] 1.1.6 Rename "Upful/Features/New Group/" to "Upful/Features/StockTrade_Controllers/"
+- [x] 1.1.7 Fix ColorManager.swift: rename VersionManager to ThemeManager (34+ files updated)
+- [x] 1.1.8 Move SavedStocksViewModelTest.swift from Extensions/ to UpfulTests/
+- [x] 1.1.9 Remove all hardcoded API keys from Constants.swift → now uses Secrets.swift
+- [x] 1.1.10 Remove hardcoded IEX key from StockDescriptionLoader.swift URL
+- [x] 1.1.11 Remove IAP shared secret from IAPService.swift → now uses Secrets.iapSharedSecret
+- [x] 1.1.12 Remove Mixpanel token from Constants.swift → now uses Secrets.mixpanelToken
+- [x] 1.1.13 Create Secrets.example.swift with placeholder values
+- [x] 1.1.14 Update .gitignore: add Secrets.swift, .env, *.xcuserdata, DerivedData/, Pods/, large PDFs
+- [-] 1.1.15 Remove stale hardcoded date ranges in API queries — SKIPPED: Intrinio API files will be entirely replaced in Phase 5
+- [x] 1.1.16 Fix 12-hour time format bug (hh -> HH in Date.asString)
+- [x] 1.1.17 Fix Double.twoDecimal() to actually use 2 decimals (was maximumFractionDigits=1)
+- [x] 1.1.18 Fix typo: FirebaseAnayltics -> FirebaseAnalytics (in AnalyticsTrackers + AnalyticsMapper)
+- [x] 1.1.19 Fix typo: sign_up_attempty -> sign_up_attempt
+- [x] 1.1.20 Also: extracted hardcoded Intrinio key from StockScreeningService.swift
+- [x] 1.1.21 Also: moved misplaced PersistedPerformanceDataPoint.swift from root to Upful/Models/
+- [~] 1.1.22 **COMMIT**: "chore: cleanup codebase - remove duplicates, fix bugs, extract secrets"
 
 ### 1.2 Dependency Migration (CocoaPods -> SPM)
 - [ ] 1.2.1 Document all current Pod dependencies and versions from Podfile.lock

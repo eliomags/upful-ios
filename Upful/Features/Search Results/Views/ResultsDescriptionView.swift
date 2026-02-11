@@ -71,7 +71,7 @@ class ResultsDescriptionView: UIView {
     fileprivate lazy var contentView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = VersionManager.collectionCellColor()
+        v.backgroundColor = ThemeManager.collectionCellColor()
         v.addSubview(imageViewBackground)
         imageViewBackground
             .setCenterYAnchor(padding: 0)

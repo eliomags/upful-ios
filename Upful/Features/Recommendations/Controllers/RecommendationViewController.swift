@@ -99,7 +99,7 @@ class RecommendationViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        view.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
         setupPresentation()
     }
     

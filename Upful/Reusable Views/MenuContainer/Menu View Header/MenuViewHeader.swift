@@ -40,7 +40,7 @@ final class MenuBarView: UIView {
     
     private lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = VersionManager.mainContainerBackground()
+        cv.backgroundColor = ThemeManager.mainContainerBackground()
         cv.register(MenuItemCell.self, forCellWithReuseIdentifier: Constants.menuCellID)
         cv.automaticallyAdjustsScrollIndicatorInsets = false
         cv.isScrollEnabled = false

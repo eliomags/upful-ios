@@ -50,7 +50,7 @@ class SuggestionFeedViewController: UIViewController {
     
     lazy var tableView: UITableView = { [unowned self] in
         let tv = UITableView(frame: .zero, style: .grouped)
-        tv.backgroundColor = VersionManager.mainContainerBackground()
+        tv.backgroundColor = ThemeManager.mainContainerBackground()
         tv.register(SuggestionViewCell.self, forCellReuseIdentifier: "suggestionCell")
         tv.separatorStyle = .none
         tv.delegate = self

@@ -119,12 +119,12 @@ class GenericNewsCell: UITableViewCell {
         }
     }
     fileprivate func setLoading() {
-        sourceLabel.backgroundColor = VersionManager.loadingLabelColor()
-        dateLabel.backgroundColor = VersionManager.loadingLabelColor()
-        articleImageView.backgroundColor = VersionManager.loadingLabelColor()
-        titleLabel.backgroundColor = VersionManager.loadingLabelColor()
-        sourceLabel.backgroundColor = VersionManager.loadingLabelColor()
-        dateLabel.backgroundColor = VersionManager.loadingLabelColor()
+        sourceLabel.backgroundColor = ThemeManager.loadingLabelColor()
+        dateLabel.backgroundColor = ThemeManager.loadingLabelColor()
+        articleImageView.backgroundColor = ThemeManager.loadingLabelColor()
+        titleLabel.backgroundColor = ThemeManager.loadingLabelColor()
+        sourceLabel.backgroundColor = ThemeManager.loadingLabelColor()
+        dateLabel.backgroundColor = ThemeManager.loadingLabelColor()
     }
     
     fileprivate func setLoaded() {

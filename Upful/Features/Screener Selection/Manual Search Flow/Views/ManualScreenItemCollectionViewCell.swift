@@ -81,7 +81,7 @@ class ManualScreenItemCollectionViewCell: UICollectionViewCell {
             .setLeadingAnchor(padding: 16)
             .setTrailingAnchor(padding: 16)
             .setBottomAnchor(padding: 16)
-        backgroundColor = VersionManager.collectionCellColor()
+        backgroundColor = ThemeManager.collectionCellColor()
     }
 
     var handleCancelTap: (() -> Void)?

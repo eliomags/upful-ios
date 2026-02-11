@@ -56,7 +56,7 @@ enum ScreenerRouter {
     }
     
     var parameters: [URLQueryItem] {
-        let apiKey = "OjNiMzRkZmFlNDBkYjIzYTgyMTNhNjcyZGNlZmYzMjE1"
+        let apiKey = Secrets.intrinioApiKey.replacingOccurrences(of: "&api_key=", with: "")
         switch self {
         case .getScreeningResults(let parameters,
                                   let numberOfResults,

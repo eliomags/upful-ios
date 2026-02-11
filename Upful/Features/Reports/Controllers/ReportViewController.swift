@@ -48,7 +48,7 @@ class ReportViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
         view.addSubview(reportContentView)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
         reportContentView.fillSuperview()

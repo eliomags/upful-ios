@@ -59,7 +59,7 @@ final class ExploreViewController: UIViewController, UISearchControllerDelegate,
     
     override func loadView() {
         super.loadView()
-        view.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
         configureNavBar()
         setupTableView()
         setupTableViewCells()
@@ -164,7 +164,7 @@ final class ExploreViewController: UIViewController, UISearchControllerDelegate,
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.searchController = self.searchController
         navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.backgroundColor = VersionManager.mainContainerBackground()
+        navigationController?.navigationBar.backgroundColor = ThemeManager.mainContainerBackground()
     }
     
     // MARK: - Delegate Methods
@@ -255,7 +255,7 @@ final class ExploreViewController: UIViewController, UISearchControllerDelegate,
         let loadedCell = tableView.dequeueReusableCell(withIdentifier: ReuseID.popularStockCell,
                                                        for: indexPath) as? CompanyPreviewTableViewCell
         loadedCell?.accessoryType = .disclosureIndicator
-        loadedCell?.backgroundColor = VersionManager.mainContainerBackground()
+        loadedCell?.backgroundColor = ThemeManager.mainContainerBackground()
         
         if !logicController.stockViewModels.isEmpty {
             let savedStock = logicController.stockViewModels[indexPath.item]

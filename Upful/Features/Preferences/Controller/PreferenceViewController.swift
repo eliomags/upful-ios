@@ -27,7 +27,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .grouped)
-        view.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
         view.separatorStyle = .none
         view.contentInsetAdjustmentBehavior = .never
         view.delegate = self
@@ -69,7 +69,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
         setupNavBar()
         setupViews()
     }
@@ -186,7 +186,7 @@ class PreferenceViewController: UIViewController, UITableViewDataSource, UITable
         preferenceCollectionView.preferenceDeSelected = { [weak self] (deSelection) in
             self?.dataManager.remove(deSelection)
         }
-        cell.backgroundColor = VersionManager.mainContainerBackground()
+        cell.backgroundColor = ThemeManager.mainContainerBackground()
         return cell
     }
     

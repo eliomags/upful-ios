@@ -176,7 +176,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
     }
     
     fileprivate func setupTableView() {
-        tableView.backgroundColor = VersionManager.mainContainerBackground()
+        tableView.backgroundColor = ThemeManager.mainContainerBackground()
         tableView.setTableHeaderView(headerView: tradingBalanceView)
         tableView.separatorStyle = .none
         view.addSubview(tableView)
@@ -448,7 +448,7 @@ final class HomeGeneralViewController: UIViewController, PreferenceDelegate {
         guard let loadedCell = tableView.dequeueReusableCell(withIdentifier: Constants.resultsCellID)
             as? CompanyPreviewTableViewCell else { return UITableViewCell() }
         loadedCell.accessoryType = .disclosureIndicator
-        loadedCell.backgroundColor = VersionManager.mainContainerBackground()
+        loadedCell.backgroundColor = ThemeManager.mainContainerBackground()
 
         if logicController.preferenceState == .loaded  && !logicController.stocksYouMayLike.isEmpty {
             let stockViewModel = logicController.stocksYouMayLike[indexPath.row]

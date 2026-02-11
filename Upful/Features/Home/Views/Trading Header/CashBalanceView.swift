@@ -43,7 +43,7 @@ final class CashBalanceView: UIView {
         let view = UIView()
         view.addSubview(cashStackView)
         cashStackView.fillSuperview(padding: .init(top: 8, left: 12, bottom: 8, right: 12))
-        view.backgroundColor = VersionManager.collectionCellColor()
+        view.backgroundColor = ThemeManager.collectionCellColor()
         view.layer.cornerRadius = 8
         view.layer.masksToBounds = true
         return view

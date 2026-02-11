@@ -70,8 +70,8 @@ class SavedScreenerTableViewCell: UITableViewCell {
     }
     
     fileprivate func setLoading() {
-        descriptionLabel.backgroundColor = VersionManager.loadingLabelColor()
-        titleLabel.backgroundColor = VersionManager.loadingLabelColor()
+        descriptionLabel.backgroundColor = ThemeManager.loadingLabelColor()
+        titleLabel.backgroundColor = ThemeManager.loadingLabelColor()
     }
     
     fileprivate func setLoaded() {

@@ -32,7 +32,7 @@ class HoldingBreakdownHeaderView: TableSectionHeaderView {
         ])
         addButton.layer.cornerRadius = 44/2
         addButton.layer.masksToBounds = true
-        addButton.backgroundColor = VersionManager.collectionCellColor()
+        addButton.backgroundColor = ThemeManager.collectionCellColor()
 
         addButton.setTitle("", for: .normal)
         addButton.setTitle("", for: .selected)

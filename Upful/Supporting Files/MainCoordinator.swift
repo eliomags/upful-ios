@@ -79,7 +79,7 @@ final class MainCoordinator: Coordinator {
             return navVC
         })
         
-        VersionManager.setTabBarColor(in: tabVC)
+        ThemeManager.setTabBarColor(in: tabVC)
         return tabVC
     }
 }

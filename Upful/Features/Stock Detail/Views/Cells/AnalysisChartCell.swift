@@ -26,7 +26,7 @@ class AnalysisChartCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = VersionManager.collectionCellColor3()
+        backgroundColor = ThemeManager.collectionCellColor3()
         selectionStyle = .none
         contentView.addSubview(containerView)
         containerView.fillSuperview()

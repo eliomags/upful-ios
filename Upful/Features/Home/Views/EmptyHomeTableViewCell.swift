@@ -69,7 +69,7 @@ class EmptyHomeTableViewCell: UITableViewCell {
     
     private lazy var contentBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = VersionManager.collectionCellColor3()
+        view.backgroundColor = ThemeManager.collectionCellColor3()
         
         let imageBackground = cellImageView.insertOnBackgroundView(padding: .init(top: 8, left: 8, bottom: 8, right: 8))
         imageBackground.backgroundColor = .clear

@@ -39,7 +39,7 @@ class TransactionLoggingManager {
 extension Date {
     var asString: String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSS"
         formatter.timeZone = TimeZone(abbreviation: "EST")
         return formatter.string(from: self)
     }
@@ -47,7 +47,7 @@ extension Date {
     func convertToEST() -> Date {
         let string = self.asString
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss.SSSS"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSS"
         formatter.timeZone = TimeZone(abbreviation: "EST")
         return formatter.date(from: string) ?? self
     }

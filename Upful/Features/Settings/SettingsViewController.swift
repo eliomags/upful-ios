@@ -50,8 +50,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        VersionManager.setNavigationBar(in: navigationController)
-        VersionManager.navigationBarColor(in: navigationController)
+        ThemeManager.setNavigationBar(in: navigationController)
+        ThemeManager.navigationBarColor(in: navigationController)
     }
     
     // MARK: - View Setup

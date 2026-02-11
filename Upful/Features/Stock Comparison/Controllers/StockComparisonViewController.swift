@@ -118,7 +118,7 @@ final class StockComparisonViewController: UIViewController {
         view.anchor(top: nil, leading: nil,
                     bottom: nil, trailing: nil,
                     size: .init(width: width, height: 582))
-        view.backgroundColor = VersionManager.collectionCellColor()
+        view.backgroundColor = ThemeManager.collectionCellColor()
         return view
     }
         
@@ -150,7 +150,7 @@ final class StockComparisonViewController: UIViewController {
         sv.setLeadingAnchor(padding: 16).setCenterYAnchor(padding: 0)
         
         cell.accessoryType = .disclosureIndicator
-        cell.backgroundColor = VersionManager.collectionCellColor3()
+        cell.backgroundColor = ThemeManager.collectionCellColor3()
         return cell
     }
 

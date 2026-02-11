@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct VersionManager {
+struct ThemeManager {
     
     // MARK: - Components
     

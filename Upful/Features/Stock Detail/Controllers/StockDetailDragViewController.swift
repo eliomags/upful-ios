@@ -85,8 +85,8 @@ final class StockDetailDragViewController: UIViewController {
         view.tableViewStyle = .plain
         view.tableView.separatorStyle = .singleLine
         view.tableView.showsVerticalScrollIndicator = false
-        view.backgroundColor = VersionManager.collectionCellColor()
-        view.tableView.backgroundColor = VersionManager.collectionCellColor()
+        view.backgroundColor = ThemeManager.collectionCellColor()
+        view.tableView.backgroundColor = ThemeManager.collectionCellColor()
         view.tableViewPadding = .init(top: 12, left: 16, bottom: 0, right: -16)
         return view
     }
@@ -167,7 +167,7 @@ extension StockDetailDragViewController: AnalysisDragContentDelegate {
             if !endDate.isEmpty { endDate = String(Array(endDate)[0...3]) }
             
             let headerView = UIView()
-            headerView.backgroundColor = VersionManager.collectionCellColor()
+            headerView.backgroundColor = ThemeManager.collectionCellColor()
             let titleLabel = UILabel()
             titleLabel.text = "\(startDate) - \(endDate)"
             titleLabel.textAlignment = .right
@@ -183,7 +183,7 @@ extension StockDetailDragViewController: AnalysisDragContentDelegate {
     
     func createMetricPreviewCell(_ tableView: UITableView, at indexPath: IndexPath) -> MetricPreviewTableViewCell? {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MetricPreviewTableViewCell.reuseID, for: indexPath) as? MetricPreviewTableViewCell else { return nil }
-        cell.backgroundColor = VersionManager.collectionCellColor3()
+        cell.backgroundColor = ThemeManager.collectionCellColor3()
         let metricViewModel = metricPreviewViewModels[indexPath.row]
         metricViewModel.configureCell(cell)
         return cell

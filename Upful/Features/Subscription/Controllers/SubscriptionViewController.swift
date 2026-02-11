@@ -93,8 +93,8 @@ class SubscriptionViewController: UIViewController, UITableViewDelegate, UITable
         view.addSubview(tableView)
         tableView.anchor(top: view.layoutMarginsGuide.topAnchor, leading: view.leadingAnchor,
                          bottom: view.bottomAnchor, trailing: view.trailingAnchor)
-        view.backgroundColor = VersionManager.mainContainerBackground()
-        tableView.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
+        tableView.backgroundColor = ThemeManager.mainContainerBackground()
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .none
         tableView.bounces = false

@@ -24,7 +24,7 @@ extension Double {
         let numFormatter = NumberFormatter()
         let startValue = self
         numFormatter.allowsFloats = true
-        numFormatter.maximumFractionDigits = 1
+        numFormatter.maximumFractionDigits = 2
         
         return numFormatter.string(from: NSNumber(value: startValue))!
     }

@@ -15,7 +15,7 @@ final class AnalyticsLogger {
     static let instance = AnalyticsLogger()
     
     private let mixpanelAnalytics = MixPanelAnalytics()
-    private let googleAnalytics = FirebaseAnayltics()
+    private let googleAnalytics = FirebaseAnalytics()
     
     private var isTrackingDisabled: Bool {
         set {

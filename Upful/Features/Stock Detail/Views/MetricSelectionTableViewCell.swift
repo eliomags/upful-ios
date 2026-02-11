@@ -65,7 +65,7 @@ class MetricSelectionTableViewCell: UITableViewCell {
     }
     
     func setupView() {
-        backgroundColor = VersionManager.collectionCellColor3()
+        backgroundColor = ThemeManager.collectionCellColor3()
 
         accessoryType = .disclosureIndicator
         addSubview(contentStackView)

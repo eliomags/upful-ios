@@ -77,7 +77,7 @@ class SearchCriteriaTableViewController: UIViewController, UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         initializeDisplayData()
-        view.backgroundColor = VersionManager.mainContainerBackground()
+        view.backgroundColor = ThemeManager.mainContainerBackground()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
@@ -241,7 +241,7 @@ class ManualSearchCriteriaCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = VersionManager.collectionCellColor()
+        backgroundColor = ThemeManager.collectionCellColor()
     }
     
     required init?(coder aDecoder: NSCoder) {

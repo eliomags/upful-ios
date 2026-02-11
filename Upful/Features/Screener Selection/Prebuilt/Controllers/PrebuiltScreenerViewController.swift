@@ -57,7 +57,7 @@ final class PrebuiltScreenerViewController: UITableViewController {
     
     fileprivate func setupTableView() {
         tableView.refreshControl = tableRefreshControl
-        tableView.backgroundColor = VersionManager.mainContainerBackground()
+        tableView.backgroundColor = ThemeManager.mainContainerBackground()
         tableView.register(ScreenerPreviewTableViewCell.self, forCellReuseIdentifier: "cell")
     }
     

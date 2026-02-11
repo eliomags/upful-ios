@@ -86,7 +86,7 @@ enum AnalyticsEventName {
         case .pushNotificationSelected:
             return "selected_push_notification"
         case .signUpAttempt:
-            return "sign_up_attempty"
+            return "sign_up_attempt"
         case .signUpForPremiumPresented(_):
             return "sign_up_presented"
         case .submitPromotorScore(_):

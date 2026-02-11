@@ -56,7 +56,7 @@ class GeneralEmptyCell: UITableViewCell {
         v.backgroundColor = .secondarySystemGroupedBackground
         v.layer.masksToBounds = false
         v.layer.cornerRadius = 16
-        v.backgroundColor = VersionManager.collectionCellColor()
+        v.backgroundColor = ThemeManager.collectionCellColor()
         return v
     }()
     

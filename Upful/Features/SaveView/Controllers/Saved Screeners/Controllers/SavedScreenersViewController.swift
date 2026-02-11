@@ -109,7 +109,7 @@ class SavedScreenerViewController: UIViewController, UITableViewDelegate, UITabl
     // MARK: - View Setup
     
     func setupTableView() {
-        tableView.backgroundColor = VersionManager.mainContainerBackground()
+        tableView.backgroundColor = ThemeManager.mainContainerBackground()
         tableView.register(ScreenerPreviewTableViewCell.self, forCellReuseIdentifier: "screenerCell")
         view.addSubview(tableView)
         tableView.fillSuperview()
