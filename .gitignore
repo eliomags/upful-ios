@@ -18,8 +18,11 @@ DerivedData/
 !default.perspectivev3
 xcuserdata/
 
-# CocoaPods (being removed in migration)
+# CocoaPods (removed - migrated to SPM)
 Pods/
+Podfile
+Podfile.lock
+*.xcworkspace
 
 # SPM
 .build/

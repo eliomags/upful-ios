@@ -6,7 +6,7 @@
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
 
-import Charts
+import DGCharts
 
 class CombinedLineChartView: CombinedChartView {
     

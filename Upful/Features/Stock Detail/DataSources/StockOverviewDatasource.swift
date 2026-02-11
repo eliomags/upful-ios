@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Charts
+import DGCharts
 
 protocol StockOverViewDataSourceDelegate: class {
     func didSelectNews(tableView: UITableView, urlString: String)

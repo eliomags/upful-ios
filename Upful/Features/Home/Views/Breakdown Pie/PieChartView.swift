@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Charts
+import DGCharts
 
 protocol PieChartConfigurable {
     var title: String { get set }

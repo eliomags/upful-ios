@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Charts
+import DGCharts
 
 protocol MetricPreviewViewModelDelegate: class {
     func didLoadCellData(cell: MetricPreviewTableViewCell?, with results: [CompanyHistoricalDatum])

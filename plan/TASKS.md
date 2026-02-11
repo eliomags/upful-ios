@@ -52,18 +52,22 @@
 - [x] 1.1.19 Fix typo: sign_up_attempty -> sign_up_attempt
 - [x] 1.1.20 Also: extracted hardcoded Intrinio key from StockScreeningService.swift
 - [x] 1.1.21 Also: moved misplaced PersistedPerformanceDataPoint.swift from root to Upful/Models/
-- [~] 1.1.22 **COMMIT**: "chore: cleanup codebase - remove duplicates, fix bugs, extract secrets"
+- [x] 1.1.22 **COMMIT**: "chore: cleanup codebase - remove duplicates, fix bugs, extract secrets" — 74 files, +191/-2,837 lines
 
 ### 1.2 Dependency Migration (CocoaPods -> SPM)
-- [ ] 1.2.1 Document all current Pod dependencies and versions from Podfile.lock
-- [ ] 1.2.2 Remove Podfile, Podfile.lock
-- [ ] 1.2.3 Remove Pods/ directory
-- [ ] 1.2.4 Remove Upful.xcworkspace
-- [ ] 1.2.5 Open Upful.xcodeproj and add SPM packages:
-  - KeychainAccess (kishikawakatsumi/KeychainAccess)
-  - Nuke (kean/Nuke) for image loading
-- [ ] 1.2.6 Verify project builds without CocoaPods
-- [ ] 1.2.7 **COMMIT**: "chore: migrate from CocoaPods to SPM"
+- [x] 1.2.1 Documented all Pod dependencies: SwiftyStoreKit, Firebase (Analytics/Core/Crashlytics/DynamicLinks/Firestore), Mixpanel-swift, Charts
+- [x] 1.2.2 Removed Podfile, Podfile.lock from git tracking
+- [x] 1.2.3 Removed Pods/ directory from git tracking (8,163 files, 163MB)
+- [x] 1.2.4 Removed Upful.xcworkspace from git tracking, updated .gitignore
+- [x] 1.2.5 Added SPM packages to Upful.xcodeproj:
+  - Firebase SDK 11.0+ (Analytics, Core, Crashlytics, DynamicLinks, Firestore)
+  - Mixpanel-swift 4.0+
+  - SwiftyStoreKit 0.16+ (temporary, will be replaced by StoreKit 2)
+  - DGCharts 5.0+ (temporary, will be replaced by Swift Charts)
+  - Kept existing: Kingfisher, YSDraggy
+- [x] 1.2.6 Updated all `import Charts` → `import DGCharts` across 7 files (SPM module name change)
+- [x] 1.2.7 Cleaned all CocoaPods build phases and references from pbxproj (46 references removed)
+- [~] 1.2.8 **COMMIT**: "chore: migrate from CocoaPods to SPM"
 
 ### 1.3 New Project Structure
 - [ ] 1.3.1 Create Jyanik/ top-level directory (new app target or renamed)
