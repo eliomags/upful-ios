@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF0000000100000200000001 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000000100000100000001 /* SubscriptionView.swift */; };
+		FF0000000100000200000002 /* SubscriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000000100000100000002 /* SubscriptionViewModel.swift */; };
+		FF0000000100000200000003 /* FeatureGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000000100000100000003 /* FeatureGateView.swift */; };
+		FF0000000200000200000001 /* PayoutEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000000200000100000001 /* PayoutEndpoints.swift */; };
+		FF0000000200000200000002 /* PayoutDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000000200000100000002 /* PayoutDTOs.swift */; };
+		FF0000000200000200000003 /* PayoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000000200000100000003 /* PayoutViewModel.swift */; };
+		FF0000000200000200000004 /* PayoutHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000000200000100000004 /* PayoutHistoryView.swift */; };
+		FF0000000200000200000005 /* RequestPayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000000200000100000005 /* RequestPayoutView.swift */; };
+
 		07910546D99F4C108523BA75 /* SwiftyStoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38C06BFAC9C14A8DB086292F /* SwiftyStoreKit */; };
 		12DBF2515D8C4CF6875CC245 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = 799D60AA507B4D3F977AAB12 /* Mixpanel */; };
 
@@ -412,6 +421,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FF0000000100000100000001 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
+		FF0000000100000100000002 /* SubscriptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionViewModel.swift; sourceTree = "<group>"; };
+		FF0000000100000100000003 /* FeatureGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureGateView.swift; sourceTree = "<group>"; };
+		FF0000000200000100000001 /* PayoutEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutEndpoints.swift; sourceTree = "<group>"; };
+		FF0000000200000100000002 /* PayoutDTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutDTOs.swift; sourceTree = "<group>"; };
+		FF0000000200000100000003 /* PayoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutViewModel.swift; sourceTree = "<group>"; };
+		FF0000000200000100000004 /* PayoutHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutHistoryView.swift; sourceTree = "<group>"; };
+		FF0000000200000100000005 /* RequestPayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestPayoutView.swift; sourceTree = "<group>"; };
+
 		3D061D1F23C273F500B8FB14 /* ScreenerSelectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenerSelectionDelegate.swift; sourceTree = "<group>"; };
 		3D0643CB23D94AE1002AAF28 /* PermissionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManagerTests.swift; sourceTree = "<group>"; };
 		3D0C5F6223395CD500F4A5FC /* Notes+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notes+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -819,6 +837,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FF0000000300000100000001 /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+				FF0000000100000100000001 /* SubscriptionView.swift */,
+				FF0000000100000100000002 /* SubscriptionViewModel.swift */,
+				FF0000000100000100000003 /* FeatureGateView.swift */,
+			);
+			path = Subscription;
+			sourceTree = "<group>";
+		};
+		FF0000000300000100000002 /* Payouts */ = {
+			isa = PBXGroup;
+			children = (
+				FF0000000200000100000003 /* PayoutViewModel.swift */,
+				FF0000000200000100000004 /* PayoutHistoryView.swift */,
+				FF0000000200000100000005 /* RequestPayoutView.swift */,
+			);
+			path = Payouts;
+			sourceTree = "<group>";
+		};
 		3D0127D423A12A92002B08D5 /* Custom Modal Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -2669,6 +2707,7 @@
 				E87B1B0A2F3D605F004E6590 /* NotificationDTOs.swift */,
 				E87B1B0B2F3D605F004E6590 /* PortfolioDTOs.swift */,
 				E87B1B0C2F3D605F004E6590 /* TradingDTOs.swift */,
+				FF0000000200000100000002 /* PayoutDTOs.swift */,
 			);
 			path = DTOs;
 			sourceTree = "<group>";
@@ -2789,6 +2828,8 @@
 				EE0000000300000500000001 /* Saved */,
 				EE0000000400000500000001 /* Watchlist */,
 				EE0000000500000500000001 /* Comparison */,
+				FF0000000300000100000001 /* Subscription */,
+				FF0000000300000100000002 /* Payouts */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -3014,6 +3055,7 @@
 				E87B1B542F3D605F004E6590 /* TradeEndpoints.swift */,
 				E87B1B552F3D605F004E6590 /* UserEndpoints.swift */,
 				E87B1B562F3D605F004E6590 /* WatchlistEndpoints.swift */,
+				FF0000000200000100000001 /* PayoutEndpoints.swift */,
 			);
 			path = Endpoints;
 			sourceTree = "<group>";
@@ -3230,6 +3272,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF0000000100000200000001 /* SubscriptionView.swift in Sources */,
+				FF0000000100000200000002 /* SubscriptionViewModel.swift in Sources */,
+				FF0000000100000200000003 /* FeatureGateView.swift in Sources */,
+				FF0000000200000200000001 /* PayoutEndpoints.swift in Sources */,
+				FF0000000200000200000002 /* PayoutDTOs.swift in Sources */,
+				FF0000000200000200000003 /* PayoutViewModel.swift in Sources */,
+				FF0000000200000200000004 /* PayoutHistoryView.swift in Sources */,
+				FF0000000200000200000005 /* RequestPayoutView.swift in Sources */,
 				E87B1BB62F3D605F004E6590 /* APIEndpoint.swift in Sources */,
 				E87B1B7D2F3D605F004E6590 /* ChatMessage.swift in Sources */,
 				E87B1B992F3D605F004E6590 /* JStockRow.swift in Sources */,

@@ -46,6 +46,14 @@ enum UserEndpoints {
             method: .get
         )
     }
+
+    static func updateSubscription(isPremium: Bool) -> APIEndpoint {
+        APIEndpoint(
+            path: "/users/me/subscription",
+            method: .put,
+            body: SubscriptionUpdateBody(isPremium: isPremium)
+        )
+    }
 }
 
 // MARK: - Request Bodies
@@ -87,4 +95,8 @@ struct ProfileUpdateFields: Encodable {
 
 private struct AvatarUploadBody: Encodable {
     let imageData: String
+}
+
+private struct SubscriptionUpdateBody: Encodable {
+    let isPremium: Bool
 }
