@@ -17,7 +17,7 @@ struct MarketsView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: JSpacing.lg) {
+            LazyVStack(spacing: JSpacing.lg) {
                 searchBar
 
                 if viewModel.isShowingSearch {
@@ -89,7 +89,7 @@ struct MarketsView: View {
                 Task { await viewModel.loadMarketData() }
             }
         } else {
-            VStack(spacing: JSpacing.lg) {
+            LazyVStack(spacing: JSpacing.lg) {
                 indicesRow
                 stockSection(.trending)
                 stockSection(.mostActive)

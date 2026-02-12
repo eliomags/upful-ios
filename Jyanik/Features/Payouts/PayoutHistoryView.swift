@@ -47,7 +47,7 @@ struct PayoutHistoryView: View {
 
     private var contentView: some View {
         ScrollView {
-            VStack(spacing: JSpacing.lg) {
+            LazyVStack(spacing: JSpacing.lg) {
                 balanceCard
 
                 requestPayoutButton
@@ -122,7 +122,7 @@ struct PayoutHistoryView: View {
     // MARK: - History List
 
     private var historyList: some View {
-        VStack(alignment: .leading, spacing: JSpacing.md) {
+        LazyVStack(alignment: .leading, spacing: JSpacing.md) {
             Text("Payout History")
                 .font(JFont.headline)
                 .foregroundStyle(JColor.textPrimary)

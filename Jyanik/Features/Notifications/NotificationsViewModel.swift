@@ -291,8 +291,12 @@ extension NotificationItem {
 
     /// Relative timestamp string (e.g., "25m ago", "2h ago", "3d ago").
     var relativeTimestamp: String {
+        Self.relativeFormatter.localizedString(for: createdAt, relativeTo: Date())
+    }
+
+    private static let relativeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .abbreviated
-        return formatter.localizedString(for: createdAt, relativeTo: Date())
-    }
+        return formatter
+    }()
 }

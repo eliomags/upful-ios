@@ -29,18 +29,28 @@ struct ChatMessage: Codable, Identifiable {
     }
 
     var formattedDate: String {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-        guard let date = formatter.date(from: createdAt)
-                ?? ISO8601DateFormatter().date(from: createdAt) else {
+        guard let date = Self.isoFormatterFractional.date(from: createdAt)
+                ?? Self.isoFormatterBasic.date(from: createdAt) else {
             return createdAt
         }
-
-        let displayFormatter = DateFormatter()
-        displayFormatter.doesRelativeDateFormatting = true
-        displayFormatter.dateStyle = .short
-        displayFormatter.timeStyle = .short
-        return displayFormatter.string(from: date)
+        return Self.relativeDateFormatter.string(from: date)
     }
+
+    // MARK: - Cached Formatters
+
+    private static let isoFormatterFractional: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
+    private static let isoFormatterBasic = ISO8601DateFormatter()
+
+    private static let relativeDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.doesRelativeDateFormatting = true
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter
+    }()
 }

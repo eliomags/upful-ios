@@ -130,33 +130,45 @@ final class CompeteViewModel {
     // MARK: - Formatting Helpers
 
     func formattedPrizePool(_ amount: Double) -> String {
+        Self.prizeFormatter.string(from: NSNumber(value: amount)) ?? "$\(Int(amount))"
+    }
+
+    func formattedDate(_ dateString: String) -> String {
+        if let date = Self.isoFormatterFractional.date(from: dateString) {
+            return Self.mediumDateFormatter.string(from: date)
+        }
+        if let date = Self.isoFormatterBasic.date(from: dateString) {
+            return Self.mediumDateFormatter.string(from: date)
+        }
+        return dateString
+    }
+
+    private static let prizeFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 0
-        return formatter.string(from: NSNumber(value: amount)) ?? "$\(Int(amount))"
-    }
+        return formatter
+    }()
 
-    func formattedDate(_ dateString: String) -> String {
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    private static let isoFormatterFractional: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
 
-        let displayFormatter = DateFormatter()
-        displayFormatter.dateStyle = .medium
-        displayFormatter.timeStyle = .none
+    private static let isoFormatterBasic: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter
+    }()
 
-        if let date = isoFormatter.date(from: dateString) {
-            return displayFormatter.string(from: date)
-        }
-
-        // Fallback: try without fractional seconds
-        isoFormatter.formatOptions = [.withInternetDateTime]
-        if let date = isoFormatter.date(from: dateString) {
-            return displayFormatter.string(from: date)
-        }
-
-        return dateString
-    }
+    private static let mediumDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }()
 
     func competitionStatusBadge(_ status: String) -> (text: String, color: String) {
         switch status.lowercased() {

@@ -113,12 +113,16 @@ final class ProfileViewModel {
     // MARK: - Formatting Helpers
 
     func formattedCurrency(_ amount: Double) -> String {
+        Self.currencyFormatter.string(from: NSNumber(value: amount)) ?? "$\(String(format: "%.2f", amount))"
+    }
+
+    private static let currencyFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 2
-        return formatter.string(from: NSNumber(value: amount)) ?? "$\(String(format: "%.2f", amount))"
-    }
+        return formatter
+    }()
 
     func formattedWinRate() -> String {
         String(format: "%.0f%%", winRate)

@@ -257,11 +257,25 @@ struct PriceChartView: View {
     private func formatTimestamp(_ timestamp: Double?) -> String? {
         guard let ts = timestamp else { return nil }
         let date = Date(timeIntervalSince1970: ts)
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = selectedRange == .oneDay ? .short : .none
+        let formatter = selectedRange == .oneDay
+            ? Self.dateTimeFormatter
+            : Self.dateOnlyFormatter
         return formatter.string(from: date)
     }
+
+    private static let dateTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
+
+    private static let dateOnlyFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }()
 }
 
 // MARK: - Previews

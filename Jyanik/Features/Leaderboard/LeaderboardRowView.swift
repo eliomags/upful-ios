@@ -106,13 +106,17 @@ struct LeaderboardRowView: View {
     }
 
     private var formattedEquity: String {
+        Self.equityFormatter.string(from: NSNumber(value: entry.totalEquity))
+            ?? "$\(Int(entry.totalEquity))"
+    }
+
+    private static let equityFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 0
-        return formatter.string(from: NSNumber(value: entry.totalEquity))
-            ?? "$\(Int(entry.totalEquity))"
-    }
+        return formatter
+    }()
 
     private func initials(for entry: LeaderboardEntryDTO) -> String {
         if let displayName = entry.displayName, !displayName.isEmpty {

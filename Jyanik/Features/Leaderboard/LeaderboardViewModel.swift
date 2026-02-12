@@ -144,10 +144,14 @@ final class LeaderboardViewModel {
     // MARK: - Formatting
 
     func formatCurrency(_ value: Double) -> String {
+        Self.currencyFormatter.string(from: NSNumber(value: value)) ?? "$\(String(format: "%.2f", value))"
+    }
+
+    private static let currencyFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 2
-        return formatter.string(from: NSNumber(value: value)) ?? "$\(String(format: "%.2f", value))"
-    }
+        return formatter
+    }()
 }

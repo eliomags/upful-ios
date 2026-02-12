@@ -321,13 +321,19 @@ struct HomeView: View {
     }
 
     private func formattedCurrency(_ value: Double) -> String {
+        Self.currencyFormatter.string(from: NSNumber(value: value)) ?? "$0.00"
+    }
+
+    // MARK: - Cached Formatters
+
+    private static let currencyFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 2
         formatter.minimumFractionDigits = 2
-        return formatter.string(from: NSNumber(value: value)) ?? "$0.00"
-    }
+        return formatter
+    }()
 }
 
 // MARK: - Quick Action Button
@@ -499,12 +505,16 @@ private struct CompetitionCard: View {
     }
 
     private var formattedPrize: String {
+        Self.prizeFormatter.string(from: NSNumber(value: competition.totalPrizePool)) ?? "$0"
+    }
+
+    private static let prizeFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 0
-        return formatter.string(from: NSNumber(value: competition.totalPrizePool)) ?? "$0"
-    }
+        return formatter
+    }()
 
     private func rankColor(_ rank: Int) -> Color {
         switch rank {
@@ -578,27 +588,35 @@ private struct TradeRow: View {
 
     private var formattedTime: String {
         // Parse ISO 8601 date and show relative time
+        if let date = Self.isoFormatterFractional.date(from: trade.executedAt) {
+            return Self.relativeFormatter.localizedString(for: date, relativeTo: Date())
+        }
+        // Try without fractional seconds
+        if let date = Self.isoFormatterBasic.date(from: trade.executedAt) {
+            return Self.relativeFormatter.localizedString(for: date, relativeTo: Date())
+        }
+        return trade.executedAt
+    }
+
+    // MARK: - Cached Formatters
+
+    private static let isoFormatterFractional: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
 
-        guard let date = formatter.date(from: trade.executedAt) else {
-            // Try without fractional seconds
-            let basic = ISO8601DateFormatter()
-            basic.formatOptions = [.withInternetDateTime]
-            guard let basicDate = basic.date(from: trade.executedAt) else {
-                return trade.executedAt
-            }
-            return relativeString(from: basicDate)
-        }
+    private static let isoFormatterBasic: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter
+    }()
 
-        return relativeString(from: date)
-    }
-
-    private func relativeString(from date: Date) -> String {
+    private static let relativeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .abbreviated
-        return formatter.localizedString(for: date, relativeTo: Date())
-    }
+        return formatter
+    }()
 }
 
 // MARK: - Preview

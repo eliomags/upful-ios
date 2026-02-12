@@ -120,30 +120,43 @@ final class PayoutViewModel {
     // MARK: - Formatters
 
     func formatCurrency(_ amount: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = balance?.currency ?? "USD"
-        return formatter.string(from: NSNumber(value: amount)) ?? "$0.00"
+        Self.currencyFormatter.currencyCode = balance?.currency ?? "USD"
+        return Self.currencyFormatter.string(from: NSNumber(value: amount)) ?? "$0.00"
     }
 
     private func formatMonthYear(from dateString: String) -> String {
-        let formatter = ISO8601DateFormatter()
-        guard let date = formatter.date(from: dateString) else { return "Unknown" }
-
-        let displayFormatter = DateFormatter()
-        displayFormatter.dateFormat = "MMMM yyyy"
-        return displayFormatter.string(from: date)
+        guard let date = Self.isoFormatter.date(from: dateString) else { return "Unknown" }
+        return Self.monthYearFormatter.string(from: date)
     }
 
     func formatDate(_ dateString: String) -> String {
-        let formatter = ISO8601DateFormatter()
-        guard let date = formatter.date(from: dateString) else { return dateString }
-
-        let displayFormatter = DateFormatter()
-        displayFormatter.dateStyle = .medium
-        displayFormatter.timeStyle = .none
-        return displayFormatter.string(from: date)
+        guard let date = Self.isoFormatter.date(from: dateString) else { return dateString }
+        return Self.mediumDateFormatter.string(from: date)
     }
+
+    private static let currencyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+        return formatter
+    }()
+
+    private static let isoFormatter: ISO8601DateFormatter = {
+        ISO8601DateFormatter()
+    }()
+
+    private static let monthYearFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        return formatter
+    }()
+
+    private static let mediumDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }()
 
     // MARK: - Mock Data
 

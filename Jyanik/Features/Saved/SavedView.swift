@@ -195,16 +195,20 @@ struct SavedView: View {
     }
 
     private func formattedDate(_ dateString: String) -> String {
-        let formatter = ISO8601DateFormatter()
-        guard let date = formatter.date(from: dateString) else {
+        guard let date = Self.isoFormatter.date(from: dateString) else {
             return dateString
         }
-
-        let displayFormatter = DateFormatter()
-        displayFormatter.dateStyle = .medium
-        displayFormatter.timeStyle = .none
-        return "Updated \(displayFormatter.string(from: date))"
+        return "Updated \(Self.mediumDateFormatter.string(from: date))"
     }
+
+    private static let isoFormatter = ISO8601DateFormatter()
+
+    private static let mediumDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }()
 }
 
 // MARK: - Previews
