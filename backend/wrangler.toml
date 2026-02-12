@@ -1,0 +1,113 @@
+name = "jyanik-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "jyanik-db"
+database_id = "placeholder-replace-after-creation"
+migrations_dir = "src/migrations"
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "CACHE"
+id = "placeholder-replace-after-creation"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "placeholder-replace-after-creation"
+
+# R2 Bucket
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "jyanik-assets"
+
+# Queue Producer
+[[queues.producers]]
+binding = "TASK_QUEUE"
+queue = "jyanik-tasks"
+
+# Queue Consumer
+[[queues.consumers]]
+queue = "jyanik-tasks"
+max_batch_size = 10
+max_batch_timeout = 30
+
+# Cron Triggers
+[triggers]
+crons = [
+  "*/15 * * * *",    # Every 15 min: refresh leaderboard + market quotes
+  "0 * * * *",       # Every hour: clean expired cache
+  "0 0 * * *",       # Daily: roll daily competition
+  "0 0 * * 1",       # Monday: roll weekly competition
+  "0 0 1 * *",       # 1st of month: roll monthly competition
+  "0 22 * * *",      # 10pm UTC: snapshot portfolio values
+]
+
+# Environment variables (non-secret)
+[vars]
+ENVIRONMENT = "development"
+APP_NAME = "Jyanik"
+STARTING_BALANCE = "25000"
+CORS_ORIGIN = "http://localhost:3000"
+
+# ---- Staging ----
+[env.staging]
+name = "jyanik-api-staging"
+[env.staging.vars]
+ENVIRONMENT = "staging"
+CORS_ORIGIN = "https://staging.jyanik.com"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "jyanik-db-staging"
+database_id = "placeholder"
+migrations_dir = "src/migrations"
+
+[[env.staging.kv_namespaces]]
+binding = "CACHE"
+id = "placeholder"
+
+[[env.staging.kv_namespaces]]
+binding = "SESSIONS"
+id = "placeholder"
+
+[[env.staging.r2_buckets]]
+binding = "STORAGE"
+bucket_name = "jyanik-assets-staging"
+
+# ---- Production ----
+[env.production]
+name = "jyanik-api"
+[env.production.vars]
+ENVIRONMENT = "production"
+CORS_ORIGIN = "https://api.jyanik.com"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "jyanik-db"
+database_id = "placeholder"
+migrations_dir = "src/migrations"
+
+[[env.production.kv_namespaces]]
+binding = "CACHE"
+id = "placeholder"
+
+[[env.production.kv_namespaces]]
+binding = "SESSIONS"
+id = "placeholder"
+
+[[env.production.r2_buckets]]
+binding = "STORAGE"
+bucket_name = "jyanik-assets"
+
+[[env.production.queues.producers]]
+binding = "TASK_QUEUE"
+queue = "jyanik-tasks"
+
+[[env.production.queues.consumers]]
+queue = "jyanik-tasks"
+max_batch_size = 10
+max_batch_timeout = 30

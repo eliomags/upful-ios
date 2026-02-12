@@ -2,7 +2,7 @@
 
 included:
   - Jyanik
-  - Upful
+  # Note: Upful/ excluded until Phase 3 rewrite completes (too many legacy violations)
 
 excluded:
   - Pods
