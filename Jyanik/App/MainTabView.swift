@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab: Tab = .home
+    @State private var router = AppRouter()
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -21,6 +22,7 @@ struct MainTabView: View {
             }
         }
         .tint(JColor.primary)
+        .environment(router)
     }
 }
 
@@ -66,15 +68,23 @@ extension MainTabView {
             NavigationStack {
                 switch self {
                 case .home:
-                    HomePlaceholder()
+                    HomeView()
                 case .markets:
-                    MarketsPlaceholder()
+                    MarketsView()
+                        .navigationDestination(for: Route.self) { route in
+                            switch route {
+                            case .stockDetail(let ticker):
+                                StockDetailView(ticker: ticker)
+                            default:
+                                EmptyView()
+                            }
+                        }
                 case .trade:
-                    TradePlaceholder()
+                    TradeView()
                 case .compete:
-                    CompetePlaceholder()
+                    CompeteView()
                 case .profile:
-                    ProfilePlaceholder()
+                    ProfileView()
                 }
             }
         }
@@ -82,17 +92,6 @@ extension MainTabView {
 }
 
 // MARK: - Tab Placeholder Views
-
-private struct HomePlaceholder: View {
-    var body: some View {
-        TabPlaceholder(
-            icon: "house.fill",
-            title: "Dashboard",
-            subtitle: "Your portfolio overview and recent activity"
-        )
-        .navigationTitle("Home")
-    }
-}
 
 private struct MarketsPlaceholder: View {
     var body: some View {

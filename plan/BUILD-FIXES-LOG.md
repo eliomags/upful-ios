@@ -6,7 +6,7 @@
 
 ## Summary
 
-The Upful Xcode project had significant legacy debt from the original developer (Yanik Simpson). When we added 68 new Swift files in the `Jyanik/` folder and attempted to build, multiple issues surfaced — some from our new code, most from the old project configuration. This document tracks every fix.
+The Upful Xcode project had significant legacy debt from the original developer (Yanik Simpson). When we added 68 new Swift files in the `Jyanik/` folder and attempted to build, multiple issues surfaced — some from our new code, most from the old project configuration. After resolving **9 distinct issues**, the project now builds cleanly with only the new Jyanik module compiled. All 233 old Upful source files have been removed from the build target (they remain on disk for reference). This document tracks every fix.
 
 ---
 
@@ -79,8 +79,8 @@ The Upful Xcode project had significant legacy debt from the original developer 
 - 5 `XCSwiftPackageProductDependency` entries
 - 1 `PBXShellScriptBuildPhase` (Crashlytics Run Script)
 
-**Old Swift Files Still Referencing Firebase (in `Upful/` folder):**
-These files will be removed when we fully replace the old code:
+**Old Swift Files That Referenced Firebase (in `Upful/` folder):**
+These files have been **removed from the build target** (Section 9) and their Firebase imports were commented out. They remain on disk for reference only:
 - `Upful/Supporting Files/AppDelegate.swift`
 - `Upful/Services/Analytics/AnalyticsMapper.swift`
 - `Upful/Services/Analytics/AnalyticsTrackers.swift`
@@ -213,16 +213,76 @@ SwiftUI has native equivalents that are significantly better:
 
 ---
 
-## Build Status: SUCCESS
+## 10. Feature Screen Integration (4 Missing pbxproj Entries + Init Params)
 
-After all 9 fixes, the project builds successfully on:
-- **Xcode:** 15.4 (Swift 5.9)
-- **Target:** iOS 17.0 Simulator (arm64)
-- **Compiled files:** 69 Jyanik Swift files
-- **SPM packages:** DGCharts 5.1.0, Kingfisher 5.15.8, Mixpanel 4.4.0, SwiftyStoreKit 0.16.4
+**Error:** `Cannot find 'HomeView' in scope` + feature views not compiling
+
+**Cause:** 11 feature screen files were created on disk by parallel agents, but:
+1. 4 files were not added to `project.pbxproj` (CompeteView, CompeteViewModel, ProfileView, ProfileViewModel)
+2. `CompeteView` and `ProfileView` had required init params but MainTabView called them without arguments
+3. `MainTabView` still had placeholder views for Trade, Compete, and Profile tabs
+4. `AppRouter` was not injected as an environment object (required by CompeteView and ProfileView)
+
+**Fix:**
+1. Added default parameter values to `CompeteView(competitionService:)` and `ProfileView(portfolioService:competitionService:)`
+2. Updated `MainTabView` to use real views: `TradeView()`, `CompeteView()`, `ProfileView()` (replacing placeholders)
+3. Added `@State private var router = AppRouter()` and `.environment(router)` to `MainTabView`
+4. Used Python script to add 4 missing files to `project.pbxproj`:
+   - Added 4 `PBXFileReference` entries
+   - Added 4 `PBXBuildFile` entries
+   - Created 2 `PBXGroup` entries (Compete, Profile) under Features group
+   - Added 4 entries to `PBXSourcesBuildPhase`
+
+**Key finding:** Most "missing" design components were already defined:
+- `JInlineLoading`, `JShimmer`, `JSkeletonStockRow` → in `JLoadingView.swift`
+- `JRadius` → in `JSpacing.swift`
+- `Color(hex:)` → in `JColor.swift`
+- All `JColor` and `JFont` variants → already in theme files
+- `ChartRange` → in `MarketEndpoints.swift`
+- `TradeSide` → in `TradeEndpoints.swift`
+
+**Result:** All 73 Swift files compile. All 5 tab views are real feature screens.
 
 ---
 
-*Last updated: 2026-02-11*
-*Phase: 3 — iOS Modernization*
+## Build Status: SUCCESS
+
+After all 10 fixes, the project builds successfully on:
+- **Xcode:** 15.4 (Swift 5.9)
+- **Target:** iOS 17.0 Simulator (arm64)
+- **Compiled files:** 73 Jyanik Swift files
+- **SPM packages:** DGCharts 5.1.0, Kingfisher 5.15.8, Mixpanel 4.4.0, SwiftyStoreKit 0.16.4
+
+## What Was Removed vs Kept
+
+### Removed from Project:
+| Item | Count | Reason |
+|------|-------|--------|
+| Firebase SDK packages | 5 | Replaced by Cloudflare Workers backend |
+| YSDraggy package | 1 | Replaced by native SwiftUI `.sheet()` |
+| Crashlytics build script | 1 | No longer needed without Firebase |
+| Old Upful source files (from build) | ~233 | Replaced by new Jyanik module |
+| Old test files (from build) | 27 | Referenced old code |
+| `.gitkeep` placeholder files | 15 | Caused Xcode resource conflicts |
+
+### Kept in Project:
+| Item | Reason |
+|------|--------|
+| DGCharts (SPM) | Stock charts - will migrate to SwiftUI Charts later |
+| Kingfisher (SPM) | Image caching - useful for stock logos |
+| Mixpanel (SPM) | Product analytics platform |
+| SwiftyStoreKit (SPM) | IAP wrapper - evaluating StoreKit 2 replacement |
+| Old Upful files on disk | Reference only - not compiled |
+| CoreData models (.xcdatamodeld) | Legacy data migration if needed |
+
+### Key File Renames:
+| Old Name | New Name | Reason |
+|----------|----------|--------|
+| `Jyanik/Core/Models/Transaction.swift` | `TradeTransaction.swift` | Conflicted with old Upful `Transaction.swift` |
+| `Jyanik/Core/Utilities/Secrets.swift` | `JyanikSecrets.swift` | Conflicted with old Upful `Secrets.swift` |
+
+---
+
+*Last updated: 2026-02-12*
+*Phase: 3 — iOS Modernization (COMPLETE)*
 *Branch: feature/jyanik-rebuild*
