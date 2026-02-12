@@ -80,7 +80,7 @@ enum MarketEndpoints {
 
 // MARK: - Chart Range
 
-enum ChartRange: String {
+enum ChartRange: String, CaseIterable {
     case oneDay = "1d"
     case fiveDays = "5d"
     case oneMonth = "1m"
@@ -93,7 +93,7 @@ enum ChartRange: String {
 
 // MARK: - Screener Filters
 
-struct ScreenerFilters: Encodable {
+struct ScreenerFilters: Codable {
     var exchange: String?
     var sector: String?
     var marketCapMin: Double?

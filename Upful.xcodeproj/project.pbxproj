@@ -374,6 +374,18 @@
 		DD0000000400000400000001 /* MonthlyResetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0000000400000300000001 /* MonthlyResetViewModel.swift */; };
 		DD0000000500000200000001 /* OutOfBudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0000000500000100000001 /* OutOfBudgetView.swift */; };
 		DD0000000500000400000001 /* OutOfBudgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0000000500000300000001 /* OutOfBudgetViewModel.swift */; };
+		EE0000000100000200000001 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000100000100000001 /* SearchView.swift */; };
+		EE0000000100000400000001 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000100000300000001 /* SearchViewModel.swift */; };
+		EE0000000200000200000001 /* ScreenerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000200000100000001 /* ScreenerView.swift */; };
+		EE0000000200000400000001 /* ScreenerBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000200000300000001 /* ScreenerBuilderView.swift */; };
+		EE0000000200000600000001 /* ScreenerResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000200000500000001 /* ScreenerResultsView.swift */; };
+		EE0000000300000200000001 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000300000100000001 /* SavedView.swift */; };
+		EE0000000300000400000001 /* SavedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000300000300000001 /* SavedViewModel.swift */; };
+		EE0000000400000200000001 /* WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000400000100000001 /* WatchlistView.swift */; };
+		EE0000000400000400000001 /* WatchlistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000400000300000001 /* WatchlistViewModel.swift */; };
+		EE0000000500000200000001 /* ComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000500000100000001 /* ComparisonView.swift */; };
+		EE0000000500000400000001 /* ComparisonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000500000300000001 /* ComparisonViewModel.swift */; };
+		EE0000000600000200000001 /* PriceChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000600000100000001 /* PriceChartView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -770,6 +782,18 @@
 		DD0000000400000300000001 /* MonthlyResetViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthlyResetViewModel.swift; sourceTree = "<group>"; };
 		DD0000000500000100000001 /* OutOfBudgetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutOfBudgetView.swift; sourceTree = "<group>"; };
 		DD0000000500000300000001 /* OutOfBudgetViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutOfBudgetViewModel.swift; sourceTree = "<group>"; };
+		EE0000000100000100000001 /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		EE0000000100000300000001 /* SearchViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		EE0000000200000100000001 /* ScreenerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenerView.swift; sourceTree = "<group>"; };
+		EE0000000200000300000001 /* ScreenerBuilderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenerBuilderView.swift; sourceTree = "<group>"; };
+		EE0000000200000500000001 /* ScreenerResultsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenerResultsView.swift; sourceTree = "<group>"; };
+		EE0000000300000100000001 /* SavedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
+		EE0000000300000300000001 /* SavedViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedViewModel.swift; sourceTree = "<group>"; };
+		EE0000000400000100000001 /* WatchlistView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchlistView.swift; sourceTree = "<group>"; };
+		EE0000000400000300000001 /* WatchlistViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchlistViewModel.swift; sourceTree = "<group>"; };
+		EE0000000500000100000001 /* ComparisonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparisonView.swift; sourceTree = "<group>"; };
+		EE0000000500000300000001 /* ComparisonViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparisonViewModel.swift; sourceTree = "<group>"; };
+		EE0000000600000100000001 /* PriceChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriceChartView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2760,6 +2784,11 @@
 				DD0000000300000700000001 /* Settings */,
 				DD0000000400000500000001 /* Competition */,
 				DD0000000500000500000001 /* Trading */,
+				EE0000000100000500000001 /* Search */,
+				EE0000000200000700000001 /* Screener */,
+				EE0000000300000500000001 /* Saved */,
+				EE0000000400000500000001 /* Watchlist */,
+				EE0000000500000500000001 /* Comparison */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -2831,6 +2860,52 @@
 			path = Trading;
 			sourceTree = "<group>";
 		};
+		EE0000000100000500000001 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				EE0000000100000100000001 /* SearchView.swift */,
+				EE0000000100000300000001 /* SearchViewModel.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		EE0000000200000700000001 /* Screener */ = {
+			isa = PBXGroup;
+			children = (
+				EE0000000200000100000001 /* ScreenerView.swift */,
+				EE0000000200000300000001 /* ScreenerBuilderView.swift */,
+				EE0000000200000500000001 /* ScreenerResultsView.swift */,
+			);
+			path = Screener;
+			sourceTree = "<group>";
+		};
+		EE0000000300000500000001 /* Saved */ = {
+			isa = PBXGroup;
+			children = (
+				EE0000000300000100000001 /* SavedView.swift */,
+				EE0000000300000300000001 /* SavedViewModel.swift */,
+			);
+			path = Saved;
+			sourceTree = "<group>";
+		};
+		EE0000000400000500000001 /* Watchlist */ = {
+			isa = PBXGroup;
+			children = (
+				EE0000000400000100000001 /* WatchlistView.swift */,
+				EE0000000400000300000001 /* WatchlistViewModel.swift */,
+			);
+			path = Watchlist;
+			sourceTree = "<group>";
+		};
+		EE0000000500000500000001 /* Comparison */ = {
+			isa = PBXGroup;
+			children = (
+				EE0000000500000100000001 /* ComparisonView.swift */,
+				EE0000000500000300000001 /* ComparisonViewModel.swift */,
+			);
+			path = Comparison;
+			sourceTree = "<group>";
+		};
 		AA0000000100000500000001 /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -2873,6 +2948,7 @@
 				C97EBEF2AF17892414E9E790 /* MarketsView.swift */,
 				10C43966339129FF5F5F3370 /* MarketsViewModel.swift */,
 				276EB9EDDFCA8284501ED640 /* StockDetailView.swift */,
+				EE0000000600000100000001 /* PriceChartView.swift */,
 			);
 			path = Markets;
 			sourceTree = "<group>";
@@ -3252,6 +3328,18 @@
 				DD0000000400000400000001 /* MonthlyResetViewModel.swift in Sources */,
 				DD0000000500000200000001 /* OutOfBudgetView.swift in Sources */,
 				DD0000000500000400000001 /* OutOfBudgetViewModel.swift in Sources */,
+				EE0000000100000200000001 /* SearchView.swift in Sources */,
+				EE0000000100000400000001 /* SearchViewModel.swift in Sources */,
+				EE0000000200000200000001 /* ScreenerView.swift in Sources */,
+				EE0000000200000400000001 /* ScreenerBuilderView.swift in Sources */,
+				EE0000000200000600000001 /* ScreenerResultsView.swift in Sources */,
+				EE0000000300000200000001 /* SavedView.swift in Sources */,
+				EE0000000300000400000001 /* SavedViewModel.swift in Sources */,
+				EE0000000400000200000001 /* WatchlistView.swift in Sources */,
+				EE0000000400000400000001 /* WatchlistViewModel.swift in Sources */,
+				EE0000000500000200000001 /* ComparisonView.swift in Sources */,
+				EE0000000500000400000001 /* ComparisonViewModel.swift in Sources */,
+				EE0000000600000200000001 /* PriceChartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

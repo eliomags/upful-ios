@@ -264,12 +264,36 @@ SwiftUI has native equivalents that are significantly better:
 
 ---
 
+## 12. Phase 5 Market & Trading Integration (6 Fixes)
+
+**Context:** Phase 5 added 12 new feature screen files across 6 feature areas (Search, PriceChart, Screener, Saved, Watchlist, Comparison).
+
+**Integration Steps:**
+1. Python script added 12 files to pbxproj with EE prefix UUIDs
+2. Created 5 new PBXGroup entries: Search, Screener, Saved, Watchlist, Comparison
+3. Added PriceChartView to existing Markets PBXGroup
+
+**Fixes Applied:**
+
+| # | File(s) | Error | Fix |
+|---|---------|-------|-----|
+| 1 | `project.pbxproj` | PriceChartView.swift not found at root path | Added file reference to Markets PBXGroup children |
+| 2 | `SearchViewModel.swift`, `SearchView.swift` | `AssetType` enum name collision (3 declarations: TradingDTOs, SearchViewModel, ScreenerBuilderView) | Renamed to `SearchAssetFilter` in Search files |
+| 3 | `MarketEndpoints.swift` | Duplicate `ChartRange.label` and `ChartRange.allDisplayCases` (extension already in StockDetailView) | Removed duplicate; kept `CaseIterable` on enum |
+| 4 | All 5 Phase 5 ViewModels | `@MainActor` isolation errors: `@State` property wrapper cannot call `@MainActor` init | Removed `@MainActor` (consistent with Phase 3/4 `@Observable` pattern) |
+| 5 | `MarketEndpoints.swift`, `SavedViewModel.swift` | Compiler crash: `ScreenerFilters.CodingKeys` conflict between `Encodable` auto-synthesized and `Decodable` extension | Changed `Encodable` → `Codable` in struct; removed manual `Decodable` extension |
+| 6 | `PriceChartView.swift` | `.background()` result unused in multi-statement previews | Added `return` keyword to preview closures |
+
+**Result:** All 110 Swift files compile. BUILD SUCCEEDED with 0 errors and 0 warnings.
+
+---
+
 ## Build Status: SUCCESS
 
-After all 11 fixes, the project builds successfully on:
+After all 12 fixes, the project builds successfully on:
 - **Xcode:** 15.4 (Swift 5.9)
 - **Target:** iOS 17.0 Simulator (arm64)
-- **Compiled files:** 98 Jyanik Swift files (73 from Phase 3 + 18 from Phase 4 + 7 modified)
+- **Compiled files:** 110 Jyanik Swift files (73 from Phase 3 + 18 from Phase 4 + 12 from Phase 5 + 7 modified)
 - **SPM packages:** DGCharts 5.1.0, Kingfisher 5.15.8, Mixpanel 4.4.0, SwiftyStoreKit 0.16.4
 
 ## What Was Removed vs Kept
@@ -303,5 +327,5 @@ After all 11 fixes, the project builds successfully on:
 ---
 
 *Last updated: 2026-02-12*
-*Phase: 4 — Core New Features (COMPLETE)*
+*Phase: 5 — Market Data & Trading (COMPLETE)*
 *Branch: feature/jyanik-rebuild*
