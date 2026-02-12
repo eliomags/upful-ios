@@ -362,6 +362,37 @@ After all 12 fixes, the project builds successfully on:
 
 ---
 
+## 14. Phase 7 Integration — Tests & Accessibility (6 new files)
+
+**Context:** Phase 7 added 5 test files and 1 accessibility modifier file.
+
+### 14a. Test File Location
+- **Cause:** Agents wrote test files to `JyanikTests/` directory, but the Xcode test target uses `UpfulTests/` directory.
+- **Fix:** Moved all 5 test files from `JyanikTests/` to `UpfulTests/`. Removed empty `JyanikTests/` directory.
+
+### 14b. XCTAssertEqual Optional Double
+- **Cause:** `PayoutDTOsTests.swift` used `XCTAssertEqual(json?["amount"] as? Double, 100.0, accuracy: 0.001)` — the `accuracy` overload requires non-optional `Double`, but `json?["amount"] as? Double` produces `Double?`.
+- **Fix:** Used `let dict = try XCTUnwrap(json)` then `dict["amount"] as! Double` for non-optional access.
+
+### 14c. Test Target PBXSourcesBuildPhase Was Empty
+- **Cause:** When old test files were removed from the build in Phase 3 (fix #9), the `UpfulTests` Sources build phase was left empty (`files = ()`).
+- **Fix:** Added 5 new test file build entries to the test target's PBXSourcesBuildPhase.
+
+**Result:** BUILD SUCCEEDED (119 files) + TEST BUILD SUCCEEDED (5 test files).
+
+---
+
+## Build Status: SUCCESS
+
+After all 14 fixes, the project builds successfully on:
+- **Xcode:** 15.4 (Swift 5.9)
+- **Target:** iOS 17.0 Simulator (arm64)
+- **Compiled files:** 119 Jyanik Swift files (73 Phase 3 + 18 Phase 4 + 12 Phase 5 + 8 Phase 6 + 1 Phase 7 + 7 modified)
+- **Test files:** 5 XCTest files (~53 test methods)
+- **SPM packages:** DGCharts 5.1.0, Kingfisher 5.15.8, Mixpanel 4.4.0, SwiftyStoreKit 0.16.4
+
+---
+
 *Last updated: 2026-02-12*
-*Phase: 6 — Monetization & Payouts (COMPLETE)*
+*Phase: 7 — Testing & Accessibility (7.1 + 7.3 COMPLETE)*
 *Branch: feature/jyanik-rebuild*

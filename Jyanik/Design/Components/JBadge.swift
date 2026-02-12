@@ -29,6 +29,7 @@ struct JBadge: View {
                 .padding(.vertical, JSpacing.xxxs)
                 .background(JColor.error, in: Capsule())
                 .fixedSize()
+                .accessibilityLabel("\(count > maxDisplay ? "More than \(maxDisplay)" : "\(count)") notifications")
         }
     }
 }
@@ -49,6 +50,7 @@ struct JDotBadge: View {
         Circle()
             .fill(color)
             .frame(width: size, height: size)
+            .accessibilityLabel("Status indicator")
     }
 }
 
@@ -78,6 +80,7 @@ struct JTextBadge: View {
             .padding(.horizontal, JSpacing.xs)
             .padding(.vertical, JSpacing.xxxs + 1)
             .background(backgroundColor, in: Capsule())
+            .accessibilityLabel(text)
     }
 
     private var foregroundColor: Color {

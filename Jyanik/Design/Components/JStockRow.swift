@@ -63,6 +63,8 @@ struct JStockRow: View {
         }
         .padding(.vertical, JSpacing.xs)
         .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(companyName) stock, \(formattedPrice), \(changePercent >= 0 ? "up" : "down") \(String(format: "%.2f", abs(changePercent))) percent")
     }
 
     private var formattedPrice: String {

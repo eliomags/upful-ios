@@ -395,6 +395,12 @@
 		EE0000000500000200000001 /* ComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000500000100000001 /* ComparisonView.swift */; };
 		EE0000000500000400000001 /* ComparisonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000500000300000001 /* ComparisonViewModel.swift */; };
 		EE0000000600000200000001 /* PriceChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0000000600000100000001 /* PriceChartView.swift */; };
+		GG0000000200000100000001 /* AccessibilityModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0000000100000100000001 /* AccessibilityModifiers.swift */; };
+		GG0000000200000200000001 /* PayoutViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0000000100000200000001 /* PayoutViewModelTests.swift */; };
+		GG0000000200000200000002 /* SubscriptionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0000000100000200000002 /* SubscriptionViewModelTests.swift */; };
+		GG0000000200000200000003 /* StoreKitServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0000000100000200000003 /* StoreKitServiceTests.swift */; };
+		GG0000000200000200000004 /* PayoutDTOsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0000000100000200000004 /* PayoutDTOsTests.swift */; };
+		GG0000000200000200000005 /* PayoutEndpointsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0000000100000200000005 /* PayoutEndpointsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -812,6 +818,12 @@
 		EE0000000500000100000001 /* ComparisonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparisonView.swift; sourceTree = "<group>"; };
 		EE0000000500000300000001 /* ComparisonViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComparisonViewModel.swift; sourceTree = "<group>"; };
 		EE0000000600000100000001 /* PriceChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriceChartView.swift; sourceTree = "<group>"; };
+		GG0000000100000100000001 /* AccessibilityModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityModifiers.swift; sourceTree = "<group>"; };
+		GG0000000100000200000001 /* PayoutViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutViewModelTests.swift; sourceTree = "<group>"; };
+		GG0000000100000200000002 /* SubscriptionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionViewModelTests.swift; sourceTree = "<group>"; };
+		GG0000000100000200000003 /* StoreKitServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitServiceTests.swift; sourceTree = "<group>"; };
+		GG0000000100000200000004 /* PayoutDTOsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutDTOsTests.swift; sourceTree = "<group>"; };
+		GG0000000100000200000005 /* PayoutEndpointsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutEndpointsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1261,6 +1273,11 @@
 				3DB345FB23CBFAF200EADFFD /* VIewModels */,
 				3DAB3ED6235130970008CC18 /* Features */,
 				3D20FB3F22FB1F0A007836DD /* Info.plist */,
+				GG0000000100000200000001 /* PayoutViewModelTests.swift */,
+				GG0000000100000200000002 /* SubscriptionViewModelTests.swift */,
+				GG0000000100000200000003 /* StoreKitServiceTests.swift */,
+				GG0000000100000200000004 /* PayoutDTOsTests.swift */,
+				GG0000000100000200000005 /* PayoutEndpointsTests.swift */,
 			);
 			path = UpfulTests;
 			sourceTree = "<group>";
@@ -2804,6 +2821,7 @@
 			children = (
 				E87B1B342F3D605F004E6590 /* Components */,
 				E87B1B392F3D605F004E6590 /* Theme */,
+				GG0000000300000100000001 /* Accessibility */,
 			);
 			path = Design;
 			sourceTree = "<group>";
@@ -3155,6 +3173,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		GG0000000300000100000001 /* Accessibility */ = {
+			isa = PBXGroup;
+			children = (
+				GG0000000100000100000001 /* AccessibilityModifiers.swift */,
+			);
+			path = Accessibility;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3397,6 +3423,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				GG0000000200000200000001 /* PayoutViewModelTests.swift in Sources */,
+				GG0000000200000200000002 /* SubscriptionViewModelTests.swift in Sources */,
+				GG0000000200000200000003 /* StoreKitServiceTests.swift in Sources */,
+				GG0000000200000200000004 /* PayoutDTOsTests.swift in Sources */,
+				GG0000000200000200000005 /* PayoutEndpointsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
