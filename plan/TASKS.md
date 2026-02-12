@@ -139,15 +139,15 @@
 - [!] 1.4.8 Add Sign in with Apple capability — REQUIRES XCODE (see Manual Actions #6)
 - [!] 1.4.9 Add In-App Purchase capability — REQUIRES XCODE (see Manual Actions #6)
 - [!] 1.4.10 Add Background Modes capability — REQUIRES XCODE (see Manual Actions #6)
-- [~] 1.4.11 **COMMIT**: "chore: add development infrastructure"
+- [x] 1.4.11 **COMMIT**: combined with Phase 1.3 + 1.5 commit
 
 ### 1.5 Security Foundation
 - [x] 1.5.1 Created AppConfig.swift with environment enum (dev/staging/prod) + feature flags
 - [x] 1.5.2 API config included in AppConfig.swift (baseURL, websocketURL per environment)
 - [x] 1.5.3 Created KeychainService.swift using native Security framework (no third-party dependency)
 - [x] 1.5.4 Verified: Secrets.swift is git-ignored, no secrets in committed files
-- [~] 1.5.5 **COMMIT**: "feat: add security foundation - config, keychain, environments"
-- [ ] 1.5.6 **PUSH all Phase 1 commits**
+- [x] 1.5.5 **COMMIT**: "feat: add project structure, dev infrastructure, and security foundation" — 21 files, +528/-50
+- [x] 1.5.6 **PUSHED all Phase 1 commits** — 4 commits total on feature/jyanik-rebuild
 
 ---
 
