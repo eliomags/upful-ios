@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import FirebaseFirestore
+// import FirebaseFirestore // REMOVED: Firebase removed during rebuild
 
 protocol SuggestionsLoaderProtocol {
     typealias SuggestionLoaderCompletion = (Result<[Suggestion],Error>) -> Void

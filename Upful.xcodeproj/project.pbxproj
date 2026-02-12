@@ -3,17 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		679AD21AA55747B8AF7BFFF1 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = DC41E2DD03A548419E6F9279 /* FirebaseAnalytics */; };
-		1B1BAEF39FA447BFA33D54FC /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 4A7EE87AE6304551A90FF6A7 /* FirebaseCore */; };
-		463409DB950C43FDAEEDEE08 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 5B7A9E7587084AF29884683D /* FirebaseCrashlytics */; };
-		8E9DF811A6C64D42BE106A85 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = D8492F4ED9AE469D995AED73 /* FirebaseDynamicLinks */; };
-		D407D3B219944631AFBC0A70 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = EAE4699672894718A9F9E39B /* FirebaseFirestore */; };
-		12DBF2515D8C4CF6875CC245 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = 799D60AA507B4D3F977AAB12 /* Mixpanel */; };
 		07910546D99F4C108523BA75 /* SwiftyStoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38C06BFAC9C14A8DB086292F /* SwiftyStoreKit */; };
+		12DBF2515D8C4CF6875CC245 /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = 799D60AA507B4D3F977AAB12 /* Mixpanel */; };
+
 		3512BC290B734B9FAE98ED6C /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = AB746CDC10A34F568DD1062D /* DGCharts */; };
 		3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D061D1F23C273F500B8FB14 /* ScreenerSelectionDelegate.swift */; };
 		3D0643CC23D94AE1002AAF28 /* PermissionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0643CB23D94AE1002AAF28 /* PermissionManagerTests.swift */; };
@@ -233,7 +229,7 @@
 		3DCE8DC024422CB70007F9EB /* ManualScreenContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DBF24422CB70007F9EB /* ManualScreenContainerViewController.swift */; };
 		3DCE8DC324423DD30007F9EB /* ManualSearchFlow+Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DC224423DD30007F9EB /* ManualSearchFlow+Protocols.swift */; };
 		3DCE8DC5244282EB0007F9EB /* ManualScreenContainerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE8DC4244282EB0007F9EB /* ManualScreenContainerHeaderView.swift */; };
-		3DD0D27E24C4B7530087928C /* YSDraggy in Frameworks */ = {isa = PBXBuildFile; productRef = 3DD0D27D24C4B7530087928C /* YSDraggy */; };
+
 		3DD3438C24B9689C0081DBE6 /* StockOverviewDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3438B24B9689C0081DBE6 /* StockOverviewDatasource.swift */; };
 		3DD3439024BA12260081DBE6 /* StockDetailDragViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3438F24BA12260081DBE6 /* StockDetailDragViewController.swift */; };
 		3DD3439424BA71500081DBE6 /* MetricPreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3439324BA71500081DBE6 /* MetricPreviewTableViewCell.swift */; };
@@ -280,6 +276,75 @@
 		3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */; };
 		3DFD240023B672950027F5CF /* SentimentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD23FF23B672950027F5CF /* SentimentView.swift */; };
 		3DFD240223B67BE50027F5CF /* HomeGeneralLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFD240123B67BE50027F5CF /* HomeGeneralLogicController.swift */; };
+		E87B1B6E2F3D605F004E6590 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1AFF2F3D605F004E6590 /* AppState.swift */; };
+		E87B1B6F2F3D605F004E6590 /* JyanikApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B002F3D605F004E6590 /* JyanikApp.swift */; };
+		E87B1B702F3D605F004E6590 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B012F3D605F004E6590 /* MainTabView.swift */; };
+		E87B1B712F3D605F004E6590 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B022F3D605F004E6590 /* RootView.swift */; };
+		E87B1B732F3D605F004E6590 /* AuthDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B062F3D605F004E6590 /* AuthDTOs.swift */; };
+		E87B1B742F3D605F004E6590 /* ChatDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B072F3D605F004E6590 /* ChatDTOs.swift */; };
+		E87B1B752F3D605F004E6590 /* CompetitionDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B082F3D605F004E6590 /* CompetitionDTOs.swift */; };
+		E87B1B762F3D605F004E6590 /* MarketDataDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B092F3D605F004E6590 /* MarketDataDTOs.swift */; };
+		E87B1B772F3D605F004E6590 /* NotificationDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B0A2F3D605F004E6590 /* NotificationDTOs.swift */; };
+		E87B1B782F3D605F004E6590 /* PortfolioDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B0B2F3D605F004E6590 /* PortfolioDTOs.swift */; };
+		E87B1B792F3D605F004E6590 /* TradingDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B0C2F3D605F004E6590 /* TradingDTOs.swift */; };
+		E87B1B7B2F3D605F004E6590 /* CachedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B0F2F3D605F004E6590 /* CachedNotification.swift */; };
+		E87B1B7C2F3D605F004E6590 /* ChartDataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B102F3D605F004E6590 /* ChartDataPoint.swift */; };
+		E87B1B7D2F3D605F004E6590 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B112F3D605F004E6590 /* ChatMessage.swift */; };
+		E87B1B7E2F3D605F004E6590 /* CompanyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B122F3D605F004E6590 /* CompanyInfo.swift */; };
+		E87B1B7F2F3D605F004E6590 /* Competition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B132F3D605F004E6590 /* Competition.swift */; };
+		E87B1B802F3D605F004E6590 /* LeaderboardEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B142F3D605F004E6590 /* LeaderboardEntry.swift */; };
+		E87B1B812F3D605F004E6590 /* MarketQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B152F3D605F004E6590 /* MarketQuote.swift */; };
+		E87B1B822F3D605F004E6590 /* NewsArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B162F3D605F004E6590 /* NewsArticle.swift */; };
+		E87B1B832F3D605F004E6590 /* Portfolio.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B172F3D605F004E6590 /* Portfolio.swift */; };
+		E87B1B842F3D605F004E6590 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B182F3D605F004E6590 /* Position.swift */; };
+		E87B1B852F3D605F004E6590 /* SavedScreener.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B192F3D605F004E6590 /* SavedScreener.swift */; };
+		E87B1B862F3D605F004E6590 /* SavedStock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B1A2F3D605F004E6590 /* SavedStock.swift */; };
+		E87B1B872F3D605F004E6590 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B1B2F3D605F004E6590 /* SearchResult.swift */; };
+		E87B1B882F3D605F004E6590 /* TradeTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B1C2F3D605F004E6590 /* TradeTransaction.swift */; };
+		E87B1B892F3D605F004E6590 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B1D2F3D605F004E6590 /* User.swift */; };
+		E87B1B8A2F3D605F004E6590 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B1F2F3D605F004E6590 /* AppRouter.swift */; };
+		E87B1B8B2F3D605F004E6590 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B202F3D605F004E6590 /* Route.swift */; };
+		E87B1B8E2F3D605F004E6590 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B252F3D605F004E6590 /* AppConfig.swift */; };
+		E87B1B8F2F3D605F004E6590 /* JyanikSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B262F3D605F004E6590 /* JyanikSecrets.swift */; };
+		E87B1B912F3D605F004E6590 /* JAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B2A2F3D605F004E6590 /* JAvatar.swift */; };
+		E87B1B922F3D605F004E6590 /* JBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B2B2F3D605F004E6590 /* JBadge.swift */; };
+		E87B1B932F3D605F004E6590 /* JButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B2C2F3D605F004E6590 /* JButton.swift */; };
+		E87B1B942F3D605F004E6590 /* JCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B2D2F3D605F004E6590 /* JCard.swift */; };
+		E87B1B952F3D605F004E6590 /* JEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B2E2F3D605F004E6590 /* JEmptyState.swift */; };
+		E87B1B962F3D605F004E6590 /* JErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B2F2F3D605F004E6590 /* JErrorView.swift */; };
+		E87B1B972F3D605F004E6590 /* JLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B302F3D605F004E6590 /* JLoadingView.swift */; };
+		E87B1B982F3D605F004E6590 /* JPriceChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B312F3D605F004E6590 /* JPriceChangeView.swift */; };
+		E87B1B992F3D605F004E6590 /* JStockRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B322F3D605F004E6590 /* JStockRow.swift */; };
+		E87B1B9A2F3D605F004E6590 /* JTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B332F3D605F004E6590 /* JTextField.swift */; };
+		E87B1B9C2F3D605F004E6590 /* JColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B362F3D605F004E6590 /* JColor.swift */; };
+		E87B1B9D2F3D605F004E6590 /* JFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B372F3D605F004E6590 /* JFont.swift */; };
+		E87B1B9E2F3D605F004E6590 /* JSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B382F3D605F004E6590 /* JSpacing.swift */; };
+		E87B1BA32F3D605F004E6590 /* AppleSignInService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B422F3D605F004E6590 /* AppleSignInService.swift */; };
+		E87B1BA42F3D605F004E6590 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B432F3D605F004E6590 /* AuthService.swift */; };
+		E87B1BA52F3D605F004E6590 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B442F3D605F004E6590 /* KeychainService.swift */; };
+		E87B1BA62F3D605F004E6590 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B462F3D605F004E6590 /* ChatService.swift */; };
+		E87B1BA72F3D605F004E6590 /* CompetitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B482F3D605F004E6590 /* CompetitionService.swift */; };
+		E87B1BA92F3D605F004E6590 /* MarketDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B4B2F3D605F004E6590 /* MarketDataService.swift */; };
+		E87B1BAA2F3D605F004E6590 /* AuthEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B4D2F3D605F004E6590 /* AuthEndpoints.swift */; };
+		E87B1BAB2F3D605F004E6590 /* CompetitionEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B4E2F3D605F004E6590 /* CompetitionEndpoints.swift */; };
+		E87B1BAC2F3D605F004E6590 /* DeviceEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B4F2F3D605F004E6590 /* DeviceEndpoints.swift */; };
+		E87B1BAD2F3D605F004E6590 /* LeaderboardEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B502F3D605F004E6590 /* LeaderboardEndpoints.swift */; };
+		E87B1BAE2F3D605F004E6590 /* MarketEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B512F3D605F004E6590 /* MarketEndpoints.swift */; };
+		E87B1BAF2F3D605F004E6590 /* PortfolioEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B522F3D605F004E6590 /* PortfolioEndpoints.swift */; };
+		E87B1BB02F3D605F004E6590 /* SocialEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B532F3D605F004E6590 /* SocialEndpoints.swift */; };
+		E87B1BB12F3D605F004E6590 /* TradeEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B542F3D605F004E6590 /* TradeEndpoints.swift */; };
+		E87B1BB22F3D605F004E6590 /* UserEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B552F3D605F004E6590 /* UserEndpoints.swift */; };
+		E87B1BB32F3D605F004E6590 /* WatchlistEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B562F3D605F004E6590 /* WatchlistEndpoints.swift */; };
+		E87B1BB52F3D605F004E6590 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B592F3D605F004E6590 /* APIClient.swift */; };
+		E87B1BB62F3D605F004E6590 /* APIEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B5A2F3D605F004E6590 /* APIEndpoint.swift */; };
+		E87B1BB72F3D605F004E6590 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B5B2F3D605F004E6590 /* APIError.swift */; };
+		E87B1BB82F3D605F004E6590 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B5C2F3D605F004E6590 /* APIResponse.swift */; };
+		E87B1BB92F3D605F004E6590 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B5D2F3D605F004E6590 /* NetworkMonitor.swift */; };
+		E87B1BBA2F3D605F004E6590 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B5F2F3D605F004E6590 /* NotificationService.swift */; };
+		E87B1BBB2F3D605F004E6590 /* PortfolioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B612F3D605F004E6590 /* PortfolioService.swift */; };
+		E87B1BBD2F3D605F004E6590 /* CacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B642F3D605F004E6590 /* CacheService.swift */; };
+		E87B1BBE2F3D605F004E6590 /* StoreKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B662F3D605F004E6590 /* StoreKitService.swift */; };
+		E87B1BC02F3D605F004E6590 /* TradingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87B1B692F3D605F004E6590 /* TradingService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -376,7 +441,7 @@
 		3D2D18EB2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricPerformanceSaverTests.swift; sourceTree = "<group>"; };
 		3D2D18F02506FFEA002F92BE /* HistoricPerformanceMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricPerformanceMapper.swift; sourceTree = "<group>"; };
 		3D2D18F2250708C0002F92BE /* PerformanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceManager.swift; sourceTree = "<group>"; };
-		3D2D197F250D4211002F92BE /* PersistedPerformanceDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedPerformanceDataPoint.swift; sourceTree = SOURCE_ROOT; };
+		3D2D197F250D4211002F92BE /* PersistedPerformanceDataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedPerformanceDataPoint.swift; sourceTree = "<group>"; };
 		3D2D1983250D52DC002F92BE /* CoreDataUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataUseCase.swift; sourceTree = "<group>"; };
 		3D2D1985250DD252002F92BE /* HomePerformanceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePerformanceViewModel.swift; sourceTree = "<group>"; };
 		3D2E37D72303942100DE8D12 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMobileAds.framework; path = "../../Downloads/GoogleMobileAdsSdkiOS-7.48.0/GoogleMobileAds.framework"; sourceTree = "<group>"; };
@@ -548,7 +613,7 @@
 		3DD75A362372456700C298B9 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		3DDF0ED0236203B900F9665F /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
 		3DE2B9CE249283F9008742F3 /* ProfileDataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDataManagerTests.swift; sourceTree = "<group>"; };
-		3DE2B9D624945766008742F3 /* User+CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "User+CoreData.swift"; path = "/Users/yaniksimpson/Desktop/Upful/Upful/Services/Persistence/User+CoreData.swift"; sourceTree = "<absolute>"; };
+		3DE2B9D624945766008742F3 /* User+CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreData.swift"; sourceTree = "<group>"; };
 		3DE8C7FC23930F2700CC0056 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		3DE8C8002394213D00CC0056 /* NotificationSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetupVC.swift; sourceTree = "<group>"; };
 		3DE8C80323997B3C00CC0056 /* HomePersistenceManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePersistenceManagerTest.swift; sourceTree = "<group>"; };
@@ -578,6 +643,75 @@
 		3DFD23FD23B51C380027F5CF /* NewsHeaderTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsHeaderTableCell.swift; sourceTree = "<group>"; };
 		3DFD23FF23B672950027F5CF /* SentimentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentimentView.swift; sourceTree = "<group>"; };
 		3DFD240123B67BE50027F5CF /* HomeGeneralLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGeneralLogicController.swift; sourceTree = "<group>"; };
+		E87B1AFF2F3D605F004E6590 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		E87B1B002F3D605F004E6590 /* JyanikApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JyanikApp.swift; sourceTree = "<group>"; };
+		E87B1B012F3D605F004E6590 /* MainTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		E87B1B022F3D605F004E6590 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		E87B1B062F3D605F004E6590 /* AuthDTOs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthDTOs.swift; sourceTree = "<group>"; };
+		E87B1B072F3D605F004E6590 /* ChatDTOs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatDTOs.swift; sourceTree = "<group>"; };
+		E87B1B082F3D605F004E6590 /* CompetitionDTOs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompetitionDTOs.swift; sourceTree = "<group>"; };
+		E87B1B092F3D605F004E6590 /* MarketDataDTOs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarketDataDTOs.swift; sourceTree = "<group>"; };
+		E87B1B0A2F3D605F004E6590 /* NotificationDTOs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationDTOs.swift; sourceTree = "<group>"; };
+		E87B1B0B2F3D605F004E6590 /* PortfolioDTOs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortfolioDTOs.swift; sourceTree = "<group>"; };
+		E87B1B0C2F3D605F004E6590 /* TradingDTOs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradingDTOs.swift; sourceTree = "<group>"; };
+		E87B1B0F2F3D605F004E6590 /* CachedNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedNotification.swift; sourceTree = "<group>"; };
+		E87B1B102F3D605F004E6590 /* ChartDataPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartDataPoint.swift; sourceTree = "<group>"; };
+		E87B1B112F3D605F004E6590 /* ChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		E87B1B122F3D605F004E6590 /* CompanyInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompanyInfo.swift; sourceTree = "<group>"; };
+		E87B1B132F3D605F004E6590 /* Competition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Competition.swift; sourceTree = "<group>"; };
+		E87B1B142F3D605F004E6590 /* LeaderboardEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaderboardEntry.swift; sourceTree = "<group>"; };
+		E87B1B152F3D605F004E6590 /* MarketQuote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarketQuote.swift; sourceTree = "<group>"; };
+		E87B1B162F3D605F004E6590 /* NewsArticle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsArticle.swift; sourceTree = "<group>"; };
+		E87B1B172F3D605F004E6590 /* Portfolio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Portfolio.swift; sourceTree = "<group>"; };
+		E87B1B182F3D605F004E6590 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		E87B1B192F3D605F004E6590 /* SavedScreener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedScreener.swift; sourceTree = "<group>"; };
+		E87B1B1A2F3D605F004E6590 /* SavedStock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedStock.swift; sourceTree = "<group>"; };
+		E87B1B1B2F3D605F004E6590 /* SearchResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
+		E87B1B1C2F3D605F004E6590 /* TradeTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeTransaction.swift; sourceTree = "<group>"; };
+		E87B1B1D2F3D605F004E6590 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		E87B1B1F2F3D605F004E6590 /* AppRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		E87B1B202F3D605F004E6590 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		E87B1B252F3D605F004E6590 /* AppConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		E87B1B262F3D605F004E6590 /* JyanikSecrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JyanikSecrets.swift; sourceTree = "<group>"; };
+		E87B1B2A2F3D605F004E6590 /* JAvatar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JAvatar.swift; sourceTree = "<group>"; };
+		E87B1B2B2F3D605F004E6590 /* JBadge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JBadge.swift; sourceTree = "<group>"; };
+		E87B1B2C2F3D605F004E6590 /* JButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JButton.swift; sourceTree = "<group>"; };
+		E87B1B2D2F3D605F004E6590 /* JCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JCard.swift; sourceTree = "<group>"; };
+		E87B1B2E2F3D605F004E6590 /* JEmptyState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JEmptyState.swift; sourceTree = "<group>"; };
+		E87B1B2F2F3D605F004E6590 /* JErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JErrorView.swift; sourceTree = "<group>"; };
+		E87B1B302F3D605F004E6590 /* JLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JLoadingView.swift; sourceTree = "<group>"; };
+		E87B1B312F3D605F004E6590 /* JPriceChangeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JPriceChangeView.swift; sourceTree = "<group>"; };
+		E87B1B322F3D605F004E6590 /* JStockRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JStockRow.swift; sourceTree = "<group>"; };
+		E87B1B332F3D605F004E6590 /* JTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTextField.swift; sourceTree = "<group>"; };
+		E87B1B362F3D605F004E6590 /* JColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JColor.swift; sourceTree = "<group>"; };
+		E87B1B372F3D605F004E6590 /* JFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFont.swift; sourceTree = "<group>"; };
+		E87B1B382F3D605F004E6590 /* JSpacing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSpacing.swift; sourceTree = "<group>"; };
+		E87B1B422F3D605F004E6590 /* AppleSignInService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleSignInService.swift; sourceTree = "<group>"; };
+		E87B1B432F3D605F004E6590 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		E87B1B442F3D605F004E6590 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		E87B1B462F3D605F004E6590 /* ChatService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		E87B1B482F3D605F004E6590 /* CompetitionService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompetitionService.swift; sourceTree = "<group>"; };
+		E87B1B4B2F3D605F004E6590 /* MarketDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarketDataService.swift; sourceTree = "<group>"; };
+		E87B1B4D2F3D605F004E6590 /* AuthEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B4E2F3D605F004E6590 /* CompetitionEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompetitionEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B4F2F3D605F004E6590 /* DeviceEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B502F3D605F004E6590 /* LeaderboardEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaderboardEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B512F3D605F004E6590 /* MarketEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarketEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B522F3D605F004E6590 /* PortfolioEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortfolioEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B532F3D605F004E6590 /* SocialEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B542F3D605F004E6590 /* TradeEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradeEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B552F3D605F004E6590 /* UserEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B562F3D605F004E6590 /* WatchlistEndpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchlistEndpoints.swift; sourceTree = "<group>"; };
+		E87B1B592F3D605F004E6590 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		E87B1B5A2F3D605F004E6590 /* APIEndpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIEndpoint.swift; sourceTree = "<group>"; };
+		E87B1B5B2F3D605F004E6590 /* APIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		E87B1B5C2F3D605F004E6590 /* APIResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
+		E87B1B5D2F3D605F004E6590 /* NetworkMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		E87B1B5F2F3D605F004E6590 /* NotificationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		E87B1B612F3D605F004E6590 /* PortfolioService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortfolioService.swift; sourceTree = "<group>"; };
+		E87B1B642F3D605F004E6590 /* CacheService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheService.swift; sourceTree = "<group>"; };
+		E87B1B662F3D605F004E6590 /* StoreKitService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreKitService.swift; sourceTree = "<group>"; };
+		E87B1B692F3D605F004E6590 /* TradingService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TradingService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -585,16 +719,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				679AD21AA55747B8AF7BFFF1 /* FirebaseAnalytics in Frameworks */,
-				1B1BAEF39FA447BFA33D54FC /* FirebaseCore in Frameworks */,
-				463409DB950C43FDAEEDEE08 /* FirebaseCrashlytics in Frameworks */,
-				8E9DF811A6C64D42BE106A85 /* FirebaseDynamicLinks in Frameworks */,
-				D407D3B219944631AFBC0A70 /* FirebaseFirestore in Frameworks */,
 				12DBF2515D8C4CF6875CC245 /* Mixpanel in Frameworks */,
 				07910546D99F4C108523BA75 /* SwiftyStoreKit in Frameworks */,
 				3512BC290B734B9FAE98ED6C /* DGCharts in Frameworks */,
 				3DBF0C5523D61E45003023D7 /* Kingfisher in Frameworks */,
-				3DD0D27E24C4B7530087928C /* YSDraggy in Frameworks */,
+
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -965,6 +1094,7 @@
 		3D20FB1C22FB1F08007836DD = {
 			isa = PBXGroup;
 			children = (
+				E87B1B6C2F3D605F004E6590 /* Jyanik */,
 				3D206A09241E90A300F7E44C /* TransactionDataModel.xcdatamodeld */,
 				3DF5FBC4233429B600856205 /* StockDataModel.xcdatamodeld */,
 				3D20FB2722FB1F08007836DD /* Upful */,
@@ -2429,6 +2559,290 @@
 			path = Payment;
 			sourceTree = "<group>";
 		};
+		E87B1B032F3D605F004E6590 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1AFF2F3D605F004E6590 /* AppState.swift */,
+				E87B1B002F3D605F004E6590 /* JyanikApp.swift */,
+				E87B1B012F3D605F004E6590 /* MainTabView.swift */,
+				E87B1B022F3D605F004E6590 /* RootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E87B1B052F3D605F004E6590 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E87B1B0D2F3D605F004E6590 /* DTOs */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B062F3D605F004E6590 /* AuthDTOs.swift */,
+				E87B1B072F3D605F004E6590 /* ChatDTOs.swift */,
+				E87B1B082F3D605F004E6590 /* CompetitionDTOs.swift */,
+				E87B1B092F3D605F004E6590 /* MarketDataDTOs.swift */,
+				E87B1B0A2F3D605F004E6590 /* NotificationDTOs.swift */,
+				E87B1B0B2F3D605F004E6590 /* PortfolioDTOs.swift */,
+				E87B1B0C2F3D605F004E6590 /* TradingDTOs.swift */,
+			);
+			path = DTOs;
+			sourceTree = "<group>";
+		};
+		E87B1B1E2F3D605F004E6590 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B0D2F3D605F004E6590 /* DTOs */,
+				E87B1B0F2F3D605F004E6590 /* CachedNotification.swift */,
+				E87B1B102F3D605F004E6590 /* ChartDataPoint.swift */,
+				E87B1B112F3D605F004E6590 /* ChatMessage.swift */,
+				E87B1B122F3D605F004E6590 /* CompanyInfo.swift */,
+				E87B1B132F3D605F004E6590 /* Competition.swift */,
+				E87B1B142F3D605F004E6590 /* LeaderboardEntry.swift */,
+				E87B1B152F3D605F004E6590 /* MarketQuote.swift */,
+				E87B1B162F3D605F004E6590 /* NewsArticle.swift */,
+				E87B1B172F3D605F004E6590 /* Portfolio.swift */,
+				E87B1B182F3D605F004E6590 /* Position.swift */,
+				E87B1B192F3D605F004E6590 /* SavedScreener.swift */,
+				E87B1B1A2F3D605F004E6590 /* SavedStock.swift */,
+				E87B1B1B2F3D605F004E6590 /* SearchResult.swift */,
+				E87B1B1C2F3D605F004E6590 /* TradeTransaction.swift */,
+				E87B1B1D2F3D605F004E6590 /* User.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E87B1B212F3D605F004E6590 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B1F2F3D605F004E6590 /* AppRouter.swift */,
+				E87B1B202F3D605F004E6590 /* Route.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		E87B1B232F3D605F004E6590 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		E87B1B272F3D605F004E6590 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B252F3D605F004E6590 /* AppConfig.swift */,
+				E87B1B262F3D605F004E6590 /* JyanikSecrets.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		E87B1B282F3D605F004E6590 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B052F3D605F004E6590 /* Extensions */,
+				E87B1B1E2F3D605F004E6590 /* Models */,
+				E87B1B212F3D605F004E6590 /* Navigation */,
+				E87B1B232F3D605F004E6590 /* Protocols */,
+				E87B1B272F3D605F004E6590 /* Utilities */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		E87B1B342F3D605F004E6590 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B2A2F3D605F004E6590 /* JAvatar.swift */,
+				E87B1B2B2F3D605F004E6590 /* JBadge.swift */,
+				E87B1B2C2F3D605F004E6590 /* JButton.swift */,
+				E87B1B2D2F3D605F004E6590 /* JCard.swift */,
+				E87B1B2E2F3D605F004E6590 /* JEmptyState.swift */,
+				E87B1B2F2F3D605F004E6590 /* JErrorView.swift */,
+				E87B1B302F3D605F004E6590 /* JLoadingView.swift */,
+				E87B1B312F3D605F004E6590 /* JPriceChangeView.swift */,
+				E87B1B322F3D605F004E6590 /* JStockRow.swift */,
+				E87B1B332F3D605F004E6590 /* JTextField.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		E87B1B392F3D605F004E6590 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B362F3D605F004E6590 /* JColor.swift */,
+				E87B1B372F3D605F004E6590 /* JFont.swift */,
+				E87B1B382F3D605F004E6590 /* JSpacing.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		E87B1B3A2F3D605F004E6590 /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B342F3D605F004E6590 /* Components */,
+				E87B1B392F3D605F004E6590 /* Theme */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		E87B1B3C2F3D605F004E6590 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		E87B1B3E2F3D605F004E6590 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E87B1B402F3D605F004E6590 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		E87B1B452F3D605F004E6590 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B422F3D605F004E6590 /* AppleSignInService.swift */,
+				E87B1B432F3D605F004E6590 /* AuthService.swift */,
+				E87B1B442F3D605F004E6590 /* KeychainService.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		E87B1B472F3D605F004E6590 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B462F3D605F004E6590 /* ChatService.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		E87B1B492F3D605F004E6590 /* Competition */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B482F3D605F004E6590 /* CompetitionService.swift */,
+			);
+			path = Competition;
+			sourceTree = "<group>";
+		};
+		E87B1B4C2F3D605F004E6590 /* MarketData */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B4B2F3D605F004E6590 /* MarketDataService.swift */,
+			);
+			path = MarketData;
+			sourceTree = "<group>";
+		};
+		E87B1B572F3D605F004E6590 /* Endpoints */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B4D2F3D605F004E6590 /* AuthEndpoints.swift */,
+				E87B1B4E2F3D605F004E6590 /* CompetitionEndpoints.swift */,
+				E87B1B4F2F3D605F004E6590 /* DeviceEndpoints.swift */,
+				E87B1B502F3D605F004E6590 /* LeaderboardEndpoints.swift */,
+				E87B1B512F3D605F004E6590 /* MarketEndpoints.swift */,
+				E87B1B522F3D605F004E6590 /* PortfolioEndpoints.swift */,
+				E87B1B532F3D605F004E6590 /* SocialEndpoints.swift */,
+				E87B1B542F3D605F004E6590 /* TradeEndpoints.swift */,
+				E87B1B552F3D605F004E6590 /* UserEndpoints.swift */,
+				E87B1B562F3D605F004E6590 /* WatchlistEndpoints.swift */,
+			);
+			path = Endpoints;
+			sourceTree = "<group>";
+		};
+		E87B1B5E2F3D605F004E6590 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B572F3D605F004E6590 /* Endpoints */,
+				E87B1B592F3D605F004E6590 /* APIClient.swift */,
+				E87B1B5A2F3D605F004E6590 /* APIEndpoint.swift */,
+				E87B1B5B2F3D605F004E6590 /* APIError.swift */,
+				E87B1B5C2F3D605F004E6590 /* APIResponse.swift */,
+				E87B1B5D2F3D605F004E6590 /* NetworkMonitor.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		E87B1B602F3D605F004E6590 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B5F2F3D605F004E6590 /* NotificationService.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		E87B1B622F3D605F004E6590 /* Portfolio */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B612F3D605F004E6590 /* PortfolioService.swift */,
+			);
+			path = Portfolio;
+			sourceTree = "<group>";
+		};
+		E87B1B652F3D605F004E6590 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B642F3D605F004E6590 /* CacheService.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		E87B1B672F3D605F004E6590 /* StoreKit */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B662F3D605F004E6590 /* StoreKitService.swift */,
+			);
+			path = StoreKit;
+			sourceTree = "<group>";
+		};
+		E87B1B6A2F3D605F004E6590 /* Trading */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B692F3D605F004E6590 /* TradingService.swift */,
+			);
+			path = Trading;
+			sourceTree = "<group>";
+		};
+		E87B1B6B2F3D605F004E6590 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B402F3D605F004E6590 /* Analytics */,
+				E87B1B452F3D605F004E6590 /* Auth */,
+				E87B1B472F3D605F004E6590 /* Chat */,
+				E87B1B492F3D605F004E6590 /* Competition */,
+				E87B1B4C2F3D605F004E6590 /* MarketData */,
+				E87B1B5E2F3D605F004E6590 /* Networking */,
+				E87B1B602F3D605F004E6590 /* Notifications */,
+				E87B1B622F3D605F004E6590 /* Portfolio */,
+				E87B1B652F3D605F004E6590 /* Storage */,
+				E87B1B672F3D605F004E6590 /* StoreKit */,
+				E87B1B6A2F3D605F004E6590 /* Trading */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		E87B1B6C2F3D605F004E6590 /* Jyanik */ = {
+			isa = PBXGroup;
+			children = (
+				E87B1B032F3D605F004E6590 /* App */,
+				E87B1B282F3D605F004E6590 /* Core */,
+				E87B1B3A2F3D605F004E6590 /* Design */,
+				E87B1B3C2F3D605F004E6590 /* Features */,
+				E87B1B3E2F3D605F004E6590 /* Resources */,
+				E87B1B6B2F3D605F004E6590 /* Services */,
+			);
+			path = Jyanik;
+			sourceTree = "<group>";
+		};
 		FFC43740532EEF9D260808DB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -2451,7 +2865,6 @@
 				3D20FB2222FB1F08007836DD /* Frameworks */,
 				3D20FB2322FB1F08007836DD /* Resources */,
 				3DA37C3223453049008832AB /* Embed Frameworks */,
-				3D58526025513D430053FBDE /* Crashlytics Run Script */,
 			);
 			buildRules = (
 			);
@@ -2460,12 +2873,6 @@
 			name = Upful;
 			packageProductDependencies = (
 				3DBF0C5423D61E45003023D7 /* Kingfisher */,
-				3DD0D27D24C4B7530087928C /* YSDraggy */,
-				DC41E2DD03A548419E6F9279 /* FirebaseAnalytics */,
-				4A7EE87AE6304551A90FF6A7 /* FirebaseCore */,
-				5B7A9E7587084AF29884683D /* FirebaseCrashlytics */,
-				D8492F4ED9AE469D995AED73 /* FirebaseDynamicLinks */,
-				EAE4699672894718A9F9E39B /* FirebaseFirestore */,
 				799D60AA507B4D3F977AAB12 /* Mixpanel */,
 				38C06BFAC9C14A8DB086292F /* SwiftyStoreKit */,
 				AB746CDC10A34F568DD1062D /* DGCharts */,
@@ -2522,8 +2929,6 @@
 			mainGroup = 3D20FB1C22FB1F08007836DD;
 			packageReferences = (
 				3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				3DD0D27C24C4B7530087928C /* XCRemoteSwiftPackageReference "YSDraggy" */,
-				64235A0E41064DD7AC71396E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				D24D970129944837BAF324F0 /* XCRemoteSwiftPackageReference "mixpanel-swift" */,
 				508F6492B83446E580C8BBAE /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */,
 				7DB88E7D53D0444096E68B55 /* XCRemoteSwiftPackageReference "Charts" */,
@@ -2559,24 +2964,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3D58526025513D430053FBDE /* Crashlytics Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Crashlytics Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Firebase Crashlytics dSYM upload - will be reconfigured after SPM migration\n# See: https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports?platform=ios\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2584,239 +2971,75 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DF734D92404169900B297A4 /* LargeStockQuoteView.swift in Sources */,
-				3DBEFFE023B01F0A00BA407E /* SavedScreenerTableViewCell.swift in Sources */,
-				3DD3439424BA71500081DBE6 /* MetricPreviewTableViewCell.swift in Sources */,
-				3DC3416C24671DC000DE5F96 /* ScreenerDescriptionViewController.swift in Sources */,
-				3D4064C424C4D58B00FDF04D /* DragViewDataSources.swift in Sources */,
-				3D206A19241F0DC200F7E44C /* TransactionDataModel.xcdatamodeld in Sources */,
-				3DBEFFC823A9CC3800BA407E /* SavedStocksViewController.swift in Sources */,
-				3D206A312421060900F7E44C /* LocalTransactionLogger.swift in Sources */,
-				3DBEFFDE23B018CC00BA407E /* SavedScreenersViewModel.swift in Sources */,
-				3D8D3268237320A600123731 /* PopularStockLoader.swift in Sources */,
-				3DD4291D2347EC530079DA18 /* Vibration.swift in Sources */,
-				3D22CE632483743D00662360 /* ProfileSyncCoordinator.swift in Sources */,
-				3D6B07202415C99400C55021 /* AuxiliaryActionView.swift in Sources */,
-				3D2F965F2318D16A003811AB /* GrowthSectionView.swift in Sources */,
-				3D206A5C242559AF00F7E44C /* StockHoldingTableViewCell.swift in Sources */,
-				3DFAC57B23B9AFEE00378AF0 /* PrebuiltScreenerViewController.swift in Sources */,
-				3DF734CC2402DDFD00B297A4 /* StockOverviewViewModel.swift in Sources */,
-				3D6B01CB23D2839A007A2F19 /* SubscriptionView.swift in Sources */,
-				3D7014A123F438DC00102E9C /* ResultsDescriptionView.swift in Sources */,
-				3D2F9663231A16B7003811AB /* CompanyNewsModel.swift in Sources */,
-				3DAB3ED32350D5190008CC18 /* PreferenceViewModel.swift in Sources */,
-				3DF734D224030E2B00B297A4 /* StockFinancialLoader.swift in Sources */,
-				3D2F965423169D31003811AB /* DetailsHeaderView.swift in Sources */,
-				3D55BD6623B7C76200B4FDF0 /* GenericNewsCell.swift in Sources */,
-				3DCE8DC024422CB70007F9EB /* ManualScreenContainerViewController.swift in Sources */,
-				3DF5FBA4232BF44300856205 /* MetricSelectionTableViewCell.swift in Sources */,
-				3DB345EC23C4C6D800EADFFD /* LoadingViewController.swift in Sources */,
-				3D917B4422FC84C4001D5E39 /* UIFont+Extensions.swift in Sources */,
-				3D2F964D23169CC7003811AB /* BarGraphTableViewCell.swift in Sources */,
-				3D42BE4123098BD200806AFF /* CompanyPreviewTableViewCell.swift in Sources */,
-				3D0C5F9F2343EA7900F4A5FC /* LargeGradientButton.swift in Sources */,
-				3D206A1F241F198D00F7E44C /* TransactionContainerManager.swift in Sources */,
-				3D7C854C2337479300A2E63E /* CustomSizeImageView.swift in Sources */,
-				3D58651A231C946600495D79 /* UserFeedbackPresenter.swift in Sources */,
-				3D6F46B7246DF5BB00844C5E /* UserProfile.swift in Sources */,
-				3D4B1EBF242BC6410021A00D /* SavedViewController.swift in Sources */,
-				3D90ADB82301995600C52455 /* ManualSearchHeaderView.swift in Sources */,
-				3DFD23FE23B51C380027F5CF /* NewsHeaderTableCell.swift in Sources */,
-				3D206A71242AFC5F00F7E44C /* PercentChangeView.swift in Sources */,
-				3DF734C62400E5D300B297A4 /* StockDescriptionCell.swift in Sources */,
-				3DC4ED3522FF02A000232155 /* IntrinioAPI.swift in Sources */,
-				3D206A4C242290D600F7E44C /* TradingBalanceView.swift in Sources */,
-				3D7C855523380F4B00A2E63E /* SavedScreenerParameter+CoreDataClass.swift in Sources */,
-				3D51639A24CE7B4A00F86951 /* StockComparisonViewController.swift in Sources */,
-				3DE2B9D724945767008742F3 /* User+CoreData.swift in Sources */,
-				3D297A1023904BFE001D02C3 /* SuggestionViewCell.swift in Sources */,
-				3DCE8DB4243E00070007F9EB /* ManualScreenItemCollectionViewCell.swift in Sources */,
-				3D562C8D235F248E00837B2F /* SubscriptionController.swift in Sources */,
-				3D206A6124284E8000F7E44C /* Holding.swift in Sources */,
-				3D917B4E22FE006D001D5E39 /* ManualSearchModel.swift in Sources */,
-				3DA54086232B361B00EE477C /* MenuViewProtocols.swift in Sources */,
-				3DBEFFE223B0280300BA407E /* LocalScreenerLoader.swift in Sources */,
-				3DBEFFD923AD7ED200BA407E /* Array+Extensions.swift in Sources */,
-				3DD42920234959FD0079DA18 /* NotesButton.swift in Sources */,
-				3D0C5F6D233A451600F4A5FC /* GenericHomeEmptyCell.swift in Sources */,
-				3DDF0ED1236203B900F9665F /* UITableViewCell+Extensions.swift in Sources */,
-				3D0C5F8C23423B7100F4A5FC /* SubscriptionItem.swift in Sources */,
-				3D55BD6A23B8052200B4FDF0 /* StockNewsViewModel.swift in Sources */,
-				3D2F965A2318C6E7003811AB /* ValuationSectionView.swift in Sources */,
-				3D2D18F3250708C0002F92BE /* PerformanceManager.swift in Sources */,
-				3DB345E323C3AA9500EADFFD /* PrebuiltScreenerLogicController.swift in Sources */,
-				3DF92412249D68470028EE01 /* PerformanceCell.swift in Sources */,
-				3D0C5F85234199BD00F4A5FC /* SubcriptionFooterView.swift in Sources */,
-				3D297A0B23902DD6001D02C3 /* SuggestionLoader.swift in Sources */,
-				3D206A0E241E925100F7E44C /* Transaction+CoreDataProperties.swift in Sources */,
-				3D6BD0C523B507DE00FBC1ED /* EmptyScreenerCell.swift in Sources */,
-				3DB7A4F824E861C200B9ADAB /* StockSplit.swift in Sources */,
-				3D297A072390226A001D02C3 /* SuggestionFeedViewController.swift in Sources */,
-				3D75B2AA251C01F500678802 /* TransactionHistoryViewController.swift in Sources */,
-				3DF734DD2406B47500B297A4 /* ScreenResultsViewModel.swift in Sources */,
-				3DD3439824BB59A70081DBE6 /* SearchCriteriaSelectionViewController.swift in Sources */,
-				3DB345EE23C4C87600EADFFD /* LoadingViewPresenter.swift in Sources */,
-				3D90ADB122FFC33C00C52455 /* UIColor+Extensions.swift in Sources */,
-				3DEA3B4924C93ACE00A79197 /* StockComparisonViewModel.swift in Sources */,
-				3DAF279D2449F98300CD001B /* HoldingBreakdownHeaderView.swift in Sources */,
-				3D206A16241EFCDE00F7E44C /* TransactionLedgerPersistence.swift in Sources */,
-				3D55BD6423B7BEBB00B4FDF0 /* UIImage+Extensions.swift in Sources */,
-				3DCE8DB9243EB1D50007F9EB /* ManualScreenSectionHeaderView.swift in Sources */,
-				3DF734C92400E8AC00B297A4 /* StockDescriptionLoader.swift in Sources */,
-				3D3749AC23B9B40A000D0597 /* NewsViewController.swift in Sources */,
-				3DAB3EB0234B6BAA0008CC18 /* ReportPresenter.swift in Sources */,
-				3DFD240023B672950027F5CF /* SentimentView.swift in Sources */,
-				3DAB3EB4234B6C440008CC18 /* ReportContentView.swift in Sources */,
-				3D31AA86242FCB3100326D7E /* CompanyNameLoader.swift in Sources */,
-				3D58651C231D777C00495D79 /* TableHeaderView.swift in Sources */,
-				3D3749B223BA830D000D0597 /* StockScreeningService.swift in Sources */,
-				3D2F96412312B036003811AB /* AnalyticsEvents.swift in Sources */,
-				3D0C5F7E233FC1BC00F4A5FC /* SettingsViewController.swift in Sources */,
-				3D206A5224229A9B00F7E44C /* TotalEquityView.swift in Sources */,
-				3DBEFFD223A9D5E900BA407E /* SavedStockLogicController.swift in Sources */,
-				3D0C5F6523395CD500F4A5FC /* Notes+CoreDataProperties.swift in Sources */,
-				3D2F9665231B7488003811AB /* String+Extensions.swift in Sources */,
-				3DF734C32400AC3600B297A4 /* QuoteLoader.swift in Sources */,
-				3D2F965D2318CC4E003811AB /* FinancialSectionView.swift in Sources */,
-				3DAB3ECD234F98860008CC18 /* PreferenceDataLoader.swift in Sources */,
-				3D2F964B2315CD34003811AB /* BarChartView.swift in Sources */,
-				3D55BD6823B803C300B4FDF0 /* StockNews.swift in Sources */,
-				3D2F966123196881003811AB /* SpacerView.swift in Sources */,
-				3D6EFA462457FA2D00457121 /* UserDefaults+Extensions.swift in Sources */,
-				3D917B5A22FE24C4001D5E39 /* SearchCriteriaTableViewController.swift in Sources */,
-				3D80298724F8879A00685659 /* AsyncOperation.swift in Sources */,
-				3DAB3EBB234C13100008CC18 /* PreferenceViewController.swift in Sources */,
-				3DF5FC0623342BED00856205 /* PersistenceService.swift in Sources */,
-				3DB7A4F624E861A600B9ADAB /* StockSplitFetcher.swift in Sources */,
-				3D2F965823171F52003811AB /* CompanyNewsCell.swift in Sources */,
-				3D55BD6023B69EAD00B4FDF0 /* NewsLoader.swift in Sources */,
-				3D206A1B241F18A900F7E44C /* CoreDataModelContainerManager.swift in Sources */,
-				3D206A5F242702BB00F7E44C /* EmptyHomeTableViewCell.swift in Sources */,
-				3DD429232349633E0079DA18 /* GenericNavBarButton.swift in Sources */,
-				3D55BD7023B847EC00B4FDF0 /* TableSectionHeaderView.swift in Sources */,
-				3DB345F123C7F67800EADFFD /* RemoteStockManager.swift in Sources */,
-				3D2D18F12506FFEA002F92BE /* HistoricPerformanceMapper.swift in Sources */,
-				3D297A0923902D70001D02C3 /* Suggestions.swift in Sources */,
-				3D94588C2543E642000DECD1 /* UpfulDeepLinkManager.swift in Sources */,
-				3D20FB4C22FB2129007836DD /* UIView+Extensions.swift in Sources */,
-				3DCE8DBB243EB9960007F9EB /* ManualScreenItemUpdaterViewController.swift in Sources */,
-				3D297A1223908FC9001D02C3 /* SelectionTableHeader.swift in Sources */,
-				3D917B5622FE088F001D5E39 /* UIViewController+Extensions.swift in Sources */,
-				3D0C5F6423395CD500F4A5FC /* Notes+CoreDataClass.swift in Sources */,
-				3D55BD6223B7BE8B00B4FDF0 /* SmallNewsCell.swift in Sources */,
-				3D0C5F81234170D900F4A5FC /* SubscriptionViewController.swift in Sources */,
-				3D4FB99E238444B200B9BFE1 /* NavigationHeaderView.swift in Sources */,
-				3D7C854E233747A800A2E63E /* InformationView.swift in Sources */,
-				3D42BE492309A59800806AFF /* SearchCriteria.swift in Sources */,
-				3D206A4624217F7400F7E44C /* RemoteTransactionLogger.swift in Sources */,
-				3DAF279F244A665300CD001B /* HoldingsBreakdownTableViewCell.swift in Sources */,
-				3D4D8608231C5B5D0065CF9F /* StockSearchViewController.swift in Sources */,
-				3DCE8DBE2440A1820007F9EB /* NotificationSetupPresenter.swift in Sources */,
-				3DD3439624BA9B360081DBE6 /* MetricPreviewViewModel.swift in Sources */,
-				3DAB3ECF234F98A40008CC18 /* Protocols.swift in Sources */,
-				3D7C855623380F4B00A2E63E /* SavedScreenerParameter+CoreDataProperties.swift in Sources */,
-				3D7C85472337344300A2E63E /* InformationViewPresenter.swift in Sources */,
-				3DF92418249FC3D00028EE01 /* HistoricalPriceLoader.swift in Sources */,
-				3D20FB6222FBC03F007836DD /* CustomHeaderLabel.swift in Sources */,
-				3D2D1981250D4211002F92BE /* PersistedPerformanceDataPoint.swift in Sources */,
-				3D206A272421046600F7E44C /* TransactionLogger.swift in Sources */,
-				3D6B071E2415C97300C55021 /* MultilineButton.swift in Sources */,
-				3DCE8DC5244282EB0007F9EB /* ManualScreenContainerHeaderView.swift in Sources */,
-				3DBEFFC523A9CC0000BA407E /* HomeGeneralViewController.swift in Sources */,
-				3DCE8DB7243E11EE0007F9EB /* ManualScreenItemViewModel.swift in Sources */,
-				3DB345F623CAD74400EADFFD /* StockSearchService.swift in Sources */,
-				3D20FB2B22FB1F08007836DD /* ExploreViewController.swift in Sources */,
-				3D5865262323024A00495D79 /* PieChartView.swift in Sources */,
-				3DD3439024BA12260081DBE6 /* StockDetailDragViewController.swift in Sources */,
-				3D7013E423ECFBDD00102E9C /* SearchResultsCoordinator.swift in Sources */,
-				3D0C5F8823419F1600F4A5FC /* SubscriptionTableViewCell.swift in Sources */,
-				3D20FB2922FB1F08007836DD /* AppDelegate.swift in Sources */,
-				3D206A3524210A4500F7E44C /* TransactionLogLoader.swift in Sources */,
-				3D562C8B235F17EA00837B2F /* UpfulProducts.swift in Sources */,
-				3D2F96472315C072003811AB /* CustomLargeButton.swift in Sources */,
-				3D90ADB52301971500C52455 /* ManualSearchParametersTableViewController.swift in Sources */,
-				3DF5FC092334360200856205 /* SavedStock+CoreDataClass.swift in Sources */,
-				3DB7A4F124E2265A00B9ADAB /* StockSplitHandler.swift in Sources */,
-				3DA54089232B364000EE477C /* MenuViewContainer.swift in Sources */,
-				3DB891DD24155A8E00CA78FF /* HomeFeedAuxiliaryActionView.swift in Sources */,
-				3D206A502422998700F7E44C /* CashBalanceView.swift in Sources */,
-				3D206A12241EA67900F7E44C /* TransactionAdapter.swift in Sources */,
-				3D0C5F6F233A49A800F4A5FC /* EmptyStockCell.swift in Sources */,
-				3D3749BA23BE66B4000D0597 /* ScreenerPreviewTableViewCell.swift in Sources */,
-				3D7013E623ECFDD600102E9C /* SafariPresenter.swift in Sources */,
-				3DAB3EB9234C04E60008CC18 /* Preference.swift in Sources */,
-				3DA5408C232B366F00EE477C /* MenuViewHeader.swift in Sources */,
-				3DE8C7FD23930F2700CC0056 /* Date+Extensions.swift in Sources */,
-				3D586518231C8AEB00495D79 /* StockSearchCell.swift in Sources */,
-				3DE8C8012394213D00CC0056 /* NotificationSetupVC.swift in Sources */,
-				3D90E1BB24D2F05800EF5E37 /* ComparisonLineChartViewModel.swift in Sources */,
-				3D206A2A242104BE00F7E44C /* TransactionType.swift in Sources */,
-				3DB004FD2360F5D1002F704D /* PermissionManager.swift in Sources */,
-				3D90E1BD24D8F4FC00EF5E37 /* CompletionHandler.swift in Sources */,
-				3D2D1986250DD252002F92BE /* HomePerformanceViewModel.swift in Sources */,
-				3DF5FBBE2333A48B00856205 /* ChartTypeUpdatable.swift in Sources */,
-				3DF5FBB0232BFCF100856205 /* AnalysisChartCell.swift in Sources */,
-				3DAB3ED1234F9F590008CC18 /* PrefrenceHeaderView.swift in Sources */,
-				3DBEFFCB23A9CCA000BA407E /* SavedScreenersViewController.swift in Sources */,
-				3D206A3324210A0500F7E44C /* TransactionLoader.swift in Sources */,
-				3D2F963C230F4922003811AB /* StockOverviewViewController.swift in Sources */,
-				3D2F96432312D44B003811AB /* AnalyticsTrackers.swift in Sources */,
-				3D3749B823BE60F4000D0597 /* ScreenerSelectionContainerView.swift in Sources */,
-				3D42BE52230C672C00806AFF /* CompanyFundamentals.swift in Sources */,
-				3D562C8F2360828800837B2F /* IAPService.swift in Sources */,
-				3DB345E123C39D5F00EADFFD /* RemoteScreenerLoader.swift in Sources */,
-				3DC710962336AC4000A2A0DA /* SavedScreener+CoreDataProperties.swift in Sources */,
-				3D3BAB94251AACBF002C09A6 /* StockEngagementRecorder.swift in Sources */,
-				3DD3438C24B9689C0081DBE6 /* StockOverviewDatasource.swift in Sources */,
-				3DAB3EC0234CA4490008CC18 /* PreferenceCollectionView.swift in Sources */,
-				3DB345F423C8A64D00EADFFD /* ExploreLogicController.swift in Sources */,
-				3D206A1D241F193F00F7E44C /* LocalTransactionLedgerLoader.swift in Sources */,
-				3D42BE58230E26A900806AFF /* UITableView+Extensions.swift in Sources */,
-				3D206A14241EA69400F7E44C /* Transaction.swift in Sources */,
-				3D42BE50230C421D00806AFF /* StockDetailsStackView.swift in Sources */,
-				3DC710952336AC4000A2A0DA /* SavedScreener+CoreDataClass.swift in Sources */,
-				3D206A3824210EFC00F7E44C /* TransactionLoggingManager.swift in Sources */,
-				3DF5FBC6233429B600856205 /* StockDataModel.xcdatamodeld in Sources */,
-				3D917B5222FE0542001D5E39 /* ManualSearchViewController.swift in Sources */,
-				3DC4ED3222FE6EF700232155 /* ScreenResultsVC.swift in Sources */,
-				3DD42926234A68B00079DA18 /* SubscriptionPresenter.swift in Sources */,
-				3D90ADBA2301BE0F00C52455 /* Double+Extensions.swift in Sources */,
-				3DAB3EBD234C139B0008CC18 /* PreferenceManager.swift in Sources */,
-				3DD75A30236BAF6700C298B9 /* ColorManager.swift in Sources */,
-				3D4FB99C2384403C00B9BFE1 /* Screener.swift in Sources */,
-				3D7013DE23ECF45000102E9C /* NewsCoordinator.swift in Sources */,
-				3DF5FC0A2334360200856205 /* SavedStock+CoreDataProperties.swift in Sources */,
-				3DFD240223B67BE50027F5CF /* HomeGeneralLogicController.swift in Sources */,
-				3D206A5A2423B05500F7E44C /* StockTradeViewController.swift in Sources */,
-				3DF5FBAC232BFAC800856205 /* AnalysisGraphView.swift in Sources */,
-				3DD75A372372456700C298B9 /* FirestoreService.swift in Sources */,
-				3DBEFFD023A9D0B900BA407E /* LocalStockLoader.swift in Sources */,
-				3DC7108A2335D70000A2A0DA /* CustomRoundButton.swift in Sources */,
-				3D3749B023B9BA66000D0597 /* NewsLogicController.swift in Sources */,
-				3D70DC9123E32E5100097323 /* RecommendationViewController.swift in Sources */,
-				3DD42929234A92CD0079DA18 /* ReportViewController.swift in Sources */,
-				3D20EB8523581FE900D1093A /* CancelButton.swift in Sources */,
-				3D2F96452312D4AF003811AB /* AnalyticsMapper.swift in Sources */,
-				3D2F965623169E9C003811AB /* DetailsCalculationsCell.swift in Sources */,
-				3D71504E245BC4320053E45D /* SplashScreenViewController.swift in Sources */,
-				3DBEFFD723ABCCF400BA407E /* StockPreviewDataLoader.swift in Sources */,
-				3D0C5F942342C88300F4A5FC /* UpfulProductViewModel.swift in Sources */,
-				3D206A48242184BA00F7E44C /* TradingEngine.swift in Sources */,
-				3D206A6E24297F5700F7E44C /* StockTradeCoordinator.swift in Sources */,
-				3D58651F231DE67B00495D79 /* Constants.swift in Sources */,
-				3D7013DB23EC9B3800102E9C /* MainCoordinator.swift in Sources */,
-				3D42BE55230C86B600806AFF /* Int+Extensions.swift in Sources */,
-				3DCE8DC324423DD30007F9EB /* ManualSearchFlow+Protocols.swift in Sources */,
-				3D7013E123ECF98F00102E9C /* StockDetailsCoordinator.swift in Sources */,
-				3DF734D62403770C00B297A4 /* BatchFinancialLoader.swift in Sources */,
-				3D7C85522337A93500A2E63E /* Animator.swift in Sources */,
-				3DCE8DB2243D844D0007F9EB /* ManualScreenViewController.swift in Sources */,
-				3DAB3EC3234D22890008CC18 /* FeaturePresenter.swift in Sources */,
-				3D061D2023C273F500B8FB14 /* ScreenerSelectionDelegate.swift in Sources */,
-				3D206A3F242158E700F7E44C /* BalanceManager.swift in Sources */,
-				3D206A68242858B200F7E44C /* HoldingMapper.swift in Sources */,
-				3D20FB4F22FB259D007836DD /* NetworkingService.swift in Sources */,
-				3D206A21241FB9BB00F7E44C /* LedgerManager.swift in Sources */,
+				E87B1BB62F3D605F004E6590 /* APIEndpoint.swift in Sources */,
+				E87B1B7D2F3D605F004E6590 /* ChatMessage.swift in Sources */,
+				E87B1B992F3D605F004E6590 /* JStockRow.swift in Sources */,
+				E87B1B962F3D605F004E6590 /* JErrorView.swift in Sources */,
+				E87B1BBE2F3D605F004E6590 /* StoreKitService.swift in Sources */,
+				E87B1B812F3D605F004E6590 /* MarketQuote.swift in Sources */,
+				E87B1BA72F3D605F004E6590 /* CompetitionService.swift in Sources */,
+				E87B1B7B2F3D605F004E6590 /* CachedNotification.swift in Sources */,
+				E87B1BB22F3D605F004E6590 /* UserEndpoints.swift in Sources */,
+				E87B1BBA2F3D605F004E6590 /* NotificationService.swift in Sources */,
+				E87B1BAC2F3D605F004E6590 /* DeviceEndpoints.swift in Sources */,
+				E87B1B822F3D605F004E6590 /* NewsArticle.swift in Sources */,
+				E87B1BAD2F3D605F004E6590 /* LeaderboardEndpoints.swift in Sources */,
+				E87B1B952F3D605F004E6590 /* JEmptyState.swift in Sources */,
+				E87B1B972F3D605F004E6590 /* JLoadingView.swift in Sources */,
+				E87B1BB92F3D605F004E6590 /* NetworkMonitor.swift in Sources */,
+				E87B1B9D2F3D605F004E6590 /* JFont.swift in Sources */,
+				E87B1B6E2F3D605F004E6590 /* AppState.swift in Sources */,
+				E87B1B782F3D605F004E6590 /* PortfolioDTOs.swift in Sources */,
+				E87B1BA32F3D605F004E6590 /* AppleSignInService.swift in Sources */,
+				E87B1BA62F3D605F004E6590 /* ChatService.swift in Sources */,
+				E87B1B9E2F3D605F004E6590 /* JSpacing.swift in Sources */,
+				E87B1B9C2F3D605F004E6590 /* JColor.swift in Sources */,
+				E87B1B8A2F3D605F004E6590 /* AppRouter.swift in Sources */,
+				E87B1B872F3D605F004E6590 /* SearchResult.swift in Sources */,
+				E87B1BB12F3D605F004E6590 /* TradeEndpoints.swift in Sources */,
+				E87B1BA92F3D605F004E6590 /* MarketDataService.swift in Sources */,
+				E87B1B892F3D605F004E6590 /* User.swift in Sources */,
+				E87B1B712F3D605F004E6590 /* RootView.swift in Sources */,
+				E87B1BB82F3D605F004E6590 /* APIResponse.swift in Sources */,
+				E87B1B862F3D605F004E6590 /* SavedStock.swift in Sources */,
+				E87B1BA52F3D605F004E6590 /* KeychainService.swift in Sources */,
+				E87B1B832F3D605F004E6590 /* Portfolio.swift in Sources */,
+				E87B1BA42F3D605F004E6590 /* AuthService.swift in Sources */,
+				E87B1B842F3D605F004E6590 /* Position.swift in Sources */,
+				E87B1B6F2F3D605F004E6590 /* JyanikApp.swift in Sources */,
+				E87B1B912F3D605F004E6590 /* JAvatar.swift in Sources */,
+				E87B1BBD2F3D605F004E6590 /* CacheService.swift in Sources */,
+				E87B1B7E2F3D605F004E6590 /* CompanyInfo.swift in Sources */,
+				E87B1B702F3D605F004E6590 /* MainTabView.swift in Sources */,
+				E87B1B882F3D605F004E6590 /* TradeTransaction.swift in Sources */,
+				E87B1BB72F3D605F004E6590 /* APIError.swift in Sources */,
+				E87B1B762F3D605F004E6590 /* MarketDataDTOs.swift in Sources */,
+				E87B1B9A2F3D605F004E6590 /* JTextField.swift in Sources */,
+				E87B1B922F3D605F004E6590 /* JBadge.swift in Sources */,
+				E87B1B802F3D605F004E6590 /* LeaderboardEntry.swift in Sources */,
+				E87B1BB02F3D605F004E6590 /* SocialEndpoints.swift in Sources */,
+				E87B1BB52F3D605F004E6590 /* APIClient.swift in Sources */,
+				E87B1BC02F3D605F004E6590 /* TradingService.swift in Sources */,
+				E87B1BAF2F3D605F004E6590 /* PortfolioEndpoints.swift in Sources */,
+				E87B1BB32F3D605F004E6590 /* WatchlistEndpoints.swift in Sources */,
+				E87B1BAB2F3D605F004E6590 /* CompetitionEndpoints.swift in Sources */,
+				E87B1B8F2F3D605F004E6590 /* JyanikSecrets.swift in Sources */,
+				E87B1B8B2F3D605F004E6590 /* Route.swift in Sources */,
+				E87B1B8E2F3D605F004E6590 /* AppConfig.swift in Sources */,
+				E87B1B752F3D605F004E6590 /* CompetitionDTOs.swift in Sources */,
+				E87B1B732F3D605F004E6590 /* AuthDTOs.swift in Sources */,
+				E87B1B792F3D605F004E6590 /* TradingDTOs.swift in Sources */,
+				E87B1B742F3D605F004E6590 /* ChatDTOs.swift in Sources */,
+				E87B1B7F2F3D605F004E6590 /* Competition.swift in Sources */,
+				E87B1BBB2F3D605F004E6590 /* PortfolioService.swift in Sources */,
+				E87B1B942F3D605F004E6590 /* JCard.swift in Sources */,
+				E87B1B982F3D605F004E6590 /* JPriceChangeView.swift in Sources */,
+				E87B1BAE2F3D605F004E6590 /* MarketEndpoints.swift in Sources */,
+				E87B1BAA2F3D605F004E6590 /* AuthEndpoints.swift in Sources */,
+				E87B1B7C2F3D605F004E6590 /* ChartDataPoint.swift in Sources */,
+				E87B1B932F3D605F004E6590 /* JButton.swift in Sources */,
+				E87B1B772F3D605F004E6590 /* NotificationDTOs.swift in Sources */,
+				E87B1B852F3D605F004E6590 /* SavedScreener.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2824,33 +3047,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D206A642428545B00F7E44C /* HoldingMapperTests.swift in Sources */,
-				3D8D32652372FAE300123731 /* ExploreLogicControllerTests.swift in Sources */,
-				3D206A3A2421105000F7E44C /* TransactionLoggingManagerTests.swift in Sources */,
-				3DF4D8CB244AC0C700D42AF8 /* PieChartViewModelLoaderTest.swift in Sources */,
-				3D206A4A2421898300F7E44C /* TradingManagerTests.swift in Sources */,
-				3DB345FA23CBC5B500EADFFD /* StockViewModelTests.swift in Sources */,
-				3D206A23241FBC9B00F7E44C /* LedgerManagerTests.swift in Sources */,
-				3DF734D424036C1700B297A4 /* StockOverviewViewModelTests.swift in Sources */,
-				3DF734E12407144800B297A4 /* SearchResultsViewModelTests.swift in Sources */,
-				3DBEFFDC23AFD86300BA407E /* SavedStocksViewModelTest.swift in Sources */,
-				3D2D1984250D52DC002F92BE /* CoreDataUseCase.swift in Sources */,
-				3D297A0E23902EDA001D02C3 /* ViewSuggestionsVCTest.swift in Sources */,
-				3D698D2E24DD0C560090CB7B /* MetricPreviewViewModelTests.swift in Sources */,
-				3DE2B9CF249283F9008742F3 /* ProfileDataManagerTests.swift in Sources */,
-				3D206A18241F047F00F7E44C /* TransactionLedgerPersistence.swift in Sources */,
-				3DD5218C235293D60090CDE6 /* HomeGeneralLogicControllerTests.swift in Sources */,
-				3D55BD6E23B805F400B4FDF0 /* StockNewsViewModelTest.swift in Sources */,
-				3D206A6B2428EA5100F7E44C /* HoldingTests.swift in Sources */,
-				3D0643CC23D94AE1002AAF28 /* PermissionManagerTests.swift in Sources */,
-				3DB7A4F424E226B700B9ADAB /* StockSplitHandlerTests.swift in Sources */,
-				3D2D18EC2501DFB8002F92BE /* HistoricPerformanceSaverTests.swift in Sources */,
-				3DB345E923C3EBE500EADFFD /* PrebuiltScreenerLogicControllerTests.swift in Sources */,
-				3D51639624CB118200F86951 /* StockComparisonViewModelTests.swift in Sources */,
-				3DE8C80423997B3C00CC0056 /* HomePersistenceManagerTest.swift in Sources */,
-				3DD52185235276580090CDE6 /* PreferenceDataManagerTest.swift in Sources */,
-				3D6BD0BB23B39C4D00FBC1ED /* SavedScreenersViewModelTest.swift in Sources */,
-				3D206A4224215C5000F7E44C /* BalanceManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2989,7 +3185,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 02;
 				DEVELOPMENT_TEAM = DNPC864748;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3013,7 +3209,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 02;
 				DEVELOPMENT_TEAM = DNPC864748;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				INFOPLIST_FILE = Upful/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3113,30 +3309,6 @@
 				minimumVersion = 5.13.0;
 			};
 		};
-		3DD0D27C24C4B7530087928C /* XCRemoteSwiftPackageReference "YSDraggy" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/syanik94/YSDraggy.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		64235A0E41064DD7AC71396E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 11.0.0;
-			};
-		};
-		D24D970129944837BAF324F0 /* XCRemoteSwiftPackageReference "mixpanel-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mixpanel/mixpanel-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
 		508F6492B83446E580C8BBAE /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bizz84/SwiftyStoreKit.git";
@@ -3153,53 +3325,31 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		D24D970129944837BAF324F0 /* XCRemoteSwiftPackageReference "mixpanel-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mixpanel/mixpanel-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		38C06BFAC9C14A8DB086292F /* SwiftyStoreKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 508F6492B83446E580C8BBAE /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */;
+			productName = SwiftyStoreKit;
+		};
 		3DBF0C5423D61E45003023D7 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3DBF0C5323D61E45003023D7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
-		3DD0D27D24C4B7530087928C /* YSDraggy */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3DD0D27C24C4B7530087928C /* XCRemoteSwiftPackageReference "YSDraggy" */;
-			productName = YSDraggy;
-		};
-		DC41E2DD03A548419E6F9279 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 64235A0E41064DD7AC71396E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		4A7EE87AE6304551A90FF6A7 /* FirebaseCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 64235A0E41064DD7AC71396E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCore;
-		};
-		5B7A9E7587084AF29884683D /* FirebaseCrashlytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 64235A0E41064DD7AC71396E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCrashlytics;
-		};
-		D8492F4ED9AE469D995AED73 /* FirebaseDynamicLinks */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 64235A0E41064DD7AC71396E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDynamicLinks;
-		};
-		EAE4699672894718A9F9E39B /* FirebaseFirestore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 64235A0E41064DD7AC71396E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestore;
-		};
 		799D60AA507B4D3F977AAB12 /* Mixpanel */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D24D970129944837BAF324F0 /* XCRemoteSwiftPackageReference "mixpanel-swift" */;
 			productName = Mixpanel;
-		};
-		38C06BFAC9C14A8DB086292F /* SwiftyStoreKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 508F6492B83446E580C8BBAE /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */;
-			productName = SwiftyStoreKit;
 		};
 		AB746CDC10A34F568DD1062D /* DGCharts */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -3230,7 +3380,6 @@
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */
-
 	};
 	rootObject = 3D20FB1D22FB1F08007836DD /* Project object */;
 }

@@ -5,8 +5,8 @@
 //  Created by Yanik Simpson on 8/7/19.
 //  Copyright © 2019 Yanik Simpson. All rights reserved.
 //
-import Firebase
-import FirebaseDynamicLinks
+// import Firebase // REMOVED: Firebase removed during rebuild
+// import FirebaseDynamicLinks // REMOVED: Firebase removed during rebuild
 import Mixpanel
 import UIKit
 

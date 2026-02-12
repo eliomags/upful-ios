@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import FirebaseFirestore
-import FirebaseDynamicLinks
+// import FirebaseFirestore // REMOVED: Firebase removed during rebuild
+// import FirebaseDynamicLinks // REMOVED: Firebase removed during rebuild
 
 class UpfulDeepLinkManager {
     enum AppRoute: String {

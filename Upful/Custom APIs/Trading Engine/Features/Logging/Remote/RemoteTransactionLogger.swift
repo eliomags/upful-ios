@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import FirebaseFirestore
+// import FirebaseFirestore // REMOVED: Firebase removed during rebuild
 
 final class RemoteTransactionLogger {
     private static let db = Firestore.firestore()

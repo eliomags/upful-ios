@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Firebase
+// import Firebase // REMOVED: Firebase removed during rebuild
 import Mixpanel
 
 protocol AnalyticsTracker {

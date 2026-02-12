@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YSDraggy
+// import YSDraggy // REMOVED: Package removed during rebuild - replaced by SwiftUI sheets
 
 protocol AnalysisDragContentDelegate: class {
     func createTradeButtonFooterView(in view: UIView, topPadding: CGFloat) -> UIView?

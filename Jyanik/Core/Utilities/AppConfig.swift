@@ -99,7 +99,7 @@ struct AppConfig {
     // MARK: - Third Party Keys
 
     struct Keys {
-        static let mixpanelToken = Secrets.mixpanelToken
+        static let mixpanelToken = JyanikSecrets.mixpanelToken
         // Future: Add keys here as services are integrated
     }
 }

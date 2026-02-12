@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FirebaseFirestore
+// import FirebaseFirestore // REMOVED: Firebase removed during rebuild
 
 protocol RemoteScreenerLoaderProtocol {
     typealias ScreenerLoadCompletion = (Result<[ScreenerViewModel],Error>) -> Void
