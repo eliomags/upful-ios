@@ -62,7 +62,7 @@ final class NotificationService {
         // Update local state
         if let index = notifications.firstIndex(where: { $0.id == id }) {
             // Since DTOs are structs, we need to handle immutability
-            var updated = notifications[index]
+            let updated = notifications[index]
             // We can't mutate the DTO directly, so mark it in a local tracking set
             // For simplicity, re-fetch or use a local read tracking mechanism
             notifications[index] = AppNotificationDTO(

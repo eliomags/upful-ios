@@ -17,7 +17,7 @@ struct RootView: View {
             } else if appState.isAuthenticated {
                 MainTabView()
             } else {
-                OnboardingPlaceholderView()
+                OnboardingView()
             }
         }
         .animation(.easeInOut(duration: 0.3), value: appState.isAuthenticated)

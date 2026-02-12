@@ -245,12 +245,31 @@ SwiftUI has native equivalents that are significantly better:
 
 ---
 
+## 11. Phase 4 Feature Integration (18 New Files + 5 Groups)
+
+**Context:** Phase 4 added 18 new feature screen files across 7 feature areas (Onboarding, Auth, Leaderboard, Notifications, Settings, Competition, Trading).
+
+**Integration Steps:**
+1. Auth agent added its 5 files to pbxproj automatically (OnboardingView, AuthViewModel, LoginView, RegisterView, ForgotPasswordView)
+2. Python script added remaining 13 files: 4 Leaderboard, 2 Notifications, 3 Settings, 2 Competition, 2 Trading
+3. Created 5 new `PBXGroup` entries under Features: Leaderboard, Notifications, Settings, Competition, Trading
+4. Added 13 `PBXFileReference`, 13 `PBXBuildFile`, and 13 `PBXSourcesBuildPhase` entries
+5. Updated `RootView.swift`: `OnboardingPlaceholderView()` → `OnboardingView()`
+
+**Warnings Fixed:**
+- `LeaderboardView.swift` line 25: `where` clause only applied to second pattern in `case .idle, .loading where ...` — split into two case patterns
+- `NotificationService.swift` line 65: `var updated` never mutated — changed to `let updated`
+
+**Result:** All 98 Swift files compile. BUILD SUCCEEDED with 0 errors and 0 Jyanik warnings.
+
+---
+
 ## Build Status: SUCCESS
 
-After all 10 fixes, the project builds successfully on:
+After all 11 fixes, the project builds successfully on:
 - **Xcode:** 15.4 (Swift 5.9)
 - **Target:** iOS 17.0 Simulator (arm64)
-- **Compiled files:** 73 Jyanik Swift files
+- **Compiled files:** 98 Jyanik Swift files (73 from Phase 3 + 18 from Phase 4 + 7 modified)
 - **SPM packages:** DGCharts 5.1.0, Kingfisher 5.15.8, Mixpanel 4.4.0, SwiftyStoreKit 0.16.4
 
 ## What Was Removed vs Kept
@@ -284,5 +303,5 @@ After all 10 fixes, the project builds successfully on:
 ---
 
 *Last updated: 2026-02-12*
-*Phase: 3 — iOS Modernization (COMPLETE)*
+*Phase: 4 — Core New Features (COMPLETE)*
 *Branch: feature/jyanik-rebuild*
