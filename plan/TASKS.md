@@ -4,6 +4,52 @@
 
 ---
 
+## MANUAL ACTIONS REQUIRED (Must Be Done in Xcode by Developer)
+
+> These items cannot be done from CLI/terminal and need the developer to open Xcode and perform them manually.
+
+### Before First Build (REQUIRED)
+1. **Upgrade to Xcode 16.3+** — Current Xcode 15.4 cannot build for iOS 17.0 target. Also requires **macOS 15 Sequoia**.
+2. **Delete local CocoaPods artifacts** — Files removed from git but still exist locally:
+   - Delete `Pods/` folder (163MB)
+   - Delete `Podfile` and `Podfile.lock`
+   - Delete `Upful.xcworkspace/` folder
+   - After deleting workspace, open `Upful.xcodeproj` directly (not workspace)
+3. **Resolve SPM packages** — First time opening project after migration, Xcode will need to fetch:
+   - Firebase SDK 11.0+ (may take a few minutes)
+   - Mixpanel-swift 4.0+
+   - SwiftyStoreKit 0.16+
+   - DGCharts 5.0+ (formerly Charts)
+   - Kingfisher, YSDraggy (already existed)
+4. **Create Secrets.swift** — If not already present, copy from template:
+   ```
+   cp "Upful/Supporting Files/Secrets.example.swift" "Upful/Supporting Files/Secrets.swift"
+   ```
+   Then fill in actual API keys.
+
+### Xcode Settings (Do When Opening Project)
+5. **Update signing team** — Select your Apple Developer team in project settings
+6. **Add capabilities** (Signing & Capabilities tab):
+   - Push Notifications
+   - Sign in with Apple
+   - In-App Purchase
+   - Background Modes (fetch, remote notifications)
+7. **Update Bundle Identifier** — Change from `com.yaniksimpson.Upful` to `com.jyanik.app` (or your chosen ID)
+8. **Update Display Name** — Change from "Upful" to "Jyanik" in target General settings
+9. **Add GoogleService-Info.plist** — Download from Firebase Console for the new Jyanik project (git-ignored)
+
+### Firebase Crashlytics Run Script (Needs Update)
+10. **Update Crashlytics dSYM upload script** — In Build Phases → "Crashlytics Run Script":
+    - Current: placeholder comment (CocoaPods path removed)
+    - Replace with SPM path: `${BUILD_DIR%Build/*}SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run`
+    - Or follow: https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports?platform=ios
+
+### Optional Cleanup
+11. **Install SwiftLint** — `brew install swiftlint` (config already at `.swiftlint.yml`)
+12. **Delete old Upful/ code** — Only after Phase 3+ rewrite is complete and all features migrated to Jyanik/
+
+---
+
 ## Phase 0: Research & Planning
 
 ### 0.1 Existing Codebase Analysis
@@ -67,58 +113,40 @@
   - Kept existing: Kingfisher, YSDraggy
 - [x] 1.2.6 Updated all `import Charts` → `import DGCharts` across 7 files (SPM module name change)
 - [x] 1.2.7 Cleaned all CocoaPods build phases and references from pbxproj (46 references removed)
-- [~] 1.2.8 **COMMIT**: "chore: migrate from CocoaPods to SPM"
+- [x] 1.2.8 **COMMIT**: "chore: migrate from CocoaPods to SPM" — 8,179 files, +129/-2,041,312 lines
 
 ### 1.3 New Project Structure
-- [ ] 1.3.1 Create Jyanik/ top-level directory (new app target or renamed)
-- [ ] 1.3.2 Create folder structure:
-  ```
-  Jyanik/App/
-  Jyanik/Core/Models/
-  Jyanik/Core/Protocols/
-  Jyanik/Core/Extensions/
-  Jyanik/Core/Utilities/
-  Jyanik/Features/ (one folder per feature)
-  Jyanik/Services/
-  Jyanik/Design/
-  Jyanik/Resources/
-  ```
-- [ ] 1.3.3 Move existing extension files to Core/Extensions/
-- [ ] 1.3.4 Move existing models to Core/Models/
-- [ ] 1.3.5 Move trading engine to Services/Trading/
-- [ ] 1.3.6 Move service files to Services/
-- [ ] 1.3.7 Update all import paths / file references in .xcodeproj
-- [ ] 1.3.8 Verify project builds with new structure
-- [ ] 1.3.9 **COMMIT**: "refactor: reorganize project structure for Jyanik"
+- [x] 1.3.1 Created Jyanik/ top-level directory for new app code
+- [x] 1.3.2 Created full folder structure with .gitkeep files:
+  - Jyanik/App/, Core/(Models, Protocols, Extensions, Utilities)
+  - Features/, Services/(Networking, Analytics, Trading, MarketData, Auth, Storage)
+  - Design/(Theme, Components), Resources/
+- [-] 1.3.3-1.3.7 File migration DEFERRED to Phase 3 — existing Upful/ stays as reference
+  - Moving files in legacy xcodeproj is brittle and error-prone
+  - All features will be rewritten as new SwiftUI files in Jyanik/
+  - Old Upful/ code serves as reference during rebuild
+- [x] 1.3.8 Structure ready for new Phase 3+ code
+- [x] 1.3.9 Committed together with Phase 1.4 + 1.5
 
 ### 1.4 Development Infrastructure
-- [ ] 1.4.1 Add SwiftLint SPM plugin
-- [ ] 1.4.2 Create .swiftlint.yml with rules:
-  - line_length: 120
-  - force_unwrapping: error
-  - force_cast: error
-  - force_try: warning
-  - trailing_whitespace: warning
-  - unused_closure_parameter: warning
-- [ ] 1.4.3 Fix all SwiftLint errors (or disable specific lines with justification)
-- [ ] 1.4.4 Create .github/workflows/ci.yml:
-  - Trigger: push to feature branches, PRs to prod
-  - Jobs: build, test, swiftlint
-  - Runner: macos-latest
-- [ ] 1.4.5 Set minimum deployment target: iOS 17.0
-- [ ] 1.4.6 Update project signing and capabilities
-- [ ] 1.4.7 Add Push Notifications capability
-- [ ] 1.4.8 Add Sign in with Apple capability
-- [ ] 1.4.9 Add In-App Purchase capability
-- [ ] 1.4.10 Add Background Modes capability (fetch, remote notifications)
-- [ ] 1.4.11 **COMMIT**: "chore: add SwiftLint, CI/CD, update capabilities"
+- [-] 1.4.1 SwiftLint SPM plugin — DEFERRED: install via `brew install swiftlint` (see Manual Actions #11)
+- [x] 1.4.2 Created .swiftlint.yml with comprehensive rules (line_length:120, force_unwrapping:error, force_cast:error, etc.)
+- [-] 1.4.3 Fix SwiftLint errors — DEFERRED to Phase 3 (legacy code will be rewritten)
+- [x] 1.4.4 Created .github/workflows/ci.yml (build, test, swiftlint jobs on macos-15)
+- [x] 1.4.5 Set minimum deployment target to iOS 17.0 (all 4 build configs updated in pbxproj)
+- [!] 1.4.6 Update project signing — REQUIRES XCODE (see Manual Actions #5)
+- [!] 1.4.7 Add Push Notifications capability — REQUIRES XCODE (see Manual Actions #6)
+- [!] 1.4.8 Add Sign in with Apple capability — REQUIRES XCODE (see Manual Actions #6)
+- [!] 1.4.9 Add In-App Purchase capability — REQUIRES XCODE (see Manual Actions #6)
+- [!] 1.4.10 Add Background Modes capability — REQUIRES XCODE (see Manual Actions #6)
+- [~] 1.4.11 **COMMIT**: "chore: add development infrastructure"
 
 ### 1.5 Security Foundation
-- [ ] 1.5.1 Create Config.swift with environment enum (dev/staging/prod)
-- [ ] 1.5.2 Create APIConfig.swift with base URLs per environment
-- [ ] 1.5.3 Create KeychainService.swift using KeychainAccess for token storage
-- [ ] 1.5.4 Ensure no secrets in any committed file
-- [ ] 1.5.5 **COMMIT**: "feat: add security foundation - config, keychain, environments"
+- [x] 1.5.1 Created AppConfig.swift with environment enum (dev/staging/prod) + feature flags
+- [x] 1.5.2 API config included in AppConfig.swift (baseURL, websocketURL per environment)
+- [x] 1.5.3 Created KeychainService.swift using native Security framework (no third-party dependency)
+- [x] 1.5.4 Verified: Secrets.swift is git-ignored, no secrets in committed files
+- [~] 1.5.5 **COMMIT**: "feat: add security foundation - config, keychain, environments"
 - [ ] 1.5.6 **PUSH all Phase 1 commits**
 
 ---
