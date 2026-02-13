@@ -44,7 +44,9 @@ struct ProfileView: View {
         .navigationTitle("Profile")
         .background(JColor.background)
         .task {
-            await viewModel.loadData()
+            if !appState.isGuest {
+                await viewModel.loadData()
+            }
         }
         .refreshable {
             await viewModel.refresh()

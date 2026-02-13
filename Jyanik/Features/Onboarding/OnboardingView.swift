@@ -92,7 +92,7 @@ struct OnboardingView: View {
                 }
 
                 Button {
-                    currentStep = 2
+                    appState.loginAsGuest()
                 } label: {
                     Text("Skip")
                         .font(JFont.calloutMedium)
@@ -233,13 +233,13 @@ struct OnboardingView: View {
                         }
                     }
 
-                    // Back button
+                    // Guest mode
                     Button {
-                        currentStep = 1
+                        appState.loginAsGuest()
                     } label: {
-                        Text("Back")
+                        Text("Continue as Guest")
                             .font(JFont.calloutMedium)
-                            .foregroundStyle(JColor.textSecondary)
+                            .foregroundStyle(JColor.textTertiary)
                     }
                     .padding(.top, JSpacing.xs)
                 }

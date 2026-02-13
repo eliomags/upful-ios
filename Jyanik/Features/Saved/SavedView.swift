@@ -12,6 +12,7 @@ struct SavedView: View {
     // MARK: - State
 
     @Environment(AppRouter.self) private var router
+    @Environment(AppState.self) private var appState
     @State private var viewModel = SavedViewModel()
 
     // MARK: - Body
@@ -32,7 +33,9 @@ struct SavedView: View {
         .background(JColor.background)
         .navigationTitle("Saved")
         .task {
-            await viewModel.loadWatchlist()
+            if !appState.isGuest {
+                await viewModel.loadWatchlist()
+            }
         }
     }
 

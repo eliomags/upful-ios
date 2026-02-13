@@ -98,6 +98,12 @@ final class HomeViewModel {
 
     // MARK: - Loading
 
+    /// Loads demo data for guest mode (no backend required).
+    func loadGuestData() {
+        loadState = .loaded
+        logger.info("[Home] Guest mode — showing default dashboard")
+    }
+
     /// Loads all home screen data concurrently.
     func loadAll() async {
         loadState = .loading

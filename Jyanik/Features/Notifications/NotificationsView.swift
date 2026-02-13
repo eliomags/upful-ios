@@ -11,6 +11,7 @@ struct NotificationsView: View {
 
     // MARK: - Dependencies
 
+    @Environment(AppState.self) private var appState
     @State private var viewModel = NotificationsViewModel()
 
     // MARK: - Body
@@ -50,7 +51,7 @@ struct NotificationsView: View {
         }
         .background(JColor.background)
         .task {
-            if viewModel.loadState == .idle {
+            if viewModel.loadState == .idle && !appState.isGuest {
                 await viewModel.load()
             }
         }

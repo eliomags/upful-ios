@@ -31,7 +31,11 @@ struct HomeView: View {
         .background(JColor.background)
         .task {
             if case .idle = viewModel.loadState {
-                await viewModel.loadAll()
+                if appState.isGuest {
+                    viewModel.loadGuestData()
+                } else {
+                    await viewModel.loadAll()
+                }
             }
         }
     }

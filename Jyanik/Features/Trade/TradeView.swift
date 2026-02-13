@@ -13,6 +13,8 @@ struct TradeView: View {
 
     // MARK: - State
 
+    @Environment(AppState.self) private var appState
+
     @State private var viewModel = TradeViewModel()
     @FocusState private var focusedField: Field?
 
@@ -34,7 +36,9 @@ struct TradeView: View {
         .navigationTitle("Trade")
         .navigationBarTitleDisplayMode(.large)
         .task {
-            await viewModel.loadPortfolio()
+            if !appState.isGuest {
+                await viewModel.loadPortfolio()
+            }
         }
         .sheet(isPresented: $viewModel.showConfirmation) {
             if let transaction = viewModel.completedTransaction {

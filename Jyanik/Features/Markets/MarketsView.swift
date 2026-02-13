@@ -11,6 +11,7 @@ struct MarketsView: View {
 
     // MARK: - State
 
+    @Environment(AppState.self) private var appState
     @State private var viewModel = MarketsViewModel()
 
     // MARK: - Body
@@ -35,7 +36,7 @@ struct MarketsView: View {
             await viewModel.refresh()
         }
         .task {
-            if viewModel.trendingStocks.isEmpty {
+            if viewModel.trendingStocks.isEmpty && !appState.isGuest {
                 await viewModel.loadMarketData()
             }
         }

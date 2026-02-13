@@ -13,6 +13,7 @@ struct CompeteView: View {
 
     @State private var viewModel: CompeteViewModel
     @Environment(AppRouter.self) private var router
+    @Environment(AppState.self) private var appState
 
     // MARK: - Init
 
@@ -39,7 +40,9 @@ struct CompeteView: View {
         .navigationTitle("Compete")
         .background(JColor.background)
         .task {
-            await viewModel.loadData()
+            if !appState.isGuest {
+                await viewModel.loadData()
+            }
         }
         .refreshable {
             await viewModel.refresh()

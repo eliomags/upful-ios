@@ -129,6 +129,26 @@ final class AppState {
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
     }
 
+    /// Allows browsing the app without a backend connection.
+    /// Creates a demo user and sets authenticated state.
+    var isGuest: Bool = false
+
+    func loginAsGuest() {
+        let guest = User(
+            id: "guest",
+            email: "guest@upful.app",
+            username: "GuestTrader",
+            displayName: "Guest Trader",
+            avatarUrl: nil,
+            tier: "free"
+        )
+        currentUser = guest
+        isAuthenticated = true
+        isGuest = true
+        hasCompletedOnboarding = true
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+    }
+
     func updateTokens(access: String, refresh: String) {
         do {
             try keychainService.saveToken(access, for: .accessToken)
