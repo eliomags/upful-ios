@@ -4,6 +4,7 @@
 //
 //  Network DTOs for trading endpoints
 //  Note: TradeSide is defined in TradeEndpoints.swift
+//  NOTE: No manual CodingKeys on Decodable structs — APIClient's decoder uses .convertFromSnakeCase
 //
 
 import Foundation
@@ -40,21 +41,11 @@ struct TradeRequestBody: Encodable {
 struct TradeResponseDTO: Decodable {
     let trade: TransactionDTO
     let portfolioSummary: PortfolioSummaryDTO
-
-    enum CodingKeys: String, CodingKey {
-        case trade
-        case portfolioSummary = "portfolio_summary"
-    }
 }
 
 struct PortfolioSummaryDTO: Decodable {
     let cashBalance: Double
     let totalEquity: Double
-
-    enum CodingKeys: String, CodingKey {
-        case cashBalance = "cash_balance"
-        case totalEquity = "total_equity"
-    }
 }
 
 // MARK: - Trade Validation

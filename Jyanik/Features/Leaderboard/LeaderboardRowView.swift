@@ -20,7 +20,7 @@ struct LeaderboardRowView: View {
 
                 // Avatar
                 JAvatar(
-                    urlString: entry.avatarURL,
+                    urlString: entry.avatarUrl,
                     initials: initials(for: entry),
                     size: .small
                 )
@@ -138,7 +138,7 @@ struct LeaderboardRowView: View {
             entry: LeaderboardEntryDTO(
                 id: "1", userId: "u1", rank: 1,
                 username: "traderpro", displayName: "Alex Morgan",
-                avatarURL: nil, totalEquity: 125_400, growthPct: 24.5,
+                avatarUrl: nil, totalEquity: 125_400, growthPct: 24.5,
                 subscriptionTier: "pro"
             ),
             onTap: {}
@@ -148,7 +148,7 @@ struct LeaderboardRowView: View {
             entry: LeaderboardEntryDTO(
                 id: "2", userId: "u2", rank: 2,
                 username: "stockwhiz", displayName: "Jamie Lee",
-                avatarURL: nil, totalEquity: 118_200, growthPct: 19.3,
+                avatarUrl: nil, totalEquity: 118_200, growthPct: 19.3,
                 subscriptionTier: nil
             ),
             onTap: {}
@@ -158,7 +158,7 @@ struct LeaderboardRowView: View {
             entry: LeaderboardEntryDTO(
                 id: "5", userId: "u5", rank: 5,
                 username: "newtrader", displayName: "Sam Rivera",
-                avatarURL: nil, totalEquity: 98_750, growthPct: -2.1,
+                avatarUrl: nil, totalEquity: 98_750, growthPct: -2.1,
                 subscriptionTier: nil
             ),
             onTap: {}

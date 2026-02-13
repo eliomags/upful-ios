@@ -43,11 +43,11 @@ struct AppConfig {
         static var baseURL: String {
             switch AppConfig.current {
             case .development:
-                return "http://localhost:8787"
+                return "http://localhost:8787/api/v1"
             case .staging:
-                return "https://api-staging.jyanik.com"
+                return "https://api-staging.jyanik.com/api/v1"
             case .production:
-                return "https://api.jyanik.com"
+                return "https://api.jyanik.com/api/v1"
             }
         }
 

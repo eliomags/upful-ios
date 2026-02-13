@@ -292,7 +292,7 @@ final class AuthViewModel {
             email: dto.email,
             username: dto.username,
             displayName: dto.displayName,
-            avatarUrl: dto.avatarURL,
+            avatarUrl: dto.avatarUrl,
             tier: dto.subscriptionTier
         )
     }

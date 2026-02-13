@@ -3,6 +3,7 @@
 //  Jyanik
 //
 //  Network DTOs for market data endpoints
+//  NOTE: No manual CodingKeys on Decodable structs — APIClient's decoder uses .convertFromSnakeCase
 //
 
 import Foundation
@@ -17,10 +18,6 @@ struct SearchResultDTO: Decodable, Identifiable {
     let score: Double?
 
     var id: String { symbol }
-
-    enum CodingKeys: String, CodingKey {
-        case symbol, name, exchange, type, score
-    }
 }
 
 struct SearchResponseDTO: Decodable {
@@ -44,23 +41,6 @@ struct MarketQuoteDTO: Decodable {
     let changeDollar: Double
     let changePercent: Double
     let updatedAt: String?
-
-    enum CodingKeys: String, CodingKey {
-        case ticker
-        case companyName = "company_name"
-        case currentPrice = "current_price"
-        case previousClose = "previous_close"
-        case openPrice = "open_price"
-        case dayHigh = "day_high"
-        case dayLow = "day_low"
-        case volume
-        case marketCap = "market_cap"
-        case peRatio = "pe_ratio"
-        case dividendYield = "dividend_yield"
-        case changeDollar = "change_dollar"
-        case changePercent = "change_percent"
-        case updatedAt = "updated_at"
-    }
 }
 
 // MARK: - Chart
@@ -91,16 +71,10 @@ struct NewsArticleDTO: Decodable, Identifiable {
     let summary: String?
     let url: String
     let source: String?
-    let imageURL: String?
+    let imageUrl: String?
     let publishedAt: String?
 
     var stableID: String { id ?? url }
-
-    enum CodingKeys: String, CodingKey {
-        case id, title, summary, url, source
-        case imageURL = "image_url"
-        case publishedAt = "published_at"
-    }
 }
 
 struct NewsResponseDTO: Decodable {
@@ -120,13 +94,6 @@ struct CryptoAssetDTO: Decodable, Identifiable {
     let rank: Int?
 
     var id: String { symbol }
-
-    enum CodingKeys: String, CodingKey {
-        case symbol, name, price, change
-        case changePercent = "change_percent"
-        case marketCap = "market_cap"
-        case volume, rank
-    }
 }
 
 struct CryptoResponseDTO: Decodable {

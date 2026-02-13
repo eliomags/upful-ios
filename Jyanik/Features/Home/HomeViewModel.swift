@@ -109,13 +109,14 @@ final class HomeViewModel {
         loadState = .loading
 
         do {
-            try await withThrowingTaskGroup(of: Void.self) { group in
-                group.addTask { try await self.loadPortfolio() }
-                group.addTask { try await self.loadCompetitions() }
-                group.addTask { try await self.loadRanking() }
+            // Portfolio is critical — must succeed
+            try await loadPortfolio()
 
-                try await group.waitForAll()
-            }
+            // Non-critical data — load concurrently, don't fail if any errors
+            async let competitionsTask: () = loadCompetitionsSafe()
+            async let rankingTask: () = loadRankingSafe()
+
+            _ = await (competitionsTask, rankingTask)
 
             // Load trades after portfolio (needs portfolio ID)
             if let portfolioId = portfolio?.id {
@@ -148,9 +149,27 @@ final class HomeViewModel {
         competitions = competitionService.currentCompetitions
     }
 
+    private func loadCompetitionsSafe() async {
+        do {
+            try await loadCompetitions()
+        } catch {
+            logger.warning("[Home] Failed to load competitions: \(error.localizedDescription)")
+            // Non-critical — competitions may not exist yet
+        }
+    }
+
     private func loadRanking() async throws {
         try await competitionService.fetchMyRanking()
         myRanking = competitionService.myRanking
+    }
+
+    private func loadRankingSafe() async {
+        do {
+            try await loadRanking()
+        } catch {
+            logger.warning("[Home] Failed to load ranking: \(error.localizedDescription)")
+            // Non-critical — user may not be in any competition yet
+        }
     }
 
     private func loadRecentTrades(portfolioId: String) async {

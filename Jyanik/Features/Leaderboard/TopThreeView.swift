@@ -48,7 +48,7 @@ struct TopThreeView: View {
                 // Avatar with crown for first place
                 ZStack(alignment: .top) {
                     JAvatar(
-                        urlString: entry.avatarURL,
+                        urlString: entry.avatarUrl,
                         initials: initials(for: entry),
                         size: rank == 1 ? .large : .medium
                     )
@@ -164,19 +164,19 @@ struct TopThreeView: View {
             LeaderboardEntryDTO(
                 id: "1", userId: "u1", rank: 1,
                 username: "traderpro", displayName: "Alex Morgan",
-                avatarURL: nil, totalEquity: 125_400, growthPct: 24.5,
+                avatarUrl: nil, totalEquity: 125_400, growthPct: 24.5,
                 subscriptionTier: "pro"
             ),
             LeaderboardEntryDTO(
                 id: "2", userId: "u2", rank: 2,
                 username: "stockwhiz", displayName: "Jamie Lee",
-                avatarURL: nil, totalEquity: 118_200, growthPct: 19.3,
+                avatarUrl: nil, totalEquity: 118_200, growthPct: 19.3,
                 subscriptionTier: nil
             ),
             LeaderboardEntryDTO(
                 id: "3", userId: "u3", rank: 3,
                 username: "bullrunner", displayName: "Taylor Kim",
-                avatarURL: nil, totalEquity: 112_800, growthPct: 15.7,
+                avatarUrl: nil, totalEquity: 112_800, growthPct: 15.7,
                 subscriptionTier: nil
             ),
         ],

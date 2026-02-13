@@ -86,7 +86,7 @@ final class CompetitionService {
             rank: ranking.rank,
             username: "",
             displayName: nil,
-            avatarURL: nil,
+            avatarUrl: nil,
             totalEquity: ranking.totalEquity,
             growthPct: ranking.growthPct,
             subscriptionTier: nil

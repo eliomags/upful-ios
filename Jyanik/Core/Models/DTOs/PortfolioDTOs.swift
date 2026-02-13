@@ -3,6 +3,7 @@
 //  Jyanik
 //
 //  Network DTOs for portfolio endpoints
+//  NOTE: No manual CodingKeys on Decodable structs — APIClient's decoder uses .convertFromSnakeCase
 //
 
 import Foundation
@@ -22,21 +23,6 @@ struct PortfolioDTO: Decodable {
     let positions: [PositionDTO]?
     let createdAt: String
     let updatedAt: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case userId = "user_id"
-        case cashBalance = "cash_balance"
-        case totalEquity = "total_equity"
-        case isActive = "is_active"
-        case competitionMonth = "competition_month"
-        case holdingsValue = "holdings_value"
-        case totalPnl = "total_pnl"
-        case totalPnlPct = "total_pnl_pct"
-        case positions
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-    }
 }
 
 // MARK: - Position
@@ -54,21 +40,6 @@ struct PositionDTO: Decodable {
     let unrealizedPnlPct: Double?
     let updatedAt: String?
     let createdAt: String?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case portfolioId = "portfolio_id"
-        case ticker
-        case assetType = "asset_type"
-        case quantity
-        case averageCost = "average_cost"
-        case currentPrice = "current_price"
-        case marketValue = "market_value"
-        case unrealizedPnl = "unrealized_pnl"
-        case unrealizedPnlPct = "unrealized_pnl_pct"
-        case updatedAt = "updated_at"
-        case createdAt = "created_at"
-    }
 }
 
 // MARK: - Transaction
@@ -83,16 +54,6 @@ struct TransactionDTO: Decodable {
     let price: Double
     let totalValue: Double
     let executedAt: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case portfolioId = "portfolio_id"
-        case ticker
-        case assetType = "asset_type"
-        case side, quantity, price
-        case totalValue = "total_value"
-        case executedAt = "executed_at"
-    }
 }
 
 // MARK: - Portfolio Snapshot
@@ -108,19 +69,6 @@ struct PortfolioSnapshotDTO: Decodable {
     let dailyPnlPct: Double
     let totalPnl: Double
     let totalPnlPct: Double
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case portfolioId = "portfolio_id"
-        case snapshotDate = "snapshot_date"
-        case cashBalance = "cash_balance"
-        case holdingsValue = "holdings_value"
-        case totalEquity = "total_equity"
-        case dailyPnl = "daily_pnl"
-        case dailyPnlPct = "daily_pnl_pct"
-        case totalPnl = "total_pnl"
-        case totalPnlPct = "total_pnl_pct"
-    }
 }
 
 // MARK: - Paginated Transactions Response
@@ -136,12 +84,6 @@ struct PaginationDTO: Decodable {
     let total: Int
     let totalPages: Int?
     let hasMore: Bool?
-
-    enum CodingKeys: String, CodingKey {
-        case page, limit, total
-        case totalPages = "total_pages"
-        case hasMore = "has_more"
-    }
 }
 
 // MARK: - Positions Response

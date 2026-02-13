@@ -3,6 +3,7 @@
 //  Jyanik
 //
 //  Network DTOs for chat endpoints
+//  NOTE: No manual CodingKeys on Decodable structs — APIClient's decoder uses .convertFromSnakeCase
 //
 
 import Foundation
@@ -17,22 +18,11 @@ struct ChatMessageDTO: Decodable, Identifiable {
     let imageKey: String?
     let tickers: [String]?
     let isDeleted: Int?
-    let avatarURL: String?
+    let avatarUrl: String?
     let createdAt: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case userId = "user_id"
-        case username, content
-        case imageKey = "image_key"
-        case tickers
-        case isDeleted = "is_deleted"
-        case avatarURL = "avatar_url"
-        case createdAt = "created_at"
-    }
 }
 
-// MARK: - Send Message Request
+// MARK: - Send Message Request (Encodable — keeps CodingKeys for encoder)
 
 struct SendMessageRequestBody: Encodable {
     let content: String?

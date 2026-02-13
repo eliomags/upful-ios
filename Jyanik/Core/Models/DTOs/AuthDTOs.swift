@@ -80,16 +80,12 @@ struct LogoutRequestBody: Encodable {
 }
 
 // MARK: - Response DTOs
+// NOTE: No manual CodingKeys needed — APIClient's decoder uses .convertFromSnakeCase
 
 struct AuthResponseDTO: Decodable {
     let user: UserDTO
     let tokens: TokensDTO
     let isNewUser: Bool?
-
-    enum CodingKeys: String, CodingKey {
-        case user, tokens
-        case isNewUser = "is_new_user"
-    }
 }
 
 struct UserDTO: Decodable {
@@ -97,45 +93,22 @@ struct UserDTO: Decodable {
     let email: String
     let username: String
     let displayName: String?
-    let avatarURL: String?
+    let avatarUrl: String?
     let paypalEmail: String?
     let subscriptionTier: String
     let createdAt: String
-
-    enum CodingKeys: String, CodingKey {
-        case id, email, username
-        case displayName = "display_name"
-        case avatarURL = "avatar_url"
-        case paypalEmail = "paypal_email"
-        case subscriptionTier = "subscription_tier"
-        case createdAt = "created_at"
-    }
 }
 
 struct TokensDTO: Decodable {
     let accessToken: String
     let refreshToken: String
     let expiresIn: Int
-    let tokenType: String
-
-    enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
-        case refreshToken = "refresh_token"
-        case expiresIn = "expires_in"
-        case tokenType = "token_type"
-    }
+    let tokenType: String?
 }
 
 struct RefreshTokenResponseDTO: Decodable {
     let accessToken: String
     let refreshToken: String
     let expiresIn: Int
-    let tokenType: String
-
-    enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
-        case refreshToken = "refresh_token"
-        case expiresIn = "expires_in"
-        case tokenType = "token_type"
-    }
+    let tokenType: String?
 }

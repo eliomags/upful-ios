@@ -3,6 +3,7 @@
 //  Jyanik
 //
 //  Network DTOs for notification endpoints
+//  NOTE: No manual CodingKeys on Decodable structs — APIClient's decoder uses .convertFromSnakeCase
 //
 
 import Foundation
@@ -20,14 +21,6 @@ struct AppNotificationDTO: Decodable, Identifiable {
     let isRead: Int
     let createdAt: String
 
-    enum CodingKeys: String, CodingKey {
-        case id
-        case userId = "user_id"
-        case type, title, body, amount, metadata
-        case isRead = "is_read"
-        case createdAt = "created_at"
-    }
-
     var read: Bool { isRead != 0 }
 }
 
@@ -37,15 +30,9 @@ struct NotificationsResponseDTO: Decodable {
     let data: [AppNotificationDTO]
     let unreadCount: Int
     let pagination: PaginationDTO
-
-    enum CodingKeys: String, CodingKey {
-        case data
-        case unreadCount = "unread_count"
-        case pagination
-    }
 }
 
-// MARK: - Device Registration
+// MARK: - Device Registration (Encodable — keeps CodingKeys for encoder)
 
 struct DeviceRegistrationBody: Encodable {
     let deviceToken: String

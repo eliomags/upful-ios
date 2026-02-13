@@ -22,16 +22,8 @@ struct Pagination: Decodable {
     let page: Int
     let limit: Int
     let total: Int
-    let totalPages: Int
+    let totalPages: Int?
     let hasMore: Bool
-
-    enum CodingKeys: String, CodingKey {
-        case page
-        case limit
-        case total
-        case totalPages = "total_pages"
-        case hasMore = "has_more"
-    }
 }
 
 // MARK: - Empty Response
