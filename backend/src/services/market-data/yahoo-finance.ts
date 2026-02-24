@@ -1,7 +1,7 @@
 import type { Env, MarketQuote } from '../../models/types';
 
 export interface SearchResult {
-  ticker: string;
+  symbol: string;
   name: string;
   type: string;
   exchange: string;
@@ -150,7 +150,7 @@ export class YahooFinanceClient {
       }
 
       return data.quotes.map((quote) => ({
-        ticker: quote.symbol,
+        symbol: quote.symbol,
         name: quote.longname || quote.shortname || quote.symbol,
         type: quote.quoteType || 'EQUITY',
         exchange: quote.exchDisp || 'Unknown',

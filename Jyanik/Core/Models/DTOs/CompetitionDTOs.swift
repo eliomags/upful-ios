@@ -11,7 +11,7 @@ import Foundation
 
 // MARK: - Competition
 
-struct CompetitionDTO: Decodable, Identifiable {
+struct CompetitionDTO: Decodable, Identifiable, Hashable {
     let id: String
     let type: String
     let status: String
@@ -20,6 +20,19 @@ struct CompetitionDTO: Decodable, Identifiable {
     let totalPrizePool: Double
     let participantCount: Int
     let createdAt: String
+    let tier: String?
+    let description: String?
+    let rules: String?
+    let isJoined: Bool?
+
+    /// Whether this is a premium (cash-prize) competition.
+    var isPremium: Bool { (tier ?? "free") == "premium" }
+
+    /// Display-friendly tier label.
+    var tierLabel: String { isPremium ? "Premium" : "Free" }
+
+    /// Whether the current user has joined this competition.
+    var joined: Bool { isJoined ?? false }
 }
 
 // MARK: - Leaderboard
@@ -34,6 +47,7 @@ struct LeaderboardEntryDTO: Decodable, Identifiable {
     let totalEquity: Double
     let growthPct: Double
     let subscriptionTier: String?
+    let prizeAmount: Double?
 
     var stableID: String { id ?? userId ?? "\(rank)" }
 }
@@ -44,6 +58,7 @@ struct MyRankingDTO: Decodable {
     let rank: Int
     let growthPct: Double
     let totalEquity: Double
+    let prizeAmount: Double?
 }
 
 // MARK: - Reset Response
@@ -61,12 +76,71 @@ struct CompetitionHistoryEntryDTO: Decodable, Identifiable {
     let competitionId: String
     let startingEquity: Double
     let endingEquity: Double?
-    let growthPct: Double
+    let growthPct: Double?
     let rank: Int?
-    let prizeAmount: Double
-    let prizeStatus: String
+    let prizeAmount: Double?
+    let prizeStatus: String?
     let createdAt: String
     let type: String?
     let startDate: String?
     let endDate: String?
+    let totalPrizePool: Double?
+    let participantCount: Int?
+    let subscriptionTier: String?
+}
+
+// MARK: - Past Competition Result (with winners)
+
+struct PastCompetitionResultDTO: Decodable, Identifiable {
+    let id: String
+    let type: String
+    let status: String
+    let startDate: String
+    let endDate: String
+    let totalPrizePool: Double
+    let participantCount: Int
+    let tier: String?
+    let winners: [CompetitionWinnerDTO]
+
+    var isPremium: Bool { (tier ?? "free") == "premium" }
+}
+
+struct CompetitionWinnerDTO: Decodable, Identifiable {
+    let userId: String
+    let username: String
+    let displayName: String?
+    let avatarUrl: String?
+    let subscriptionTier: String?
+    let rank: Int
+    let growthPct: Double
+    let prizeAmount: Double?
+    let endingEquity: Double?
+
+    var id: String { userId }
+}
+
+// MARK: - User Performance
+
+struct UserPerformanceResponseDTO: Decodable {
+    let user: UserPerformanceProfileDTO
+    let stats: UserPerformanceStatsDTO
+    let history: [CompetitionHistoryEntryDTO]
+}
+
+struct UserPerformanceProfileDTO: Decodable {
+    let id: String
+    let username: String
+    let displayName: String?
+    let avatarUrl: String?
+    let subscriptionTier: String?
+    let memberSince: String?
+}
+
+struct UserPerformanceStatsDTO: Decodable {
+    let totalCompetitions: Int
+    let wins: Int
+    let topThreeFinishes: Int
+    let bestRank: Int?
+    let avgGrowthPct: Double
+    let totalPrizeWon: Double
 }

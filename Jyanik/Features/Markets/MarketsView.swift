@@ -36,7 +36,7 @@ struct MarketsView: View {
             await viewModel.refresh()
         }
         .task {
-            if viewModel.trendingStocks.isEmpty && !appState.isGuest {
+            if viewModel.trendingStocks.isEmpty {
                 await viewModel.loadMarketData()
             }
         }

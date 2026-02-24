@@ -2,21 +2,33 @@
 //  JCard.swift
 //  Jyanik
 //
-//  Rounded card container with shadow and surface background
+//  Configurable card container with shadow or border style
 //
 
 import SwiftUI
 
+// MARK: - Card Style
+
+enum JCardStyle {
+    case shadow
+    case bordered
+}
+
+// MARK: - JCard
+
 struct JCard<Content: View>: View {
+    let style: JCardStyle
     let padding: CGFloat
     let cornerRadius: CGFloat
     let content: Content
 
     init(
+        style: JCardStyle = .shadow,
         padding: CGFloat = JSpacing.md,
         cornerRadius: CGFloat = JRadius.medium,
         @ViewBuilder content: () -> Content
     ) {
+        self.style = style
         self.padding = padding
         self.cornerRadius = cornerRadius
         self.content = content()
@@ -27,13 +39,37 @@ struct JCard<Content: View>: View {
             .padding(padding)
             .background(JColor.surface)
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-            .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 2)
+            .modifier(CardDecorationModifier(style: style, cornerRadius: cornerRadius))
     }
 }
 
-// MARK: - Bordered Variant
+// MARK: - Decoration Modifier
 
-struct JCardBordered<Content: View>: View {
+private struct CardDecorationModifier: ViewModifier {
+    let style: JCardStyle
+    let cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        switch style {
+        case .shadow:
+            content
+                .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 2)
+        case .bordered:
+            content
+                .overlay {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .strokeBorder(JColor.border, lineWidth: 1)
+                }
+        }
+    }
+}
+
+// MARK: - Backward-Compatible Alias
+
+/// Backward-compatible alias — use `JCard(style: .bordered)` instead.
+typealias JCardBordered = _JCardBorderedCompat
+
+struct _JCardBorderedCompat<Content: View>: View {
     let padding: CGFloat
     let cornerRadius: CGFloat
     let content: Content
@@ -49,14 +85,9 @@ struct JCardBordered<Content: View>: View {
     }
 
     var body: some View {
-        content
-            .padding(padding)
-            .background(JColor.surface)
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-            .overlay {
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .strokeBorder(JColor.border, lineWidth: 1)
-            }
+        JCard(style: .bordered, padding: padding, cornerRadius: cornerRadius) {
+            content
+        }
     }
 }
 
@@ -77,7 +108,7 @@ struct JCardBordered<Content: View>: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
 
-        JCardBordered {
+        JCard(style: .bordered) {
             HStack {
                 Text("AAPL")
                     .font(JFont.headline)

@@ -44,7 +44,14 @@ struct StockDetailView: View {
         .navigationTitle(ticker)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $tradeSheet) { item in
-            TradeSheetPlaceholder(ticker: item.ticker, side: item.side)
+            NavigationStack {
+                TradeView(initialTicker: item.ticker, initialSide: item.side)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Close") { tradeSheet = nil }
+                        }
+                    }
+            }
         }
         .task {
             if viewModel.quote == nil {
@@ -350,45 +357,6 @@ private struct TradeSheetItem: Identifiable {
     let side: TradeSide
 
     var id: String { "\(ticker)_\(side.rawValue)" }
-}
-
-// MARK: - Trade Sheet Placeholder
-
-/// Temporary placeholder until the full TradeView feature handles sheet presentation.
-private struct TradeSheetPlaceholder: View {
-    let ticker: String
-    let side: TradeSide
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: JSpacing.lg) {
-                Image(systemName: side == .buy ? "arrow.up.circle.fill" : "arrow.down.circle.fill")
-                    .font(.system(size: 56))
-                    .foregroundStyle(side == .buy ? JColor.gainPositive : JColor.gainNegative)
-
-                Text("\(side == .buy ? "Buy" : "Sell") \(ticker)")
-                    .font(JFont.title2)
-                    .foregroundStyle(JColor.textPrimary)
-
-                Text("Trading functionality coming soon")
-                    .font(JFont.subheadline)
-                    .foregroundStyle(JColor.textSecondary)
-
-                Spacer()
-            }
-            .padding(.top, JSpacing.xxl)
-            .frame(maxWidth: .infinity)
-            .background(JColor.background)
-            .navigationTitle("\(side == .buy ? "Buy" : "Sell") \(ticker)")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") { dismiss() }
-                }
-            }
-        }
-    }
 }
 
 // MARK: - Stock Detail View Model

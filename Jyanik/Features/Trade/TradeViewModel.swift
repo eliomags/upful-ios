@@ -204,6 +204,14 @@ final class TradeViewModel {
 
     // MARK: - Actions
 
+    /// Loads sample data for guest mode.
+    func loadGuestData() {
+        cashBalance = 25_000.00
+        portfolioId = "guest-portfolio"
+        positions = []
+        tradeState = .idle
+    }
+
     /// Loads portfolio data (cash balance, positions, portfolio ID).
     func loadPortfolio() async {
         tradeState = .loading

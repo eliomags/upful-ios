@@ -139,8 +139,8 @@ private extension ProfileView {
             )
 
             statCard(
-                title: "Competitions",
-                value: "\(viewModel.competitionsWon)",
+                title: "Prizes Won",
+                value: viewModel.formattedPrizesWon(),
                 icon: "trophy"
             )
         }

@@ -112,3 +112,18 @@ export function round(value: number, decimals = 2): number {
   const factor = Math.pow(10, decimals);
   return Math.round(value * factor) / factor;
 }
+
+/**
+ * Calculate prize for a rank based on a competition's total_prize_pool.
+ * Distribution: 1st=50%, 2nd=30%, 3rd=20%. Only top 3 receive prizes.
+ */
+export function calculatePrizeForRank(rank: number, totalPrizePool: number, _participantCount: number): number {
+  if (totalPrizePool <= 0 || rank < 1) return 0;
+  const pool = totalPrizePool;
+
+  if (rank === 1) return Math.round(pool * 0.50);
+  if (rank === 2) return Math.round(pool * 0.30);
+  if (rank === 3) return Math.round(pool * 0.20);
+
+  return 0;
+}

@@ -68,11 +68,9 @@ struct APIEndpoint {
             request.setValue(value, forHTTPHeaderField: key)
         }
 
-        // Encode body
+        // Encode body using shared encoder (avoids duplicate allocation)
         if let body {
-            let encoder = JSONEncoder()
-            encoder.keyEncodingStrategy = .convertToSnakeCase
-            request.httpBody = try encoder.encode(AnyEncodable(body))
+            request.httpBody = try APIClient.sharedEncoder.encode(AnyEncodable(body))
         }
 
         return request

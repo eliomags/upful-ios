@@ -20,7 +20,7 @@ portfolioRoutes.post('/', async (c) => {
     .first<PortfolioRow>();
 
   if (activePortfolio) {
-    return c.json({ error: 'Active portfolio already exists' }, 409);
+    return c.json({ success: false, error: 'Active portfolio already exists' }, 409);
   }
 
   const portfolioId = generateId();
@@ -39,7 +39,7 @@ portfolioRoutes.post('/', async (c) => {
     .bind(portfolioId)
     .first<PortfolioRow>();
 
-  return c.json(portfolio, 201);
+  return c.json({ success: true, data: portfolio }, 201);
 });
 
 // GET /active - Get user's active portfolio with positions
@@ -54,7 +54,7 @@ portfolioRoutes.get('/active', async (c) => {
     .first<PortfolioRow>();
 
   if (!portfolio) {
-    return c.json({ error: 'No active portfolio found' }, 404);
+    return c.json({ success: false, error: 'No active portfolio found' }, 404);
   }
 
   // Query all positions for the portfolio
@@ -74,11 +74,14 @@ portfolioRoutes.get('/active', async (c) => {
   const total_pnl_pct = round(pctChange(25000, portfolio.total_equity));
 
   return c.json({
-    ...portfolio,
-    holdings_value: round(holdings_value),
-    total_pnl,
-    total_pnl_pct,
-    positions,
+    success: true,
+    data: {
+      ...portfolio,
+      holdings_value: round(holdings_value),
+      total_pnl,
+      total_pnl_pct,
+      positions,
+    },
   });
 });
 
@@ -94,10 +97,10 @@ portfolioRoutes.get('/:id', async (c) => {
     .first<PortfolioRow>();
 
   if (!portfolio) {
-    return c.json({ error: 'Portfolio not found' }, 404);
+    return c.json({ success: false, error: 'Portfolio not found' }, 404);
   }
 
-  return c.json(portfolio);
+  return c.json({ success: true, data: portfolio });
 });
 
 // GET /:id/positions - Get positions for portfolio
@@ -113,7 +116,7 @@ portfolioRoutes.get('/:id/positions', async (c) => {
     .first<PortfolioRow>();
 
   if (!portfolio) {
-    return c.json({ error: 'Portfolio not found' }, 404);
+    return c.json({ success: false, error: 'Portfolio not found' }, 404);
   }
 
   // Query positions
@@ -128,7 +131,7 @@ portfolioRoutes.get('/:id/positions', async (c) => {
     unrealized_pnl_pct: round(pctChange(pos.average_cost * pos.quantity, pos.market_value)),
   }));
 
-  return c.json({ positions });
+  return c.json({ success: true, data: positions });
 });
 
 // GET /:id/transactions - Get trade history (paginated)
@@ -144,7 +147,7 @@ portfolioRoutes.get('/:id/transactions', async (c) => {
     .first<PortfolioRow>();
 
   if (!portfolio) {
-    return c.json({ error: 'Portfolio not found' }, 404);
+    return c.json({ success: false, error: 'Portfolio not found' }, 404);
   }
 
   const { page, limit, offset } = parsePagination(new URL(c.req.url).searchParams);
@@ -168,6 +171,7 @@ portfolioRoutes.get('/:id/transactions', async (c) => {
   const total = countResult?.count || 0;
 
   return c.json({
+    success: true,
     data: trades,
     pagination: {
       page,
@@ -192,14 +196,19 @@ portfolioRoutes.get('/:id/performance', async (c) => {
     .first<PortfolioRow>();
 
   if (!portfolio) {
-    return c.json({ error: 'Portfolio not found' }, 404);
+    return c.json({ success: false, error: 'Portfolio not found' }, 404);
   }
 
-  // Calculate date filter based on range
-  let dateFilter = '';
-  const currentDate = new Date();
+  // Calculate date filter using parameterized query (no string interpolation)
+  let snapshotsResult;
 
-  if (range !== 'all') {
+  if (range === 'all') {
+    snapshotsResult = await c.env.DB.prepare(
+      'SELECT * FROM portfolio_snapshots WHERE portfolio_id = ? ORDER BY snapshot_date ASC'
+    )
+      .bind(portfolioId)
+      .all();
+  } else {
     let daysAgo = 0;
     switch (range) {
       case '7d': daysAgo = 7; break;
@@ -209,23 +218,20 @@ portfolioRoutes.get('/:id/performance', async (c) => {
       case '1y': daysAgo = 365; break;
     }
 
-    if (daysAgo > 0) {
-      const filterDate = new Date(currentDate);
-      filterDate.setDate(filterDate.getDate() - daysAgo);
-      dateFilter = ` AND snapshot_date >= '${filterDate.toISOString()}'`;
-    }
-  }
+    const filterDate = new Date();
+    filterDate.setDate(filterDate.getDate() - daysAgo);
+    const filterDateISO = filterDate.toISOString();
 
-  // Query snapshots
-  const snapshotsResult = await c.env.DB.prepare(
-    `SELECT * FROM portfolio_snapshots WHERE portfolio_id = ?${dateFilter} ORDER BY snapshot_date ASC`
-  )
-    .bind(portfolioId)
-    .all();
+    snapshotsResult = await c.env.DB.prepare(
+      'SELECT * FROM portfolio_snapshots WHERE portfolio_id = ? AND snapshot_date >= ? ORDER BY snapshot_date ASC'
+    )
+      .bind(portfolioId, filterDateISO)
+      .all();
+  }
 
   const snapshots = snapshotsResult.results || [];
 
-  return c.json({ snapshots });
+  return c.json({ success: true, data: snapshots });
 });
 
 export { portfolioRoutes };

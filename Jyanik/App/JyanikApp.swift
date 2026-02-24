@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct JyanikApp: App {
     @State private var appState: AppState
+    @State private var router = AppRouter()
 
     private let keychainService: KeychainService
 
@@ -44,6 +45,7 @@ struct JyanikApp: App {
         WindowGroup {
             RootView()
                 .environment(appState)
+                .environment(router)
                 .modelContainer(sharedModelContainer)
         }
     }

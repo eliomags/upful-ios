@@ -116,6 +116,11 @@ struct LoginView: View {
                             }
                         }
                         .padding(.top, JSpacing.xs)
+
+                        // Dev Login (Debug builds only)
+                        #if DEBUG
+                        devLoginSection(vm)
+                        #endif
                     }
                     .padding(.horizontal, JSpacing.lg)
                 }
@@ -148,6 +153,79 @@ struct LoginView: View {
         }
     }
 }
+
+// MARK: - Dev Login (Debug Only)
+
+#if DEBUG
+private extension LoginView {
+
+    struct TestAccount {
+        let label: String
+        let email: String
+        let tier: String
+    }
+
+    static var testAccounts: [TestAccount] {
+        [
+            TestAccount(label: "Alex Morgan (Premium)", email: "alex@traderpro.com", tier: "premium"),
+            TestAccount(label: "Jamie Chen (Pro)", email: "jamie.chen@gmail.com", tier: "pro"),
+            TestAccount(label: "David Okafor (Free)", email: "david.o@gmail.com", tier: "free"),
+        ]
+    }
+
+    func devLoginSection(_ vm: AuthViewModel) -> some View {
+        VStack(spacing: JSpacing.sm) {
+            HStack(spacing: JSpacing.sm) {
+                Rectangle()
+                    .fill(JColor.border)
+                    .frame(height: 1)
+
+                Text("DEV LOGIN")
+                    .font(JFont.caption)
+                    .foregroundStyle(JColor.warning)
+
+                Rectangle()
+                    .fill(JColor.border)
+                    .frame(height: 1)
+            }
+
+            Text("Password: TestUser123!")
+                .font(JFont.caption)
+                .foregroundStyle(JColor.textTertiary)
+                .monospaced()
+
+            ForEach(Self.testAccounts, id: \.email) { account in
+                Button {
+                    Task { @MainActor in
+                        vm.email = account.email
+                        vm.password = "TestUser123!"
+                        await vm.login()
+                    }
+                } label: {
+                    HStack {
+                        Text(account.label)
+                            .font(JFont.callout)
+                        Spacer()
+                        Text(account.tier)
+                            .font(JFont.caption)
+                            .foregroundStyle(JColor.textTertiary)
+                    }
+                    .padding(.horizontal, JSpacing.md)
+                    .padding(.vertical, JSpacing.sm)
+                    .background(JColor.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: JRadius.small))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: JRadius.small)
+                            .stroke(JColor.border, lineWidth: 1)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.top, JSpacing.sm)
+    }
+}
+#endif
 
 // MARK: - Previews
 

@@ -121,7 +121,7 @@ export interface PortfolioSnapshotRow {
 
 export interface CompetitionRow {
   id: string;
-  type: 'daily' | 'weekly' | 'monthly';
+  type: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'semiannual';
   status: 'active' | 'calculating' | 'completed' | 'paid_out';
   start_date: string;
   end_date: string;
@@ -235,7 +235,7 @@ export type NotificationType =
   | 'monthly_reset'
   | 'system';
 
-export type CompetitionPeriod = 'daily' | 'weekly' | 'monthly';
+export type CompetitionPeriod = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'semiannual';
 
 export type SubscriptionTier = 'free' | 'premium';
 

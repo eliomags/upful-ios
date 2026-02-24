@@ -237,13 +237,29 @@ authRoutes.post('/apple', authRateLimiter, async (c) => {
       return c.json({ success: false, error: 'identity_token is required' }, 400);
     }
 
-    // Decode Apple JWT (without verification for now)
-    const decoded = jose.decodeJwt(identity_token);
-    const apple_user_id = decoded.sub as string;
-    const email = decoded.email as string;
+    // Verify Apple JWT using Apple's JWKS endpoint
+    let apple_user_id: string;
+    let email: string;
+
+    try {
+      const JWKS = jose.createRemoteJWKSet(
+        new URL('https://appleid.apple.com/auth/keys')
+      );
+
+      const { payload } = await jose.jwtVerify(identity_token, JWKS, {
+        issuer: 'https://appleid.apple.com',
+        audience: c.env.APPLE_BUNDLE_ID || 'com.jyanik.app',
+      });
+
+      apple_user_id = payload.sub as string;
+      email = payload.email as string;
+    } catch (jwtError) {
+      console.error('[Auth] Apple JWT verification failed:', jwtError);
+      return c.json({ success: false, error: 'Invalid or expired Apple identity token' }, 401);
+    }
 
     if (!apple_user_id || !email) {
-      return c.json({ success: false, error: 'Invalid Apple identity token' }, 400);
+      return c.json({ success: false, error: 'Apple token missing required claims (sub, email)' }, 400);
     }
 
     // Check if user exists by apple_user_id

@@ -2,7 +2,7 @@
 //  LeaderboardViewModel.swift
 //  Jyanik
 //
-//  ViewModel for the full leaderboard screen
+//  ViewModel for the full leaderboard screen with Free/Premium tier tabs
 //
 
 import Foundation
@@ -12,23 +12,15 @@ import OSLog
 @Observable
 final class LeaderboardViewModel {
 
-    // MARK: - Load State
-
-    enum LoadState: Equatable {
-        case idle
-        case loading
-        case loaded
-        case error(String)
-    }
-
     // MARK: - State
 
     private(set) var entries: [LeaderboardEntryDTO] = []
     private(set) var myRanking: MyRankingDTO?
     private(set) var loadState: LoadState = .idle
 
+    var selectedTier: LeaderboardTier = .free
     var selectedPeriod: LeaderboardPeriod = .weekly
-    var selectedTab: LeaderboardTab = .topGainers
+    var selectedSort: LeaderboardSort = .topGainers
 
     // MARK: - Computed
 
@@ -51,7 +43,7 @@ final class LeaderboardViewModel {
 
     var formattedEquity: String {
         guard let ranking = myRanking else { return "$--" }
-        return formatCurrency(ranking.totalEquity)
+        return JFormatters.formatCurrency(ranking.totalEquity)
     }
 
     var formattedGrowth: Double {
@@ -71,6 +63,21 @@ final class LeaderboardViewModel {
 
     // MARK: - Data Loading
 
+    /// Loads sample leaderboard for guest mode.
+    func loadGuestData() {
+        entries = [
+            LeaderboardEntryDTO(id: "lb1", userId: "u1", rank: 1, username: "TradeMaster", displayName: "Alex Chen", avatarUrl: nil, totalEquity: 32_450.80, growthPct: 29.80, subscriptionTier: "premium", prizeAmount: 1000),
+            LeaderboardEntryDTO(id: "lb2", userId: "u2", rank: 2, username: "StockWhiz", displayName: "Maria G.", avatarUrl: nil, totalEquity: 30_125.50, growthPct: 20.50, subscriptionTier: "premium", prizeAmount: 600),
+            LeaderboardEntryDTO(id: "lb3", userId: "u3", rank: 3, username: "BullRunner", displayName: "James L.", avatarUrl: nil, totalEquity: 28_890.00, growthPct: 15.56, subscriptionTier: "free", prizeAmount: 400),
+            LeaderboardEntryDTO(id: "lb4", userId: "u4", rank: 4, username: "InvestorJo", displayName: "Jo Park", avatarUrl: nil, totalEquity: 27_600.30, growthPct: 10.40, subscriptionTier: "free", prizeAmount: nil),
+            LeaderboardEntryDTO(id: "lb5", userId: "u5", rank: 5, username: "MarketEagle", displayName: "Sam D.", avatarUrl: nil, totalEquity: 26_320.15, growthPct: 5.28, subscriptionTier: "free", prizeAmount: nil),
+            LeaderboardEntryDTO(id: "lb6", userId: "u6", rank: 6, username: "FinanceNerd", displayName: "Chris R.", avatarUrl: nil, totalEquity: 25_800.00, growthPct: 3.20, subscriptionTier: "free", prizeAmount: nil),
+            LeaderboardEntryDTO(id: "lb7", userId: "u7", rank: 7, username: "DayTrader99", displayName: "Pat W.", avatarUrl: nil, totalEquity: 25_200.40, growthPct: 0.80, subscriptionTier: "premium", prizeAmount: nil),
+        ]
+        myRanking = MyRankingDTO(rank: 42, growthPct: 0.0, totalEquity: 25_000, prizeAmount: nil)
+        loadState = .loaded
+    }
+
     /// Loads leaderboard entries and user ranking concurrently.
     func load() async {
         guard loadState != .loading else { return }
@@ -87,13 +94,19 @@ final class LeaderboardViewModel {
         }
     }
 
-    /// Reloads data with the current period and tab selection.
+    /// Reloads data with the current selections.
     func refresh() async {
         loadState = .idle
         await load()
     }
 
-    // MARK: - Period & Tab Changes
+    // MARK: - Selection Changes
+
+    func changeTier(_ tier: LeaderboardTier) async {
+        guard tier != selectedTier else { return }
+        selectedTier = tier
+        await refresh()
+    }
 
     func changePeriod(_ period: LeaderboardPeriod) async {
         guard period != selectedPeriod else { return }
@@ -101,9 +114,9 @@ final class LeaderboardViewModel {
         await refresh()
     }
 
-    func changeTab(_ tab: LeaderboardTab) async {
-        guard tab != selectedTab else { return }
-        selectedTab = tab
+    func changeSort(_ sort: LeaderboardSort) async {
+        guard sort != selectedSort else { return }
+        selectedSort = sort
         await refresh()
     }
 
@@ -113,12 +126,13 @@ final class LeaderboardViewModel {
         do {
             try await competitionService.fetchLeaderboard(
                 period: selectedPeriod,
-                tab: selectedTab,
+                tier: selectedTier,
+                sort: selectedSort,
                 page: 1,
                 limit: 50
             )
             entries = competitionService.leaderboard
-            logger.info("[Leaderboard] Loaded \(self.entries.count) entries for \(self.selectedPeriod.rawValue)/\(self.selectedTab.rawValue)")
+            logger.info("[Leaderboard] Loaded \(self.entries.count) entries for \(self.selectedTier.rawValue)/\(self.selectedPeriod.rawValue)/\(self.selectedSort.rawValue)")
         } catch {
             logger.error("[Leaderboard] Failed to fetch entries: \(error.localizedDescription)")
             loadState = .error("Failed to load leaderboard. Pull to retry.")
@@ -127,31 +141,21 @@ final class LeaderboardViewModel {
 
     private func fetchMyRanking() async {
         do {
-            try await competitionService.fetchMyRanking()
+            try await competitionService.fetchMyRanking(period: selectedPeriod)
             if let serviceRanking = competitionService.myRanking {
                 myRanking = MyRankingDTO(
                     rank: serviceRanking.rank,
                     growthPct: serviceRanking.growthPct,
-                    totalEquity: serviceRanking.totalEquity
+                    totalEquity: serviceRanking.totalEquity,
+                    prizeAmount: serviceRanking.prizeAmount
                 )
+            } else {
+                myRanking = nil
             }
         } catch {
-            logger.warning("[Leaderboard] Failed to fetch my ranking: \(error.localizedDescription)")
-            // Non-critical; don't override the main load state for this
+            // Non-critical — don't override the main load state
+            myRanking = nil
+            logger.info("[Leaderboard] Ranking unavailable: \(error.localizedDescription)")
         }
     }
-
-    // MARK: - Formatting
-
-    func formatCurrency(_ value: Double) -> String {
-        Self.currencyFormatter.string(from: NSNumber(value: value)) ?? "$\(String(format: "%.2f", value))"
-    }
-
-    private static let currencyFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "USD"
-        formatter.maximumFractionDigits = 2
-        return formatter
-    }()
 }

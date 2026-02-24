@@ -63,7 +63,7 @@ struct SavedView: View {
                     description: "Add stocks to your watchlist to track them here.",
                     actionTitle: "Browse Markets"
                 ) {
-                    router.navigate(to: .watchlist, in: .market)
+                    router.navigate(to: .watchlist, in: .markets)
                 }
             } else {
                 watchlistList

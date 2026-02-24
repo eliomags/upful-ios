@@ -165,19 +165,19 @@ struct TopThreeView: View {
                 id: "1", userId: "u1", rank: 1,
                 username: "traderpro", displayName: "Alex Morgan",
                 avatarUrl: nil, totalEquity: 125_400, growthPct: 24.5,
-                subscriptionTier: "pro"
+                subscriptionTier: "pro", prizeAmount: 1000
             ),
             LeaderboardEntryDTO(
                 id: "2", userId: "u2", rank: 2,
                 username: "stockwhiz", displayName: "Jamie Lee",
                 avatarUrl: nil, totalEquity: 118_200, growthPct: 19.3,
-                subscriptionTier: nil
+                subscriptionTier: nil, prizeAmount: 600
             ),
             LeaderboardEntryDTO(
                 id: "3", userId: "u3", rank: 3,
                 username: "bullrunner", displayName: "Taylor Kim",
                 avatarUrl: nil, totalEquity: 112_800, growthPct: 15.7,
-                subscriptionTier: nil
+                subscriptionTier: nil, prizeAmount: 400
             ),
         ],
         onTapUser: { _ in }

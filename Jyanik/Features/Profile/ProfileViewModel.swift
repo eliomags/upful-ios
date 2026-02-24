@@ -27,7 +27,7 @@ final class ProfileViewModel {
     /// User stats.
     private(set) var totalTrades: Int = 0
     private(set) var winRate: Double = 0
-    private(set) var competitionsWon: Int = 0
+    private(set) var totalPrizesWon: Double = 0
 
     // MARK: - Dependencies
 
@@ -99,11 +99,11 @@ final class ProfileViewModel {
 
     private func fetchCompetitionStats() async {
         do {
-            let history = try await competitionService.fetchHistory(page: 1, limit: 50)
-            // Count competitions where user finished in first place
-            competitionsWon = history.filter { $0.status.lowercased() == "completed" }.count
+            let history = try await competitionService.fetchMyHistory(page: 1, limit: 100)
+            // Sum all prize amounts from competition history (from DB)
+            totalPrizesWon = history.compactMap(\.prizeAmount).reduce(0, +)
 
-            logger.info("[Profile] Competition stats loaded: \(history.count) entries")
+            logger.info("[Profile] Competition stats loaded: \(history.count) entries, total prizes: $\(self.totalPrizesWon)")
         } catch {
             logger.warning("[Profile] Failed to fetch competition stats: \(error.localizedDescription)")
             // Non-critical: don't overwrite error
@@ -127,6 +127,23 @@ final class ProfileViewModel {
     func formattedWinRate() -> String {
         String(format: "%.0f%%", winRate)
     }
+
+    func formattedPrizesWon() -> String {
+        let intVal = Int(totalPrizesWon)
+        if intVal >= 1_000 {
+            return Self.wholeNumberCurrencyFormatter.string(from: NSNumber(value: intVal))
+                ?? "$\(intVal)"
+        }
+        return "$\(intVal)"
+    }
+
+    private static let wholeNumberCurrencyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+        formatter.maximumFractionDigits = 0
+        return formatter
+    }()
 
     // MARK: - App Info
 

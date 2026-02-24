@@ -15,8 +15,14 @@ struct TradeView: View {
 
     @Environment(AppState.self) private var appState
 
-    @State private var viewModel = TradeViewModel()
+    @State private var viewModel: TradeViewModel
     @FocusState private var focusedField: Field?
+
+    // MARK: - Init
+
+    init(initialTicker: String? = nil, initialSide: TradeSide = .buy) {
+        _viewModel = State(initialValue: TradeViewModel(initialTicker: initialTicker, initialSide: initialSide))
+    }
 
     private enum Field: Hashable {
         case search
@@ -36,7 +42,9 @@ struct TradeView: View {
         .navigationTitle("Trade")
         .navigationBarTitleDisplayMode(.large)
         .task {
-            if !appState.isGuest {
+            if appState.isGuest {
+                viewModel.loadGuestData()
+            } else {
                 await viewModel.loadPortfolio()
             }
         }

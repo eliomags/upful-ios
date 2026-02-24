@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import type { Env, UserRow } from '../models/types';
 import { authMiddleware } from '../middleware/auth';
-import { now } from '../utils/helpers';
+import { now, calculatePrizeForRank } from '../utils/helpers';
 
 const userRoutes = new Hono<{ Bindings: Env }>();
 
@@ -153,6 +153,89 @@ userRoutes.get('/:id/public', async (c) => {
     avatar_url,
     subscription_tier: user.subscription_tier,
     created_at: user.created_at,
+  });
+});
+
+// GET /:id/performance - User competition performance history (public)
+userRoutes.get('/:id/performance', async (c) => {
+  const targetUserId = c.req.param('id');
+
+  const user = await c.env.DB.prepare(
+    'SELECT id, username, display_name, avatar_key, subscription_tier, created_at FROM users WHERE id = ?'
+  )
+    .bind(targetUserId)
+    .first<UserRow>();
+
+  if (!user) {
+    return c.json({ success: false, error: 'User not found' }, 404);
+  }
+
+  const avatar_url = user.avatar_key ? `https://jyanik-assets.r2.dev/${user.avatar_key}` : null;
+
+  const history = await c.env.DB.prepare(
+    `SELECT
+       ce.id, ce.competition_id, ce.starting_equity, ce.ending_equity,
+       ce.growth_pct, ce.rank, ce.prize_amount, ce.prize_status, ce.created_at,
+       c.type, c.start_date, c.end_date, c.total_prize_pool, c.participant_count
+     FROM competition_entries ce
+     JOIN competitions c ON c.id = ce.competition_id
+     WHERE ce.user_id = ?
+     ORDER BY c.end_date DESC
+     LIMIT 50`
+  )
+    .bind(targetUserId)
+    .all();
+
+  const rawEntries = history.results || [];
+
+  // Enrich each entry with calculated prize when DB value is 0/NULL
+  const entries = rawEntries.map((e: any) => {
+    const dbPrize = e.prize_amount;
+    const rank = e.rank;
+    const pool = e.total_prize_pool || 0;
+    const participants = e.participant_count || 0;
+
+    const prize = (dbPrize && dbPrize > 0)
+      ? dbPrize
+      : (rank && rank > 0 ? calculatePrizeForRank(rank, pool, participants) : 0);
+
+    return { ...e, prize_amount: prize };
+  });
+
+  const totalCompetitions = entries.length;
+  const wins = entries.filter((e: any) => e.rank === 1).length;
+  const topThreeFinishes = entries.filter((e: any) => e.rank && e.rank <= 3).length;
+  const bestRank = entries.reduce((best: number | null, e: any) => {
+    if (!e.rank) return best;
+    return best === null ? e.rank : Math.min(best, e.rank);
+  }, null);
+  const avgGrowth = totalCompetitions > 0
+    ? entries.reduce((sum: number, e: any) => sum + (e.growth_pct || 0), 0) / totalCompetitions
+    : 0;
+  // Use enriched prize_amount (calculated on-the-fly) for total
+  const totalPrizeWon = entries.reduce((sum: number, e: any) => sum + (e.prize_amount || 0), 0);
+
+  return c.json({
+    success: true,
+    data: {
+      user: {
+        id: user.id,
+        username: user.username,
+        display_name: user.display_name,
+        avatar_url,
+        subscription_tier: user.subscription_tier,
+        member_since: user.created_at,
+      },
+      stats: {
+        total_competitions: totalCompetitions,
+        wins,
+        top_three_finishes: topThreeFinishes,
+        best_rank: bestRank,
+        avg_growth_pct: Math.round(avgGrowth * 100) / 100,
+        total_prize_won: totalPrizeWon,
+      },
+      history: entries,
+    },
   });
 });
 

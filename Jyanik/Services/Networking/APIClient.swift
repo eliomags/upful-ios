@@ -16,6 +16,14 @@ actor APIClient {
 
     private let session: URLSession
     private let decoder: JSONDecoder
+    /// Shared encoder — also used by APIEndpoint to avoid duplicate allocations.
+    static let sharedEncoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.dateEncodingStrategy = .iso8601
+        return encoder
+    }()
+
     private let encoder: JSONEncoder
     private let keychain: KeychainService
     private let logger = Logger(subsystem: "com.jyanik", category: "APIClient")
@@ -250,9 +258,7 @@ actor APIClient {
             return try await existingTask.value
         }
 
-        let task = Task<String, Error> { [weak self] in
-            guard let self else { throw APIError.unauthorized }
-
+        let task = Task<String, Error> {
             guard let refreshToken = try? self.keychain.loadToken(for: .refreshToken) else {
                 throw APIError.unauthorized
             }

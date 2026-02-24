@@ -89,7 +89,7 @@ struct AppConfig {
     // MARK: - App Info
 
     struct App {
-        static let name = "Jyanik"
+        static let name = "Upful"
         static let bundleID = Bundle.main.bundleIdentifier ?? "com.jyanik.app"
         static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
         static let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"

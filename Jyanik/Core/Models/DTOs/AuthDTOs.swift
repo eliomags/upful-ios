@@ -2,85 +2,14 @@
 //  AuthDTOs.swift
 //  Jyanik
 //
-//  Network DTOs for authentication endpoints
+//  Network DTOs for authentication endpoints.
+//  Request bodies are defined in AuthEndpoints.swift (private, uses .convertToSnakeCase encoder).
+//  Response DTOs use .convertFromSnakeCase decoder — no manual CodingKeys needed.
 //
 
 import Foundation
 
-// MARK: - Request Bodies
-
-struct RegisterRequestBody: Encodable {
-    let email: String
-    let username: String
-    let password: String
-    let displayName: String?
-
-    enum CodingKeys: String, CodingKey {
-        case email, username, password
-        case displayName = "display_name"
-    }
-}
-
-struct LoginRequestBody: Encodable {
-    let email: String
-    let password: String
-}
-
-struct AppleAuthRequestBody: Encodable {
-    let identityToken: String
-    let authorizationCode: String
-    let fullName: AppleFullName?
-
-    enum CodingKeys: String, CodingKey {
-        case identityToken = "identity_token"
-        case authorizationCode = "authorization_code"
-        case fullName = "full_name"
-    }
-}
-
-struct AppleFullName: Encodable {
-    let givenName: String?
-    let familyName: String?
-
-    enum CodingKeys: String, CodingKey {
-        case givenName = "given_name"
-        case familyName = "family_name"
-    }
-}
-
-struct RefreshTokenRequestBody: Encodable {
-    let refreshToken: String
-
-    enum CodingKeys: String, CodingKey {
-        case refreshToken = "refresh_token"
-    }
-}
-
-struct ForgotPasswordRequestBody: Encodable {
-    let email: String
-}
-
-struct ResetPasswordRequestBody: Encodable {
-    let email: String
-    let code: String
-    let newPassword: String
-
-    enum CodingKeys: String, CodingKey {
-        case email, code
-        case newPassword = "new_password"
-    }
-}
-
-struct LogoutRequestBody: Encodable {
-    let refreshToken: String
-
-    enum CodingKeys: String, CodingKey {
-        case refreshToken = "refresh_token"
-    }
-}
-
 // MARK: - Response DTOs
-// NOTE: No manual CodingKeys needed — APIClient's decoder uses .convertFromSnakeCase
 
 struct AuthResponseDTO: Decodable {
     let user: UserDTO

@@ -139,7 +139,7 @@ struct LeaderboardRowView: View {
                 id: "1", userId: "u1", rank: 1,
                 username: "traderpro", displayName: "Alex Morgan",
                 avatarUrl: nil, totalEquity: 125_400, growthPct: 24.5,
-                subscriptionTier: "pro"
+                subscriptionTier: "pro", prizeAmount: 1000
             ),
             onTap: {}
         )
@@ -149,7 +149,7 @@ struct LeaderboardRowView: View {
                 id: "2", userId: "u2", rank: 2,
                 username: "stockwhiz", displayName: "Jamie Lee",
                 avatarUrl: nil, totalEquity: 118_200, growthPct: 19.3,
-                subscriptionTier: nil
+                subscriptionTier: nil, prizeAmount: 600
             ),
             onTap: {}
         )
@@ -159,7 +159,7 @@ struct LeaderboardRowView: View {
                 id: "5", userId: "u5", rank: 5,
                 username: "newtrader", displayName: "Sam Rivera",
                 avatarUrl: nil, totalEquity: 98_750, growthPct: -2.1,
-                subscriptionTier: nil
+                subscriptionTier: nil, prizeAmount: nil
             ),
             onTap: {}
         )

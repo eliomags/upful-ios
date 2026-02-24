@@ -2,7 +2,8 @@
 //  LeaderboardView.swift
 //  Jyanik
 //
-//  Full leaderboard screen with ranking, period/tab pickers, top-3 podium, and scrollable list
+//  Full leaderboard screen with Free/Premium tier tabs, period/sort pickers,
+//  top-3 podium, and scrollable ranked list
 //
 
 import SwiftUI
@@ -10,6 +11,7 @@ import SwiftUI
 struct LeaderboardView: View {
 
     @Environment(AppRouter.self) private var router
+    @Environment(AppState.self) private var appState
 
     @State private var viewModel: LeaderboardViewModel
 
@@ -39,7 +41,11 @@ struct LeaderboardView: View {
         .navigationBarTitleDisplayMode(.large)
         .task {
             if viewModel.loadState == .idle {
-                await viewModel.load()
+                if appState.isGuest {
+                    viewModel.loadGuestData()
+                } else {
+                    await viewModel.load()
+                }
             }
         }
     }
@@ -49,6 +55,11 @@ struct LeaderboardView: View {
     private var leaderboardContent: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
+                // Tier Tabs (Free / Premium)
+                tierPicker
+                    .padding(.horizontal, JSpacing.md)
+                    .padding(.bottom, JSpacing.sm)
+
                 // My Ranking Card
                 myRankingCard
                     .padding(.horizontal, JSpacing.md)
@@ -59,8 +70,8 @@ struct LeaderboardView: View {
                     .padding(.horizontal, JSpacing.md)
                     .padding(.bottom, JSpacing.sm)
 
-                // Tab Picker
-                tabPicker
+                // Sort Picker
+                sortPicker
                     .padding(.horizontal, JSpacing.md)
                     .padding(.bottom, JSpacing.md)
 
@@ -114,6 +125,46 @@ struct LeaderboardView: View {
         }
     }
 
+    // MARK: - Tier Picker (Free / Premium)
+
+    private var tierPicker: some View {
+        HStack(spacing: 0) {
+            ForEach([LeaderboardTier.free, .premium], id: \.self) { tier in
+                tierTab(tier)
+            }
+        }
+        .background(JColor.surfaceSecondary, in: RoundedRectangle(cornerRadius: JRadius.medium))
+    }
+
+    private func tierTab(_ tier: LeaderboardTier) -> some View {
+        let isSelected = viewModel.selectedTier == tier
+
+        return Button {
+            Task { await viewModel.changeTier(tier) }
+        } label: {
+            HStack(spacing: JSpacing.xxs) {
+                Image(systemName: tier == .premium ? "star.fill" : "gift.fill")
+                    .font(.caption2)
+                    .foregroundStyle(isSelected
+                        ? (tier == .premium ? JColor.warning : JColor.success)
+                        : JColor.textTertiary
+                    )
+
+                Text(tier == .free ? "Free Leaderboard" : "Premium Leaderboard")
+                    .font(isSelected ? JFont.calloutMedium : JFont.callout)
+                    .foregroundStyle(isSelected ? JColor.textPrimary : JColor.textSecondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, JSpacing.sm)
+            .background(
+                isSelected ? JColor.surface : Color.clear,
+                in: RoundedRectangle(cornerRadius: JRadius.medium)
+            )
+            .shadow(color: isSelected ? .black.opacity(0.06) : .clear, radius: 2, y: 1)
+        }
+        .buttonStyle(.plain)
+    }
+
     // MARK: - My Ranking Card
 
     private var myRankingCard: some View {
@@ -133,7 +184,6 @@ struct LeaderboardView: View {
 
                 if let ranking = viewModel.myRanking {
                     HStack(spacing: JSpacing.lg) {
-                        // Equity
                         VStack(alignment: .leading, spacing: JSpacing.xxxs) {
                             Text("Total Equity")
                                 .font(JFont.caption)
@@ -146,7 +196,6 @@ struct LeaderboardView: View {
 
                         Spacer()
 
-                        // Growth
                         VStack(alignment: .trailing, spacing: JSpacing.xxxs) {
                             Text("Growth")
                                 .font(JFont.caption)
@@ -173,7 +222,7 @@ struct LeaderboardView: View {
     private var periodPicker: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: JSpacing.xs) {
-                ForEach(allPeriods, id: \.self) { period in
+                ForEach(LeaderboardPeriod.allCases, id: \.self) { period in
                     periodButton(period)
                 }
             }
@@ -186,7 +235,7 @@ struct LeaderboardView: View {
         return Button {
             Task { await viewModel.changePeriod(period) }
         } label: {
-            Text(periodLabel(period))
+            Text(period.displayName)
                 .font(isSelected ? JFont.subheadlineMedium : JFont.subheadline)
                 .foregroundStyle(isSelected ? .white : JColor.textSecondary)
                 .padding(.horizontal, JSpacing.md)
@@ -199,24 +248,24 @@ struct LeaderboardView: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - Tab Picker
+    // MARK: - Sort Picker
 
-    private var tabPicker: some View {
+    private var sortPicker: some View {
         HStack(spacing: 0) {
-            ForEach(allTabs, id: \.self) { tab in
-                tabButton(tab)
+            ForEach(LeaderboardSort.allCases, id: \.self) { sort in
+                sortButton(sort)
             }
         }
         .background(JColor.surfaceSecondary, in: RoundedRectangle(cornerRadius: JRadius.small))
     }
 
-    private func tabButton(_ tab: LeaderboardTab) -> some View {
-        let isSelected = viewModel.selectedTab == tab
+    private func sortButton(_ sort: LeaderboardSort) -> some View {
+        let isSelected = viewModel.selectedSort == sort
 
         return Button {
-            Task { await viewModel.changeTab(tab) }
+            Task { await viewModel.changeSort(sort) }
         } label: {
-            Text(tabLabel(tab))
+            Text(sort.displayName)
                 .font(isSelected ? JFont.captionMedium : JFont.caption)
                 .foregroundStyle(isSelected ? JColor.textPrimary : JColor.textSecondary)
                 .frame(maxWidth: .infinity)
@@ -245,33 +294,6 @@ struct LeaderboardView: View {
                 .foregroundStyle(JColor.textTertiary)
         }
     }
-
-    // MARK: - Data & Labels
-
-    private var allPeriods: [LeaderboardPeriod] {
-        [.daily, .weekly, .monthly, .allTime]
-    }
-
-    private var allTabs: [LeaderboardTab] {
-        [.topGainers, .topLosers, .mostActive]
-    }
-
-    private func periodLabel(_ period: LeaderboardPeriod) -> String {
-        switch period {
-        case .daily: return "Daily"
-        case .weekly: return "Weekly"
-        case .monthly: return "Monthly"
-        case .allTime: return "All Time"
-        }
-    }
-
-    private func tabLabel(_ tab: LeaderboardTab) -> String {
-        switch tab {
-        case .topGainers: return "Top Gainers"
-        case .topLosers: return "Top Losers"
-        case .mostActive: return "Most Active"
-        }
-    }
 }
 
 // MARK: - Preview
@@ -280,5 +302,6 @@ struct LeaderboardView: View {
     NavigationStack {
         LeaderboardView()
             .environment(AppRouter())
+            .environment(AppState(keychainService: KeychainService(serviceName: "preview")))
     }
 }

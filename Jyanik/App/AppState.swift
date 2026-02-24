@@ -2,35 +2,37 @@
 //  AppState.swift
 //  Jyanik
 //
-//  Observable application state managing authentication and user session
+//  Observable application state managing authentication and user session.
+//  Token storage is handled exclusively by KeychainService.
+//  Token refresh is handled exclusively by APIClient (coalesced, retry-safe).
 //
 
 import Foundation
 import Observation
+import OSLog
 
 @Observable
 final class AppState {
 
-    // MARK: - Published State
+    // MARK: - State
 
     var isAuthenticated: Bool = false
     var isLoading: Bool = true
     var currentUser: User?
     var hasCompletedOnboarding: Bool = false
-
-    // MARK: - Token Storage
-
-    private(set) var accessToken: String?
-    private(set) var refreshToken: String?
+    var isGuest: Bool = false
 
     // MARK: - Dependencies
 
     private let keychainService: KeychainService
+    private let apiClient: APIClient
+    private let logger = Logger(subsystem: "com.jyanik", category: "AppState")
 
     // MARK: - Init
 
-    init(keychainService: KeychainService = .shared) {
+    init(keychainService: KeychainService = .shared, apiClient: APIClient = .shared) {
         self.keychainService = keychainService
+        self.apiClient = apiClient
         restoreSession()
     }
 
@@ -44,17 +46,80 @@ final class AppState {
             let storedAccess = try keychainService.loadToken(for: .accessToken)
             let storedRefresh = try keychainService.loadToken(for: .refreshToken)
 
-            if let storedAccess, let storedRefresh {
-                accessToken = storedAccess
-                refreshToken = storedRefresh
+            if storedAccess != nil, storedRefresh != nil {
                 isAuthenticated = true
                 hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+                restoreCachedUser()
             } else {
                 isAuthenticated = false
             }
         } catch {
-            print("[AppState] Failed to restore session: \(error.localizedDescription)")
+            logger.error("[AppState] Failed to restore session: \(error.localizedDescription)")
             isAuthenticated = false
+        }
+    }
+
+    /// Restores basic user info from UserDefaults so the UI has a name/avatar immediately.
+    private func restoreCachedUser() {
+        let defaults = UserDefaults.standard
+        guard let id = defaults.string(forKey: "cachedUserId"),
+              let username = defaults.string(forKey: "cachedUsername") else { return }
+
+        let user = User(
+            id: id,
+            username: username,
+            displayName: defaults.string(forKey: "cachedDisplayName"),
+            avatarUrl: defaults.string(forKey: "cachedAvatarUrl"),
+            tier: defaults.string(forKey: "cachedTier") ?? "free"
+        )
+        currentUser = user
+        logger.info("[AppState] Restored cached user: \(username)")
+    }
+
+    /// Caches essential user info to UserDefaults for instant session restore.
+    private func cacheUser(_ user: User) {
+        let defaults = UserDefaults.standard
+        defaults.set(user.id, forKey: "cachedUserId")
+        defaults.set(user.username, forKey: "cachedUsername")
+        defaults.set(user.displayName, forKey: "cachedDisplayName")
+        defaults.set(user.avatarUrl, forKey: "cachedAvatarUrl")
+        defaults.set(user.tier, forKey: "cachedTier")
+    }
+
+    /// Clears cached user info from UserDefaults.
+    private func clearCachedUser() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "cachedUserId")
+        defaults.removeObject(forKey: "cachedUsername")
+        defaults.removeObject(forKey: "cachedDisplayName")
+        defaults.removeObject(forKey: "cachedAvatarUrl")
+        defaults.removeObject(forKey: "cachedTier")
+    }
+
+    // MARK: - Fetch User from API
+
+    /// Fetches the current user's profile from the API and caches it.
+    /// Call this after session restore when cached user data is missing.
+    func fetchCurrentUser() async {
+        guard isAuthenticated, !isGuest else { return }
+
+        do {
+            let endpoint = UserEndpoints.getProfile()
+            let userDTO: UserDTO = try await apiClient.request(endpoint)
+
+            let user = User(
+                id: userDTO.id,
+                email: userDTO.email,
+                username: userDTO.username,
+                displayName: userDTO.displayName,
+                avatarUrl: userDTO.avatarUrl,
+                tier: userDTO.subscriptionTier
+            )
+            currentUser = user
+            cacheUser(user)
+            logger.info("[AppState] Fetched user from API: \(user.username)")
+        } catch {
+            logger.warning("[AppState] Failed to fetch user from API: \(error.localizedDescription)")
         }
     }
 
@@ -65,12 +130,12 @@ final class AppState {
             try keychainService.saveToken(accessToken, for: .accessToken)
             try keychainService.saveToken(refreshToken, for: .refreshToken)
 
-            self.accessToken = accessToken
-            self.refreshToken = refreshToken
             self.currentUser = user
             self.isAuthenticated = true
+            self.isGuest = false
+            cacheUser(user)
         } catch {
-            print("[AppState] Failed to persist tokens: \(error.localizedDescription)")
+            logger.error("[AppState] Failed to persist tokens: \(error.localizedDescription)")
         }
     }
 
@@ -78,50 +143,15 @@ final class AppState {
         do {
             try keychainService.clearAll()
         } catch {
-            print("[AppState] Failed to clear keychain: \(error.localizedDescription)")
+            logger.error("[AppState] Failed to clear keychain: \(error.localizedDescription)")
         }
 
-        accessToken = nil
-        refreshToken = nil
         currentUser = nil
         isAuthenticated = false
+        isGuest = false
         hasCompletedOnboarding = false
+        clearCachedUser()
         UserDefaults.standard.set(false, forKey: "hasCompletedOnboarding")
-    }
-
-    func refreshAuth() async {
-        guard let currentRefresh = refreshToken else {
-            logout()
-            return
-        }
-
-        do {
-            let url = URL(string: "\(AppConfig.API.baseURL)/auth/refresh")!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-            let body = ["refreshToken": currentRefresh]
-            request.httpBody = try JSONEncoder().encode(body)
-
-            let (data, response) = try await URLSession.shared.data(for: request)
-
-            guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode == 200 else {
-                logout()
-                return
-            }
-
-            let decoded = try JSONDecoder().decode(TokenResponse.self, from: data)
-            try keychainService.saveToken(decoded.accessToken, for: .accessToken)
-            try keychainService.saveToken(decoded.refreshToken, for: .refreshToken)
-
-            self.accessToken = decoded.accessToken
-            self.refreshToken = decoded.refreshToken
-        } catch {
-            print("[AppState] Token refresh failed: \(error.localizedDescription)")
-            logout()
-        }
     }
 
     func completeOnboarding() {
@@ -130,9 +160,6 @@ final class AppState {
     }
 
     /// Allows browsing the app without a backend connection.
-    /// Creates a demo user and sets authenticated state.
-    var isGuest: Bool = false
-
     func loginAsGuest() {
         let guest = User(
             id: "guest",
@@ -149,21 +176,13 @@ final class AppState {
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
     }
 
+    /// Updates stored tokens (called after APIClient refreshes).
     func updateTokens(access: String, refresh: String) {
         do {
             try keychainService.saveToken(access, for: .accessToken)
             try keychainService.saveToken(refresh, for: .refreshToken)
-            self.accessToken = access
-            self.refreshToken = refresh
         } catch {
-            print("[AppState] Failed to update tokens: \(error.localizedDescription)")
+            logger.error("[AppState] Failed to update tokens: \(error.localizedDescription)")
         }
     }
-}
-
-// MARK: - Token Refresh Response
-
-private struct TokenResponse: Decodable {
-    let accessToken: String
-    let refreshToken: String
 }

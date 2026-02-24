@@ -14,13 +14,6 @@ final class HomeViewModel {
 
     // MARK: - State
 
-    enum LoadState {
-        case idle
-        case loading
-        case loaded
-        case error(String)
-    }
-
     private(set) var loadState: LoadState = .idle
 
     // Portfolio
@@ -100,8 +93,36 @@ final class HomeViewModel {
 
     /// Loads demo data for guest mode (no backend required).
     func loadGuestData() {
+        portfolio = PortfolioDTO(
+            id: "guest-portfolio",
+            userId: "guest",
+            cashBalance: 18_735.42,
+            totalEquity: 25_000.00,
+            isActive: 1,
+            competitionMonth: "2026-02",
+            holdingsValue: 6_264.58,
+            totalPnl: 234.08,
+            totalPnlPct: 0.94,
+            positions: nil,
+            createdAt: "2026-02-01T00:00:00Z",
+            updatedAt: "2026-02-20T12:00:00Z"
+        )
+
+        positions = [
+            PositionDTO(id: "p1", portfolioId: "guest-portfolio", ticker: "AAPL", assetType: "stock", quantity: 5, averageCost: 185.20, currentPrice: 192.53, marketValue: 962.65, unrealizedPnl: 36.65, unrealizedPnlPct: 3.96, updatedAt: nil, createdAt: nil),
+            PositionDTO(id: "p2", portfolioId: "guest-portfolio", ticker: "TSLA", assetType: "stock", quantity: 3, averageCost: 245.00, currentPrice: 258.10, marketValue: 774.30, unrealizedPnl: 39.30, unrealizedPnlPct: 5.35, updatedAt: nil, createdAt: nil),
+            PositionDTO(id: "p3", portfolioId: "guest-portfolio", ticker: "MSFT", assetType: "stock", quantity: 4, averageCost: 410.50, currentPrice: 422.80, marketValue: 1691.20, unrealizedPnl: 49.20, unrealizedPnlPct: 3.00, updatedAt: nil, createdAt: nil),
+            PositionDTO(id: "p4", portfolioId: "guest-portfolio", ticker: "NVDA", assetType: "stock", quantity: 2, averageCost: 875.00, currentPrice: 912.40, marketValue: 1824.80, unrealizedPnl: 74.80, unrealizedPnlPct: 4.28, updatedAt: nil, createdAt: nil),
+            PositionDTO(id: "p5", portfolioId: "guest-portfolio", ticker: "AMZN", assetType: "stock", quantity: 5, averageCost: 195.30, currentPrice: 202.33, marketValue: 1011.63, unrealizedPnl: 35.13, unrealizedPnlPct: 3.60, updatedAt: nil, createdAt: nil),
+        ]
+
+        competitions = [
+            CompetitionDTO(id: "comp-weekly", type: "weekly", status: "active", startDate: "2026-02-16", endDate: "2026-02-22", totalPrizePool: 500, participantCount: 128, createdAt: "2026-02-16T00:00:00Z", tier: "free", description: nil, rules: nil, isJoined: true),
+            CompetitionDTO(id: "comp-monthly", type: "monthly", status: "active", startDate: "2026-02-01", endDate: "2026-02-28", totalPrizePool: 2500, participantCount: 312, createdAt: "2026-02-01T00:00:00Z", tier: "free", description: nil, rules: nil, isJoined: true),
+        ]
+
         loadState = .loaded
-        logger.info("[Home] Guest mode — showing default dashboard")
+        logger.info("[Home] Guest mode — showing sample dashboard")
     }
 
     /// Loads all home screen data concurrently.
