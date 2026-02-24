@@ -61,6 +61,8 @@ struct MainTabView: View {
         case .userProfile(let id):
             UserPerformanceView(userId: id)
                 .id(id) // Force SwiftUI to create a new view for each user ID
+        case .transactionHistory:
+            TransactionHistoryView()
         case .competitionDetail:
             EmptyView() // handled by CompeteView's own navigationDestination
         default:

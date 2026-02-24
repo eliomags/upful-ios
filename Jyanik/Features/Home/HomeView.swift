@@ -2,24 +2,26 @@
 //  HomeView.swift
 //  Jyanik
 //
-//  Home dashboard showing portfolio summary, quick actions,
-//  top movers, active competitions, and recent trades
+//  Home screen = User's full portfolio.
+//  Shows total balance, returns, cash balance, full holdings list,
+//  active competitions, and recent trades — all from DB.
 //
 
 import SwiftUI
 
 struct HomeView: View {
     @Environment(AppState.self) private var appState
+    @Environment(AppRouter.self) private var router
     @State private var viewModel = HomeViewModel()
 
     var body: some View {
         Group {
             switch viewModel.loadState {
             case .idle, .loading:
-                JLoadingView("Loading your dashboard...")
+                JLoadingView("Loading your portfolio...")
 
             case .loaded:
-                dashboardContent
+                portfolioContent
 
             case .error(let message):
                 JErrorView(message) {
@@ -27,7 +29,8 @@ struct HomeView: View {
                 }
             }
         }
-        .navigationTitle("Home")
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
         .background(JColor.background)
         .task {
             if case .idle = viewModel.loadState {
@@ -40,164 +43,230 @@ struct HomeView: View {
         }
     }
 
-    // MARK: - Dashboard Content
+    // MARK: - Portfolio Content
 
-    private var dashboardContent: some View {
+    private var portfolioContent: some View {
         ScrollView {
             LazyVStack(spacing: JSpacing.md) {
-                greetingHeader
-                portfolioSummaryCard
-                quickActionsRow
-                topMoversSection
-                activeCompetitionsSection
+                if appState.isGuest {
+                    guestBanner
+                }
+                portfolioHeader
+                holdingsSection
+                competitionsSection
                 recentTradesSection
             }
             .padding(.horizontal, JSpacing.md)
             .padding(.bottom, JSpacing.xl)
         }
         .refreshable {
-            await viewModel.refresh()
+            if !appState.isGuest {
+                await viewModel.refresh()
+            }
         }
     }
 
-    // MARK: - Greeting Header
+    // MARK: - Guest Banner
 
-    private var greetingHeader: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: JSpacing.xxxs) {
-                Text(greetingText)
+    private var guestBanner: some View {
+        JCard(style: .bordered) {
+            VStack(spacing: JSpacing.sm) {
+                HStack(spacing: JSpacing.xs) {
+                    Image(systemName: "person.badge.plus")
+                        .font(.title3)
+                        .foregroundStyle(JColor.primary)
+
+                    Text("Welcome to Upful")
+                        .font(JFont.headline)
+                        .foregroundStyle(JColor.textPrimary)
+
+                    Spacer()
+                }
+
+                Text("Sign up to start paper trading with $25,000, compete in tournaments, and win real prizes.")
                     .font(JFont.subheadline)
                     .foregroundStyle(JColor.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
 
-                Text(displayName)
-                    .font(JFont.title2)
-                    .foregroundStyle(JColor.textPrimary)
+                Button {
+                    appState.logout()
+                } label: {
+                    Text("Create Account")
+                        .font(JFont.calloutMedium)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, JSpacing.xs)
+                        .background(JColor.primary, in: RoundedRectangle(cornerRadius: JRadius.small))
+                }
             }
-
-            Spacer()
-
-            JAvatar(
-                urlString: appState.currentUser?.avatarUrl,
-                initials: userInitials,
-                size: .medium
-            )
         }
         .padding(.top, JSpacing.xs)
     }
 
-    // MARK: - Portfolio Summary Card
+    // MARK: - Portfolio Header (Total Balance + Returns + Cash)
 
-    private var portfolioSummaryCard: some View {
-        JCard {
-            VStack(alignment: .leading, spacing: JSpacing.sm) {
-                Text("Portfolio Value")
-                    .font(JFont.subheadline)
-                    .foregroundStyle(JColor.textSecondary)
+    private var portfolioHeader: some View {
+        VStack(alignment: .leading, spacing: JSpacing.sm) {
+            // Total Balance label
+            Text("TOTAL BALANCE")
+                .font(JFont.subheadlineMedium)
+                .foregroundStyle(JColor.textSecondary)
 
-                Text(formattedCurrency(viewModel.totalEquity))
-                    .font(JFont.priceLarge)
+            // Total equity — large, bold
+            Text(formattedCurrency(viewModel.totalEquity))
+                .font(.system(size: 34, weight: .black))
+                .foregroundStyle(JColor.textPrimary)
+
+            // Dollar + Percent return
+            HStack(spacing: JSpacing.xs) {
+                Text(formattedSignedCurrency(viewModel.totalPnl))
+                    .font(JFont.calloutMedium)
+                    .foregroundStyle(pnlColor)
+
+                Text("  \(formattedPercent(viewModel.totalPnlPct))")
+                    .font(JFont.calloutMedium)
+                    .foregroundStyle(pnlColor)
+            }
+
+            // Last Updated
+            Text("Last Updated, \(formattedUpdateTime)")
+                .font(JFont.caption)
+                .foregroundStyle(JColor.textTertiary)
+                .padding(.top, JSpacing.xxxs)
+
+            // Cash Balance card
+            HStack {
+                Text("CASH BALANCE:")
+                    .font(JFont.calloutMedium)
                     .foregroundStyle(JColor.textPrimary)
 
-                HStack(spacing: JSpacing.md) {
-                    JPriceChangeBadge(viewModel.totalPnlPct, style: .percent)
+                Spacer()
 
-                    Spacer()
+                Text(formattedCurrency(viewModel.cashBalance))
+                    .font(JFont.body)
+                    .foregroundStyle(JColor.textPrimary)
+            }
+            .padding(.horizontal, JSpacing.md)
+            .padding(.vertical, JSpacing.sm)
+            .background(JColor.surface, in: RoundedRectangle(cornerRadius: JRadius.small))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.top, JSpacing.sm)
+    }
 
-                    VStack(alignment: .trailing, spacing: JSpacing.xxxs) {
-                        Text("Cash")
-                            .font(JFont.caption)
-                            .foregroundStyle(JColor.textTertiary)
+    // MARK: - Holdings Section
 
-                        Text(formattedCurrency(viewModel.cashBalance))
-                            .font(JFont.priceSmall)
-                            .foregroundStyle(JColor.textSecondary)
-                    }
+    private var holdingsSection: some View {
+        VStack(alignment: .leading, spacing: JSpacing.sm) {
+            // Section header
+            HStack {
+                Text("Holdings")
+                    .font(JFont.headline)
+                    .foregroundStyle(JColor.textPrimary)
 
-                    VStack(alignment: .trailing, spacing: JSpacing.xxxs) {
-                        Text("Holdings")
-                            .font(JFont.caption)
-                            .foregroundStyle(JColor.textTertiary)
+                Spacer()
 
-                        Text(formattedCurrency(viewModel.holdingsValue))
-                            .font(JFont.priceSmall)
-                            .foregroundStyle(JColor.textSecondary)
+                if viewModel.hasRecentTrades {
+                    Button {
+                        router.navigate(to: .transactionHistory)
+                    } label: {
+                        Text("See History")
+                            .font(JFont.subheadlineMedium)
+                            .foregroundStyle(JColor.primary)
                     }
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-    }
 
-    // MARK: - Quick Actions
-
-    private var quickActionsRow: some View {
-        HStack(spacing: JSpacing.sm) {
-            QuickActionButton(
-                icon: "cart.fill",
-                title: "Buy",
-                color: JColor.gainPositive
-            ) {
-                // Navigate to search/trade flow for buying
-            }
-
-            QuickActionButton(
-                icon: "arrow.down.circle.fill",
-                title: "Sell",
-                color: JColor.gainNegative
-            ) {
-                // Navigate to portfolio positions for selling
-            }
-
-            QuickActionButton(
-                icon: "star.fill",
-                title: "Watchlist",
-                color: JColor.accent
-            ) {
-                // Navigate to watchlist
-            }
-
-            QuickActionButton(
-                icon: "magnifyingglass",
-                title: "Search",
-                color: JColor.info
-            ) {
-                // Open search sheet
-            }
-        }
-    }
-
-    // MARK: - Top Movers Section
-
-    @ViewBuilder
-    private var topMoversSection: some View {
-        if viewModel.hasPositions {
-            VStack(alignment: .leading, spacing: JSpacing.sm) {
-                sectionHeader(title: "Top Movers", icon: "flame.fill")
-
+            if viewModel.hasPositions {
                 JCard(padding: 0) {
                     LazyVStack(spacing: 0) {
-                        ForEach(Array(viewModel.topMovers.enumerated()), id: \.element.id) { index, position in
-                            TopMoverRow(position: position)
-                                .padding(.horizontal, JSpacing.md)
-                                .padding(.vertical, JSpacing.xs)
+                        ForEach(Array(viewModel.positions.enumerated()), id: \.element.id) { index, position in
+                            Button {
+                                router.navigate(to: .stockDetail(ticker: position.ticker))
+                            } label: {
+                                HoldingRow(position: position)
+                                    .padding(.horizontal, JSpacing.md)
+                                    .padding(.vertical, JSpacing.sm)
+                            }
+                            .buttonStyle(.plain)
+                            .contextMenu {
+                                Button {
+                                    router.navigate(to: .stockDetail(ticker: position.ticker))
+                                } label: {
+                                    Label("View Details", systemImage: "magnifyingglass")
+                                }
+                                Button {
+                                    router.selectedTab = .trade
+                                } label: {
+                                    Label("Trade", systemImage: "arrow.up.arrow.down")
+                                }
+                            }
 
-                            if index < viewModel.topMovers.count - 1 {
+                            if index < viewModel.positions.count - 1 {
                                 Divider()
                                     .padding(.leading, JSpacing.md)
                             }
                         }
                     }
                 }
+            } else {
+                // Empty holdings state
+                JCardBordered {
+                    VStack(spacing: JSpacing.sm) {
+                        Image(systemName: "chart.bar.doc.horizontal")
+                            .font(.system(size: 36))
+                            .foregroundStyle(JColor.textTertiary)
+
+                        Text("No Holdings Yet")
+                            .font(JFont.headline)
+                            .foregroundStyle(JColor.textPrimary)
+
+                        Text("Search for stocks and make your first trade to see your holdings here.")
+                            .font(JFont.subheadline)
+                            .foregroundStyle(JColor.textSecondary)
+                            .multilineTextAlignment(.center)
+
+                        Button {
+                            router.selectedTab = .markets
+                        } label: {
+                            Text("Find Stocks")
+                                .font(JFont.calloutMedium)
+                                .foregroundStyle(JColor.primary)
+                        }
+                        .padding(.top, JSpacing.xxs)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, JSpacing.md)
+                }
             }
         }
     }
 
-    // MARK: - Active Competitions Section
+    // MARK: - Competitions Section
 
     @ViewBuilder
-    private var activeCompetitionsSection: some View {
+    private var competitionsSection: some View {
         VStack(alignment: .leading, spacing: JSpacing.sm) {
-            sectionHeader(title: "Competitions", icon: "trophy.fill")
+            HStack(spacing: JSpacing.xs) {
+                Image(systemName: "trophy.fill")
+                    .font(JFont.subheadline)
+                    .foregroundStyle(JColor.primary)
+
+                Text("Competitions")
+                    .font(JFont.headline)
+                    .foregroundStyle(JColor.textPrimary)
+
+                Spacer()
+
+                Button {
+                    router.selectedTab = .compete
+                } label: {
+                    Text("View All")
+                        .font(JFont.subheadlineMedium)
+                        .foregroundStyle(JColor.primary)
+                }
+            }
+            .padding(.top, JSpacing.xs)
 
             if viewModel.hasCompetitions {
                 ForEach(viewModel.competitions) { competition in
@@ -236,7 +305,18 @@ struct HomeView: View {
     @ViewBuilder
     private var recentTradesSection: some View {
         VStack(alignment: .leading, spacing: JSpacing.sm) {
-            sectionHeader(title: "Recent Trades", icon: "clock.fill")
+            HStack(spacing: JSpacing.xs) {
+                Image(systemName: "clock.fill")
+                    .font(JFont.subheadline)
+                    .foregroundStyle(JColor.primary)
+
+                Text("Recent Trades")
+                    .font(JFont.headline)
+                    .foregroundStyle(JColor.textPrimary)
+
+                Spacer()
+            }
+            .padding(.top, JSpacing.xs)
 
             if viewModel.hasRecentTrades {
                 JCard(padding: 0) {
@@ -278,54 +358,33 @@ struct HomeView: View {
         }
     }
 
-    // MARK: - Section Header
-
-    private func sectionHeader(title: String, icon: String) -> some View {
-        HStack(spacing: JSpacing.xs) {
-            Image(systemName: icon)
-                .font(JFont.subheadline)
-                .foregroundStyle(JColor.primary)
-
-            Text(title)
-                .font(JFont.headline)
-                .foregroundStyle(JColor.textPrimary)
-
-            Spacer()
-        }
-        .padding(.top, JSpacing.xs)
-    }
-
     // MARK: - Helpers
 
-    private var greetingText: String {
-        let hour = Calendar.current.component(.hour, from: Date())
-        switch hour {
-        case 5..<12: return "Good morning"
-        case 12..<17: return "Good afternoon"
-        case 17..<22: return "Good evening"
-        default: return "Good night"
-        }
+    private var pnlColor: Color {
+        if viewModel.totalPnl > 0 { return JColor.gainPositive }
+        if viewModel.totalPnl < 0 { return JColor.gainNegative }
+        return JColor.textSecondary
     }
 
-    private var displayName: String {
-        appState.currentUser?.displayName
-            ?? appState.currentUser?.username
-            ?? "Trader"
-    }
-
-    private var userInitials: String {
-        let name = appState.currentUser?.displayName
-            ?? appState.currentUser?.username
-            ?? ""
-        let parts = name.split(separator: " ")
-        if parts.count >= 2 {
-            return String(parts[0].prefix(1)) + String(parts[1].prefix(1))
-        }
-        return String(name.prefix(2))
+    private var formattedUpdateTime: String {
+        let df = DateFormatter()
+        df.dateFormat = "MMM d, h:mm a"
+        df.timeZone = TimeZone(abbreviation: "EST")
+        return "\(df.string(from: Date())) EST"
     }
 
     private func formattedCurrency(_ value: Double) -> String {
         Self.currencyFormatter.string(from: NSNumber(value: value)) ?? "$0.00"
+    }
+
+    private func formattedSignedCurrency(_ value: Double) -> String {
+        let prefix = value >= 0 ? "+" : ""
+        return "\(prefix)\(formattedCurrency(value))"
+    }
+
+    private func formattedPercent(_ value: Double) -> String {
+        let prefix = value >= 0 ? "+" : ""
+        return "\(prefix)\(String(format: "%.2f", value))%"
     }
 
     // MARK: - Cached Formatters
@@ -340,40 +399,14 @@ struct HomeView: View {
     }()
 }
 
-// MARK: - Quick Action Button
+// MARK: - Holding Row
 
-private struct QuickActionButton: View {
-    let icon: String
-    let title: String
-    let color: Color
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: JSpacing.xs) {
-                Image(systemName: icon)
-                    .font(.title3)
-                    .foregroundStyle(color)
-                    .frame(width: 44, height: 44)
-                    .background(color.opacity(0.12), in: Circle())
-
-                Text(title)
-                    .font(JFont.captionMedium)
-                    .foregroundStyle(JColor.textPrimary)
-            }
-            .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(.plain)
-    }
-}
-
-// MARK: - Top Mover Row
-
-private struct TopMoverRow: View {
+private struct HoldingRow: View {
     let position: PositionDTO
 
     var body: some View {
         HStack(spacing: JSpacing.sm) {
+            // Ticker + shares
             VStack(alignment: .leading, spacing: JSpacing.xxxs) {
                 Text(position.ticker)
                     .font(JFont.headline)
@@ -386,19 +419,28 @@ private struct TopMoverRow: View {
 
             Spacer()
 
-            VStack(alignment: .trailing, spacing: JSpacing.xxxs) {
-                Text(formattedMarketValue)
+            // Current price + avg cost
+            VStack(alignment: .center, spacing: JSpacing.xxxs) {
+                Text("$\((position.currentPrice ?? 0).formatted(.number.precision(.fractionLength(2))))")
                     .font(JFont.price)
                     .foregroundStyle(JColor.textPrimary)
 
-                JPriceChangeView(position.unrealizedPnlPct ?? 0, style: .percent)
+                Text("$\(position.averageCost.formatted(.number.precision(.fractionLength(2))))")
+                    .font(JFont.caption)
+                    .foregroundStyle(JColor.textTertiary)
             }
+
+            // PnL
+            VStack(alignment: .trailing, spacing: JSpacing.xxxs) {
+                JPriceChangeView(position.unrealizedPnlPct ?? 0, style: .percent)
+
+                Text(formattedPnl)
+                    .font(JFont.caption)
+                    .foregroundStyle(JColor.textSecondary)
+            }
+            .frame(minWidth: 80, alignment: .trailing)
         }
         .contentShape(Rectangle())
-    }
-
-    private var formattedMarketValue: String {
-        "$\(position.marketValue.formatted(.number.precision(.fractionLength(2))))"
     }
 
     private var formattedQuantity: String {
@@ -406,6 +448,11 @@ private struct TopMoverRow: View {
             return String(format: "%.0f", position.quantity)
         }
         return String(format: "%.2f", position.quantity)
+    }
+
+    private var formattedPnl: String {
+        let prefix = position.unrealizedPnl >= 0 ? "+" : ""
+        return "\(prefix)$\(abs(position.unrealizedPnl).formatted(.number.precision(.fractionLength(2))))"
     }
 }
 
@@ -480,7 +527,6 @@ private struct CompetitionCard: View {
                     }
                 }
 
-                // Time remaining
                 HStack(spacing: JSpacing.xxs) {
                     Image(systemName: "calendar")
                         .font(.caption)
@@ -524,7 +570,7 @@ private struct CompetitionCard: View {
         switch rank {
         case 1: return JColor.accent
         case 2: return JColor.textSecondary
-        case 3: return Color(hex: 0xCD7F32) // bronze
+        case 3: return Color(hex: 0xCD7F32)
         default: return JColor.textPrimary
         }
     }
@@ -537,7 +583,6 @@ private struct TradeRow: View {
 
     var body: some View {
         HStack(spacing: JSpacing.sm) {
-            // Side indicator
             Image(systemName: isBuy ? "arrow.up.circle.fill" : "arrow.down.circle.fill")
                 .font(.title3)
                 .foregroundStyle(isBuy ? JColor.gainPositive : JColor.gainNegative)
@@ -575,9 +620,7 @@ private struct TradeRow: View {
         .contentShape(Rectangle())
     }
 
-    private var isBuy: Bool {
-        trade.side == "buy"
-    }
+    private var isBuy: Bool { trade.side == "buy" }
 
     private var formattedQuantityAndPrice: String {
         let qty = trade.quantity == trade.quantity.rounded()
@@ -591,18 +634,14 @@ private struct TradeRow: View {
     }
 
     private var formattedTime: String {
-        // Parse ISO 8601 date and show relative time
         if let date = Self.isoFormatterFractional.date(from: trade.executedAt) {
             return Self.relativeFormatter.localizedString(for: date, relativeTo: Date())
         }
-        // Try without fractional seconds
         if let date = Self.isoFormatterBasic.date(from: trade.executedAt) {
             return Self.relativeFormatter.localizedString(for: date, relativeTo: Date())
         }
         return trade.executedAt
     }
-
-    // MARK: - Cached Formatters
 
     private static let isoFormatterFractional: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
@@ -630,4 +669,5 @@ private struct TradeRow: View {
         HomeView()
     }
     .environment(AppState(keychainService: KeychainService(serviceName: "preview")))
+    .environment(AppRouter())
 }

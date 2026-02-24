@@ -28,6 +28,9 @@ enum Route: Hashable {
     // Social
     case userProfile(id: String)
 
+    // Portfolio
+    case transactionHistory
+
     // Settings
     case settings
     case editProfile

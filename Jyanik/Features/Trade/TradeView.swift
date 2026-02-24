@@ -42,11 +42,8 @@ struct TradeView: View {
         .navigationTitle("Trade")
         .navigationBarTitleDisplayMode(.large)
         .task {
-            if appState.isGuest {
-                viewModel.loadGuestData()
-            } else {
-                await viewModel.loadPortfolio()
-            }
+            guard !appState.isGuest else { return }
+            await viewModel.loadPortfolio()
         }
         .sheet(isPresented: $viewModel.showConfirmation) {
             if let transaction = viewModel.completedTransaction {
@@ -82,15 +79,58 @@ struct TradeView: View {
 
     @ViewBuilder
     private var content: some View {
-        switch viewModel.tradeState {
-        case .loading:
-            JLoadingView("Loading portfolio...")
-        case .error(let message) where !viewModel.hasStockSelected && viewModel.portfolioId == nil:
-            JErrorView(message) {
-                Task { await viewModel.loadPortfolio() }
+        if appState.isGuest {
+            guestPrompt
+        } else {
+            switch viewModel.tradeState {
+            case .loading:
+                JLoadingView("Loading portfolio...")
+            case .error(let message) where !viewModel.hasStockSelected && viewModel.portfolioId == nil:
+                JErrorView(message) {
+                    Task { await viewModel.loadPortfolio() }
+                }
+            default:
+                tradeForm
             }
-        default:
-            tradeForm
+        }
+    }
+
+    // MARK: - Guest Prompt
+
+    private var guestPrompt: some View {
+        VStack(spacing: JSpacing.lg) {
+            Spacer()
+
+            Image(systemName: "arrow.up.arrow.down.circle")
+                .font(.system(size: 56))
+                .foregroundStyle(JColor.primary)
+
+            VStack(spacing: JSpacing.sm) {
+                Text("Sign Up to Trade")
+                    .font(JFont.title2)
+                    .foregroundStyle(JColor.textPrimary)
+
+                Text("Create an account to start paper trading with $25,000 in virtual cash. Compete against other traders and win real prizes.")
+                    .font(JFont.subheadline)
+                    .foregroundStyle(JColor.textSecondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, JSpacing.lg)
+            }
+
+            Button {
+                appState.logout()
+            } label: {
+                Text("Create Account")
+                    .font(JFont.calloutMedium)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, JSpacing.sm)
+                    .background(JColor.primary, in: RoundedRectangle(cornerRadius: JRadius.medium))
+            }
+            .padding(.horizontal, JSpacing.xl)
+
+            Spacer()
+            Spacer()
         }
     }
 
