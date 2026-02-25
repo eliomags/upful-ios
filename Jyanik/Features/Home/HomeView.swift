@@ -52,6 +52,7 @@ struct HomeView: View {
                     guestBanner
                 }
                 portfolioHeader
+                statsRow
                 holdingsSection
                 competitionsSection
                 recentTradesSection
@@ -103,55 +104,134 @@ struct HomeView: View {
         .padding(.top, JSpacing.xs)
     }
 
-    // MARK: - Portfolio Header (Total Balance + Returns + Cash)
+    // MARK: - Portfolio Header (Summary Card)
 
     private var portfolioHeader: some View {
-        VStack(alignment: .leading, spacing: JSpacing.sm) {
-            // Total Balance label
-            Text("TOTAL BALANCE")
-                .font(JFont.subheadlineMedium)
-                .foregroundStyle(JColor.textSecondary)
+        JCard {
+            VStack(alignment: .leading, spacing: JSpacing.sm) {
+                HStack {
+                    Text("Portfolio Summary")
+                        .font(JFont.headline)
+                        .foregroundStyle(JColor.textPrimary)
 
-            // Total equity — large, bold
-            Text(formattedCurrency(viewModel.totalEquity))
-                .font(.system(size: 34, weight: .black))
-                .foregroundStyle(JColor.textPrimary)
+                    Spacer()
 
-            // Dollar + Percent return
-            HStack(spacing: JSpacing.xs) {
-                Text(formattedSignedCurrency(viewModel.totalPnl))
-                    .font(JFont.calloutMedium)
-                    .foregroundStyle(pnlColor)
+                    Text(formattedUpdateTime)
+                        .font(JFont.caption)
+                        .foregroundStyle(JColor.textTertiary)
+                }
 
-                Text("  \(formattedPercent(viewModel.totalPnlPct))")
-                    .font(JFont.calloutMedium)
-                    .foregroundStyle(pnlColor)
+                // Total Value + gain %
+                VStack(alignment: .leading, spacing: JSpacing.xxxs) {
+                    Text("Total Value")
+                        .font(JFont.caption)
+                        .foregroundStyle(JColor.textTertiary)
+
+                    HStack(alignment: .firstTextBaseline, spacing: JSpacing.xs) {
+                        Text(formattedCurrency(viewModel.totalEquity))
+                            .font(JFont.priceLarge)
+                            .foregroundStyle(JColor.textPrimary)
+
+                        JPriceChangeView(viewModel.totalPnlPct, style: .percent)
+                    }
+                }
+
+                Divider()
+                    .foregroundStyle(JColor.divider)
+
+                // Cash / Holdings / Total P&L breakdown
+                HStack {
+                    VStack(alignment: .leading, spacing: JSpacing.xxxs) {
+                        Text("Cash")
+                            .font(JFont.caption)
+                            .foregroundStyle(JColor.textTertiary)
+
+                        Text(formattedCurrency(viewModel.cashBalance))
+                            .font(JFont.calloutMedium)
+                            .foregroundStyle(JColor.textPrimary)
+                    }
+
+                    Spacer()
+
+                    VStack(alignment: .leading, spacing: JSpacing.xxxs) {
+                        Text("Holdings")
+                            .font(JFont.caption)
+                            .foregroundStyle(JColor.textTertiary)
+
+                        Text(formattedCurrency(viewModel.holdingsValue))
+                            .font(JFont.calloutMedium)
+                            .foregroundStyle(JColor.textPrimary)
+                    }
+
+                    Spacer()
+
+                    VStack(alignment: .leading, spacing: JSpacing.xxxs) {
+                        Text("Total P&L")
+                            .font(JFont.caption)
+                            .foregroundStyle(JColor.textTertiary)
+
+                        Text(formattedCurrency(viewModel.totalPnl))
+                            .font(JFont.calloutMedium)
+                            .foregroundStyle(viewModel.totalPnl >= 0 ? JColor.gainPositive : JColor.gainNegative)
+                    }
+                }
             }
-
-            // Last Updated
-            Text("Last Updated, \(formattedUpdateTime)")
-                .font(JFont.caption)
-                .foregroundStyle(JColor.textTertiary)
-                .padding(.top, JSpacing.xxxs)
-
-            // Cash Balance card
-            HStack {
-                Text("CASH BALANCE:")
-                    .font(JFont.calloutMedium)
-                    .foregroundStyle(JColor.textPrimary)
-
-                Spacer()
-
-                Text(formattedCurrency(viewModel.cashBalance))
-                    .font(JFont.body)
-                    .foregroundStyle(JColor.textPrimary)
-            }
-            .padding(.horizontal, JSpacing.md)
-            .padding(.vertical, JSpacing.sm)
-            .background(JColor.surface, in: RoundedRectangle(cornerRadius: JRadius.small))
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, JSpacing.sm)
+    }
+
+    // MARK: - Stats Row
+
+    private var statsRow: some View {
+        HStack(spacing: JSpacing.sm) {
+            statCard(
+                title: "Total Trades",
+                value: "\(viewModel.totalTrades)",
+                icon: "arrow.left.arrow.right"
+            )
+
+            statCard(
+                title: "Win Rate",
+                value: String(format: "%.0f%%", viewModel.winRate),
+                icon: "chart.line.uptrend.xyaxis"
+            )
+
+            statCard(
+                title: "Prizes Won",
+                value: formattedPrizesWon,
+                icon: "trophy"
+            )
+        }
+    }
+
+    private func statCard(title: String, value: String, icon: String) -> some View {
+        JCard {
+            VStack(spacing: JSpacing.xs) {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundStyle(JColor.primary)
+
+                Text(value)
+                    .font(JFont.title3)
+                    .foregroundStyle(JColor.textPrimary)
+
+                Text(title)
+                    .font(JFont.caption)
+                    .foregroundStyle(JColor.textSecondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    private var formattedPrizesWon: String {
+        let intVal = Int(viewModel.totalPrizesWon)
+        if intVal >= 1_000 {
+            return Self.wholeNumberCurrencyFormatter.string(from: NSNumber(value: intVal))
+                ?? "$\(intVal)"
+        }
+        return "$\(intVal)"
     }
 
     // MARK: - Holdings Section
@@ -395,6 +475,14 @@ struct HomeView: View {
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 2
         formatter.minimumFractionDigits = 2
+        return formatter
+    }()
+
+    private static let wholeNumberCurrencyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+        formatter.maximumFractionDigits = 0
         return formatter
     }()
 }

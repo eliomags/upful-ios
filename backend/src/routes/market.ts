@@ -115,11 +115,15 @@ marketRoutes.get('/quote/:symbol', async (c) => {
 // GET /chart/:symbol - Get chart data
 marketRoutes.get('/chart/:symbol', async (c) => {
   const symbol = c.req.param('symbol').toUpperCase();
-  const range = c.req.query('range') || '1D';
+  const rawRange = (c.req.query('range') || '1D').toUpperCase();
+
+  // Normalize: 5D → 1W (same Yahoo range), accept both cases
+  const rangeAliases: Record<string, string> = { '5D': '1W' };
+  const range = rangeAliases[rawRange] || rawRange;
 
   const validRanges = ['1D', '1W', '1M', '3M', '6M', '1Y', '5Y'];
   if (!validRanges.includes(range)) {
-    return c.json({ error: 'Invalid range. Valid options: 1D, 1W, 1M, 3M, 6M, 1Y, 5Y' }, 400);
+    return c.json({ error: 'Invalid range. Valid options: 1D, 5D, 1W, 1M, 3M, 6M, 1Y, 5Y' }, 400);
   }
 
   const yahooClient = new YahooFinanceClient(c.env);

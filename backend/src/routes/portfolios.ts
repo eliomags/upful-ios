@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import type { Env, PortfolioRow, PositionRow, TradeRow } from '../models/types';
 import { authMiddleware } from '../middleware/auth';
 import { generateId, now, currentMonth, round, pctChange, parsePagination } from '../utils/helpers';
+import { YahooFinanceClient } from '../services/market-data/yahoo-finance';
 
 const portfolioRoutes = new Hono<{ Bindings: Env }>();
 
@@ -64,19 +65,98 @@ portfolioRoutes.get('/active', async (c) => {
     .bind(portfolio.id)
     .all<PositionRow>();
 
-  const positions = positionsResult.results || [];
+  const rawPositions = positionsResult.results || [];
 
-  // Calculate holdings_value
+  // Refresh prices from Yahoo Finance (with KV cache, 15 min TTL)
+  const yahooClient = new YahooFinanceClient(c.env);
+  const uniqueTickers = [...new Set(rawPositions.map((p) => p.ticker))];
+
+  // Build ticker → asset_type map for Yahoo symbol conversion
+  const tickerTypeMap = new Map<string, string>();
+  rawPositions.forEach((p) => tickerTypeMap.set(p.ticker, p.asset_type));
+
+  // Crypto tickers need "-USD" suffix for Yahoo (BTC → BTC-USD)
+  const toYahooSymbol = (ticker: string): string => {
+    return tickerTypeMap.get(ticker) === 'crypto' ? `${ticker}-USD` : ticker;
+  };
+
+  // Fetch live prices concurrently (KV cached at 15 min in market routes)
+  const priceMap = new Map<string, number>();
+  await Promise.all(
+    uniqueTickers.map(async (ticker) => {
+      try {
+        // Check KV cache first (shared with market routes)
+        const yahooSymbol = toYahooSymbol(ticker);
+        const cacheKey = `quote:${yahooSymbol}`;
+        const cached = await c.env.CACHE.get(cacheKey, 'json') as any;
+        if (cached?.current_price) {
+          priceMap.set(ticker, cached.current_price);
+          return;
+        }
+
+        // Fetch from Yahoo
+        const quote = await yahooClient.getQuote(yahooSymbol);
+        if (quote?.current_price) {
+          priceMap.set(ticker, quote.current_price);
+          // Cache for 15 minutes (same as market routes)
+          await c.env.CACHE.put(cacheKey, JSON.stringify(quote), { expirationTtl: 900 });
+        }
+      } catch (err) {
+        console.error(`Failed to fetch price for ${ticker}:`, err);
+        // Fall back to DB price
+      }
+    })
+  );
+
+  // Update positions with live prices and persist to DB
+  const updateStatements: ReturnType<ReturnType<typeof c.env.DB.prepare>['bind']>[] = [];
+  const timestamp = now();
+  const positions = rawPositions.map((pos) => {
+    const livePrice = priceMap.get(pos.ticker);
+    const currentPrice = livePrice ?? pos.current_price;
+    const marketValue = round(pos.quantity * currentPrice);
+    const costBasis = pos.average_cost * pos.quantity;
+    const unrealizedPnl = round(marketValue - costBasis);
+    const unrealizedPnlPct = round(pctChange(marketValue, costBasis));
+
+    // Queue DB update if price changed
+    if (livePrice && livePrice !== pos.current_price) {
+      updateStatements.push(
+        c.env.DB.prepare(
+          'UPDATE positions SET current_price = ?, market_value = ?, unrealized_pnl = ?, updated_at = ? WHERE id = ?'
+        ).bind(livePrice, marketValue, unrealizedPnl, timestamp, pos.id)
+      );
+    }
+
+    return {
+      ...pos,
+      current_price: currentPrice,
+      market_value: marketValue,
+      unrealized_pnl: unrealizedPnl,
+      unrealized_pnl_pct: unrealizedPnlPct,
+    };
+  });
+
+  // Batch update positions in DB (non-blocking, don't fail the response)
+  if (updateStatements.length > 0) {
+    c.env.DB.batch(updateStatements).catch((err) =>
+      console.error('Failed to persist position prices:', err)
+    );
+  }
+
+  // Calculate holdings_value from live position data
   const holdings_value = positions.reduce((sum, pos) => sum + pos.market_value, 0);
 
-  // Calculate total_pnl
-  const total_pnl = round(portfolio.total_equity - 25000);
-  const total_pnl_pct = round(pctChange(25000, portfolio.total_equity));
+  // Compute total_equity live: cash + holdings (don't trust stale DB value)
+  const total_equity = round(portfolio.cash_balance + holdings_value);
+  const total_pnl = round(total_equity - 25000);
+  const total_pnl_pct = round(pctChange(total_equity, 25000));
 
   return c.json({
     success: true,
     data: {
       ...portfolio,
+      total_equity,
       holdings_value: round(holdings_value),
       total_pnl,
       total_pnl_pct,
@@ -128,7 +208,7 @@ portfolioRoutes.get('/:id/positions', async (c) => {
 
   const positions = (positionsResult.results || []).map((pos) => ({
     ...pos,
-    unrealized_pnl_pct: round(pctChange(pos.average_cost * pos.quantity, pos.market_value)),
+    unrealized_pnl_pct: round(pctChange(pos.market_value, pos.average_cost * pos.quantity)),
   }));
 
   return c.json({ success: true, data: positions });

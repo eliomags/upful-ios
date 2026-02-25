@@ -27,6 +27,9 @@ final class HomeViewModel {
     // Recent Trades
     private(set) var recentTrades: [TransactionDTO] = []
 
+    // Stats
+    private(set) var totalPrizesWon: Double = 0
+
     // MARK: - Dependencies
 
     private let portfolioService: PortfolioService
@@ -81,6 +84,16 @@ final class HomeViewModel {
         !recentTrades.isEmpty
     }
 
+    var totalTrades: Int {
+        positions.count
+    }
+
+    var winRate: Double {
+        guard !positions.isEmpty else { return 0 }
+        let winners = positions.filter { $0.unrealizedPnl > 0 }.count
+        return Double(winners) / Double(positions.count) * 100.0
+    }
+
     /// Top movers sorted by absolute unrealized P&L percent (biggest swings first).
     var topMovers: [PositionDTO] {
         positions
@@ -128,8 +141,9 @@ final class HomeViewModel {
             // Non-critical data — load concurrently, don't fail if any errors
             async let competitionsTask: () = loadCompetitionsSafe()
             async let rankingTask: () = loadRankingSafe()
+            async let prizesTask: () = loadPrizesSafe()
 
-            _ = await (competitionsTask, rankingTask)
+            _ = await (competitionsTask, rankingTask, prizesTask)
 
             // Load trades after portfolio (needs portfolio ID)
             if let portfolioId = portfolio?.id {
@@ -182,6 +196,15 @@ final class HomeViewModel {
         } catch {
             logger.warning("[Home] Failed to load ranking: \(error.localizedDescription)")
             // Non-critical — user may not be in any competition yet
+        }
+    }
+
+    private func loadPrizesSafe() async {
+        do {
+            let history = try await competitionService.fetchMyHistory(page: 1, limit: 100)
+            totalPrizesWon = history.compactMap(\.prizeAmount).reduce(0, +)
+        } catch {
+            logger.warning("[Home] Failed to load prizes: \(error.localizedDescription)")
         }
     }
 
