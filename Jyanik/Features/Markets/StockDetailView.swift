@@ -110,111 +110,18 @@ struct StockDetailView: View {
         }
     }
 
-    // MARK: - Chart Section
+    // MARK: - Chart Section (uses PriceChartView with Y-axis + interactive crosshair)
 
     private var chartSection: some View {
         JCard(padding: JSpacing.sm) {
-            VStack(spacing: JSpacing.sm) {
-                if viewModel.chartPoints.isEmpty {
-                    chartPlaceholder
-                } else {
-                    simpleChart
-                }
-
-                chartRangeSelector
-            }
-        }
-    }
-
-    private var chartPlaceholder: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: JRadius.small)
-                .fill(JColor.surfaceSecondary)
-
-            VStack(spacing: JSpacing.xs) {
-                Image(systemName: "chart.xyaxis.line")
-                    .font(.title)
-                    .foregroundStyle(JColor.textTertiary)
-
-                Text("Chart data loading...")
-                    .font(JFont.caption)
-                    .foregroundStyle(JColor.textTertiary)
-            }
-        }
-        .frame(height: 200)
-    }
-
-    private var simpleChart: some View {
-        GeometryReader { geometry in
-            let points = viewModel.normalizedChartPoints(in: geometry.size)
-
-            ZStack {
-                // Gradient fill under the line
-                Path { path in
-                    guard let first = points.first else { return }
-                    path.move(to: CGPoint(x: first.x, y: geometry.size.height))
-                    path.addLine(to: first)
-                    for point in points.dropFirst() {
-                        path.addLine(to: point)
-                    }
-                    path.addLine(to: CGPoint(x: points.last?.x ?? 0, y: geometry.size.height))
-                    path.closeSubpath()
-                }
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            viewModel.isPositive ? JColor.gainPositive.opacity(0.3) : JColor.gainNegative.opacity(0.3),
-                            viewModel.isPositive ? JColor.gainPositive.opacity(0.0) : JColor.gainNegative.opacity(0.0)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-
-                // Price line
-                Path { path in
-                    guard let first = points.first else { return }
-                    path.move(to: first)
-                    for point in points.dropFirst() {
-                        path.addLine(to: point)
-                    }
-                }
-                .stroke(
-                    viewModel.isPositive ? JColor.gainPositive : JColor.gainNegative,
-                    style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round)
-                )
-            }
-        }
-        .frame(height: 200)
-    }
-
-    private var chartRangeSelector: some View {
-        HStack(spacing: 0) {
-            ForEach(ChartRange.allDisplayCases, id: \.self) { range in
-                Button {
+            PriceChartView(
+                dataPoints: viewModel.chartPoints,
+                selectedRange: viewModel.selectedRange,
+                onRangeChanged: { range in
                     Task { await viewModel.selectChartRange(range) }
-                } label: {
-                    Text(range.label)
-                        .font(JFont.captionMedium)
-                        .foregroundStyle(
-                            viewModel.selectedRange == range
-                                ? Color.white
-                                : JColor.textSecondary
-                        )
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, JSpacing.xs)
-                        .background(
-                            viewModel.selectedRange == range
-                                ? JColor.primary
-                                : Color.clear,
-                            in: Capsule()
-                        )
                 }
-                .buttonStyle(.plain)
-            }
+            )
         }
-        .padding(JSpacing.xxxs)
-        .background(JColor.surfaceSecondary, in: Capsule())
     }
 
     // MARK: - Trade Buttons
@@ -484,24 +391,6 @@ final class StockDetailViewModel {
     var formattedDividend: String {
         guard let div = quote?.dividendYield else { return "--" }
         return "\(div.formatted(.number.precision(.fractionLength(2))))%"
-    }
-
-    // MARK: - Chart Helpers
-
-    func normalizedChartPoints(in size: CGSize) -> [CGPoint] {
-        let values = chartPoints.map(\.close)
-        guard values.count > 1 else { return [] }
-
-        let minVal = values.min() ?? 0
-        let maxVal = values.max() ?? 1
-        let range = maxVal - minVal
-        let safeRange = range == 0 ? 1 : range
-
-        return values.enumerated().map { index, value in
-            let x = size.width * CGFloat(index) / CGFloat(values.count - 1)
-            let y = size.height * (1 - CGFloat((value - minVal) / safeRange))
-            return CGPoint(x: x, y: y)
-        }
     }
 
     // MARK: - Private Helpers

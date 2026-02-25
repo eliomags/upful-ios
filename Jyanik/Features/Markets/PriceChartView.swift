@@ -131,8 +131,23 @@ struct PriceChartView: View {
                 .symbolSize(isCompact ? 30 : 50)
             }
         }
-        .chartXAxis(isCompact ? .hidden : .visible)
+        .chartXAxis(.hidden)
         .chartYAxis(isCompact ? .hidden : .visible)
+        .chartYAxis {
+            if !isCompact {
+                AxisMarks(position: .trailing, values: .automatic(desiredCount: 5)) { value in
+                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5, dash: [4, 4]))
+                        .foregroundStyle(JColor.divider)
+                    AxisValueLabel {
+                        if let price = value.as(Double.self) {
+                            Text(formatAxisPrice(price))
+                                .font(JFont.caption)
+                                .foregroundStyle(JColor.textTertiary)
+                        }
+                    }
+                }
+            }
+        }
         .chartYScale(domain: (minPrice - priceRange * 0.05)...(maxPrice + priceRange * 0.05))
         .chartOverlay { proxy in
             GeometryReader { geometry in
@@ -249,6 +264,16 @@ struct PriceChartView: View {
     }
 
     // MARK: - Formatting
+
+    private func formatAxisPrice(_ price: Double) -> String {
+        if price >= 1000 {
+            return "$\(price.formatted(.number.precision(.fractionLength(0))))"
+        } else if price >= 1 {
+            return "$\(price.formatted(.number.precision(.fractionLength(2))))"
+        } else {
+            return "$\(price.formatted(.number.precision(.fractionLength(4))))"
+        }
+    }
 
     private func formatSelectedPrice(_ price: Double) -> String {
         "$\(price.formatted(.number.precision(.fractionLength(2))))"
